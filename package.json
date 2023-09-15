@@ -2,13 +2,17 @@
   "name": "smartsoft001",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "prepare": "husky install"
+  },
   "private": true,
-  "dependencies": {},
   "devDependencies": {
+    "@commitlint/cli": "^17.7.1",
+    "@commitlint/config-conventional": "^17.7.0",
     "@nx/js": "16.8.1",
     "nx": "16.8.1",
-    "nx-cloud": "latest"
+    "nx-cloud": "latest",
+    "husky": "^8.0.0"
   },
   "workspaces": [
     "packages/*"
