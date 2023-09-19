@@ -14,6 +14,6 @@ jobs:
           fetch-depth: 0
       - uses: nrwl/nx-set-shas@v3
       - run: npm ci --prefer-offline --no-audit --progress=false --ignore-scripts
-      - run: nx affected --target=lint --parallel=3
-      - run: nx affected --target=test --parallel=3 --ci --code-coverage
-      - run: nx affected --target=build --parallel=3
+      - run: npx nx affected --target=lint --parallel=3
+      - run: npx nx affected --target=test --parallel=3 --ci --code-coverage
+      - run: npx nx affected --target=build --parallel=3
