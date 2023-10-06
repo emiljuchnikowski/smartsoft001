@@ -1,4 +1,4 @@
-import { SpecificationService } from '@smartsoft001/utils';
+import { SpecificationService } from './specification.service';
 
 describe('shared-utils: SpecificationService', () => {
   describe('valid()', () => {
