@@ -8,7 +8,7 @@ export class NipService {
         if(typeof nip !== 'string')
             return false;
 
-        //eslint-disable-line
+        //eslint-disable-next-line
         nip = nip.replace(/[\ \-]/gi, '');
 
         const weight = [6, 5, 7, 2, 3, 4, 5, 6, 7];
