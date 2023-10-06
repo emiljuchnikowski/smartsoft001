@@ -2,6 +2,9 @@
   "name": "@smartsoft001/utils",
   "version": "2.0.1",
   "dependencies": {
+    "tslib": "^2.3.0",
+    "guid-typescript": "^1.0.9",
+    "md5": "^2.3.0",
     "tslib": "^2.3.0"
   },
   "type": "commonjs",

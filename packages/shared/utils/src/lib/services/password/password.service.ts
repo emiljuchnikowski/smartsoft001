@@ -19,7 +19,7 @@ export class PasswordService {
    * @param h {string} - hashed text
    */
   static async compare(p: string, h: string): Promise<boolean> {
-    let hp = await PasswordService.hash(p);
+    const hp = await PasswordService.hash(p);
     return hp === h;
   }
 }

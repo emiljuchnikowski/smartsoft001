@@ -1,4 +1,4 @@
-import { ArrayService } from '@smartsoft001/utils';
+import { ArrayService } from './array.service';
 
 describe('shared-utils: ArrayService', () => {
   describe('addItem()', () => {
