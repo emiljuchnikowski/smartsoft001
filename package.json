@@ -24,7 +24,7 @@
     "jest": "^29.4.1",
     "jest-environment-node": "^29.4.1",
     "nx": "16.8.1",
-    "nx-cloud": "latest",
+    "nx-cloud": "^16.5.2",
     "prettier": "^2.6.2",
     "ts-jest": "^29.1.0",
     "ts-node": "10.9.1",
