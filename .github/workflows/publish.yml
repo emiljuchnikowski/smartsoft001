@@ -28,7 +28,7 @@ jobs:
       - name: Update changelog
         run: npx nx release changelog ${{ steps.package.outputs.version }}
       - name: Publish
-        run: npx nx release publish --registry registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}
+        run: NPM_TOKEN=${{ secrets.NPM_TOKEN }} && npx nx release publish
       - name: Commit
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
