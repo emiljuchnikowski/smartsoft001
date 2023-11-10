@@ -16,6 +16,8 @@ jobs:
           node-version: 18
           cache: 'npm'
       - run: npm ci --prefer-offline --no-audit --progress=false --ignore-scripts
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - run: npx nx format:check
       - run: npx nx affected --target=lint --parallel=3
       - run: npx nx affected --target=test --parallel=3 --ci --code-coverage
@@ -28,7 +30,9 @@ jobs:
       - name: Update changelog
         run: npx nx release changelog ${{ steps.package.outputs.version }}
       - name: Publish
-        run: NPM_TOKEN=${{ secrets.NPM_TOKEN }} && npx nx release publish
+        run: npx nx release publish
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Commit
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
