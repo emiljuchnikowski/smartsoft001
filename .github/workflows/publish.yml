@@ -8,10 +8,8 @@ jobs:
   main:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out code
-        uses: actions/checkout@v2
       - name: Run CI steps
-        uses: ./.github/workflows/ci.yml
+        uses: smartsoft001/.github/workflows/ci.yml
       - name: Set version
         run: npx nx release version minor
       - id: package
