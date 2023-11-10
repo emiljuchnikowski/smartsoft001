@@ -30,7 +30,7 @@ jobs:
       - name: Update changelog
         run: npx nx release changelog ${{ steps.package.outputs.version }}
       - name: Publish
-        run: npx nx release publish
+        run: npx nx run-many --target=publish --parallel=3 --ver=${{ steps.package.outputs.version }} --tag=latest
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Commit
