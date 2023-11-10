@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run CI steps
-        uses: ./.github/workflows/ci.yml@main
+        uses: emiljuchnikowski/smartsoft001/.github/workflows/ci.yml@main
       - name: Set version
         run: npx nx release version minor
       - id: package
