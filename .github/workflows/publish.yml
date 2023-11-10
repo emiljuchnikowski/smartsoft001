@@ -8,8 +8,18 @@ jobs:
   main:
     runs-on: ubuntu-latest
     steps:
-      - name: Run CI steps
-        uses: emiljuchnikowski/smartsoft001/.github/workflows/ci.yml@main
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+      - run: npm ci --prefer-offline --no-audit --progress=false --ignore-scripts
+      - run: npx nx format:check
+      - run: npx nx affected --target=lint --parallel=3
+      - run: npx nx affected --target=test --parallel=3 --ci --code-coverage
+      - run: npx nx affected --target=build --parallel=3
       - name: Set version
         run: npx nx release version minor
       - id: package
