@@ -27,11 +27,8 @@ jobs:
           echo "::set-output name=version::$(node -p "require('./package.json').version")"
       - name: Update changelog
         run: npx nx release changelog ${{ steps.package.outputs.version }}
-      - name: Create .npmrc
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> .npmrc
       - name: Publish
-        run: npx nx release publish
+        run: npx nx release publish --registry registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}
       - name: Commit
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
