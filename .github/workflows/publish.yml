@@ -36,7 +36,7 @@ jobs:
       - name: Check login
         run: npm whoami
       - name: Publish to NPM
-        run: nx run-many -t deploy
+        run: npx nx run-many -t deploy
       - name: Commit
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
