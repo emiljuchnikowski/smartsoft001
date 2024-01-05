@@ -14,10 +14,6 @@
         "assets": ["packages/shared/utils/*.md"]
       }
     },
-    "publish": {
-      "command": "node tools/scripts/publish.mjs utils {args.ver} {args.tag}",
-      "dependsOn": ["build"]
-    },
     "lint": {
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"],
@@ -41,6 +37,13 @@
           "codeCoverage": true
         }
       }
+    },
+    "deploy": {
+      "executor": "ngx-deploy-npm:deploy",
+      "options": {
+        "access": "public"
+      },
+      "dependsOn": ["build"]
     }
   },
   "tags": []

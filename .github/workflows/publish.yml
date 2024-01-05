@@ -32,10 +32,14 @@ jobs:
       - uses: JS-DevTools/npm-publish@v3
         with:
           token: ${{ secrets.NPM_TOKEN }}
-      - name: Publish
-        run: npx nx release publish
+      - name: Set NPM token
+        run: echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > .npmrc
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish to NPM utils
+        run: npx nx deploy utils
+      - name: Publish to NPM users
+        run: npx nx deploy users
       - name: Commit
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
