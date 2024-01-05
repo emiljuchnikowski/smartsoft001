@@ -35,10 +35,8 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Check login
         run: npm whoami
-      - name: Publish to NPM utils
-        run: npx nx deploy utils
-      - name: Publish to NPM users
-        run: npx nx deploy users
+      - name: Publish to NPM
+        run: nx run-many -t deploy
       - name: Commit
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
