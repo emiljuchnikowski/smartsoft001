@@ -1,3 +1,7 @@
+## 2.19.0
+
+This was a version bump only, there were no code changes.
+
 ## 2.18.0
 
 This was a version bump only, there were no code changes.
