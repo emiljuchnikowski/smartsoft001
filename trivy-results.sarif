@@ -8,11 +8,67 @@
           "fullName": "Trivy Vulnerability Scanner",
           "informationUri": "https://github.com/aquasecurity/trivy",
           "name": "Trivy",
-          "rules": [],
+          "rules": [
+            {
+              "id": "CVE-2019-18413",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "SQL Injection and Cross-site Scripting in class-validator"
+              },
+              "fullDescription": {
+                "text": "In TypeStack class-validator 0.10.2, validate() input validation can be bypassed because certain internal attributes can be overwritten via a conflicting name. Even though there is an optional forbidUnknownValues parameter that can be used to reduce the risk of this bypass, this option is not documented and thus most developers configure input validation in the vulnerable default manner. With this vulnerability, attackers can launch SQL Injection or XSS attacks by injecting arbitrary malicious input. NOTE: a software maintainer agrees with the \u0026#34;is not documented\u0026#34; finding but suggests that much of the responsibility for the risk lies in a different product."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2019-18413",
+              "help": {
+                "text": "Vulnerability CVE-2019-18413\\nSeverity: CRITICAL\\nPackage: class-validator\\nFixed Version: 0.14.0\\nLink: [CVE-2019-18413](https://avd.aquasec.com/nvd/cve-2019-18413)\\nIn TypeStack class-validator 0.10.2, validate() input validation can be bypassed because certain internal attributes can be overwritten via a conflicting name. Even though there is an optional forbidUnknownValues parameter that can be used to reduce the risk of this bypass, this option is not documented and thus most developers configure input validation in the vulnerable default manner. With this vulnerability, attackers can launch SQL Injection or XSS attacks by injecting arbitrary malicious input. NOTE: a software maintainer agrees with the \"is not documented\" finding but suggests that much of the responsibility for the risk lies in a different product.",
+                "markdown": "**Vulnerability CVE-2019-18413**\\n| Severity | Package | Fixed Version | Link |\\n| --- | --- | --- | --- |\\n|CRITICAL|class-validator|0.14.0|[CVE-2019-18413](https://avd.aquasec.com/nvd/cve-2019-18413)|\\n\\nIn TypeStack class-validator 0.10.2, validate() input validation can be bypassed because certain internal attributes can be overwritten via a conflicting name. Even though there is an optional forbidUnknownValues parameter that can be used to reduce the risk of this bypass, this option is not documented and thus most developers configure input validation in the vulnerable default manner. With this vulnerability, attackers can launch SQL Injection or XSS attacks by injecting arbitrary malicious input. NOTE: a software maintainer agrees with the \"is not documented\" finding but suggests that much of the responsibility for the risk lies in a different product."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "9.8",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "CRITICAL"
+                ]
+              }
+            }
+          ],
           "version": "0.48.1"
         }
       },
-      "results": [],
+      "results": [
+        {
+          "ruleId": "CVE-2019-18413",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "Package: class-validator\\nInstalled Version: 0.13.0\\nVulnerability CVE-2019-18413\\nSeverity: CRITICAL\\nFixed Version: 0.14.0\\nLink: [CVE-2019-18413](https://avd.aquasec.com/nvd/cve-2019-18413)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "package-lock.json",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 5686,
+                  "startColumn": 1,
+                  "endLine": 5694,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "package-lock.json: class-validator@0.13.0"
+              }
+            }
+          ]
+        }
+      ],
       "columnKind": "utf16CodeUnits",
       "originalUriBaseIds": {
         "ROOTPATH": {
