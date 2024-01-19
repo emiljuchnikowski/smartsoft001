@@ -16,13 +16,19 @@ jobs:
         with:
           scan-type: 'fs'
           ignore-unfixed: true
-          format: 'sarif'
-          output: 'trivy-results.sarif'
+          format: 'table'
+          output: 'trivy-results.txt'
           severity: 'CRITICAL'
-      - name: upload trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: 'trivy-results.sarif'
+      - name: Check for vulnerabilities
+        id: check
+        run: |
+          if grep -q "CRITICAL" trivy-results.txt; then
+            echo "Critical vulnerability found, stopping the workflow."
+            cat trivy-results.txt
+            exit 1
+          else
+            echo "No critical vulnerabilities found."
+          fi
       - uses: actions/setup-node@v3
         with:
           node-version: 18
