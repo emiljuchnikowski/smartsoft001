@@ -9,6 +9,7 @@
   "devDependencies": {
     "@commitlint/cli": "^17.7.1",
     "@commitlint/config-conventional": "^17.7.0",
+    "@nx/esbuild": "17.0.2",
     "@nx/eslint": "17.0.2",
     "@nx/eslint-plugin": "17.0.2",
     "@nx/jest": "17.0.2",
@@ -20,6 +21,7 @@
     "@types/node": "18.7.1",
     "@typescript-eslint/eslint-plugin": "^5.60.1",
     "@typescript-eslint/parser": "^5.60.1",
+    "esbuild": "^0.19.2",
     "eslint": "~8.46.0",
     "eslint-config-prettier": "9.0.0",
     "husky": "^8.0.0",
@@ -39,6 +41,8 @@
   "dependencies": {
     "guid-typescript": "^1.0.9",
     "md5": "^2.3.0",
+    "reflect-metadata": "^0.2.1",
+    "rxjs": "^7.8.1",
     "tslib": "^2.3.0"
   },
   "nx": {

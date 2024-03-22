@@ -1,0 +1,11 @@
+{
+  "name": "@smartsoft001/models",
+  "version": "2.20.0",
+  "type": "commonjs",
+  "main": "./index.cjs",
+  "dependencies": {
+    "reflect-metadata": "^0.2.1",
+    "rxjs": "^7.8.1",
+    "@smartsoft001/utils": "^2.20.0"
+  }
+}

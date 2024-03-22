@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@smartsoft001/models": ["packages/shared/models/src/index.ts"],
       "@smartsoft001/users": ["packages/shared/users/src/index.ts"],
       "@smartsoft001/utils": ["packages/shared/utils/src/index.ts"]
     }
