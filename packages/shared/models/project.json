@@ -16,8 +16,11 @@
         "format": ["cjs"]
       }
     },
-    "publish": {
-      "command": "node tools/scripts/publish.mjs models {args.ver} {args.tag}",
+    "deploy": {
+      "executor": "ngx-deploy-npm:deploy",
+      "options": {
+        "access": "public"
+      },
       "dependsOn": ["build"]
     },
     "lint": {
