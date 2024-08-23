@@ -20,7 +20,8 @@
     "deploy": {
       "executor": "ngx-deploy-npm:deploy",
       "options": {
-        "access": "public"
+        "access": "public",
+        "distFolderPath": "dist/packages/shared/models"
       },
       "dependsOn": ["build"]
     },
