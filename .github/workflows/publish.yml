@@ -60,7 +60,7 @@ jobs:
       - name: Publish to NPM
         run: npx nx run-many -t deploy
       - name: Commit
-        uses: stefanzweifel/git-auto-commit-action@v4
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "build(github): publish ${{ steps.package.outputs.version }} [skip ci]"
           tagging_message: "v${{ steps.package.outputs.version }}"
