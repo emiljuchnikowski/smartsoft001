@@ -36,7 +36,7 @@ export enum FieldTypeDef {
 export const FieldType: typeof FieldTypeDef = FieldTypeDef;
 
 export interface ISpecification {
-    criteria: any;
+    readonly criteria: any;
 }
 
 export interface IModelFilter {
