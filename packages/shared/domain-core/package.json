@@ -2,9 +2,7 @@
   "name": "@smartsoft001/domain-core",
   "type": "commonjs",
   "dependencies": {
-    "reflect-metadata": "^0.2.1",
-    "rxjs": "^7.8.1",
-    "@smartsoft001/utils": "^2.36.0"
+    "rxjs": "^7.8.1"
   },
   "version": "2.36.0",
   "main": "./src/index.js",
