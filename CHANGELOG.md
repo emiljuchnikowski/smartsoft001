@@ -1,3 +1,7 @@
+## 2.39.0 (2024-08-30)
+
+This was a version bump only, there were no code changes.
+
 ## 2.31.0 (2024-08-23)
 
 This was a version bump only, there were no code changes.
