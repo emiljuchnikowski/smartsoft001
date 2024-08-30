@@ -1,8 +1,6 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-npm ci --prefer-offline --no-audit --progress=false --ignore-scripts
-
 npx nx format:check
 
 npx nx affected --target=lint --base=origin/main --head=HEAD --parallel=3
