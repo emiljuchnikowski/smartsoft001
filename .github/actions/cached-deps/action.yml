@@ -1,0 +1,39 @@
+name: 'Get & Cache Dependencies'
+description: 'Get the dependencies (via npm) and cache them.'
+inputs:
+  caching:
+    description: 'Whether to cache dependencies or not.'
+    required: false
+    default: 'true'
+  prod:
+    description: 'Production mode.'
+    required: false
+    default: 'false'
+  node-version:
+    description: 'Node version.'
+    required: false
+    default: "18"
+runs:
+  using: 'composite'
+  steps:
+    - name: Install NodeJS
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+    - name: Cache dependencies
+      if: inputs.caching == 'true'
+      id: cache
+      uses: actions/cache@v4
+      with:
+        path: node_modules
+        key: deps-node-modules-${{inputs.prod}}-${{ hashFiles('package-lock.json | jq -S ".dependencies, .devDependencies"') }}
+    - name: Install dependencies
+      if: (steps.cache.outputs.cache-hit != 'true' || inputs.caching != 'true') && inputs.prod == 'false'
+      run: |
+        npm i --legacy-peer-deps
+      shell: bash
+    - name: Install dependencies (prod)
+      if: (steps.cache.outputs.cache-hit != 'true' || inputs.caching != 'true') && inputs.prod == 'true'
+      run: |
+        npm i --production --legacy-peer-deps --prefer-offline --no-audit --ignore-scripts
+      shell: bash

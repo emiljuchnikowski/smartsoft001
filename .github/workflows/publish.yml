@@ -29,10 +29,11 @@ jobs:
           else
             echo "No critical vulnerabilities found."
           fi
-      - uses: actions/setup-node@v3
+      - name: Load & cache dependencies
+        id: cache-deps
+        uses: ./.github/actions/cached-deps
         with:
-          node-version: 20
-          cache: 'npm'
+          node-version: '20'
       - run: npm ci --prefer-offline --no-audit --progress=false --ignore-scripts
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
