@@ -1,6 +1,6 @@
 {
   "name": "smartsoft001",
-  "version": "2.43.0",
+  "version": "2.44.0",
   "license": "MIT",
   "scripts": {
     "prepare": "husky install"
