@@ -1,3 +1,14 @@
+## 2.43.0 (2024-09-12)
+
+
+### 🚀 Features
+
+- **app:** Added very basic readme ([82dcf03](https://github.com/emiljuchnikowski/smartsoft001/commit/82dcf03))
+
+### ❤️  Thank You
+
+- cookie_lobster
+
 ## 2.42.0 (2024-08-30)
 
 This was a version bump only, there were no code changes.
