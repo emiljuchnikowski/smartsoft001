@@ -68,6 +68,20 @@ npm install @smartsoft001/cli -g
 
 ## Overview
 
+### Domain-core
+This library describes basic repository and tools for working with the repositories.
+Full list of features [here](packages/shared/domain-core/README.md).
+
+### Models
+
+
+### Users
+Users library defines the entity for the user.
+
+### Utils
+Utils library has various services for Nip, Pesel, zip-code verification, password hashing, operations with objects and 
+more. Check the full list of features [here](packages/shared/utils/README.md).
+
 ### Generate
 Use generate command to generate libraries or domains. Has an alias g.
 
