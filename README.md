@@ -73,7 +73,9 @@ This library describes basic repository and tools for working with the repositor
 Full list of features [here](packages/shared/domain-core/README.md).
 
 ### Models
-
+Models library is designed to enhance and manage data models in applications. This library provides decorators and utility 
+functions that enable developers to define, manipulate, and validate models with rich metadata and custom behaviors. 
+Full list of features [here](packages/shared/models/README.md).
 
 ### Users
 Users library defines the entity for the user.
