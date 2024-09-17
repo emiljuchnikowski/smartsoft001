@@ -14,7 +14,7 @@ export class SpecificationService {
   static valid<T>(
     value: T,
     spec: { criteria: any },
-    custom?: ISpecificationCustom
+    custom?: ISpecificationCustom,
   ): boolean {
     const keys = Object.keys(spec.criteria);
 
@@ -27,7 +27,7 @@ export class SpecificationService {
         if (
           !SpecificationService.check(
             custom?.$root[key.replace(SPECIFICATION_ROOT_KEY, '')],
-            spec.criteria[key]
+            spec.criteria[key],
           )
         )
           return false;
@@ -49,7 +49,7 @@ export class SpecificationService {
   static invalid<T>(
     value: T,
     spec: { criteria: any },
-    custom?: ISpecificationCustom
+    custom?: ISpecificationCustom,
   ): boolean {
     return !SpecificationService.valid(value, spec, custom);
   }

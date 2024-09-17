@@ -1,5 +1,6 @@
-import { ObjectService } from './object.service';
 import { isNull } from 'util';
+
+import { ObjectService } from './object.service';
 
 describe('shared-utils: ObjectService', () => {
   describe('createByType()', () => {

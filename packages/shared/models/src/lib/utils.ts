@@ -1,20 +1,20 @@
-import { IFieldOptions, IModelOptions } from "./interfaces";
-import { SYMBOL_FIELD, SYMBOL_MODEL } from "./symbols";
+import { IFieldOptions, IModelOptions } from './interfaces';
+import { SYMBOL_FIELD, SYMBOL_MODEL } from './symbols';
 
 export function getModelFieldKeys<T>(type: T): Array<string> {
-  if (!(type as any)["__fields"]) return [];
-  return Object.keys((type as any)["__fields"]);
+  if (!(type as any)['__fields']) return [];
+  return Object.keys((type as any)['__fields']);
 }
 
 export function getModelFieldOptions<T>(
   instance: T,
-  fieldKey: string
+  fieldKey: string,
 ): IFieldOptions {
   return Reflect.getMetadata(SYMBOL_FIELD, instance as any, fieldKey);
 }
 
 export function getModelFieldsWithOptions<T>(
-  instance: T
+  instance: T,
 ): Array<{ key: string; options: IFieldOptions }> {
   const keys = getModelFieldKeys((instance as any).constructor);
 
@@ -37,8 +37,8 @@ export function isModel<T>(instance: T): boolean {
 
 export function getInvalidFields<T>(
   instance: T,
-  mode: "create" | "update" | string,
-  permissions: Array<string>
+  mode: 'create' | 'update' | string,
+  permissions: Array<string>,
 ): Array<string> {
   const result: any[] = [];
 
@@ -46,7 +46,7 @@ export function getInvalidFields<T>(
     let required = options.required;
 
     if (
-      (mode === "create" || mode === "update") &&
+      (mode === 'create' || mode === 'update') &&
       options[mode] &&
       options[mode]?.constructor
     ) {
@@ -58,15 +58,18 @@ export function getInvalidFields<T>(
         (options[mode] as IFieldOptions).permissions
       ) {
         required = (options[mode] as IFieldOptions)?.permissions?.some((op) =>
-          permissions.some((p) => p === op)
+          permissions.some((p) => p === op),
         );
       }
     }
 
     if (
-        required
-        && ((instance as any)[key] === null || (instance as any)[key] === undefined || (instance as any)[key] === '')
-    ) result.push(key);
+      required &&
+      ((instance as any)[key] === null ||
+        (instance as any)[key] === undefined ||
+        (instance as any)[key] === '')
+    )
+      result.push(key);
   });
 
   return result;
@@ -74,18 +77,17 @@ export function getInvalidFields<T>(
 
 export function castModel<T>(
   instance: T,
-  mode: "create" | "update" | string,
-  permissions: Array<string>
+  mode: 'create' | 'update' | string,
+  permissions: Array<string>,
 ): void {
   if (!isModel(instance)) return;
 
   const fieldsWithOptions = getModelFieldsWithOptions(instance);
 
   Object.keys(instance as any)
-    .filter((key) => key !== "id")
+    .filter((key) => key !== 'id')
     .forEach((key) => {
-      const fieldWidthOptions =
-          fieldsWithOptions.find((f) => f.key === key);
+      const fieldWidthOptions = fieldsWithOptions.find((f) => f.key === key);
 
       if (!fieldWidthOptions) {
         delete (instance as any)[key];
@@ -93,21 +95,19 @@ export function castModel<T>(
       }
 
       if (
-        (mode === "create" || mode === "update") &&
+        (mode === 'create' || mode === 'update') &&
         (!fieldWidthOptions.options[mode] ||
           (permissions &&
             (fieldWidthOptions.options[mode] as IFieldOptions).permissions &&
-            !(fieldWidthOptions.options[
-              mode
-            ] as IFieldOptions)?.permissions?.some((op) =>
-              permissions.some((p) => op === p)
-            )))
+            !(
+              fieldWidthOptions.options[mode] as IFieldOptions
+            )?.permissions?.some((op) => permissions.some((p) => op === p))))
       ) {
         delete (instance as any)[key];
         return;
       } else if (
-        mode !== "create" &&
-        mode !== "update" &&
+        mode !== 'create' &&
+        mode !== 'update' &&
         (!fieldWidthOptions.options.customs ||
           !fieldWidthOptions.options.customs.some((c) => c.mode === mode))
       ) {

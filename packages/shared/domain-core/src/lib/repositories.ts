@@ -1,8 +1,7 @@
-import { Observable } from "rxjs";
+import { IUser } from '@smartsoft001/users';
+import { Observable } from 'rxjs';
 
-import { IUser } from "@smartsoft001/users";
-
-import { IEntity, ISpecification } from "./interfaces";
+import { IEntity, ISpecification } from './interfaces';
 
 /**
  * ITransaction defines the structure of a transaction context that can be used to
@@ -62,7 +61,9 @@ export abstract class IUnitOfWork {
    *       );
    * });
    */
-  abstract scope(definition: (transaction: ITransaction) => Promise<void>): Promise<void>;
+  abstract scope(
+    definition: (transaction: ITransaction) => Promise<void>,
+  ): Promise<void>;
 }
 
 /**
@@ -93,7 +94,11 @@ export abstract class IItemRepository<T extends IEntity<string>> {
    *
    * @returns {Promise<void>} - A promise that resolves when the entity is successfully created.
    */
-  abstract create(item: T, user: IUser, options?: IItemRepositoryOptions): Promise<void>;
+  abstract create(
+    item: T,
+    user: IUser,
+    options?: IItemRepositoryOptions,
+  ): Promise<void>;
 
   /**
    * Creates multiple entities in the storage system.
@@ -104,7 +109,11 @@ export abstract class IItemRepository<T extends IEntity<string>> {
    *
    * @returns {Promise<void>} - A promise that resolves when all entities are successfully created.
    */
-  abstract createMany(list: T[], user: IUser, options?: IItemRepositoryOptions): Promise<void>;
+  abstract createMany(
+    list: T[],
+    user: IUser,
+    options?: IItemRepositoryOptions,
+  ): Promise<void>;
 
   /**
    * Updates an existing entity in the storage system.
@@ -115,7 +124,11 @@ export abstract class IItemRepository<T extends IEntity<string>> {
    *
    * @returns {Promise<void>} - A promise that resolves when the entity is successfully updated.
    */
-  abstract update(item: T, user: IUser, options?: IItemRepositoryOptions): Promise<void>;
+  abstract update(
+    item: T,
+    user: IUser,
+    options?: IItemRepositoryOptions,
+  ): Promise<void>;
 
   /**
    * Partially updates an existing entity in the storage system.
@@ -128,8 +141,8 @@ export abstract class IItemRepository<T extends IEntity<string>> {
    */
   abstract updatePartial(
     item: Partial<T> & { id: string },
-    user: IUser
-      , options?: IItemRepositoryOptions
+    user: IUser,
+    options?: IItemRepositoryOptions,
   ): Promise<void>;
 
   /**
@@ -145,7 +158,8 @@ export abstract class IItemRepository<T extends IEntity<string>> {
   abstract updatePartialManyByCriteria(
     criteria: any,
     set: Partial<T>,
-    user: IUser, options?: IItemRepositoryOptions
+    user: IUser,
+    options?: IItemRepositoryOptions,
   ): Promise<void>;
 
   /**
@@ -161,7 +175,8 @@ export abstract class IItemRepository<T extends IEntity<string>> {
   abstract updatePartialManyBySpecification(
     spec: ISpecification,
     set: Partial<T>,
-    user: IUser, options?: IItemRepositoryOptions
+    user: IUser,
+    options?: IItemRepositoryOptions,
   ): Promise<void>;
 
   /**
@@ -173,7 +188,11 @@ export abstract class IItemRepository<T extends IEntity<string>> {
    *
    * @returns {Promise<void>} - A promise that resolves when the entity is successfully deleted.
    */
-  abstract delete(id: string, user: IUser, options?: IItemRepositoryOptions): Promise<void>;
+  abstract delete(
+    id: string,
+    user: IUser,
+    options?: IItemRepositoryOptions,
+  ): Promise<void>;
 
   /**
    * Retrieves an entity from the storage system by its ID.
@@ -183,7 +202,10 @@ export abstract class IItemRepository<T extends IEntity<string>> {
    *
    * @returns {Promise<T>} - A promise that resolves to the retrieved entity.
    */
-  abstract getById(id: string, repoOptions?: IItemRepositoryOptions): Promise<T>;
+  abstract getById(
+    id: string,
+    repoOptions?: IItemRepositoryOptions,
+  ): Promise<T>;
 
   /**
    * Retrieves entities from the storage system that match the specified criteria.
@@ -195,7 +217,7 @@ export abstract class IItemRepository<T extends IEntity<string>> {
    */
   abstract getByCriteria(
     criteria: any,
-    options?: any
+    options?: any,
   ): Promise<{ data: T[]; totalCount: number }>;
 
   /**
@@ -208,7 +230,7 @@ export abstract class IItemRepository<T extends IEntity<string>> {
    */
   abstract getBySpecification(
     spec: ISpecification,
-    options?: any
+    options?: any,
   ): Promise<{ data: T[]; totalCount: number }>;
 
   /**
@@ -296,8 +318,14 @@ export abstract class IAttachmentRepository<T extends IEntity<string>> {
    * console.log('File uploaded successfully');
    */
   abstract upload(
-      data: { id: string, fileName: string; stream: any; mimeType: string; encoding: string },
-      options?: { streamCallback?: (r: any) => void }
+    data: {
+      id: string;
+      fileName: string;
+      stream: any;
+      mimeType: string;
+      encoding: string;
+    },
+    options?: { streamCallback?: (r: any) => void },
   ): Promise<void>;
 
   /**
@@ -310,7 +338,9 @@ export abstract class IAttachmentRepository<T extends IEntity<string>> {
    *
    * @throws {Error} - Throws an error if retrieving the file information fails.
    */
-  abstract getInfo(id: string): Promise<{ fileName: string, contentType: string, length: number }>;
+  abstract getInfo(
+    id: string,
+  ): Promise<{ fileName: string; contentType: string; length: number }>;
 
   /**
    * Retrieves a stream for downloading a file from the storage system.
@@ -324,7 +354,10 @@ export abstract class IAttachmentRepository<T extends IEntity<string>> {
    *
    * @throws {Error} - Throws an error if retrieving the file stream fails.
    */
-  abstract getStream(id: string, options?: { start: number; end: number }): Promise<any>;
+  abstract getStream(
+    id: string,
+    options?: { start: number; end: number },
+  ): Promise<any>;
 
   /**
    * Deletes a file from the storage system.

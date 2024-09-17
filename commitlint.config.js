@@ -20,6 +20,7 @@ module.exports = {
                     'nx',
                     'github',
                     'docker',
+                    'release'
                 ],
             ];
         },
