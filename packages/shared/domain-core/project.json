@@ -26,7 +26,14 @@
       "dependsOn": ["build"]
     },
     "lint": {
-      "executor": "@nx/eslint:lint"
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "packages/shared/domain-core/**/*.{ts,tsx,js,jsx}",
+          "packages/shared/domain-core/package.json"
+        ]
+      }
     },
     "test": {
       "executor": "@nx/jest:jest",

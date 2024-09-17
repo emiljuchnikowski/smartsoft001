@@ -1,12 +1,19 @@
 {
   "root": true,
   "ignorePatterns": ["**/*"],
-  "plugins": ["@nx"],
+  "plugins": ["@nrwl/nx"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "extends": [
+        "plugin:prettier/recommended",
+        "plugin:@nrwl/nx/typescript",
+        "plugin:import/errors",
+        "plugin:import/warnings",
+        "plugin:import/typescript"
+      ],
       "rules": {
-        "@nx/enforce-module-boundaries": [
+        "@nrwl/nx/enforce-module-boundaries": [
           "error",
           {
             "enforceBuildableLibDependency": true,
@@ -18,31 +25,62 @@
               }
             ]
           }
+        ],
+        "import/order": [
+          "error",
+          {
+            "newlines-between": "always",
+            "groups": ["external", "builtin", "internal"],
+            "pathGroups": [
+              {
+                "pattern": "@absysco/**",
+                "group": "external",
+                "position": "after"
+              }
+            ],
+            "pathGroupsExcludedImportTypes": [],
+            "alphabetize": {
+              "order": "asc",
+              "caseInsensitive": true
+            }
+          }
         ]
       }
     },
     {
       "files": ["*.ts", "*.tsx"],
-      "extends": ["plugin:@nx/typescript"],
       "rules": {
-        "@typescript-eslint/no-extra-semi": "error",
-        "no-extra-semi": "off"
+        "no-undef": "off"
       }
     },
     {
-      "files": ["*.js", "*.jsx"],
-      "extends": ["plugin:@nx/javascript"],
+      "files": ["*.d.ts"],
       "rules": {
-        "@typescript-eslint/no-extra-semi": "error",
-        "no-extra-semi": "off"
+        "import/no-duplicates": "off"
       }
     },
     {
-      "files": ["*.spec.ts", "*.spec.tsx", "*.spec.js", "*.spec.jsx"],
-      "env": {
-        "jest": true
-      },
-      "rules": {}
+      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "rules": {
+        "@typescript-eslint/camelcase": "off",
+        "@typescript-eslint/class-name-casing": "off",
+        "@nrwl/nx/enforce-module-boundaries": "off",
+        "lines-between-class-members": "off",
+        "max-classes-per-file": "off",
+        "no-inner-declarations": "off",
+        "no-invalid-this": "off",
+        "no-magic-numbers": "off",
+        "no-prototype-builtins": "off",
+        "no-undef": "off",
+        "sort-imports": "off",
+        "import/export": "off",
+        "import/first": "error",
+        "import/no-duplicates": "error",
+        "import/no-extraneous-dependencies": "off",
+        "import/no-internal-modules": "off",
+        "import/no-unresolved": "off",
+        "import/prefer-default-export": "off"
+      }
     }
   ]
 }

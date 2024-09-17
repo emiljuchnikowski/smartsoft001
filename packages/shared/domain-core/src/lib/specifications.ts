@@ -1,4 +1,4 @@
-import {ISpecification} from "./interfaces";
+import { ISpecification } from './interfaces';
 
 /**
  * BasicSpecification is a class that implements the `ISpecification` interface and serves as a base
@@ -12,13 +12,12 @@ import {ISpecification} from "./interfaces";
  * @implements {ISpecification}
  */
 export class BasicSpecification implements ISpecification {
-
-    /**
-     * Creates an instance of BasicSpecification.
-     *
-     * @param {any} criteria - The criteria used to filter entities.
-     */
-    constructor(public readonly criteria: any) { }
+  /**
+   * Creates an instance of BasicSpecification.
+   *
+   * @param {any} criteria - The criteria used to filter entities.
+   */
+  constructor(public readonly criteria: any) {}
 }
 
 /**
@@ -32,24 +31,23 @@ export class BasicSpecification implements ISpecification {
  * @extends {BasicSpecification}
  */
 export class MergeSpecification extends BasicSpecification {
+  /**
+   * Creates an instance of MergeSpecification.
+   *
+   * @param {...ISpecification[]} specs - An array of specifications to be merged.
+   */
+  constructor(...specs: Array<ISpecification>) {
+    let criteria = {};
 
-    /**
-     * Creates an instance of MergeSpecification.
-     *
-     * @param {...ISpecification[]} specs - An array of specifications to be merged.
-     */
-    constructor(...specs: Array<ISpecification>) {
-        let criteria = {};
+    specs.forEach((spec) => {
+      criteria = {
+        ...criteria,
+        ...spec.criteria,
+      };
+    });
 
-        specs.forEach(spec => {
-           criteria = {
-               ...criteria,
-               ...spec.criteria
-           }
-        });
-
-        super(criteria);
-    }
+    super(criteria);
+  }
 }
 
 /**
@@ -64,17 +62,16 @@ export class MergeSpecification extends BasicSpecification {
  * @extends {BasicSpecification}
  */
 export class OrSpecification extends BasicSpecification {
-
-    /**
-     * Creates an instance of OrSpecification.
-     *
-     * @param {...ISpecification[]} spec - An array of specifications to be combined using a logical OR.
-     */
-    constructor(...spec: Array<ISpecification>) {
-        super({
-            $or: spec.map(c => c.criteria)
-        });
-    }
+  /**
+   * Creates an instance of OrSpecification.
+   *
+   * @param {...ISpecification[]} spec - An array of specifications to be combined using a logical OR.
+   */
+  constructor(...spec: Array<ISpecification>) {
+    super({
+      $or: spec.map((c) => c.criteria),
+    });
+  }
 }
 
 /**
@@ -89,15 +86,14 @@ export class OrSpecification extends BasicSpecification {
  * @extends {BasicSpecification}
  */
 export class AndSpecification extends BasicSpecification {
-
-    /**
-     * Creates an instance of AndSpecification.
-     *
-     * @param {...ISpecification[]} spec - An array of specifications to be combined using a logical AND.
-     */
-    constructor(...spec: Array<ISpecification>) {
-        super({
-            $and: spec.map(c => c.criteria)
-        });
-    }
+  /**
+   * Creates an instance of AndSpecification.
+   *
+   * @param {...ISpecification[]} spec - An array of specifications to be combined using a logical AND.
+   */
+  constructor(...spec: Array<ISpecification>) {
+    super({
+      $and: spec.map((c) => c.criteria),
+    });
+  }
 }

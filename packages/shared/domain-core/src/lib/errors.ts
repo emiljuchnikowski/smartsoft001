@@ -1,15 +1,15 @@
 export class DomainValidationError extends Error {
-    type = DomainValidationError;
+  type = DomainValidationError;
 
-    constructor(msg: string) {
-        super(msg);
-    }
+  constructor(msg: string) {
+    super(msg);
+  }
 }
 
 export class DomainForbiddenError extends Error {
-    type = DomainForbiddenError;
+  type = DomainForbiddenError;
 
-    constructor(msg: string) {
-        super(msg);
-    }
+  constructor(msg: string) {
+    super(msg);
+  }
 }
