@@ -6,17 +6,25 @@
 [//]: # (  ·)
 
 [//]: # (  <a href="">Blog</a>)
-  <br>
-  <br>
-</p>
+[//]: # (  <br>)
 
-<p align="center">
-  <a href="https://www.npmjs.com/package/@smartsoft001/cli">
-    Smartsoft CLI
-  </a>&nbsp;
-</p>
+[//]: # (  <br>)
 
-<hr>
+[//]: # (</p>)
+
+[//]: # ()
+[//]: # (<p align="center">)
+
+[//]: # (  <a href="https://www.npmjs.com/package/@smartsoft001/cli">)
+
+[//]: # (    Smartsoft CLI)
+
+[//]: # (  </a>&nbsp;)
+
+[//]: # (</p>)
+
+[//]: # ()
+[//]: # (<hr>)
 
 [//]: # (## Documentation)
 
@@ -40,31 +48,48 @@
 
 - Install [Node.js] which includes [Node Package Manager][npm]
 
-### Setting Up new Project
+[//]: # (### Setting Up new Project)
 
-Install the Smartsoft CLI globally:
-```
-npm install @smartsoft001/cli -g
-```
+[//]: # ()
+[//]: # (Install the Smartsoft CLI globally:)
 
-Prepare system dependencies to work with the framework:
-```
-smart prepare
-```
+[//]: # (```)
 
-Create project:
-```
-smart init --name [name]
-```
+[//]: # (npm install @smartsoft001/cli -g)
 
-Checkout the CLI for more commands <a href="https://www.npmjs.com/package/@smartsoft001/cli">Smartsoft CLI</a>
+[//]: # (```)
 
-### Add to existing Project
+[//]: # ()
+[//]: # (Prepare system dependencies to work with the framework:)
 
-Install the Smartsoft CLI
-```
-npm install @smartsoft001/cli -g
-```
+[//]: # (```)
+
+[//]: # (smart prepare)
+
+[//]: # (```)
+
+[//]: # ()
+[//]: # (Create project:)
+
+[//]: # (```)
+
+[//]: # (smart init --name [name])
+
+[//]: # (```)
+
+[//]: # ()
+[//]: # (Checkout the CLI for more commands <a href="https://www.npmjs.com/package/@smartsoft001/cli">Smartsoft CLI</a>)
+
+[//]: # (### Add to existing Project)
+
+[//]: # ()
+[//]: # (Install the Smartsoft CLI)
+
+[//]: # (```)
+
+[//]: # (npm install @smartsoft001/cli -g)
+
+[//]: # (```)
 
 ## Overview
 
@@ -84,38 +109,65 @@ Users library defines the entity for the user.
 Utils library has various services for Nip, Pesel, zip-code verification, password hashing, operations with objects and 
 more. Check the full list of features [here](packages/shared/utils/README.md).
 
-### Generate
-Use generate command to generate libraries or domains. Has an alias g.
+[//]: # (### Generate)
+[//]: # (Use generate command to generate libraries or domains. Has an alias g.)
 
-Generate shared library
-```
-smart generate library [name] [--type=default]
-```
-or
-```
-smart g library [name] [--type=default]
-```
-<table>
-    <tbody><tr>
-        <td>name</td>
-        <td>Library name</td>
-    </tr>
-    <tr>
-        <td>--type</td>
-        <td>
-            Type of library (default: default)
-            <ul>
-                <li>angular - angular library</li>
-                <li>default - nodejs library</li>
-            </ul>        
-        </td>
-    </tr>
-</tbody></table>
+[//]: # (Generate shared library)
 
-Generate domain
-```
-smart g domain [name]
-```
+[//]: # (```)
+
+[//]: # (smart generate library [name] [--type=default])
+
+[//]: # (```)
+
+[//]: # (or)
+
+[//]: # (```)
+
+[//]: # (smart g library [name] [--type=default])
+
+[//]: # (```)
+
+[//]: # (<table>)
+
+[//]: # (    <tbody><tr>)
+
+[//]: # (        <td>name</td>)
+
+[//]: # (        <td>Library name</td>)
+
+[//]: # (    </tr>)
+
+[//]: # (    <tr>)
+
+[//]: # (        <td>--type</td>)
+
+[//]: # (        <td>)
+
+[//]: # (            Type of library &#40;default: default&#41;)
+
+[//]: # (            <ul>)
+
+[//]: # (                <li>angular - angular library</li>)
+
+[//]: # (                <li>default - nodejs library</li>)
+
+[//]: # (            </ul>        )
+
+[//]: # (        </td>)
+
+[//]: # (    </tr>)
+
+[//]: # (</tbody></table>)
+
+[//]: # ()
+[//]: # (Generate domain)
+
+[//]: # (```)
+
+[//]: # (smart g domain [name])
+
+[//]: # (```)
 
 ## Contributing
 
