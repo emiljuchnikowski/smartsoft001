@@ -1,3 +1,14 @@
+## 2.46.0 (2024-09-18)
+
+
+### 🩹 Fixes
+
+- Commented parts about the CLI and usage ([26cf2e4](https://github.com/emiljuchnikowski/smartsoft001/commit/26cf2e4))
+
+### ❤️  Thank You
+
+- cookie_lobster
+
 ## 2.45.0 (2024-09-17)
 
 
