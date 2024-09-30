@@ -1,3 +1,26 @@
+## 2.46.0 (2024-09-18)
+
+
+### 🩹 Fixes
+
+- Commented parts about the CLI and usage ([26cf2e4](https://github.com/emiljuchnikowski/smartsoft001/commit/26cf2e4))
+
+### ❤️  Thank You
+
+- cookie_lobster
+
+## 2.45.0 (2024-09-17)
+
+
+### 🚀 Features
+
+- **domain-core:** Added readme based on existing comments ([dd9e0d6](https://github.com/emiljuchnikowski/smartsoft001/commit/dd9e0d6))
+- **models:** Added summary of what the decorators and functions do ([0720c96](https://github.com/emiljuchnikowski/smartsoft001/commit/0720c96))
+
+### ❤️  Thank You
+
+- cookie_lobster
+
 ## 2.44.0 (2024-09-12)
 
 This was a version bump only, there were no code changes.
