@@ -34,12 +34,9 @@ jobs:
         uses: ./.github/actions/cached-deps
         with:
           node-version: '20'
-      - run: npm ci --prefer-offline --no-audit --progress=false --ignore-scripts
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - run: pnpm dlx nx-cloud start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="build"
+      - run: npx pnpm dlx nx-cloud start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="build"
       - run: npx nx format:check
-      - run: pnpm exec nx affected -t lint test build
+      - run: npx pnpm exec nx affected -t lint test build
       - name: Set version
         run: npx nx release version minor && npm version minor --no-git-tag-version
       - id: package
