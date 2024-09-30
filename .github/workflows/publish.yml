@@ -56,6 +56,8 @@ jobs:
         run: npm whoami
       - name: Publish to NPM
         run: npx nx run-many -t nx-release-publish
+        env:
+          NX_CLOUD_DISTRIBUTED_EXECUTION: false
       - name: Commit
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
