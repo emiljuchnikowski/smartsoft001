@@ -2,7 +2,7 @@
 
 ## Usage
 
-`npm i @smartsoft001/utis`
+`npm i @smartsoft001/utils`
 
 # ArrayService
 
