@@ -16,8 +16,6 @@ jobs:
         uses: ./.github/actions/cached-deps
         with:
           node-version: '20'
-      - run: npm ci --prefer-offline --no-audit --progress=false --ignore-scripts
+      - run: npx pnpm dlx nx-cloud start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="build"
       - run: npx nx format:check
-      - run: npx nx affected --target=lint --parallel=3
-      - run: npx nx affected --target=test --parallel=3 --ci --code-coverage
-      - run: npx nx affected --target=build --parallel=3
+      - run: npx pnpm exec nx affected -t lint test build
