@@ -52,7 +52,7 @@ const mockData: (MongoConfig & { result: string, testName: string })[] = [
 
 describe('utils function getMongoUrl', () => {
   for (const data of mockData) {
-    it(data.testName, () => {
+    it('should create a mongo url with the given config', () => {
       expect(getMongoUrl(data)).toBe(data.result);
     });
   }
