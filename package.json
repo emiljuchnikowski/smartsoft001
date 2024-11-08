@@ -48,6 +48,7 @@
   ],
   "dependencies": {
     "@nx/devkit": "^19.6.2",
+    "class-validator": "^0.14.1",
     "guid-typescript": "^1.0.9",
     "md5": "^2.3.0",
     "reflect-metadata": "^0.2.1",
