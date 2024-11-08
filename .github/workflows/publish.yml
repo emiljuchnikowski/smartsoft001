@@ -55,7 +55,7 @@ jobs:
       - name: Check login
         run: npm whoami
       - name: Publish to NPM
-        run: npx nx run-many -t nx-release-publish
+        run: npx nx run-many -t nx-release-publish --no-agents
         env:
           NX_CLOUD_DISTRIBUTED_EXECUTION: false
       - name: Commit
