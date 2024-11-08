@@ -1,19 +1,19 @@
 {
   "root": true,
   "ignorePatterns": ["**/*"],
-  "plugins": ["@nrwl/nx"],
+  "plugins": ["@nx/eslint-plugin"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "extends": [
         "plugin:prettier/recommended",
-        "plugin:@nrwl/nx/typescript",
+        "plugin:@nx/typescript",
         "plugin:import/errors",
         "plugin:import/warnings",
         "plugin:import/typescript"
       ],
       "rules": {
-        "@nrwl/nx/enforce-module-boundaries": [
+        "@nx/enforce-module-boundaries": [
           "error",
           {
             "enforceBuildableLibDependency": true,
@@ -64,7 +64,7 @@
       "rules": {
         "@typescript-eslint/camelcase": "off",
         "@typescript-eslint/class-name-casing": "off",
-        "@nrwl/nx/enforce-module-boundaries": "off",
+        "@nx/enforce-module-boundaries": "off",
         "lines-between-class-members": "off",
         "max-classes-per-file": "off",
         "no-inner-declarations": "off",
