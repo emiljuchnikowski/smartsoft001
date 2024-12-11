@@ -1,3 +1,7 @@
+## 2.48.0 (2024-11-20)
+
+This was a version bump only, there were no code changes.
+
 ## 2.46.0 (2024-09-18)
 
 

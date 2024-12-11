@@ -4,9 +4,9 @@
   "dependencies": {
     "reflect-metadata": "^0.2.1",
     "rxjs": "^7.8.1",
-    "@smartsoft001/utils": "^2.47.0"
+    "@smartsoft001/utils": "^2.48.0"
   },
-  "version": "2.47.0",
+  "version": "2.48.0",
   "main": "./src/index.js",
   "typings": "./src/index.d.ts"
 }
