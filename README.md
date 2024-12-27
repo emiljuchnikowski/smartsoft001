@@ -3,7 +3,9 @@
 ![Last Commit](https://img.shields.io/github/last-commit/emiljuchnikowski/smartsoft001)
 ![Last Commit](https://img.shields.io/github/issues/emiljuchnikowski/smartsoft001)
 ![Contributors](https://img.shields.io/github/contributors/emiljuchnikowski/smartsoft001)
+![Open Pull Requests](https://img.shields.io/github/issues-pr/emiljuchnikowski/smartsoft001)
 ![Build Status](https://github.com/emiljuchnikowski/smartsoft001/actions/workflows/publish.yml/badge.svg)
+![Forks](https://img.shields.io/github/forks/emiljuchnikowski/smartsoft001?style=social)
 
 <p align="center">
   <a href="https://github.com/emiljuchnikowski/smartsoft001/issues">Submit an Issue</a>
