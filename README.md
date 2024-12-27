@@ -1,5 +1,10 @@
 <h1 align="center">Smartsoft - A collection of libraries for Angular, NestJS and Ionic projects</h1>
 
+![Last Commit](https://img.shields.io/github/last-commit/emiljuchnikowski/smartsoft001)
+![Last Commit](https://img.shields.io/github/issues/emiljuchnikowski/smartsoft001)
+![Contributors](https://img.shields.io/github/contributors/emiljuchnikowski/smartsoft001)
+
+
 <p align="center">
   <a href="https://github.com/emiljuchnikowski/smartsoft001/issues">Submit an Issue</a>
 
