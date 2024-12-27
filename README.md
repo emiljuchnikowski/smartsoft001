@@ -174,6 +174,22 @@ more. Check the full list of features [here](packages/shared/utils/README.md).
 
 [//]: # (```)
 
-## Contributing
+## 🤝 Contributing
 
-If you find a bug, inconsistency or have a suggestion, than <a href="https://github.com/emiljuchnikowski/smartsoft001/issues">submit an Issue</a>
+Contributions are welcome! 🎉
+
+1. Fork the repository.
+2. Create a feature branch: git checkout -b feature/my-new-feature.
+3. Commit your changes: git commit -m 'Add some feature'.
+4. Push to the branch: git push origin feature/my-new-feature.
+   Submit a pull request.
+
+For more details, see our [Contributing Guidelines](./CONTRIBUTING.md).
+
+## 📝 Changelog
+
+All notable changes to this project will be documented in the [CHANGELOG](./CHANGELOG.md).
+
+## 📜 License
+
+This project is licensed under the MIT License.
