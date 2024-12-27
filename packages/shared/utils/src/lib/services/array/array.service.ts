@@ -34,7 +34,7 @@ export class ArrayService {
    * @param by {function} - function to get sort key
    * @returns {array} - sorted array
    */
-  static sort<T>(array: Array<T>, by: (item: T) => any): Array<T> {
+  static sort<T>(array: Array<T>, by: (item: T) => unknown): Array<T> {
     return _.sortBy(array, by);
   }
 }

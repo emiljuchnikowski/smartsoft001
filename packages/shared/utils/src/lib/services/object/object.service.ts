@@ -8,10 +8,10 @@ export class ObjectService {
    * @return - new type object
    */
   static createByType<T>(data: any, type: any): T {
-    if (!data) return data;
+    if (!data) return data as T;
 
     try {
-      if (data instanceof type) return data;
+      if (data instanceof type) return data as T;
     } catch (e) {
       console.warn(e);
     }
