@@ -3,6 +3,7 @@
   "version": "2.50.0",
   "license": "MIT",
   "scripts": {
+    "test": "nx run-many --target=test --all",
     "prepare": "husky install"
   },
   "private": true,
