@@ -1,5 +1,3 @@
-import { isNull } from 'util';
-
 import { ObjectService } from './object.service';
 
 describe('shared-utils: ObjectService', () => {
@@ -91,7 +89,7 @@ describe('shared-utils: ObjectService', () => {
       obj.test1 = undefined;
       obj.date = new Date();
 
-      const result = ObjectService.removeTypes(obj);
+      ObjectService.removeTypes(obj);
 
       expect(obj.test1 === undefined).toBeTruthy();
     });

@@ -1,5 +1,12 @@
 <h1 align="center">Smartsoft - A collection of libraries for Angular, NestJS and Ionic projects</h1>
 
+![Last Commit](https://img.shields.io/github/last-commit/emiljuchnikowski/smartsoft001)
+![Last Commit](https://img.shields.io/github/issues/emiljuchnikowski/smartsoft001)
+![Contributors](https://img.shields.io/github/contributors/emiljuchnikowski/smartsoft001)
+![Open Pull Requests](https://img.shields.io/github/issues-pr/emiljuchnikowski/smartsoft001)
+![Build Status](https://github.com/emiljuchnikowski/smartsoft001/actions/workflows/publish.yml/badge.svg)
+![Forks](https://img.shields.io/github/forks/emiljuchnikowski/smartsoft001?style=social)
+
 <p align="center">
   <a href="https://github.com/emiljuchnikowski/smartsoft001/issues">Submit an Issue</a>
 
@@ -169,6 +176,22 @@ more. Check the full list of features [here](packages/shared/utils/README.md).
 
 [//]: # (```)
 
-## Contributing
+## 🤝 Contributing
 
-If you find a bug, inconsistency or have a suggestion, than <a href="https://github.com/emiljuchnikowski/smartsoft001/issues">submit an Issue</a>
+Contributions are welcome! 🎉
+
+1. Fork the repository.
+2. Create a feature branch: git checkout -b feature/my-new-feature.
+3. Commit your changes: git commit -m 'Add some feature'.
+4. Push to the branch: git push origin feature/my-new-feature.
+   Submit a pull request.
+
+For more details, see our [Contributing Guidelines](./CONTRIBUTING.md).
+
+## 📝 Changelog
+
+All notable changes to this project will be documented in the [CHANGELOG](./CHANGELOG.md).
+
+## 📜 License
+
+This project is licensed under the MIT License.

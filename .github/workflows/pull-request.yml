@@ -1,4 +1,4 @@
-name: CI
+name: Pull Request
 on:
   pull_request:
     branches:
@@ -6,16 +6,16 @@ on:
 
 jobs:
   main:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
         with:
           fetch-depth: 0
       - name: Load & cache dependencies
         id: cache-deps
         uses: ./.github/actions/cached-deps
         with:
-          node-version: '20'
+          node-version: '22'
       - run: npx pnpm dlx nx-cloud start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="build"
       - run: npx nx format:check
       - run: npx pnpm exec nx affected -t lint test build
