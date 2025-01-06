@@ -48,10 +48,14 @@
     "packages/*"
   ],
   "dependencies": {
+    "@nestjs/common": "^10.4.6",
     "@nx/devkit": "20.3.0",
+    "@smartsoft001/crud-shell-dtos": "^1.1.91",
+    "@smartsoft001/mongo": "^1.1.91",
     "class-validator": "^0.14.1",
     "guid-typescript": "^1.0.9",
     "md5": "^2.3.0",
+    "mongodb": "^6.10.0",
     "reflect-metadata": "^0.2.1",
     "rxjs": "^7.8.1",
     "tslib": "^2.3.0"
