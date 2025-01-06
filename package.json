@@ -64,9 +64,6 @@
     "crypto-js": "^4.2.0",
     "guid-typescript": "^1.0.9",
     "md5": "^2.3.0",
-    "passport": "^0.7.0",
-    "passport-jwt": "^4.0.1",
-    "mongodb": "^6.10.0",
     "reflect-metadata": "^0.2.1",
     "rxjs": "^7.8.1",
     "tslib": "^2.3.0"
