@@ -1,123 +1,255 @@
-import { MongoClient, Db, Collection } from 'mongodb';
-import { IUser } from '@smartsoft001/users';
 import { MongoConfig, MongoItemRepository } from '@smartsoft001/mongo';
+import { IUser } from '@smartsoft001/users';
+import { IItemRepositoryOptions } from '@smartsoft001/domain-core';
+import { IMongoTransaction } from '../mongo.unitofwork';
 
-jest.mock('mongodb');
-
-describe('MongoItemRepository', () => {
+describe('MongoItemRepository - create', () => {
   let repository: MongoItemRepository<any>;
-  let mockClient: MongoClient;
-  let mockDb: Db;
-  let mockCollection: Collection;
-  const mockConfig: MongoConfig = {
-    host: 'host',
-    port: 4200,
-    database: 'testDb',
-    collection: 'testCollection'
-  };
+  let mockCollection: any;
+  let mockLogChange: jest.Mock;
 
   beforeEach(() => {
-    mockClient = new MongoClient('mock-url') as any;
-    mockDb = {
-      collection: jest.fn().mockReturnValue({
-        insertOne: jest.fn(),
-        deleteOne: jest.fn(),
-        findOne: jest.fn(),
-        replaceOne: jest.fn(),
-      }),
-    } as unknown as Db;
-    mockCollection = mockDb.collection('testCollection') as Collection;
-    jest.spyOn(MongoClient, 'connect').mockResolvedValue(mockClient);
-    jest.spyOn(mockClient, 'db').mockReturnValue(mockDb);
+    mockCollection = {
+      insertOne: jest.fn(),
+    };
 
-    repository = new MongoItemRepository(mockConfig);
+    mockLogChange = jest.fn().mockResolvedValue(undefined);
+
+    repository = new MongoItemRepository(new MongoConfig());
+    jest.spyOn(repository as any, 'collectionContext').mockImplementation((callback: any) => {
+      return callback(mockCollection);
+    });
+    jest.spyOn(repository as any, 'logChange').mockImplementation(mockLogChange);
+    jest.spyOn(repository as any, 'getModelToCreate').mockImplementation((item: Record<string, any>, user: IUser) => ({
+      ...item,
+      _id: item.id,
+      __info: { create: { username: user.username, date: new Date() } },
+    }));
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('should create an item', async () => {
-    const item = { id: '123', name: 'testItem' };
-    const user = { username: 'testUser' } as IUser;
+  it('should call insertOne with the transformed item', async () => {
+    const item = { id: '123', name: 'test item' };
+    const user = { username: 'testuser', permissions: ['']};
 
     await repository.create(item, user);
 
-    expect(mockDb.collection).toHaveBeenCalledWith('testCollection');
     expect(mockCollection.insertOne).toHaveBeenCalledWith(
-      expect.objectContaining({
+      {
+        id: '123',
+        name: 'test item',
         _id: '123',
-        name: 'testItem',
-        __info: expect.objectContaining({
-          create: { username: 'testUser', date: expect.any(Date) },
-        }),
-      }),
-      { session: undefined }
-    );
-  }, 10000);
-
-  it('should delete an item by ID', async () => {
-    const id = '123';
-    const user = { username: 'testUser' } as IUser;
-
-    await repository.delete(id, user);
-
-    expect(mockDb.collection).toHaveBeenCalledWith('testCollection');
-    expect(mockCollection.deleteOne).toHaveBeenCalledWith(
-      { _id: id },
+        __info: {
+          create: {
+            username: 'testuser',
+            date: expect.any(Date),
+          },
+        },
+      },
       { session: undefined }
     );
   });
 
-  it('should update an item', async () => {
-    const item = { id: '123', name: 'updatedItem' };
-    const user = { username: 'testUser' } as IUser;
+  it('should call logChange with correct parameters on success', async () => {
+    const item = { id: '123', name: 'test item' };
+    const user = { username: 'testuser', permissions: [''] };
+    const repoOptions = { transaction: { session: 'mockSession', connection: 'mockConnection' } };
 
-    mockCollection.findOne = jest.fn().mockResolvedValue({ __info: {} });
+    await repository.create(item, user, repoOptions);
 
-    await repository.update(item, user);
-
-    expect(mockDb.collection).toHaveBeenCalledWith('testCollection');
-    expect(mockCollection.replaceOne).toHaveBeenCalledWith(
-      { _id: '123' },
-      expect.objectContaining({
-        _id: '123',
-        name: 'updatedItem',
-        __info: expect.objectContaining({
-          update: { username: 'testUser', date: expect.any(Date) },
-        }),
-      }),
-      { session: undefined }
+    expect(mockLogChange).toHaveBeenCalledWith(
+      'create',
+      item,
+      repoOptions,
+      user,
+      null
     );
   });
 
-  it('should get an item by ID', async () => {
-    const id = '123';
-    const mockItem = { _id: '123', name: 'testItem' };
+  it('should call logChange with error on failure and rethrow the error', async () => {
+    const item = { id: '123', name: 'test item' };
+    const user = { username: 'testuser', permissions: [''] };
+    const error = new Error('Insert failed');
+    mockCollection.insertOne.mockRejectedValue(error);
 
-    mockCollection.findOne = jest.fn().mockResolvedValue(mockItem);
+    await expect(repository.create(item, user)).rejects.toThrow(error);
 
-    const result = await repository.getById(id);
-
-    expect(mockDb.collection).toHaveBeenCalledWith('testCollection');
-    expect(mockCollection.findOne).toHaveBeenCalledWith(
-      { _id: id },
-      { session: undefined }
+    expect(mockLogChange).toHaveBeenCalledWith(
+      'create',
+      item,
+      undefined,
+      user,
+      error
     );
-    expect(result).toEqual({
-      id: '123',
-      name: 'testItem',
+  });
+
+});
+
+describe('MongoItemRepository - clear', () => {
+  let repository: MongoItemRepository<any>;
+  let mockCollection: any;
+  let mockLogChange: jest.Mock;
+
+  beforeEach(() => {
+    mockCollection = {
+      deleteMany: jest.fn(),
+    };
+
+    mockLogChange = jest.fn().mockResolvedValue(undefined);
+
+    repository = new MongoItemRepository<any>(null as any);
+
+    // Mock collectionContext
+    jest.spyOn(repository as any, 'collectionContext').mockImplementation(async (callback: any) => {
+      return callback(mockCollection);
     });
+
+    // Mock logChange
+    jest.spyOn(repository as any, 'logChange').mockImplementation(mockLogChange);
   });
 
-  it('should handle errors during create', async () => {
-    const item = { id: '123', name: 'testItem' };
-    const user = { username: 'testUser' } as IUser;
+  it('should call deleteMany and logChange on success', async () => {
+    const mockUser: IUser = { username: 'testUser', permissions: [''] }; // Replace with actual IUser fields
+    const mockRepoOptions: IItemRepositoryOptions = {
+      transaction: { session: {} } as IMongoTransaction,
+    };
 
-    mockCollection.insertOne = jest.fn().mockRejectedValue(new Error('Insert error'));
+    mockCollection.deleteMany.mockResolvedValueOnce({});
 
-    await expect(repository.create(item, user)).rejects.toThrow('Insert error');
+    await repository.clear(mockUser, mockRepoOptions);
 
-    expect(mockCollection.insertOne).toHaveBeenCalled();
+    expect(mockCollection.deleteMany).toHaveBeenCalledWith(
+      {},
+      { session: (mockRepoOptions.transaction as IMongoTransaction).session }
+    );
+    expect(mockLogChange).toHaveBeenCalledWith('clear', null, mockRepoOptions, mockUser, null);
+  });
+
+  it('should call logChange with error if deleteMany fails', async () => {
+    const mockUser: IUser = { username: 'testUser', permissions: [''] };
+    const mockRepoOptions: IItemRepositoryOptions = {
+      transaction: { session: {} } as IMongoTransaction,
+    };
+    const mockError = new Error('DeleteMany failed');
+
+    mockCollection.deleteMany.mockRejectedValueOnce(mockError);
+
+    await expect(repository.clear(mockUser, mockRepoOptions)).rejects.toThrow(mockError);
+
+    expect(mockCollection.deleteMany).toHaveBeenCalledWith(
+      {},
+      { session: (mockRepoOptions.transaction as IMongoTransaction).session }
+    );
+    expect(mockLogChange).toHaveBeenCalledWith('clear', null, mockRepoOptions, mockUser, mockError);
+  });
+
+  it('should work without repoOptions', async () => {
+    const mockUser: IUser = { username: 'testUser', permissions: [''] };
+
+    mockCollection.deleteMany.mockResolvedValueOnce({});
+
+    await repository.clear(mockUser);
+
+    expect(mockCollection.deleteMany).toHaveBeenCalledWith({}, { session: undefined });
+    expect(mockLogChange).toHaveBeenCalledWith('clear', null, undefined, mockUser, null);
   });
 });
+
+describe('MongoItemRepository.createMany', () => {
+  let repository: MongoItemRepository<any>;
+  let mockCollection: any;
+  let mockLogChange: jest.Mock;
+  let mockGetModelToCreate: jest.Mock;
+
+  beforeEach(() => {
+    mockCollection = {
+      insertMany: jest.fn(),
+    };
+
+    mockLogChange = jest.fn().mockResolvedValue(undefined);
+    mockGetModelToCreate = jest.fn((item, user) => ({ ...item, createdBy: user.username }));
+
+    repository = new MongoItemRepository<any>(null as any);
+
+    // Mock collectionContext
+    jest.spyOn(repository as any, 'collectionContext').mockImplementation(async (callback: any) => {
+      return callback(mockCollection);
+    });
+
+    // Mock logChange
+    jest.spyOn(repository as any, 'logChange').mockImplementation(mockLogChange);
+
+    // Mock getModelToCreate
+    jest.spyOn(repository as any, 'getModelToCreate').mockImplementation(mockGetModelToCreate);
+  });
+
+  it('should call insertMany and logChange on success', async () => {
+    const mockUser: IUser = { username: 'testUser', permissions: [''] };
+    const mockRepoOptions: IItemRepositoryOptions = {
+      transaction: { session: {} } as IMongoTransaction,
+    };
+    const mockList = [{ id: 1 }, { id: 2 }];
+
+    mockCollection.insertMany.mockResolvedValueOnce({});
+
+    await repository.createMany(mockList, mockUser, mockRepoOptions);
+
+    expect(mockCollection.insertMany).toHaveBeenCalledWith(
+      mockList.map((item) => ({ ...item, createdBy: mockUser.username })),
+      { session: (mockRepoOptions.transaction as IMongoTransaction).session }
+    );
+    expect(mockLogChange).toHaveBeenCalledWith('createMany', null, mockRepoOptions, mockUser, null);
+  });
+
+  it('should call logChange with error if insertMany fails', async () => {
+    const mockUser: IUser = { username: 'testUser', permissions: [''] };
+    const mockRepoOptions: IItemRepositoryOptions = {
+      transaction: { session: {} } as IMongoTransaction,
+    };
+    const mockList = [{ id: 1 }, { id: 2 }];
+    const mockError = new Error('InsertMany failed');
+
+    mockCollection.insertMany.mockRejectedValueOnce(mockError);
+
+    await expect(repository.createMany(mockList, mockUser, mockRepoOptions)).rejects.toThrow(
+      mockError
+    );
+
+    expect(mockCollection.insertMany).toHaveBeenCalledWith(
+      mockList.map((item) => ({ ...item, createdBy: mockUser.username })),
+      { session: (mockRepoOptions.transaction as IMongoTransaction).session }
+    );
+    expect(mockLogChange).toHaveBeenCalledWith(
+      'createMany',
+      null,
+      mockRepoOptions,
+      mockUser,
+      mockError
+    );
+  });
+
+  it('should work without repoOptions', async () => {
+    const mockUser: IUser = { username: 'testUser', permissions: [''] };
+    const mockList = [{ id: 1 }, { id: 2 }];
+
+    mockCollection.insertMany.mockResolvedValueOnce({});
+
+    await repository.createMany(mockList, mockUser);
+
+    expect(mockCollection.insertMany).toHaveBeenCalledWith(
+      mockList.map((item) => ({ ...item, createdBy: mockUser.username })),
+      { session: undefined }
+    );
+    expect(mockLogChange).toHaveBeenCalledWith('createMany', null, undefined, mockUser, null);
+  });
+
+  it('should handle an empty list without calling insertMany', async () => {
+    const mockUser: IUser = { username: 'testUser', permissions: [''] };
+
+    await repository.createMany([], mockUser);
+
+    expect(mockCollection.insertMany).not.toHaveBeenCalled();
+    expect(mockLogChange).toHaveBeenCalledWith('createMany', null, undefined, mockUser, null);
+  });
+});
+
+

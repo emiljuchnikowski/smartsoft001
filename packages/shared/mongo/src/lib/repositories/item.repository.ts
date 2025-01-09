@@ -14,9 +14,9 @@ import { ItemChangedData } from '@smartsoft001/crud-shell-dtos';
 import { ObjectService } from '@smartsoft001/utils';
 import { getModelFieldsWithOptions } from '@smartsoft001/models';
 
-import { MongoConfig } from '../mongo.config';
 import { getMongoUrl } from '../mongo.utils';
 import { IMongoTransaction } from '../mongo.unitofwork';
+import { MongoConfig } from '@smartsoft001/mongo';
 
 @Injectable()
 export class MongoItemRepository<
