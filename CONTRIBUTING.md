@@ -25,6 +25,12 @@ We appreciate your time and effort. Here's how you can help:
 4. **Make Your Changes**
     - Follow the coding standards and naming conventions used in the project.
     - Write clear, concise, and well-documented code.
+    - When it makes sense, ensure that all changes are covered by tests in Jest. The main `describe` block should begin with the library or application name in the format `app/lib: ClassName`, for example:
+   ```javascript
+   describe('utils: ArrayService', () => {
+      // ...
+   });
+   ```
 
 5. **Run Tests**  
    Ensure all tests pass before committing your changes:
