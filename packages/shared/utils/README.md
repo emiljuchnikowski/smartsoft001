@@ -2,8 +2,6 @@
 
 ![npm](https://img.shields.io/npm/v/@smartsoft001/utils) ![downloads](https://img.shields.io/npm/dm/@smartsoft001/utils)
 
-## 🚀 Usage
-
 `npm i @smartsoft001/utils`
 
 ## 🛠️ Services & Methods
