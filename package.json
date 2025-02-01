@@ -10,11 +10,14 @@
   "devDependencies": {
     "@commitlint/cli": "^17.7.1",
     "@commitlint/config-conventional": "^17.7.0",
+    "@nestjs/schematics": "^10.0.1",
+    "@nestjs/testing": "^11.0.7",
     "@nx/esbuild": "20.3.3",
     "@nx/eslint": "20.3.3",
     "@nx/eslint-plugin": "20.3.3",
     "@nx/jest": "20.3.3",
     "@nx/js": "20.3.3",
+    "@nx/nest": "^20.3.3",
     "@swc-node/register": "1.9.2",
     "@swc/core": "1.5.7",
     "@swc/helpers": "~0.5.11",
@@ -23,6 +26,7 @@
     "@types/lodash": "^4.17.7",
     "@types/md5": "^2.3.3",
     "@types/node": "18.16.9",
+    "@types/passport-jwt": "^4.0.1",
     "@typescript-eslint/eslint-plugin": "7.18.0",
     "@typescript-eslint/parser": "7.18.0",
     "babel-plugin-macros": "^3.1.0",
@@ -48,10 +52,13 @@
     "packages/*"
   ],
   "dependencies": {
+    "@nestjs/common": "^11.0.7",
+    "@nestjs/passport": "^11.0.5",
     "@nx/devkit": "20.3.3",
     "class-validator": "^0.14.1",
     "guid-typescript": "^1.0.9",
     "md5": "^2.3.0",
+    "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.2.1",
     "rxjs": "^7.8.1",
     "tslib": "^2.3.0"
