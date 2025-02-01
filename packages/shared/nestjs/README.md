@@ -1,4 +1,4 @@
-# 📦 @smartsoft001/nestjs npm downloads
+# 📦 @smartsoft001/nestjs
 
 ![npm](https://img.shields.io/npm/v/@smartsoft001/nestjs) ![downloads](https://img.shields.io/npm/dm/@smartsoft001/nestjs)
 
