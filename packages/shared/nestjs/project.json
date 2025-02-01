@@ -1,0 +1,37 @@
+{
+  "name": "nestjs",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/shared/nestjs/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/shared/nestjs",
+        "main": "packages/shared/nestjs/src/index.ts",
+        "tsConfig": "packages/shared/nestjs/tsconfig.lib.json",
+        "assets": ["packages/shared/nestjs/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "packages/shared/nestjs/jest.config.ts"
+      }
+    },
+    "deploy": {
+      "executor": "ngx-deploy-npm:deploy",
+      "options": {
+        "access": "public",
+        "distFolderPath": "dist/packages/shared/nestjs"
+      },
+      "dependsOn": ["build"]
+    }
+  }
+}

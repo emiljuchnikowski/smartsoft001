@@ -17,6 +17,7 @@
     "paths": {
       "@smartsoft001/domain-core": ["packages/shared/domain-core/src/index.ts"],
       "@smartsoft001/models": ["packages/shared/models/src/index.ts"],
+      "@smartsoft001/nestjs": ["packages/shared/nestjs/src/index.ts"],
       "@smartsoft001/users": ["packages/shared/users/src/index.ts"],
       "@smartsoft001/utils": ["packages/shared/utils/src/index.ts"]
     }
