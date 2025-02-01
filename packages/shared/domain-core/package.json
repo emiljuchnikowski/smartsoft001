@@ -3,10 +3,10 @@
   "type": "commonjs",
   "dependencies": {
     "rxjs": "^7.8.1",
-    "@smartsoft001/models": "^2.59.0",
-    "@smartsoft001/users": "^2.59.0"
+    "@smartsoft001/models": "^2.60.0",
+    "@smartsoft001/users": "^2.60.0"
   },
-  "version": "2.59.0",
+  "version": "2.60.0",
   "main": "./src/index.js",
   "typings": "./src/index.d.ts"
 }
