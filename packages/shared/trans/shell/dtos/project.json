@@ -1,0 +1,35 @@
+{
+  "name": "trans-shell-dtos",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/trans/shell/dtos/src",
+  "projectType": "library",
+  "generators": {},
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/trans/shell/dtos/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "libs/trans/shell/dtos/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "outputs": ["{workspaceRoot}/coverage/libs/trans/shell/dtos"]
+    },
+    "build": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "outputPath": "dist/libs/trans/shell/dtos",
+        "tsConfig": "libs/trans/shell/dtos/tsconfig.lib.json",
+        "packageJson": "libs/trans/shell/dtos/package.json",
+        "main": "libs/trans/shell/dtos/src/index.ts",
+        "assets": ["libs/trans/shell/dtos/*.md"]
+      },
+      "outputs": ["{options.outputPath}"]
+    }
+  },
+  "tags": ["scope:trans", "type:shell"]
+}
