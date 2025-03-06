@@ -1,3 +1,18 @@
+## 2.64.0 (2025-03-06)
+
+### 🩹 Fixes
+
+- conflicts in packages ([60c9579](https://github.com/emiljuchnikowski/smartsoft001/commit/60c9579))
+- conflicts in packages ([af2a17f](https://github.com/emiljuchnikowski/smartsoft001/commit/af2a17f))
+- conflicts in packages ([22b0f18](https://github.com/emiljuchnikowski/smartsoft001/commit/22b0f18))
+- conflicts in packages ([4da7eb6](https://github.com/emiljuchnikowski/smartsoft001/commit/4da7eb6))
+- conflicts in packages ([cbefd53](https://github.com/emiljuchnikowski/smartsoft001/commit/cbefd53))
+- conflicts in packages ([2fdcc68](https://github.com/emiljuchnikowski/smartsoft001/commit/2fdcc68))
+
+### ❤️ Thank You
+
+- Emil Juchnikowski
+
 ## 2.61.0 (2025-02-01)
 
 This was a version bump only, there were no code changes.
