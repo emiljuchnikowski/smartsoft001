@@ -78,7 +78,7 @@ jest.mock("mongodb", () => {
   };
 });
 
-describe("MongoAttachmentRepository class", () => {
+describe("shared-mongo: MongoAttachmentRepository", () => {
   let model: MongoAttachmentRepository<IEntity<string>>;
   const mockConfig = {
     database: "testDB",
