@@ -50,7 +50,7 @@ const mockData: (MongoConfig & { result: string, testName: string })[] = [
   }
 ];
 
-describe('utils function getMongoUrl', () => {
+describe('shared-mongo: utils getMongoUrl function', () => {
   for (const data of mockData) {
     it(data.testName, () => {
       expect(getMongoUrl(data)).toBe(data.result);

@@ -15,7 +15,7 @@ const mockData: {
   url: 'mongodb://host:4200?authSource=db-string',
 };
 
-describe('scope function', () => {
+describe('shared-mongo: MongoUnitOfWork scope function', () => {
   let mockClient: Partial<MongoClient>;
   let mockSession: Partial<ClientSession>;
   let model: MongoUnitOfWork;

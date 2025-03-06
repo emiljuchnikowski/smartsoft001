@@ -6,9 +6,8 @@ import { IUser } from '@smartsoft001/users';
 import { IItemRepositoryOptions } from '@smartsoft001/domain-core';
 
 import { IMongoTransaction } from '../mongo.unitofwork';
-import { ItemChangedData } from '@smartsoft001/crud-shell-dtos';
 
-describe('MongoItemRepository - create', () => {
+describe('shared-mongo: MongoItemRepository create function', () => {
   let repository: MongoItemRepository<any>;
   let mockCollection: any;
   let mockLogChange: jest.Mock;
@@ -89,7 +88,7 @@ describe('MongoItemRepository - create', () => {
 
 });
 
-describe('MongoItemRepository - clear', () => {
+describe('shared-mongo: MongoItemRepository clear function', () => {
   let repository: MongoItemRepository<any>;
   let mockCollection: any;
   let mockLogChange: jest.Mock;
@@ -159,7 +158,7 @@ describe('MongoItemRepository - clear', () => {
   });
 });
 
-describe('MongoItemRepository.createMany', () => {
+describe('shared-mongo: MongoItemRepository createMany function', () => {
   let repository: MongoItemRepository<any>;
   let mockCollection: any;
   let mockLogChange: jest.Mock;
@@ -257,7 +256,7 @@ describe('MongoItemRepository.createMany', () => {
   });
 });
 
-describe('MongoItemRepository - update', () => {
+describe('shared-mongo: MongoItemRepository update function', () => {
   let repository: MongoItemRepository<any>;
   let mockCollection: any;
   let mockLogChange: jest.Mock;
@@ -385,7 +384,7 @@ describe('MongoItemRepository - update', () => {
   });
 });
 
-describe('MongoItemRepository - updatePartial', () => {
+describe('shared-mongo: MongoItemRepository updatePartial function', () => {
   let repository: MongoItemRepository<any>;
   let mockCollection: any;
   let mockLogChange: jest.Mock;
@@ -533,7 +532,7 @@ describe('MongoItemRepository - updatePartial', () => {
   });
 });
 
-describe('MongoItemRepository - updatePartialManyByCriteria', () => {
+describe('shared-mongo: MongoItemRepository updatePartialManyByCriteria function', () => {
   let repository: MongoItemRepository<any>;
   let mockCollection: any;
   let mockLogChange: jest.Mock;
@@ -692,7 +691,7 @@ describe('MongoItemRepository - updatePartialManyByCriteria', () => {
   });
 });
 
-describe('MongoItemRepository - delete', () => {
+describe('shared-mongo: MongoItemRepository delete function', () => {
   let repository: MongoItemRepository<any>;
   let mockCollection: any;
   let mockLogChange: jest.Mock;
@@ -784,7 +783,7 @@ describe('MongoItemRepository - delete', () => {
   });
 });
 
-describe('MongoItemRepository - getById', () => {
+describe('shared-mongo: MongoItemRepository getById function', () => {
   let repository: MongoItemRepository<any>;
   let mockCollection: any;
 
@@ -853,7 +852,7 @@ describe('MongoItemRepository - getById', () => {
   });
 });
 
-describe('MongoItemRepository - getByCriteria', () => {
+describe('shared-mongo: MongoItemRepository getByCriteria function', () => {
   let repository: MongoItemRepository<any>;
   let mockCollection: any;
 
@@ -970,7 +969,7 @@ describe('MongoItemRepository - getByCriteria', () => {
 //   };
 // });
 
-// describe('MongoItemRepository changesByCriteria', () => {
+// describe('shared-mongo: MongoItemRepository changesByCriteria function', () => {
 //   let mongoItemRepository: MongoItemRepository<any>;
 //   let mockClient: any;
 //   let mockDb: any;
