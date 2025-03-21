@@ -5,66 +5,66 @@ import { IEntity } from "@smartsoft001/domain-core";
 @Entity("trans")
 export class Trans<T> implements IEntity<string> {
   @ObjectIdColumn({ generated: false })
-  id: string;
+  id!: string;
 
   @Column()
-  externalId: string;
+  externalId!: string;
 
   @Column()
-  name: string;
+  name!: string;
 
   @Column()
-  amount: number;
+  amount!: number;
 
   @Column()
-  firstName: string;
+  firstName!: string;
 
   @Column()
-  lastName: string;
+  lastName!: string;
 
   @Column()
-  email: string;
+  email!: string;
 
   @Column()
-  contactPhone: string;
+  contactPhone!: string;
 
   @Column()
-  data: T;
+  data!: T;
 
   @Column()
-  system: TransSystem;
+  system!: TransSystem;
 
   @Column()
   options: any;
 
   @Column()
-  status: TransStatus;
+  status!: TransStatus;
 
   @Column()
-  modifyDate: Date;
+  modifyDate!: Date;
 
   @Column(() => TransHistory)
-  history: TransHistory<T>[];
+  history!: TransHistory<T>[];
 
   @Column()
-  clientIp: string;
+  clientIp!: string;
 }
 
 export class TransHistory<T> {
   @Column()
-  amount: number;
+  amount!: number;
 
   @Column()
   data: any;
 
   @Column()
-  system: TransSystem;
+  system!: TransSystem;
 
   @Column()
-  status: TransStatus;
+  status!: TransStatus;
 
   @Column()
-  modifyDate: Date;
+  modifyDate!: Date;
 }
 
 export type TransSystem = "payu" | "paypal" | "revolut" | "paynow";

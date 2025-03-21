@@ -27,6 +27,7 @@
     "@types/md5": "^2.3.3",
     "@types/node": "18.16.9",
     "@types/passport-jwt": "^4.0.1",
+    "@types/paypal-rest-sdk": "^1.7.9",
     "@typescript-eslint/eslint-plugin": "7.18.0",
     "@typescript-eslint/parser": "7.18.0",
     "babel-plugin-macros": "^3.1.0",
@@ -52,18 +53,23 @@
     "packages/*"
   ],
   "dependencies": {
+    "@nestjs/axios": "^4.0.0",
     "@nestjs/common": "11.0.7",
     "@nestjs/core": "11.0.7",
+    "@nestjs/jwt": "^11.0.0",
     "@nestjs/passport": "11.0.5",
     "@nx/devkit": "20.4.6",
     "class-validator": "^0.14.1",
     "guid-typescript": "^1.0.9",
     "md5": "^2.3.0",
+    "mongodb": "^5.9.2",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
+    "paypal-rest-sdk": "^1.8.1",
     "reflect-metadata": "^0.2.1",
     "rxjs": "^7.8.1",
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "typeorm": "^0.3.21"
   },
   "nx": {
     "includedScripts": []

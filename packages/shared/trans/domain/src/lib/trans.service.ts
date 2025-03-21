@@ -18,7 +18,7 @@ export abstract class TransBaseService<T> {
         trans.history.push(historyItem);
     }
 
-    protected async setError(trans: Trans<T>, error): Promise<void> {
+    protected async setError(trans: Trans<T>, error: any): Promise<void> {
         trans.modifyDate = new Date();
         trans.status = "error";
         this.addHistory(trans, error);

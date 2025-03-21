@@ -22,7 +22,7 @@ export class CreatorService<T> extends TransBaseService<T> {
     paymentService: ITransPaymentService
   ): Promise<{ orderId: string, redirectUrl?: string, responseData?: any }> {
     this.valid(config);
-    let trans = null;
+    let trans: Trans<T> | null = null;
 
     return this.prepare(config)
       .then(r => {
@@ -30,10 +30,12 @@ export class CreatorService<T> extends TransBaseService<T> {
         return this.setAsNew(trans, internalService);
       })
       .then(() => {
-        return this.setAsStarted(trans, paymentService);
+        return this.setAsStarted(trans!, paymentService);
       })
       .catch(e => {
-        this.setError(trans, e);
+        if (trans) {
+          this.setError(trans, e);
+        }
         console.error(e);
         throw e;
       });
@@ -85,7 +87,7 @@ export class CreatorService<T> extends TransBaseService<T> {
     const trans = new Trans<T>();
 
     Object.keys(config).forEach(key => {
-      trans[key] = config[key];
+      (trans as any)[key] = (config as any)[key];
     });
 
     trans.id = Guid.raw();

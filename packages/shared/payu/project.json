@@ -1,0 +1,35 @@
+{
+  "name": "shared-payu",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/shared/payu/src",
+  "projectType": "library",
+  "generators": {},
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["packages/shared/shared/payu/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "packages/shared/shared/payu/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "outputs": ["{workspaceRoot}/coverage/packages/shared/shared/payu"]
+    },
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "options": {
+        "outputPath": "dist/packages/shared/payu",
+        "tsConfig": "packages/shared/payu/tsconfig.lib.json",
+        "packageJson": "packages/shared/payu/package.json",
+        "main": "packages/shared/payu/src/index.ts",
+        "assets": ["packages/shared/payu/*.md"]
+      },
+      "outputs": ["{options.outputPath}"]
+    }
+  },
+  "tags": ["scope:shared", "type:util"]
+}

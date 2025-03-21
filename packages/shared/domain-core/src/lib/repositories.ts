@@ -96,7 +96,7 @@ export abstract class IItemRepository<T extends IEntity<string>> {
    */
   abstract create(
     item: T,
-    user: IUser,
+    user: IUser | null,
     options?: IItemRepositoryOptions,
   ): Promise<void>;
 
@@ -126,7 +126,7 @@ export abstract class IItemRepository<T extends IEntity<string>> {
    */
   abstract update(
     item: T,
-    user: IUser,
+    user: IUser | null,
     options?: IItemRepositoryOptions,
   ): Promise<void>;
 
@@ -141,7 +141,7 @@ export abstract class IItemRepository<T extends IEntity<string>> {
    */
   abstract updatePartial(
     item: Partial<T> & { id: string },
-    user: IUser,
+    user: IUser | null,
     options?: IItemRepositoryOptions,
   ): Promise<void>;
 

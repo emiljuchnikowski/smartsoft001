@@ -1,7 +1,9 @@
 export class TransConfig {
-    internalApiUrl: string;
-    tokenConfig: {
-        secretOrPrivateKey: string,
-        expiredIn: number
-    }
+    constructor(
+        public internalApiUrl: string,
+        public tokenConfig: {
+            secretOrPrivateKey: string,
+            expiredIn: number
+        }
+    ) {}
 }
