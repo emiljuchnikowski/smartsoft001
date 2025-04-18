@@ -39,6 +39,11 @@
       "cache": true,
       "dependsOn": ["^build"],
       "inputs": ["default", "^default"]
+    },
+    "@nx/angular:package": {
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": ["default", "^default"]
     }
   },
   "nxCloudAccessToken": "NGUyN2ZlZDktZjIyNi00MTUyLWJkOTQtZjM3NzI3NTg0ZGZifHJlYWQtd3JpdGU=",
@@ -48,5 +53,14 @@
       "preVersionCommand": "npx nx run-many -t build"
     }
   },
-  "useLegacyCache": true
+  "useLegacyCache": true,
+  "generators": {
+    "@nx/angular:library": {
+      "linter": "eslint",
+      "unitTestRunner": "jest"
+    },
+    "@nx/angular:component": {
+      "style": "scss"
+    }
+  }
 }
