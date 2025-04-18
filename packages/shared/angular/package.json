@@ -2,5 +2,10 @@
   "name": "@smartsoft001/angular",
   "version": "0.0.1",
   "peerDependencies": {},
-  "sideEffects": false
+  "sideEffects": false,
+  "dependencies": {
+    "@angular/common": "~19.2.0",
+    "@smartsoft001/users": "2.64.0",
+    "@angular/core": "~19.2.0"
+  }
 }
