@@ -84,7 +84,7 @@ export class RevolutService implements ITransPaymentSingleService {
   }
 
   refund(trans: Trans<any>, comment: string): Promise<any> {
-    return Promise.reject('Revolut not support');
+    return Promise.reject('Revolut does not support refund');
   }
 
   private getBaseUrl(config: RevolutConfig): string {
