@@ -11,13 +11,13 @@ import {
   Trans,
   TransStatus,
 } from "@smartsoft001/trans-domain";
+import {GuidService} from "@smartsoft001/utils";
 
 import {
   IPaynowConfigProvider,
   PAYNOW_CONFIG_PROVIDER,
   PaynowConfig,
 } from "./paynow.config";
-import {GuidService} from "@smartsoft001/utils";
 
 @Injectable()
 export class PaynowService implements ITransPaymentSingleService {

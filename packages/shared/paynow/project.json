@@ -1,7 +1,7 @@
 {
-  "name": "shared-mongo",
+  "name": "shared-paynow",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "packages/shared/mongo/src",
+  "sourceRoot": "packages/shared/paynow/src",
   "projectType": "library",
   "generators": {},
   "targets": {
@@ -10,27 +10,27 @@
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": [
-          "packages/shared/mongo/**/*.{ts,tsx,js,jsx}",
-          "packages/shared/mongo/package.json"
+          "packages/shared/paynow/**/*.{ts,tsx,js,jsx}",
+          "packages/shared/paynow/package.json"
         ]
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
       "options": {
-        "jestConfig": "packages/shared/mongo/jest.config.ts"
+        "jestConfig": "packages/shared/paynow/jest.config.ts"
       },
-      "outputs": ["{workspaceRoot}/coverage/packages/shared/mongo"]
+      "outputs": ["{workspaceRoot}/coverage/packages/shared/paynow"]
     },
     "build": {
       "executor": "@nx/esbuild:esbuild",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/packages/shared/mongo",
-        "tsConfig": "packages/shared/mongo/tsconfig.lib.json",
-        "packageJson": "packages/shared/mongo/package.json",
-        "main": "packages/shared/mongo/src/index.ts",
-        "assets": ["packages/shared/mongo/*.md"],
+        "outputPath": "dist/packages/shared/paynow",
+        "tsConfig": "packages/shared/paynow/tsconfig.lib.json",
+        "packageJson": "packages/shared/paynow/package.json",
+        "main": "packages/shared/paynow/src/index.ts",
+        "assets": ["packages/shared/paynow/*.md"],
         "generatePackageJson": true,
         "format": ["cjs"]
       }
@@ -39,7 +39,7 @@
       "executor": "ngx-deploy-npm:deploy",
       "options": {
         "access": "public",
-        "distFolderPath": "dist/packages/shared/mongo"
+        "distFolderPath": "dist/packages/shared/paynow"
       },
       "dependsOn": ["build"]
     }

@@ -6,29 +6,41 @@
   "generators": {},
   "targets": {
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["packages/shared/shared/payu/**/*.ts"]
+        "lintFilePatterns": [
+          "packages/shared/payu/**/*.{ts,tsx,js,jsx}",
+          "packages/shared/payu/package.json"
+        ]
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
       "options": {
-        "jestConfig": "packages/shared/shared/payu/jest.config.ts",
+        "jestConfig": "packages/shared/payu/jest.config.ts",
         "passWithNoTests": true
       },
       "outputs": ["{workspaceRoot}/coverage/packages/shared/shared/payu"]
     },
     "build": {
       "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/shared/payu",
         "tsConfig": "packages/shared/payu/tsconfig.lib.json",
         "packageJson": "packages/shared/payu/package.json",
         "main": "packages/shared/payu/src/index.ts",
         "assets": ["packages/shared/payu/*.md"]
+      }
+    },
+    "deploy": {
+      "executor": "ngx-deploy-npm:deploy",
+      "options": {
+        "access": "public",
+        "distFolderPath": "dist/packages/shared/payu"
       },
-      "outputs": ["{options.outputPath}"]
+      "dependsOn": ["build"]
     }
   },
   "tags": ["scope:shared", "type:util"]
