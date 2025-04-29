@@ -136,34 +136,32 @@ export class PaypalService implements ITransPaymentSingleService {
     };
   }
 
-  refund(trans: Trans<any>, comment: string): Promise<any> {
-    return Promise.reject('Revolut not support');
+  async refund(trans: Trans<any>, comment: string): Promise<any> {
+    const orderId = this.getOrderId(trans);
+    const config = await this.getConfig(trans.data);
+    const transactionId = this.getTransactionId(trans);
 
-    // const orderId = this.getOrderId(trans);
-    // const config = await this.getConfig(trans.data);
-    //
-    // const token = await new Promise((res, rej) => {
-    //   paypal.generateToken(this.getEnv(config), (error, result) => {
-    //     if (error) {
-    //       rej(error);
-    //     } else {
-    //       res(result);
-    //     }
-    //   });
-    // });
-    //
-    // const { data } = await this.httpService.post(
-    //     `${ this.getApiUrl(config) }v1/payments/sale/${ this.getTransactionId(trans) }/refund`, {},
-    //     {
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //         Authorization: token,
-    //         "X-Requested-With": "XMLHttpRequest",
-    //       },
-    //       maxRedirects: 0,
-    //     }).toPromise();
-    //
-    // return data;
+    if (!transactionId) {
+      throw new Error('Paypal transaction ID not found for refund');
+    }
+
+    const refundData = {
+      amount: {
+        total: (trans.amount / 100).toString(),
+        currency: config.currencyCode
+      },
+      description: comment
+    };
+
+    return new Promise((resolve, reject) => {
+      paypal.sale.refund(transactionId, refundData, this.getEnv(config) as any, (error: any, refund: any) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(refund);
+        }
+      });
+    });
   }
 
   private getOrderId(trans: Trans<any>): string | null {
