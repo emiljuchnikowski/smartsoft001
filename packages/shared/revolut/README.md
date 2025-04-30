@@ -1,7 +1,28 @@
-# shared-revolut
+# 📦 @smartsoft001/revolut
 
-This library was generated with [Nx](https://nx.dev).
+![npm](https://img.shields.io/npm/v/@smartsoft001/revolut) ![downloads](https://img.shields.io/npm/dm/@smartsoft001/revolut)
 
-## Running unit tests
+## 🚀 Usage
 
-Run `ng test shared-revolut` to execute the unit tests via [Jest](https://jestjs.io).
+`npm i @smartsoft001/revolut`
+
+## 🛠️ Services & Methods
+
+### PaypalService
+
+Methods:
+
+<table>
+    <tr>
+        <td>create</td>
+        <td>Creates a new order with payment provider (Revolut)</td>
+    </tr>
+    <tr>
+        <td>confirm</td>
+        <td>Fetches the current status of an existing transaction/order</td>
+    </tr>
+    <tr>
+        <td>refund</td>
+        <td>Refund handling (unsupported)</td>
+    </tr>
+</table>
