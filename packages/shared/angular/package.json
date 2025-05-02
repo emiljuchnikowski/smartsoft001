@@ -4,6 +4,7 @@
   "sideEffects": false,
   "peerDependencies": {
     "@angular/common": "~19.2.0",
-    "@angular/core": "~19.2.0"
+    "@angular/core": "~19.2.0",
+    "jest-preset-angular": "~14.4.0"
   }
 }
