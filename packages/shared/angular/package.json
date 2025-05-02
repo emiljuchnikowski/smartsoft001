@@ -8,6 +8,8 @@
     "jest-preset-angular": "~14.4.0",
     "@storybook/angular": "^8.6.11",
     "@storybook/jest": "^0.2.3",
-    "@storybook/testing-library": "^0.2.2"
+    "@storybook/testing-library": "^0.2.2",
+    "postcss": "^8.4.5",
+    "@nx/angular": "^20.8.0"
   }
 }

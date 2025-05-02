@@ -31,6 +31,14 @@
       },
       "defaultConfiguration": "production"
     },
+    "postbuild": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "npx tailwind -c packages/shared/angular/tailwind.config.js -i packages/shared/angular/src/lib/styles.css -o dist/packages/shared/angular/styles.css"
+        ]
+      }
+    },
     "nx-release-publish": {
       "options": {
         "packageRoot": "dist/{projectRoot}"
@@ -52,7 +60,10 @@
         "port": 4400,
         "configDir": "packages/shared/angular/.storybook",
         "browserTarget": "angular:build-storybook",
-        "compodoc": false
+        "compodoc": false,
+        "styles": [
+          "packages/shared/angular/src/lib/styles.css"
+        ]
       },
       "configurations": {
         "ci": {
