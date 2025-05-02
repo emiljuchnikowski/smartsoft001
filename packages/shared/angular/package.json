@@ -5,6 +5,9 @@
   "peerDependencies": {
     "@angular/common": "~19.2.0",
     "@angular/core": "~19.2.0",
-    "jest-preset-angular": "~14.4.0"
+    "jest-preset-angular": "~14.4.0",
+    "@storybook/angular": "^8.6.11",
+    "@storybook/jest": "^0.2.3",
+    "@storybook/testing-library": "^0.2.2"
   }
 }
