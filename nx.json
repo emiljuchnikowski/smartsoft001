@@ -44,6 +44,15 @@
       "cache": true,
       "dependsOn": ["^build"],
       "inputs": ["default", "^default"]
+    },
+    "build-storybook": {
+      "cache": true,
+      "inputs": [
+        "default",
+        "^default",
+        "{projectRoot}/.storybook/**/*",
+        "{projectRoot}/tsconfig.storybook.json"
+      ]
     }
   },
   "nxCloudAccessToken": "NGUyN2ZlZDktZjIyNi00MTUyLWJkOTQtZjM3NzI3NTg0ZGZifHJlYWQtd3JpdGU=",
