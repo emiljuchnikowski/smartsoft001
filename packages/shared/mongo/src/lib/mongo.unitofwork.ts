@@ -1,7 +1,8 @@
+import { Injectable } from '@nestjs/common';
+import { ClientSession, MongoClient, TransactionOptions } from 'mongodb';
+
 import { ITransaction, IUnitOfWork } from '@smartsoft001/domain-core';
 import { MongoConfig } from '@smartsoft001/mongo';
-import { ClientSession, MongoClient, TransactionOptions } from 'mongodb';
-import { Injectable } from '@nestjs/common';
 
 import { getMongoUrl } from './mongo.utils';
 

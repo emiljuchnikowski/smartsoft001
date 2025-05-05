@@ -33,12 +33,12 @@ describe('shared-mongo: MongoUnitOfWork scope function', () => {
           return callback(mockSession as ClientSession); // Pass the mocked session
         },
       ) as ClientSession['withTransaction'],
-      endSession: jest.fn(async () => {}),
+      endSession: jest.fn(() => Promise.resolve()),
     };
 
     mockClient = {
       startSession: jest.fn(() => mockSession as ClientSession),
-      close: jest.fn(async () => {}),
+      close: jest.fn(() => Promise.resolve()),
     };
 
     jest

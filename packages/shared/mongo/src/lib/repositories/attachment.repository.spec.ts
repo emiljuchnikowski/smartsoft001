@@ -1,6 +1,7 @@
-import { IEntity } from '@smartsoft001/domain-core';
 import { MongoClient, GridFSBucket } from 'mongodb';
 import { Readable } from 'stream';
+
+import { IEntity } from '@smartsoft001/domain-core';
 
 import { MongoAttachmentRepository } from './attachment.repository';
 
@@ -36,8 +37,10 @@ jest.mock('mongodb', () => {
     emit: jest.fn((event, ...args) => {
       if (event === 'finish') {
         setTimeout(() => {
-          // Simulate the finish event
-          mockWriteStream.on('finish', () => {});
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+          mockWriteStream.on('finish', () => {
+            // Simulate the finish event
+          });
         }, 0);
       }
       return true; // Return true for emit as a valid event
