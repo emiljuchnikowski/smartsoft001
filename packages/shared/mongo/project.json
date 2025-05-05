@@ -1,7 +1,7 @@
 {
   "name": "shared-mongo",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/shared/mongo/src",
+  "sourceRoot": "packages/shared/mongo/src",
   "projectType": "library",
   "generators": {},
   "targets": {
@@ -18,9 +18,9 @@
     "test": {
       "executor": "@nx/jest:jest",
       "options": {
-        "jestConfig": "libs/shared/mongo/jest.config.ts"
+        "jestConfig": "packages/shared/mongo/jest.config.ts"
       },
-      "outputs": ["{workspaceRoot}/coverage/libs/shared/mongo"]
+      "outputs": ["{workspaceRoot}/coverage/packages/shared/mongo"]
     },
     "build": {
       "executor": "@nx/esbuild:esbuild",

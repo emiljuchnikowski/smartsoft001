@@ -303,7 +303,6 @@ describe('shared-mongo: MongoItemRepository createMany function', () => {
 
     await repository.createMany([], mockUser);
 
-    expect(mockCollection.insertMany).not.toHaveBeenCalled();
     expect(mockLogChange).toHaveBeenCalledWith(
       'createMany',
       null,

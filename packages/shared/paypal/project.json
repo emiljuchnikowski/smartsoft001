@@ -14,10 +14,10 @@
     "test": {
       "executor": "@nx/jest:jest",
       "options": {
-        "jestConfig": "packages/shared/shared/paypal/jest.config.ts",
+        "jestConfig": "packages/shared/paypal/jest.config.ts",
         "passWithNoTests": true
       },
-      "outputs": ["{workspaceRoot}/coverage/packages/shared/shared/paypal"]
+      "outputs": ["{workspaceRoot}/coverage/packages/shared/paypal"]
     },
     "build": {
       "executor": "@nx/esbuild:esbuild",
