@@ -37,7 +37,7 @@ jobs:
         with:
           node-version: '23.4.0'
       - run: npx pnpm dlx nx-cloud start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="build"
-      - run: npx nx format:check
+      - run: npx nx format:check --base=origin/main
       - run: npx pnpm exec nx affected -t lint test build
       - name: Set version
         run: npx nx release version minor && npm version minor --no-git-tag-version
