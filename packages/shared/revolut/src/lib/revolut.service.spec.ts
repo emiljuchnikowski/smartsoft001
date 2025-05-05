@@ -48,8 +48,8 @@ describe('RevolutService', () => {
         data: {
           public_id: 'test-order-id',
           id: 'test-internal-id',
-          state: 'PENDING'
-        }
+          state: 'PENDING',
+        },
       };
 
       mockHttpService.post.mockReturnValue(of(mockResponse));
@@ -65,7 +65,7 @@ describe('RevolutService', () => {
 
       expect(result).toEqual({
         orderId: 'test-order-id',
-        responseData: mockResponse.data
+        responseData: mockResponse.data,
       });
     });
 
@@ -74,8 +74,8 @@ describe('RevolutService', () => {
         data: {
           public_id: 'test-order-id',
           id: 'test-internal-id',
-          state: 'PENDING'
-        }
+          state: 'PENDING',
+        },
       };
 
       mockHttpService.post.mockReturnValue(of(mockResponse));
@@ -94,9 +94,9 @@ describe('RevolutService', () => {
         expect.any(Object),
         expect.objectContaining({
           headers: expect.objectContaining({
-            Authorization: 'Bearer mock-token'
-          })
-        })
+            Authorization: 'Bearer mock-token',
+          }),
+        }),
       );
     });
   });
@@ -106,23 +106,25 @@ describe('RevolutService', () => {
       const mockResponse = {
         data: {
           id: 'test-internal-id',
-          state: 'PROCESSING'
-        }
+          state: 'PROCESSING',
+        },
       };
 
       mockHttpService.get.mockReturnValue(of(mockResponse));
 
       const result = await service.getStatus({
         data: {},
-        history: [{
-          status: 'started',
-          data: { responseData: { id: 'test-internal-id' } }
-        }]
+        history: [
+          {
+            status: 'started',
+            data: { responseData: { id: 'test-internal-id' } },
+          },
+        ],
       } as Trans<any>);
 
       expect(result).toEqual({
         status: 'completed',
-        data: mockResponse.data
+        data: mockResponse.data,
       });
     });
 
@@ -132,25 +134,27 @@ describe('RevolutService', () => {
         { state: 'CANCELLED', expectedStatus: 'canceled' },
         { state: 'FAILED', expectedStatus: 'canceled' },
         { state: 'PENDING', expectedStatus: 'pending' },
-        { state: 'UNKNOWN', expectedStatus: 'UNKNOWN' }
+        { state: 'UNKNOWN', expectedStatus: 'UNKNOWN' },
       ];
 
       for (const testCase of testCases) {
         const mockResponse = {
           data: {
             id: 'test-internal-id',
-            state: testCase.state
-          }
+            state: testCase.state,
+          },
         };
 
         mockHttpService.get.mockReturnValue(of(mockResponse));
 
         const result = await service.getStatus({
           data: {},
-          history: [{
-            status: 'started',
-            data: { responseData: { id: 'test-internal-id' } }
-          }]
+          history: [
+            {
+              status: 'started',
+              data: { responseData: { id: 'test-internal-id' } },
+            },
+          ],
         } as Trans<any>);
 
         expect(result.status).toBe(testCase.expectedStatus);
@@ -160,14 +164,16 @@ describe('RevolutService', () => {
 
   describe('refund', () => {
     it('should reject with "Revolut not support" message', async () => {
-      await expect(service.refund(
-        {
-          amount: 1000,
-          data: {},
-          history: []
-        } as Trans<any>,
-        'test comment'
-      )).rejects.toEqual('Revolut does not support refund');
+      await expect(
+        service.refund(
+          {
+            amount: 1000,
+            data: {},
+            history: [],
+          } as Trans<any>,
+          'test comment',
+        ),
+      ).rejects.toEqual('Revolut does not support refund');
     });
   });
-}); 
+});

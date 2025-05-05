@@ -48,17 +48,17 @@ describe('PayuService', () => {
     it('should obtain OAuth token before creating payment', async () => {
       const mockTokenResponse = {
         data: {
-          access_token: 'mock-token'
-        }
+          access_token: 'mock-token',
+        },
       };
       const mockErrorResponse = {
         response: {
           status: 302,
           data: {
             redirectUri: 'https://redirect.url',
-            orderId: 'test-order-id'
-          }
-        }
+            orderId: 'test-order-id',
+          },
+        },
       };
 
       mockHttpService.post
@@ -75,24 +75,28 @@ describe('PayuService', () => {
       });
 
       const firstCall = mockHttpService.post.mock.calls[0];
-      expect(firstCall[0]).toBe('https://secure.snd.payu.com/pl/standard/user/oauth/authorize');
-      expect(firstCall[1]).toBe('grant_type=client_credentials&client_id=mock-client-id&client_secret=mock-client-secret');
+      expect(firstCall[0]).toBe(
+        'https://secure.snd.payu.com/pl/standard/user/oauth/authorize',
+      );
+      expect(firstCall[1]).toBe(
+        'grant_type=client_credentials&client_id=mock-client-id&client_secret=mock-client-secret',
+      );
     });
 
     it('should create payment with correct request body', async () => {
       const mockTokenResponse = {
         data: {
-          access_token: 'mock-token'
-        }
+          access_token: 'mock-token',
+        },
       };
       const mockErrorResponse = {
         response: {
           status: 302,
           data: {
             redirectUri: 'https://redirect.url',
-            orderId: 'test-order-id'
-          }
-        }
+            orderId: 'test-order-id',
+          },
+        },
       };
 
       mockHttpService.post
@@ -133,17 +137,17 @@ describe('PayuService', () => {
     it('should create payment with correct headers', async () => {
       const mockTokenResponse = {
         data: {
-          access_token: 'mock-token'
-        }
+          access_token: 'mock-token',
+        },
       };
       const mockErrorResponse = {
         response: {
           status: 302,
           data: {
             redirectUri: 'https://redirect.url',
-            orderId: 'test-order-id'
-          }
-        }
+            orderId: 'test-order-id',
+          },
+        },
       };
 
       mockHttpService.post
@@ -172,17 +176,17 @@ describe('PayuService', () => {
     it('should return redirect URL and order ID on successful payment creation', async () => {
       const mockTokenResponse = {
         data: {
-          access_token: 'mock-token'
-        }
+          access_token: 'mock-token',
+        },
       };
       const mockErrorResponse = {
         response: {
           status: 302,
           data: {
             redirectUri: 'https://redirect.url',
-            orderId: 'test-order-id'
-          }
-        }
+            orderId: 'test-order-id',
+          },
+        },
       };
 
       mockHttpService.post
@@ -209,8 +213,8 @@ describe('PayuService', () => {
     it('should obtain OAuth token before checking status', async () => {
       const mockTokenResponse = {
         data: {
-          access_token: 'mock-token'
-        }
+          access_token: 'mock-token',
+        },
       };
       const mockStatusResponse = {
         data: {
@@ -228,22 +232,28 @@ describe('PayuService', () => {
 
       await service.getStatus({
         data: {},
-        history: [{
-          status: 'started',
-          data: { orderId: 'test-order-id' }
-        }]
+        history: [
+          {
+            status: 'started',
+            data: { orderId: 'test-order-id' },
+          },
+        ],
       } as any);
 
       const firstCall = mockHttpService.post.mock.calls[0];
-      expect(firstCall[0]).toBe('https://secure.snd.payu.com/pl/standard/user/oauth/authorize');
-      expect(firstCall[1]).toBe('grant_type=client_credentials&client_id=mock-client-id&client_secret=mock-client-secret');
+      expect(firstCall[0]).toBe(
+        'https://secure.snd.payu.com/pl/standard/user/oauth/authorize',
+      );
+      expect(firstCall[1]).toBe(
+        'grant_type=client_credentials&client_id=mock-client-id&client_secret=mock-client-secret',
+      );
     });
 
     it('should check status with correct headers', async () => {
       const mockTokenResponse = {
         data: {
-          access_token: 'mock-token'
-        }
+          access_token: 'mock-token',
+        },
       };
       const mockStatusResponse = {
         data: {
@@ -261,10 +271,12 @@ describe('PayuService', () => {
 
       await service.getStatus({
         data: {},
-        history: [{
-          status: 'started',
-          data: { orderId: 'test-order-id' }
-        }]
+        history: [
+          {
+            status: 'started',
+            data: { orderId: 'test-order-id' },
+          },
+        ],
       } as any);
 
       const getCall = mockHttpService.get.mock.calls[0];
@@ -281,8 +293,8 @@ describe('PayuService', () => {
     it('should return correct status and data', async () => {
       const mockTokenResponse = {
         data: {
-          access_token: 'mock-token'
-        }
+          access_token: 'mock-token',
+        },
       };
       const mockStatusResponse = {
         data: {
@@ -300,10 +312,12 @@ describe('PayuService', () => {
 
       const result = await service.getStatus({
         data: {},
-        history: [{
-          status: 'started',
-          data: { orderId: 'test-order-id' }
-        }]
+        history: [
+          {
+            status: 'started',
+            data: { orderId: 'test-order-id' },
+          },
+        ],
       } as any);
 
       expect(result).toEqual({
@@ -320,13 +334,13 @@ describe('PayuService', () => {
     it('should obtain OAuth token before processing refund', async () => {
       const mockTokenResponse = {
         data: {
-          access_token: 'mock-token'
-        }
+          access_token: 'mock-token',
+        },
       };
       const mockRefundResponse = {
         data: {
-          refundId: 'test-refund-id'
-        }
+          refundId: 'test-refund-id',
+        },
       };
 
       mockHttpService.post
@@ -336,29 +350,35 @@ describe('PayuService', () => {
       await service.refund(
         {
           data: {},
-          history: [{
-            status: 'started',
-            data: { orderId: 'test-order-id' }
-          }]
+          history: [
+            {
+              status: 'started',
+              data: { orderId: 'test-order-id' },
+            },
+          ],
         } as any,
-        'test comment'
+        'test comment',
       );
 
       const firstCall = mockHttpService.post.mock.calls[0];
-      expect(firstCall[0]).toBe('https://secure.snd.payu.com/pl/standard/user/oauth/authorize');
-      expect(firstCall[1]).toBe('grant_type=client_credentials&client_id=mock-client-id&client_secret=mock-client-secret');
+      expect(firstCall[0]).toBe(
+        'https://secure.snd.payu.com/pl/standard/user/oauth/authorize',
+      );
+      expect(firstCall[1]).toBe(
+        'grant_type=client_credentials&client_id=mock-client-id&client_secret=mock-client-secret',
+      );
     });
 
     it('should process refund with correct request body', async () => {
       const mockTokenResponse = {
         data: {
-          access_token: 'mock-token'
-        }
+          access_token: 'mock-token',
+        },
       };
       const mockRefundResponse = {
         data: {
-          refundId: 'test-refund-id'
-        }
+          refundId: 'test-refund-id',
+        },
       };
 
       mockHttpService.post
@@ -368,12 +388,14 @@ describe('PayuService', () => {
       await service.refund(
         {
           data: {},
-          history: [{
-            status: 'started',
-            data: { orderId: 'test-order-id' }
-          }]
+          history: [
+            {
+              status: 'started',
+              data: { orderId: 'test-order-id' },
+            },
+          ],
         } as any,
-        'test comment'
+        'test comment',
       );
 
       const secondCall = mockHttpService.post.mock.calls[1];
@@ -387,13 +409,13 @@ describe('PayuService', () => {
     it('should process refund with correct headers', async () => {
       const mockTokenResponse = {
         data: {
-          access_token: 'mock-token'
-        }
+          access_token: 'mock-token',
+        },
       };
       const mockRefundResponse = {
         data: {
-          refundId: 'test-refund-id'
-        }
+          refundId: 'test-refund-id',
+        },
       };
 
       mockHttpService.post
@@ -403,12 +425,14 @@ describe('PayuService', () => {
       await service.refund(
         {
           data: {},
-          history: [{
-            status: 'started',
-            data: { orderId: 'test-order-id' }
-          }]
+          history: [
+            {
+              status: 'started',
+              data: { orderId: 'test-order-id' },
+            },
+          ],
         } as any,
-        'test comment'
+        'test comment',
       );
 
       const secondCall = mockHttpService.post.mock.calls[1];
@@ -425,13 +449,13 @@ describe('PayuService', () => {
     it('should return refund response data', async () => {
       const mockTokenResponse = {
         data: {
-          access_token: 'mock-token'
-        }
+          access_token: 'mock-token',
+        },
       };
       const mockRefundResponse = {
         data: {
-          refundId: 'test-refund-id'
-        }
+          refundId: 'test-refund-id',
+        },
       };
 
       mockHttpService.post
@@ -441,16 +465,18 @@ describe('PayuService', () => {
       const result = await service.refund(
         {
           data: {},
-          history: [{
-            status: 'started',
-            data: { orderId: 'test-order-id' }
-          }]
+          history: [
+            {
+              status: 'started',
+              data: { orderId: 'test-order-id' },
+            },
+          ],
         } as any,
-        'test comment'
+        'test comment',
       );
 
       expect(result).toEqual({
-        refundId: 'test-refund-id'
+        refundId: 'test-refund-id',
       });
     });
   });

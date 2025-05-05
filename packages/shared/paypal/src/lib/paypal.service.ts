@@ -162,19 +162,24 @@ export class PaypalService implements ITransPaymentSingleService {
     const refundData = {
       amount: {
         total: (trans.amount / 100).toString(),
-        currency: config.currencyCode
+        currency: config.currencyCode,
       },
-      description: comment
+      description: comment,
     };
 
     return new Promise((resolve, reject) => {
-      paypal.sale.refund(transactionId, refundData, this.getEnv(config) as any, (error: any, refund: any) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(refund);
-        }
-      });
+      paypal.sale.refund(
+        transactionId,
+        refundData,
+        this.getEnv(config) as any,
+        (error: any, refund: any) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(refund);
+          }
+        },
+      );
     });
   }
 

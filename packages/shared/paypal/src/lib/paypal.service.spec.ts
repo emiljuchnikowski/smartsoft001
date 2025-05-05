@@ -68,9 +68,11 @@ describe('PaypalService', () => {
         links: [{ rel: 'approval_url', href: 'https://approval.url' }],
       };
 
-      (paypal.payment.create as jest.Mock).mockImplementation((data, config, callback) => {
-        callback(null, mockPayment);
-      });
+      (paypal.payment.create as jest.Mock).mockImplementation(
+        (data, config, callback) => {
+          callback(null, mockPayment);
+        },
+      );
 
       const result = await service.create({
         id: 'test-id',
@@ -81,7 +83,10 @@ describe('PaypalService', () => {
         data: {},
       });
 
-      expect(result).toEqual({ orderId: 'test-payment-id', redirectUrl: 'https://approval.url' });
+      expect(result).toEqual({
+        orderId: 'test-payment-id',
+        redirectUrl: 'https://approval.url',
+      });
     });
   });
 
@@ -89,11 +94,18 @@ describe('PaypalService', () => {
     it('should execute a payment and return the result', async () => {
       const mockPayment = { id: 'test-payment-id', state: 'approved' };
 
-      (paypal.payment.execute as jest.Mock).mockImplementation((paymentId, data, config, callback) => {
-        callback(null, mockPayment);
-      });
+      (paypal.payment.execute as jest.Mock).mockImplementation(
+        (paymentId, data, config, callback) => {
+          callback(null, mockPayment);
+        },
+      );
 
-      const result = await service.confirm('test-payer-id', 'test-payment-id', 10, {});
+      const result = await service.confirm(
+        'test-payer-id',
+        'test-payment-id',
+        10,
+        {},
+      );
 
       expect(result).toEqual(mockPayment);
     });
@@ -103,16 +115,20 @@ describe('PaypalService', () => {
     it('should return the status and data of a payment', async () => {
       const mockPayment = { state: 'COMPLETED' };
 
-      (paypal.payment.get as jest.Mock).mockImplementation((paymentId, config, callback) => {
-        callback(null, mockPayment);
-      });
+      (paypal.payment.get as jest.Mock).mockImplementation(
+        (paymentId, config, callback) => {
+          callback(null, mockPayment);
+        },
+      );
 
       const result = await service.getStatus({
         data: {},
-        history: [{
-          status: 'started',
-          data: { orderId: 'test-order-id' }
-        }]
+        history: [
+          {
+            status: 'started',
+            data: { orderId: 'test-order-id' },
+          },
+        ],
       } as Trans<any>);
 
       expect(result).toEqual({ status: 'completed', data: mockPayment });
@@ -123,42 +139,52 @@ describe('PaypalService', () => {
     it('should process a refund and return the result', async () => {
       const mockRefund = { id: 'test-refund-id', state: 'completed' };
 
-      (paypal.sale.refund as jest.Mock).mockImplementation((saleId, data, config, callback) => {
-        callback(null, mockRefund);
-      });
+      (paypal.sale.refund as jest.Mock).mockImplementation(
+        (saleId, data, config, callback) => {
+          callback(null, mockRefund);
+        },
+      );
 
       const result = await service.refund(
         {
           amount: 1000,
           data: {},
-          history: [{
-            status: 'completed',
-            data: {
-              customData: {
-                transactions: [{
-                  related_resources: [{
-                    sale: { id: 'test-sale-id' }
-                  }]
-                }]
-              }
-            }
-          }]
+          history: [
+            {
+              status: 'completed',
+              data: {
+                customData: {
+                  transactions: [
+                    {
+                      related_resources: [
+                        {
+                          sale: { id: 'test-sale-id' },
+                        },
+                      ],
+                    },
+                  ],
+                },
+              },
+            },
+          ],
         } as Trans<any>,
-        'test comment'
+        'test comment',
       );
 
       expect(result).toEqual(mockRefund);
     });
 
     it('should throw an error when transaction ID is not found', async () => {
-      await expect(service.refund(
-        {
-          amount: 1000,
-          data: {},
-          history: []
-        } as unknown as Trans<any>,
-        'test comment'
-      )).rejects.toThrow('Paypal transaction ID not found for refund');
+      await expect(
+        service.refund(
+          {
+            amount: 1000,
+            data: {},
+            history: [],
+          } as unknown as Trans<any>,
+          'test comment',
+        ),
+      ).rejects.toThrow('Paypal transaction ID not found for refund');
     });
   });
-}); 
+});
