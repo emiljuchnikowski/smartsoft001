@@ -9,8 +9,8 @@
       "executor": "@nx/eslint:lint",
       "options": {
         "lintFilePatterns": [
-          "packages/shared/paypal/**/*.{ts,tsx,js,jsx}",
-          "packages/shared/paypal/package.json"
+          "packages/shared/revolut/**/*.{ts,tsx,js,jsx}",
+          "packages/shared/revolut/package.json"
         ]
       }
     },

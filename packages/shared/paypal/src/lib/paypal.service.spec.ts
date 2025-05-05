@@ -1,6 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpService } from '@nestjs/axios';
 import { ModuleRef } from '@nestjs/core';
+import { Trans } from '@smartsoft001/trans-domain';
+
+import { PaypalService } from './paypal.service';
+import { PaypalConfig } from './paypal.config';
 
 // Mock the module before importing it
 jest.mock('paypal-rest-sdk', () => ({
@@ -17,11 +21,8 @@ jest.mock('paypal-rest-sdk', () => ({
   userAgent: 'PayPalSDK/PayPal-node-SDK 1.8.1',
 }));
 
-import * as paypal from 'paypal-rest-sdk';
-import { Trans } from '@smartsoft001/trans-domain';
-
-import { PaypalService } from './paypal.service';
-import { PaypalConfig } from './paypal.config';
+//eslint-disable-next-line
+import * as paypal from 'paypal-rest-sdk'; // Needs to be mocked first
 
 const mockHttpService = {
   post: jest.fn(),
