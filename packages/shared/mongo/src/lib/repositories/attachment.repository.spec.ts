@@ -1,9 +1,9 @@
-import { MongoClient, GridFSBucket } from "mongodb";
+import { MongoClient, GridFSBucket } from 'mongodb';
 import { MongoAttachmentRepository } from './attachment.repository';
 import { IEntity } from '@smartsoft001/domain-core';
 import { Readable } from 'stream';
 
-jest.mock("mongodb", () => {
+jest.mock('mongodb', () => {
   const mockOpenDownloadStream = jest.fn();
   const mockDelete = jest.fn();
   const mockClose = jest.fn();
@@ -78,21 +78,21 @@ jest.mock("mongodb", () => {
   };
 });
 
-describe("shared-mongo: MongoAttachmentRepository", () => {
+describe('shared-mongo: MongoAttachmentRepository', () => {
   let model: MongoAttachmentRepository<IEntity<string>>;
   const mockConfig = {
-    database: "testDB",
+    database: 'testDB',
     host: 'host',
     port: 4200,
-    collection: "testCollection",
+    collection: 'testCollection',
   };
 
   const data = {
-    id: "test-id",
-    fileName: "test-file.txt",
+    id: 'test-id',
+    fileName: 'test-file.txt',
     stream: new Readable(),
-    mimeType: "text/plain",
-    encoding: "utf8",
+    mimeType: 'text/plain',
+    encoding: 'utf8',
   };
 
   const options = {
@@ -100,7 +100,7 @@ describe("shared-mongo: MongoAttachmentRepository", () => {
   };
 
   // Declare mockDelete here to access in the test scope
-  const mongodbMock = jest.requireMock("mongodb");
+  const mongodbMock = jest.requireMock('mongodb');
   const mockDelete = mongodbMock.__mockDelete;
   const mockClose = mongodbMock.__mockClose;
   const mockOpenDownloadStream = mongodbMock.__mockOpenDownloadStream;
@@ -115,9 +115,9 @@ describe("shared-mongo: MongoAttachmentRepository", () => {
   });
 
   it('delete() should delete a file from GridFSBucket and close the client', async () => {
-    const id = "test-id";
-    const mockUrl = "mock-url";
-    jest.spyOn(model as any, "getUrl").mockImplementation(() => mockUrl);
+    const id = 'test-id';
+    const mockUrl = 'mock-url';
+    jest.spyOn(model as any, 'getUrl').mockImplementation(() => mockUrl);
 
     await model.delete(id);
 
@@ -133,8 +133,8 @@ describe("shared-mongo: MongoAttachmentRepository", () => {
   it('getStream() should return a readable stream when getStream is called', async () => {
     const id = 'test-id';
     const options = { start: 0, end: 100 };
-    const mockUrl = "mock-url";
-    jest.spyOn(model as any, "getUrl").mockImplementation(() => mockUrl);
+    const mockUrl = 'mock-url';
+    jest.spyOn(model as any, 'getUrl').mockImplementation(() => mockUrl);
 
     // Mock the return value of openDownloadStream to return a mock Readable stream
     const mockStream = new Readable();
@@ -158,7 +158,7 @@ describe("shared-mongo: MongoAttachmentRepository", () => {
         length: 1024,
       },
     ];
-    const mockUrl = "mock-url";
+    const mockUrl = 'mock-url';
 
     mockToArray.mockResolvedValueOnce(mockFileData); // Mock toArray to return mock file data
 

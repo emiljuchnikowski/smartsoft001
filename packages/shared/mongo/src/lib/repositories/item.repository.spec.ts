@@ -20,20 +20,26 @@ describe('shared-mongo: MongoItemRepository create function', () => {
     mockLogChange = jest.fn().mockResolvedValue(undefined);
 
     repository = new MongoItemRepository(new MongoConfig());
-    jest.spyOn(repository as any, 'collectionContext').mockImplementation((callback: any) => {
-      return callback(mockCollection);
-    });
-    jest.spyOn(repository as any, 'logChange').mockImplementation(mockLogChange);
-    jest.spyOn(repository as any, 'getModelToCreate').mockImplementation((item: Record<string, any>, user: IUser) => ({
-      ...item,
-      _id: item.id,
-      __info: { create: { username: user.username, date: new Date() } },
-    }));
+    jest
+      .spyOn(repository as any, 'collectionContext')
+      .mockImplementation((callback: any) => {
+        return callback(mockCollection);
+      });
+    jest
+      .spyOn(repository as any, 'logChange')
+      .mockImplementation(mockLogChange);
+    jest
+      .spyOn(repository as any, 'getModelToCreate')
+      .mockImplementation((item: Record<string, any>, user: IUser) => ({
+        ...item,
+        _id: item.id,
+        __info: { create: { username: user.username, date: new Date() } },
+      }));
   });
 
   it('should call insertOne with the transformed item', async () => {
     const item = { id: '123', name: 'test item' };
-    const user = { username: 'testuser', permissions: ['']};
+    const user = { username: 'testuser', permissions: [''] };
 
     await repository.create(item, user);
 
@@ -49,14 +55,16 @@ describe('shared-mongo: MongoItemRepository create function', () => {
           },
         },
       },
-      { session: undefined }
+      { session: undefined },
     );
   });
 
   it('should call logChange with correct parameters on success', async () => {
     const item = { id: '123', name: 'test item' };
     const user = { username: 'testuser', permissions: [''] };
-    const repoOptions = { transaction: { session: 'mockSession', connection: 'mockConnection' } };
+    const repoOptions = {
+      transaction: { session: 'mockSession', connection: 'mockConnection' },
+    };
 
     await repository.create(item, user, repoOptions);
 
@@ -65,7 +73,7 @@ describe('shared-mongo: MongoItemRepository create function', () => {
       item,
       repoOptions,
       user,
-      null
+      null,
     );
   });
 
@@ -82,10 +90,9 @@ describe('shared-mongo: MongoItemRepository create function', () => {
       item,
       undefined,
       user,
-      error
+      error,
     );
   });
-
 });
 
 describe('shared-mongo: MongoItemRepository clear function', () => {
@@ -103,12 +110,16 @@ describe('shared-mongo: MongoItemRepository clear function', () => {
     repository = new MongoItemRepository<any>(null as any);
 
     // Mock collectionContext
-    jest.spyOn(repository as any, 'collectionContext').mockImplementation(async (callback: any) => {
-      return callback(mockCollection);
-    });
+    jest
+      .spyOn(repository as any, 'collectionContext')
+      .mockImplementation(async (callback: any) => {
+        return callback(mockCollection);
+      });
 
     // Mock logChange
-    jest.spyOn(repository as any, 'logChange').mockImplementation(mockLogChange);
+    jest
+      .spyOn(repository as any, 'logChange')
+      .mockImplementation(mockLogChange);
   });
 
   it('should call deleteMany and logChange on success', async () => {
@@ -123,9 +134,15 @@ describe('shared-mongo: MongoItemRepository clear function', () => {
 
     expect(mockCollection.deleteMany).toHaveBeenCalledWith(
       {},
-      { session: (mockRepoOptions.transaction as IMongoTransaction).session }
+      { session: (mockRepoOptions.transaction as IMongoTransaction).session },
     );
-    expect(mockLogChange).toHaveBeenCalledWith('clear', null, mockRepoOptions, mockUser, null);
+    expect(mockLogChange).toHaveBeenCalledWith(
+      'clear',
+      null,
+      mockRepoOptions,
+      mockUser,
+      null,
+    );
   });
 
   it('should call logChange with error if deleteMany fails', async () => {
@@ -137,13 +154,21 @@ describe('shared-mongo: MongoItemRepository clear function', () => {
 
     mockCollection.deleteMany.mockRejectedValueOnce(mockError);
 
-    await expect(repository.clear(mockUser, mockRepoOptions)).rejects.toThrow(mockError);
+    await expect(repository.clear(mockUser, mockRepoOptions)).rejects.toThrow(
+      mockError,
+    );
 
     expect(mockCollection.deleteMany).toHaveBeenCalledWith(
       {},
-      { session: (mockRepoOptions.transaction as IMongoTransaction).session }
+      { session: (mockRepoOptions.transaction as IMongoTransaction).session },
     );
-    expect(mockLogChange).toHaveBeenCalledWith('clear', null, mockRepoOptions, mockUser, mockError);
+    expect(mockLogChange).toHaveBeenCalledWith(
+      'clear',
+      null,
+      mockRepoOptions,
+      mockUser,
+      mockError,
+    );
   });
 
   it('should work without repoOptions', async () => {
@@ -153,8 +178,17 @@ describe('shared-mongo: MongoItemRepository clear function', () => {
 
     await repository.clear(mockUser);
 
-    expect(mockCollection.deleteMany).toHaveBeenCalledWith({}, { session: undefined });
-    expect(mockLogChange).toHaveBeenCalledWith('clear', null, undefined, mockUser, null);
+    expect(mockCollection.deleteMany).toHaveBeenCalledWith(
+      {},
+      { session: undefined },
+    );
+    expect(mockLogChange).toHaveBeenCalledWith(
+      'clear',
+      null,
+      undefined,
+      mockUser,
+      null,
+    );
   });
 });
 
@@ -170,20 +204,29 @@ describe('shared-mongo: MongoItemRepository createMany function', () => {
     };
 
     mockLogChange = jest.fn().mockResolvedValue(undefined);
-    mockGetModelToCreate = jest.fn((item, user) => ({ ...item, createdBy: user.username }));
+    mockGetModelToCreate = jest.fn((item, user) => ({
+      ...item,
+      createdBy: user.username,
+    }));
 
     repository = new MongoItemRepository<any>(null as any);
 
     // Mock collectionContext
-    jest.spyOn(repository as any, 'collectionContext').mockImplementation(async (callback: any) => {
-      return callback(mockCollection);
-    });
+    jest
+      .spyOn(repository as any, 'collectionContext')
+      .mockImplementation(async (callback: any) => {
+        return callback(mockCollection);
+      });
 
     // Mock logChange
-    jest.spyOn(repository as any, 'logChange').mockImplementation(mockLogChange);
+    jest
+      .spyOn(repository as any, 'logChange')
+      .mockImplementation(mockLogChange);
 
     // Mock getModelToCreate
-    jest.spyOn(repository as any, 'getModelToCreate').mockImplementation(mockGetModelToCreate);
+    jest
+      .spyOn(repository as any, 'getModelToCreate')
+      .mockImplementation(mockGetModelToCreate);
   });
 
   it('should call insertMany and logChange on success', async () => {
@@ -199,9 +242,15 @@ describe('shared-mongo: MongoItemRepository createMany function', () => {
 
     expect(mockCollection.insertMany).toHaveBeenCalledWith(
       mockList.map((item) => ({ ...item, createdBy: mockUser.username })),
-      { session: (mockRepoOptions.transaction as IMongoTransaction).session }
+      { session: (mockRepoOptions.transaction as IMongoTransaction).session },
     );
-    expect(mockLogChange).toHaveBeenCalledWith('createMany', null, mockRepoOptions, mockUser, null);
+    expect(mockLogChange).toHaveBeenCalledWith(
+      'createMany',
+      null,
+      mockRepoOptions,
+      mockUser,
+      null,
+    );
   });
 
   it('should call logChange with error if insertMany fails', async () => {
@@ -214,20 +263,20 @@ describe('shared-mongo: MongoItemRepository createMany function', () => {
 
     mockCollection.insertMany.mockRejectedValueOnce(mockError);
 
-    await expect(repository.createMany(mockList, mockUser, mockRepoOptions)).rejects.toThrow(
-      mockError
-    );
+    await expect(
+      repository.createMany(mockList, mockUser, mockRepoOptions),
+    ).rejects.toThrow(mockError);
 
     expect(mockCollection.insertMany).toHaveBeenCalledWith(
       mockList.map((item) => ({ ...item, createdBy: mockUser.username })),
-      { session: (mockRepoOptions.transaction as IMongoTransaction).session }
+      { session: (mockRepoOptions.transaction as IMongoTransaction).session },
     );
     expect(mockLogChange).toHaveBeenCalledWith(
       'createMany',
       null,
       mockRepoOptions,
       mockUser,
-      mockError
+      mockError,
     );
   });
 
@@ -241,9 +290,15 @@ describe('shared-mongo: MongoItemRepository createMany function', () => {
 
     expect(mockCollection.insertMany).toHaveBeenCalledWith(
       mockList.map((item) => ({ ...item, createdBy: mockUser.username })),
-      { session: undefined }
+      { session: undefined },
     );
-    expect(mockLogChange).toHaveBeenCalledWith('createMany', null, undefined, mockUser, null);
+    expect(mockLogChange).toHaveBeenCalledWith(
+      'createMany',
+      null,
+      undefined,
+      mockUser,
+      null,
+    );
   });
 
   it('should handle an empty list without calling insertMany', async () => {
@@ -252,7 +307,13 @@ describe('shared-mongo: MongoItemRepository createMany function', () => {
     await repository.createMany([], mockUser);
 
     expect(mockCollection.insertMany).not.toHaveBeenCalled();
-    expect(mockLogChange).toHaveBeenCalledWith('createMany', null, undefined, mockUser, null);
+    expect(mockLogChange).toHaveBeenCalledWith(
+      'createMany',
+      null,
+      undefined,
+      mockUser,
+      null,
+    );
   });
 });
 
@@ -279,18 +340,24 @@ describe('shared-mongo: MongoItemRepository update function', () => {
     repository = new MongoItemRepository<any>(null as any);
 
     // Mock collectionContext
-    jest.spyOn(repository as any, 'collectionContext').mockImplementation(async (callback: any) => {
-      return callback(mockCollection);
-    });
+    jest
+      .spyOn(repository as any, 'collectionContext')
+      .mockImplementation(async (callback: any) => {
+        return callback(mockCollection);
+      });
 
     // Mock logChange
-    jest.spyOn(repository as any, 'logChange').mockImplementation(mockLogChange);
+    jest
+      .spyOn(repository as any, 'logChange')
+      .mockImplementation(mockLogChange);
 
     // Mock getInfo
     jest.spyOn(repository as any, 'getInfo').mockImplementation(mockGetInfo);
 
     // Mock getModelToUpdate
-    jest.spyOn(repository as any, 'getModelToUpdate').mockImplementation(mockGetModelToUpdate);
+    jest
+      .spyOn(repository as any, 'getModelToUpdate')
+      .mockImplementation(mockGetModelToUpdate);
   });
 
   it('should call replaceOne and logChange on success', async () => {
@@ -312,9 +379,15 @@ describe('shared-mongo: MongoItemRepository update function', () => {
         updatedBy: mockUser.username,
         previousInfo: { existingData: 'value' },
       },
-      { session: (mockRepoOptions.transaction as IMongoTransaction).session }
+      { session: (mockRepoOptions.transaction as IMongoTransaction).session },
     );
-    expect(mockLogChange).toHaveBeenCalledWith('update', mockItem, mockRepoOptions, mockUser, null);
+    expect(mockLogChange).toHaveBeenCalledWith(
+      'update',
+      mockItem,
+      mockRepoOptions,
+      mockUser,
+      null,
+    );
   });
 
   it('should call logChange with error if replaceOne fails', async () => {
@@ -327,7 +400,9 @@ describe('shared-mongo: MongoItemRepository update function', () => {
 
     mockCollection.replaceOne.mockRejectedValueOnce(mockError);
 
-    await expect(repository.update(mockItem, mockUser, mockRepoOptions)).rejects.toThrow(mockError);
+    await expect(
+      repository.update(mockItem, mockUser, mockRepoOptions),
+    ).rejects.toThrow(mockError);
 
     expect(mockGetInfo).toHaveBeenCalledWith(mockItem.id, mockCollection);
     expect(mockCollection.replaceOne).toHaveBeenCalledWith(
@@ -337,14 +412,14 @@ describe('shared-mongo: MongoItemRepository update function', () => {
         updatedBy: mockUser.username,
         previousInfo: { existingData: 'value' },
       },
-      { session: (mockRepoOptions.transaction as IMongoTransaction).session }
+      { session: (mockRepoOptions.transaction as IMongoTransaction).session },
     );
     expect(mockLogChange).toHaveBeenCalledWith(
       'update',
       mockItem,
       mockRepoOptions,
       mockUser,
-      mockError
+      mockError,
     );
   });
 
@@ -364,9 +439,15 @@ describe('shared-mongo: MongoItemRepository update function', () => {
         updatedBy: mockUser.username,
         previousInfo: { existingData: 'value' },
       },
-      { session: undefined }
+      { session: undefined },
     );
-    expect(mockLogChange).toHaveBeenCalledWith('update', mockItem, undefined, mockUser, null);
+    expect(mockLogChange).toHaveBeenCalledWith(
+      'update',
+      mockItem,
+      undefined,
+      mockUser,
+      null,
+    );
   });
 
   it('should throw if getInfo fails', async () => {
@@ -376,11 +457,19 @@ describe('shared-mongo: MongoItemRepository update function', () => {
 
     mockGetInfo.mockRejectedValueOnce(mockError);
 
-    await expect(repository.update(mockItem, mockUser)).rejects.toThrow(mockError);
+    await expect(repository.update(mockItem, mockUser)).rejects.toThrow(
+      mockError,
+    );
 
     expect(mockGetInfo).toHaveBeenCalledWith(mockItem.id, mockCollection);
     expect(mockCollection.replaceOne).not.toHaveBeenCalled();
-    expect(mockLogChange).toHaveBeenCalledWith('update', mockItem, undefined, mockUser, mockError);
+    expect(mockLogChange).toHaveBeenCalledWith(
+      'update',
+      mockItem,
+      undefined,
+      mockUser,
+      mockError,
+    );
   });
 });
 
@@ -407,18 +496,24 @@ describe('shared-mongo: MongoItemRepository updatePartial function', () => {
     repository = new MongoItemRepository<any>(null as any);
 
     // Mock collectionContext
-    jest.spyOn(repository as any, 'collectionContext').mockImplementation(async (callback: any) => {
-      return callback(mockCollection);
-    });
+    jest
+      .spyOn(repository as any, 'collectionContext')
+      .mockImplementation(async (callback: any) => {
+        return callback(mockCollection);
+      });
 
     // Mock logChange
-    jest.spyOn(repository as any, 'logChange').mockImplementation(mockLogChange);
+    jest
+      .spyOn(repository as any, 'logChange')
+      .mockImplementation(mockLogChange);
 
     // Mock getInfo
     jest.spyOn(repository as any, 'getInfo').mockImplementation(mockGetInfo);
 
     // Mock getModelToUpdate
-    jest.spyOn(repository as any, 'getModelToUpdate').mockImplementation(mockGetModelToUpdate);
+    jest
+      .spyOn(repository as any, 'getModelToUpdate')
+      .mockImplementation(mockGetModelToUpdate);
   });
 
   it('should call updateOne and logChange on success', async () => {
@@ -442,14 +537,14 @@ describe('shared-mongo: MongoItemRepository updatePartial function', () => {
           previousInfo: { existingData: 'value' },
         },
       },
-      { session: (mockRepoOptions.transaction as IMongoTransaction).session }
+      { session: (mockRepoOptions.transaction as IMongoTransaction).session },
     );
     expect(mockLogChange).toHaveBeenCalledWith(
       'updatePartial',
       mockItem,
       mockRepoOptions,
       mockUser,
-      null
+      null,
     );
   });
 
@@ -464,7 +559,7 @@ describe('shared-mongo: MongoItemRepository updatePartial function', () => {
     mockCollection.updateOne.mockRejectedValueOnce(mockError);
 
     await expect(
-      repository.updatePartial(mockItem, mockUser, mockRepoOptions)
+      repository.updatePartial(mockItem, mockUser, mockRepoOptions),
     ).rejects.toThrow(mockError);
 
     expect(mockGetInfo).toHaveBeenCalledWith(mockItem.id, mockCollection);
@@ -477,14 +572,14 @@ describe('shared-mongo: MongoItemRepository updatePartial function', () => {
           previousInfo: { existingData: 'value' },
         },
       },
-      { session: (mockRepoOptions.transaction as IMongoTransaction).session }
+      { session: (mockRepoOptions.transaction as IMongoTransaction).session },
     );
     expect(mockLogChange).toHaveBeenCalledWith(
       'updatePartial',
       mockItem,
       mockRepoOptions,
       mockUser,
-      mockError
+      mockError,
     );
   });
 
@@ -506,9 +601,15 @@ describe('shared-mongo: MongoItemRepository updatePartial function', () => {
           previousInfo: { existingData: 'value' },
         },
       },
-      { session: undefined }
+      { session: undefined },
     );
-    expect(mockLogChange).toHaveBeenCalledWith('updatePartial', mockItem, undefined, mockUser, null);
+    expect(mockLogChange).toHaveBeenCalledWith(
+      'updatePartial',
+      mockItem,
+      undefined,
+      mockUser,
+      null,
+    );
   });
 
   it('should throw if getInfo fails', async () => {
@@ -518,7 +619,9 @@ describe('shared-mongo: MongoItemRepository updatePartial function', () => {
 
     mockGetInfo.mockRejectedValueOnce(mockError);
 
-    await expect(repository.updatePartial(mockItem, mockUser)).rejects.toThrow(mockError);
+    await expect(repository.updatePartial(mockItem, mockUser)).rejects.toThrow(
+      mockError,
+    );
 
     expect(mockGetInfo).toHaveBeenCalledWith(mockItem.id, mockCollection);
     expect(mockCollection.updateOne).not.toHaveBeenCalled();
@@ -527,7 +630,7 @@ describe('shared-mongo: MongoItemRepository updatePartial function', () => {
       mockItem,
       undefined,
       mockUser,
-      mockError
+      mockError,
     );
   });
 });
@@ -549,15 +652,21 @@ describe('shared-mongo: MongoItemRepository updatePartialManyByCriteria function
     repository = new MongoItemRepository<any>(null as any);
 
     // Mock collectionContext
-    jest.spyOn(repository as any, 'collectionContext').mockImplementation(async (callback: any) => {
-      return callback(mockCollection);
-    });
+    jest
+      .spyOn(repository as any, 'collectionContext')
+      .mockImplementation(async (callback: any) => {
+        return callback(mockCollection);
+      });
 
     // Mock logChange
-    jest.spyOn(repository as any, 'logChange').mockImplementation(mockLogChange);
+    jest
+      .spyOn(repository as any, 'logChange')
+      .mockImplementation(mockLogChange);
 
     // Mock convertIdInCriteria
-    jest.spyOn(repository as any, 'convertIdInCriteria').mockImplementation(mockConvertIdInCriteria);
+    jest
+      .spyOn(repository as any, 'convertIdInCriteria')
+      .mockImplementation(mockConvertIdInCriteria);
   });
 
   it('should call updateMany and logChange on success', async () => {
@@ -570,7 +679,12 @@ describe('shared-mongo: MongoItemRepository updatePartialManyByCriteria function
 
     mockCollection.updateMany.mockResolvedValueOnce({});
 
-    await repository.updatePartialManyByCriteria(mockCriteria, mockSet, mockUser, mockRepoOptions);
+    await repository.updatePartialManyByCriteria(
+      mockCriteria,
+      mockSet,
+      mockUser,
+      mockRepoOptions,
+    );
 
     expect(mockConvertIdInCriteria).toHaveBeenCalledWith(mockCriteria);
     expect(mockCollection.updateMany).toHaveBeenCalledWith(
@@ -584,14 +698,14 @@ describe('shared-mongo: MongoItemRepository updatePartialManyByCriteria function
           },
         },
       },
-      { session: (mockRepoOptions.transaction as IMongoTransaction).session }
+      { session: (mockRepoOptions.transaction as IMongoTransaction).session },
     );
     expect(mockLogChange).toHaveBeenCalledWith(
       'updatePartialManyByCriteria',
       { ...mockCriteria, set: mockSet },
       mockRepoOptions,
       mockUser,
-      null
+      null,
     );
   });
 
@@ -607,7 +721,12 @@ describe('shared-mongo: MongoItemRepository updatePartialManyByCriteria function
     mockCollection.updateMany.mockRejectedValueOnce(mockError);
 
     await expect(
-      repository.updatePartialManyByCriteria(mockCriteria, mockSet, mockUser, mockRepoOptions)
+      repository.updatePartialManyByCriteria(
+        mockCriteria,
+        mockSet,
+        mockUser,
+        mockRepoOptions,
+      ),
     ).rejects.toThrow(mockError);
 
     expect(mockConvertIdInCriteria).toHaveBeenCalledWith(mockCriteria);
@@ -622,14 +741,14 @@ describe('shared-mongo: MongoItemRepository updatePartialManyByCriteria function
           },
         },
       },
-      { session: (mockRepoOptions.transaction as IMongoTransaction).session }
+      { session: (mockRepoOptions.transaction as IMongoTransaction).session },
     );
     expect(mockLogChange).toHaveBeenCalledWith(
       'updatePartialManyByCriteria',
       { ...mockCriteria, set: mockSet },
       mockRepoOptions,
       mockUser,
-      mockError
+      mockError,
     );
   });
 
@@ -640,7 +759,11 @@ describe('shared-mongo: MongoItemRepository updatePartialManyByCriteria function
 
     mockCollection.updateMany.mockResolvedValueOnce({});
 
-    await repository.updatePartialManyByCriteria(mockCriteria, mockSet, mockUser);
+    await repository.updatePartialManyByCriteria(
+      mockCriteria,
+      mockSet,
+      mockUser,
+    );
 
     expect(mockConvertIdInCriteria).toHaveBeenCalledWith(mockCriteria);
     expect(mockCollection.updateMany).toHaveBeenCalledWith(
@@ -654,14 +777,14 @@ describe('shared-mongo: MongoItemRepository updatePartialManyByCriteria function
           },
         },
       },
-      { session: undefined }
+      { session: undefined },
     );
     expect(mockLogChange).toHaveBeenCalledWith(
       'updatePartialManyByCriteria',
       { ...mockCriteria, set: mockSet },
       undefined,
       mockUser,
-      null
+      null,
     );
   });
 
@@ -676,7 +799,7 @@ describe('shared-mongo: MongoItemRepository updatePartialManyByCriteria function
     });
 
     await expect(
-      repository.updatePartialManyByCriteria(mockCriteria, mockSet, mockUser)
+      repository.updatePartialManyByCriteria(mockCriteria, mockSet, mockUser),
     ).rejects.toThrow(mockError);
 
     expect(mockConvertIdInCriteria).toHaveBeenCalledWith(mockCriteria);
@@ -686,7 +809,7 @@ describe('shared-mongo: MongoItemRepository updatePartialManyByCriteria function
       { ...mockCriteria, set: mockSet },
       undefined,
       mockUser,
-      mockError
+      mockError,
     );
   });
 });
@@ -705,11 +828,15 @@ describe('shared-mongo: MongoItemRepository delete function', () => {
 
     repository = new MongoItemRepository<any>(null as any);
 
-    jest.spyOn(repository as any, 'collectionContext').mockImplementation(async (callback: any) => {
-      return callback(mockCollection);
-    });
+    jest
+      .spyOn(repository as any, 'collectionContext')
+      .mockImplementation(async (callback: any) => {
+        return callback(mockCollection);
+      });
 
-    jest.spyOn(repository as any, 'logChange').mockImplementation(mockLogChange);
+    jest
+      .spyOn(repository as any, 'logChange')
+      .mockImplementation(mockLogChange);
   });
 
   it('should call deleteOne and logChange on success', async () => {
@@ -725,14 +852,14 @@ describe('shared-mongo: MongoItemRepository delete function', () => {
 
     expect(mockCollection.deleteOne).toHaveBeenCalledWith(
       { _id: mockId },
-      { session: (mockRepoOptions.transaction as IMongoTransaction).session }
+      { session: (mockRepoOptions.transaction as IMongoTransaction).session },
     );
     expect(mockLogChange).toHaveBeenCalledWith(
       'delete',
       { id: mockId },
       mockRepoOptions,
       mockUser,
-      null
+      null,
     );
   });
 
@@ -746,18 +873,20 @@ describe('shared-mongo: MongoItemRepository delete function', () => {
 
     mockCollection.deleteOne.mockRejectedValueOnce(mockError);
 
-    await expect(repository.delete(mockId, mockUser, mockRepoOptions)).rejects.toThrow(mockError);
+    await expect(
+      repository.delete(mockId, mockUser, mockRepoOptions),
+    ).rejects.toThrow(mockError);
 
     expect(mockCollection.deleteOne).toHaveBeenCalledWith(
       { _id: mockId },
-      { session: (mockRepoOptions.transaction as IMongoTransaction).session }
+      { session: (mockRepoOptions.transaction as IMongoTransaction).session },
     );
     expect(mockLogChange).toHaveBeenCalledWith(
       'delete',
       { id: mockId },
       mockRepoOptions,
       mockUser,
-      mockError
+      mockError,
     );
   });
 
@@ -771,14 +900,14 @@ describe('shared-mongo: MongoItemRepository delete function', () => {
 
     expect(mockCollection.deleteOne).toHaveBeenCalledWith(
       { _id: mockId },
-      { session: undefined }
+      { session: undefined },
     );
     expect(mockLogChange).toHaveBeenCalledWith(
       'delete',
       { id: mockId },
       undefined,
       mockUser,
-      null
+      null,
     );
   });
 });
@@ -794,11 +923,15 @@ describe('shared-mongo: MongoItemRepository getById function', () => {
 
     repository = new MongoItemRepository<any>(null as any);
 
-    jest.spyOn(repository as any, 'collectionContext').mockImplementation(async (callback: any) => {
-      return callback(mockCollection);
-    });
+    jest
+      .spyOn(repository as any, 'collectionContext')
+      .mockImplementation(async (callback: any) => {
+        return callback(mockCollection);
+      });
 
-    jest.spyOn(repository as any, 'getModelToResult').mockImplementation((item: any) => item);
+    jest
+      .spyOn(repository as any, 'getModelToResult')
+      .mockImplementation((item: any) => item);
   });
 
   it('should call findOne and return the result', async () => {
@@ -814,7 +947,7 @@ describe('shared-mongo: MongoItemRepository getById function', () => {
 
     expect(mockCollection.findOne).toHaveBeenCalledWith(
       { _id: mockId },
-      { session: (mockRepoOptions.transaction as IMongoTransaction).session }
+      { session: (mockRepoOptions.transaction as IMongoTransaction).session },
     );
     expect(result).toEqual(mockItem);
   });
@@ -831,7 +964,7 @@ describe('shared-mongo: MongoItemRepository getById function', () => {
 
     expect(mockCollection.findOne).toHaveBeenCalledWith(
       { _id: mockId },
-      { session: (mockRepoOptions.transaction as IMongoTransaction).session }
+      { session: (mockRepoOptions.transaction as IMongoTransaction).session },
     );
     expect(result).toBeNull();
   });
@@ -846,7 +979,7 @@ describe('shared-mongo: MongoItemRepository getById function', () => {
 
     expect(mockCollection.findOne).toHaveBeenCalledWith(
       { _id: mockId },
-      { session: undefined }
+      { session: undefined },
     );
     expect(result).toEqual(mockItem);
   });
@@ -863,14 +996,22 @@ describe('shared-mongo: MongoItemRepository getByCriteria function', () => {
 
     repository = new MongoItemRepository<any>(null as any);
 
-    jest.spyOn(repository as any, 'collectionContext').mockImplementation(async (callback: any) => {
-      return callback(mockCollection);
-    });
+    jest
+      .spyOn(repository as any, 'collectionContext')
+      .mockImplementation(async (callback: any) => {
+        return callback(mockCollection);
+      });
 
-    jest.spyOn(repository as any, 'convertIdInCriteria').mockImplementation(jest.fn());
-    jest.spyOn(repository as any, 'generateSearch').mockImplementation(jest.fn());
+    jest
+      .spyOn(repository as any, 'convertIdInCriteria')
+      .mockImplementation(jest.fn());
+    jest
+      .spyOn(repository as any, 'generateSearch')
+      .mockImplementation(jest.fn());
     jest.spyOn(repository as any, 'getCount').mockResolvedValue(42);
-    jest.spyOn(repository as any, 'getModelToResult').mockImplementation((item: any) => item);
+    jest
+      .spyOn(repository as any, 'getModelToResult')
+      .mockImplementation((item: any) => item);
   });
 
   it('should aggregate data based on criteria and options', async () => {
@@ -886,7 +1027,10 @@ describe('shared-mongo: MongoItemRepository getByCriteria function', () => {
 
     expect(repository['convertIdInCriteria']).toHaveBeenCalledWith(criteria);
     expect(repository['generateSearch']).toHaveBeenCalledWith(criteria);
-    expect(repository['getCount']).toHaveBeenCalledWith(criteria, mockCollection);
+    expect(repository['getCount']).toHaveBeenCalledWith(
+      criteria,
+      mockCollection,
+    );
 
     expect(mockCollection.aggregate).toHaveBeenCalledWith(
       [
@@ -895,7 +1039,7 @@ describe('shared-mongo: MongoItemRepository getByCriteria function', () => {
         { $skip: options.skip },
         { $limit: options.limit },
       ],
-      { allowDiskUse: undefined, session: undefined }
+      { allowDiskUse: undefined, session: undefined },
     );
 
     expect(result).toEqual({ data: mockData, totalCount: 42 });
@@ -912,7 +1056,10 @@ describe('shared-mongo: MongoItemRepository getByCriteria function', () => {
 
     expect(repository['convertIdInCriteria']).toHaveBeenCalledWith(undefined);
     expect(repository['generateSearch']).toHaveBeenCalledWith(undefined);
-    expect(repository['getCount']).toHaveBeenCalledWith(undefined, mockCollection);
+    expect(repository['getCount']).toHaveBeenCalledWith(
+      undefined,
+      mockCollection,
+    );
 
     expect(mockCollection.aggregate).toHaveBeenCalledWith([], {
       allowDiskUse: undefined,
@@ -942,7 +1089,7 @@ describe('shared-mongo: MongoItemRepository getByCriteria function', () => {
         { $project: options.project },
         { $group: options.group },
       ],
-      { allowDiskUse: undefined, session: undefined }
+      { allowDiskUse: undefined, session: undefined },
     );
 
     expect(result).toEqual({ data: mockData, totalCount: 42 });

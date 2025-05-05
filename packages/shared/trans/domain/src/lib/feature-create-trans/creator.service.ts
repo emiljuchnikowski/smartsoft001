@@ -1,14 +1,15 @@
-import {Injectable} from "@nestjs/common";
-import {Guid} from "guid-typescript";
-
-import {DomainValidationError, IItemRepository} from "@smartsoft001/domain-core";
+import { Injectable } from '@nestjs/common';
+import { Guid } from 'guid-typescript';
 
 import {
-  ITransCreate,
-} from "./interfaces";
-import { Trans, TRANS_SYSTEMS } from "../entities/trans.entity";
-import { TransBaseService } from "../trans.service";
-import {ITransInternalService, ITransPaymentService} from "../interfaces";
+  DomainValidationError,
+  IItemRepository,
+} from '@smartsoft001/domain-core';
+
+import { ITransCreate } from './interfaces';
+import { Trans, TRANS_SYSTEMS } from '../entities/trans.entity';
+import { TransBaseService } from '../trans.service';
+import { ITransInternalService, ITransPaymentService } from '../interfaces';
 
 @Injectable()
 export class CreatorService<T> extends TransBaseService<T> {
@@ -19,20 +20,20 @@ export class CreatorService<T> extends TransBaseService<T> {
   create(
     config: ITransCreate<T>,
     internalService: ITransInternalService<T>,
-    paymentService: ITransPaymentService
-  ): Promise<{ orderId: string, redirectUrl?: string, responseData?: any }> {
+    paymentService: ITransPaymentService,
+  ): Promise<{ orderId: string; redirectUrl?: string; responseData?: any }> {
     this.valid(config);
     let trans: Trans<T> | null = null;
 
     return this.prepare(config)
-      .then(r => {
+      .then((r) => {
         trans = r;
         return this.setAsNew(trans, internalService);
       })
       .then(() => {
         return this.setAsStarted(trans!, paymentService);
       })
-      .catch(e => {
+      .catch((e) => {
         if (trans) {
           this.setError(trans, e);
         }
@@ -43,8 +44,8 @@ export class CreatorService<T> extends TransBaseService<T> {
 
   private async setAsStarted(
     trans: Trans<T>,
-    paymentService: ITransPaymentService
-  ): Promise<{ orderId: string, redirectUrl?: string, responseData?: any }> {
+    paymentService: ITransPaymentService,
+  ): Promise<{ orderId: string; redirectUrl?: string; responseData?: any }> {
     const paymentResult = await paymentService[trans.system].create({
       id: trans.id,
       name: trans.name,
@@ -55,9 +56,9 @@ export class CreatorService<T> extends TransBaseService<T> {
       contactPhone: trans.contactPhone,
       clientIp: trans.clientIp,
       data: trans.data,
-      options: trans.options
+      options: trans.options,
     });
-    trans.status = "started";
+    trans.status = 'started';
     trans.modifyDate = new Date();
     trans.externalId = paymentResult.orderId;
 
@@ -70,13 +71,13 @@ export class CreatorService<T> extends TransBaseService<T> {
 
   private async setAsNew(
     trans: Trans<any & { amount?: number }>,
-    internalService: ITransInternalService<T>
+    internalService: ITransInternalService<T>,
   ): Promise<void> {
     const internalResult = await internalService.create(trans);
     if (internalResult.amount) {
       trans.amount = internalResult.amount;
     }
-    trans.status = "new";
+    trans.status = 'new';
     trans.modifyDate = new Date();
     this.addHistory(trans, internalResult);
 
@@ -86,14 +87,14 @@ export class CreatorService<T> extends TransBaseService<T> {
   private async prepare(config: ITransCreate<T>): Promise<Trans<T>> {
     const trans = new Trans<T>();
 
-    Object.keys(config).forEach(key => {
+    Object.keys(config).forEach((key) => {
       (trans as any)[key] = (config as any)[key];
     });
 
     trans.id = Guid.raw();
 
     trans.modifyDate = new Date();
-    trans.status = "prepare";
+    trans.status = 'prepare';
 
     this.addHistory(trans, trans.data);
 
@@ -103,14 +104,14 @@ export class CreatorService<T> extends TransBaseService<T> {
   }
 
   private valid(req: ITransCreate<T>) {
-    if (!req) throw new DomainValidationError("config is empty");
+    if (!req) throw new DomainValidationError('config is empty');
 
-    if (!req.name) throw new DomainValidationError("name is empty");
-    if (!req.clientIp) throw new DomainValidationError("client ip is empty");
+    if (!req.name) throw new DomainValidationError('name is empty');
+    if (!req.clientIp) throw new DomainValidationError('client ip is empty');
     if (!req.amount || req.amount < 1)
-      throw new DomainValidationError("amount is empty");
-    if (!req.data) throw new DomainValidationError("data is empty");
-    if (!req.system || !TRANS_SYSTEMS.some(s => s === req.system))
-      throw new DomainValidationError("system is empty");
+      throw new DomainValidationError('amount is empty');
+    if (!req.data) throw new DomainValidationError('data is empty');
+    if (!req.system || !TRANS_SYSTEMS.some((s) => s === req.system))
+      throw new DomainValidationError('system is empty');
   }
 }

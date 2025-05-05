@@ -4,13 +4,13 @@ import { jest } from '@jest/globals';
 import { IMongoTransaction, MongoUnitOfWork } from './mongo.unitofwork';
 
 const mockData: {
-  config: MongoConfig,
-  url: string,
+  config: MongoConfig;
+  url: string;
 } = {
   config: {
     host: 'host',
     port: 4200,
-    database: 'db-string'
+    database: 'db-string',
   },
   url: 'mongodb://host:4200?authSource=db-string',
 };
@@ -24,12 +24,14 @@ describe('shared-mongo: MongoUnitOfWork scope function', () => {
     model = new MongoUnitOfWork(mockData.config);
 
     mockSession = {
-      withTransaction: jest.fn(async <T>(
-        callback: (session: ClientSession) => Promise<T>,
-        options: TransactionOptions
-      ): Promise<T> => {
-        return callback(mockSession as ClientSession); // Pass the mocked session
-      }) as ClientSession['withTransaction'],
+      withTransaction: jest.fn(
+        async <T>(
+          callback: (session: ClientSession) => Promise<T>,
+          options: TransactionOptions,
+        ): Promise<T> => {
+          return callback(mockSession as ClientSession); // Pass the mocked session
+        },
+      ) as ClientSession['withTransaction'],
       endSession: jest.fn(async () => {}),
     };
 
@@ -38,7 +40,9 @@ describe('shared-mongo: MongoUnitOfWork scope function', () => {
       close: jest.fn(async () => {}),
     };
 
-    jest.spyOn(MongoClient, 'connect').mockResolvedValue(mockClient as MongoClient);
+    jest
+      .spyOn(MongoClient, 'connect')
+      .mockResolvedValue(mockClient as MongoClient);
   });
 
   afterEach(() => {
@@ -77,4 +81,3 @@ describe('shared-mongo: MongoUnitOfWork scope function', () => {
     expect(mockClient.close).toHaveBeenCalled();
   });
 });
-

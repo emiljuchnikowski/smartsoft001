@@ -8,7 +8,7 @@
 import { MongoConfig } from '@smartsoft001/mongo';
 import { getMongoUrl } from './mongo.utils';
 
-const mockData: (MongoConfig & { result: string, testName: string })[] = [
+const mockData: (MongoConfig & { result: string; testName: string })[] = [
   {
     host: 'host',
     port: 4200,
@@ -20,7 +20,8 @@ const mockData: (MongoConfig & { result: string, testName: string })[] = [
     host: 'ondigitalocean.com',
     port: 4200,
     database: 'db-string',
-    result: 'mongodb+srv://ondigitalocean.com:4200?authSource=db-string&tls=true',
+    result:
+      'mongodb+srv://ondigitalocean.com:4200?authSource=db-string&tls=true',
     testName: 'Specific host',
   },
   {
@@ -47,7 +48,7 @@ const mockData: (MongoConfig & { result: string, testName: string })[] = [
     testName: 'Username and Password',
     username: 'username',
     password: 'password',
-  }
+  },
 ];
 
 describe('shared-mongo: utils getMongoUrl function', () => {

@@ -1,7 +1,5 @@
-import {Trans} from "./trans.entity";
+import { Trans } from './trans.entity';
 
 export * from './trans.entity';
 
-export const ENTITIES = [
-    Trans
-];
+export const ENTITIES = [Trans];

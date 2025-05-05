@@ -1,5 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { ChangeStream, Collection, Condition, Db, MongoClient, ObjectId } from 'mongodb';
+import {
+  ChangeStream,
+  Collection,
+  Condition,
+  Db,
+  MongoClient,
+  ObjectId,
+} from 'mongodb';
 import { Observable, Observer } from 'rxjs';
 import { finalize, share } from 'rxjs/operators';
 
@@ -20,7 +27,7 @@ import { ItemChangedData } from './interfaces';
 
 @Injectable()
 export class MongoItemRepository<
-  T extends IEntity<string>
+  T extends IEntity<string>,
 > extends IItemRepository<T> {
   constructor(protected config: MongoConfig) {
     super();
@@ -29,7 +36,7 @@ export class MongoItemRepository<
   async create(
     item: T,
     user: IUser,
-    repoOptions?: IItemRepositoryOptions
+    repoOptions?: IItemRepositoryOptions,
   ): Promise<void> {
     await this.collectionContext(async (collection) => {
       try {
@@ -46,13 +53,13 @@ export class MongoItemRepository<
 
   async clear(
     user: IUser,
-    repoOptions?: IItemRepositoryOptions
+    repoOptions?: IItemRepositoryOptions,
   ): Promise<void> {
     await this.collectionContext(async (collection) => {
       try {
         await collection.deleteMany(
           {},
-          { session: (repoOptions?.transaction as IMongoTransaction)?.session }
+          { session: (repoOptions?.transaction as IMongoTransaction)?.session },
         );
         this.logChange('clear', null, repoOptions, user, null).then();
       } catch (errClear) {
@@ -65,13 +72,13 @@ export class MongoItemRepository<
   async createMany(
     list: T[],
     user: IUser,
-    repoOptions?: IItemRepositoryOptions
+    repoOptions?: IItemRepositoryOptions,
   ): Promise<void> {
     await this.collectionContext(async (collection) => {
       try {
         await collection.insertMany(
           list.map((item) => this.getModelToCreate(item as T, user)),
-          { session: (repoOptions?.transaction as IMongoTransaction)?.session }
+          { session: (repoOptions?.transaction as IMongoTransaction)?.session },
         );
         this.logChange('createMany', null, repoOptions, user, null).then();
       } catch (errInsert) {
@@ -84,7 +91,7 @@ export class MongoItemRepository<
   async update(
     item: T,
     user: IUser,
-    repoOptions?: IItemRepositoryOptions
+    repoOptions?: IItemRepositoryOptions,
   ): Promise<void> {
     await this.collectionContext(async (collection) => {
       try {
@@ -93,7 +100,7 @@ export class MongoItemRepository<
         await collection.replaceOne(
           { _id: item.id as any },
           this.getModelToUpdate(item as T, user, info),
-          { session: (repoOptions?.transaction as IMongoTransaction)?.session }
+          { session: (repoOptions?.transaction as IMongoTransaction)?.session },
         );
         this.logChange('update', item, repoOptions, user, null).then();
       } catch (errInsert) {
@@ -106,7 +113,7 @@ export class MongoItemRepository<
   async updatePartial(
     item: Partial<T> & { id: string },
     user: IUser,
-    repoOptions?: IItemRepositoryOptions
+    repoOptions?: IItemRepositoryOptions,
   ): Promise<void> {
     await this.collectionContext(async (collection) => {
       try {
@@ -117,11 +124,17 @@ export class MongoItemRepository<
           {
             $set: this.getModelToUpdate(item as T, user, info),
           },
-          { session: (repoOptions?.transaction as IMongoTransaction)?.session }
+          { session: (repoOptions?.transaction as IMongoTransaction)?.session },
         );
         this.logChange('updatePartial', item, repoOptions, user, null).then();
       } catch (errUpdate) {
-        this.logChange('updatePartial', item, repoOptions, user, errUpdate).then();
+        this.logChange(
+          'updatePartial',
+          item,
+          repoOptions,
+          user,
+          errUpdate,
+        ).then();
         throw errUpdate;
       }
     });
@@ -131,7 +144,7 @@ export class MongoItemRepository<
     criteria: any,
     set: Partial<T>,
     user: IUser,
-    repoOptions?: IItemRepositoryOptions
+    repoOptions?: IItemRepositoryOptions,
   ): Promise<void> {
     await this.collectionContext(async (collection) => {
       try {
@@ -148,7 +161,7 @@ export class MongoItemRepository<
               },
             },
           },
-          { session: (repoOptions?.transaction as IMongoTransaction)?.session }
+          { session: (repoOptions?.transaction as IMongoTransaction)?.session },
         );
         this.logChange(
           'updatePartialManyByCriteria',
@@ -158,7 +171,7 @@ export class MongoItemRepository<
           },
           repoOptions,
           user,
-          null
+          null,
         ).then();
       } catch (errUpdate) {
         this.logChange(
@@ -169,7 +182,7 @@ export class MongoItemRepository<
           },
           repoOptions,
           user,
-          errUpdate
+          errUpdate,
         ).then();
         throw errUpdate;
       }
@@ -180,26 +193,26 @@ export class MongoItemRepository<
     spec: ISpecification,
     set: Partial<T>,
     user: IUser,
-    repoOptions?: IItemRepositoryOptions
+    repoOptions?: IItemRepositoryOptions,
   ): Promise<void> {
     return this.updatePartialManyByCriteria(
       spec.criteria,
       set,
       user,
-      repoOptions
+      repoOptions,
     );
   }
 
   async delete(
     id: string,
     user: IUser,
-    repoOptions?: IItemRepositoryOptions
+    repoOptions?: IItemRepositoryOptions,
   ): Promise<void> {
     await this.collectionContext(async (collection) => {
       try {
         await collection.deleteOne(
           { _id: id as any },
-          { session: (repoOptions?.transaction as IMongoTransaction)?.session }
+          { session: (repoOptions?.transaction as IMongoTransaction)?.session },
         );
         this.logChange(
           'delete',
@@ -208,7 +221,7 @@ export class MongoItemRepository<
           },
           repoOptions,
           user,
-          null
+          null,
         ).then();
       } catch (errDelete) {
         this.logChange(
@@ -218,7 +231,7 @@ export class MongoItemRepository<
           },
           repoOptions,
           user,
-          errDelete
+          errDelete,
         ).then();
         throw errDelete;
       }
@@ -227,11 +240,11 @@ export class MongoItemRepository<
 
   async getById(id: string, repoOptions?: IItemRepositoryOptions): Promise<T> {
     return await this.collectionContext<T>(async (collection) => {
-      const item =  await collection.findOne<T>(
+      const item = await collection.findOne<T>(
         { _id: id as any },
         {
           session: (repoOptions?.transaction as IMongoTransaction)?.session,
-        }
+        },
       );
 
       return this.getModelToResult(item);
@@ -240,7 +253,7 @@ export class MongoItemRepository<
 
   async getByCriteria(
     criteria: any,
-    options: any = {}
+    options: any = {},
   ): Promise<{ data: T[]; totalCount: number }> {
     return await this.collectionContext<T>(async (collection) => {
       this.convertIdInCriteria(criteria);
@@ -291,14 +304,14 @@ export class MongoItemRepository<
 
       return {
         data: list.map((item) => this.getModelToResult(item)),
-          totalCount,
-      }
+        totalCount,
+      };
     });
   }
 
   getBySpecification(
     spec: ISpecification,
-    options: any = {}
+    options: any = {},
   ): Promise<{ data: T[]; totalCount: number }> {
     return this.getByCriteria(spec.criteria, options);
   }
@@ -329,12 +342,12 @@ export class MongoItemRepository<
 
           const pipeline = criteria.id
             ? [
-              {
-                $match: {
-                  'documentKey._id': criteria.id,
+                {
+                  $match: {
+                    'documentKey._id': criteria.id,
+                  },
                 },
-              },
-            ]
+              ]
             : [];
 
           stream = collection.watch(pipeline).on('change', (result) => {
@@ -358,12 +371,12 @@ export class MongoItemRepository<
         await stream.close();
         await client.close();
       }),
-      share()
+      share(),
     );
   }
 
   protected async getContext<TResult>(
-    handler: (db: Db) => Promise<TResult>
+    handler: (db: Db) => Promise<TResult>,
   ): Promise<TResult> {
     const client = await MongoClient.connect(this.getUrl());
 
@@ -379,12 +392,15 @@ export class MongoItemRepository<
     }
   }
 
-  protected async  getCount(criteria: any, collection: any): Promise<any> {
+  protected async getCount(criteria: any, collection: any): Promise<any> {
     this.convertIdInCriteria(criteria);
     return await collection.countDocuments(criteria);
   }
 
-  protected async getInfo(id: string, collection: Collection<any>): Promise<any> {
+  protected async getInfo(
+    id: string,
+    collection: Collection<any>,
+  ): Promise<any> {
     const array = await collection
       .aggregate([{ $match: { _id: id } }, { $project: { __info: 1 } }])
       .toArray();
@@ -420,7 +436,7 @@ export class MongoItemRepository<
   protected getModelToUpdate(
     item: { id: string },
     user: IUser,
-    info: any
+    info: any,
   ): { id: string } {
     const result = ObjectService.removeTypes(item);
     result['_id'] = result.id;
@@ -453,23 +469,27 @@ export class MongoItemRepository<
     return getMongoUrl(this.config);
   }
 
-  protected async  logChange(type: any, item: any, options: any, user: any, error: any) {
+  protected async logChange(
+    type: any,
+    item: any,
+    options: any,
+    user: any,
+    error: any,
+  ) {
     const client = await MongoClient.connect(this.getUrl());
 
     const db = client.db(this.config.database);
 
     try {
-      await db.collection('changes').insertOne(
-        {
-          type,
-          collection: this.config.collection,
-          item,
-          options,
-          user,
-          error,
-          date: new Date(),
-        }
-      );
+      await db.collection('changes').insertOne({
+        type,
+        collection: this.config.collection,
+        item,
+        options,
+        user,
+        error,
+        date: new Date(),
+      });
     } catch (e) {
       console.warn(e);
     } finally {
@@ -482,7 +502,7 @@ export class MongoItemRepository<
 
     if (this.config.type) {
       const modelFields = getModelFieldsWithOptions(
-        new this.config.type()
+        new this.config.type(),
       ).filter((i) => i.options.search);
 
       if (modelFields.length) {
@@ -539,7 +559,7 @@ export class MongoItemRepository<
 
   protected async collectionContext<T>(
     callback: (collection: Collection) => Promise<any>,
-    repoOptions?: IItemRepositoryOptions
+    repoOptions?: IItemRepositoryOptions,
   ): Promise<any> {
     const client: MongoClient = (repoOptions?.transaction as IMongoTransaction)
       ?.connection

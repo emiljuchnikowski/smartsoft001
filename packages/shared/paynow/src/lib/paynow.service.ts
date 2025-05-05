@@ -1,30 +1,27 @@
-import {
-  Injectable,
-  Logger,
-} from "@nestjs/common";
-import { ModuleRef } from "@nestjs/core";
-import * as CryptoJS from "crypto-js";
-import {HttpService} from "@nestjs/axios";
+import { Injectable, Logger } from '@nestjs/common';
+import { ModuleRef } from '@nestjs/core';
+import * as CryptoJS from 'crypto-js';
+import { HttpService } from '@nestjs/axios';
 
 import {
   ITransPaymentSingleService,
   Trans,
   TransStatus,
-} from "@smartsoft001/trans-domain";
+} from '@smartsoft001/trans-domain';
 
 import {
   IPaynowConfigProvider,
   PAYNOW_CONFIG_PROVIDER,
   PaynowConfig,
-} from "./paynow.config";
-import {GuidService} from "@smartsoft001/utils";
+} from './paynow.config';
+import { GuidService } from '@smartsoft001/utils';
 
 @Injectable()
 export class PaynowService implements ITransPaymentSingleService {
   constructor(
     private readonly httpService: HttpService,
     private config: PaynowConfig,
-    private moduleRef: ModuleRef
+    private moduleRef: ModuleRef,
   ) {}
 
   async create(obj: {
@@ -44,16 +41,16 @@ export class PaynowService implements ITransPaymentSingleService {
     const data = {
       externalId: obj.id,
       description: obj.name,
-      currency: "PLN",
+      currency: 'PLN',
       amount: obj.amount,
       continueUrl: config.continueUrl,
       buyer: {
-        email: obj.email
+        email: obj.email,
       } as any,
     };
 
     if (obj.contactPhone || obj.firstName || obj.lastName) {
-      data["buyer"] = {
+      data['buyer'] = {
         email: obj.email,
         phone: obj.contactPhone,
         firstName: obj.firstName,
@@ -64,15 +61,16 @@ export class PaynowService implements ITransPaymentSingleService {
     const signature = this.getSignature(data, config);
 
     const response = await this.httpService
-        .post(this.getBaseUrl(config) + "/v1/payments", data, {
-          headers: {
-            "Content-Type": "application/json",
-            "Api-Key": config.apiKey,
-            "Idempotency-Key": GuidService.create(),
-            "Signature": signature
-          },
-          maxRedirects: 0,
-        }).toPromise();
+      .post(this.getBaseUrl(config) + '/v1/payments', data, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Api-Key': config.apiKey,
+          'Idempotency-Key': GuidService.create(),
+          Signature: signature,
+        },
+        maxRedirects: 0,
+      })
+      .toPromise();
 
     return {
       redirectUrl: response.data.redirectUrl,
@@ -81,17 +79,17 @@ export class PaynowService implements ITransPaymentSingleService {
   }
 
   async getStatus<T>(
-    trans: Trans<T>
+    trans: Trans<T>,
   ): Promise<{ status: TransStatus; data: any }> {
     const orderId = this.getOrderId(trans);
     const config = await this.getConfig(trans.data);
 
     const response = await this.httpService
-      .get(this.getBaseUrl(config) + "/v1/payments/" + orderId + "/status", {
+      .get(this.getBaseUrl(config) + '/v1/payments/' + orderId + '/status', {
         headers: {
-          "Content-Type": "application/json",
-          "Api-Key": config.apiKey,
-        }
+          'Content-Type': 'application/json',
+          'Api-Key': config.apiKey,
+        },
       })
       .toPromise();
 
@@ -106,23 +104,23 @@ export class PaynowService implements ITransPaymentSingleService {
     const config = await this.getConfig(trans.data);
 
     const data = {
-      amount: trans.amount
+      amount: trans.amount,
     };
 
     const signature = this.getSignature(data, config);
 
     const response = await this.httpService
       .post(
-        this.getBaseUrl(config) + "/v1/payments/" + orderId + "/refunds",
-          data,
+        this.getBaseUrl(config) + '/v1/payments/' + orderId + '/refunds',
+        data,
         {
           headers: {
-            "Content-Type": "application/json",
-            "Api-Key": config.apiKey,
-            "Idempotency-Key": GuidService.create(),
-            "Signature": signature
-          }
-        }
+            'Content-Type': 'application/json',
+            'Api-Key': config.apiKey,
+            'Idempotency-Key': GuidService.create(),
+            Signature: signature,
+          },
+        },
       )
       .toPromise();
 
@@ -130,10 +128,10 @@ export class PaynowService implements ITransPaymentSingleService {
   }
 
   private getOrderId(trans: Trans<any>): string {
-    const historyItem = trans.history.find((x) => x.status === "started");
+    const historyItem = trans.history.find((x) => x.status === 'started');
 
     if (!historyItem) {
-      console.warn("Transaction without start status");
+      console.warn('Transaction without start status');
       return null;
     }
 
@@ -144,36 +142,38 @@ export class PaynowService implements ITransPaymentSingleService {
     try {
       const provider: IPaynowConfigProvider = this.moduleRef.get(
         PAYNOW_CONFIG_PROVIDER,
-        { strict: false }
+        { strict: false },
       );
       return await provider.get(data);
     } catch (e) {
-      Logger.warn("Paynow config provider not found", PaynowService.name);
+      Logger.warn('Paynow config provider not found', PaynowService.name);
     }
 
     return this.config;
   }
 
   private getBaseUrl(config: PaynowConfig): string {
-    if (config.test) return "https://api.sandbox.paynow.pl";
+    if (config.test) return 'https://api.sandbox.paynow.pl';
 
-    return "https://api.paynow.pl";
+    return 'https://api.paynow.pl';
   }
 
   private getStatusFromExternal(status: string): any {
     switch (status) {
-      case "CONFIRMED":
-        return "completed";
-      case "REJECTED":
-        return "canceled";
-      case "PENDING":
-        return "pending";
+      case 'CONFIRMED':
+        return 'completed';
+      case 'REJECTED':
+        return 'canceled';
+      case 'PENDING':
+        return 'pending';
       default:
         return status;
     }
   }
 
   private getSignature(data: any, config: PaynowConfig): string {
-    return CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256(JSON.stringify(data), config.apiSignatureKey));
+    return CryptoJS.enc.Base64.stringify(
+      CryptoJS.HmacSHA256(JSON.stringify(data), config.apiSignatureKey),
+    );
   }
 }
