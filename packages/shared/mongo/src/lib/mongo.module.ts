@@ -1,5 +1,4 @@
 import { DynamicModule } from '@nestjs/common';
-
 import {
   IAttachmentRepository,
   IItemRepository,
@@ -7,9 +6,9 @@ import {
 } from '@smartsoft001/domain-core';
 
 import { MongoConfig } from './mongo.config';
-import { MongoItemRepository } from './repositories/item.repository';
 import { MongoUnitOfWork } from './mongo.unitofwork';
 import { MongoAttachmentRepository } from './repositories/attachment.repository';
+import { MongoItemRepository } from './repositories/item.repository';
 
 export class MongoModule {
   static forRoot(config: MongoConfig): DynamicModule {

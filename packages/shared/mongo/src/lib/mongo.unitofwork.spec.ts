@@ -1,6 +1,7 @@
+import { jest } from '@jest/globals';
 import { MongoConfig } from '@smartsoft001/mongo';
 import { MongoClient, ClientSession, TransactionOptions } from 'mongodb';
-import { jest } from '@jest/globals';
+
 import { IMongoTransaction, MongoUnitOfWork } from './mongo.unitofwork';
 
 const mockData: {

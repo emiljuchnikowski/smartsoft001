@@ -1,11 +1,5 @@
-// import { ISpecification } from './interfaces';
-// import {
-//   BasicSpecification,
-//   MergeSpecification,
-//   OrSpecification,
-//   AndSpecification,
-// } from './specifications';
 import { MongoConfig } from '@smartsoft001/mongo';
+
 import { getMongoUrl } from './mongo.utils';
 
 const mockData: (MongoConfig & { result: string; testName: string })[] = [
