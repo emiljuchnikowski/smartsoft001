@@ -8,16 +8,16 @@
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "options": {
-        "lintFilePatterns": ["packages/shared/shared/payu/**/*.ts"]
+        "lintFilePatterns": ["packages/shared/payu/**/*.ts"]
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
       "options": {
-        "jestConfig": "packages/shared/shared/payu/jest.config.ts",
+        "jestConfig": "packages/shared/payu/jest.config.ts",
         "passWithNoTests": true
       },
-      "outputs": ["{workspaceRoot}/coverage/packages/shared/shared/payu"]
+      "outputs": ["{workspaceRoot}/coverage/packages/shared/payu"]
     },
     "build": {
       "executor": "@nx/esbuild:esbuild",
