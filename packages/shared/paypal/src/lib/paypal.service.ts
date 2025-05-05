@@ -1,27 +1,26 @@
-import { Injectable, Logger } from "@nestjs/common";
-import * as paypal from "paypal-rest-sdk";
-import {ModuleRef} from "@nestjs/core";
-import {HttpService} from "@nestjs/axios";
-
+import { HttpService } from '@nestjs/axios';
+import { Injectable, Logger } from '@nestjs/common';
+import { ModuleRef } from '@nestjs/core';
 import {
   ITransPaymentSingleService,
   Trans,
   TransStatus,
-} from "@smartsoft001/trans-domain";
+} from '@smartsoft001/trans-domain';
+import * as paypal from 'paypal-rest-sdk';
 
 import {
   IPaypalConfigProvider,
   PAYPAL_CONFIG_PROVIDER,
   PaypalConfig,
-} from "./paypal.config";
+} from './paypal.config';
 
 @Injectable()
 export class PaypalService implements ITransPaymentSingleService {
   constructor(
     private readonly httpService: HttpService,
     private config: PaypalConfig,
-    private moduleRef: ModuleRef
-  ) { }
+    private moduleRef: ModuleRef,
+  ) {}
 
   async create(obj: {
     id: string;
@@ -37,12 +36,12 @@ export class PaypalService implements ITransPaymentSingleService {
     const config = await this.getConfig(obj.data);
 
     const data = {
-      intent: "sale",
+      intent: 'sale',
       payer: {
-        payment_method: "paypal",
+        payment_method: 'paypal',
       },
       redirect_urls: {
-        return_url: config.apiUrl + "paypal/" + obj.id + "/confirm",
+        return_url: config.apiUrl + 'paypal/' + obj.id + '/confirm',
         cancel_url: config.cancelUrl,
       },
       transactions: [
@@ -68,17 +67,23 @@ export class PaypalService implements ITransPaymentSingleService {
     };
 
     const result: { id: any; links: any[] } = await new Promise((res, rej) => {
-      paypal.payment.create(data as any, this.getEnv(config) as any, (error: any, payment: any) => {
-        if (error) {
-          rej(error);
-        } else {
-          res(payment);
-        }
-      });
+      paypal.payment.create(
+        data as any,
+        this.getEnv(config) as any,
+        (error: any, payment: any) => {
+          if (error) {
+            rej(error);
+          } else {
+            res(payment);
+          }
+        },
+      );
     });
 
     return {
-      redirectUrl: result.links.find((l: { rel: string; }) => l.rel === "approval_url").href,
+      redirectUrl: result.links.find(
+        (l: { rel: string }) => l.rel === 'approval_url',
+      ).href,
       orderId: result.id,
     };
   }
@@ -87,7 +92,7 @@ export class PaypalService implements ITransPaymentSingleService {
     payerId: any,
     paymentId: any,
     amount: number,
-    externalData: any
+    externalData: any,
   ): Promise<any> {
     const config = await this.getConfig(externalData);
 
@@ -104,30 +109,39 @@ export class PaypalService implements ITransPaymentSingleService {
     };
 
     return await new Promise<void>((res, rej) => {
-      paypal.payment.execute(paymentId, data, this.getEnv(config) as any, (error: any, payment: any) => {
-        if (error) {
-          rej(error);
-        } else {
-          res(payment);
-        }
-      });
+      paypal.payment.execute(
+        paymentId,
+        data,
+        this.getEnv(config) as any,
+        (error: any, payment: any) => {
+          if (error) {
+            rej(error);
+          } else {
+            res(payment);
+          }
+        },
+      );
     });
   }
 
   async getStatus<T>(
-    trans: Trans<T>
+    trans: Trans<T>,
   ): Promise<{ status: TransStatus; data: any }> {
     const orderId = this.getOrderId(trans) ?? '';
     const config = await this.getConfig(trans.data);
 
     const payment: { state: string } = await new Promise((res, rej) => {
-      paypal.payment.get(orderId, this.getEnv(config) as any, (error: any, result: any) => {
-        if (error) {
-          rej(error);
-        } else {
-          res(result);
-        }
-      });
+      paypal.payment.get(
+        orderId,
+        this.getEnv(config) as any,
+        (error: any, result: any) => {
+          if (error) {
+            rej(error);
+          } else {
+            res(result);
+          }
+        },
+      );
     });
 
     return {
@@ -165,30 +179,30 @@ export class PaypalService implements ITransPaymentSingleService {
   }
 
   private getOrderId(trans: Trans<any>): string | null {
-    const historyItem = trans.history.find((x) => x.status === "started");
+    const historyItem = trans.history.find((x) => x.status === 'started');
 
     if (!historyItem) {
-      console.warn("Transaction without start status");
+      console.warn('Transaction without start status');
       return null;
     }
 
-    return  historyItem.data.orderId;
+    return historyItem.data.orderId;
   }
 
   private getStatusFromExternal(status: string): any {
     status = status.toUpperCase();
 
     switch (status) {
-      case "COMPLETED":
-        return "completed";
-      case "VOIDED":
-        return "canceled";
-      case "CREATED":
-        return "pending";
-      case "SAVED":
-        return "pending";
-      case "APPROVED":
-        return "completed";
+      case 'COMPLETED':
+        return 'completed';
+      case 'VOIDED':
+        return 'canceled';
+      case 'CREATED':
+        return 'pending';
+      case 'SAVED':
+        return 'pending';
+      case 'APPROVED':
+        return 'completed';
       default:
         return status;
     }
@@ -196,7 +210,10 @@ export class PaypalService implements ITransPaymentSingleService {
 
   private async getConfig(data: any): Promise<PaypalConfig> {
     try {
-      const provider: IPaypalConfigProvider = this.moduleRef.get(PAYPAL_CONFIG_PROVIDER, { strict: false });
+      const provider: IPaypalConfigProvider = this.moduleRef.get(
+        PAYPAL_CONFIG_PROVIDER,
+        { strict: false },
+      );
       return await provider.get(data);
     } catch (e) {
       Logger.warn('PayPal config provider not found', PaypalService.name);
@@ -205,29 +222,39 @@ export class PaypalService implements ITransPaymentSingleService {
     return this.config;
   }
 
-  private getEnv(config: PaypalConfig): { mode: any, client_id: any, client_secret: any } {
+  private getEnv(config: PaypalConfig): {
+    mode: any;
+    client_id: any;
+    client_secret: any;
+  } {
     return {
-      mode: config.test ? "sandbox" : "live",
+      mode: config.test ? 'sandbox' : 'live',
       client_id: config.clientId,
       client_secret: config.clientSecret,
     };
   }
 
   private getApiUrl(config: PaypalConfig): string {
-    return config.test ? 'https://api-m.sandbox.paypal.com/' : 'https://api-m.paypal.com/';
+    return config.test
+      ? 'https://api-m.sandbox.paypal.com/'
+      : 'https://api-m.paypal.com/';
   }
 
   private getTransactionId(trans: Trans<any>): string {
-    const historyItem = trans.history.find((i) =>
-        i.status === "completed"
-        && i.data && i.data.customData
-        && i.data.customData.transactions
-        && i.data.customData.transactions.length
-        && i.data.customData.transactions[0].related_resources
-        && i.data.customData.transactions[0].related_resources.length
-        && i.data.customData.transactions[0].related_resources[0].sale
+    const historyItem = trans.history.find(
+      (i) =>
+        i.status === 'completed' &&
+        i.data &&
+        i.data.customData &&
+        i.data.customData.transactions &&
+        i.data.customData.transactions.length &&
+        i.data.customData.transactions[0].related_resources &&
+        i.data.customData.transactions[0].related_resources.length &&
+        i.data.customData.transactions[0].related_resources[0].sale,
     );
 
-    return historyItem ? historyItem.data.customData.transactions[0].related_resources[0].sale.id : null;
+    return historyItem
+      ? historyItem.data.customData.transactions[0].related_resources[0].sale.id
+      : null;
   }
 }

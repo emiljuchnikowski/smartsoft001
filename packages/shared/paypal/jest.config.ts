@@ -1,19 +1,19 @@
 /* eslint-disable */
 export default {
+  displayName: 'shared-paypal',
   globals: {},
+  testEnvironment: 'node',
   transform: {
-    "^.+\\.[tj]sx?$": [
-      "ts-jest",
+    '^.+\\.[tj]sx?$': [
+      'ts-jest',
       {
-        tsConfig: "<rootDir>/tsconfig.spec.json",
+        tsConfig: '<rootDir>/tsconfig.spec.json',
       },
     ],
   },
-  moduleFileExtensions: ["ts", "tsx", "js", "jsx"],
-  coverageDirectory: "../../../coverage/packages/shared/paypal",
-  preset: "../../../jest.preset.js",
-  displayName: "shared-paypal",
-  testEnvironment: "node",
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
+  coverageDirectory: '../../../coverage/libs/shared/paypal',
+  preset: '../../../jest.preset.js',
   /* TODO: Update to latest Jest snapshotFormat
    * By default Nx has kept the older style of Jest Snapshot formats
    * to prevent breaking of any existing tests with snapshots.

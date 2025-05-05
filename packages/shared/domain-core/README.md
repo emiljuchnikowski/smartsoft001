@@ -5,7 +5,9 @@
 `npm i @smartsoft001/domain-core`
 
 ## Repositories
+
 ### IItemRepository
+
 **create** - Creates a new entity in the storage system.
 
 <table>
@@ -91,7 +93,7 @@ returns a `Promise<void>` that resolves when the entity is successfully updated.
         </tr>
     </thead>
     <tr>
-        <td>item: 
+        <td>item:
 
 `Partial<T>& { id: string }`
 
@@ -124,7 +126,7 @@ returns a `Promise<void>` that resolves when the entity is successfully updated.
         <td>The criteria used to select the entities to be updated.</td>
     </tr>
     <tr>
-        <td>set: 
+        <td>set:
 
 `Partial<T>`
 
@@ -157,7 +159,7 @@ returns a `Promise<void>` that resolves when the entities are successfully updat
         <td>The specification used to select the entities to be updated.</td>
     </tr>
     <tr>
-        <td>set: 
+        <td>set:
 
 `Partial<T>`
 
@@ -315,7 +317,7 @@ returns a `Promise<void>` that resolves when the storage system is cleared.
 
 returns a `Observable<any>` that emits changes to the matching entities.
 
-### IAttachmentRepository 
+### IAttachmentRepository
 
 **upload** - Uploads a file to the storage system.
 
@@ -351,7 +353,7 @@ returns a `Observable<any>` that emits changes to the matching entities.
         <td>The encoding of the file.</td>
     </tr>
     <tr>
-        <td>options?: 
+        <td>options?:
 
 `{ streamCallback?: (r: any) => void }`
 
@@ -370,17 +372,20 @@ const repository = new MongoAttachmentRepository(config);
 
 const fileStream = fs.createReadStream('/path/to/file');
 
-await repository.upload({
-  id: 'unique-file-id',
-  fileName: 'example.txt',
-  stream: fileStream,
-  mimeType: 'text/plain',
-  encoding: 'utf-8'
-}, {
-  streamCallback: (writeStream) => {
-    console.log('Upload started');
-  }
-});
+await repository.upload(
+  {
+    id: 'unique-file-id',
+    fileName: 'example.txt',
+    stream: fileStream,
+    mimeType: 'text/plain',
+    encoding: 'utf-8',
+  },
+  {
+    streamCallback: (writeStream) => {
+      console.log('Upload started');
+    },
+  },
+);
 
 console.log('File uploaded successfully');
 ```
@@ -400,7 +405,7 @@ console.log('File uploaded successfully');
     </tr>
 </table>
 
-returns a `Promise<{ fileName: string, contentType: string, length: number } | null>` that resolves to an object 
+returns a `Promise<{ fileName: string, contentType: string, length: number } | null>` that resolves to an object
 containing file metadata, or `null` if the file is not found.
 
 throws an error if retrieving the file information fails.
@@ -419,7 +424,7 @@ throws an error if retrieving the file information fails.
         <td>The unique identifier of the file.</td>
     </tr>
     <tr>
-        <td>options?: 
+        <td>options?:
 
 `{ start: number; end: number }`
 

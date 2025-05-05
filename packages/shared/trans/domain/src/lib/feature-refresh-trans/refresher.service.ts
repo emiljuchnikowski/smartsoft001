@@ -1,11 +1,10 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException } from '@nestjs/common';
 
-import {IItemRepository} from "@smartsoft001/domain-core";
+import { IItemRepository } from '@smartsoft001/domain-core';
 
-import { TransBaseService } from "../trans.service";
-import { ITransInternalService, ITransPaymentService } from "../interfaces";
-import { Trans } from "../entities";
-
+import { TransBaseService } from '../trans.service';
+import { ITransInternalService, ITransPaymentService } from '../interfaces';
+import { Trans } from '../entities';
 
 @Injectable()
 export class RefresherService<T> extends TransBaseService<T> {
@@ -17,21 +16,22 @@ export class RefresherService<T> extends TransBaseService<T> {
     transId: string,
     internalService: ITransInternalService<T>,
     paymentService: ITransPaymentService,
-    customData = {}
-  ) : Promise<void> {
-
+    customData = {},
+  ): Promise<void> {
     // hack : bad map id
-    const trans: Trans<any> = (await this.repository
-        .getByCriteria({
-          externalId: transId
-        })).data[0];
+    const trans: Trans<any> = (
+      await this.repository.getByCriteria({
+        externalId: transId,
+      })
+    ).data[0];
 
     if (!trans) {
-      throw new NotFoundException("Transaction not found: " + transId);
+      throw new NotFoundException('Transaction not found: ' + transId);
     }
 
     try {
-      const { status, data } = await paymentService[trans.system].getStatus(trans);
+      const { status, data } =
+        await paymentService[trans.system].getStatus(trans);
 
       if (status === trans.status) return;
 
@@ -46,12 +46,15 @@ export class RefresherService<T> extends TransBaseService<T> {
 
       this.addHistory(trans, internalRes);
 
-      await this.repository.updatePartial({
-        id: trans.id,
-        modifyDate: trans.modifyDate,
-        status: trans.status,
-        history: trans.history
-      }, null);
+      await this.repository.updatePartial(
+        {
+          id: trans.id,
+          modifyDate: trans.modifyDate,
+          status: trans.status,
+          history: trans.history,
+        },
+        null,
+      );
     } catch (err) {
       console.error(err);
 

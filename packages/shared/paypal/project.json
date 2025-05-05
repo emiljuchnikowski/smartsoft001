@@ -21,7 +21,7 @@
         "jestConfig": "packages/shared/paypal/jest.config.ts",
         "passWithNoTests": true
       },
-      "outputs": ["{workspaceRoot}/coverage/packages/shared/shared/paypal"]
+      "outputs": ["{workspaceRoot}/coverage/packages/shared/paypal"]
     },
     "build": {
       "executor": "@nx/esbuild:esbuild",

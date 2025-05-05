@@ -46,9 +46,17 @@ describe('PaynowService', () => {
 
   describe('create', () => {
     it('should create a payment and return orderId and redirectUrl', async () => {
-      const mockConfig = { apiKey: 'test-key', apiSignatureKey: 'test-signature', continueUrl: 'https://continue.url', test: true };
+      const mockConfig = {
+        apiKey: 'test-key',
+        apiSignatureKey: 'test-signature',
+        continueUrl: 'https://continue.url',
+        test: true,
+      };
       const mockResponse = {
-        data: { paymentId: 'test-payment-id', redirectUrl: 'https://redirect.url' },
+        data: {
+          paymentId: 'test-payment-id',
+          redirectUrl: 'https://redirect.url',
+        },
       };
 
       mockModuleRef.get.mockReturnValue({
@@ -65,11 +73,14 @@ describe('PaynowService', () => {
         data: {},
       });
 
-      expect(result).toEqual({ orderId: 'test-payment-id', redirectUrl: 'https://redirect.url' });
+      expect(result).toEqual({
+        orderId: 'test-payment-id',
+        redirectUrl: 'https://redirect.url',
+      });
       expect(mockHttpService.post).toHaveBeenCalledWith(
         'https://api.sandbox.paynow.pl/v1/payments',
         expect.any(Object),
-        expect.objectContaining({ headers: expect.any(Object) })
+        expect.objectContaining({ headers: expect.any(Object) }),
       );
     });
   });
@@ -88,23 +99,32 @@ describe('PaynowService', () => {
 
       const result = await service.getStatus({
         data: {},
-        history: [{
-          status: 'started',
-          data: { orderId: 'test-order-id' }
-        }]
+        history: [
+          {
+            status: 'started',
+            data: { orderId: 'test-order-id' },
+          },
+        ],
       } as Trans<any>);
 
-      expect(result).toEqual({ status: 'completed', data: { status: 'CONFIRMED' } });
+      expect(result).toEqual({
+        status: 'completed',
+        data: { status: 'CONFIRMED' },
+      });
       expect(mockHttpService.get).toHaveBeenCalledWith(
         'https://api.sandbox.paynow.pl/v1/payments/test-order-id/status',
-        expect.objectContaining({ headers: expect.any(Object) })
+        expect.objectContaining({ headers: expect.any(Object) }),
       );
     });
   });
 
   describe('refund', () => {
     it('should process a refund and return response data', async () => {
-      const mockConfig = { apiKey: 'test-key', apiSignatureKey: 'test-signature', test: true };
+      const mockConfig = {
+        apiKey: 'test-key',
+        apiSignatureKey: 'test-signature',
+        test: true,
+      };
       const mockResponse = {
         data: { refundId: 'test-refund-id' },
       };
@@ -118,19 +138,21 @@ describe('PaynowService', () => {
         {
           amount: 100,
           data: {},
-          history: [{
-            status: 'started',
-            data: { orderId: 'test-order-id' }
-          }]
+          history: [
+            {
+              status: 'started',
+              data: { orderId: 'test-order-id' },
+            },
+          ],
         } as Trans<any>,
-        'test comment'
+        'test comment',
       );
 
       expect(result).toEqual({ refundId: 'test-refund-id' });
       expect(mockHttpService.post).toHaveBeenCalledWith(
         'https://api.sandbox.paynow.pl/v1/payments/test-order-id/refunds',
         expect.any(Object),
-        expect.objectContaining({ headers: expect.any(Object) })
+        expect.objectContaining({ headers: expect.any(Object) }),
       );
     });
   });

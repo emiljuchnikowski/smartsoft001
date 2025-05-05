@@ -1,8 +1,8 @@
-import { Column, Entity, ObjectIdColumn } from "typeorm";
+import { Column, Entity, ObjectIdColumn } from 'typeorm';
 
-import { IEntity } from "@smartsoft001/domain-core";
+import { IEntity } from '@smartsoft001/domain-core';
 
-@Entity("trans")
+@Entity('trans')
 export class Trans<T> implements IEntity<string> {
   @ObjectIdColumn({ generated: false })
   id!: string;
@@ -67,15 +67,15 @@ export class TransHistory<T> {
   modifyDate!: Date;
 }
 
-export type TransSystem = "payu" | "paypal" | "revolut" | "paynow";
+export type TransSystem = 'payu' | 'paypal' | 'revolut' | 'paynow';
 export type TransStatus =
-  | "prepare"
-  | "new"
-  | "error"
-  | "started"
-  | "completed"
-  | "canceled"
-  | "pending"
-  | "refund";
+  | 'prepare'
+  | 'new'
+  | 'error'
+  | 'started'
+  | 'completed'
+  | 'canceled'
+  | 'pending'
+  | 'refund';
 
-export const TRANS_SYSTEMS = ["payu", "paypal", "revolut", "paynow"];
+export const TRANS_SYSTEMS = ['payu', 'paypal', 'revolut', 'paynow'];

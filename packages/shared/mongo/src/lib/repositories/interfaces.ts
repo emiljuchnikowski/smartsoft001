@@ -8,10 +8,10 @@ export interface IItemUpdateData {
   id: string;
   type: 'update';
   data: {
-    removedFields: Array<string>,
+    removedFields: Array<string>;
     updatedFields: {
-      [key: string]: any
-    }
+      [key: string]: any;
+    };
   };
 }
 
@@ -20,6 +20,9 @@ export interface IItemDeleteData {
   type: 'delete';
 }
 
-export type ItemChangedData = IItemCreateData | IItemUpdateData | IItemDeleteData;
+export type ItemChangedData =
+  | IItemCreateData
+  | IItemUpdateData
+  | IItemDeleteData;
 
 export type ItemChangedDataType = 'create' | 'update' | 'delete';
