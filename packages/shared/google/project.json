@@ -1,0 +1,34 @@
+{
+  "name": "shared-google",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/shared/google/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/shared/google/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/shared/google"],
+      "options": {
+        "jestConfig": "libs/shared/google/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/shared/google",
+        "tsConfig": "libs/shared/google/tsconfig.lib.json",
+        "packageJson": "libs/shared/google/package.json",
+        "main": "libs/shared/google/src/index.ts",
+        "assets": ["libs/shared/google/*.md"]
+      }
+    }
+  },
+  "tags": []
+}
