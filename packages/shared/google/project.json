@@ -1,32 +1,35 @@
 {
   "name": "shared-google",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/shared/google/src",
+  "sourceRoot": "packages/shared/google/src",
   "projectType": "library",
   "targets": {
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["libs/shared/google/**/*.ts"]
+        "lintFilePatterns": [
+          "packages/shared/fb/**/*.{ts,tsx,js,jsx}",
+          "packages/shared/fb/package.json"
+        ]
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/libs/shared/google"],
+      "outputs": ["{workspaceRoot}/coverage/packages/shared/google"],
       "options": {
-        "jestConfig": "libs/shared/google/jest.config.ts",
-        "passWithNoTests": true
+        "jestConfig": "packages/shared/google/jest.config.ts",
       }
     },
     "build": {
-      "executor": "@nx/js:tsc",
+      "executor": "@nx/esbuild:esbuild",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/libs/shared/google",
-        "tsConfig": "libs/shared/google/tsconfig.lib.json",
-        "packageJson": "libs/shared/google/package.json",
-        "main": "libs/shared/google/src/index.ts",
-        "assets": ["libs/shared/google/*.md"]
+        "outputPath": "dist/packages/shared/google",
+        "tsConfig": "packages/shared/google/tsconfig.lib.json",
+        "packageJson": "packages/shared/google/package.json",
+        "main": "packages/shared/google/src/index.ts",
+        "assets": ["packages/shared/google/*.md"]
       }
     }
   },

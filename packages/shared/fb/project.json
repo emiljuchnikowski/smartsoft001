@@ -1,32 +1,35 @@
 {
   "name": "shared-fb",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/shared/fb/src",
+  "sourceRoot": "packages/shared/fb/src",
   "projectType": "library",
   "targets": {
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["libs/shared/fb/**/*.ts"]
+        "lintFilePatterns": [
+          "packages/shared/fb/**/*.{ts,tsx,js,jsx}",
+          "packages/shared/fb/package.json"
+        ]
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/libs/shared/fb"],
       "options": {
-        "jestConfig": "libs/shared/fb/jest.config.ts",
-        "passWithNoTests": true
-      }
+        "jestConfig": "packages/shared/fb/jest.config.ts"
+      },
+      "outputs": ["{workspaceRoot}/coverage/packages/shared/fb"]
     },
     "build": {
-      "executor": "@nx/js:tsc",
+      "executor": "@nx/esbuild:esbuild",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/libs/shared/fb",
-        "tsConfig": "libs/shared/fb/tsconfig.lib.json",
-        "packageJson": "libs/shared/fb/package.json",
-        "main": "libs/shared/fb/src/index.ts",
-        "assets": ["libs/shared/fb/*.md"]
+        "outputPath": "dist/packages/shared/fb",
+        "tsConfig": "packages/shared/fb/tsconfig.lib.json",
+        "packageJson": "packages/shared/fb/package.json",
+        "main": "packages/shared/fb/src/index.ts",
+        "assets": ["packages/shared/fb/*.md"]
       }
     }
   },

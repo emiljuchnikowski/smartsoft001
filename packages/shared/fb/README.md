@@ -1,7 +1,24 @@
-# shared-fb
+# 📦 @smartsoft001/fb
 
-This library was generated with [Nx](https://nx.dev).
+![npm](https://img.shields.io/npm/v/@smartsoft001/fb) ![downloads](https://img.shields.io/npm/dm/@smartsoft001/fb)
 
-## Running unit tests
+## 🚀 Usage
 
-Run `nx test shared-fb` to execute the unit tests via [Jest](https://jestjs.io).
+`npm i @smartsoft001/fb`
+
+## 🛠️ Services & Methods
+
+### FbService
+
+Methods:
+
+<table>
+    <tr>
+        <td>getUserId</td>
+        <td>Makes a GET request to Facebook's Graph API to fetch the current user's profile</td>
+    </tr>
+    <tr>
+        <td>getData</td>
+        <td>Makes a GET request but specifically requests both email and ID fields</td>
+    </tr>
+</table>

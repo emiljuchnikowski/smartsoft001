@@ -1,8 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: "shared-fb",
   globals: {},
-  testEnvironment: "node",
   transform: {
     "^.+\\.[tj]sx?$": [
       "ts-jest",
@@ -11,8 +9,10 @@ export default {
       },
     ],
   },
-  moduleFileExtensions: ["ts", "tsx", "js", "jsx"],
-  coverageDirectory: "../../../coverage/libs/shared/fb",
+  moduleFileExtensions: ["ts", "js", "jsx"],
+  coverageDirectory: "../../../coverage/packages/shared/fb",
+  displayName: "shared-fb",
+  testEnvironment: "node",
   preset: "../../../jest.preset.js",
   /* TODO: Update to latest Jest snapshotFormat
    * By default Nx has kept the older style of Jest Snapshot formats
