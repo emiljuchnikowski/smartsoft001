@@ -8,7 +8,7 @@ describe('GoogleService', () => {
   let httpService: HttpService;
 
   const mockHttpService = {
-    get: jest.fn()
+    get: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -17,8 +17,8 @@ describe('GoogleService', () => {
         GoogleService,
         {
           provide: HttpService,
-          useValue: mockHttpService
-        }
+          useValue: mockHttpService,
+        },
       ],
     }).compile();
 
@@ -39,8 +39,8 @@ describe('GoogleService', () => {
       const mockToken = 'test-token';
       const mockResponse = {
         data: {
-          user_id: '123456789'
-        }
+          user_id: '123456789',
+        },
       };
 
       mockHttpService.get.mockReturnValue(of(mockResponse));
@@ -49,7 +49,8 @@ describe('GoogleService', () => {
 
       expect(result).toBe('123456789');
       expect(mockHttpService.get).toHaveBeenCalledWith(
-        'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=' + mockToken
+        'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=' +
+          mockToken,
       );
     });
 
@@ -69,8 +70,8 @@ describe('GoogleService', () => {
       const mockResponse = {
         data: {
           user_id: '123456789',
-          email: 'test@example.com'
-        }
+          email: 'test@example.com',
+        },
       };
 
       mockHttpService.get.mockReturnValue(of(mockResponse));
@@ -79,10 +80,11 @@ describe('GoogleService', () => {
 
       expect(result).toEqual({
         id: '123456789',
-        email: 'test@example.com'
+        email: 'test@example.com',
       });
       expect(mockHttpService.get).toHaveBeenCalledWith(
-        'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=' + mockToken
+        'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=' +
+          mockToken,
       );
     });
 
@@ -95,4 +97,4 @@ describe('GoogleService', () => {
       await expect(service.getData(mockToken)).rejects.toThrow('API Error');
     });
   });
-}); 
+});

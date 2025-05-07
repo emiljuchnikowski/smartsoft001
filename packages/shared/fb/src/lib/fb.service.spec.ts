@@ -8,7 +8,7 @@ describe('FbService', () => {
   let httpService: HttpService;
 
   const mockHttpService = {
-    get: jest.fn()
+    get: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -17,8 +17,8 @@ describe('FbService', () => {
         FbService,
         {
           provide: HttpService,
-          useValue: mockHttpService
-        }
+          useValue: mockHttpService,
+        },
       ],
     }).compile();
 
@@ -39,8 +39,8 @@ describe('FbService', () => {
       const mockToken = 'test-token';
       const mockResponse = {
         data: {
-          id: '123456789'
-        }
+          id: '123456789',
+        },
       };
 
       mockHttpService.get.mockReturnValue(of(mockResponse));
@@ -49,7 +49,7 @@ describe('FbService', () => {
 
       expect(result).toBe('123456789');
       expect(mockHttpService.get).toHaveBeenCalledWith(
-        'https://graph.facebook.com/me?access_token=' + mockToken
+        'https://graph.facebook.com/me?access_token=' + mockToken,
       );
     });
 
@@ -69,8 +69,8 @@ describe('FbService', () => {
       const mockResponse = {
         data: {
           id: '123456789',
-          email: 'test@example.com'
-        }
+          email: 'test@example.com',
+        },
       };
 
       mockHttpService.get.mockReturnValue(of(mockResponse));
@@ -79,10 +79,11 @@ describe('FbService', () => {
 
       expect(result).toEqual({
         id: '123456789',
-        email: 'test@example.com'
+        email: 'test@example.com',
       });
       expect(mockHttpService.get).toHaveBeenCalledWith(
-        'https://graph.facebook.com/me?fields=email,id&access_token=' + mockToken
+        'https://graph.facebook.com/me?fields=email,id&access_token=' +
+          mockToken,
       );
     });
 
@@ -95,4 +96,4 @@ describe('FbService', () => {
       await expect(service.getData(mockToken)).rejects.toThrow('API Error');
     });
   });
-}); 
+});

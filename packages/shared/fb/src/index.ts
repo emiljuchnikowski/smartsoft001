@@ -1,1 +1,1 @@
-export * from "./lib/fb.service";
+export * from './lib/fb.service';

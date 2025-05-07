@@ -18,7 +18,7 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/packages/shared/google"],
       "options": {
-        "jestConfig": "packages/shared/google/jest.config.ts",
+        "jestConfig": "packages/shared/google/jest.config.ts"
       }
     },
     "build": {

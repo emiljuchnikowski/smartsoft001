@@ -1,1 +1,1 @@
-export * from "./lib/google.service";
+export * from './lib/google.service';
