@@ -24,7 +24,7 @@ const mockPayuConfig = {
   test: true,
 };
 
-describe('PayuService', () => {
+describe('payu: PayuService', () => {
   let service: PayuService;
 
   beforeEach(async () => {

@@ -22,7 +22,7 @@ const mockRevolutConfig = {
   test: true,
 };
 
-describe('RevolutService', () => {
+describe('revolut: RevolutService', () => {
   let service: RevolutService;
 
   beforeEach(async () => {

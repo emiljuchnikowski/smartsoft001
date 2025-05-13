@@ -42,7 +42,7 @@ const mockPaypalConfig = {
   test: true,
 };
 
-describe('PaypalService', () => {
+describe('paypal: PaypalService', () => {
   let service: PaypalService;
 
   beforeEach(async () => {
