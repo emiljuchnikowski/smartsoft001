@@ -22,7 +22,7 @@ const mockPaynowConfig = {
   test: true,
 };
 
-describe('PaynowService', () => {
+describe('paynow: PaynowService', () => {
   let service: PaynowService;
 
   beforeEach(async () => {
