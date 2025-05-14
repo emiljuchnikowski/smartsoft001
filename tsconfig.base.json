@@ -17,7 +17,16 @@
     "paths": {
       "@smartsoft001/domain-core": ["packages/shared/domain-core/src/index.ts"],
       "@smartsoft001/models": ["packages/shared/models/src/index.ts"],
+      "@smartsoft001/mongo": ["packages/shared/mongo/src/index.ts"],
       "@smartsoft001/nestjs": ["packages/shared/nestjs/src/index.ts"],
+      "@smartsoft001/paynow": ["packages/shared/paynow/src/index.ts"],
+      "@smartsoft001/paypal": ["packages/shared/paypal/src/index.ts"],
+      "@smartsoft001/payu": ["packages/shared/payu/src/index.ts"],
+      "@smartsoft001/revolut": ["packages/shared/revolut/src/index.ts"],
+      "@smartsoft001/trans": ["packages/shared/trans/src/index.ts"],
+      "@smartsoft001/trans-domain": [
+        "packages/shared/trans/domain/src/index.ts"
+      ],
       "@smartsoft001/users": ["packages/shared/users/src/index.ts"],
       "@smartsoft001/utils": ["packages/shared/utils/src/index.ts"]
     }

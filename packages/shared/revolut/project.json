@@ -1,0 +1,46 @@
+{
+  "name": "shared-revolut",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/shared/revolut/src",
+  "projectType": "library",
+  "generators": {},
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": [
+          "packages/shared/revolut/**/*.{ts,tsx,js,jsx}",
+          "packages/shared/revolut/package.json"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "packages/shared/revolut/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "outputs": ["{workspaceRoot}/coverage/packages/shared/revolut"]
+    },
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/shared/revolut",
+        "tsConfig": "packages/shared/revolut/tsconfig.lib.json",
+        "packageJson": "packages/shared/revolut/package.json",
+        "main": "packages/shared/revolut/src/index.ts",
+        "assets": ["packages/shared/revolut/*.md"]
+      }
+    },
+    "deploy": {
+      "executor": "ngx-deploy-npm:deploy",
+      "options": {
+        "access": "public",
+        "distFolderPath": "dist/packages/shared/revolut"
+      },
+      "dependsOn": ["build"]
+    }
+  },
+  "tags": ["scope:shared", "type:util"]
+}

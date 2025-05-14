@@ -1,0 +1,48 @@
+{
+  "name": "shared-paynow",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/shared/paynow/src",
+  "projectType": "library",
+  "generators": {},
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "packages/shared/paynow/**/*.{ts,tsx,js,jsx}",
+          "packages/shared/paynow/package.json"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "packages/shared/paynow/jest.config.ts"
+      },
+      "outputs": ["{workspaceRoot}/coverage/packages/shared/paynow"]
+    },
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/shared/paynow",
+        "tsConfig": "packages/shared/paynow/tsconfig.lib.json",
+        "packageJson": "packages/shared/paynow/package.json",
+        "main": "packages/shared/paynow/src/index.ts",
+        "assets": ["packages/shared/paynow/*.md"],
+        "generatePackageJson": true,
+        "format": ["cjs"]
+      }
+    },
+    "deploy": {
+      "executor": "ngx-deploy-npm:deploy",
+      "options": {
+        "access": "public",
+        "distFolderPath": "dist/packages/shared/paynow"
+      },
+      "dependsOn": ["build"]
+    }
+  },
+  "tags": ["scope:shared", "type:util"]
+}
