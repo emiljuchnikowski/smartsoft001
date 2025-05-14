@@ -1,9 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PaynowService } from './paynow.service';
 import { HttpService } from '@nestjs/axios';
 import { ModuleRef } from '@nestjs/core';
 import { of } from 'rxjs';
+
 import { Trans } from '@smartsoft001/trans-domain';
+
+import { PaynowService } from './paynow.service';
 import { PaynowConfig } from './paynow.config';
 
 const mockHttpService = {
@@ -22,7 +24,7 @@ const mockPaynowConfig = {
   test: true,
 };
 
-describe('PaynowService', () => {
+describe('paynow: PaynowService', () => {
   let service: PaynowService;
 
   beforeEach(async () => {

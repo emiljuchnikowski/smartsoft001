@@ -48,7 +48,7 @@ jobs:
           git config --global user.name "Emil Juchnikowski"
           git config --global user.email "emil@juchnikowski.com"
       - name: Update changelog
-        run: npx nx release changelog ${{ steps.package.outputs.version }} --tag-pattern="v${{ steps.package.outputs.version }}"
+        run: npx nx release changelog ${{ steps.package.outputs.version }}
       - name: Set NPM token
         run: echo //registry.npmjs.org/:_authToken="${NPM_TOKEN}" > .npmrc
         env:

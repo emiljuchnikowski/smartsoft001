@@ -4,3 +4,8 @@
 /.nx/cache
 /.nx/workspace-data
 /.cache
+
+CHANGELOG.md
+CONTRIBUTING.md
+README.md
+packages/shared/utils/README.md

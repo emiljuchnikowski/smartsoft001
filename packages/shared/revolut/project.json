@@ -6,9 +6,12 @@
   "generators": {},
   "targets": {
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/eslint:lint",
       "options": {
-        "lintFilePatterns": ["packages/shared/revolut/**/*.ts"]
+        "lintFilePatterns": [
+          "packages/shared/revolut/**/*.{ts,tsx,js,jsx}",
+          "packages/shared/revolut/package.json"
+        ]
       }
     },
     "test": {
@@ -21,14 +24,22 @@
     },
     "build": {
       "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/shared/revolut",
         "tsConfig": "packages/shared/revolut/tsconfig.lib.json",
         "packageJson": "packages/shared/revolut/package.json",
         "main": "packages/shared/revolut/src/index.ts",
         "assets": ["packages/shared/revolut/*.md"]
+      }
+    },
+    "deploy": {
+      "executor": "ngx-deploy-npm:deploy",
+      "options": {
+        "access": "public",
+        "distFolderPath": "dist/packages/shared/revolut"
       },
-      "outputs": ["{options.outputPath}"]
+      "dependsOn": ["build"]
     }
   },
   "tags": ["scope:shared", "type:util"]
