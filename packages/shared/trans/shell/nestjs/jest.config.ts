@@ -1,19 +1,19 @@
 /* eslint-disable */
 export default {
+  displayName: "trans-shell-nestjs",
   globals: {},
+  testEnvironment: "node",
   transform: {
-    '^.+\\.[tj]sx?$': [
-      'ts-jest',
+    "^.+\\.[tj]sx?$": [
+      "ts-jest",
       {
-        tsConfig: '<rootDir>/tsconfig.spec.json',
+        tsConfig: "<rootDir>/tsconfig.spec.json",
       },
     ],
   },
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../../../coverage/libs/shared/trans/domain',
-  displayName: 'trans-domain',
-  testEnvironment: 'node',
-  preset: '../../../../jest.preset.js',
+  moduleFileExtensions: ["ts", "tsx", "js", "jsx"],
+  coverageDirectory: "../../../../coverage/libs/trans/shell/nestjs",
+  preset: "../../../../jest.preset.js",
   /* TODO: Update to latest Jest snapshotFormat
    * By default Nx has kept the older style of Jest Snapshot formats
    * to prevent breaking of any existing tests with snapshots.
