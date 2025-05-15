@@ -1,6 +1,6 @@
-import { Injectable, Optional } from "@nestjs/common";
-import { ModuleRef } from "@nestjs/core";
-import {HttpService} from "@nestjs/axios";
+import { Injectable, Optional } from '@nestjs/common';
+import { ModuleRef } from '@nestjs/core';
+import { HttpService } from '@nestjs/axios';
 
 import {
   ITransCreate,
@@ -9,15 +9,16 @@ import {
   CreatorService,
   RefresherService,
   ITransPaymentSingleService,
-  ITransInternalService, RefundService,
-} from "@smartsoft001/trans-domain";
-import { PayuService } from "@smartsoft001/payu";
-import { PaypalService } from "@smartsoft001/paypal";
-import { RevolutService } from "@smartsoft001/revolut";
-import {IItemRepository} from "@smartsoft001/domain-core";
-import {PaynowService} from "@smartsoft001/paynow";
+  ITransInternalService,
+  RefundService,
+} from '@smartsoft001/trans-domain';
+import { PayuService } from '@smartsoft001/payu';
+import { PaypalService } from '@smartsoft001/paypal';
+import { RevolutService } from '@smartsoft001/revolut';
+import { IItemRepository } from '@smartsoft001/domain-core';
+import { PaynowService } from '@smartsoft001/paynow';
 
-import { TRANS_TOKEN_INTERNAL_SERVICE } from "../internal/internal.service";
+import { TRANS_TOKEN_INTERNAL_SERVICE } from '../internal/internal.service';
 
 @Injectable()
 export class TransService {
@@ -32,10 +33,11 @@ export class TransService {
 
   private _internalService = {
     create: (trans: Trans<any>) => {
-      if (!this.config.internalApiUrl) return Promise.resolve({
-        date: new Date(),
-        req: trans
-      });
+      if (!this.config.internalApiUrl)
+        return Promise.resolve({
+          date: new Date(),
+          req: trans,
+        });
 
       return this.httpService
         .post(this.config.internalApiUrl, trans)
@@ -44,14 +46,15 @@ export class TransService {
     },
 
     refresh: (trans: Trans<any>) => {
-      if (!this.config.internalApiUrl) return Promise.resolve({
-        date: new Date(),
-        req: trans,
-        id: trans.id
-      });
+      if (!this.config.internalApiUrl)
+        return Promise.resolve({
+          date: new Date(),
+          req: trans,
+          id: trans.id,
+        });
 
       return this.httpService
-        .put(this.config.internalApiUrl + "/" + trans.id, trans)
+        .put(this.config.internalApiUrl + '/' + trans.id, trans)
         .toPromise()
         .then((res) => res.data);
     },
@@ -68,14 +71,16 @@ export class TransService {
     @Optional() private payuService: PayuService,
     @Optional() private paynowService: PaynowService,
     @Optional() private paypalService: PaypalService,
-    @Optional() private revolutService: RevolutService
+    @Optional() private revolutService: RevolutService,
   ) {}
 
-  create<T>(ops: ITransCreate<T>): Promise<{ orderId: string, redirectUrl?: string, responseData?: any }> {
+  create<T>(
+    ops: ITransCreate<T>,
+  ): Promise<{ orderId: string; redirectUrl?: string; responseData?: any }> {
     return this.creatorService.create(
       ops,
       this.getInternalService(),
-      this._paymentService
+      this._paymentService,
     );
   }
 
@@ -84,16 +89,16 @@ export class TransService {
       transId,
       this.getInternalService(),
       this._paymentService,
-      data
+      data,
     );
   }
 
-  async refund(transId: string, comment = "Refund"): Promise<void> {
+  async refund(transId: string, comment = 'Refund'): Promise<void> {
     await this.refundService.refund(
-        transId,
-        this.getInternalService(),
-        this._paymentService,
-        comment
+      transId,
+      this.getInternalService(),
+      this._paymentService,
+      comment,
     );
   }
 

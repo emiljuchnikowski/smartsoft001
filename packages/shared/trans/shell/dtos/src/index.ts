@@ -1,1 +1,1 @@
-export * from "./lib/trans-create.dto";
+export * from './lib/trans-create.dto';
