@@ -18,7 +18,6 @@ export class RefresherService<T> extends TransBaseService<T> {
     paymentService: ITransPaymentService,
     customData = {},
   ): Promise<void> {
-    // hack : bad map id
     const trans: Trans<any> = (
       await this.repository.getByCriteria({
         externalId: transId,
