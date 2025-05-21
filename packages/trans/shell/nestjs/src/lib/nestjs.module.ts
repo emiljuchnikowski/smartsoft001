@@ -8,7 +8,7 @@ import { DOMAIN_SERVICES, TransConfig } from '@smartsoft001/trans-domain';
 import { PayuConfig, PayuService } from '@smartsoft001/payu';
 import { PaypalConfig, PaypalService } from '@smartsoft001/paypal';
 import { RevolutConfig, RevolutService } from '@smartsoft001/revolut';
-import { CrudShellNestjsModule } from '@smartsoft001/crud-shell-nestjs';
+// import { CrudShellNestjsModule } from '@smartsoft001/crud-shell-nestjs';
 import { SharedConfig } from '@smartsoft001/nestjs';
 import { PaynowConfig, PaynowService } from '@smartsoft001/paynow';
 

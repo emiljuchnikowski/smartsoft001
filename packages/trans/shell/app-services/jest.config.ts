@@ -1,8 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: 'trans-shell-app-services',
   globals: {},
-  testEnvironment: 'node',
   transform: {
     '^.+\\.[tj]sx?$': [
       'ts-jest',
@@ -12,7 +10,9 @@ export default {
     ],
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../../../coverage/libs/trans/shell/app-services',
+  coverageDirectory: '../../../../coverage/packages/trans/shell/app-services',
+  displayName: 'trans-shell-app-services',
+  testEnvironment: 'node',
   preset: '../../../../jest.preset.js',
   /* TODO: Update to latest Jest snapshotFormat
    * By default Nx has kept the older style of Jest Snapshot formats

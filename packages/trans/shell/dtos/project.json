@@ -1,34 +1,38 @@
 {
   "name": "trans-shell-dtos",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/trans/shell/dtos/src",
+  "sourceRoot": "packages/trans/shell/dtos/src",
   "projectType": "library",
   "generators": {},
   "targets": {
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["libs/trans/shell/dtos/**/*.ts"]
+        "lintFilePatterns": [
+          "packages/trans/shell/dtos/**/*.{ts,tsx,js,jsx}",
+          "packages/trans/shell/dtos/package.json"
+        ]
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
       "options": {
-        "jestConfig": "libs/trans/shell/dtos/jest.config.ts",
+        "jestConfig": "packages/trans/shell/dtos/jest.config.ts",
         "passWithNoTests": true
       },
-      "outputs": ["{workspaceRoot}/coverage/libs/trans/shell/dtos"]
+      "outputs": ["{workspaceRoot}/coverage/packages/trans/shell/dtos"]
     },
     "build": {
-      "executor": "@nx/js:tsc",
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/libs/trans/shell/dtos",
-        "tsConfig": "libs/trans/shell/dtos/tsconfig.lib.json",
-        "packageJson": "libs/trans/shell/dtos/package.json",
-        "main": "libs/trans/shell/dtos/src/index.ts",
-        "assets": ["libs/trans/shell/dtos/*.md"]
-      },
-      "outputs": ["{options.outputPath}"]
+        "outputPath": "dist/packages/trans/shell/dtos",
+        "tsConfig": "packages/trans/shell/dtos/tsconfig.lib.json",
+        "packageJson": "packages/trans/shell/dtos/package.json",
+        "main": "packages/trans/shell/dtos/src/index.ts",
+        "assets": ["packages/trans/shell/dtos/*.md"]
+      }
     }
   },
   "tags": ["scope:trans", "type:shell"]
