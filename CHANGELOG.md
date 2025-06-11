@@ -1,3 +1,7 @@
+## 2.66.0 (2025-05-16)
+
+This was a version bump only, there were no code changes.
+
 ## 2.65.0 (2025-05-14)
 
 ### 🚀 Features

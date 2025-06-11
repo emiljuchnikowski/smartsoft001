@@ -1,7 +1,7 @@
 {
-  "name": "@smartsoft001/trans-domain",
-  "version": "1.3.0",
-  "description": "This library was generated with [Nx](https://nx.dev).",
+  "name": "@smartsoft001/fb",
+  "version": "1.2.0",
+  "description": "Utils for fb authorisation",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/emiljuchnikowski/smartsoft.git"

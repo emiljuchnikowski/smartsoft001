@@ -1,0 +1,37 @@
+{
+  "name": "shared-google",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/shared/google/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "packages/shared/fb/**/*.{ts,tsx,js,jsx}",
+          "packages/shared/fb/package.json"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/packages/shared/google"],
+      "options": {
+        "jestConfig": "packages/shared/google/jest.config.ts"
+      }
+    },
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/shared/google",
+        "tsConfig": "packages/shared/google/tsconfig.lib.json",
+        "packageJson": "packages/shared/google/package.json",
+        "main": "packages/shared/google/src/index.ts",
+        "assets": ["packages/shared/google/*.md"]
+      }
+    }
+  },
+  "tags": []
+}

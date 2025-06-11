@@ -18,21 +18,9 @@
       "rules": {}
     },
     {
-      "files": ["*.json"],
+      "files": "package.json",
       "parser": "jsonc-eslint-parser",
-      "rules": {
-        "@nx/dependency-checks": [
-          "error",
-          {
-            "ignoredDependencies": [
-              "passport-jwt",
-              "@nestjs/passport",
-              "@nestjs/common",
-              "@nestjs/testing"
-            ]
-          }
-        ]
-      }
+      "rules": {}
     }
   ]
 }

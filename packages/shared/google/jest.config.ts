@@ -5,13 +5,13 @@ export default {
     '^.+\\.[tj]sx?$': [
       'ts-jest',
       {
-        tsconfig: '<rootDir>/tsconfig.spec.json',
+        tsConfig: '<rootDir>/tsconfig.spec.json',
       },
     ],
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../../coverage/packages/shared/mongo',
-  displayName: 'shared-mongo',
+  coverageDirectory: '../../../coverage/packages/shared/google',
+  displayName: 'shared-google',
   testEnvironment: 'node',
   preset: '../../../jest.preset.js',
   /* TODO: Update to latest Jest snapshotFormat
