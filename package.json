@@ -61,10 +61,14 @@
     "@nestjs/jwt": "^11.0.0",
     "@nestjs/passport": "11.0.5",
     "@nx/devkit": "20.8.0",
+    "busboy": "^1.6.0",
     "class-validator": "^0.14.1",
     "crypto-js": "^4.2.0",
     "guid-typescript": "^1.0.9",
+    "json2csv": "^6.0.0-alpha.2",
+    "lodash-decorators": "^6.0.1",
     "md5": "^2.3.0",
+    "moment-timezone": "^0.6.0",
     "mongodb": "^5.9.2",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
@@ -72,7 +76,8 @@
     "reflect-metadata": "^0.2.1",
     "rxjs": "^7.8.1",
     "tslib": "^2.3.0",
-    "typeorm": "^0.3.21"
+    "typeorm": "^0.3.21",
+    "xlsx": "^0.18.5"
   },
   "resolutions": {
     "paypal-rest-sdk": "1.8.1"
