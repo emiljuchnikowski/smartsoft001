@@ -7,7 +7,7 @@ import { RefundService } from './refund.service';
 import { Trans } from '../entities';
 import { ITransInternalService, ITransPaymentService } from '../interfaces';
 
-describe('refund: RefundService', () => {
+describe('trans-domain: RefundService', () => {
   let service: RefundService<any>;
   let mockRepository: jest.Mocked<IItemRepository<Trans<any>>>;
   let mockInternalService: jest.Mocked<ITransInternalService<any>>;

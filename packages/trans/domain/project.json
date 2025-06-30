@@ -1,7 +1,7 @@
 {
   "name": "trans-domain",
-  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "packages/shared/trans/domain/src",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/trans/domain/src",
   "projectType": "library",
   "generators": {},
   "targets": {
@@ -10,34 +10,34 @@
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": [
-          "packages/shared/mongo/**/*.{ts,tsx,js,jsx}",
-          "packages/shared/mongo/package.json"
+          "packages/trans/domain/**/*.{ts,tsx,js,jsx}",
+          "packages/trans/domain/package.json"
         ]
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
       "options": {
-        "jestConfig": "packages/shared/trans/domain/jest.config.ts"
+        "jestConfig": "packages/trans/domain/jest.config.ts"
       },
-      "outputs": ["{workspaceRoot}/coverage/packages/shared/trans/domain"]
+      "outputs": ["{workspaceRoot}/coverage/packages/trans/domain"]
     },
     "build": {
       "executor": "@nx/esbuild:esbuild",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/packages/shared/trans/domain",
-        "tsConfig": "packages/shared/trans/domain/tsconfig.lib.json",
-        "packageJson": "packages/shared/trans/domain/package.json",
-        "main": "packages/shared/trans/domain/src/index.ts",
-        "assets": ["packages/shared/trans/domain/*.md"]
+        "outputPath": "dist/packages/trans/domain",
+        "tsConfig": "packages/trans/domain/tsconfig.lib.json",
+        "packageJson": "packages/trans/domain/package.json",
+        "main": "packages/trans/domain/src/index.ts",
+        "assets": ["packages/trans/domain/*.md"]
       }
     },
     "deploy": {
       "executor": "ngx-deploy-npm:deploy",
       "options": {
         "access": "public",
-        "distFolderPath": "dist/packages/shared/trans/domain"
+        "distFolderPath": "dist/packages/trans/domain"
       },
       "dependsOn": ["build"]
     }
