@@ -73,6 +73,7 @@
         "no-prototype-builtins": "off",
         "no-undef": "off",
         "sort-imports": "off",
+        "import/order": "off",
         "import/export": "off",
         "import/first": "error",
         "import/no-duplicates": "error",

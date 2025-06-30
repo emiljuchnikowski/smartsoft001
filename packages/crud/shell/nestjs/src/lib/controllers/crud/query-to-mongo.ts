@@ -68,7 +68,7 @@ function typedValue(value) {
 // Convert a comma separated string value to an array of values.  Commas
 // in a quoted strings and regexes are ignored.  Also strips ! prefix from values.
 function typedValues(svalue) {
-  const commaSplit = /("[^"]*")|('[^']*')|(\/[^\/]*\/i?)|([^,]+)/g;
+  const commaSplit = /("[^"]*")|('[^']*')|(\/[^/]*\/i?)|([^,]+)/g;
   const values = [];
   svalue.match(commaSplit).forEach(function (value) {
     values.push(typedValue(value));

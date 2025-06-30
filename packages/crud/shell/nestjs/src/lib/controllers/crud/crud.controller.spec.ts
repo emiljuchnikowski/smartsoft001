@@ -1,7 +1,10 @@
-import { CrudController } from './crud.controller';
-import { CrudService } from '@smartsoft001/crud-shell-app-services';
 import { Request } from 'express';
 import * as XLSX from 'xlsx';
+
+import { CrudService } from '@smartsoft001/crud-shell-app-services';
+
+import { CrudController } from './crud.controller';
+import * as q2mModule from './query-to-mongo';
 
 jest.mock('xlsx');
 jest.mock('json2csv', () => ({
@@ -50,7 +53,7 @@ describe('crud-nestjs: CrudController', () => {
     it('should call q2m and return result', () => {
       const query = { a: 1, b: 2 };
       const result = { criteria: {}, options: {}, links: jest.fn() };
-      jest.spyOn(require('./query-to-mongo'), 'q2m').mockReturnValue(result);
+      jest.spyOn(q2mModule, 'q2m').mockReturnValue(result);
       expect(controller['getQueryObject'](query)).toBe(result);
     });
   });

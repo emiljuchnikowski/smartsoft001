@@ -35,7 +35,9 @@ describe('crud-nestjs: AuthJwtGuard', () => {
   it('should log info if no user', () => {
     try {
       guard.handleRequest(null, null, { msg: 'info' });
-    } catch {}
+    } catch {
+      // Intentionally left empty: exception is expected and tested below
+    }
     expect(loggerWarnSpy).toHaveBeenCalledWith(JSON.stringify({ msg: 'info' }));
   });
 });

@@ -2,19 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { HttpService } from '@nestjs/axios';
 import { ModuleRef } from '@nestjs/core';
 
-// Mock PayPal SDK before importing it
-jest.mock('paypal-rest-sdk', () => ({
-  payment: {
-    create: jest.fn(),
-    execute: jest.fn(),
-    get: jest.fn(),
-  },
-  sale: {
-    refund: jest.fn(),
-  },
-  configure: jest.fn(),
-}));
-
 import { PaypalService } from '@smartsoft001/paypal';
 import {
   CreatorService,
@@ -30,6 +17,19 @@ import { PaynowService } from '@smartsoft001/paynow';
 import { IItemRepository } from '@smartsoft001/domain-core';
 
 import { TransService } from './trans.service';
+
+// Mock PayPal SDK before importing it
+jest.mock('paypal-rest-sdk', () => ({
+  payment: {
+    create: jest.fn(),
+    execute: jest.fn(),
+    get: jest.fn(),
+  },
+  sale: {
+    refund: jest.fn(),
+  },
+  configure: jest.fn(),
+}));
 
 describe('trans: TransService', () => {
   let service: TransService;
