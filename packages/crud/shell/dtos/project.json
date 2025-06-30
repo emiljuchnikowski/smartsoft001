@@ -17,10 +17,7 @@
           "packages/crud/shell/dtos/tsconfig.lib.json",
           "packages/crud/shell/dtos/tsconfig.spec.json"
         ],
-        "exclude": [
-          "**/node_modules/**",
-          "!packages/crud/shell/dtos/**/*"
-        ]
+        "exclude": ["**/node_modules/**", "!packages/crud/shell/dtos/**/*"]
       }
     },
     "test": {

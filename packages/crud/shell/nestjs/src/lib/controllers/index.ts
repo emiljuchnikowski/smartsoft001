@@ -1,7 +1,5 @@
-import {CrudController} from "./crud/crud.controller";
+import { CrudController } from './crud/crud.controller';
 
-export * from "./crud/crud.controller";
+export * from './crud/crud.controller';
 
-export const CONTROLLERS = [
-    CrudController
-];
+export const CONTROLLERS = [CrudController];

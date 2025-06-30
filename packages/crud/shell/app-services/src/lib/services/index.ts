@@ -1,7 +1,5 @@
-import {CrudService} from "./crud/crud.service";
+import { CrudService } from './crud/crud.service';
 
 export * from './crud/crud.service';
 
-export const SERVICES = [
-    CrudService
-];
+export const SERVICES = [CrudService];

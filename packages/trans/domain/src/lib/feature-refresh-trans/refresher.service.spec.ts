@@ -1,13 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException } from '@nestjs/common';
 
-import {
-  IItemRepository,
-} from '@smartsoft001/domain-core';
+import { IItemRepository } from '@smartsoft001/domain-core';
 
 import { RefresherService } from './refresher.service';
 import { Trans, TransSystem, TransStatus } from '../entities/trans.entity';
-import { ITransInternalService, ITransPaymentService, ITransPaymentSingleService } from '../interfaces';
+import {
+  ITransInternalService,
+  ITransPaymentService,
+  ITransPaymentSingleService,
+} from '../interfaces';
 
 describe('trans-domain: RefresherService', () => {
   let service: RefresherService<any>;
@@ -39,13 +41,17 @@ describe('trans-domain: RefresherService', () => {
       update: jest.fn(),
       updatePartial: jest.fn(),
       getById: jest.fn(),
-      getByCriteria: jest.fn().mockResolvedValue({ data: [mockTrans], totalCount: 1 }),
+      getByCriteria: jest
+        .fn()
+        .mockResolvedValue({ data: [mockTrans], totalCount: 1 }),
       getAll: jest.fn(),
       delete: jest.fn(),
     } as any;
 
     mockInternalService = {
-      refresh: jest.fn().mockResolvedValue({ status: 'completed' as TransStatus }),
+      refresh: jest
+        .fn()
+        .mockResolvedValue({ status: 'completed' as TransStatus }),
     } as any;
 
     const mockPayuService: ITransPaymentSingleService = {
@@ -83,10 +89,17 @@ describe('trans-domain: RefresherService', () => {
 
   describe('refresh', () => {
     it('should throw NotFoundException when transaction is not found', async () => {
-      mockRepository.getByCriteria.mockResolvedValueOnce({ data: [], totalCount: 0 });
+      mockRepository.getByCriteria.mockResolvedValueOnce({
+        data: [],
+        totalCount: 0,
+      });
 
       await expect(
-        service.refresh('non-existent-id', mockInternalService, mockPaymentService),
+        service.refresh(
+          'non-existent-id',
+          mockInternalService,
+          mockPaymentService,
+        ),
       ).rejects.toThrow(NotFoundException);
     });
 
@@ -96,24 +109,38 @@ describe('trans-domain: RefresherService', () => {
         data: { paymentId: 'test-payment-id' },
       });
 
-      await service.refresh('test-external-id', mockInternalService, mockPaymentService);
+      await service.refresh(
+        'test-external-id',
+        mockInternalService,
+        mockPaymentService,
+      );
 
       expect(mockRepository.updatePartial).not.toHaveBeenCalled();
     });
 
     it('should call updatePartial when status changes', async () => {
-      await service.refresh('test-external-id', mockInternalService, mockPaymentService);
+      await service.refresh(
+        'test-external-id',
+        mockInternalService,
+        mockPaymentService,
+      );
 
       expect(mockRepository.updatePartial).toHaveBeenCalled();
     });
 
     it('should throw error when payment service fails', async () => {
       const error = new Error('Test error');
-      (mockPaymentService.payu.getStatus as jest.Mock).mockRejectedValueOnce(error);
+      (mockPaymentService.payu.getStatus as jest.Mock).mockRejectedValueOnce(
+        error,
+      );
 
       await expect(
-        service.refresh('test-external-id', mockInternalService, mockPaymentService),
+        service.refresh(
+          'test-external-id',
+          mockInternalService,
+          mockPaymentService,
+        ),
       ).rejects.toThrow(error);
     });
   });
-}); 
+});

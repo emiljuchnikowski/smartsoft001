@@ -1,16 +1,14 @@
-import { DynamicModule, Module } from "@nestjs/common";
-import { PassportModule } from "@nestjs/passport";
-import { JwtModule } from "@nestjs/jwt";
+import { DynamicModule, Module } from '@nestjs/common';
+import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from '@nestjs/jwt';
 
-import {
-  SERVICES,
-} from "@smartsoft001/crud-shell-app-services";
-import { SharedConfig, SharedModule } from "@smartsoft001/nestjs";
-import { MongoModule } from "@smartsoft001/mongo";
+import { SERVICES } from '@smartsoft001/crud-shell-app-services';
+import { SharedConfig, SharedModule } from '@smartsoft001/nestjs';
+import { MongoModule } from '@smartsoft001/mongo';
 
-import { CONTROLLERS } from "./controllers";
-import { AuthJwtGuard } from "./guards/auth/auth.guard";
-import { GATEWAYS } from "./gateways";
+import { CONTROLLERS } from './controllers';
+import { AuthJwtGuard } from './guards/auth/auth.guard';
+import { GATEWAYS } from './gateways';
 
 @Module({})
 export class CrudShellNestjsModule {
@@ -28,7 +26,7 @@ export class CrudShellNestjsModule {
     } & {
       restApi: boolean;
       socket: boolean;
-    }
+    },
   ): DynamicModule {
     return {
       module: CrudShellNestjsModule,
@@ -42,7 +40,7 @@ export class CrudShellNestjsModule {
         ...(options.restApi && options.tokenConfig.secretOrPrivateKey
           ? [
               PassportModule.register({
-                defaultStrategy: "jwt",
+                defaultStrategy: 'jwt',
                 session: false,
               }),
               JwtModule.register({
@@ -54,13 +52,9 @@ export class CrudShellNestjsModule {
             ]
           : []),
         SharedModule.forFeature(options),
-        MongoModule.forRoot(options.db)
+        MongoModule.forRoot(options.db),
       ],
-      exports: [
-        ...SERVICES,
-        AuthJwtGuard,
-        MongoModule.forRoot(options.db)
-      ],
+      exports: [...SERVICES, AuthJwtGuard, MongoModule.forRoot(options.db)],
     };
   }
 }
@@ -78,17 +72,13 @@ export class CrudShellNestjsCoreModule {
         collection?: string;
         type?: any;
       };
-    }
+    },
   ): DynamicModule {
     return {
       module: CrudShellNestjsModule,
-      providers: [
-        ...SERVICES,
-        ...GATEWAYS,
-        AuthJwtGuard,
-      ],
+      providers: [...SERVICES, ...GATEWAYS, AuthJwtGuard],
       imports: [
-        PassportModule.register({ defaultStrategy: "jwt", session: false }),
+        PassportModule.register({ defaultStrategy: 'jwt', session: false }),
         JwtModule.register({
           secret: options.tokenConfig.secretOrPrivateKey,
           signOptions: {
@@ -96,7 +86,7 @@ export class CrudShellNestjsCoreModule {
           },
         }),
         SharedModule.forRoot(options),
-        MongoModule.forRoot(options.db)
+        MongoModule.forRoot(options.db),
       ],
       exports: [],
     };

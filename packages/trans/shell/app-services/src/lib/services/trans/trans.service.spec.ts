@@ -174,9 +174,12 @@ describe('trans: TransService', () => {
         contactPhone: '123456789',
         data: {},
         options: {},
-        clientIp: '127.0.0.1'
+        clientIp: '127.0.0.1',
       };
-      const mockResult = { orderId: 'test-order', redirectUrl: 'http://test.com' };
+      const mockResult = {
+        orderId: 'test-order',
+        redirectUrl: 'http://test.com',
+      };
       mockCreatorService.create.mockResolvedValue(mockResult);
       mockModuleRef.get.mockReturnValue(mockInternalService);
 
@@ -198,7 +201,7 @@ describe('trans: TransService', () => {
         transId,
         mockInternalService,
         expect.any(Object),
-        mockData
+        mockData,
       );
     });
   });
@@ -215,7 +218,7 @@ describe('trans: TransService', () => {
         transId,
         mockInternalService,
         expect.any(Object),
-        comment
+        comment,
       );
     });
   });
@@ -260,4 +263,4 @@ describe('trans: TransService', () => {
       expect(result).toHaveProperty('refresh');
     });
   });
-}); 
+});

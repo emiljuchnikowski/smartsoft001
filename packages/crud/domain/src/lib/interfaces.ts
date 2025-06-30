@@ -1,5 +1,5 @@
 export interface ICreateManyOptions {
-    mode: CreateManyMode
+  mode: CreateManyMode;
 }
 
 export type CreateManyMode = 'default' | 'replace';

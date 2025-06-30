@@ -4,7 +4,9 @@ import { Request } from 'express';
 import * as XLSX from 'xlsx';
 
 jest.mock('xlsx');
-jest.mock('json2csv', () => ({ Parser: jest.fn().mockImplementation(() => ({ parse: jest.fn(() => 'csv') })) }));
+jest.mock('json2csv', () => ({
+  Parser: jest.fn().mockImplementation(() => ({ parse: jest.fn(() => 'csv') })),
+}));
 
 describe('crud-nestjs: CrudController', () => {
   let service: jest.Mocked<CrudService<any>>;
@@ -35,7 +37,11 @@ describe('crud-nestjs: CrudController', () => {
 
   describe('static getLink', () => {
     it('should return correct link', () => {
-      const req = { protocol: 'http', headers: { host: 'localhost' }, url: '/api' } as Request;
+      const req = {
+        protocol: 'http',
+        headers: { host: 'localhost' },
+        url: '/api',
+      } as Request;
       expect(CrudController.getLink(req)).toBe('http://localhost/api');
     });
   });
@@ -55,7 +61,9 @@ describe('crud-nestjs: CrudController', () => {
     });
     it('should return csv string for data', () => {
       const data = [{ a: '1', b: '2' }];
-      jest.spyOn(controller as any, 'getDataWithFields').mockReturnValue({ res: data, fields: ['a', 'b'] });
+      jest
+        .spyOn(controller as any, 'getDataWithFields')
+        .mockReturnValue({ res: data, fields: ['a', 'b'] });
       expect(controller['parseToCsv'](data)).toBe('csv');
     });
   });
@@ -66,10 +74,18 @@ describe('crud-nestjs: CrudController', () => {
     });
     it('should call XLSX utils for data', () => {
       const data = [{ a: '1', b: '2' }];
-      jest.spyOn(controller as any, 'getDataWithFields').mockReturnValue({ res: data, fields: ['a', 'b'] });
-      const jsonToSheet = jest.spyOn(XLSX.utils, 'json_to_sheet').mockReturnValue({} as any);
-      const bookNew = jest.spyOn(XLSX.utils, 'book_new').mockReturnValue({} as any);
-      const bookAppendSheet = jest.spyOn(XLSX.utils, 'book_append_sheet').mockImplementation();
+      jest
+        .spyOn(controller as any, 'getDataWithFields')
+        .mockReturnValue({ res: data, fields: ['a', 'b'] });
+      const jsonToSheet = jest
+        .spyOn(XLSX.utils, 'json_to_sheet')
+        .mockReturnValue({} as any);
+      const bookNew = jest
+        .spyOn(XLSX.utils, 'book_new')
+        .mockReturnValue({} as any);
+      const bookAppendSheet = jest
+        .spyOn(XLSX.utils, 'book_append_sheet')
+        .mockImplementation();
       const write = jest.spyOn(XLSX, 'write').mockReturnValue('buffer' as any);
       expect(controller['parseToXlsx'](data)).toBe('buffer');
     });
@@ -84,7 +100,9 @@ describe('crud-nestjs: CrudController', () => {
     it('should remove keys not in fields', () => {
       const data = [{ a: '1', b: '2' }];
       const result = controller['getDataWithFields'](data);
-      expect(Object.keys(result.res[0]).every(k => result.fields.includes(k))).toBe(true);
+      expect(
+        Object.keys(result.res[0]).every((k) => result.fields.includes(k)),
+      ).toBe(true);
     });
   });
-}); 
+});

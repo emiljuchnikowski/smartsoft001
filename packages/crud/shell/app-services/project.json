@@ -16,7 +16,7 @@
         "tsConfig": [
           "packages/crud/shell/app-services/tsconfig.lib.json",
           "packages/crud/shell/app-services/tsconfig.spec.json"
-        ],
+        ]
       }
     },
     "test": {

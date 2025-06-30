@@ -1,46 +1,47 @@
-import {Injectable, Logger} from "@nestjs/common";
-import { Guid } from "guid-typescript";
-import { Observable } from "rxjs";
-import {Readable, Stream} from "stream";
-import {Memoize} from "lodash-decorators";
-import * as CombinedStream from "combined-stream";
+import { Injectable, Logger } from '@nestjs/common';
+import { Guid } from 'guid-typescript';
+import { Observable } from 'rxjs';
+import { Readable, Stream } from 'stream';
+import { Memoize } from 'lodash-decorators';
+import * as CombinedStream from 'combined-stream';
 
-import { IUser } from "@smartsoft001/users";
+import { IUser } from '@smartsoft001/users';
 import {
-  DomainValidationError, IAttachmentRepository,
+  DomainValidationError,
+  IAttachmentRepository,
   IEntity,
   IItemRepository,
   ISpecification,
-} from "@smartsoft001/domain-core";
-import {ICreateManyOptions} from "@smartsoft001/crud-domain";
-import { ItemChangedData } from "@smartsoft001/crud-shell-dtos";
-import {PermissionService} from "@smartsoft001/nestjs";
-import {castModel, getInvalidFields, isModel} from "@smartsoft001/models";
-import {GuidService, PasswordService} from "@smartsoft001/utils";
+} from '@smartsoft001/domain-core';
+import { ICreateManyOptions } from '@smartsoft001/crud-domain';
+import { ItemChangedData } from '@smartsoft001/crud-shell-dtos';
+import { PermissionService } from '@smartsoft001/nestjs';
+import { castModel, getInvalidFields, isModel } from '@smartsoft001/models';
+import { GuidService, PasswordService } from '@smartsoft001/utils';
 
 @Injectable()
 export class CrudService<T extends IEntity<string>> {
   private _logger = new Logger(CrudService.name, { timestamp: true });
 
   constructor(
-      protected readonly permissionService: PermissionService,
-      protected readonly repository: IItemRepository<T>,
-      protected readonly attachmentRepository: IAttachmentRepository<T>
+    protected readonly permissionService: PermissionService,
+    protected readonly repository: IItemRepository<T>,
+    protected readonly attachmentRepository: IAttachmentRepository<T>,
   ) {}
 
   async create(data: T, user: IUser): Promise<string> {
     data.id = Guid.raw();
 
     try {
-      this.permissionService.valid("create", user);
+      this.permissionService.valid('create', user);
 
-      castModel(data, "create", user.permissions);
+      castModel(data, 'create', user.permissions);
       this.checkValidCreate(data, user.permissions);
 
       if (data['password']) {
         data['password'] = await PasswordService.hash(data['password']);
       }
-      if(data['passwordConfirm']) {
+      if (data['passwordConfirm']) {
         delete data['passwordConfirm'];
       }
       await this.repository.create(data, user);
@@ -55,17 +56,17 @@ export class CrudService<T extends IEntity<string>> {
   async createMany(
     data: T[],
     user: IUser,
-    options: ICreateManyOptions
+    options: ICreateManyOptions,
   ): Promise<T[]> {
     data.forEach((item) => {
       item.id = Guid.raw();
     });
 
     try {
-      this.permissionService.valid("create", user);
+      this.permissionService.valid('create', user);
 
       data.forEach((item) => {
-        castModel(item, "create", user.permissions);
+        castModel(item, 'create', user.permissions);
         this.checkValidCreate(item, user.permissions);
       });
 
@@ -80,7 +81,7 @@ export class CrudService<T extends IEntity<string>> {
           item['password'] = await PasswordService.hash(item['password']);
         }
 
-        if(item['passwordConfirm']) {
+        if (item['passwordConfirm']) {
           delete item['passwordConfirm'];
         }
       }
@@ -96,7 +97,7 @@ export class CrudService<T extends IEntity<string>> {
 
   async readById(id: string, user: IUser): Promise<T> {
     try {
-      this.permissionService.valid("read", user);
+      this.permissionService.valid('read', user);
       const result = await this.repository.getById(id);
       delete result['password'];
 
@@ -110,12 +111,12 @@ export class CrudService<T extends IEntity<string>> {
   async read(
     criteria: any,
     options: any,
-    user: IUser
+    user: IUser,
   ): Promise<{ data: T[]; totalCount: number }> {
     try {
-      this.permissionService.valid("read", user);
+      this.permissionService.valid('read', user);
       const result = await this.repository.getByCriteria(criteria, options);
-      result.data.forEach(item => delete item['password']);
+      result.data.forEach((item) => delete item['password']);
 
       return result;
     } catch (e) {
@@ -127,7 +128,7 @@ export class CrudService<T extends IEntity<string>> {
   readBySpec(
     spec: ISpecification,
     options: any,
-    user: IUser
+    user: IUser,
   ): Promise<{ data: T[]; totalCount: number }> {
     return this.read(spec.criteria, options, user);
   }
@@ -135,7 +136,7 @@ export class CrudService<T extends IEntity<string>> {
   async update(id: string, data: T, user: IUser): Promise<void> {
     try {
       data.id = id;
-      this.permissionService.valid("update", user);
+      this.permissionService.valid('update', user);
 
       castModel(data, 'update', user.permissions);
       this.checkValidUpdate(data, user.permissions);
@@ -143,7 +144,7 @@ export class CrudService<T extends IEntity<string>> {
       if (data['password']) {
         data['password'] = await PasswordService.hash(data['password']);
       }
-      if(data['passwordConfirm']) {
+      if (data['passwordConfirm']) {
         delete data['passwordConfirm'];
       }
       await this.repository.update(data, user);
@@ -156,22 +157,20 @@ export class CrudService<T extends IEntity<string>> {
   async updatePartial(
     id: string,
     data: Partial<T>,
-    user: IUser
+    user: IUser,
   ): Promise<void> {
     try {
       data.id = id;
 
-      this.permissionService.valid("update", user);
+      this.permissionService.valid('update', user);
 
       castModel(data, 'update', user.permissions);
       this.checkValidUpdatePartial(data, user.permissions);
 
-      if (data["password"]) {
-        data["password"] = await PasswordService.hash(
-            data["password"]
-        );
+      if (data['password']) {
+        data['password'] = await PasswordService.hash(data['password']);
       }
-      if(data['passwordConfirm']) {
+      if (data['passwordConfirm']) {
         delete data['passwordConfirm'];
       }
       await this.repository.updatePartial(data as Partial<T> & { id }, user);
@@ -183,7 +182,7 @@ export class CrudService<T extends IEntity<string>> {
 
   async delete(id: string, user: IUser): Promise<void> {
     try {
-      this.permissionService.valid("delete", user);
+      this.permissionService.valid('delete', user);
 
       await this.repository.delete(id, user);
     } catch (e) {
@@ -193,8 +192,14 @@ export class CrudService<T extends IEntity<string>> {
   }
 
   async uploadAttachment(
-      data: { id: string, fileName: string; stream: Stream; mimeType: string; encoding: string},
-      options?: { streamCallback?: (r) => void, start?: number }
+    data: {
+      id: string;
+      fileName: string;
+      stream: Stream;
+      mimeType: string;
+      encoding: string;
+    },
+    options?: { streamCallback?: (r) => void; start?: number },
   ): Promise<string> {
     if (!data.id) {
       data.id = GuidService.create();
@@ -205,7 +210,7 @@ export class CrudService<T extends IEntity<string>> {
       oldId = data.id;
       const stream = await this.attachmentRepository.getStream(data.id, {
         start: 0,
-        end: options.start - 1
+        end: options.start - 1,
       });
 
       const combinedStream = CombinedStream.create();
@@ -224,11 +229,16 @@ export class CrudService<T extends IEntity<string>> {
   }
 
   @Memoize()
-  getAttachmentInfo(id: string): Promise<{ fileName: string, contentType: string, length: number }> {
+  getAttachmentInfo(
+    id: string,
+  ): Promise<{ fileName: string; contentType: string; length: number }> {
     return this.attachmentRepository.getInfo(id);
   }
 
-  getAttachmentStream(id: string, options?: { start: number; end: number }): Promise<Readable> {
+  getAttachmentStream(
+    id: string,
+    options?: { start: number; end: number },
+  ): Promise<Readable> {
     return this.attachmentRepository.getStream(id, options);
   }
 
@@ -241,31 +251,34 @@ export class CrudService<T extends IEntity<string>> {
   }
 
   private checkValidCreate(item: T, permissions: Array<string>): void {
-    const array = getInvalidFields(item, "create", permissions);
+    const array = getInvalidFields(item, 'create', permissions);
 
     if (array.length) {
-      throw new DomainValidationError("Required fields: " + array.join(", "));
+      throw new DomainValidationError('Required fields: ' + array.join(', '));
     }
   }
 
   private checkValidUpdate(item: T, permissions: Array<string>): void {
-    const array = getInvalidFields(item, "update", permissions);
+    const array = getInvalidFields(item, 'update', permissions);
 
     if (array.length) {
-      throw new DomainValidationError("Required fields: " + array.join(", "));
+      throw new DomainValidationError('Required fields: ' + array.join(', '));
     }
   }
 
-  private checkValidUpdatePartial(item: Partial<T>, permissions: Array<string>): void {
+  private checkValidUpdatePartial(
+    item: Partial<T>,
+    permissions: Array<string>,
+  ): void {
     if (!isModel(item)) return;
 
     const keys = Object.keys(item);
-    const array = getInvalidFields(item, "update", permissions).filter((invalidField) =>
-        keys.some((key) => key === invalidField)
+    const array = getInvalidFields(item, 'update', permissions).filter(
+      (invalidField) => keys.some((key) => key === invalidField),
     );
 
     if (array.length) {
-      throw new DomainValidationError("Required fields: " + array.join(", "));
+      throw new DomainValidationError('Required fields: ' + array.join(', '));
     }
   }
 }

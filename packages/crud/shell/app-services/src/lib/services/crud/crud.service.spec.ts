@@ -3,7 +3,7 @@ import { of, Observable } from 'rxjs';
 
 jest.mock('@smartsoft001/utils', () => ({
   PasswordService: { hash: jest.fn(async (v) => 'hashed-' + v) },
-  GuidService: { create: jest.fn(() => 'guid') }
+  GuidService: { create: jest.fn(() => 'guid') },
 }));
 
 const mockUser = { id: 'u', username: 'test', permissions: ['p'] };
@@ -12,18 +12,22 @@ const mockRepo = () => ({
   create: jest.fn(),
   createMany: jest.fn(),
   getById: jest.fn().mockResolvedValue({ id: 'id', password: 'pw' }),
-  getByCriteria: jest.fn().mockResolvedValue({ data: [{ id: 'id', password: 'pw' }], totalCount: 1 }),
+  getByCriteria: jest
+    .fn()
+    .mockResolvedValue({ data: [{ id: 'id', password: 'pw' }], totalCount: 1 }),
   update: jest.fn(),
   updatePartial: jest.fn(),
   delete: jest.fn(),
   clear: jest.fn(),
-  changesByCriteria: jest.fn(() => of({}))
+  changesByCriteria: jest.fn(() => of({})),
 });
 const mockAttachRepo = () => ({
   upload: jest.fn(),
-  getInfo: jest.fn().mockResolvedValue({ fileName: 'f', contentType: 'c', length: 1 }),
+  getInfo: jest
+    .fn()
+    .mockResolvedValue({ fileName: 'f', contentType: 'c', length: 1 }),
   getStream: jest.fn().mockResolvedValue({}),
-  delete: jest.fn()
+  delete: jest.fn(),
 });
 const mockPerm = () => ({ valid: jest.fn() });
 
@@ -37,7 +41,11 @@ describe('crud-app-services: CrudService', () => {
     repository = mockRepo();
     attachmentRepository = mockAttachRepo();
     permissionService = mockPerm();
-    service = new CrudService(permissionService, repository, attachmentRepository);
+    service = new CrudService(
+      permissionService,
+      repository,
+      attachmentRepository,
+    );
   });
 
   describe('create', () => {
@@ -46,23 +54,35 @@ describe('crud-app-services: CrudService', () => {
       expect(typeof id).toBe('string');
     });
     it('should log and throw on error', async () => {
-      permissionService.valid.mockImplementation(() => { throw new Error('fail'); });
-      await expect(service.create({ ...mockData }, mockUser)).rejects.toThrow('fail');
+      permissionService.valid.mockImplementation(() => {
+        throw new Error('fail');
+      });
+      await expect(service.create({ ...mockData }, mockUser)).rejects.toThrow(
+        'fail',
+      );
     });
   });
 
   describe('createMany', () => {
     it('should create many and return data', async () => {
-      const data = await service.createMany([{ ...mockData }], mockUser, { mode: undefined });
+      const data = await service.createMany([{ ...mockData }], mockUser, {
+        mode: undefined,
+      });
       expect(Array.isArray(data)).toBe(true);
     });
     it('should clear repo if mode is replace', async () => {
-      await service.createMany([{ ...mockData }], mockUser, { mode: 'replace' });
+      await service.createMany([{ ...mockData }], mockUser, {
+        mode: 'replace',
+      });
       expect(repository.clear).toHaveBeenCalled();
     });
     it('should log and throw on error', async () => {
-      permissionService.valid.mockImplementation(() => { throw new Error('fail'); });
-      await expect(service.createMany([{ ...mockData }], mockUser, { mode: undefined })).rejects.toThrow('fail');
+      permissionService.valid.mockImplementation(() => {
+        throw new Error('fail');
+      });
+      await expect(
+        service.createMany([{ ...mockData }], mockUser, { mode: undefined }),
+      ).rejects.toThrow('fail');
     });
   });
 
@@ -72,7 +92,9 @@ describe('crud-app-services: CrudService', () => {
       expect(res.password).toBeUndefined();
     });
     it('should log and throw on error', async () => {
-      repository.getById.mockImplementation(() => { throw new Error('fail'); });
+      repository.getById.mockImplementation(() => {
+        throw new Error('fail');
+      });
       await expect(service.readById('id', mockUser)).rejects.toThrow('fail');
     });
   });
@@ -83,14 +105,18 @@ describe('crud-app-services: CrudService', () => {
       expect(res).toHaveProperty('data');
     });
     it('should log and throw on error', async () => {
-      repository.getByCriteria.mockImplementation(() => { throw new Error('fail'); });
+      repository.getByCriteria.mockImplementation(() => {
+        throw new Error('fail');
+      });
       await expect(service.read({}, {}, mockUser)).rejects.toThrow('fail');
     });
   });
 
   describe('readBySpec', () => {
     it('should call read with spec', async () => {
-      const spy = jest.spyOn(service, 'read').mockResolvedValue({ data: [], totalCount: 0 });
+      const spy = jest
+        .spyOn(service, 'read')
+        .mockResolvedValue({ data: [], totalCount: 0 });
       await service.readBySpec({ criteria: {} }, {}, mockUser);
       expect(spy).toHaveBeenCalled();
     });
@@ -102,8 +128,12 @@ describe('crud-app-services: CrudService', () => {
       expect(repository.update).toHaveBeenCalled();
     });
     it('should log and throw on error', async () => {
-      repository.update.mockImplementation(() => { throw new Error('fail'); });
-      await expect(service.update('id', { ...mockData }, mockUser)).rejects.toThrow('fail');
+      repository.update.mockImplementation(() => {
+        throw new Error('fail');
+      });
+      await expect(
+        service.update('id', { ...mockData }, mockUser),
+      ).rejects.toThrow('fail');
     });
   });
 
@@ -113,8 +143,12 @@ describe('crud-app-services: CrudService', () => {
       expect(repository.updatePartial).toHaveBeenCalled();
     });
     it('should log and throw on error', async () => {
-      repository.updatePartial.mockImplementation(() => { throw new Error('fail'); });
-      await expect(service.updatePartial('id', { ...mockData }, mockUser)).rejects.toThrow('fail');
+      repository.updatePartial.mockImplementation(() => {
+        throw new Error('fail');
+      });
+      await expect(
+        service.updatePartial('id', { ...mockData }, mockUser),
+      ).rejects.toThrow('fail');
     });
   });
 
@@ -124,7 +158,9 @@ describe('crud-app-services: CrudService', () => {
       expect(repository.delete).toHaveBeenCalled();
     });
     it('should log and throw on error', async () => {
-      repository.delete.mockImplementation(() => { throw new Error('fail'); });
+      repository.delete.mockImplementation(() => {
+        throw new Error('fail');
+      });
       await expect(service.delete('id', mockUser)).rejects.toThrow('fail');
     });
   });
@@ -148,9 +184,15 @@ describe('crud-app-services: CrudService', () => {
         prependListener: jest.fn(),
         prependOnceListener: jest.fn(),
         eventNames: jest.fn(),
-        listenerCount: jest.fn()
+        listenerCount: jest.fn(),
       };
-      const id = await service.uploadAttachment({ id: '', fileName: '', stream: fakeStream, mimeType: '', encoding: '' });
+      const id = await service.uploadAttachment({
+        id: '',
+        fileName: '',
+        stream: fakeStream,
+        mimeType: '',
+        encoding: '',
+      });
       expect(typeof id).toBe('string');
     });
   });
@@ -182,4 +224,4 @@ describe('crud-app-services: CrudService', () => {
       expect(obs instanceof Observable).toBe(true);
     });
   });
-}); 
+});

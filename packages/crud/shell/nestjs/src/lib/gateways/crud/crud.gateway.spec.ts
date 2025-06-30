@@ -11,7 +11,7 @@ describe('crud-nestjs: CrudGateway', () => {
 
   beforeEach(() => {
     service = {
-      changes: jest.fn()
+      changes: jest.fn(),
     } as any;
     gateway = new CrudGateway(service);
     gateway['afterInit']({});
@@ -40,7 +40,9 @@ describe('crud-nestjs: CrudGateway', () => {
     it('should clear subscription and log disconnect', () => {
       const logSpy = jest.spyOn(console, 'log').mockImplementation();
       const unsub = jest.fn();
-      gateway['_clientsSubscriptions'].set(client.id, { unsubscribe: unsub } as any);
+      gateway['_clientsSubscriptions'].set(client.id, {
+        unsubscribe: unsub,
+      } as any);
       gateway.handleDisconnect(client);
       expect(unsub).toHaveBeenCalled();
       logSpy.mockRestore();
@@ -50,7 +52,9 @@ describe('crud-nestjs: CrudGateway', () => {
   describe('clearSubscription', () => {
     it('should unsubscribe and delete if present', () => {
       const unsub = jest.fn();
-      gateway['_clientsSubscriptions'].set(client.id, { unsubscribe: unsub } as any);
+      gateway['_clientsSubscriptions'].set(client.id, {
+        unsubscribe: unsub,
+      } as any);
       gateway['clearSubscription'](client);
       expect(gateway['_clientsSubscriptions'].has(client.id)).toBe(false);
     });
@@ -89,16 +93,30 @@ describe('crud-nestjs: CrudGateway', () => {
 
     it('should clear previous subscription before subscribing', () => {
       const unsub = jest.fn();
-      gateway['_clientsSubscriptions'].set(client.id, { unsubscribe: unsub } as any);
-      service.changes.mockReturnValue(of({ type: 'update', id: '1', data: { removedFields: [], updatedFields: {} } }));
+      gateway['_clientsSubscriptions'].set(client.id, {
+        unsubscribe: unsub,
+      } as any);
+      service.changes.mockReturnValue(
+        of({
+          type: 'update',
+          id: '1',
+          data: { removedFields: [], updatedFields: {} },
+        }),
+      );
       gateway.handleFilter({}, client).subscribe().unsubscribe();
       expect(unsub).toHaveBeenCalled();
     });
 
     it('should store new subscription in _clientsSubscriptions', () => {
-      service.changes.mockReturnValue(of({ type: 'update', id: '1', data: { removedFields: [], updatedFields: {} } }));
+      service.changes.mockReturnValue(
+        of({
+          type: 'update',
+          id: '1',
+          data: { removedFields: [], updatedFields: {} },
+        }),
+      );
       gateway.handleFilter({}, client).subscribe().unsubscribe();
       expect(gateway['_clientsSubscriptions'].has(client.id)).toBe(true);
     });
   });
-}); 
+});

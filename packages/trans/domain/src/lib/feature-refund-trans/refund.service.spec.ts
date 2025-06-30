@@ -48,7 +48,11 @@ describe('refund: RefundService', () => {
       mockRepository.getById.mockResolvedValue(null);
 
       await expect(
-        service.refund('non-existent-id', mockInternalService, mockPaymentService),
+        service.refund(
+          'non-existent-id',
+          mockInternalService,
+          mockPaymentService,
+        ),
       ).rejects.toThrow(NotFoundException);
     });
 
@@ -83,22 +87,41 @@ describe('refund: RefundService', () => {
         };
 
         mockRepository.getById.mockResolvedValue(mockTrans);
-        (mockPaymentService.payu.refund as jest.Mock).mockResolvedValue(mockRefundData);
+        (mockPaymentService.payu.refund as jest.Mock).mockResolvedValue(
+          mockRefundData,
+        );
         mockRepository.update.mockResolvedValue(undefined);
       });
 
       it('should update transaction status to refund', async () => {
-        await service.refund('test-id', mockInternalService, mockPaymentService, 'Test refund');
+        await service.refund(
+          'test-id',
+          mockInternalService,
+          mockPaymentService,
+          'Test refund',
+        );
         expect(mockTrans.status).toBe('refund');
       });
 
       it('should add refund comment to transaction history', async () => {
-        await service.refund('test-id', mockInternalService, mockPaymentService, 'Test refund');
-        expect(mockTrans.history[0].data.customData).toEqual({ comment: 'Test refund' });
+        await service.refund(
+          'test-id',
+          mockInternalService,
+          mockPaymentService,
+          'Test refund',
+        );
+        expect(mockTrans.history[0].data.customData).toEqual({
+          comment: 'Test refund',
+        });
       });
 
       it('should update transaction in repository', async () => {
-        await service.refund('test-id', mockInternalService, mockPaymentService, 'Test refund');
+        await service.refund(
+          'test-id',
+          mockInternalService,
+          mockPaymentService,
+          'Test refund',
+        );
         expect(mockRepository.update).toHaveBeenCalledWith(mockTrans, null);
       });
     });
@@ -119,7 +142,9 @@ describe('refund: RefundService', () => {
         mockError = new Error('Refund failed');
 
         mockRepository.getById.mockResolvedValue(mockTrans);
-        (mockPaymentService.payu.refund as jest.Mock).mockRejectedValue(mockError);
+        (mockPaymentService.payu.refund as jest.Mock).mockRejectedValue(
+          mockError,
+        );
       });
 
       it('should propagate the error', async () => {
@@ -130,25 +155,40 @@ describe('refund: RefundService', () => {
 
       it('should set transaction status to error', async () => {
         try {
-          await service.refund('test-id', mockInternalService, mockPaymentService);
+          await service.refund(
+            'test-id',
+            mockInternalService,
+            mockPaymentService,
+          );
         } catch (error) {
           expect(mockTrans.status).toBe('error');
         }
       });
 
       it('should add error to transaction history', async () => {
-        const refundPromise = service.refund('test-id', mockInternalService, mockPaymentService);
+        const refundPromise = service.refund(
+          'test-id',
+          mockInternalService,
+          mockPaymentService,
+        );
         await expect(refundPromise).rejects.toThrow(mockError);
-        expect((service as any).setError).toHaveBeenCalledWith(mockTrans, mockError);
+        expect((service as any).setError).toHaveBeenCalledWith(
+          mockTrans,
+          mockError,
+        );
       });
 
       it('should update transaction in repository', async () => {
         try {
-          await service.refund('test-id', mockInternalService, mockPaymentService);
+          await service.refund(
+            'test-id',
+            mockInternalService,
+            mockPaymentService,
+          );
         } catch (error) {
           expect(mockRepository.update).toHaveBeenCalledWith(mockTrans, null);
         }
       });
     });
   });
-}); 
+});

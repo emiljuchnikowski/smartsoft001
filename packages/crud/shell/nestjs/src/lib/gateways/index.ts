@@ -1,5 +1,3 @@
-import {CrudGateway} from "./crud/crud.gateway";
+import { CrudGateway } from './crud/crud.gateway';
 
-export const GATEWAYS = [
-    CrudGateway
-];
+export const GATEWAYS = [CrudGateway];

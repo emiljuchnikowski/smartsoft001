@@ -15,6 +15,16 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@smartsoft001/crud-domain": ["packages/crud/domain/src/index.ts"],
+      "@smartsoft001/crud-shell-app-services": [
+        "packages/crud/shell/app-services/src/index.ts"
+      ],
+      "@smartsoft001/crud-shell-dtos": [
+        "packages/crud/shell/dtos/src/index.ts"
+      ],
+      "@smartsoft001/crud-shell-nestjs": [
+        "packages/crud/shell/nestjs/src/index.ts"
+      ],
       "@smartsoft001/domain-core": ["packages/shared/domain-core/src/index.ts"],
       "@smartsoft001/models": ["packages/shared/models/src/index.ts"],
       "@smartsoft001/mongo": ["packages/shared/mongo/src/index.ts"],
@@ -24,15 +34,17 @@
       "@smartsoft001/payu": ["packages/shared/payu/src/index.ts"],
       "@smartsoft001/revolut": ["packages/shared/revolut/src/index.ts"],
       "@smartsoft001/trans-domain": ["packages/trans/domain/src/index.ts"],
-      "@smartsoft001/trans-shell-app-services": ["packages/trans/shell/app-services/src/index.ts"],
-      "@smartsoft001/trans-shell-dtos": ["packages/trans/shell/dtos/src/index.ts"],
-      "@smartsoft001/trans-shell-nestjs": ["packages/trans/shell/nestjs/src/index.ts"],
+      "@smartsoft001/trans-shell-app-services": [
+        "packages/trans/shell/app-services/src/index.ts"
+      ],
+      "@smartsoft001/trans-shell-dtos": [
+        "packages/trans/shell/dtos/src/index.ts"
+      ],
+      "@smartsoft001/trans-shell-nestjs": [
+        "packages/trans/shell/nestjs/src/index.ts"
+      ],
       "@smartsoft001/users": ["packages/shared/users/src/index.ts"],
-      "@smartsoft001/utils": ["packages/shared/utils/src/index.ts"],
-      "@smartsoft001/crud-shell-nestjs": ["packages/crud/shell/nestjs/src/index.ts"],
-      "@smartsoft001/crud-shell-dtos": ["packages/crud/shell/dtos/src/index.ts"],
-      "@smartsoft001/crud-shell-app-services": ["packages/crud/shell/app-services/src/index.ts"],
-      "@smartsoft001/crud-domain": ["packages/crud/domain/src/index.ts"]
+      "@smartsoft001/utils": ["packages/shared/utils/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

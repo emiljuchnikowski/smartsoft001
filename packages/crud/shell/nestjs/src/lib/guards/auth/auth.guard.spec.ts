@@ -20,12 +20,16 @@ describe('crud-nestjs: AuthJwtGuard', () => {
   });
 
   it('should throw UnauthorizedException if no user and no error', () => {
-    expect(() => guard.handleRequest(null, null, { msg: 'no user' })).toThrow(UnauthorizedException);
+    expect(() => guard.handleRequest(null, null, { msg: 'no user' })).toThrow(
+      UnauthorizedException,
+    );
   });
 
   it('should throw error if error is present', () => {
     const error = new Error('fail');
-    expect(() => guard.handleRequest(error, null, { msg: 'err' })).toThrow(error);
+    expect(() => guard.handleRequest(error, null, { msg: 'err' })).toThrow(
+      error,
+    );
   });
 
   it('should log info if no user', () => {
@@ -51,4 +55,4 @@ describe('crud-nestjs: AuthOrAnonymousJwtGuard', () => {
   it('should return undefined if user is undefined', () => {
     expect(guard.handleRequest(null, undefined, null)).toBeUndefined();
   });
-}); 
+});
