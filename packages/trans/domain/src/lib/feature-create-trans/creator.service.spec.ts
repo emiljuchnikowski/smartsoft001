@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
-  DomainValidationError,
   IItemRepository,
 } from '@smartsoft001/domain-core';
 
