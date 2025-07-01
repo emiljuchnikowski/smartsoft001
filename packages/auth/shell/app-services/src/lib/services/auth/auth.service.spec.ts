@@ -6,7 +6,7 @@ import {
   AUTH_TOKEN_USER_PROVIDER,
   AUTH_TOKEN_VALIDATION_PROVIDER,
   IAuthToken,
-  TokenFactory
+  TokenFactory,
 } from '@smartsoft001/auth-domain';
 
 import { AuthService } from './auth.service';
@@ -23,15 +23,15 @@ describe('auth-shell-app-services: AuthService', () => {
         {
           provide: TokenFactory,
           useValue: {
-            create: jest.fn()
-          }
+            create: jest.fn(),
+          },
         },
         {
           provide: ModuleRef,
           useValue: {
-            get: jest.fn()
-          }
-        }
+            get: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
@@ -69,7 +69,9 @@ describe('auth-shell-app-services: AuthService', () => {
 
       await service.create(request);
 
-      expect((tokenFactory.create as jest.Mock).mock.calls[0][0].payloadProvider).toBe(payloadProvider);
+      expect(
+        (tokenFactory.create as jest.Mock).mock.calls[0][0].payloadProvider,
+      ).toBe(payloadProvider);
     });
 
     it('should include validation provider when available', async () => {
@@ -85,7 +87,9 @@ describe('auth-shell-app-services: AuthService', () => {
 
       await service.create(request);
 
-      expect((tokenFactory.create as jest.Mock).mock.calls[0][0].validationProvider).toBe(validationProvider);
+      expect(
+        (tokenFactory.create as jest.Mock).mock.calls[0][0].validationProvider,
+      ).toBe(validationProvider);
     });
 
     it('should include user provider when available', async () => {
@@ -101,7 +105,9 @@ describe('auth-shell-app-services: AuthService', () => {
 
       await service.create(request);
 
-      expect((tokenFactory.create as jest.Mock).mock.calls[0][0].userProvider).toBe(userProvider);
+      expect(
+        (tokenFactory.create as jest.Mock).mock.calls[0][0].userProvider,
+      ).toBe(userProvider);
     });
   });
 });

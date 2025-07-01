@@ -1,18 +1,18 @@
 /* eslint-disable */
 export default {
-  displayName: "auth-domain",
-  preset: "../../../jest.preset.js",
-  testEnvironment: "node",
+  displayName: 'auth-domain',
+  preset: '../../../jest.preset.js',
+  testEnvironment: 'node',
   transform: {
-    "^.+\\.[tj]sx?$": [
-      "ts-jest",
+    '^.+\\.[tj]sx?$': [
+      'ts-jest',
       {
-        tsConfig: "<rootDir>/tsconfig.spec.json",
+        tsConfig: '<rootDir>/tsconfig.spec.json',
       },
     ],
   },
-  moduleFileExtensions: ["ts", "tsx", "js", "jsx"],
-  coverageDirectory: "../../../coverage/packages/auth/domain",
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
+  coverageDirectory: '../../../coverage/packages/auth/domain',
   /* TODO: Update to latest Jest snapshotFormat
    * By default Nx has kept the older style of Jest Snapshot formats
    * to prevent breaking of any existing tests with snapshots.

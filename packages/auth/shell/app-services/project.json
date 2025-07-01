@@ -11,7 +11,6 @@
         "lintFilePatterns": [
           "packages/auth/shell/app-services/**/*.{ts,tsx,js,jsx}",
           "packages/auth/shell/app-services/package.json"
-
         ]
       }
     },
@@ -19,7 +18,7 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/packages/auth/shell/app-services"],
       "options": {
-        "jestConfig": "packages/auth/shell/app-services/jest.config.ts",
+        "jestConfig": "packages/auth/shell/app-services/jest.config.ts"
       }
     },
     "build": {

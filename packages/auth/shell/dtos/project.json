@@ -10,7 +10,6 @@
         "lintFilePatterns": [
           "packages/auth/shell/dtos/**/*.{ts,tsx,js,jsx}",
           "packages/auth/shell/dtos/package.json"
-
         ]
       }
     },

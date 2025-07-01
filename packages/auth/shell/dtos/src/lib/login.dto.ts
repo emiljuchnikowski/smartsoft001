@@ -1,4 +1,4 @@
-import { Field, Model } from "@smartsoft001/models";
+import { Field, Model } from '@smartsoft001/models';
 
 @Model({})
 export class LoginDto {

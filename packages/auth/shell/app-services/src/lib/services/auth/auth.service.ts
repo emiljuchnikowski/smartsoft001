@@ -1,31 +1,33 @@
-import {Injectable, Logger} from "@nestjs/common";
-import { ModuleRef } from "@nestjs/core";
-import { Request } from "express";
+import { Injectable, Logger } from '@nestjs/common';
+import { ModuleRef } from '@nestjs/core';
+import { Request } from 'express';
 
 import {
-  AUTH_TOKEN_PAYLOAD_PROVIDER, AUTH_TOKEN_USER_PROVIDER,
+  AUTH_TOKEN_PAYLOAD_PROVIDER,
+  AUTH_TOKEN_USER_PROVIDER,
   AUTH_TOKEN_VALIDATION_PROVIDER,
   IAuthToken,
   IAuthTokenRequest,
-  ITokenPayloadProvider, ITokenUserProvider,
+  ITokenPayloadProvider,
+  ITokenUserProvider,
   ITokenValidationProvider,
   TokenFactory,
-} from "@smartsoft001/auth-domain";
+} from '@smartsoft001/auth-domain';
 
 @Injectable()
 export class AuthService {
   constructor(
-      private factory: TokenFactory,
-      private moduleRef: ModuleRef
+    private factory: TokenFactory,
+    private moduleRef: ModuleRef,
   ) {}
 
-    create(req: IAuthTokenRequest, httpReq?: Request): Promise<IAuthToken> {
+  create(req: IAuthTokenRequest, httpReq?: Request): Promise<IAuthToken> {
     return this.factory.create({
       httpReq: httpReq,
       request: req,
       payloadProvider: this.getPayloadProvider(),
       validationProvider: this.getValidationProvider(),
-      userProvider: this.getUserProvider()
+      userProvider: this.getUserProvider(),
     }) as Promise<IAuthToken>;
   }
 
