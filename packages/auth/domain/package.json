@@ -1,0 +1,15 @@
+{
+  "name": "@smartsoft001/auth-domain",
+  "version": "1.1.95",
+  "description": "Utils for authorization",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emiljuchnikowski/smartsoft.git"
+  },
+  "keywords": [
+    "smartsoft",
+    "oauth",
+    "angular",
+    "nestjs"
+  ]
+}

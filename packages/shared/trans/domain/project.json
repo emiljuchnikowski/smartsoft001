@@ -14,8 +14,7 @@
     "test": {
       "executor": "@nx/jest:jest",
       "options": {
-        "jestConfig": "packages/shared/trans/domain/jest.config.ts",
-        "passWithNoTests": true
+        "jestConfig": "packages/shared/trans/domain/jest.config.ts"
       },
       "outputs": ["{workspaceRoot}/coverage/packages/shared/trans/domain"]
     },

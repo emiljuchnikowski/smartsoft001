@@ -1,0 +1,45 @@
+{
+  "name": "auth-shell-app-services",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/auth/shell/app-services/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "packages/auth/shell/app-services/**/*.{ts,tsx,js,jsx}",
+          "packages/auth/shell/app-services/package.json"
+
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/packages/auth/shell/app-services"],
+      "options": {
+        "jestConfig": "packages/auth/shell/app-services/jest.config.ts",
+      }
+    },
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/auth/shell/app-services",
+        "tsConfig": "packages/auth/shell/app-services/tsconfig.lib.json",
+        "packageJson": "packages/auth/shell/app-services/package.json",
+        "main": "packages/auth/shell/app-services/src/index.ts",
+        "assets": ["packages/auth/shell/app-services/*.md"]
+      }
+    },
+    "deploy": {
+      "executor": "ngx-deploy-npm:deploy",
+      "options": {
+        "access": "public",
+        "distFolderPath": "dist/packages/auth/shell/app-services"
+      },
+      "dependsOn": ["build"]
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "name": "auth-shell-dtos",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/auth/shell/dtos/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": [
+          "packages/auth/shell/dtos/**/*.{ts,tsx,js,jsx}",
+          "packages/auth/shell/dtos/package.json"
+
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/packages/auth/shell/dtos"],
+      "options": {
+        "jestConfig": "packages/auth/shell/dtos/jest.config.ts"
+      }
+    },
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/auth/shell/dtos",
+        "tsConfig": "packages/auth/shell/dtos/tsconfig.lib.json",
+        "packageJson": "packages/auth/shell/dtos/package.json",
+        "main": "packages/auth/shell/dtos/src/index.ts",
+        "assets": ["packages/auth/shell/dtos/*.md"]
+      }
+    },
+    "deploy": {
+      "executor": "ngx-deploy-npm:deploy",
+      "options": {
+        "access": "public",
+        "distFolderPath": "dist/packages/auth/shell/dtos"
+      },
+      "dependsOn": ["build"]
+    }
+  }
+}

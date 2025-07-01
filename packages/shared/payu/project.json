@@ -14,8 +14,7 @@
     "test": {
       "executor": "@nx/jest:jest",
       "options": {
-        "jestConfig": "packages/shared/payu/jest.config.ts",
-        "passWithNoTests": true
+        "jestConfig": "packages/shared/payu/jest.config.ts"
       },
       "outputs": ["{workspaceRoot}/coverage/packages/shared/payu"]
     },
