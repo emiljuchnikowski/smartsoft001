@@ -1,3 +1,14 @@
+## 2.69.0 (2025-07-13)
+
+### 🩹 Fixes
+
+- **shared:** auth domain, dtos, app-services, nestjs packages kod i testy ([62bb041](https://github.com/emiljuchnikowski/smartsoft001/commit/62bb041))
+- **shared:** nx formatowanie 1 ([4059a2b](https://github.com/emiljuchnikowski/smartsoft001/commit/4059a2b))
+
+### ❤️ Thank You
+
+- Andrii Bilych
+
 ## 2.68.0 (2025-07-13)
 
 This was a version bump only, there were no code changes.
