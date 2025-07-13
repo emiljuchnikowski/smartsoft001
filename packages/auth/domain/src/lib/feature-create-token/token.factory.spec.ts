@@ -1,14 +1,15 @@
-import { Test } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
+import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { DomainValidationError } from '@smartsoft001/domain-core';
 import { FbService } from '@smartsoft001/fb';
 import { GoogleService } from '@smartsoft001/google';
-import { Repository } from 'typeorm';
 import { PasswordService } from '@smartsoft001/utils';
+import { Repository } from 'typeorm';
+
 import { User } from '../entities';
-import { TokenFactory } from './token.factory';
 import { TokenConfig } from './token.config';
+import { TokenFactory } from './token.factory';
 
 describe('auth-domain: TokenFactory', () => {
   let tokenFactory: TokenFactory;

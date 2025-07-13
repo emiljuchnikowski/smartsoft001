@@ -1,10 +1,8 @@
-import { DynamicModule, Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
-import { PassportModule } from '@nestjs/passport';
+import { DynamicModule, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
-import { TokenController } from './controllers/token/token.controller';
 import {
   DOMAIN_SERVICES,
   ENTITIES,
@@ -13,6 +11,8 @@ import {
 import { AuthService } from '@smartsoft001/auth-shell-app-services';
 import { FbService } from '@smartsoft001/fb';
 import { GoogleService } from '@smartsoft001/google';
+
+import { TokenController } from './controllers/token/token.controller';
 
 @Module({})
 export class AuthShellNestjsModule {

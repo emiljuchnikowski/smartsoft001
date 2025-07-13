@@ -1,21 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Guid } from 'guid-typescript';
-import { Request } from 'express';
-
 import { DomainValidationError, IFactory } from '@smartsoft001/domain-core';
-import { PasswordService } from '@smartsoft001/utils';
 import { FbService } from '@smartsoft001/fb';
 import { GoogleService } from '@smartsoft001/google';
+import { PasswordService } from '@smartsoft001/utils';
+import { Request } from 'express';
+import { Guid } from 'guid-typescript';
+import { Repository } from 'typeorm';
 
 import { User } from '../entities';
-import { TokenConfig } from './token.config';
 import { IAuthToken, IAuthTokenRequest } from './interfaces';
 import { ITokenPayloadProvider } from './token-payload.provider';
-import { ITokenValidationProvider } from './token-validation.provider';
 import { ITokenUserProvider } from './token-user.provider';
+import { ITokenValidationProvider } from './token-validation.provider';
+import { TokenConfig } from './token.config';
 
 @Injectable()
 export class TokenFactory

@@ -1,7 +1,7 @@
 import { Request } from 'express';
 
-import { User } from '../entities/user.entity';
 import { IAuthTokenRequest } from './interfaces';
+import { User } from '../entities/user.entity';
 
 export const AUTH_TOKEN_USER_PROVIDER = 'AUTH_TOKEN_USER_PROVIDER';
 
