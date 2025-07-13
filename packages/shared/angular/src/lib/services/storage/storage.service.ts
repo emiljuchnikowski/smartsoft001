@@ -4,8 +4,6 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class StorageService {
-  constructor() {}
-
   setItem(key: string, value: any): void {
     if (typeof value === 'undefined' || value === null) {
       localStorage.removeItem(key);

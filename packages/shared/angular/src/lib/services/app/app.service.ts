@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { NavigationEnd, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-
 import { ArrayService } from '@smartsoft001/utils';
+import { BehaviorSubject } from 'rxjs';
 
 import { IIconButtonOptions } from '../../models';
 
