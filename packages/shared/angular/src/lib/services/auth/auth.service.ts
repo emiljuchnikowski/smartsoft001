@@ -10,11 +10,13 @@ export class AuthService {
   constructor(protected storageService: StorageService) {}
 
   isAuthenticated(): boolean {
-    const token: { access_token: string }  | null = this.getToken();
+    const token: { access_token: string } | null = this.getToken();
 
     if (!token) return false;
 
-    const tokenPayload: { exp: number } = (jwt_decode as any)(token.access_token) as any;
+    const tokenPayload: { exp: number } = (jwt_decode as any)(
+      token.access_token,
+    ) as any;
 
     if (Date.now() >= tokenPayload.exp * 1000) {
       this.storageService.removeItem(AUTH_TOKEN); // Remove expired token
@@ -30,15 +32,17 @@ export class AuthService {
     if (!token) return false;
 
     // Check for token expiration before decoding
-    const tokenPayloadExp: { exp: number } = (jwt_decode as any)(token.access_token) as any;
+    const tokenPayloadExp: { exp: number } = (jwt_decode as any)(
+      token.access_token,
+    ) as any;
     if (Date.now() >= tokenPayloadExp.exp * 1000) {
       this.storageService.removeItem(AUTH_TOKEN); // Remove expired token
       return false;
     }
 
-    const tokenPayloadPerm: { permissions: Array<string> } = (jwt_decode as any)(
-      token.access_token,
-    ) as any;
+    const tokenPayloadPerm: { permissions: Array<string> } = (
+      jwt_decode as any
+    )(token.access_token) as any;
 
     return (
       // this.isAuthenticated() call here would be redundant and might lead to multiple decodes/checks.
@@ -58,7 +62,9 @@ export class AuthService {
     if (!token) return [];
 
     // Check for token expiration
-    const tokenPayloadExp: { exp: number } = (jwt_decode as any)(token.access_token) as any;
+    const tokenPayloadExp: { exp: number } = (jwt_decode as any)(
+      token.access_token,
+    ) as any;
     if (Date.now() >= tokenPayloadExp.exp * 1000) {
       this.storageService.removeItem(AUTH_TOKEN); // Remove expired token
       return [];
@@ -75,7 +81,9 @@ export class AuthService {
     const token: { access_token: string } | null = this.getToken();
     if (!token) return null;
 
-    const tokenPayload: { exp: number } = (jwt_decode as any)(token.access_token) as any;
+    const tokenPayload: { exp: number } = (jwt_decode as any)(
+      token.access_token,
+    ) as any;
     if (Date.now() >= tokenPayload.exp * 1000) {
       this.storageService.removeItem(AUTH_TOKEN);
       return null;
