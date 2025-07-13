@@ -25,7 +25,13 @@
       "@smartsoft001/crud-shell-nestjs": [
         "packages/crud/shell/nestjs/src/index.ts"
       ],
+      "@smartsoft001/auth-domain": ["packages/auth/domain/src/index.ts"],
+      "@smartsoft001/auth-shell-app-services": [
+        "packages/auth/shell/app-services/src/index.ts"
+      ],
       "@smartsoft001/domain-core": ["packages/shared/domain-core/src/index.ts"],
+      "@smartsoft001/fb": ["packages/shared/fb/src/index.ts"],
+      "@smartsoft001/google": ["packages/shared/google/src/index.ts"],
       "@smartsoft001/models": ["packages/shared/models/src/index.ts"],
       "@smartsoft001/mongo": ["packages/shared/mongo/src/index.ts"],
       "@smartsoft001/nestjs": ["packages/shared/nestjs/src/index.ts"],
