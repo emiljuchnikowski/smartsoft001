@@ -1,0 +1,34 @@
+{
+  "name": "trans-domain",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/shared/trans/domain/src",
+  "projectType": "library",
+  "generators": {},
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["packages/shared/trans/domain/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "packages/shared/trans/domain/jest.config.ts"
+      },
+      "outputs": ["{workspaceRoot}/coverage/packages/shared/trans/domain"]
+    },
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "options": {
+        "outputPath": "dist/packages/shared/trans/domain",
+        "tsConfig": "packages/shared/trans/domain/tsconfig.lib.json",
+        "packageJson": "packages/shared/trans/domain/package.json",
+        "main": "packages/shared/trans/domain/src/index.ts",
+        "assets": ["packages/shared/trans/domain/*.md"]
+      },
+      "outputs": ["{options.outputPath}"]
+    }
+  },
+  "tags": ["scope:trans", "type:domain"]
+}
