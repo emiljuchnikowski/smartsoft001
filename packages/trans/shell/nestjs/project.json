@@ -1,0 +1,39 @@
+{
+  "name": "trans-shell-nestjs",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/trans/shell/nestjs/src",
+  "projectType": "library",
+  "generators": {},
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "packages/trans/shell/nestjs/**/*.{ts,tsx,js,jsx}",
+          "packages/trans/shell/nestjs/package.json"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "packages/trans/shell/nestjs/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "outputs": ["{workspaceRoot}/coverage/packages/trans/shell/nestjs"]
+    },
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "options": {
+        "outputPath": "dist/packages/trans/shell/nestjs",
+        "tsConfig": "packages/trans/shell/nestjs/tsconfig.lib.json",
+        "packageJson": "packages/trans/shell/nestjs/package.json",
+        "main": "packages/trans/shell/nestjs/src/index.ts",
+        "assets": ["packages/trans/shell/nestjs/*.md"]
+      },
+      "outputs": ["{options.outputPath}"]
+    }
+  },
+  "tags": ["scope:trans", "type:shell"]
+}

@@ -196,54 +196,63 @@ describe('shared-mongo: MongoAttachmentRepository', () => {
     expect(result).toBeNull(); // Expect null if no file is found
   });
 
-  // it("upload() should upload file successfully", async () => {
-  //   const mockUrl = "mock-url";
-  //   jest.spyOn(model as any, "getUrl").mockImplementation(() => mockUrl);
-  //
-  //   const mockStream = new Readable();
-  //   mockStream._read = jest.fn();
-  //
-  //   // Set up the stream to simulate data being piped
-  //   data.stream = mockStream;
-  //
-  //   const result = model.upload(data);
-  //
-  //   // Ensure the MongoClient.connect method is called with the correct URL
-  //   expect(MongoClient.connect).toHaveBeenCalledWith(mockUrl);
-  //
-  //   // Wait for the upload promise to resolve
-  //   await expect(result).resolves.toBeUndefined();
-  //
-  //   // Ensure GridFSBucket and openUploadStreamWithId are called
-  //   expect(GridFSBucket).toHaveBeenCalledWith(expect.anything(), {
-  //     bucketName: mockConfig.collection,
-  //   });
-  //   expect(mockOpenUploadStreamWithId).toHaveBeenCalledWith(data.id, data.fileName, {
-  //     contentType: data.mimeType,
-  //   });
-  //
-  //   // Ensure the stream callback is called if provided
-  //   expect(options.streamCallback).toHaveBeenCalledWith(mockWriteStream);
-  //
-  //   // Ensure data is piped into the write stream
-  //   expect(mockStream.pipe).toHaveBeenCalledWith(mockWriteStream);
-  // });
+  it('upload() should call MongoClient.connect with correct URL', async () => {
+    const mockUrl = 'mock-url';
+    jest.spyOn(model as any, 'getUrl').mockImplementation(() => mockUrl);
+    const mockStream = new Readable();
+    mockStream._read = jest.fn();
+    data.stream = mockStream;
+    model.upload(data);
+    expect(MongoClient.connect).toHaveBeenCalledWith(mockUrl);
+  });
 
-  // it("upload() should reject with error if upload fails", async () => {
-  //   const mockUrl = "mock-url";
-  //   jest.spyOn(model as any, "getUrl").mockImplementation(() => mockUrl);
-  //
-  //   const result = model.upload({
-  //     ...data,
-  //     stream: mockStream
-  //   });
-  //
-  //   if (mockWriteStream._errorCallback) {
-  //     mockWriteStream._errorCallback(new Error("Upload failed"));
-  //   }
-  //   // Ensure the upload rejects with the error
-  //   // await expect(result.catch(e => e)).rejects.toThrowError("Upload failed");
-  //
-  //   await expect(result).rejects.toThrowError("Upload failed");
-  // });
+  it('upload() should resolve the upload promise', async () => {
+    const mockUrl = 'mock-url';
+    jest.spyOn(model as any, 'getUrl').mockImplementation(() => mockUrl);
+    const mockStream = new Readable();
+    mockStream._read = jest.fn();
+    data.stream = mockStream;
+    const result = model.upload(data);
+    await expect(result).resolves.toBeUndefined();
+  });
+
+  it('upload() should call GridFSBucket and openUploadStreamWithId', async () => {
+    const mockUrl = 'mock-url';
+    jest.spyOn(model as any, 'getUrl').mockImplementation(() => mockUrl);
+    const mockStream = new Readable();
+    mockStream._read = jest.fn();
+    data.stream = mockStream;
+    await model.upload(data);
+    expect(GridFSBucket).toHaveBeenCalledWith(expect.anything(), {
+      bucketName: mockConfig.collection,
+    });
+    expect(mockOpenUploadStreamWithId).toHaveBeenCalledWith(
+      data.id,
+      data.fileName,
+      {
+        contentType: data.mimeType,
+      },
+    );
+  });
+
+  it('upload() should call streamCallback if provided', async () => {
+    const mockUrl = 'mock-url';
+    jest.spyOn(model as any, 'getUrl').mockImplementation(() => mockUrl);
+    const mockStream = new Readable();
+    mockStream._read = jest.fn();
+    data.stream = mockStream;
+    await model.upload(data, options);
+    expect(options.streamCallback).toHaveBeenCalled();
+  });
+
+  it('upload() should call pipe of the provided data stream', async () => {
+    const mockUrl = 'mock-url';
+    jest.spyOn(model as any, 'getUrl').mockImplementation(() => mockUrl);
+    const mockStream = new Readable();
+    mockStream._read = jest.fn();
+    mockStream.pipe = jest.fn();
+    data.stream = mockStream;
+    await model.upload(data);
+    expect(mockStream.pipe).toHaveBeenCalled();
+  });
 });

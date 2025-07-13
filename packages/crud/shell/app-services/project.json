@@ -1,0 +1,43 @@
+{
+  "name": "crud-shell-app-services",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/crud/shell/app-services/src",
+  "projectType": "library",
+  "generators": {},
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "packages/crud/shell/app-services/**/*.{ts,tsx,js,jsx}",
+          "packages/crud/shell/app-services/package.json"
+        ],
+        "tsConfig": [
+          "packages/crud/shell/app-services/tsconfig.lib.json",
+          "packages/crud/shell/app-services/tsconfig.spec.json"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "packages/crud/shell/app-services/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "outputs": ["{workspaceRoot}/coverage/packages/crud/shell/app-services"]
+    },
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "options": {
+        "outputPath": "dist/packages/crud/shell/app-services",
+        "tsConfig": "packages/crud/shell/app-services/tsconfig.lib.json",
+        "packageJson": "packages/crud/shell/app-services/package.json",
+        "main": "packages/crud/shell/app-services/src/index.ts",
+        "assets": ["packages/crud/shell/app-services/*.md"]
+      },
+      "outputs": ["{options.outputPath}"]
+    }
+  },
+  "tags": ["scope:crud", "type:shell"]
+}

@@ -1,0 +1,43 @@
+{
+  "name": "crud-shell-nestjs",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/crud/shell/nestjs/src",
+  "projectType": "library",
+  "generators": {},
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "packages/crud/shell/nestjs/**/*.{ts,tsx,js,jsx}",
+          "packages/crud/shell/nestjs/package.json"
+        ],
+        "tsConfig": [
+          "packages/crud/shell/nestjs/tsconfig.lib.json",
+          "packages/crud/shell/nestjs/tsconfig.spec.json"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "packages/crud/shell/nestjs/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "outputs": ["{workspaceRoot}/coverage/packages/crud/shell/nestjs"]
+    },
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "options": {
+        "outputPath": "dist/packages/crud/shell/nestjs",
+        "tsConfig": "packages/crud/shell/nestjs/tsconfig.lib.json",
+        "packageJson": "packages/crud/shell/nestjs/package.json",
+        "main": "packages/crud/shell/nestjs/src/index.ts",
+        "assets": ["packages/crud/shell/nestjs/*.md"]
+      },
+      "outputs": ["{options.outputPath}"]
+    }
+  },
+  "tags": ["scope:crud", "type:shell"]
+}
