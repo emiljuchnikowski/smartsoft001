@@ -15,6 +15,11 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@smartsoft001/angular": ["packages/shared/angular/src/index.ts"],
+      "@smartsoft001/auth-domain": ["packages/auth/domain/src/index.ts"],
+      "@smartsoft001/auth-shell-app-services": [
+        "packages/auth/shell/app-services/src/index.ts"
+      ],
       "@smartsoft001/crud-domain": ["packages/crud/domain/src/index.ts"],
       "@smartsoft001/crud-shell-app-services": [
         "packages/crud/shell/app-services/src/index.ts"
@@ -25,11 +30,6 @@
       "@smartsoft001/crud-shell-nestjs": [
         "packages/crud/shell/nestjs/src/index.ts"
       ],
-      "@smartsoft001/auth-domain": ["packages/auth/domain/src/index.ts"],
-      "@smartsoft001/auth-shell-app-services": [
-        "packages/auth/shell/app-services/src/index.ts"
-      ],
-      "@smartsoft001/angular": ["packages/shared/angular/src/index.ts"],
       "@smartsoft001/domain-core": ["packages/shared/domain-core/src/index.ts"],
       "@smartsoft001/fb": ["packages/shared/fb/src/index.ts"],
       "@smartsoft001/google": ["packages/shared/google/src/index.ts"],
