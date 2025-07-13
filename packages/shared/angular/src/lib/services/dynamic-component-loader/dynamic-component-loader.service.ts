@@ -1,17 +1,24 @@
 import {
   Compiler,
-  ComponentFactory, ComponentFactoryResolver,
-  Injectable, Injector,
+  ComponentFactory,
+  ComponentFactoryResolver,
+  Injectable,
+  Injector,
   NgModule,
-} from "@angular/core";
+} from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
-export class DynamicComponentLoader<T> { // Generic T is unused in original
+export class DynamicComponentLoader<T> {
+  // Generic T is unused in original
   static declaredComponents = [];
 
-  constructor(private resolver: ComponentFactoryResolver, private injector: Injector) {}
+  constructor(
+    private resolver: ComponentFactoryResolver,
+    private injector: Injector,
+  ) {}
 
-  async getComponentsWithFactories<C>(options: { // Generic C is unused in original
+  async getComponentsWithFactories<C>(options: {
+    // Generic C is unused in original
     components: Array<any>;
   }): Promise<
     {
@@ -21,12 +28,13 @@ export class DynamicComponentLoader<T> { // Generic T is unused in original
   > {
     let components: Array<any> = [];
 
-    components = options.components.filter(
-      (comp) =>
-        !DynamicComponentLoader.declaredComponents.some(
-          (dec) => dec.component === comp
-        )
-    ) || [];
+    components =
+      options.components.filter(
+        (comp) =>
+          !DynamicComponentLoader.declaredComponents.some(
+            (dec) => dec.component === comp,
+          ),
+      ) || [];
 
     const result = options.components.map((c) => {
       let factory: ComponentFactory<any> | undefined = undefined;
@@ -37,10 +45,9 @@ export class DynamicComponentLoader<T> { // Generic T is unused in original
         // It might be in declaredComponents if dynamically compiled
       }
 
-
       if (!factory) {
         const declared = DynamicComponentLoader.declaredComponents.find(
-            (x) => x.component === c
+          (x) => x.component === c,
         );
         if (declared) {
           factory = declared.factory;
@@ -51,11 +58,13 @@ export class DynamicComponentLoader<T> { // Generic T is unused in original
         // This case should ideally not happen if components are correctly provided
         // or have been processed by this service before.
         // Consider logging a warning or throwing a more specific error.
-        console.warn(`Component factory not found for component: ${c.name || c}`);
+        console.warn(
+          `Component factory not found for component: ${c.name || c}`,
+        );
         // Returning a structure that indicates failure or an empty factory
         return {
-            component: c,
-            factory: undefined as any // Or handle as an error
+          component: c,
+          factory: undefined as any, // Or handle as an error
         };
       }
 
@@ -66,14 +75,18 @@ export class DynamicComponentLoader<T> { // Generic T is unused in original
     });
 
     // Filter out components for which factories could not be created
-    const validResults = result.filter(r => r.factory);
+    const validResults = result.filter((r) => r.factory);
 
     // Update declaredComponents only with valid component-factory pairs
     // and avoid duplicates
-    validResults.forEach(vr => {
-        if (!DynamicComponentLoader.declaredComponents.some(dc => dc.component === vr.component)) {
-            DynamicComponentLoader.declaredComponents.push(vr);
-        }
+    validResults.forEach((vr) => {
+      if (
+        !DynamicComponentLoader.declaredComponents.some(
+          (dc) => dc.component === vr.component,
+        )
+      ) {
+        DynamicComponentLoader.declaredComponents.push(vr);
+      }
     });
 
     return validResults;

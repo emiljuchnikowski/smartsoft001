@@ -1,9 +1,9 @@
-import { Injectable } from "@angular/core";
-import decode from "jwt-decode";
+import { Injectable } from '@angular/core';
+import decode from 'jwt-decode';
 
-import { StorageService } from "../storage/storage.service"; // This path needs to be correct
+import { StorageService } from '../storage/storage.service'; // This path needs to be correct
 
-export const AUTH_TOKEN = "AUTH_TOKEN";
+export const AUTH_TOKEN = 'AUTH_TOKEN';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -14,9 +14,7 @@ export class AuthService {
 
     if (!token) return false;
 
-    const tokenPayload: { exp: number } = decode(
-        token.access_token
-    ) as any;
+    const tokenPayload: { exp: number } = decode(token.access_token) as any;
 
     if (Date.now() >= tokenPayload.exp * 1000) {
       this.storageService.removeItem(AUTH_TOKEN); // Remove expired token
@@ -39,7 +37,7 @@ export class AuthService {
     }
 
     const tokenPayloadPerm: { permissions: Array<string> } = decode(
-      token.access_token
+      token.access_token,
     ) as any;
 
     return (
@@ -49,7 +47,7 @@ export class AuthService {
       // For now, direct check as added above.
       tokenPayloadPerm.permissions &&
       permissions.some((p) =>
-        (tokenPayloadPerm.permissions as Array<string>).some((tp) => p === tp)
+        (tokenPayloadPerm.permissions as Array<string>).some((tp) => p === tp),
       )
     );
   }
@@ -67,7 +65,7 @@ export class AuthService {
     }
 
     const tokenPayload: { permissions: Array<string> } = decode(
-        token.access_token
+      token.access_token,
     ) as any;
 
     return tokenPayload.permissions || []; // ensure it returns empty array if permissions field is missing
@@ -102,8 +100,9 @@ export class AuthService {
   // Adjusted to use getRawToken and be more explicit
   protected getToken(): { access_token: string } | null {
     const token = this.getRawToken();
-    if (!token || !token.access_token) { // ensure access_token property exists
-        return null;
+    if (!token || !token.access_token) {
+      // ensure access_token property exists
+      return null;
     }
 
     // No need to check expiration here as individual methods do it.

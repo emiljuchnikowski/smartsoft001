@@ -1,22 +1,22 @@
-import {Injectable} from "@angular/core";
+import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class DetailsService {
-    private _root: any;
+  private _root: any;
 
-    get $root(): any {
-        return this._root;
-    }
+  get $root(): any {
+    return this._root;
+  }
 
-    constructor() {
-        this.init();
-    }
+  constructor() {
+    this.init();
+  }
 
-    init(): void {
-        this._root = null;
-    }
+  init(): void {
+    this._root = null;
+  }
 
-    setRoot(obj: any, force = false): void {
-        if (!this._root || force) this._root = obj;
-    }
+  setRoot(obj: any, force = false): void {
+    if (!this._root || force) this._root = obj;
+  }
 }
