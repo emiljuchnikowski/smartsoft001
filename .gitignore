@@ -16,6 +16,7 @@ node_modules
 *.launch
 .settings/
 *.sublime-workspace
+.history/
 
 # IDE - VSCode
 .vscode/*
@@ -42,5 +43,7 @@ Thumbs.db
 .nx/workspace-data
 .npmrc
 .cache
+.cursor/rules/nx-rules.mdc
+.github/instructions/nx.instructions.md
 
 .angular

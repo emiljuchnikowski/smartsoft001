@@ -1,0 +1,44 @@
+{
+  "name": "crud-domain",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/crud/domain/src",
+  "projectType": "library",
+  "generators": {},
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "packages/crud/domain/**/*.{ts,tsx,js,jsx}",
+          "packages/crud/domain/package.json"
+        ],
+        "tsConfig": [
+          "packages/crud/domain/tsconfig.lib.json",
+          "packages/crud/domain/tsconfig.spec.json"
+        ],
+        "exclude": ["**/node_modules/**", "!packages/crud/domain/**/*"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "packages/crud/domain/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "outputs": ["{workspaceRoot}/coverage/packages/crud/domain"]
+    },
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "options": {
+        "outputPath": "dist/packages/crud/domain",
+        "tsConfig": "packages/crud/domain/tsconfig.lib.json",
+        "packageJson": "packages/crud/domain/package.json",
+        "main": "packages/crud/domain/src/index.ts",
+        "assets": ["packages/crud/domain/*.md"]
+      },
+      "outputs": ["{options.outputPath}"]
+    }
+  },
+  "tags": ["scope:crud", "type:domain"]
+}

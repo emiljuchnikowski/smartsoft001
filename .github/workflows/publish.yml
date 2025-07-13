@@ -4,6 +4,7 @@ on:
     branches:
       - main
 
+
 jobs:
   main:
     if: github.repository_owner == 'emiljuchnikowski'
@@ -63,7 +64,7 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: 'build(github): publish ${{ steps.package.outputs.version }} [skip ci]'
-          push_options: '--follow-tags'
+          push_options: '--follow-tags --no-verify'
         env:
           NX_CLOUD_DISTRIBUTED_EXECUTION: false
 

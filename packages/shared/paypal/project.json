@@ -1,0 +1,46 @@
+{
+  "name": "shared-paypal",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/shared/paypal/src",
+  "projectType": "library",
+  "generators": {},
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "packages/shared/paypal/**/*.{ts,tsx,js,jsx}",
+          "packages/shared/paypal/package.json"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "packages/shared/paypal/jest.config.ts"
+      },
+      "outputs": ["{workspaceRoot}/coverage/packages/shared/paypal"]
+    },
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/shared/paypal",
+        "tsConfig": "packages/shared/paypal/tsconfig.lib.json",
+        "packageJson": "packages/shared/paypal/package.json",
+        "main": "packages/shared/paypal/src/index.ts",
+        "assets": ["packages/shared/paypal/*.md"]
+      }
+    },
+    "deploy": {
+      "executor": "ngx-deploy-npm:deploy",
+      "options": {
+        "access": "public",
+        "distFolderPath": "dist/packages/shared/paypal"
+      },
+      "dependsOn": ["build"]
+    }
+  },
+  "tags": ["scope:shared", "type:util"]
+}

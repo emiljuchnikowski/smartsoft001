@@ -1,0 +1,46 @@
+{
+  "name": "trans-domain",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/trans/domain/src",
+  "projectType": "library",
+  "generators": {},
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "packages/trans/domain/**/*.{ts,tsx,js,jsx}",
+          "packages/trans/domain/package.json"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "packages/trans/domain/jest.config.ts"
+      },
+      "outputs": ["{workspaceRoot}/coverage/packages/trans/domain"]
+    },
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/trans/domain",
+        "tsConfig": "packages/trans/domain/tsconfig.lib.json",
+        "packageJson": "packages/trans/domain/package.json",
+        "main": "packages/trans/domain/src/index.ts",
+        "assets": ["packages/trans/domain/*.md"]
+      }
+    },
+    "deploy": {
+      "executor": "ngx-deploy-npm:deploy",
+      "options": {
+        "access": "public",
+        "distFolderPath": "dist/packages/trans/domain"
+      },
+      "dependsOn": ["build"]
+    }
+  },
+  "tags": ["scope:trans", "type:domain"]
+}

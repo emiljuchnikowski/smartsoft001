@@ -1,0 +1,20 @@
+{
+  "name": "@smartsoft001/crud-shell-app-services",
+  "version": "2.68.0",
+  "description": "Utils to crud",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emiljuchnikowski/smartsoft.git"
+  },
+  "keywords": [
+    "smartsoft",
+    "oauth",
+    "nestjs"
+  ],
+  "author": "Emil Juchnikowski",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/emiljuchnikowski/smartsoft/issues"
+  },
+  "homepage": "https://github.com/emiljuchnikowski/smartsoft#readme"
+}

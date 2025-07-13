@@ -1,0 +1,44 @@
+{
+  "name": "auth-domain",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/auth/domain/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "packages/auth/domain/**/*.{ts,tsx,js,jsx}",
+          "packages/auth/domain/package.json"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/packages/auth/domain"],
+      "options": {
+        "jestConfig": "packages/auth/domain/jest.config.ts"
+      }
+    },
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/auth/domain",
+        "tsConfig": "packages/auth/domain/tsconfig.lib.json",
+        "packageJson": "packages/auth/domain/package.json",
+        "main": "packages/auth/domain/src/index.ts",
+        "assets": ["packages/auth/domain/*.md"]
+      }
+    },
+    "deploy": {
+      "executor": "ngx-deploy-npm:deploy",
+      "options": {
+        "access": "public",
+        "distFolderPath": "dist/packages/auth/domain"
+      },
+      "dependsOn": ["build"]
+    }
+  }
+}

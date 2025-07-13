@@ -62,7 +62,6 @@
       "preVersionCommand": "npx nx run-many -t build"
     }
   },
-  "useLegacyCache": true,
   "generators": {
     "@nx/angular:library": {
       "linter": "eslint",

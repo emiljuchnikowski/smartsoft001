@@ -1,0 +1,37 @@
+{
+  "name": "auth-shell-nestjs",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/auth/shell/nestjs/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "packages/auth/shell/nestjs/**/*.{ts,tsx,js,jsx}",
+          "packages/auth/shell/nestjs/package.json"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/packages/auth/shell/nestjs"],
+      "options": {
+        "jestConfig": "packages/auth/shell/nestjs/jest.config.ts"
+      }
+    },
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/auth/shell/nestjs",
+        "tsConfig": "packages/auth/shell/nestjs/tsconfig.lib.json",
+        "packageJson": "packages/auth/shell/nestjs/package.json",
+        "main": "packages/auth/shell/nestjs/src/index.ts",
+        "assets": ["packages/auth/shell/nestjs/*.md"]
+      }
+    }
+  },
+  "tags": ["scope:auth", "type:shell"]
+}

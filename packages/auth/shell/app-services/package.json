@@ -1,0 +1,16 @@
+{
+  "name": "@smartsoft001/auth-shell-app-services",
+  "version": "2.68.0",
+  "description": "Utils to authorization",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emiljuchnikowski/smartsoft.git"
+  },
+  "keywords": [
+    "smartsoft",
+    "oauth",
+    "nestjs"
+  ],
+  "author": "Emil Juchnikowski",
+  "license": "MIT"
+}
