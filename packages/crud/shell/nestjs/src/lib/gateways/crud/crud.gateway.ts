@@ -8,11 +8,11 @@ import {
   WebSocketGateway,
   WsResponse,
 } from '@nestjs/websockets';
-import { Socket } from 'socket.io';
 import { CrudService } from '@smartsoft001/crud-shell-app-services';
+import { ItemChangedData } from '@smartsoft001/crud-shell-dtos';
 import { IEntity } from '@smartsoft001/domain-core';
 import { Observable, Subscription } from 'rxjs';
-import { ItemChangedData } from '@smartsoft001/crud-shell-dtos';
+import { Socket } from 'socket.io';
 
 @WebSocketGateway({
   transports: ['websocket'],

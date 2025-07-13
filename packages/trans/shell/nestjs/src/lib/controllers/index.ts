@@ -1,7 +1,7 @@
-import { TransController } from './trans/trans.controller';
-import { PayUController } from './payu/payu.controller';
-import { PaypalController } from './paypal/paypal.controller';
 import { PaynowController } from './paynow/paynow.controller';
+import { PaypalController } from './paypal/paypal.controller';
+import { PayUController } from './payu/payu.controller';
+import { TransController } from './trans/trans.controller';
 
 export * from './trans/trans.controller';
 export * from './payu/payu.controller';

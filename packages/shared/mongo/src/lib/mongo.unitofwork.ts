@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { ITransaction, IUnitOfWork } from '@smartsoft001/domain-core';
 import { ClientSession, MongoClient, TransactionOptions } from 'mongodb';
 
-import { ITransaction, IUnitOfWork } from '@smartsoft001/domain-core';
-import { MongoConfig } from '@smartsoft001/mongo';
-
+import { MongoConfig } from './mongo.module';
 import { getMongoUrl } from './mongo.utils';
 
 export interface IMongoTransaction extends ITransaction {

@@ -1,12 +1,11 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { HttpService } from '@nestjs/axios';
 import { ModuleRef } from '@nestjs/core';
+import { Test, TestingModule } from '@nestjs/testing';
+import { Trans } from '@smartsoft001/trans-domain';
 import { of } from 'rxjs';
 
-import { Trans } from '@smartsoft001/trans-domain';
-
-import { RevolutService } from './revolut.service';
 import { RevolutConfig } from './revolut.config';
+import { RevolutService } from './revolut.service';
 
 const mockHttpService = {
   post: jest.fn(),

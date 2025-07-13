@@ -1,10 +1,10 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { HttpService } from '@nestjs/axios';
 import { ModuleRef } from '@nestjs/core';
+import { Test, TestingModule } from '@nestjs/testing';
 import { Trans } from '@smartsoft001/trans-domain';
 
-import { PaypalService } from './paypal.service';
 import { PaypalConfig } from './paypal.config';
+import { PaypalService } from './paypal.service';
 
 // Mock the module before importing it
 jest.mock('paypal-rest-sdk', () => ({

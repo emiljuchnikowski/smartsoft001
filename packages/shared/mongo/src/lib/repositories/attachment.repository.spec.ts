@@ -1,7 +1,7 @@
-import { MongoClient, GridFSBucket } from 'mongodb';
-import { Readable } from 'stream';
-
 import { IEntity } from '@smartsoft001/domain-core';
+import { MongoClient, GridFSBucket } from 'mongodb';
+
+import { Readable } from 'stream';
 
 import { MongoAttachmentRepository } from './attachment.repository';
 

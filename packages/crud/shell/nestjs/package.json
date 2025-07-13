@@ -16,5 +16,10 @@
   "bugs": {
     "url": "https://github.com/emiljuchnikowski/smartsoft/issues"
   },
+  "peerDependencies": {
+    "@smartsoft001/crud-shell-app-services": "*",
+    "@smartsoft001/crud-shell-dto": "*",
+    "@smartsoft001/domain-core": "*"
+  },
   "homepage": "https://github.com/emiljuchnikowski/smartsoft#readme"
 }

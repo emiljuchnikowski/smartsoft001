@@ -1,10 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-
 import { IItemRepository } from '@smartsoft001/domain-core';
 
 import { CreatorService } from './creator.service';
-import { Trans, TransSystem } from '../entities/trans.entity';
 import { ITransCreate } from './interfaces';
+import { Trans, TransSystem } from '../entities/trans.entity';
 import { ITransInternalService, ITransPaymentService } from '../interfaces';
 
 describe('trans-domain: CreatorService', () => {

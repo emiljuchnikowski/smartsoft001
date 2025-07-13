@@ -1,4 +1,4 @@
-import { MongoConfig } from '@smartsoft001/mongo';
+import { MongoConfig } from './mongo.module';
 
 export function getMongoUrl(config: MongoConfig): string {
   let url;

@@ -1,14 +1,13 @@
 import { DynamicModule, Module } from '@nestjs/common';
-import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-
+import { PassportModule } from '@nestjs/passport';
 import { SERVICES } from '@smartsoft001/crud-shell-app-services';
-import { SharedConfig, SharedModule } from '@smartsoft001/nestjs';
 import { MongoModule } from '@smartsoft001/mongo';
+import { SharedConfig, SharedModule } from '@smartsoft001/nestjs';
 
 import { CONTROLLERS } from './controllers';
-import { AuthJwtGuard } from './guards/auth/auth.guard';
 import { GATEWAYS } from './gateways';
+import { AuthJwtGuard } from './guards/auth/auth.guard';
 
 @Module({})
 export class CrudShellNestjsModule {

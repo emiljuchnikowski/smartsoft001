@@ -1,7 +1,7 @@
 {
   "extends": "../../../.eslintrc",
   "rules": {
-    "import/order": "off"
+
   },
   "ignorePatterns": ["!**/*"],
   "overrides": [

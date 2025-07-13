@@ -1,5 +1,4 @@
-import { MongoConfig } from '@smartsoft001/mongo';
-
+import { MongoConfig } from './mongo.module';
 import { getMongoUrl } from './mongo.utils';
 
 const mockData: (MongoConfig & { result: string; testName: string })[] = [

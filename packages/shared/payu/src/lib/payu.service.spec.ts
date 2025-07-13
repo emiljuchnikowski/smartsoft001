@@ -1,10 +1,10 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { HttpService } from '@nestjs/axios';
 import { ModuleRef } from '@nestjs/core';
+import { Test, TestingModule } from '@nestjs/testing';
 import { of, throwError } from 'rxjs';
 
-import { PayuService } from './payu.service';
 import { PayuConfig } from './payu.config';
+import { PayuService } from './payu.service';
 
 const mockHttpService = {
   post: jest.fn(),

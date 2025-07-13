@@ -1,7 +1,7 @@
 import { IItemRepositoryOptions } from '@smartsoft001/domain-core';
-import { MongoConfig, MongoItemRepository } from '@smartsoft001/mongo';
 import { IUser } from '@smartsoft001/users';
 
+import { MongoConfig, MongoItemRepository } from '../mongo.module';
 import { IMongoTransaction } from '../mongo.unitofwork';
 
 describe('shared-mongo: MongoItemRepository create function', () => {

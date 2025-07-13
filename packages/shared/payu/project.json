@@ -6,9 +6,12 @@
   "generators": {},
   "targets": {
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/eslint:lint",
       "options": {
-        "lintFilePatterns": ["packages/shared/payu/**/*.ts"]
+        "lintFilePatterns": [
+          "packages/shared/payu/**/*.{ts,tsx,js,jsx}",
+          "packages/shared/payu/package.json"
+        ]
       }
     },
     "test": {

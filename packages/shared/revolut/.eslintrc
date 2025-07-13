@@ -2,7 +2,7 @@
   "extends": "../../../.eslintrc.json",
   "ignorePatterns": ["!**/*"],
   "rules": {
-    "import/order": "off"
+
   },
   "overrides": [
     {

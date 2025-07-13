@@ -26,3 +26,6 @@ export class MongoModule {
     };
   }
 }
+
+export { MongoConfig } from './mongo.config';
+export { MongoItemRepository } from './repositories/item.repository';

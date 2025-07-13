@@ -1,6 +1,5 @@
-import { Column, Entity, ObjectIdColumn } from 'typeorm';
-
 import { IEntity } from '@smartsoft001/domain-core';
+import { Column, Entity, ObjectIdColumn } from 'typeorm';
 
 @Entity('trans')
 export class Trans<T> implements IEntity<string> {

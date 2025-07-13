@@ -10,9 +10,8 @@ import {
   HttpStatus,
   Optional,
 } from '@nestjs/common';
-
-import { TransService } from '@smartsoft001/trans-shell-app-services';
 import { PaypalConfig, PaypalService } from '@smartsoft001/paypal';
+import { TransService } from '@smartsoft001/trans-shell-app-services';
 
 @Controller('paypal')
 export class PaypalController {

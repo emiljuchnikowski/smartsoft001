@@ -1,20 +1,19 @@
+import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
-import * as CryptoJS from 'crypto-js';
-import { HttpService } from '@nestjs/axios';
-
 import {
   ITransPaymentSingleService,
   Trans,
   TransStatus,
 } from '@smartsoft001/trans-domain';
+import { GuidService } from '@smartsoft001/utils';
+import * as CryptoJS from 'crypto-js';
 
 import {
   IPaynowConfigProvider,
   PAYNOW_CONFIG_PROVIDER,
   PaynowConfig,
 } from './paynow.config';
-import { GuidService } from '@smartsoft001/utils';
 
 @Injectable()
 export class PaynowService implements ITransPaymentSingleService {

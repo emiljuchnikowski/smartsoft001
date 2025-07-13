@@ -1,12 +1,11 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { HttpService } from '@nestjs/axios';
 import { ModuleRef } from '@nestjs/core';
+import { Test, TestingModule } from '@nestjs/testing';
+import { Trans } from '@smartsoft001/trans-domain';
 import { of } from 'rxjs';
 
-import { Trans } from '@smartsoft001/trans-domain';
-
-import { PaynowService } from './paynow.service';
 import { PaynowConfig } from './paynow.config';
+import { PaynowService } from './paynow.service';
 
 const mockHttpService = {
   post: jest.fn(),

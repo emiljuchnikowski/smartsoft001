@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { IEntity, IAttachmentRepository } from '@smartsoft001/domain-core';
-import { MongoConfig } from '@smartsoft001/mongo';
 import { MongoClient } from 'mongodb';
 import * as mongo from 'mongodb';
+
 import { Readable, Stream } from 'stream';
 
+import { MongoConfig } from '../mongo.module';
 import { getMongoUrl } from '../mongo.utils';
 
 @Injectable()

@@ -1,7 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { HttpService } from '@nestjs/axios';
-import { FbService } from './fb.service';
+import { Test, TestingModule } from '@nestjs/testing';
 import { of } from 'rxjs';
+
+import { FbService } from './fb.service';
 
 describe('FbService', () => {
   let service: FbService;
