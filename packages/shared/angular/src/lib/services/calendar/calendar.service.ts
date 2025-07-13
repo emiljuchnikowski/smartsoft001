@@ -24,10 +24,10 @@ export class CalendarService {
       date: moment().add(2, 'year'),
       calendar: [
         {
-          dates: null,
-          monthName: null,
-          number: null,
-          year: null,
+          dates: null as any,
+          monthName: null as any,
+          number: null as any,
+          year: null as any,
         },
       ],
     };

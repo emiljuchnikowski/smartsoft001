@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import decode from 'jwt-decode';
+import * as jwt_decode from 'jwt-decode';
 
 import { StorageService } from '../storage/storage.service'; // This path needs to be correct
 
@@ -10,11 +10,11 @@ export class AuthService {
   constructor(protected storageService: StorageService) {}
 
   isAuthenticated(): boolean {
-    const token: { access_token: string } = this.getToken();
+    const token: { access_token: string }  | null = this.getToken();
 
     if (!token) return false;
 
-    const tokenPayload: { exp: number } = decode(token.access_token) as any;
+    const tokenPayload: { exp: number } = (jwt_decode as any)(token.access_token) as any;
 
     if (Date.now() >= tokenPayload.exp * 1000) {
       this.storageService.removeItem(AUTH_TOKEN); // Remove expired token
@@ -25,18 +25,18 @@ export class AuthService {
   }
 
   expectPermissions(permissions: Array<string>): boolean {
-    const token: { access_token: string } = this.getToken();
+    const token: { access_token: string } | null = this.getToken();
 
     if (!token) return false;
 
     // Check for token expiration before decoding
-    const tokenPayloadExp: { exp: number } = decode(token.access_token) as any;
+    const tokenPayloadExp: { exp: number } = (jwt_decode as any)(token.access_token) as any;
     if (Date.now() >= tokenPayloadExp.exp * 1000) {
       this.storageService.removeItem(AUTH_TOKEN); // Remove expired token
       return false;
     }
 
-    const tokenPayloadPerm: { permissions: Array<string> } = decode(
+    const tokenPayloadPerm: { permissions: Array<string> } = (jwt_decode as any)(
       token.access_token,
     ) as any;
 
@@ -53,18 +53,18 @@ export class AuthService {
   }
 
   getPermissions(): Array<string> {
-    const token: { access_token: string } = this.getToken();
+    const token: { access_token: string } | null = this.getToken();
 
     if (!token) return [];
 
     // Check for token expiration
-    const tokenPayloadExp: { exp: number } = decode(token.access_token) as any;
+    const tokenPayloadExp: { exp: number } = (jwt_decode as any)(token.access_token) as any;
     if (Date.now() >= tokenPayloadExp.exp * 1000) {
       this.storageService.removeItem(AUTH_TOKEN); // Remove expired token
       return [];
     }
 
-    const tokenPayload: { permissions: Array<string> } = decode(
+    const tokenPayload: { permissions: Array<string> } = (jwt_decode as any)(
       token.access_token,
     ) as any;
 
@@ -72,10 +72,10 @@ export class AuthService {
   }
 
   getTokenPayload(): any {
-    const token: { access_token: string } = this.getToken();
+    const token: { access_token: string } | null = this.getToken();
     if (!token) return null;
 
-    const tokenPayload: { exp: number } = decode(token.access_token) as any;
+    const tokenPayload: { exp: number } = (jwt_decode as any)(token.access_token) as any;
     if (Date.now() >= tokenPayload.exp * 1000) {
       this.storageService.removeItem(AUTH_TOKEN);
       return null;

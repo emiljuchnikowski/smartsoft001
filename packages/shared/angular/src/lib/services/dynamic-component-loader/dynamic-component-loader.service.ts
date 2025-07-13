@@ -10,7 +10,7 @@ import {
 @Injectable({ providedIn: 'root' })
 export class DynamicComponentLoader<T> {
   // Generic T is unused in original
-  static declaredComponents = [];
+  static declaredComponents: any[] = [];
 
   constructor(
     private resolver: ComponentFactoryResolver,
@@ -46,7 +46,7 @@ export class DynamicComponentLoader<T> {
       }
 
       if (!factory) {
-        const declared = DynamicComponentLoader.declaredComponents.find(
+        const declared: any = DynamicComponentLoader.declaredComponents.find(
           (x) => x.component === c,
         );
         if (declared) {
@@ -82,10 +82,10 @@ export class DynamicComponentLoader<T> {
     validResults.forEach((vr) => {
       if (
         !DynamicComponentLoader.declaredComponents.some(
-          (dc) => dc.component === vr.component,
+          (dc: any) => dc.component === vr.component,
         )
       ) {
-        DynamicComponentLoader.declaredComponents.push(vr);
+        DynamicComponentLoader.declaredComponents.push(vr as any);
       }
     });
 
