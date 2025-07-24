@@ -1,0 +1,61 @@
+<ion-header [hidden]="!options || options.hideHeader">
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button [hidden]="!options || options.hideMenuButton"></ion-menu-button>
+            <ion-button *ngIf="options && options.showBackButton" (click)="back()">
+                <ion-icon slot="icon-only" name="arrow-back"> </ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title [innerHTML]="options?.title | translate"></ion-title>
+
+        <ion-buttons slot="end">
+            <smart-searchbar *ngIf="options?.search" [text]="options.search.text$ | async" (textChange)="options.search.set($event)"></smart-searchbar>
+
+            <ng-container *ngIf="options?.endButtons">
+                <ng-container *ngFor="let btn of options.endButtons" [ngSwitch]="btn.type">
+                    <ion-button (click)="presentPopover($event, btn)" [disabled]="btn.disabled$ | async" *ngSwitchCase="'popover'">
+                        <ng-container [ngTemplateOutlet]="btnContent"
+                                      [ngTemplateOutletContext]="{ btn: btn }"
+                        ></ng-container>
+                    </ion-button>
+
+                    <ion-button (click)="btn.handler()" [disabled]="btn.disabled$ | async" *ngSwitchDefault>
+                        <ng-container [ngTemplateOutlet]="btnContent"
+                                      [ngTemplateOutletContext]="{ btn: btn }"
+                        ></ng-container>
+                    </ion-button>
+                </ng-container>
+            </ng-container>
+
+            <ng-container *ngFor="let btn of appService.endButtons$ | async" [ngSwitch]="btn.type">
+                <ion-button (click)="presentPopover($event, btn)" [disabled]="btn.disabled$ | async" *ngSwitchCase="'popover'">
+                    <ng-container [ngTemplateOutlet]="btnContent"
+                                  [ngTemplateOutletContext]="{ btn: btn }"
+                    ></ng-container>
+                </ion-button>
+
+                <ion-button (click)="btn.handler()" [disabled]="btn.disabled$ | async" *ngSwitchDefault>
+                    <ng-container [ngTemplateOutlet]="btnContent"
+                                  [ngTemplateOutletContext]="{ btn: btn }"
+                    ></ng-container>
+                </ion-button>
+            </ng-container>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+<ion-content scroll>
+    <ng-content></ng-content>
+</ion-content>
+
+<ng-template #btnContent let-btn="btn">
+    <ng-container *ngIf="!isMobile && btn.text">
+        <ion-icon slot="start" [name]="btn.icon"></ion-icon>
+        {{ btn.text | translate }}
+        <ion-badge *ngIf="btn.number" color="primary">{{btn.number}}</ion-badge>
+    </ng-container>
+
+    <ng-container *ngIf="isMobile || !btn.text">
+        <ion-icon slot="icon-only" [name]="btn.icon"></ion-icon>
+        <ion-badge *ngIf="btn.number" color="primary">{{btn.number}}</ion-badge>
+    </ng-container>
+</ng-template>

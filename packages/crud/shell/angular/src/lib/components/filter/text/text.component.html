@@ -1,0 +1,13 @@
+<ion-row>
+    <ion-col>
+        <ion-label position="floating">
+            {{ item.label | translate }}
+        </ion-label>
+        <ion-input [(ngModel)]="value"></ion-input>
+    </ion-col>
+    <ion-col size="auto" *ngIf="value">
+        <ion-button color="danger" (click)="refresh(null)" class="squere-button">
+            <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+        </ion-button>
+    </ion-col>
+</ion-row>

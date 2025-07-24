@@ -1,0 +1,51 @@
+{
+  "name": "crud-shell-angular",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "packages/crud/shell/angular/src",
+  "prefix": "smart",
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "packages/crud/shell/angular/**/*.{ts,tsx,js,jsx}",
+          "packages/crud/shell/angular/package.json"
+        ],
+        "tsConfig": [
+          "packages/crud/shell/angular/tsconfig.lib.json",
+          "packages/crud/shell/angular/tsconfig.spec.json"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "packages/crud/shell/angular/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "outputs": ["{workspaceRoot}/coverage/packages/crud/shell/angular"]
+    },
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "options": {
+        "outputPath": "dist/packages/crud/shell/angular",
+        "tsConfig": "packages/crud/shell/angular/tsconfig.lib.json",
+        "project": "packages/crud/shell/angular/ng-package.json",
+        "buildableProjectDepsInPackageJsonType": "dependencies"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "packages/crud/shell/angular/tsconfig.lib.prod.json"
+        }
+      }
+    }
+  },
+  "generators": {
+    "@schematics/angular:component": {
+      "style": "scss"
+    }
+  },
+  "tags": ["scope:crud", "type:shell"]
+}

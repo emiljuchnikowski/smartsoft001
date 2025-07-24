@@ -1,0 +1,36 @@
+:host {
+  width: 100%;
+  // padding-right: 2.4rem;
+  margin-bottom: 1.2rem;
+  ion-radio {
+    margin-right: 2.4rem;
+  }
+  ion-item-divider {
+    font-weight: 300;
+    --padding-end: .8rem;
+    font-size: 1.2rem;
+    --ion-background-color: linear-gradient(90deg, transparent, var(--ion-color-light));
+    ion-icon {
+      margin-right: 1.6rem;
+      font-size: 1.6rem;
+      --color: var(--ion-color-primary);
+    }
+    ion-label {
+      --padding: var(--smart-button-padding-left)/2 var(--smart-button-padding-top)/2 var(--smart-button-padding-right)/2 var(--smart-button-padding-bottom)/2;
+    }
+    .squere-button {
+      margin: 0;
+      font-size: 18px;
+      height: 36px;
+      width: 36px;
+      padding: 0;
+      --padding-start: .2em;
+      --padding-end: .2em;
+      ion-icon {
+        //font-size: 1.3em !important;
+        margin: 0;
+        padding: 0;
+      }
+    }
+  }
+}

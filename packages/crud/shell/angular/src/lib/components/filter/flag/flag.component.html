@@ -1,0 +1,15 @@
+<ion-row>
+    <ion-col>
+        <div class="flag-container">
+            <ion-label position="static">
+                {{ item.label | translate }}
+            </ion-label>
+            <ion-checkbox [(ngModel)]="value" slot="end"></ion-checkbox>
+        </div>
+    </ion-col>
+    <ion-col size="auto" *ngIf="value === true || value === false">
+        <ion-button color="danger" (click)="refresh(null)" class="squere-button">
+            <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+        </ion-button>
+    </ion-col>
+</ion-row>

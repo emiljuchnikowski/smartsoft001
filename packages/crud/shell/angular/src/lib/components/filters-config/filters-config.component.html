@@ -1,0 +1,9 @@
+ <ng-container *ngIf="query$ | async; let query">
+    <ion-toolbar *ngIf="query?.length">
+        <ion-chip *ngFor="let item of query" (click)="onRemoveQuery(item)" color="medium" outline="true">
+            <ion-icon name="filter-circle-outline" color="primary"></ion-icon>
+            <ion-label>{{ 'MODEL.' + item.key | translate }} {{ item.type }} {{ item.value | translate }}</ion-label>
+            <ion-icon name="close" color="danger"></ion-icon>
+        </ion-chip>
+    </ion-toolbar>
+</ng-container>

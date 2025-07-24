@@ -1,0 +1,20 @@
+<ion-header [hidden]="hideMenu">
+    <ion-toolbar>
+        <ion-buttons slot="end">
+            <ion-button (click)="onClose()">
+                <ion-icon slot="icon-only" name="close"> </ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>{{ 'filters' | translate }}</ion-title>
+    </ion-toolbar>
+</ion-header>
+<ion-content style="height: 100vh;">
+    <ion-list>
+        <ng-container *ngFor="let item of list">
+            <smart-crud-filter [item]="item" [filter]="filter$ | async"></smart-crud-filter>
+        </ng-container>
+    </ion-list>
+    <div class="menu-bottom-space">
+        &nbsp;
+    </div>
+</ion-content>

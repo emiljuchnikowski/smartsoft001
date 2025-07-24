@@ -1,0 +1,10 @@
+<smart-accordion *ngFor="let item of groups" [(show)]="item.show" (showChange)="change($event, item)">
+    <smart-accordion-header [ngClass]="{ 'accordion-show': item.show }">{{ item.text | translate }}</smart-accordion-header>
+    <smart-accordion-body>
+        <smart-list *ngIf="item.show && !item.children && listOptions" [options]="listOptions"></smart-list>
+        <div *ngIf="item.children" style="margin-left: 50px">
+            <smart-crud-group [groups]="item.children" [listOptions]="listOptions"></smart-crud-group>
+        </div>
+    </smart-accordion-body>
+</smart-accordion>
+<br/><br/><br/>

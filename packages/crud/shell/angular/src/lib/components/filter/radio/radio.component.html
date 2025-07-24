@@ -1,0 +1,25 @@
+<ion-row>
+    <ion-col>
+        <ion-radio-group [(ngModel)]="value">
+            <ion-item-divider>
+                <ion-icon slot="start" name="filter-outline"></ion-icon>
+                <ion-label>
+                    {{ item.label | translate }}
+                </ion-label>
+                <ion-button *ngIf="value || value === false" slot="end" color="danger" (click)="refresh(null)" class="squere-button">
+                    <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+                </ion-button>
+            </ion-item-divider>
+
+            <ion-item *ngFor="let item of possibilities$ | async">
+                <ion-label>{{ item.text | translate }}</ion-label>
+                <ion-radio [value]="item.id"></ion-radio>
+            </ion-item>
+        </ion-radio-group>
+    </ion-col>
+    <!-- <ion-col size="auto" *ngIf="value">
+        <ion-button color="danger" (click)="refresh(null)" class="squere-button">
+            <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+        </ion-button>
+    </ion-col> -->
+</ion-row>

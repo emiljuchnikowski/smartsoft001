@@ -1,0 +1,74 @@
+<ion-row>
+    <ion-col>
+        <ion-label>
+            {{ item.label | translate }}
+        </ion-label>
+
+        <ion-input placeholder="YYYY-MM-DD"
+                   [(ngModel)]="customValue"
+                   *ngIf="!advanced"
+                   [pattern]="'([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))'"
+        ></ion-input>
+    </ion-col>
+    <ion-col size="auto" *ngIf="!advanced">
+        <ion-button id="open-date-input-{{ id }}" class="squere-button">
+            <ion-icon slot="icon-only" name="calendar-outline"></ion-icon>
+            <ion-popover trigger="open-date-input-{{ id }}" show-backdrop="false">
+                <ng-template>
+                    <ion-datetime displayFormat="YYYY-MM-DD"
+                                  pickerFormat="YYYY-MM-DD"
+                                  [(ngModel)]="customValue"
+                                  presentation="date"
+                                  first-day-of-week="1"
+                                  locale="{{ lang }}"
+                    ></ion-datetime>
+                </ng-template>
+            </ion-popover>
+        </ion-button>
+    </ion-col>
+    <ion-col size="auto" *ngIf="allowAdvanced">
+        <ion-button (click)="toggleAdvanced()" class="squere-button" [disabled]="minValue || maxValue">
+            <ion-icon *ngIf="!advanced" slot="icon-only" name="settings-outline"></ion-icon>
+            <ion-icon *ngIf="advanced" slot="icon-only" name="settings"></ion-icon>
+        </ion-button>
+    </ion-col>
+    <ion-col size="auto" *ngIf="value || minValue || maxValue">
+        <ion-button color="danger" (click)="clear()" class="squere-button">
+            <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+        </ion-button>
+    </ion-col>
+</ion-row>
+<ion-row *ngIf="(advanced || minValue || maxValue) && allowAdvanced">
+    <ion-col>
+        <ion-item>
+            <ion-label>
+                {{ 'from' | translate }}
+            </ion-label>
+            <ion-input placeholder="YYYY-MM-DD"
+                       [(ngModel)]="customMinValue"
+                       [pattern]="'([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))'"
+            ></ion-input>
+        </ion-item>
+    </ion-col>
+    <ion-col size="auto" *ngIf="customMinValue">
+        <ion-button color="danger" (click)="refresh(null, '>=')" class="squere-button">
+            <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+        </ion-button>
+    </ion-col>
+    <ion-col>
+        <ion-item>
+            <ion-label>
+                {{ 'to' | translate }}
+            </ion-label>
+            <ion-input placeholder="YYYY-MM-DD"
+                       [(ngModel)]="customMaxValue"
+                       [pattern]="'([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))'"
+            ></ion-input>
+        </ion-item>
+    </ion-col>
+    <ion-col size="auto" *ngIf="customMaxValue">
+        <ion-button color="danger" (click)="refresh(null, '<=')" class="squere-button">
+            <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+        </ion-button>
+    </ion-col>
+</ion-row>

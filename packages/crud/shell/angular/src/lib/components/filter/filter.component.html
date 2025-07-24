@@ -1,0 +1,49 @@
+<ion-item [ngSwitch]="item.fieldType">
+  <smart-crud-filter-date
+          *ngSwitchCase="FieldType.date"
+          [item]="item"
+          [filter]="filter"
+  ></smart-crud-filter-date>
+
+  <smart-crud-filter-date-with-edit
+          *ngSwitchCase="FieldType.dateWithEdit"
+          [item]="item"
+          [filter]="filter"
+  ></smart-crud-filter-date-with-edit>
+
+  <smart-crud-filter-date-time
+    *ngSwitchCase="FieldType.dateTime"
+    [item]="item"
+    [filter]="filter"
+  ></smart-crud-filter-date-time>
+
+  <smart-crud-filter-radio
+          *ngSwitchCase="FieldType.radio"
+          [item]="item"
+          [filter]="filter"
+  ></smart-crud-filter-radio>
+
+  <smart-crud-filter-check
+          *ngSwitchCase="FieldType.check"
+          [item]="item"
+          [filter]="filter"
+  ></smart-crud-filter-check>
+
+  <smart-crud-filter-flag
+          *ngSwitchCase="FieldType.flag"
+          [item]="item"
+          [filter]="filter"
+  ></smart-crud-filter-flag>
+
+  <smart-crud-filter-int
+          *ngSwitchCase="FieldType.int"
+          [item]="item"
+          [filter]="filter"
+  ></smart-crud-filter-int>
+
+  <smart-crud-filter-text
+    *ngSwitchDefault
+    [item]="item"
+    [filter]="filter"
+  ></smart-crud-filter-text>
+</ion-item>
