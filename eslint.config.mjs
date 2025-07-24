@@ -23,7 +23,7 @@ export default [
           groups: ['external', 'builtin', 'internal'],
           pathGroups: [
             {
-              pattern: '@op/**',
+              pattern: '@smartsoft001/**',
               group: 'external',
               position: 'after',
             },
