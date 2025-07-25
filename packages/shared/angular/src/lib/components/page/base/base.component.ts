@@ -6,8 +6,8 @@ import {
     Renderer2,
     Directive,
     ViewChild,
-    ViewContainerRef,
-} from "@angular/core";
+    ViewContainerRef, TemplateRef
+} from '@angular/core';
 import { Location } from '@angular/common';
 import {PopoverController} from "@ionic/angular";
 import { Subscription} from "rxjs";
@@ -20,13 +20,13 @@ import { HardwareService } from "../../../services/hardware/hardware.service";
 export abstract class PageBaseComponent implements OnInit, OnDestroy {
     static smartType: DynamicComponentType = "page";
 
-    private _options: IPageOptions;
+    private _options: IPageOptions | null = null;
     private _subscriptions = new Subscription();
 
-    @Input() set options(val: IPageOptions) {
+    @Input() set options(val: IPageOptions | null) {
         this._options = val;
     }
-    get options(): IPageOptions {
+    get options(): IPageOptions | null {
         return this._options;
     }
 
@@ -35,7 +35,7 @@ export abstract class PageBaseComponent implements OnInit, OnDestroy {
     }
 
     @ViewChild("contentTpl", { read: ViewContainerRef, static: true })
-    contentTpl: ViewContainerRef;
+    contentTpl: TemplateRef<any> | ViewContainerRef | null = null;
 
     constructor(
         private el: ElementRef,

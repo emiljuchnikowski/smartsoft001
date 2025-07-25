@@ -4,3 +4,8 @@ export * from './input';
 export * from './export';
 export * from './import';
 export * from './page';
+export * from './details';
+export * from './card';
+export * from './detail';
+export * from './info';
+export * from './button';

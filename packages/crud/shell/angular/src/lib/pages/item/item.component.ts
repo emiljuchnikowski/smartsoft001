@@ -9,16 +9,18 @@ import {
 } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { BehaviorSubject, Observable } from "rxjs";
-import { Location } from "@angular/common";
+import { Location, NgTemplateOutlet } from '@angular/common';
 import {TranslateService} from "@ngx-translate/core";
+import { IonContent } from "@ionic/angular";
+import {AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup} from "@angular/forms"
 
 import {
   AuthService, CreateDynamicComponent, DetailsService,
   DynamicComponentLoader, DynamicContentDirective, ICellPipe,
   IDetailsOptions,
   IIconButtonOptions,
-  IPageOptions, StyleService, ToastService,
-} from "@smartsoft001/angular";
+  IPageOptions, PageComponent, StyleService, ToastService
+} from '@smartsoft001/angular';
 import { IEntity } from "@smartsoft001/domain-core";
 import {getModelOptions} from "@smartsoft001/models";
 import { SpecificationService } from "@smartsoft001/utils";
@@ -27,27 +29,31 @@ import { CrudFacade } from "../../+state/crud.facade";
 import { CrudFullConfig } from "../../crud.config";
 import { CrudService } from "../../services/crud/crud.service";
 import { ICrudFilter } from "../../models/interfaces";
-import { IonContent } from "@ionic/angular";
-import {AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup} from "@angular/forms"
 import {ItemStandardComponent} from "./standard/standard.component";
 import { CrudItemPageBaseComponent } from "./base/base.component";
 import { PageService } from "../../services/page/page.service";
 
 @Component({
-  selector: "smart-crud-item-page",
+  selector: 'smart-crud-item-page',
+  imports: [
+    PageComponent,
+    ItemStandardComponent,
+    NgTemplateOutlet
+  ],
   template: `
     <smart-page [options]="pageOptions">
       <div #topTpl class="top-content"></div>
-      <smart-crud-item-standard-page *ngIf="template === 'default'"
-                                     [detailsOptions]="detailsOptions"
-                                     [mode]="mode"
-                                     [uniqueProvider]="uniqueProvider"
-                                     (onPartialChange)="onPartialChange($event)"
-                                     (onChange)="onChange($event)"
-                                     (onValidChange)="onValidChange($event)"
-      >
-        <ng-container [ngTemplateOutlet]="contentTpl"></ng-container>
-      </smart-crud-item-standard-page>
+      @if (template === 'default') {
+        <smart-crud-item-standard-page [detailsOptions]="detailsOptions"
+                                       [mode]="mode"
+                                       [uniqueProvider]="uniqueProvider"
+                                       (onPartialChange)="onPartialChange($event)"
+                                       (onChange)="onChange($event)"
+                                       (onValidChange)="onValidChange($event)"
+        >
+          <ng-container [ngTemplateOutlet]="contentTpl"></ng-container>
+        </smart-crud-item-standard-page>
+      }
       <ng-template #contentTpl>
         <ng-content></ng-content>
       </ng-template>
@@ -81,7 +87,6 @@ export class ItemComponent<T extends IEntity<string>>
   get mode(): string {
     return this._mode;
   }
-
 
   selected$: Observable<T>;
 

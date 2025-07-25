@@ -26,13 +26,13 @@ export abstract class DetailsBaseComponent<T extends IEntity<string>>
   implements AfterViewInit {
   static smartType: DynamicComponentType = 'details';
 
-  private _fields: Array<{ key: string; options: IFieldOptions }>;
-  private _type: any;
+  private _fields: Array<{ key: string; options: IFieldOptions }> | null = null;
+  private _type: any | null = null;
 
-  componentFactories: IDetailsComponentFactories<T>;
-  cellPipe: ICellPipe<T>;
+  componentFactories: IDetailsComponentFactories<T> | null = null;
+  cellPipe: ICellPipe<T> | null = null;
 
-  get fields(): Array<{ key: string; options: IFieldOptions }> {
+  get fields(): Array<{ key: string; options: IFieldOptions }> | null {
     return this._fields;
   }
 
@@ -40,22 +40,22 @@ export abstract class DetailsBaseComponent<T extends IEntity<string>>
     return this._type;
   }
 
-  item$: Observable<T>;
-  loading$: Observable<boolean>;
+  item$: Observable<T> | null = null;
+  loading$: Observable<boolean> | null = null;
 
   @ViewChild("contentTpl", { read: ViewContainerRef, static: true })
-  contentTpl: ViewContainerRef;
+  contentTpl: ViewContainerRef | null = null;
 
   @ViewChild("topTpl", { read: ViewContainerRef, static: true })
-  topTpl: ViewContainerRef;
+  topTpl: ViewContainerRef | null = null;
 
   @ViewChild("bottomTpl", { read: ViewContainerRef, static: true })
-  bottomTpl: ViewContainerRef;
+  bottomTpl: ViewContainerRef | null = null;
 
-  @Input() set options(obj: IDetailsOptions<T>) {
-    this._type = obj.type;
+  @Input() set options(obj: IDetailsOptions<T> | null) {
+    this._type = obj?.type ?? null;
 
-    const enabledDefinitions: Array<{ key: string; spec: ISpecification }> = [];
+    const enabledDefinitions: Array<{ key: string; spec: ISpecification | null }> = [];
 
     this._fields = getModelFieldsWithOptions(new this._type())
       .filter((f) => f.options.details)
@@ -63,7 +63,7 @@ export abstract class DetailsBaseComponent<T extends IEntity<string>>
         if ((field.options.details as IFieldDetailsMetadata).enabled) {
           enabledDefinitions.push({
             key: field.key,
-            spec: (field.options.details as IFieldDetailsMetadata).enabled,
+            spec: (field.options.details as IFieldDetailsMetadata)?.enabled ?? null,
           });
         } else if (field.options.enabled) {
           enabledDefinitions.push({
@@ -75,7 +75,7 @@ export abstract class DetailsBaseComponent<T extends IEntity<string>>
         if (
           (field.options.details as IFieldDetailsMetadata).permissions &&
           !this.authService.expectPermissions(
-            (field.options.details as IFieldDetailsMetadata).permissions
+            (field.options.details as IFieldDetailsMetadata)?.permissions ?? null
           )
         ) {
           return false;
@@ -83,29 +83,34 @@ export abstract class DetailsBaseComponent<T extends IEntity<string>>
 
         return true;
       });
-    this.item$ = obj.item$.pipe(
-      map((item) => {
-        if (!item) return item;
+    if (obj !== null) {
+      this.item$ = obj.item$.pipe(
+        map((item) => {
+          if (!item) return item;
 
-        let result = null;
+          let result = null;
 
-        if (item instanceof obj.type) result = item;
-        else result = ObjectService.createByType(item, obj.type);
+          if (item instanceof obj.type) result = item;
+          else result = ObjectService.createByType(item, obj.type);
 
-        const removeFields = enabledDefinitions.filter((def) => {
-          return SpecificationService.invalid(result, def.spec, {
-            $root: this.detailsService.$root
-          });
-        }).map(def => def.key);
+          const removeFields = enabledDefinitions.filter((def) => {
+            return SpecificationService.invalid(result, def.spec as ISpecification, {
+              $root: this.detailsService.$root
+            });
+          }).map(def => def.key);
 
-        this._fields = this._fields.filter(f => !removeFields.some(rf => rf === f.key));
+          if (this._fields) {
+            this._fields = this._fields.filter(f => !removeFields.some(rf => rf === f.key));
+          }
 
-        return result;
-      })
-    );
-    this.loading$ = obj.loading$;
-    this.componentFactories = obj.componentFactories;
-    this.cellPipe = obj.cellPipe;
+          return result;
+        })
+      ) as Observable<T>;
+
+      this.loading$ = obj.loading$ ?? null;
+      this.componentFactories = obj.componentFactories ?? null;
+      this.cellPipe = obj.cellPipe ?? null;
+    }
 
     this.generateDynamicComponents();
   }

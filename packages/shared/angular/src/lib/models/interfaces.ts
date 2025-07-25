@@ -1,8 +1,16 @@
 import { Observable } from 'rxjs';
 import { ComponentFactory, PipeTransform, Type } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
-import { InputBaseComponent } from '../components';
+
 import { IEntity } from '@smartsoft001/domain-core';
+import { IFieldOptions } from '@smartsoft001/models';
+
+import { InputBaseComponent } from '../components';
+
+export interface ICardOptions {
+  title?: string;
+  buttons?: Array<IIconButtonOptions>;
+}
 
 export interface IIconButtonOptions {
   icon: string;
@@ -69,6 +77,23 @@ export interface IDetailsOptions<T extends IEntity<string>> {
   componentFactories?: IDetailsComponentFactories<T>;
 }
 
+export interface IButtonOptions {
+  type?: "submit" | "button";
+  expand?: "block" | "full" | undefined;
+  confirm?: boolean;
+  color?: 'primary' | 'light' | string;
+  click: () => void;
+  loading$?: Observable<boolean>;
+}
+
+export interface IDetailOptions<T> {
+  key: string;
+  item$?: Observable<T>;
+  options: IFieldOptions;
+  cellPipe?: ICellPipe<T>;
+  loading$?: Observable<boolean>;
+}
+
 export interface ICellPipe<T> extends PipeTransform {
   transform(value: T, columnName: string, translate?: (val: string) => string): string;
 }
@@ -79,11 +104,11 @@ export interface IPageOptions {
   hideMenuButton?: boolean;
   showBackButton?: boolean;
   endButtons?: Array<IIconButtonOptions>;
-  search?: { text$: Observable<string>, set: (txt) => void }
+  search?: { text$: Observable<string>, set: (txt: string) => void }
 }
 
 export interface IListProvider<T> {
-  getData: (filter) => void;
+  getData: (filter: any) => void;
   onChangeMultiSelected?: (list: Array<T>) => void;
   onCleanMultiSelected$?: Observable<void>;
   list$: Observable<T[]>;

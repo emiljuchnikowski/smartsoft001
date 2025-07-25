@@ -1,0 +1,3 @@
+<p *ngIf='options?.item$ | async; let item'>
+    <ng-container *ngIf="item[options?.key]; let range">{{ range.start }} - {{ range.end }}</ng-container>
+</p>

@@ -6,32 +6,38 @@ import {
 } from "@angular/core";
 import { Subscription } from "rxjs";
 
-import { IDetailsOptions } from "../../models/interfaces";
 import { IEntity } from "@smartsoft001/domain-core";
+
+import { IDetailsOptions } from "../../models/interfaces";
 import { CreateDynamicComponent } from "../base/base.component";
 import { DetailsBaseComponent } from "./base/base.component";
 import {DynamicContentDirective} from "../../directives/dynamic-content/dynamic-content.directive";
 import {DetailsService} from "../../services/details/details.service";
+import { DetailsStandardComponent } from './standard/standard.component';
 
 @Component({
-  selector: "smart-details",
+  selector: 'smart-details',
   template: `
-    <smart-details-standard
-      *ngIf="options && template === 'default'"
-      [options]="options"
-    ></smart-details-standard>
+    @if (options && template === 'default') {
+      <smart-details-standard
+        [options]="options"
+      ></smart-details-standard>
+    }
     <div #customTpl></div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    DetailsStandardComponent
+  ]
 })
 export class DetailsComponent<T extends IEntity<string>>
   extends CreateDynamicComponent<DetailsBaseComponent<any>>("details")
   implements OnDestroy
 {
-  private _options: IDetailsOptions<T>;
+  private _options: IDetailsOptions<T> | null = null;
   private _subscription = new Subscription();
 
-  item: T;
+  item: T | null = null;
 
   @Input() set options(val: IDetailsOptions<T>) {
     this._options = val;
@@ -45,15 +51,15 @@ export class DetailsComponent<T extends IEntity<string>>
 
     this.refreshDynamicInstance();
   }
-  get options(): IDetailsOptions<T> {
+  get options(): IDetailsOptions<T> | null {
     return this._options;
   }
 
   @ViewChild("contentTpl", { read: TemplateRef, static: false })
-  contentTpl: TemplateRef<any>;
+  override contentTpl: TemplateRef<any> | null = null;
 
   @ViewChildren(DynamicContentDirective, { read: DynamicContentDirective })
-  dynamicContents = new QueryList<DynamicContentDirective>();
+  override dynamicContents = new QueryList<DynamicContentDirective>();
 
   constructor(
       cd: ChangeDetectorRef,
@@ -64,13 +70,13 @@ export class DetailsComponent<T extends IEntity<string>>
     super(cd, moduleRef, cfr);
   }
 
-  ngOnDestroy(): void {
+  override ngOnDestroy(): void {
     if (this._subscription) {
       this._subscription.unsubscribe();
     }
   }
 
-  refreshProperties(): void {
+  override refreshProperties(): void {
     this.baseInstance.options = this.options;
   }
 }

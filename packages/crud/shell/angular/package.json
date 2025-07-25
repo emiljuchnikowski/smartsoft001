@@ -7,6 +7,11 @@
     "url": "git+https://github.com/emiljuchnikowski/smartsoft.git"
   },
   "author": "Emil Juchnikowski",
+  "contributors": [
+    {
+      "name": "Andrii Bilych"
+    }
+  ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/emiljuchnikowski/smartsoft/issues"

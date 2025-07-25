@@ -34,15 +34,15 @@ export interface IDynamicComponent<T> extends BaseComponent {
   baseInstance: T;
   template: "custom" | "default";
 
-  contentTpl: TemplateRef<any>;
+  contentTpl: TemplateRef<any> | ViewContainerRef | null;
   dynamicContents: QueryList<DynamicContentDirective>;
 
   refreshProperties(): void;
-  refreshDynamicInstance();
+  refreshDynamicInstance(): void;
 }
 
 export function CreateDynamicComponent<
-  T extends { contentTpl: ViewContainerRef } = any
+  T extends { contentTpl: TemplateRef<any> | ViewContainerRef | null } = any
 >(
   type: DynamicComponentType
 ): new (
@@ -55,12 +55,12 @@ export function CreateDynamicComponent<
     private _renderCustom = false;
     private _findDynamicContent = false;
 
-    baseInstance: T;
+    baseInstance: T | null = null;
 
     dynamicType: Readonly<DynamicComponentType> = type;
-    template: "custom" | "default";
+    template: "custom" | "default" = "default";
 
-    abstract contentTpl: TemplateRef<any>;
+    abstract contentTpl: TemplateRef<any> | ViewContainerRef | null;
     abstract dynamicContents: QueryList<DynamicContentDirective>;
 
     protected constructor(
@@ -107,7 +107,7 @@ export function CreateDynamicComponent<
           this._renderCustom = true;
           this.baseInstance = this.dynamicContents.first.container.createComponent(factory).instance;
           this.refreshDynamicInstance();
-          this.baseInstance.contentTpl?.createEmbeddedView(this.contentTpl);
+          this.baseInstance?.contentTpl?.createEmbeddedView(this.contentTpl);
         }
       }
 

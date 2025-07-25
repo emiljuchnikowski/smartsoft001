@@ -26,10 +26,11 @@ export class AuthService {
     return !!token;
   }
 
-  expectPermissions(permissions: Array<string>): boolean {
+  expectPermissions(permissions: Array<string> | null): boolean {
     const token: { access_token: string } | null = this.getToken();
 
     if (!token) return false;
+    if (permissions === null) return false;
 
     // Check for token expiration before decoding
     const tokenPayloadExp: { exp: number } = (jwt_decode as any)(
