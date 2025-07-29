@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { ComponentFactory, PipeTransform, Type } from '@angular/core';
+import { ComponentFactory, PipeTransform, Signal, Type } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 
 import { IEntity } from '@smartsoft001/domain-core';
@@ -104,7 +104,7 @@ export interface IPageOptions {
   hideMenuButton?: boolean;
   showBackButton?: boolean;
   endButtons?: Array<IIconButtonOptions>;
-  search?: { text$: Observable<string>, set: (txt: string) => void }
+  search?: { text: Signal<string>, set: (txt: string) => void }
 }
 
 export interface IListProvider<T> {

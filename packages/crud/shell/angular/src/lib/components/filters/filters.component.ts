@@ -1,7 +1,19 @@
-import {Component, ElementRef, Input, OnInit} from '@angular/core';
-import {Observable} from "rxjs";
+import { Component, ElementRef, input, InputSignal, OnInit, Signal, WritableSignal } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import {
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonList,
+  IonTitle,
+  IonToolbar
+} from '@ionic/angular/standalone';
+import { TranslatePipe } from '@ngx-translate/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 
-import {AuthService, MenuService, StyleService} from "@smartsoft001/angular";
+import {MenuService, StyleService} from "@smartsoft001/angular";
 import {
     FieldType,
     getModelFieldsWithOptions,
@@ -11,9 +23,10 @@ import {
 } from "@smartsoft001/models";
 import {IEntity} from "@smartsoft001/domain-core";
 
-import {ICrudFilter} from "../../models/interfaces";
+import {ICrudFilter} from '../../models';
 import {CrudConfig} from "../../crud.config";
 import {CrudFacade} from "../../+state/crud.facade";
+import { FilterComponent } from '../filter';
 
 /**
  * This component is only to use in crud module
@@ -73,17 +86,29 @@ import {CrudFacade} from "../../+state/crud.facade";
 @Component({
   selector: 'smart-crud-filters',
   templateUrl: './filters.component.html',
+  imports: [
+    FilterComponent,
+    IonHeader,
+    IonToolbar,
+    IonButtons,
+    IonButton,
+    IonIcon,
+    IonTitle,
+    IonContent,
+    IonList,
+    TranslatePipe
+  ],
   styleUrls: ['./filters.component.scss']
 })
 export class FiltersComponent<T extends IEntity<string>> implements OnInit {
-  list: Array<IModelFilter>;
+  list: WritableSignal<Array<IModelFilter>>;
 
-  filter$: Observable<ICrudFilter>;
+  filter: Signal<ICrudFilter | undefined>;
 
     /**
      * Hide menu used only from MenuService
      */
-  @Input() hideMenu: boolean;
+  readonly hideMenu: InputSignal<boolean> = input<boolean>(false);
 
   constructor(
       private menuService: MenuService,
@@ -102,7 +127,7 @@ export class FiltersComponent<T extends IEntity<string>> implements OnInit {
 
     const modelFilters = getModelOptions(this.config.type).filters;
 
-    this.list = [
+    this.list.set([
         ...(modelFilters ? modelFilters.map(item => {
           if (!item.label) {
             item.label = 'MODEL.' + item.key;
@@ -118,7 +143,7 @@ export class FiltersComponent<T extends IEntity<string>> implements OnInit {
               label: 'MODEL.' + item.key,
               fieldType: item.options.type
             }))
-    ];
-    this.filter$ = this.facade.filter$;
+    ]);
+    this.filter = toSignal(this.facade.filter$);
   }
 }

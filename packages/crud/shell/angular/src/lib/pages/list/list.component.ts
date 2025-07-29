@@ -1,17 +1,18 @@
 import {
   ChangeDetectorRef,
   Component,
-  ComponentFactory, ComponentFactoryResolver, ElementRef,
+  ComponentFactory, ComponentFactoryResolver, computed,
   Injector, NgModuleRef, OnDestroy,
-  OnInit, QueryList, TemplateRef,
+  OnInit, QueryList, Signal, TemplateRef,
   ViewChild, ViewChildren,
-  ViewContainerRef,
-} from "@angular/core";
-import { map, tap } from "rxjs/operators";
+  ViewContainerRef, WritableSignal
+} from '@angular/core';
+import { map } from "rxjs/operators";
 import { Router } from "@angular/router";
-import {Observable, Subject} from "rxjs";
+import {Subject} from "rxjs";
 import { SpecificationService } from "@smartsoft001/utils";
-import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 import {
   CreateDynamicComponent,
@@ -49,15 +50,14 @@ import { ListStandardComponent } from './standard/standard.component';
     PageComponent,
     ListStandardComponent,
     NgTemplateOutlet,
-    AsyncPipe
   ],
   template: `
-    @if (filter$ | async) {
-      <smart-page [options]="pageOptions">
+    @if (filter()) {
+      <smart-page [options]="pageOptions()">
         <div #topTpl></div>
 
-        @if (template === 'default') {
-          <smart-crud-list-standard-page [listOptions]="listOptions">
+        @if (template() === 'default') {
+          <smart-crud-list-standard-page [listOptions]="listOptions()">
             <ng-container [ngTemplateOutlet]="contentTpl"></ng-container>
           </smart-crud-list-standard-page>
         }
@@ -75,16 +75,11 @@ export class ListComponent<T extends IEntity<string>>
 {
   private _cleanMultiSelected$ = new Subject<void>();
 
-  pageOptions: IPageOptions;
-  listOptions: IListOptions<T>;
-  filter: ICrudFilter;
+  pageOptions: Signal<IPageOptions>;
+  listOptions: WritableSignal<IListOptions<T>>;
   links: { next; prev };
 
-  filter$: Observable<ICrudFilter> = this.facade.filter$.pipe(
-    tap((filter) => {
-      this.filter = filter;
-    })
-  );
+  filter: Signal<ICrudFilter> = toSignal(this.facade.filter$);
 
   @ViewChild("topTpl", { read: ViewContainerRef, static: false })
   topTpl: ViewContainerRef;
@@ -118,7 +113,7 @@ export class ListComponent<T extends IEntity<string>>
   }
 
   refreshProperties(): void {
-    this.baseInstance.listOptions = this.listOptions;
+    this.baseInstance.listOptions = this.listOptions();
   }
 
   async ngOnInit(): Promise<void> {
@@ -138,8 +133,8 @@ export class ListComponent<T extends IEntity<string>>
         sortDesc: this.config.sort ? this.config.sort["defaultDesc"] : null,
         ...this.searchService.filter
       };
-    } else if (this.filter) {
-      newFilter = this.filter;
+    } else if (this.filter()) {
+      newFilter = this.filter();
     } else {
       newFilter = {
         paginationMode: this.config.list.paginationMode,
@@ -160,15 +155,15 @@ export class ListComponent<T extends IEntity<string>>
 
     const endButtons = this.getEndButtons();
 
-    this.pageOptions = {
+    this.pageOptions = computed( () => ({
       title: this.config.title,
       search: this.config.search
         ? {
-            text$: this.filter$.pipe(map((f) => (f ? f.searchText : null))),
+            text: computed(() => (this.filter().searchText ?? null)),
             set: (txt) => {
-              if (txt !== this.filter.searchText)
+              if (txt !== this.filter().searchText)
                 this.facade.read({
-                  ...this.filter,
+                  ...this.filter(),
                   searchText: txt,
                   offset: 0,
                 });
@@ -176,7 +171,7 @@ export class ListComponent<T extends IEntity<string>>
           }
         : null,
       endButtons: endButtons,
-    };
+    }));
 
     const compiledComponents =
       await this.dynamicComponentLoader.getComponentsWithFactories({
@@ -199,11 +194,11 @@ export class ListComponent<T extends IEntity<string>>
         ],
       });
 
-    this.listOptions = {
+    this.listOptions.set({
       provider: {
         getData: (filter): void => {
           const global = {
-            ...this.filter,
+            ...this.filter(),
             ...filter,
           };
           this.facade.read(global);
@@ -286,13 +281,13 @@ export class ListComponent<T extends IEntity<string>>
         limit: this.config.pagination.limit,
         provider: {
           getFilter: () => {
-            return this.filter;
+            return this.filter();
           },
           getLinks: () => this.links,
         },
       }),
       sort: this.config.sort,
-    };
+    });
 
     this.cd.detectChanges();
 
@@ -311,10 +306,10 @@ export class ListComponent<T extends IEntity<string>>
   private async clear() {
     await this.menuService.closeEnd();
 
-    this.listOptions = {
-      ...this.listOptions,
-      select: null,
-    };
+    this.listOptions.update((val => ({
+      ...val,
+      select: null
+    })));
 
     this.facade.multiSelect([]);
   }
@@ -351,10 +346,10 @@ export class ListComponent<T extends IEntity<string>>
                 this._cleanMultiSelected$.next();
 
                 setTimeout(async () => {
-                  this.listOptions = {
-                    ...this.listOptions,
-                    select: this.listOptions.select === "multi" ? null : "multi",
-                  };
+                  this.listOptions.update(val => ({
+                    ...val,
+                    select: val.select === "multi" ? null : "multi",
+                  }));
                   if (this.menuService.openedEnd)
                     await this.menuService.closeEnd();
                   this.cd.detectChanges();

@@ -1,6 +1,9 @@
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {IonDatetime} from "@ionic/angular";
 import {Subscription} from "rxjs";
+import { IonButton, IonCol, IonIcon, IonInput, IonItem, IonLabel, IonRow } from '@ionic/angular/standalone';
+import { TranslatePipe } from '@ngx-translate/core';
+import { FormsModule } from '@angular/forms';
 
 import {IEntity} from "@smartsoft001/domain-core";
 import { GuidService } from '@smartsoft001/utils';
@@ -10,6 +13,17 @@ import {FilterDateComponent} from "../date/date.component";
 @Component({
   selector: 'smart-crud-filter-date-time',
   templateUrl: './date-time.component.html',
+  imports: [
+    IonRow,
+    IonCol,
+    IonLabel,
+    TranslatePipe,
+    IonButton,
+    IonIcon,
+    IonItem,
+    IonInput,
+    FormsModule
+  ],
   styleUrls: ['./date-time.component.scss']
 })
 export class FilterDateTimeComponent<T extends IEntity<string>> extends FilterDateComponent<T>

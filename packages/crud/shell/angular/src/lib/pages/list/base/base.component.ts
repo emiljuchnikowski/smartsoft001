@@ -22,7 +22,7 @@ export abstract class CrudListPageBaseComponent<T extends IEntity<string>> exten
     contentTpl: ViewContainerRef;
 
     @Input()
-    listOptions: IListOptions<T>;
+    listOptions: IListOptions<T>; // !Set externally (outside of template)
 
     protected constructor(
         public config: CrudFullConfig<T>,

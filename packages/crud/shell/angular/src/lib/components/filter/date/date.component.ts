@@ -1,8 +1,19 @@
 import { Component } from '@angular/core';
-// @ts-ignore
 import moment from "moment";
-import {GuidService} from "@smartsoft001/utils";
+import {
+  IonButton,
+  IonCol,
+  IonDatetime, IonIcon,
+  IonItem,
+  IonLabel,
+  IonPopover,
+  IonRow,
+  IonText
+} from '@ionic/angular/standalone';
+import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
+import {GuidService} from "@smartsoft001/utils";
 import {IEntity} from "@smartsoft001/domain-core";
 
 import {BaseComponent} from "../base/base.component";
@@ -10,13 +21,26 @@ import {BaseComponent} from "../base/base.component";
 @Component({
   selector: 'smart-crud-filter-date',
   templateUrl: './date.component.html',
+  imports: [
+    IonRow,
+    IonCol,
+    IonLabel,
+    IonItem,
+    IonText,
+    IonPopover,
+    IonDatetime,
+    FormsModule,
+    IonButton,
+    IonIcon,
+    TranslatePipe
+  ],
   styleUrls: ['./date.component.scss']
 })
 export class FilterDateComponent<T extends IEntity<string>> extends BaseComponent<T> {
   id = GuidService.create();
 
   get allowAdvanced(): boolean {
-    return this.item?.type === '=';
+    return this.item()?.type === '=';
   }
 
   set customValue(val) {

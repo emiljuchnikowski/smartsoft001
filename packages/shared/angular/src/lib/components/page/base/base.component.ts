@@ -6,7 +6,7 @@ import {
     Renderer2,
     Directive,
     ViewChild,
-    ViewContainerRef, TemplateRef
+    ViewContainerRef, TemplateRef, WritableSignal, signal
 } from '@angular/core';
 import { Location } from '@angular/common';
 import {PopoverController} from "@ionic/angular";
@@ -20,14 +20,14 @@ import { HardwareService } from '../../../services';
 export abstract class PageBaseComponent implements OnInit, OnDestroy {
     static smartType: DynamicComponentType = "page";
 
-    private _options: IPageOptions | null = null;
+    private _options: WritableSignal<IPageOptions | null> = signal(null);
     private _subscriptions = new Subscription();
 
     @Input() set options(val: IPageOptions | null) {
-        this._options = val;
+        this._options.set(val);
     }
     get options(): IPageOptions | null {
-        return this._options;
+        return this._options();
     }
 
     get isMobile(): boolean {

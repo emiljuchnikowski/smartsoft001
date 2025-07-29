@@ -12,7 +12,7 @@
 
     <ion-buttons slot="end">
       @if (options?.search) {
-        <smart-searchbar [text]="options!.search!.text$ | async" (textChange)="options!.search!.set($event)"></smart-searchbar>
+        <smart-searchbar [text]="options!.search!.text()" (textChange)="options!.search!.set($event)"></smart-searchbar>
       }
 
       @if (options?.endButtons) {

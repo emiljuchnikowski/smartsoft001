@@ -11,7 +11,8 @@
       "dom",
       "es2018"
     ],
-    "useDefineForClassFields": false
+    "useDefineForClassFields": false,
+    "allowSyntheticDefaultImports": true
   },
   "angularCompilerOptions": {
     "annotateForClosureCompiler": true,

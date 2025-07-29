@@ -1,10 +1,10 @@
 import {
     Directive, EventEmitter,
-    Input, Output, QueryList,
+    Input, Output, QueryList, Signal,
     ViewChild, ViewChildren,
     ViewContainerRef
-} from "@angular/core";
-import {Observable} from "rxjs";
+} from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 import {
     BaseComponent,
@@ -19,7 +19,7 @@ import { CrudFacade } from "../../../+state/crud.facade";
 export abstract class CrudItemPageBaseComponent<T extends IEntity<string>> extends BaseComponent {
     static smartType: DynamicComponentType = "crud-item-page";
 
-    selected$: Observable<T>;
+    selected: Signal<T>;
 
     @ViewChild("contentTpl", { read: ViewContainerRef, static: true })
     contentTpl: ViewContainerRef;
@@ -27,10 +27,10 @@ export abstract class CrudItemPageBaseComponent<T extends IEntity<string>> exten
     @ViewChildren(FormComponent, { read: FormComponent }) formComponents = new QueryList<FormComponent<any>>();
 
     @Input()
-    detailsOptions: IDetailsOptions<T>;
+    detailsOptions: IDetailsOptions<T>; // !Set externally (outside of template)
 
     @Input()
-    mode: string;
+    mode: string; // !Set externally (outside of template)
 
     @Input()
     uniqueProvider: (values: Record<keyof T, any>) => Promise<boolean>;
@@ -49,6 +49,6 @@ export abstract class CrudItemPageBaseComponent<T extends IEntity<string>> exten
         public facade: CrudFacade<T>
     ) {
         super();
-        this.selected$ = facade.selected$;
+        this.selected = toSignal(facade.selected$);
     }
 }

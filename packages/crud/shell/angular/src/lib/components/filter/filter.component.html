@@ -1,49 +1,43 @@
-<ion-item [ngSwitch]="item.fieldType">
-  <smart-crud-filter-date
-          *ngSwitchCase="FieldType.date"
-          [item]="item"
-          [filter]="filter"
-  ></smart-crud-filter-date>
+<ion-item>
+  @switch (item.fieldType) {
+    @case (FieldType.date) {
+      <smart-crud-filter-date [item]="item" [filter]="filter"></smart-crud-filter-date>
+    }
+    @case (FieldType.dateWithEdit) {
+      <smart-crud-filter-date-with-edit [item]="item" [filter]="filter"></smart-crud-filter-date-with-edit>
+    }
+    @case (FieldType.dateTime) {
+      <smart-crud-filter-date-time [item]="item" [filter]="filter"></smart-crud-filter-date-time>
+    }
+    @case (FieldType.radio) {
+      <smart-crud-filter-radio [item]="item" [filter]="filter"></smart-crud-filter-radio>
+    }
+    @case (FieldType.check) {
+      <smart-crud-filter-check [item]="item" [filter]="filter"></smart-crud-filter-check>
+    }
+    @case (FieldType.flag) {
+       <smart-crud-filter-flag [item]="item" [filter]="filter"></smart-crud-filter-flag>
+    }
+    @case (FieldType.int) {
+      <smart-crud-filter-int [item]="item" [filter]="filter"></smart-crud-filter-int>
+    }
+    @default {
+      <smart-crud-filter-text [item]="item" [filter]="filter"></smart-crud-filter-text>
+    }
+  }
 
-  <smart-crud-filter-date-with-edit
-          *ngSwitchCase="FieldType.dateWithEdit"
-          [item]="item"
-          [filter]="filter"
-  ></smart-crud-filter-date-with-edit>
 
-  <smart-crud-filter-date-time
-    *ngSwitchCase="FieldType.dateTime"
-    [item]="item"
-    [filter]="filter"
-  ></smart-crud-filter-date-time>
 
-  <smart-crud-filter-radio
-          *ngSwitchCase="FieldType.radio"
-          [item]="item"
-          [filter]="filter"
-  ></smart-crud-filter-radio>
 
-  <smart-crud-filter-check
-          *ngSwitchCase="FieldType.check"
-          [item]="item"
-          [filter]="filter"
-  ></smart-crud-filter-check>
 
-  <smart-crud-filter-flag
-          *ngSwitchCase="FieldType.flag"
-          [item]="item"
-          [filter]="filter"
-  ></smart-crud-filter-flag>
 
-  <smart-crud-filter-int
-          *ngSwitchCase="FieldType.int"
-          [item]="item"
-          [filter]="filter"
-  ></smart-crud-filter-int>
 
-  <smart-crud-filter-text
-    *ngSwitchDefault
-    [item]="item"
-    [filter]="filter"
-  ></smart-crud-filter-text>
+
+
+
+
+
+
+
+
 </ion-item>

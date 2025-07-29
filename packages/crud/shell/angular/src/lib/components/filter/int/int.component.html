@@ -1,47 +1,62 @@
 <ion-row>
+  <ion-col>
+    <ion-label>
+        {{ item().label | translate }}
+    </ion-label>
+    @if (!advanced()) {
+      <ion-input [(ngModel)]="value" type="number" step="1"></ion-input>
+    }
+  </ion-col>
+  @if (allowAdvanced) {
+    <ion-col size="auto">
+      <ion-button (click)="toggleAdvanced()" class="square-button" [disabled]="minValue || maxValue">
+        @if (!advanced()) {
+          <ion-icon slot="icon-only" name="settings-outline"></ion-icon>
+        } @else {
+          <ion-icon slot="icon-only" name="settings"></ion-icon>
+        }
+      </ion-button>
+    </ion-col>
+  }
+  @if (value || minValue || maxValue) {
+    <ion-col size="auto">
+      <ion-button color="danger" (click)="clear()" class="square-button">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-col>
+  }
+</ion-row>
+@if ((advanced() || minValue || maxValue) && allowAdvanced) {
+  <ion-row>
     <ion-col>
+      <ion-item>
         <ion-label>
-            {{ item.label | translate }}
+          {{ 'from' | translate }}
         </ion-label>
-        <ion-input [(ngModel)]="value" type="number" step="1" *ngIf="!advanced"></ion-input>
+        <ion-input [(ngModel)]="minValue" type="number" step="1"></ion-input>
+      </ion-item>
     </ion-col>
-    <ion-col size="auto" *ngIf="allowAdvanced">
-        <ion-button (click)="toggleAdvanced()" class="squere-button" [disabled]="minValue || maxValue">
-            <ion-icon *ngIf="!advanced" slot="icon-only" name="settings-outline"></ion-icon>
-            <ion-icon *ngIf="advanced" slot="icon-only" name="settings"></ion-icon>
+    @if (minValue) {
+      <ion-col size="auto">
+        <ion-button color="danger" (click)="refresh(null, '>=')" class="square-button">
+          <ion-icon slot="icon-only" name="close-outline"></ion-icon>
         </ion-button>
-    </ion-col>
-    <ion-col size="auto" *ngIf="value || minValue || maxValue">
-        <ion-button color="danger" (click)="clear()" class="squere-button">
-            <ion-icon slot="icon-only" name="close-outline"></ion-icon>
-        </ion-button>
-    </ion-col>
-</ion-row>
-<ion-row *ngIf="(advanced || minValue || maxValue) && allowAdvanced">
+      </ion-col>
+    }
     <ion-col>
-        <ion-item>
-            <ion-label>
-                {{ 'from' | translate }}
-            </ion-label>
-            <ion-input [(ngModel)]="minValue" type="number" step="1"></ion-input>
-        </ion-item>
+      <ion-item>
+        <ion-label>
+          {{ 'to' | translate }}
+        </ion-label>
+        <ion-input [(ngModel)]="maxValue" type="number" step="1"></ion-input>
+      </ion-item>
     </ion-col>
-    <ion-col size="auto" *ngIf="minValue">
-        <ion-button color="danger" (click)="refresh(null, '>=')" class="squere-button">
-            <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+    @if (maxValue) {
+      <ion-col size="auto">
+        <ion-button color="danger" (click)="refresh(null, '<=')" class="square-button">
+          <ion-icon slot="icon-only" name="close-outline"></ion-icon>
         </ion-button>
-    </ion-col>
-    <ion-col>
-        <ion-item>
-            <ion-label>
-                {{ 'to' | translate }}
-            </ion-label>
-            <ion-input [(ngModel)]="maxValue" type="number" step="1"></ion-input>
-        </ion-item>
-    </ion-col>
-    <ion-col size="auto" *ngIf="maxValue">
-        <ion-button color="danger" (click)="refresh(null, '<=')" class="squere-button">
-            <ion-icon slot="icon-only" name="close-outline"></ion-icon>
-        </ion-button>
-    </ion-col>
-</ion-row>
+      </ion-col>
+    }
+  </ion-row>
+}

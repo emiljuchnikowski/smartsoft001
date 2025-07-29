@@ -1,16 +1,15 @@
 import {
-    AfterViewInit,
     ChangeDetectionStrategy, ChangeDetectorRef,
-    Component, ComponentFactoryResolver, ComponentRef,
+    Component, ComponentFactoryResolver,
     ElementRef,
     Input, NgModuleRef,
     OnInit, QueryList,
-    Renderer2, TemplateRef, ViewChild, ViewChildren, ViewContainerRef,
-} from "@angular/core";
+    Renderer2, signal, TemplateRef, ViewChild, ViewChildren, ViewContainerRef, WritableSignal
+} from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 
-import {IPageOptions} from "../../models/interfaces";
-import {DynamicContentDirective} from "../../directives/dynamic-content/dynamic-content.directive";
+import {IPageOptions} from '../../models';
+import {DynamicContentDirective} from '../../directives';
 import {PageBaseComponent} from "./base/base.component";
 import {CreateDynamicComponent} from "../base";
 import { PageStandardComponent } from './standard/standard.component';
@@ -18,7 +17,7 @@ import { PageStandardComponent } from './standard/standard.component';
 @Component({
     selector: 'smart-page',
     template: `
-        @if (template === 'default') {
+        @if (template() === 'default') {
             <smart-page-standard [options]="options">
                 <ng-container [ngTemplateOutlet]="contentTpl"></ng-container>
             </smart-page-standard>
@@ -35,14 +34,14 @@ import { PageStandardComponent } from './standard/standard.component';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PageComponent extends CreateDynamicComponent<PageBaseComponent>('page') implements OnInit {
-    private _options: IPageOptions | null = null;
+    private _options: WritableSignal<IPageOptions | null> = signal(null);
 
     @Input() set options(val: IPageOptions) {
-        this._options = val;
+        this._options.set(val);
         this.refreshDynamicInstance();
     }
     get options(): IPageOptions | null {
-        return this._options;
+        return this._options();
     }
 
     @ViewChild("contentTpl", { read: TemplateRef, static: false })

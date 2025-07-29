@@ -4,10 +4,10 @@ import {
   ComponentFactoryResolver,
   Directive, DoCheck,
   NgModuleRef,
-  OnDestroy, QueryList,
+  OnDestroy, QueryList, signal,
   TemplateRef,
-  ViewContainerRef,
-} from "@angular/core";
+  ViewContainerRef, WritableSignal
+} from '@angular/core';
 import { takeUntil } from "rxjs/operators";
 
 import { DynamicComponentType } from "../../models";
@@ -30,7 +30,7 @@ export abstract class BaseComponent implements OnDestroy {
 
 export interface IDynamicComponent<T> extends BaseComponent {
   baseInstance: T;
-  template: "custom" | "default";
+  template: WritableSignal<"custom" | "default">;
 
   contentTpl: TemplateRef<any> | ViewContainerRef | null;
   dynamicContents: QueryList<DynamicContentDirective>;
@@ -56,7 +56,7 @@ export function CreateDynamicComponent<
     baseInstance: T | null = null;
 
     dynamicType: Readonly<DynamicComponentType> = type;
-    template: "custom" | "default" = "default";
+    template: WritableSignal<'custom' | 'default'> = signal('default');
 
     abstract contentTpl: TemplateRef<any> | ViewContainerRef | null;
     abstract dynamicContents: QueryList<DynamicContentDirective>;
@@ -96,7 +96,7 @@ export function CreateDynamicComponent<
           this.dynamicType,
           this.moduleRef
       )[0];
-      this.template = component ? "custom" : "default";
+      this.template.set(component ? "custom" : "default");
 
       if (component && !this._renderCustom) {
         const factory =

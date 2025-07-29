@@ -3,9 +3,9 @@ import {
   Component, ComponentFactory, ComponentFactoryResolver,
   ElementRef, NgModuleRef,
   OnInit,
-  QueryList, TemplateRef,
+  QueryList, signal, TemplateRef,
   ViewChild,
-  ViewChildren, ViewContainerRef
+  ViewChildren, ViewContainerRef, WritableSignal
 } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { BehaviorSubject, Observable } from "rxjs";
@@ -41,12 +41,12 @@ import { PageService } from "../../services/page/page.service";
     NgTemplateOutlet
   ],
   template: `
-    <smart-page [options]="pageOptions">
+    <smart-page [options]="pageOptions()">
       <div #topTpl class="top-content"></div>
-      @if (template === 'default') {
-        <smart-crud-item-standard-page [detailsOptions]="detailsOptions"
+      @if (template() === 'default') {
+        <smart-crud-item-standard-page [detailsOptions]="detailsOptions()"
                                        [mode]="mode"
-                                       [uniqueProvider]="uniqueProvider"
+                                       [uniqueProvider]="uniqueProvider()"
                                        (onPartialChange)="onPartialChange($event)"
                                        (onChange)="onChange($event)"
                                        (onValidChange)="onValidChange($event)"
@@ -65,27 +65,27 @@ import { PageService } from "../../services/page/page.service";
 export class ItemComponent<T extends IEntity<string>>
     extends CreateDynamicComponent<CrudItemPageBaseComponent<any>>('crud-item-page')
   implements OnInit {
-  private _mode: string;
+  private _mode: WritableSignal<string>;
 
-  pageOptions: IPageOptions = {
+  pageOptions: WritableSignal<IPageOptions> = signal({
     title: "",
     showBackButton: true,
     hideMenuButton: true,
-  };
-  detailsOptions: IDetailsOptions<T>;
+  });
+  detailsOptions: WritableSignal<IDetailsOptions<T>>;
   id: string;
   formValue: T;
   formValid = false;
   item: T;
   formPartialValue: Partial<T>;
-  uniqueProvider: (values: Record<keyof T, any>) => Promise<boolean>;
+  uniqueProvider: WritableSignal<(values: Record<keyof T, any>) => Promise<boolean>>;
 
   set mode(val: string) {
-    this._mode = val;
+    this._mode = signal(val);
     this.refreshDynamicInstance();
   }
   get mode(): string {
-    return this._mode;
+    return this._mode();
   }
 
   selected$: Observable<T>;
@@ -131,9 +131,9 @@ export class ItemComponent<T extends IEntity<string>>
   }
 
   refreshProperties() {
-    this.baseInstance.detailsOptions = this.detailsOptions;
+    this.baseInstance.detailsOptions = this.detailsOptions();
     this.baseInstance.mode = this.mode;
-    this.baseInstance.uniqueProvider = this.uniqueProvider;
+    this.baseInstance.uniqueProvider = this.uniqueProvider();
     this.baseInstance.onPartialChange.pipe(this.takeUntilDestroy).subscribe(val => this.onPartialChange(val));
     this.baseInstance.onChange.pipe(this.takeUntilDestroy).subscribe(val => this.onChange(val));
     this.baseInstance.onValidChange.pipe(this.takeUntilDestroy).subscribe(val => this.onValidChange(val));
@@ -172,7 +172,7 @@ export class ItemComponent<T extends IEntity<string>>
           });
     }
 
-    this.uniqueProvider = async (values) => {
+    this.uniqueProvider.set(async (values) => {
       const filter: ICrudFilter = {
         query: [],
       };
@@ -195,7 +195,7 @@ export class ItemComponent<T extends IEntity<string>>
       const { totalCount } = await this.service.getList(filter).toPromise();
 
       return !totalCount;
-    };
+    });
 
     if (this.config.details) {
       const compiledComponents: {
@@ -218,7 +218,7 @@ export class ItemComponent<T extends IEntity<string>>
         }
       );
 
-      this.detailsOptions = {
+      this.detailsOptions.set({
         type: this.config.type,
         item$: this.facade.selected$,
         cellPipe: this.config.details ? (this.config.details as {cellPipe?: ICellPipe<T>}).cellPipe : null,
@@ -240,7 +240,7 @@ export class ItemComponent<T extends IEntity<string>>
                   ).factory
                   : null,
         },
-      };
+      });
     }
 
     this.initPageOptions();
@@ -302,11 +302,11 @@ export class ItemComponent<T extends IEntity<string>>
   }
 
   private initPageOptions(): void {
-    this.pageOptions = {
-      ...this.pageOptions,
+    this.pageOptions.set({
+      ...this.pageOptions(),
       title: this.getTitle(),
       endButtons: this.getButtons(),
-    };
+    })
   }
 
   private getButtons(): Array<IIconButtonOptions> {
@@ -414,7 +414,7 @@ export class ItemComponent<T extends IEntity<string>>
   private checkFirstInvalid(): boolean {
     this.cd.detectChanges();
 
-    const form = this.template === 'default'
+    const form = this.template() === 'default'
         ? this.standardComponents.first.formComponents.first.form
         : this.baseInstance.formComponents.first.form;
 

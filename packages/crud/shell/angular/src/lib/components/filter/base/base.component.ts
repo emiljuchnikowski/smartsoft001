@@ -1,37 +1,39 @@
-import {Directive, Inject, Input, OnInit, Optional} from "@angular/core";
+import { Directive, Inject, input, InputSignal, OnInit, Optional, Signal } from '@angular/core';
 import {Debounce} from "lodash-decorators";
 import {Observable} from "rxjs";
+import {TranslateService} from "@ngx-translate/core";
+import { toSignal } from '@angular/core/rxjs-interop';
 
 import {IEntity} from "@smartsoft001/domain-core";
 import {FieldType, IModelFilter} from "@smartsoft001/models";
 
-import {ICrudFilter} from "../../../models/interfaces";
+import {ICrudFilter} from '../../../models';
 import {CrudFacade} from "../../../+state/crud.facade";
 import {
   CRUD_MODEL_POSSIBILITIES_PROVIDER,
   ICrudModelPossibilitiesProvider,
 } from "../../../providers/model-possibilities/model-possibilities.provider";
 import {CrudConfig} from "../../../crud.config";
-import {TranslateService} from "@ngx-translate/core";
 
 @Directive()
 export class BaseComponent<T extends IEntity<string>> implements OnInit {
-  possibilities$: Observable<{ id: any; text: string }[]>;
+  possibilities$: Observable<{ id: any; text: string }[]>; //!Used externally (inside check.component)
+  possibilities: Signal<{ id: any; text: string }[]>;
 
-  @Input() item: IModelFilter;
-  @Input() filter: ICrudFilter;
+  readonly item: InputSignal<IModelFilter> = input<IModelFilter>();
+  readonly filter: InputSignal<ICrudFilter> = input<ICrudFilter>();
 
   get value(): any {
     if (this.isArrayType()) {
-      return this.filter.query
+      return this.filter().query
           .filter(
-            (q) => q.key === this.item.key && q.type === this.item.type
+            (q) => q.key === this.item().key && q.type === this.item().type
           )
           .map(q => q.value);
     }
 
-    const query = this.filter.query.find(
-      (q) => q.key === this.item.key && q.type === this.item.type
+    const query = this.filter().query.find(
+      (q) => q.key === this.item().key && q.type === this.item().type
     );
     return query?.value;
   }
@@ -42,15 +44,15 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
 
   get minValue(): any {
     if (this.isArrayType()) {
-      return this.filter.query
+      return this.filter().query
           .filter(
-              (q) => q.key === this.item.key && q.type === ">="
+              (q) => q.key === this.item().key && q.type === ">="
           )
           .map(q => q.value);
     }
 
-    const query = this.filter.query.find(
-        (q) => q.key === this.item.key && q.type === ">="
+    const query = this.filter().query.find(
+        (q) => q.key === this.item().key && q.type === ">="
     );
     return query?.value;
   }
@@ -61,15 +63,15 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
 
   get maxValue(): any {
     if (this.isArrayType()) {
-      return this.filter.query
+      return this.filter().query
           .filter(
-              (q) => q.key === this.item.key && q.type === "<="
+              (q) => q.key === this.item().key && q.type === "<="
           )
           .map(q => q.value);
     }
 
-    const query = this.filter.query.find(
-        (q) => q.key === this.item.key && q.type === "<="
+    const query = this.filter().query.find(
+        (q) => q.key === this.item().key && q.type === "<="
     );
     return query?.value;
   }
@@ -93,51 +95,51 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
 
   @Debounce(500)
   refresh(val: any, type = null): void {
-    if (!type) type = this.item.type;
+    if (!type) type = this.item().type;
 
-    this.filter.offset = 0;
+    this.filter().offset = 0;
 
     if (this.isArrayType()) {
       this.refreshForArray(val as [], type);
       return;
     }
 
-    let query = this.filter.query.find(
-        (q) => q.key === this.item.key && q.type === type
+    let query = this.filter().query.find(
+        (q) => q.key === this.item().key && q.type === type
     );
 
     if (val === null || val === undefined || val === '') {
-      const index = this.filter.query.indexOf(query);
+      const index = this.filter().query.indexOf(query);
       if (index > -1) {
-        this.filter.query.splice(index, 1);
+        this.filter().query.splice(index, 1);
       }
 
-      this.facade.read(this.filter);
+      this.facade.read(this.filter());
       return;
     }
 
     if (!query) {
       query = {
-        key: this.item.key,
+        key: this.item().key,
         type: type,
         value: null,
       };
 
-      this.filter.query.push(query);
+      this.filter().query.push(query);
     }
 
     query.value = val;
-    query.label = this.item.label;
+    query.label = this.item().label;
 
-    this.facade.read(this.filter);
+    this.facade.read(this.filter());
   }
 
   clear(): void {
-    this.filter.query = this.filter.query.filter(
-        (q) => q.key !== this.item.key
+    this.filter().query = this.filter().query.filter(
+        (q) => q.key !== this.item().key
     );
-    this.filter.offset = 0;
-    this.facade.read(this.filter);
+    this.filter().offset = 0;
+    this.facade.read(this.filter());
   }
 
   ngOnInit(): void {
@@ -145,48 +147,49 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
   }
 
   private initPossibilities(): void {
-    let possibilities = this.item.possibilities$;
+    let possibilities = this.item().possibilities$;
 
     if (this.modelPossibilitiesProvider) {
       const possibilitiesFromProvider = this.modelPossibilitiesProvider.get(this.config.type);
-      if (possibilitiesFromProvider && possibilitiesFromProvider[this.item.key])
-        possibilities = possibilitiesFromProvider[this.item.key];
+      if (possibilitiesFromProvider && possibilitiesFromProvider[this.item().key])
+        possibilities = possibilitiesFromProvider[this.item().key];
     }
 
     this.possibilities$ = possibilities;
+    this.possibilities = toSignal(possibilities);
   }
 
   private isArrayType(): boolean {
-    return (this.item?.fieldType === FieldType.check);
+    return (this.item()?.fieldType === FieldType.check);
   }
 
   private refreshForArray(vals: [], type): void {
-    const queries = this.filter.query.filter(
-        (q) => q.key === this.item.key && q.type === type
+    const queries = this.filter().query.filter(
+        (q) => q.key === this.item().key && q.type === type
     );
 
     queries.forEach(query => {
-      const index = this.filter.query.indexOf(query);
+      const index = this.filter().query.indexOf(query);
       if (index > -1) {
-        this.filter.query.splice(index, 1);
+        this.filter().query.splice(index, 1);
       }
     });
 
     if (vals === null || vals === undefined || !vals.length) {
-      this.facade.read(this.filter);
+      this.facade.read(this.filter());
       return;
     }
 
     vals.forEach(val => {
       const query = {
-        key: this.item.key,
+        key: this.item().key,
         type: type,
         value: val,
       };
 
-      this.filter.query.push(query);
+      this.filter().query.push(query);
     });
 
-    this.facade.read(this.filter);
+    this.facade.read(this.filter());
   }
 }

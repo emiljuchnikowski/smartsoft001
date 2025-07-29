@@ -1,10 +1,10 @@
 import {Component} from "@angular/core";
+import { NgTemplateOutlet } from '@angular/common';
 
 import {IEntity} from "@smartsoft001/domain-core";
+import { DetailsComponent, FormComponent } from '@smartsoft001/angular';
 
 import {CrudItemPageBaseComponent} from "../base/base.component";
-import { DetailsComponent, FormComponent } from '@smartsoft001/angular';
-import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import { FormOptionsPipe } from '../../../pipes';
 
 @Component({
@@ -20,20 +20,19 @@ import { FormOptionsPipe } from '../../../pipes';
 
         <ng-template #editTpl>
             <smart-form
-              [options]="(selected$ | async) | smartFormOptions : mode:config?.type:uniqueProvider : config.inputComponents"
+              [options]="selected() | smartFormOptions : mode:config?.type:uniqueProvider : config.inputComponents"
               (valuePartialChange)="onPartialChange.emit($event)"
               (valueChange)="onChange.emit($event)"
               (validChange)="onValidChange.emit($event)"
             ></smart-form>
         </ng-template>
 
-        <br/><br/>
+        <br /><br />
     `,
     styleUrls: ['./standard.component.scss'],
     imports: [
         DetailsComponent,
         FormComponent,
-        AsyncPipe,
         FormOptionsPipe,
         NgTemplateOutlet
     ]

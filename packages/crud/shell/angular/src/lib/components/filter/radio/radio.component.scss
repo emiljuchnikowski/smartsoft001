@@ -1,6 +1,5 @@
 :host {
     width: 100%;
-    // padding-right: 2.4rem;
     margin-bottom: 1.2rem;
     ion-radio {
         margin-right: 2.4rem;
@@ -18,7 +17,7 @@
         ion-label {
             --padding: var(--smart-button-padding-left)/2 var(--smart-button-padding-top)/2 var(--smart-button-padding-right)/2 var(--smart-button-padding-bottom)/2;
         }
-        .squere-button {
+        .square-button {
             margin: 0;
             font-size: 18px;
             height: 36px;
@@ -27,7 +26,6 @@
             --padding-start: .2em;
             --padding-end: .2em;
             ion-icon {
-                //font-size: 1.3em !important;
                 margin: 0;
                 padding: 0;
             }

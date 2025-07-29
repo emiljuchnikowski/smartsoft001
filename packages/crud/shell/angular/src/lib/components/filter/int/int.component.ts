@@ -1,25 +1,37 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {IonDatetime} from "@ionic/angular";
+import { Component, OnDestroy, OnInit, signal, WritableSignal } from '@angular/core';
 import {Subscription} from "rxjs";
+import { IonButton, IonCol, IonIcon, IonInput, IonItem, IonLabel, IonRow } from '@ionic/angular/standalone';
+import { TranslatePipe } from '@ngx-translate/core';
+import { FormsModule } from '@angular/forms';
 
 import {IEntity} from "@smartsoft001/domain-core";
 
-import {FilterDateComponent} from "../date/date.component";
 import {BaseComponent} from "../base/base.component";
 
 @Component({
   selector: 'smart-crud-filter-int',
   templateUrl: './int.component.html',
+  imports: [
+    IonRow,
+    IonCol,
+    IonLabel,
+    TranslatePipe,
+    FormsModule,
+    IonInput,
+    IonButton,
+    IonIcon,
+    IonItem
+  ],
   styleUrls: ['./int.component.scss']
 })
 export class FilterIntComponent<T extends IEntity<string>> extends BaseComponent<T>
 implements OnInit, OnDestroy {
   private _subscriptions = new Subscription();
 
-  advanced = false;
+  advanced: WritableSignal<boolean> = signal<boolean>(false);
 
   get allowAdvanced(): boolean {
-    return this.item?.type === '=';
+    return this.item()?.type === '=';
   }
 
   ngOnInit(): void {
@@ -33,7 +45,7 @@ implements OnInit, OnDestroy {
   }
 
   toggleAdvanced(): void {
-    this.advanced = !this.advanced;
+    this.advanced.update((val) => !val);
     if (this.advanced) this.value = null;
   }
 }
