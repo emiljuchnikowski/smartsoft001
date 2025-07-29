@@ -1,7 +1,7 @@
 import { Action } from "@ngrx/store";
 
 import { IEntity } from "@smartsoft001/domain-core";
-import { ICrudCreateManyOptions, ICrudFilter } from "../models/interfaces";
+import { ICrudCreateManyOptions, ICrudFilter } from '../models';
 
 
 /*

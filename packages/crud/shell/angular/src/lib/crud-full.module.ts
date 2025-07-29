@@ -10,16 +10,16 @@ import {IEntity} from "@smartsoft001/domain-core";
 import {CrudConfig} from "./crud.config";
 import {CrudEffects} from "./+state/crud.effects";
 import {getReducer} from "./+state/crud.reducer";
-import {ListComponent} from "./pages/list/list.component";
-import {ItemComponent} from "./pages/item/item.component";
-import {CrudPipesModule} from "./pipes/pipes.module";
+import {ListComponent} from './pages';
+import {ItemComponent} from './pages';
+import {CrudPipesModule} from './pipes';
 import { CrudService } from './services/crud/crud.service';
 import { CrudFacade } from './+state/crud.facade';
 import {CrudListPaginationFactory} from "./factories/list-pagination/list-pagination.factory";
-import {CrudComponentsModule} from "./components/components.module";
+import {CrudComponentsModule} from './components';
 import {PageService} from "./services/page/page.service";
-import {ListStandardComponent} from "./pages/list/standard/standard.component";
-import {ItemStandardComponent} from "./pages/item/standard/standard.component";
+import {ListStandardComponent} from './pages';
+import {ItemStandardComponent} from './pages';
 import {CrudListGroupService} from "./services/list-group/list-group.service";
 
 export const PAGES = [

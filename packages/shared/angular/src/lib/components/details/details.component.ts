@@ -8,11 +8,11 @@ import { Subscription } from "rxjs";
 
 import { IEntity } from "@smartsoft001/domain-core";
 
-import { IDetailsOptions } from "../../models/interfaces";
-import { CreateDynamicComponent } from "../base/base.component";
+import { IDetailsOptions } from '../../models';
+import { CreateDynamicComponent } from '../base';
 import { DetailsBaseComponent } from "./base/base.component";
-import {DynamicContentDirective} from "../../directives/dynamic-content/dynamic-content.directive";
-import {DetailsService} from "../../services/details/details.service";
+import {DynamicContentDirective} from '../../directives';
+import {DetailsService} from '../../services';
 import { DetailsStandardComponent } from './standard/standard.component';
 
 @Component({

@@ -1,0 +1,141 @@
+<div #topTpl></div>
+
+<ion-content>
+  <div style="width: 100%; overflow-y: auto">
+    <table
+      cdk-table
+      matSort
+      [dataSource]="(list$ | async) ?? []"
+      recycleRows
+      [trackBy]="myTrackById"
+      style="overflow-y: auto"
+    >
+      @for (key of desktopKeys; track key) {
+        @let last = $last;
+        <ng-container
+          matColumnDef="{{ key }}"
+          class="col-sm"
+          style="text-align: left"
+        >
+          <div>
+            @switch (key) {
+              @case ('selectMulti') {
+                <th cdk-header-cell class="cell-details" *matHeaderCellDef></th>
+                <td cdk-cell *matCellDef="let element">
+                  <ion-checkbox
+                    style="margin-right: 15px"
+                    *ngIf="list$ | async; let list"
+                    (ionChange)="
+                  onChangeMultiselect($event.detail.checked, element, list)
+                "
+                  ></ion-checkbox>
+                </td>
+              }
+              @case ('removeAction') {
+                <th cdk-header-cell class="cell-details" *matHeaderCellDef>
+                  <ng-container *ngTemplateOutlet="pagination"></ng-container>
+                </th>
+                <td cdk-cell *matCellDef="let element">
+                  <ion-button
+                    (click)="removeHandler?.(element)"
+                    *ngIf="!checkRemoveHandler || checkRemoveHandler(element)"
+                  >
+                    <ion-icon slot="icon-only" name="trash"></ion-icon>
+                  </ion-button>
+                </td>
+              }
+              @case ('detailsAction') {
+                <th cdk-header-cell class="cell-details" *matHeaderCellDef>
+                  <ng-container *ngTemplateOutlet="pagination"></ng-container>
+                </th>
+                <td cdk-cell *matCellDef="let element">
+                  <ion-button
+                    (click)="detailsButtonOptions.click()"
+                    [smartDetails]="{
+                      component: detailsComponent,
+                      params: detailsComponentProps,
+                      mode: 'bottom'
+                    }"
+                    (smartDetailsShowed)="select && select(element.id)"
+                  >
+                    <ion-icon
+                      slot="icon-only"
+                      name="ellipsis-vertical-outline"
+                    ></ion-icon>
+                  </ion-button>
+                </td>
+              }
+              @case ('itemAction') {
+                <th cdk-header-cell class="cell-details" *matHeaderCellDef>
+                  <ng-container *ngTemplateOutlet="pagination"></ng-container>
+                </th>
+                <td cdk-cell *matCellDef="let element">
+                  <ion-button (click)="itemHandler?.(element.id)">
+                    <ion-icon
+                      slot="icon-only"
+                      name="arrow-forward-outline"
+                    ></ion-icon>
+                  </ion-button>
+                </td>
+              }
+              @default {
+                <th cdk-header-cell *matHeaderCellDef mat-sort-header="{{ key }}">
+                  {{ list$ | async | smartListHeader: key:type | async }}
+                  <ng-container *ngTemplateOutlet="pagination"></ng-container>
+                </th>
+                <ng-container *matCellDef="let element">
+                  @let cell = element | smartListCell: key:cellPipe:type;
+                  @if (cell) {
+                    <td
+                      cdk-cell
+                      [attr.smart-item-key]="key"
+                      [style.width.px]="cell.type === FieldType.image ? 60 : null"
+                      [style.textAlign]="cell.type === FieldType.image ? 'center' : null"
+                    >
+                      @if (cell.type === FieldType.image) {
+                        <img height="50" [lazyLoad]="cell.value | smartFileUrl" alt="" src=""/>
+                      } @else {
+                        <div class="cell-html" [innerHTML]="cell.value"></div>
+                      }
+                    </td>
+                  } @else {
+                    <td cdk-cell></td>
+                  }
+                </ng-container>
+              }
+            }
+          </div>
+
+          <ng-template #pagination>
+            @if (last && loadNextPage && (totalPages$ | async)) {
+              <div style="float: right">
+                <ion-chip>
+                  {{ "page" | translate }}:
+                  <b>{{ page$ | async }}/{{ totalPages$ | async }}</b>
+                </ion-chip>
+              </div>
+            }
+          </ng-template>
+        </ng-container>
+      }
+
+      <tr cdk-header-row *matHeaderRowDef="desktopKeys ?? []; sticky: true"></tr>
+      <tr cdk-row *matRowDef="let row; columns: desktopKeys ?? []"></tr>
+    </table>
+  </div>
+
+  @if (loadNextPage && Object.keys((list$ | async) ?? [])?.length && options.pagination?.mode !== PaginationMode.singlePage) {
+    <ion-infinite-scroll threshold="100px" (ionInfinite)="loadNextPage($event)">
+      <ion-infinite-scroll-content loadingSpinner="circles"></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+  }
+</ion-content>
+
+@if (options?.pagination?.mode === PaginationMode.singlePage) {
+  <smart-paging
+    [page]="page$ | async"
+    [totalPages]="totalPages$ | async"
+    (prevPage)="loadPrevPage?.()"
+    (nextPage)="loadNextPage?.()"
+  ></smart-paging>
+}

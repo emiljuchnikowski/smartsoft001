@@ -1,19 +1,17 @@
 import { MonoTypeOperatorFunction, Subject } from "rxjs";
 import {
-  AfterContentInit,
   ChangeDetectorRef,
   ComponentFactoryResolver,
   Directive, DoCheck,
   NgModuleRef,
   OnDestroy, QueryList,
   TemplateRef,
-  ViewChild, ViewChildren,
   ViewContainerRef,
 } from "@angular/core";
 import { takeUntil } from "rxjs/operators";
 
 import { DynamicComponentType } from "../../models";
-import { DynamicComponentStorageService } from "../../services/dynamic-component-storage/dynamic-component-storage.service";
+import { DynamicComponentStorageService } from '../../services';
 import {DynamicContentDirective} from "../../directives";
 
 @Directive()

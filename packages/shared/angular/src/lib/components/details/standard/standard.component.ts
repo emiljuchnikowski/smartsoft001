@@ -2,10 +2,10 @@ import {
   ChangeDetectionStrategy,
   Component,
 } from "@angular/core";
-
-import { DetailsBaseComponent } from "../base/base.component";
 import { IEntity } from "@smartsoft001/domain-core";
 import { IonList } from '@ionic/angular/standalone';
+
+import { DetailsBaseComponent } from "../base/base.component";
 import { CardComponent } from '../../card';
 import { DetailComponent } from '../../detail';
 

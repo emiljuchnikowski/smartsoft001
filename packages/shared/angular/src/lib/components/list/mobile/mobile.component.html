@@ -1,0 +1,47 @@
+<div #topTpl></div>
+
+@let list = listMobile$ | async;
+<ion-list>
+  @for (item of list; track item.id) {
+    <ion-item-sliding>
+      @if (removeHandler && (!checkRemoveHandler || checkRemoveHandler(item))) {
+        <ion-item-options side="start" (ionSwipe)="removeHandler?.(item)">
+            <ion-item-option color="danger" expandable (click)="removeHandler?.(item)">
+                {{ 'delete' | translate }}
+            </ion-item-option>
+        </ion-item-options>
+      }
+
+      <ion-item (click)='itemHandler ? itemHandler(item.id) : unselect && unselect()'>
+          <ion-label>
+            @for (key of keys; track key) {
+              @let cell = item | smartListCell : key : cellPipe : type;
+              @if (cell) {
+                @if (cell.type === FieldType.image) {
+                  <img [attr.smart-item-key]="key" height="100" [lazyLoad]="cell.value | smartFileUrl" alt="" src="">
+                } @else if ($first) {
+                  <h2 [attr.smart-item-key]="key" [innerHTML]="cell.value"></h2>
+                } @else {
+                  <p  [attr.smart-item-key]="key" [innerHTML]="cell.value"></p>
+                }
+              }
+            }
+          </ion-label>
+      </ion-item>
+    </ion-item-sliding>
+  }
+</ion-list>
+
+@if (loadNextPage && list?.length && options.pagination?.mode !== PaginationMode.singlePage) {
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadNextPage?.($event)">
+    <ion-infinite-scroll-content loadingSpinner="circles"></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+}
+
+@if (options?.pagination?.mode === PaginationMode.singlePage) {
+  <smart-paging [page]="page$ | async"
+                [totalPages]="totalPages$ | async"
+                (prevPage)="loadPrevPage?.()"
+                (nextPage)="loadNextPage?.()"
+  ></smart-paging>
+}

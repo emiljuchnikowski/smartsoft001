@@ -72,8 +72,8 @@ export interface IDetailsOptions<T extends IEntity<string>> {
   type: any;
   item$: Observable<T>;
   loading$?: Observable<boolean>;
-  itemHandler?: (id: string) => void;
-  removeHandler?: (item: T) => void;
+  itemHandler?: ((id: string) => void) | null;
+  removeHandler?: ((item: T) => void) | null;
   componentFactories?: IDetailsComponentFactories<T>;
 }
 
@@ -197,4 +197,8 @@ export interface IListOptions<T> {
 export interface IRemoveProvider<T> {
   invoke: (id: string) => void;
   check?: (item: T) => boolean;
+}
+
+export interface IListInternalOptions<T> extends IListOptions<T> {
+  fields?: Array<{ key: string, options: IFieldOptions }>;
 }

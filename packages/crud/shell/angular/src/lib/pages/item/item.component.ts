@@ -1,12 +1,12 @@
 import {
   ChangeDetectorRef,
-  Component, ComponentFactoryResolver,
+  Component, ComponentFactory, ComponentFactoryResolver,
   ElementRef, NgModuleRef,
   OnInit,
   QueryList, TemplateRef,
   ViewChild,
   ViewChildren, ViewContainerRef
-} from "@angular/core";
+} from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Location, NgTemplateOutlet } from '@angular/common';
@@ -28,7 +28,7 @@ import { SpecificationService } from "@smartsoft001/utils";
 import { CrudFacade } from "../../+state/crud.facade";
 import { CrudFullConfig } from "../../crud.config";
 import { CrudService } from "../../services/crud/crud.service";
-import { ICrudFilter } from "../../models/interfaces";
+import { ICrudFilter } from '../../models';
 import {ItemStandardComponent} from "./standard/standard.component";
 import { CrudItemPageBaseComponent } from "./base/base.component";
 import { PageService } from "../../services/page/page.service";
@@ -198,7 +198,10 @@ export class ItemComponent<T extends IEntity<string>>
     };
 
     if (this.config.details) {
-      const compiledComponents = await this.dynamicComponentLoader.getComponentsWithFactories(
+      const compiledComponents: {
+        component: any;
+        factory: ComponentFactory<any>;
+      }[] = await this.dynamicComponentLoader.getComponentsWithFactories(
         {
           components: [
             ...(this.config.details &&

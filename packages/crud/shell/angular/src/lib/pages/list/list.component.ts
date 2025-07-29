@@ -10,6 +10,8 @@ import {
 import { map, tap } from "rxjs/operators";
 import { Router } from "@angular/router";
 import {Observable, Subject} from "rxjs";
+import { SpecificationService } from "@smartsoft001/utils";
+import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 
 import {
   CreateDynamicComponent,
@@ -19,8 +21,8 @@ import {
   IListOptions,
   IPageOptions,
   ListMode,
-  MenuService, StyleService,
-} from "@smartsoft001/angular";
+  MenuService, PageComponent, StyleService
+} from '@smartsoft001/angular';
 import { IEntity } from "@smartsoft001/domain-core";
 import {
   getModelFieldsWithOptions,
@@ -31,29 +33,40 @@ import {
 
 import { CrudFacade } from "../../+state/crud.facade";
 import { CrudFullConfig } from "../../crud.config";
-import { ICrudFilter } from "../../models/interfaces";
-import { ExportComponent } from "../../components/export/export.component";
-import { FiltersComponent } from "../../components/filters/filters.component";
-import { MultiselectComponent } from "../../components/multiselect/multiselect.component";
+import { ICrudFilter } from '../../models';
+import { ExportComponent } from '../../components';
+import { FiltersComponent } from '../../components';
+import { MultiselectComponent } from '../../components';
 import { CrudListPaginationFactory } from "../../factories/list-pagination/list-pagination.factory";
 import {PageService} from "../../services/page/page.service";
 import {CrudListPageBaseComponent} from "./base/base.component";
 import {CrudSearchService} from "../../services/search/search.service";
-import { SpecificationService } from "@smartsoft001/utils";
+import { ListStandardComponent } from './standard/standard.component';
 
 @Component({
-  selector: "smart-crud-list-page",
+  selector: 'smart-crud-list-page',
+  imports: [
+    PageComponent,
+    ListStandardComponent,
+    NgTemplateOutlet,
+    AsyncPipe
+  ],
   template: `
-    <smart-page [options]="pageOptions" *ngIf="filter$ | async">
-      <div #topTpl></div>
-      <smart-crud-list-standard-page *ngIf="template === 'default'" [listOptions]="listOptions">
-      <ng-container [ngTemplateOutlet]="contentTpl"></ng-container>
-      </smart-crud-list-standard-page>
-      <ng-template #contentTpl>
-        <ng-content></ng-content>
-      </ng-template>
-      <div class="dynamic-content"></div>
-    </smart-page>
+    @if (filter$ | async) {
+      <smart-page [options]="pageOptions">
+        <div #topTpl></div>
+
+        @if (template === 'default') {
+          <smart-crud-list-standard-page [listOptions]="listOptions">
+            <ng-container [ngTemplateOutlet]="contentTpl"></ng-container>
+          </smart-crud-list-standard-page>
+        }
+        <ng-template #contentTpl>
+          <ng-content></ng-content>
+        </ng-template>
+        <div class="dynamic-content"></div>
+      </smart-page>
+    }
   `
 })
 export class ListComponent<T extends IEntity<string>>
@@ -91,8 +104,6 @@ export class ListComponent<T extends IEntity<string>>
     private menuService: MenuService,
     private hardwareService: HardwareService,
     private paginationFacade: CrudListPaginationFactory<T>,
-    private styleService: StyleService,
-    private elementRef: ElementRef,
     private pageService: PageService<T>,
     public config: CrudFullConfig<T>,
     private searchService: CrudSearchService,
@@ -111,7 +122,7 @@ export class ListComponent<T extends IEntity<string>>
   }
 
   async ngOnInit(): Promise<void> {
-    await this.pageService.checkPermissions();
+    this.pageService.checkPermissions();
 
     const options = getModelOptions(this.config.type);
 

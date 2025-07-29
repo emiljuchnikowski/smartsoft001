@@ -1,0 +1,104 @@
+import {
+  Component,
+  ViewChild,
+  ViewContainerRef,
+  AfterViewInit,
+} from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { CdkTableDataSourceInput } from '@angular/cdk/table';
+
+import { IEntity } from '@smartsoft001/domain-core';
+import { FieldType, getModelFieldsWithOptions } from '@smartsoft001/models';
+
+import { ListBaseComponent } from '../base/base.component';
+import { IListComponentFactories, IListInternalOptions } from '../../../models';
+import { PagingComponent } from '../../paging';
+import {
+  IonButton, IonCard, IonCardContent,
+  IonCol,
+  IonIcon,
+  IonInfiniteScroll,
+  IonInfiniteScrollContent,
+  IonRow
+} from '@ionic/angular/standalone';
+import { AsyncPipe, NgOptimizedImage } from '@angular/common';
+import { FileUrlPipe, ListCellPipe } from '../../../pipes';
+
+@Component({
+  selector: 'smart-list-masonry-grid',
+  templateUrl: './masonry-grid.component.html',
+  styleUrls: ['./masonry-grid.component.scss'],
+  imports: [
+    PagingComponent,
+    IonInfiniteScrollContent,
+    IonInfiniteScroll,
+    AsyncPipe,
+    IonIcon,
+    IonButton,
+    IonCol,
+    IonRow,
+    IonCard,
+    FileUrlPipe,
+    IonCardContent,
+    NgOptimizedImage,
+    ListCellPipe
+  ]
+})
+export class ListMasonryGridComponent<T extends IEntity<string & { [key: string]: any}>>
+  extends ListBaseComponent<T>
+  implements AfterViewInit
+{
+  componentFactories: IListComponentFactories<T> | null = null;
+
+  listWithImages$!: Observable<{ data: T; image: any }[] | null> | null;
+
+  @ViewChild('topTpl', { read: ViewContainerRef, static: true })
+  topTpl!: ViewContainerRef;
+
+  ngAfterViewInit(): void {
+    this.generateDynamicComponents();
+  }
+
+  protected override afterInitOptions() {
+    super.afterInitOptions();
+
+    const fieldOptions = getModelFieldsWithOptions(new this.type());
+    const imageFieldOptions = fieldOptions.find(
+      (item) => item.options.type === FieldType.image
+    );
+
+    this.listWithImages$ = this.list$.pipe(
+      map((list: CdkTableDataSourceInput<T>) => {
+        if (!list) return null;
+
+        return (list as T[]).map((item) => {
+          return {
+            data: item,
+            image: (item as any)[imageFieldOptions?.key ?? ''],
+          };
+        }) as { data: T; image: any }[];
+      })
+    );
+  }
+
+  protected override initList(val: IListInternalOptions<T>): void {
+    super.initList(val);
+
+    this.componentFactories = val?.componentFactories ?? null;
+
+    this.generateDynamicComponents();
+  }
+
+  private generateDynamicComponents(): void {
+    if (!this.componentFactories) return;
+
+    if (this.componentFactories.top && this.topTpl) {
+      if (!this.topTpl.get(0)) {
+        this.topTpl.createComponent(this.componentFactories.top);
+      }
+    }
+  }
+
+  protected readonly Object = Object;
+}

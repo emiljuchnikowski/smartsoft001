@@ -2,7 +2,7 @@ import {IEntity} from "@smartsoft001/domain-core";
 import {Action} from "@ngrx/store";
 import {PaginationMode} from "@smartsoft001/angular";
 
-import {ICrudFilter} from "../models/interfaces";
+import {ICrudFilter} from '../models';
 
 export interface State<T extends IEntity<string>> {
     selected?: T;

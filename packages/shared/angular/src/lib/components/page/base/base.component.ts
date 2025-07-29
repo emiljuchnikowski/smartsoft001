@@ -12,9 +12,9 @@ import { Location } from '@angular/common';
 import {PopoverController} from "@ionic/angular";
 import { Subscription} from "rxjs";
 
-import {DynamicComponentType, IIconButtonOptions, IPageOptions} from "../../../models/interfaces";
-import {AppService} from "../../../services/app/app.service";
-import { HardwareService } from "../../../services/hardware/hardware.service";
+import {DynamicComponentType, IIconButtonOptions, IPageOptions} from '../../../models';
+import {AppService} from '../../../services';
+import { HardwareService } from '../../../services';
 
 @Directive()
 export abstract class PageBaseComponent implements OnInit, OnDestroy {
@@ -37,7 +37,7 @@ export abstract class PageBaseComponent implements OnInit, OnDestroy {
     @ViewChild("contentTpl", { read: ViewContainerRef, static: true })
     contentTpl: TemplateRef<any> | ViewContainerRef | null = null;
 
-    constructor(
+    protected constructor(
         private el: ElementRef,
         private renderer: Renderer2,
         private location: Location,

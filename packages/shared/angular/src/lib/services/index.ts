@@ -12,4 +12,6 @@ export * from './style/style.service';
 export * from './toast/toast.service';
 export * from './hardware/hardware.service';
 export * from './menu/menu.service';
+export * from './modal/modal.service';
+export * from './alert/alert.service';
 
