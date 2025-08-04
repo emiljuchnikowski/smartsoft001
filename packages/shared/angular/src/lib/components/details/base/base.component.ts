@@ -3,10 +3,9 @@ import {
   Input,
   ViewChild,
   ViewContainerRef,
-  Directive,
-} from "@angular/core";
-import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
+  Directive, WritableSignal, signal, Signal, computed, effect, untracked
+} from '@angular/core';
+import { Observable } from 'rxjs';
 
 import {
   getModelFieldsWithOptions,
@@ -18,29 +17,29 @@ import { IEntity } from "@smartsoft001/domain-core";
 import { ObjectService, SpecificationService } from "@smartsoft001/utils";
 
 import {DynamicComponentType, ICellPipe, IDetailsComponentFactories, IDetailsOptions} from "../../../models";
-import { AuthService } from "../../../services/auth/auth.service";
-import {DetailsService} from "../../../services/details/details.service";
+import { AuthService } from '../../../services';
+import {DetailsService} from '../../../services';
 
 @Directive()
 export abstract class DetailsBaseComponent<T extends IEntity<string>>
   implements AfterViewInit {
   static smartType: DynamicComponentType = 'details';
 
-  private _fields: Array<{ key: string; options: IFieldOptions }> | null = null;
-  private _type: any | null = null;
+  private _fields: WritableSignal<Array<{ key: string; options: IFieldOptions }> | null> = signal(null);
+  private _type: any | null = null; //!Is being instantiated with the "new" and doesn't quite work with signals
 
   componentFactories: IDetailsComponentFactories<T> | null = null;
-  cellPipe: ICellPipe<T> | null = null;
+  cellPipe: WritableSignal<ICellPipe<T> | null> = signal(null);
 
   get fields(): Array<{ key: string; options: IFieldOptions }> | null {
-    return this._fields;
+    return this._fields();
   }
 
   get type(): any {
     return this._type;
   }
 
-  item$: Observable<T> | null = null;
+  item: Signal<T> | null = null;
   loading$: Observable<boolean> | null = null;
 
   @ViewChild("contentTpl", { read: ViewContainerRef, static: true })
@@ -57,7 +56,7 @@ export abstract class DetailsBaseComponent<T extends IEntity<string>>
 
     const enabledDefinitions: Array<{ key: string; spec: ISpecification | null }> = [];
 
-    this._fields = getModelFieldsWithOptions(new this._type())
+    this._fields.set(getModelFieldsWithOptions(new this._type())
       .filter((f) => f.options.details)
       .filter((field) => {
         if ((field.options.details as IFieldDetailsMetadata).enabled) {
@@ -72,44 +71,39 @@ export abstract class DetailsBaseComponent<T extends IEntity<string>>
           });
         }
 
-        if (
-          (field.options.details as IFieldDetailsMetadata).permissions &&
+        return !((field.options.details as IFieldDetailsMetadata).permissions &&
           !this.authService.expectPermissions(
             (field.options.details as IFieldDetailsMetadata)?.permissions ?? null
-          )
-        ) {
-          return false;
-        }
-
-        return true;
-      });
+          ));
+      }));
     if (obj !== null) {
-      this.item$ = obj.item$.pipe(
-        map((item) => {
-          if (!item) return item;
+      this.item = computed<T>(() => {
+        const item = obj.item();
+        if (!item) return item as T;
 
-          let result = null;
+        let result = null;
 
-          if (item instanceof obj.type) result = item;
-          else result = ObjectService.createByType(item, obj.type);
+        if (item instanceof obj.type) result = item;
+        else result = ObjectService.createByType(item, obj.type);
 
-          const removeFields = enabledDefinitions.filter((def) => {
-            return SpecificationService.invalid(result, def.spec as ISpecification, {
-              $root: this.detailsService.$root
-            });
-          }).map(def => def.key);
+        const removeFields = enabledDefinitions.filter((def) => {
+          return SpecificationService.invalid(result, def.spec as ISpecification, {
+            $root: this.detailsService.$root
+          });
+        }).map(def => def.key);
 
-          if (this._fields) {
-            this._fields = this._fields.filter(f => !removeFields.some(rf => rf === f.key));
+        untracked(() => {
+          if (this._fields()) {
+            this._fields.update((val) => val?.length ? val.filter(f => !removeFields.some(rf => rf === f.key)) : null);
           }
+        });
 
-          return result;
-        })
-      ) as Observable<T>;
+        return result as T;
+      });
 
       this.loading$ = obj.loading$ ?? null;
       this.componentFactories = obj.componentFactories ?? null;
-      this.cellPipe = obj.cellPipe ?? null;
+      this.cellPipe.set(obj.cellPipe ?? null);
     }
 
     this.generateDynamicComponents();

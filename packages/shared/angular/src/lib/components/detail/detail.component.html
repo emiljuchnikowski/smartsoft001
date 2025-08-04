@@ -1,60 +1,60 @@
-@if (options) {
+@if (options()) {
   <ion-item>
     <div class="container-right">
-      @if (options?.options?.info) {
-        <smart-info [text]="options?.options?.info ?? ''"></smart-info>
+      @if (options()?.options?.info) {
+        <smart-info [text]="options()?.options?.info ?? ''"></smart-info>
       }
     </div>
     <ion-label color="medium" position="stacked">
-      {{ (options.item$ | async) | smartModelLabel : options.key : type | async}}
+      {{ options()?.item() | smartModelLabel : options().key : type()}}
     </ion-label>
-    @let item = options.item$ | async;
+    @let item = options()?.item();
     @if (item) {
-      @switch (options.options.type) {
+      @switch (options().options.type) {
         @case (FieldType.email) {
-          <smart-detail-email [options]="options"></smart-detail-email>
+          <smart-detail-email [options]="options()"></smart-detail-email>
         }
         @case (FieldType.flag) {
-          <smart-detail-flag [options]="options"></smart-detail-flag>
+          <smart-detail-flag [options]="options()"></smart-detail-flag>
         }
         @case (FieldType.enum) {
-          <smart-detail-enum [options]="options"></smart-detail-enum>
+          <smart-detail-enum [options]="options()"></smart-detail-enum>
         }
         @case (FieldType.address) {
-          <smart-detail-address [options]="options"></smart-detail-address>
+          <smart-detail-address [options]="options()"></smart-detail-address>
         }
         @case (FieldType.object) {
-          <smart-detail-object [options]="options"></smart-detail-object>
+          <smart-detail-object [options]="options()"></smart-detail-object>
         }
         @case (FieldType.color) {
-          <smart-detail-color [options]="options"></smart-detail-color>
+          <smart-detail-color [options]="options()"></smart-detail-color>
         }
         @case (FieldType.logo) {
-          <smart-detail-logo [options]="options"></smart-detail-logo>
+          <smart-detail-logo [options]="options()"></smart-detail-logo>
         }
         @case (FieldType.array) {
-          <smart-detail-array [options]="options"></smart-detail-array>
+          <smart-detail-array [options]="options()"></smart-detail-array>
         }
         @case (FieldType.pdf) {
-          <smart-detail-pdf [options]="options"></smart-detail-pdf>
+          <smart-detail-pdf [options]="options()"></smart-detail-pdf>
         }
         @case (FieldType.video) {
-          <smart-detail-video [options]="options"></smart-detail-video>
+          <smart-detail-video [options]="options()"></smart-detail-video>
         }
         @case (FieldType.attachment) {
-          <smart-detail-attachment [options]="options"></smart-detail-attachment>
+          <smart-detail-attachment [options]="options()"></smart-detail-attachment>
         }
         @case (FieldType.dateRange) {
-          <smart-detail-date-range [options]="options"></smart-detail-date-range>
+          <smart-detail-date-range [options]="options()"></smart-detail-date-range>
         }
         @case (FieldType.image) {
-          <smart-detail-image [options]="options"></smart-detail-image>
+          <smart-detail-image [options]="options()"></smart-detail-image>
         }
         @case (FieldType.phoneNumberPl) {
-          <smart-detail-phone-number-pl [options]="options"></smart-detail-phone-number-pl>
+          <smart-detail-phone-number-pl [options]="options()"></smart-detail-phone-number-pl>
         }
         @default {
-          <smart-detail-text [options]="options"></smart-detail-text>
+          <smart-detail-text [options]="options()"></smart-detail-text>
         }
       }
     } @else {

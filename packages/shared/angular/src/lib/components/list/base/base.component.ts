@@ -6,7 +6,7 @@ import {
   Type,
   ViewChild,
   ViewContainerRef,
-  inject,
+  inject, Signal
 } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { Observable } from 'rxjs';
@@ -34,6 +34,7 @@ import {
 import { AlertService } from '../../../services';
 import { AuthService } from '../../../services';
 import { CdkTableDataSourceInput } from '@angular/cdk/table';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Directive()
 export abstract class ListBaseComponent<T extends IEntity<string & { [key: string]: any }>>
@@ -66,10 +67,10 @@ export abstract class ListBaseComponent<T extends IEntity<string & { [key: strin
   loadPrevPage: ((event?: any) => void) | null  = null;
   loadNextPage: ((event?: any) => void) | null  = null;
 
-  list$!: Observable<CdkTableDataSourceInput<T>>;
+  list!: Signal<CdkTableDataSourceInput<T> | null>;
   loading$!: Observable<boolean>;
-  page$!: Observable<number>;
-  totalPages$!: Observable<number>;
+  page!: Signal<number | null>;
+  totalPages!: Signal<number | null>;
 
   FieldType = FieldType;
   PaginationMode = PaginationMode;
@@ -153,7 +154,7 @@ export abstract class ListBaseComponent<T extends IEntity<string & { [key: strin
 
       this.detailsComponent = DetailsPage;
       this.detailsComponentProps = {
-        item$: details?.provider.item$,
+        item: details?.provider.item,
         type: val.type,
         loading$: details?.provider.loading$,
         itemHandler: this.itemHandler ?? null,
@@ -184,8 +185,8 @@ export abstract class ListBaseComponent<T extends IEntity<string & { [key: strin
         });
       };
 
-      this.page$ = val.pagination.page$;
-      this.totalPages$ = val.pagination.totalPages$;
+      this.page = toSignal(val.pagination.page$, {initialValue: null});
+      this.totalPages = toSignal(val.pagination.totalPages$, {initialValue: null});
     }
 
     this.afterInitOptions();
@@ -251,7 +252,7 @@ export abstract class ListBaseComponent<T extends IEntity<string & { [key: strin
   }
 
   protected initList(val: IListInternalOptions<T>): void {
-    this.list$ = this.provider.list$.pipe(
+    this.list = toSignal(this.provider.list$.pipe(
       map((list) => {
         if (!list) return list;
         const result = list.filter((item) => !this.removed.has(item.id));
@@ -259,7 +260,7 @@ export abstract class ListBaseComponent<T extends IEntity<string & { [key: strin
 
         return result;
       })
-    );
+    ), {initialValue: null});
   }
 
   protected initLoading(): void {

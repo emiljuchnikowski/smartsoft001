@@ -2,10 +2,10 @@ import {
   AfterViewInit,
   Component,
   OnDestroy,
-  OnInit,
+  OnInit, Signal,
   ViewChild,
-  ViewContainerRef,
-} from "@angular/core";
+  ViewContainerRef
+} from '@angular/core';
 import { Subscription } from "rxjs";
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import {
@@ -17,7 +17,7 @@ import {
   IonInfiniteScroll,
   IonInfiniteScrollContent
 } from '@ionic/angular/standalone';
-import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { CdkCell, CdkHeaderCell, CdkHeaderRow, CdkRecycleRows, CdkRow, CdkTable } from '@angular/cdk/table';
 import { MatCellDef, MatColumnDef, MatHeaderCellDef, MatHeaderRowDef, MatRowDef } from '@angular/material/table';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
@@ -37,7 +37,6 @@ import { PagingComponent } from '../../paging';
   styleUrls: ['./desktop.component.scss', '../../../styles/desktop.scss'],
   imports: [
     IonContent,
-    AsyncPipe,
     IonCheckbox,
     CdkTable,
     MatSort,
@@ -72,6 +71,8 @@ export class ListDesktopComponent<T extends IEntity<string & { [key: string]: an
   implements OnInit, OnDestroy, AfterViewInit {
   private _subscriptions = new Subscription();
   private _multiSelected: T[] = [];
+
+  desktopList = this.list as Signal<T[]>;
 
   componentFactories: IListComponentFactories<T> | null = null;
 

@@ -1,6 +1,5 @@
 import {ChangeDetectorRef, Component} from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { AsyncPipe } from '@angular/common';
 
 import {IEntity} from "@smartsoft001/domain-core";
 
@@ -12,17 +11,16 @@ import { ButtonComponent } from '../../button';
 @Component({
     selector: 'smart-detail-pdf',
     template: `
-        @let item = options?.item$ | async;
-        @if (item && options.key) {
-            <smart-button [options]="getButtonOptions(item[options.key!])">
-                {{ 'show' | translate }}
-            </smart-button>
-        }
+      @let item = options?.item();
+      @if (item && options.key) {
+        <smart-button [options]="getButtonOptions(item[options.key!])">
+          {{ 'show' | translate }}
+        </smart-button>
+      }
     `,
     imports: [
         ButtonComponent,
         TranslatePipe,
-        AsyncPipe
     ],
     styleUrls: ['./pdf.component.scss']
 })

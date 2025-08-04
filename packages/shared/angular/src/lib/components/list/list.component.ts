@@ -6,11 +6,11 @@ import {
   Input,
   NgModuleRef,
   OnInit,
-  QueryList,
+  QueryList, signal,
   TemplateRef,
   ViewChild,
   ViewChildren,
-  ViewEncapsulation
+  ViewEncapsulation, WritableSignal
 } from '@angular/core';
 import * as _ from 'lodash';
 import { IonCol, IonRow } from '@ionic/angular/standalone';
@@ -18,6 +18,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 
 import { getModelFieldsWithOptions, IFieldListMetadata } from '@smartsoft001/models';
+import { IEntity } from '@smartsoft001/domain-core';
 
 import { IListInternalOptions, IListOptions, ListMode } from '../../models';
 import { HardwareService } from '../../services';
@@ -47,22 +48,22 @@ import { LoaderComponent } from '../loader';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListComponent<T> extends CreateDynamicComponent<ListBaseComponent<any>>('list') implements OnInit {
-  private _options!: IListInternalOptions<T>;
+export class ListComponent<T extends IEntity<string & { [key: string]: any }>> extends CreateDynamicComponent<ListBaseComponent<any>>('list') implements OnInit {
+  private _options!: WritableSignal<IListInternalOptions<T>>;
 
-  mode: ListMode = ListMode.desktop;
+  mode: WritableSignal<ListMode> = signal<ListMode>(ListMode.desktop);
 
   ListMode = ListMode;
 
   @Input() set options(val: IListOptions<T>) {
-    this._options = val;
+    this._options.set(val);
     this.initFields();
     this.initModel();
     this.refreshDynamicInstance();
   }
 
   get internalOptions(): IListInternalOptions<T> {
-    return this._options;
+    return this._options();
   }
 
   @ViewChild("contentTpl", { read: TemplateRef, static: false })
@@ -89,17 +90,17 @@ export class ListComponent<T> extends CreateDynamicComponent<ListBaseComponent<a
   }
 
   private initFields(): void {
-    this._options.fields = _.sortBy(
-        getModelFieldsWithOptions(new this._options.type()).filter(item => item?.options?.list),
+    this._options().fields = _.sortBy(
+        getModelFieldsWithOptions(new (this._options() as any).type()).filter(item => item?.options?.list),
         item => (item?.options?.list as IFieldListMetadata).order
     );
   }
 
   private initModel(): void {
-    if (this._options.mode) {
-      this.mode = this._options.mode;
+    if (this._options()?.mode) {
+      this.mode.set(this._options().mode!);
     } else {
-      this.mode = this.hardwareService.isMobile ? ListMode.mobile : ListMode.desktop
+      this.mode.set(this.hardwareService.isMobile ? ListMode.mobile : ListMode.desktop);
     }
   }
 }

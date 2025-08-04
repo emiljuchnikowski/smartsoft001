@@ -1,5 +1,5 @@
-@if (template === 'default') {
-  @switch (mode) {
+@if (template() === 'default') {
+  @switch (mode()) {
     @case (ListMode.desktop) {
       <smart-list-desktop [options]="internalOptions"></smart-list-desktop>
     }

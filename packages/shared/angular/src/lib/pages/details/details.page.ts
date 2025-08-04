@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit} from "@angular/core";
+import { Component, computed, ElementRef, OnInit } from '@angular/core';
 import { NavParams } from "@ionic/angular";
 import { first } from "rxjs/operators";
 
@@ -51,7 +51,8 @@ export class DetailsPage<T extends IEntity<string>> implements OnInit {
     if (this.detailsOptions.removeHandler) {
       buttons.push({
         handler: () => {
-          this.detailsOptions.item$.pipe(first()).subscribe(item => {
+          computed(() => {
+            const item = this.detailsOptions.item();
             this.detailsOptions?.removeHandler?.(item);
             this.modalService.dismiss();
           });
@@ -62,8 +63,9 @@ export class DetailsPage<T extends IEntity<string>> implements OnInit {
     if (this.detailsOptions.itemHandler) {
       buttons.push({
         handler: () => {
-          this.detailsOptions.item$.pipe(first()).subscribe(item => {
-            this.detailsOptions?.itemHandler?.(item.id);
+          computed(() => {
+            const item = this.detailsOptions.item();
+            this.detailsOptions?.removeHandler?.(item);
             this.modalService.dismiss();
           });
         }, icon: 'arrow-forward-outline'

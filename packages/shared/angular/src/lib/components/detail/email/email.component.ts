@@ -7,7 +7,7 @@ import {DetailBaseComponent} from "../base/base.component";
   selector: 'smart-detail-email',
   template: `
     <p>
-      @let item = options?.item$ | async;
+      @let item = options?.item();
       @if (item && options?.key) {
         <a [href]="'mailto:' + item[options.key!]">{{ item[options.key!] }}</a>
       }

@@ -12,12 +12,12 @@ import { ButtonComponent } from '../../button';
 @Component({
     selector: 'smart-detail-attachment',
     template: `
-        @let item = options?.item$ | async;
-        @if (item && options?.key) {
-            <smart-button [options]="getButtonOptions(item[options.key!])">
-                {{ 'download' | translate }}
-            </smart-button>
-        }
+      @let item = options?.item();
+      @if (item && options?.key) {
+        <smart-button [options]="getButtonOptions(item[options.key!])">
+          {{ 'download' | translate }}
+        </smart-button>
+      }
     `,
     imports: [
         ButtonComponent,

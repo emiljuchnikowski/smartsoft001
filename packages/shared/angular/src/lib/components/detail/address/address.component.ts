@@ -1,7 +1,4 @@
-import { Component } from "@angular/core";
-import { Observable } from "rxjs";
-import { AsyncPipe } from '@angular/common';
-import { map } from "rxjs/operators";
+import { Component, computed, Signal } from '@angular/core';
 
 import { IAddress } from "@smartsoft001/domain-core";
 
@@ -10,7 +7,7 @@ import { DetailBaseComponent } from "../base/base.component";
 @Component({
   selector: 'smart-detail-address',
   template: `
-    @let address = address$ | async;
+    @let address = thisAddress();
     @if (address) {
       <p>
         {{ address?.street }}
@@ -20,18 +17,16 @@ import { DetailBaseComponent } from "../base/base.component";
     }
   `,
   styleUrls: ['./address.component.scss'],
-  imports: [
-    AsyncPipe
-  ]
 })
 export class DetailAddressComponent<T extends { [key: string]: any }> extends DetailBaseComponent<T> {
-  address$!: Observable<IAddress>;
+  thisAddress!: Signal<IAddress>;
 
   protected override afterSetOptionsHandler() {
-    if (this.options?.item$ && this.options?.key) {
-      this.address$ = this.options.item$.pipe(
-        map((item) => (this.options && item ? item[this.options.key] : null))
-      );
+    if (this.options?.item && this.options?.key) {
+      this.thisAddress = computed<IAddress>(() => {
+        const item = this.options?.item?.();
+        return item?.[this.options.key!] ?? null;
+      }) 
     }
   }
 }

@@ -13,3 +13,4 @@ export * from './list';
 export * from './loader';
 export * from './paging';
 export * from './searchbar';
+export * from './accordion';

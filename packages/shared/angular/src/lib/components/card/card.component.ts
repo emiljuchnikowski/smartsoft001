@@ -7,7 +7,7 @@ import {
   IonCardTitle,
   IonIcon
 } from '@ionic/angular/standalone';
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, input, Input, InputSignal, OnInit } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 
 import {ICardOptions} from "../../models";
@@ -16,15 +16,15 @@ import {ICardOptions} from "../../models";
   selector: 'smart-card',
   template: `
     <ion-card class="ion-padding">
-      @let title = options?.title;
-      @let buttons = options?.buttons;
+      @let title = options()?.title;
+      @let buttons = options()?.buttons;
       @if (title) {
         <ion-card-header>
           <ion-card-title>
             {{ title }}
             @if (buttons) {
               <ion-buttons style="float: right">
-                @for (btn of options.buttons; track btn.number) {
+                @for (btn of options()!.buttons; track btn.number) {
                   <ion-button (click)="btn?.handler()" [disabled]="btn.disabled$ | async">
                     <ion-icon slot="icon-only" [name]="btn.icon"></ion-icon>
                   </ion-button>
@@ -53,7 +53,7 @@ import {ICardOptions} from "../../models";
 })
 export class CardComponent implements OnInit {
 
-  @Input() options!: ICardOptions;
+  readonly options: InputSignal<ICardOptions | undefined> = input<ICardOptions>();
 
   constructor() { }
 

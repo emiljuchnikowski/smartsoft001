@@ -1,7 +1,5 @@
-import { ChangeDetectorRef, Component, Inject } from "@angular/core";
-import { Observable, of } from "rxjs";
-import { map } from "rxjs/operators";
-import { AsyncPipe, NgComponentOutlet } from '@angular/common';
+import { ChangeDetectorRef, Component, computed, Inject, signal, Signal } from '@angular/core';
+import { NgComponentOutlet } from '@angular/common';
 import { DynamicIoDirective } from 'ng-dynamic-component';
 
 import { IEntity } from "@smartsoft001/domain-core";
@@ -14,10 +12,10 @@ import { DETAILS_COMPONENT_TOKEN } from "../../../shared.inectors";
   selector: 'smart-detail-object',
   template: `
     <br />
-    @let childOptions = childOptions$ | async;
-    @if (childOptions) {
+    @let options = childOptions();
+    @if (options) {
       <ng-template [ngComponentOutlet]="detailsComponent"
-                   [ndcDynamicInputs]="{ options: childOptions }"
+                   [ndcDynamicInputs]="{ options: options }"
       ></ng-template>
     }
   `,
@@ -25,14 +23,13 @@ import { DETAILS_COMPONENT_TOKEN } from "../../../shared.inectors";
   imports: [
     NgComponentOutlet,
     DynamicIoDirective,
-    AsyncPipe
   ]
 })
 export class DetailObjectComponent<
-  T,
+  T extends IEntity<string> & {[key: string]: any },
   TChild extends IEntity<string>
 > extends DetailBaseComponent<T> {
-  childOptions$!: Observable<IDetailsOptions<TChild> | null>;
+  childOptions!: Signal<IDetailsOptions<TChild> | null>;
 
   constructor(
     cd: ChangeDetectorRef,
@@ -43,17 +40,16 @@ export class DetailObjectComponent<
 
   protected override afterSetOptionsHandler() {
     super.afterSetOptionsHandler();
-    if (this.options?.item$) {
-      this.childOptions$ = this.options.item$.pipe(
-        map((item) => {
-          if (!item) return null;
+    if (this.options?.item) {
+      this.childOptions = computed(() => {
+        const item = this.options?.item?.();
+        if (!item) return null;
 
-          return {
-            type: item[this.options.key].constructor as any,
-            item$: of(item[this.options.key] as TChild),
-          } as IDetailsOptions<TChild>;
-        })
-      );
+        return {
+          type: item[this.options.key].constructor as any,
+          item: signal(item[this.options.key] as TChild),
+        } as IDetailsOptions<TChild>;
+      });
     }
   }
 }

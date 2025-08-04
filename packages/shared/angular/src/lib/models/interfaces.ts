@@ -70,7 +70,7 @@ export interface IDetailsOptions<T extends IEntity<string>> {
   title?: string;
   cellPipe?: ICellPipe<T>;
   type: any;
-  item$: Observable<T>;
+  item: Signal<T>;
   loading$?: Observable<boolean>;
   itemHandler?: ((id: string) => void) | null;
   removeHandler?: ((item: T) => void) | null;
@@ -88,7 +88,7 @@ export interface IButtonOptions {
 
 export interface IDetailOptions<T> {
   key: string;
-  item$?: Observable<T>;
+  item?: Signal<T>;
   options: IFieldOptions;
   cellPipe?: ICellPipe<T>;
   loading$?: Observable<boolean>;
@@ -154,7 +154,7 @@ export interface IListComponentFactories<T> {
 export interface IDetailsProvider<T> {
   getData: (id: string) => void;
   clearData: () => void;
-  item$: Observable<T>;
+  item: Signal<T>;
   loading$: Observable<boolean>;
 }
 

@@ -20,8 +20,8 @@ import { DetailComponent } from '../../detail';
           <smart-detail [type]="type" [options]="{
           key: field.key,
           options: field.options,
-          cellPipe: cellPipe ?? undefined,
-          item$: item$ ?? undefined,
+          cellPipe: cellPipe() ?? undefined,
+          item: item ?? undefined,
           loading$: loading$ ?? undefined
           }"></smart-detail>
         }

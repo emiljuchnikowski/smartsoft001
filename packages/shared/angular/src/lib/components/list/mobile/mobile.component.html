@@ -1,18 +1,19 @@
 <div #topTpl></div>
 
-@let list = listMobile$ | async;
-<ion-list>
-  @for (item of list; track item.id) {
-    <ion-item-sliding>
-      @if (removeHandler && (!checkRemoveHandler || checkRemoveHandler(item))) {
-        <ion-item-options side="start" (ionSwipe)="removeHandler?.(item)">
+@let list = listMobile();
+@if (list) {
+  <ion-list>
+    @for (item of list; track item.id) {
+      <ion-item-sliding>
+        @if (removeHandler && (!checkRemoveHandler || checkRemoveHandler(item))) {
+          <ion-item-options side="start" (ionSwipe)="removeHandler?.(item)">
             <ion-item-option color="danger" expandable (click)="removeHandler?.(item)">
-                {{ 'delete' | translate }}
+              {{ 'delete' | translate }}
             </ion-item-option>
-        </ion-item-options>
-      }
+          </ion-item-options>
+        }
 
-      <ion-item (click)='itemHandler ? itemHandler(item.id) : unselect && unselect()'>
+        <ion-item (click)='itemHandler ? itemHandler(item.id) : unselect && unselect()'>
           <ion-label>
             @for (key of keys; track key) {
               @let cell = item | smartListCell : key : cellPipe : type;
@@ -27,10 +28,11 @@
               }
             }
           </ion-label>
-      </ion-item>
-    </ion-item-sliding>
-  }
-</ion-list>
+        </ion-item>
+      </ion-item-sliding>
+    }
+  </ion-list>
+}
 
 @if (loadNextPage && list?.length && options.pagination?.mode !== PaginationMode.singlePage) {
   <ion-infinite-scroll threshold="100px" (ionInfinite)="loadNextPage?.($event)">
@@ -39,8 +41,8 @@
 }
 
 @if (options?.pagination?.mode === PaginationMode.singlePage) {
-  <smart-paging [page]="page$ | async"
-                [totalPages]="totalPages$ | async"
+  <smart-paging [page]="page()"
+                [totalPages]="totalPages()"
                 (prevPage)="loadPrevPage?.()"
                 (nextPage)="loadNextPage?.()"
   ></smart-paging>

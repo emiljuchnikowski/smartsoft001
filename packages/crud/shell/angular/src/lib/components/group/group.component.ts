@@ -1,25 +1,58 @@
-import {ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit} from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, input, InputSignal, OnDestroy, OnInit } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
-import {BaseComponent, IListOptions, StyleService} from "@smartsoft001/angular";
+import {
+    AccordionBodyComponent,
+    AccordionComponent,
+    AccordionHeaderComponent,
+    BaseComponent,
+    IListOptions, ListComponent,
+    StyleService
+} from '@smartsoft001/angular';
 import {IEntity} from "@smartsoft001/domain-core";
 
-import {ICrudListGroup} from "../../models/interfaces";
-import {CrudFacade} from "../../+state/crud.facade";
+import {ICrudListGroup} from '../../models';
 import {CrudListGroupService} from "../../services/list-group/list-group.service";
 
 @Component({
     selector: 'smart-crud-group',
-    templateUrl: './group.component.html',
+    template: `
+        @for (item of groups(); track item.key) {
+            <smart-accordion [(show)]="item.show" (showChange)="change($event, item)">
+                <smart-accordion-header [ngClass]="{ 'accordion-show': item.show }">{{ item.text | translate }}
+                </smart-accordion-header>
+                <smart-accordion-body>
+                    @if (item.show && !item.children && listOptions) {
+                        <smart-list [options]="listOptions()"></smart-list>
+                    }
+                    @if (item.children) {
+                        <div style="margin-left: 50px">
+                            <smart-crud-group [groups]="item.children" [listOptions]="listOptions()"></smart-crud-group>
+                        </div>
+                    }
+                </smart-accordion-body>
+            </smart-accordion>
+        }
+        <br /><br /><br />
+    `,
+    imports: [
+        AccordionComponent,
+        AccordionHeaderComponent,
+        AccordionBodyComponent,
+        ListComponent,
+        NgClass,
+        TranslatePipe
+    ],
     styleUrls: ['./group.component.scss']
 })
 export class GroupComponent<T extends IEntity<string>> extends BaseComponent implements OnInit, OnDestroy {
-    @Input() groups: Array<ICrudListGroup>;
-    @Input() listOptions: IListOptions<T>;
+    readonly groups: InputSignal<Array<ICrudListGroup>> = input<Array<ICrudListGroup>>();
+    readonly listOptions: InputSignal<IListOptions<T>> = input<IListOptions<T>>();
 
     constructor(
         private styleService: StyleService,
         private elementRef: ElementRef,
-        private facade: CrudFacade<T>,
         private cd: ChangeDetectorRef,
         private groupService: CrudListGroupService<T>
     ) {
@@ -27,11 +60,11 @@ export class GroupComponent<T extends IEntity<string>> extends BaseComponent imp
     }
 
     change(val, item: ICrudListGroup, force = false): void {
-        this.groups.filter(i => i.value !== item.value || i.key !== item.key).forEach(i => {
+        this.groups().filter(i => i.value !== item.value || i.key !== item.key).forEach(i => {
             i.show = false;
         });
 
-        this.groupService.change(val, item, this.groups, force);
+        this.groupService.change(val, item, this.groups(), force);
 
         if (val) {
             setTimeout(() => {
@@ -49,7 +82,7 @@ export class GroupComponent<T extends IEntity<string>> extends BaseComponent imp
     }
 
     ngOnDestroy(): void {
-        this.groupService.destroy(this.groups);
+        this.groupService.destroy(this.groups());
         super.ngOnDestroy();
     }
 }

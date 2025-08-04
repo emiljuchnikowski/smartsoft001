@@ -1,8 +1,9 @@
-import {Inject, Optional, Pipe, PipeTransform, Type} from "@angular/core";
+import { Inject, Optional, Pipe, PipeTransform, signal, Signal, Type } from '@angular/core';
 import {TranslateService} from "@ngx-translate/core";
 import {Observable, of} from "rxjs";
 
 import {IModelLabelProvider, MODEL_LABEL_PROVIDER} from '../../providers';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Pipe({
     name: 'smartListHeader'
@@ -13,21 +14,21 @@ export class ListHeaderPipe<T> implements PipeTransform {
         @Optional() @Inject(MODEL_LABEL_PROVIDER) private modelLabelProvider: IModelLabelProvider
     ) { }
 
-    transform(data: T, key: string, type?: Type<any> ): Observable<string> {
+    transform(data: T, key: string, type?: Type<any> ): Signal<string> {
         if (key.indexOf('__array') === 0) {
             const info = key.split('.');
             const arrayKey = info[1];
             const index = Number(info[2]);
             const headerKey = info[3];
 
-            return of((data as any)[0][arrayKey][index][headerKey]);
+            return signal((data as any)[0][arrayKey][index][headerKey]);
         }
 
         if (this.modelLabelProvider) {
-            const result$ = this.modelLabelProvider.get({ type, key });
-            if (result$) return result$;
+            const result = this.modelLabelProvider.get({ type, key });
+            if (result) return result;
         }
 
-        return of(this.translateService.instant('MODEL.' + key));
+        return signal(this.translateService.instant('MODEL.' + key));
     }
 }

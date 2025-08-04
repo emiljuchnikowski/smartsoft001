@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ViewChild, ViewContainerRef} from "@angular/core";
+import { AfterViewInit, Component, Signal, ViewChild, ViewContainerRef } from '@angular/core';
 import {
   IonInfiniteScroll, IonInfiniteScrollContent,
   IonItem,
@@ -10,8 +10,6 @@ import {
 } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
-import { AsyncPipe } from '@angular/common';
-import { Observable } from 'rxjs';
 
 import { IEntity } from "@smartsoft001/domain-core";
 
@@ -37,7 +35,6 @@ import { PagingComponent } from '../../paging';
     IonInfiniteScroll,
     IonInfiniteScrollContent,
     PagingComponent,
-    AsyncPipe,
     ListCellPipe
   ]
 })
@@ -45,7 +42,7 @@ export class ListMobileComponent<T extends IEntity<string & { [key: string]: any
   extends ListBaseComponent<T>
   implements AfterViewInit {
 
-  listMobile$ = this.list$ as Observable<readonly T[]>;
+  listMobile = this.list as Signal<T[]>;
 
   componentFactories: IListComponentFactories<T> | null = null;
 

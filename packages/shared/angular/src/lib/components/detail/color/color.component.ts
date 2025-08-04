@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { AsyncPipe } from '@angular/common';
 import { IonCard, IonCardHeader, IonCol, IonRow } from '@ionic/angular/standalone';
 
 import {DetailBaseComponent} from "../base/base.component";
@@ -7,7 +6,7 @@ import {DetailBaseComponent} from "../base/base.component";
 @Component({
   selector: 'smart-detail-color',
   template: `
-    @let item = options?.item$ | async;
+    @let item = options?.item();
     @if (item && options?.key) {
       <ion-row>
         <ion-col>
@@ -20,7 +19,6 @@ import {DetailBaseComponent} from "../base/base.component";
     }
   `,
   imports: [
-    AsyncPipe,
     IonRow,
     IonCol,
     IonCard,

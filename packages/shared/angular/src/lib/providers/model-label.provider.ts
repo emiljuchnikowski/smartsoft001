@@ -1,8 +1,8 @@
-import {InjectionToken, Type} from "@angular/core";
+import { InjectionToken, Signal, Type } from '@angular/core';
 import {Observable} from "rxjs";
 
 export abstract class IModelLabelProvider {
-    abstract get(options: IModelLabelOptions): Observable<string>;
+    abstract get(options: IModelLabelOptions): Signal<string>;
 }
 
 export interface IModelLabelOptions {

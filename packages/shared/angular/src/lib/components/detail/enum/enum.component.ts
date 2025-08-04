@@ -7,7 +7,7 @@ import {DetailBaseComponent} from "../base/base.component";
 @Component({
   selector: 'smart-detail-enum',
   template: `
-    @let item = options?.item$ | async;
+    @let item = options?.item() ;
     @if (item && options?.key) {
       <p>
         @for (val of this.getValues(item, options.key); track val; let first = $first) {

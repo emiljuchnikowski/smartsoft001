@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { AsyncPipe } from '@angular/common';
 
 import {DetailBaseComponent} from "../base/base.component";
 import { ListCellPipe, TrustHtmlPipe } from '../../../pipes';
@@ -7,7 +6,7 @@ import { ListCellPipe, TrustHtmlPipe } from '../../../pipes';
 @Component({
   selector: 'smart-detail-text',
   template: `
-    @let item = options?.item$ | async;
+    @let item = options?.item();
     @if (item) {
       <p [innerHTML]="(item | smartListCell : options?.key : options.cellPipe)?.value | smartTrustHtml"
       ></p>
@@ -15,7 +14,6 @@ import { ListCellPipe, TrustHtmlPipe } from '../../../pipes';
 
   `,
   imports: [
-    AsyncPipe,
     ListCellPipe,
     TrustHtmlPipe
   ],

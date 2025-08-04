@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, Input, InputSignal } from '@angular/core';
 import { IonItem, IonLabel, IonSkeletonText } from '@ionic/angular/standalone';
 import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 
@@ -22,6 +22,7 @@ import { DetailPhoneNumberPlComponent } from './phone-number-pl/phone-number-pl.
 import { DetailTextComponent } from './text/text.component';
 import { ModelLabelPipe } from '../../pipes';
 import { InfoComponent } from '../info';
+import { IEntity } from '@smartsoft001/domain-core';
 
 @Component({
   selector: 'smart-detail',
@@ -53,10 +54,10 @@ import { InfoComponent } from '../info';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DetailComponent<T> {
+export class DetailComponent<T extends IEntity<string> & { [key: string]: any; }> {
   FieldType = FieldType;
 
-  @Input() options!: IDetailOptions<T>;
-  @Input() type: any;
+  readonly options: InputSignal<IDetailOptions<T>> = input.required<IDetailOptions<T>>();
+  readonly type: InputSignal<any> = input.required<any>();
 }
 

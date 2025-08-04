@@ -1,5 +1,4 @@
 import {ChangeDetectorRef, Component} from '@angular/core';
-import { AsyncPipe } from '@angular/common';
 
 import {IEntity} from "@smartsoft001/domain-core";
 
@@ -9,17 +8,14 @@ import {FileService} from '../../../services';
 @Component({
     selector: 'smart-detail-video',
     template: `
-        @let item = options?.item$ | async;
-        @if (item && options?.key) {
-            <video style="width: 100%" controls controlsList="nodownload">
-                <source type="video/mp4" [src]="getUrl(item[options.key!])">
-                Your browser does not support the video tag.
-            </video>
-        }
+      @let item = options?.item();
+      @if (item && options?.key) {
+        <video style="width: 100%" controls controlsList="nodownload">
+          <source type="video/mp4" [src]="getUrl(item[options.key!])">
+          Your browser does not support the video tag.
+        </video>
+      }
     `,
-    imports: [
-        AsyncPipe
-    ],
     styleUrls: ['./video.component.scss']
 })
 export class DetailVideoComponent<T extends IEntity<string> & { [key: string]: any }> extends DetailBaseComponent<T> {

@@ -32,6 +32,7 @@ import { ICrudFilter } from '../../models';
 import {ItemStandardComponent} from "./standard/standard.component";
 import { CrudItemPageBaseComponent } from "./base/base.component";
 import { PageService } from "../../services/page/page.service";
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'smart-crud-item-page',
@@ -220,7 +221,7 @@ export class ItemComponent<T extends IEntity<string>>
 
       this.detailsOptions.set({
         type: this.config.type,
-        item$: this.facade.selected$,
+        item: toSignal(this.facade.selected$),
         cellPipe: this.config.details ? (this.config.details as {cellPipe?: ICellPipe<T>}).cellPipe : null,
         componentFactories: {
           top:

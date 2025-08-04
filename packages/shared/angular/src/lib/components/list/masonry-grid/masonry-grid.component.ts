@@ -2,7 +2,7 @@ import {
   Component,
   ViewChild,
   ViewContainerRef,
-  AfterViewInit,
+  AfterViewInit, Signal, computed
 } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -51,7 +51,7 @@ export class ListMasonryGridComponent<T extends IEntity<string & { [key: string]
 {
   componentFactories: IListComponentFactories<T> | null = null;
 
-  listWithImages$!: Observable<{ data: T; image: any }[] | null> | null;
+  listWithImages!: Signal<{ data: T; image: any }[] | null>;
 
   @ViewChild('topTpl', { read: ViewContainerRef, static: true })
   topTpl!: ViewContainerRef;
@@ -68,18 +68,17 @@ export class ListMasonryGridComponent<T extends IEntity<string & { [key: string]
       (item) => item.options.type === FieldType.image
     );
 
-    this.listWithImages$ = this.list$.pipe(
-      map((list: CdkTableDataSourceInput<T>) => {
-        if (!list) return null;
+    this.listWithImages = computed(() => {
+      const list = this.list();
+      if (!list) return null;
 
-        return (list as T[]).map((item) => {
-          return {
-            data: item,
-            image: (item as any)[imageFieldOptions?.key ?? ''],
-          };
-        }) as { data: T; image: any }[];
-      })
-    );
+      return (list as T[]).map((item) => {
+        return {
+          data: item,
+          image: (item as any)[imageFieldOptions?.key ?? ''],
+        };
+      }) as { data: T; image: any }[];
+    });
   }
 
   protected override initList(val: IListInternalOptions<T>): void {

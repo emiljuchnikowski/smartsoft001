@@ -2,8 +2,8 @@ import {
   ChangeDetectionStrategy, ChangeDetectorRef,
   Component, ComponentFactoryResolver,
   Input, NgModuleRef,
-  OnDestroy, QueryList, TemplateRef, ViewChild, ViewChildren,
-} from "@angular/core";
+  OnDestroy, QueryList, signal, TemplateRef, ViewChild, ViewChildren, WritableSignal
+} from '@angular/core';
 import { Subscription } from "rxjs";
 
 import { IEntity } from "@smartsoft001/domain-core";
@@ -18,7 +18,7 @@ import { DetailsStandardComponent } from './standard/standard.component';
 @Component({
   selector: 'smart-details',
   template: `
-    @if (options && template === 'default') {
+    @if (options && template() === 'default') {
       <smart-details-standard
         [options]="options"
       ></smart-details-standard>
@@ -34,25 +34,24 @@ export class DetailsComponent<T extends IEntity<string>>
   extends CreateDynamicComponent<DetailsBaseComponent<any>>("details")
   implements OnDestroy
 {
-  private _options: IDetailsOptions<T> | null = null;
-  private _subscription = new Subscription();
+  private _options: WritableSignal<IDetailsOptions<T> | null> = signal(null);
 
   item: T | null = null;
 
   @Input() set options(val: IDetailsOptions<T>) {
-    this._options = val;
+    this._options.set(val);
 
-    this._subscription.add(
-      this._options.item$.subscribe((item) => {
-        this.detailsService.setRoot(item);
-        this.item = item;
-      })
-    );
+    const item = this._options()?.item();
+    if (item) {
+      this.detailsService.setRoot(item);
+      this.item = item;
+    }
 
     this.refreshDynamicInstance();
   }
+
   get options(): IDetailsOptions<T> | null {
-    return this._options;
+    return this._options();
   }
 
   @ViewChild("contentTpl", { read: TemplateRef, static: false })
@@ -68,12 +67,6 @@ export class DetailsComponent<T extends IEntity<string>>
       private detailsService: DetailsService
   ) {
     super(cd, moduleRef, cfr);
-  }
-
-  override ngOnDestroy(): void {
-    if (this._subscription) {
-      this._subscription.unsubscribe();
-    }
   }
 
   override refreshProperties(): void {

@@ -2,7 +2,7 @@
 
 <div class="ion-padding">
     <div id="container">
-      @for (item of listWithImages$ | async; track item) {
+      @for (item of listWithImages(); track item) {
         <ion-card (click)='unselect?.()'>
           @if (item.image) {
             <img [ngSrc]="item.image | smartFileUrl" alt="" fill>
@@ -45,7 +45,7 @@
     </div>
 </div>
 
-@if (loadNextPage && Object.keys((list$ | async) ?? [])?.length && options.pagination?.mode !== PaginationMode.singlePage) {
+@if (loadNextPage && Object.keys((list()) ?? [])?.length && options.pagination?.mode !== PaginationMode.singlePage) {
   <ion-infinite-scroll threshold="100px"
                        (ionInfinite)="loadNextPage?.($event)"
   >
@@ -55,8 +55,8 @@
 }
 
 @if (options?.pagination?.mode === PaginationMode.singlePage) {
-  <smart-paging [page]="page$ | async"
-                [totalPages]="totalPages$ | async"
+  <smart-paging [page]="page()"
+                [totalPages]="totalPages()"
                 (prevPage)="loadPrevPage?.()"
                 (nextPage)="loadNextPage?.()"
   ></smart-paging>

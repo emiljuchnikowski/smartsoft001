@@ -5,7 +5,7 @@
     <table
       cdk-table
       matSort
-      [dataSource]="(list$ | async) ?? []"
+      [dataSource]="list() ?? []"
       recycleRows
       [trackBy]="myTrackById"
       style="overflow-y: auto"
@@ -22,13 +22,13 @@
               @case ('selectMulti') {
                 <th cdk-header-cell class="cell-details" *matHeaderCellDef></th>
                 <td cdk-cell *matCellDef="let element">
-                  <ion-checkbox
-                    style="margin-right: 15px"
-                    *ngIf="list$ | async; let list"
-                    (ionChange)="
-                  onChangeMultiselect($event.detail.checked, element, list)
-                "
-                  ></ion-checkbox>
+                  @let list = desktopList();
+                  @if (list) {
+                    <ion-checkbox
+                      style="margin-right: 15px"
+                      (ionChange)="onChangeMultiselect($event.detail.checked, element, list)"
+                    ></ion-checkbox>
+                  }
                 </td>
               }
               @case ('removeAction') {
@@ -36,12 +36,13 @@
                   <ng-container *ngTemplateOutlet="pagination"></ng-container>
                 </th>
                 <td cdk-cell *matCellDef="let element">
-                  <ion-button
-                    (click)="removeHandler?.(element)"
-                    *ngIf="!checkRemoveHandler || checkRemoveHandler(element)"
-                  >
-                    <ion-icon slot="icon-only" name="trash"></ion-icon>
-                  </ion-button>
+                  @if (!checkRemoveHandler || checkRemoveHandler(element)) {
+                    <ion-button
+                      (click)="removeHandler?.(element)"
+                    >
+                      <ion-icon slot="icon-only" name="trash"></ion-icon>
+                    </ion-button>
+                  }
                 </td>
               }
               @case ('detailsAction') {
@@ -80,7 +81,7 @@
               }
               @default {
                 <th cdk-header-cell *matHeaderCellDef mat-sort-header="{{ key }}">
-                  {{ list$ | async | smartListHeader: key:type | async }}
+                  {{ (list() | smartListHeader: key:type)() }}
                   <ng-container *ngTemplateOutlet="pagination"></ng-container>
                 </th>
                 <ng-container *matCellDef="let element">
@@ -107,11 +108,11 @@
           </div>
 
           <ng-template #pagination>
-            @if (last && loadNextPage && (totalPages$ | async)) {
+            @if (last && loadNextPage && totalPages()) {
               <div style="float: right">
                 <ion-chip>
                   {{ "page" | translate }}:
-                  <b>{{ page$ | async }}/{{ totalPages$ | async }}</b>
+                  <b>{{ page() }}/{{ totalPages() }}</b>
                 </ion-chip>
               </div>
             }
@@ -124,7 +125,7 @@
     </table>
   </div>
 
-  @if (loadNextPage && Object.keys((list$ | async) ?? [])?.length && options.pagination?.mode !== PaginationMode.singlePage) {
+  @if (loadNextPage && Object.keys((list()) ?? [])?.length && options.pagination?.mode !== PaginationMode.singlePage) {
     <ion-infinite-scroll threshold="100px" (ionInfinite)="loadNextPage($event)">
       <ion-infinite-scroll-content loadingSpinner="circles"></ion-infinite-scroll-content>
     </ion-infinite-scroll>
@@ -133,8 +134,8 @@
 
 @if (options?.pagination?.mode === PaginationMode.singlePage) {
   <smart-paging
-    [page]="page$ | async"
-    [totalPages]="totalPages$ | async"
+    [page]="page()"
+    [totalPages]="totalPages()"
     (prevPage)="loadPrevPage?.()"
     (nextPage)="loadNextPage?.()"
   ></smart-paging>
