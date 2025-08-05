@@ -1,4 +1,4 @@
-import {Directive, Input, ViewChild, ViewContainerRef} from "@angular/core";
+import { Directive, Input, signal, ViewChild, ViewContainerRef, WritableSignal } from '@angular/core';
 
 import {DynamicComponentType, IButtonOptions} from "../../../models";
 
@@ -6,19 +6,19 @@ import {DynamicComponentType, IButtonOptions} from "../../../models";
 export abstract class ButtonBaseComponent {
     static smartType: DynamicComponentType = "button"
 
-    mode: 'default' | 'confirm';
+    mode: WritableSignal<'default' | 'confirm'> = signal('default');
 
-    @Input() options: IButtonOptions;
-    @Input() disabled: boolean;
+    @Input() options: IButtonOptions | null = null;
+    @Input() disabled: boolean = false;
 
     @ViewChild("contentTpl", { read: ViewContainerRef, static: true })
-    contentTpl: ViewContainerRef;
+    contentTpl: ViewContainerRef | null = null;
 
     invoke(): void {
         if (!this.options) return;
 
         if (this.options.confirm) {
-            this.mode = 'confirm';
+            this.mode.set('confirm');
         } else {
             this.options.click();
         }
@@ -27,11 +27,11 @@ export abstract class ButtonBaseComponent {
     confirmInvoke(): void {
         if (!this.options) return;
         this.options.click();
-        this.mode = 'default';
+        this.mode.set('default');
     }
 
     confirmCancel(): void {
         if (!this.options) return;
-        this.mode = 'default';
+        this.mode.set('default');
     }
 }

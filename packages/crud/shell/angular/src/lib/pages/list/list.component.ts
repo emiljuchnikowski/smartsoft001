@@ -79,7 +79,7 @@ export class ListComponent<T extends IEntity<string>>
   listOptions: WritableSignal<IListOptions<T>>;
   links: { next; prev };
 
-  filter: Signal<ICrudFilter> = toSignal(this.facade.filter$);
+  filter: Signal<ICrudFilter> = this.facade.filter;
 
   @ViewChild("topTpl", { read: ViewContainerRef, static: false })
   topTpl: ViewContainerRef;
@@ -107,9 +107,7 @@ export class ListComponent<T extends IEntity<string>>
   ) {
     super(cd, moduleRef, componentFactoryResolver);
 
-    this.facade.links$.pipe(this.takeUntilDestroy).subscribe((links) => {
-      this.links = links;
-    });
+    this.links = facade.links();
   }
 
   refreshProperties(): void {
@@ -215,8 +213,8 @@ export class ListComponent<T extends IEntity<string>>
 
           this.facade.multiSelect(list);
         },
-        list$: this.facade.list$,
-        loading$: this.facade.loaded$.pipe(map((l) => !l)),
+        list: this.facade.list,
+        loading: this.facade.loading,
         onCleanMultiSelected$: this._cleanMultiSelected$
       },
       cellPipe: this.config.list ? this.config.list.cellPipe : null,
@@ -231,8 +229,8 @@ export class ListComponent<T extends IEntity<string>>
               clearData: () => {
                 this.facade.unselect();
               },
-              item$: this.facade.selected$,
-              loading$: this.facade.loaded$.pipe(map((l) => !l)),
+              item: this.facade.selected,
+              loading: this.facade.loading,
             },
             componentFactories: {
               top:

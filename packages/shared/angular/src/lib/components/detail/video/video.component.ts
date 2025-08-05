@@ -18,7 +18,7 @@ import {FileService} from '../../../services';
     `,
     styleUrls: ['./video.component.scss']
 })
-export class DetailVideoComponent<T extends IEntity<string> & { [key: string]: any }> extends DetailBaseComponent<T> {
+export class DetailVideoComponent<T extends IEntity<string>> extends DetailBaseComponent<T> {
     constructor(cd: ChangeDetectorRef, private fileService: FileService) {
         super(cd);
     }

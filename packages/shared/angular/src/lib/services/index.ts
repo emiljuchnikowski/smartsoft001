@@ -6,7 +6,6 @@ export * from './details/details.service';
 export * from './dynamic-component-loader/dynamic-component-loader.service';
 export * from './dynamic-component-storage/dynamic-component-storage.service';
 export * from './file/file.service';
-export * from "./ngrx-store/ngrx-store.service";
 export * from './form/form.group';
 export * from './style/style.service';
 export * from './toast/toast.service';
@@ -14,4 +13,5 @@ export * from './hardware/hardware.service';
 export * from './menu/menu.service';
 export * from './modal/modal.service';
 export * from './alert/alert.service';
+export * from './popover/popover.service';
 

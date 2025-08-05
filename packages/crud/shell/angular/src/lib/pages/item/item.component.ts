@@ -1,38 +1,53 @@
 import {
   ChangeDetectorRef,
-  Component, ComponentFactory, ComponentFactoryResolver,
-  ElementRef, NgModuleRef,
+  Component,
+  ComponentFactory,
+  ComponentFactoryResolver,
+  effect,
+  ElementRef,
+  NgModuleRef,
   OnInit,
-  QueryList, signal, TemplateRef,
+  QueryList,
+  Signal,
+  signal,
+  TemplateRef,
   ViewChild,
-  ViewChildren, ViewContainerRef, WritableSignal
+  ViewChildren,
+  ViewContainerRef,
+  WritableSignal
 } from '@angular/core';
-import { ActivatedRoute, Router } from "@angular/router";
-import { BehaviorSubject, Observable } from "rxjs";
+import { ActivatedRoute, Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 import { Location, NgTemplateOutlet } from '@angular/common';
-import {TranslateService} from "@ngx-translate/core";
-import { IonContent } from "@ionic/angular";
-import {AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup} from "@angular/forms"
+import { TranslateService } from '@ngx-translate/core';
+import { IonContent } from '@ionic/angular';
+import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 
 import {
-  AuthService, CreateDynamicComponent, DetailsService,
-  DynamicComponentLoader, DynamicContentDirective, ICellPipe,
+  AuthService,
+  CreateDynamicComponent,
+  DetailsService,
+  DynamicComponentLoader,
+  DynamicContentDirective,
+  ICellPipe,
   IDetailsOptions,
   IIconButtonOptions,
-  IPageOptions, PageComponent, StyleService, ToastService
+  IPageOptions,
+  PageComponent,
+  StyleService,
+  ToastService
 } from '@smartsoft001/angular';
-import { IEntity } from "@smartsoft001/domain-core";
-import {getModelOptions} from "@smartsoft001/models";
-import { SpecificationService } from "@smartsoft001/utils";
+import { IEntity } from '@smartsoft001/domain-core';
+import { getModelOptions } from '@smartsoft001/models';
+import { SpecificationService } from '@smartsoft001/utils';
 
-import { CrudFacade } from "../../+state/crud.facade";
-import { CrudFullConfig } from "../../crud.config";
-import { CrudService } from "../../services/crud/crud.service";
+import { CrudFacade } from '../../+state/crud.facade';
+import { CrudFullConfig } from '../../crud.config';
+import { CrudService } from '../../services/crud/crud.service';
 import { ICrudFilter } from '../../models';
-import {ItemStandardComponent} from "./standard/standard.component";
-import { CrudItemPageBaseComponent } from "./base/base.component";
-import { PageService } from "../../services/page/page.service";
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ItemStandardComponent } from './standard/standard.component';
+import { CrudItemPageBaseComponent } from './base/base.component';
+import { PageService } from '../../services/page/page.service';
 
 @Component({
   selector: 'smart-crud-item-page',
@@ -89,7 +104,7 @@ export class ItemComponent<T extends IEntity<string>>
     return this._mode();
   }
 
-  selected$: Observable<T>;
+  selected: Signal<T>;
 
   @ViewChildren(ItemStandardComponent, { read: ItemStandardComponent }) standardComponents = new QueryList<ItemStandardComponent<any>>();
   @ViewChild(IonContent, { static: true }) content: IonContent;
@@ -128,7 +143,7 @@ export class ItemComponent<T extends IEntity<string>>
   ) {
     super(cd, moduleRef, componentFactoryResolver);
 
-    this.selected$ = this.facade.selected$;
+    this.selected = this.facade.selected;
   }
 
   refreshProperties() {
@@ -193,7 +208,7 @@ export class ItemComponent<T extends IEntity<string>>
           type: "!=",
         });
       }
-      const { totalCount } = await this.service.getList(filter).toPromise();
+      const { totalCount } = await this.service.getList(filter);
 
       return !totalCount;
     });
@@ -221,7 +236,7 @@ export class ItemComponent<T extends IEntity<string>>
 
       this.detailsOptions.set({
         type: this.config.type,
-        item: toSignal(this.facade.selected$),
+        item: this.facade.selected,
         cellPipe: this.config.details ? (this.config.details as {cellPipe?: ICellPipe<T>}).cellPipe : null,
         componentFactories: {
           top:
@@ -246,8 +261,8 @@ export class ItemComponent<T extends IEntity<string>>
 
     this.initPageOptions();
 
-    this.facade.selected$.pipe(this.takeUntilDestroy).subscribe(item => {
-      this.item = item;
+    effect(() => {
+      this.item = this.facade.selected();
       this.initPageOptions();
       this.cd.detectChanges();
     });

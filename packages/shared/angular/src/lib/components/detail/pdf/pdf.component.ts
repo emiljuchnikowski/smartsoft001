@@ -24,7 +24,7 @@ import { ButtonComponent } from '../../button';
     ],
     styleUrls: ['./pdf.component.scss']
 })
-export class DetailPdfComponent<T extends IEntity<string> & { [key: string]: any }> extends DetailBaseComponent<T> {
+export class DetailPdfComponent<T extends IEntity<string>> extends DetailBaseComponent<T> {
     constructor(cd: ChangeDetectorRef, private fileService: FileService) {
         super(cd);
     }

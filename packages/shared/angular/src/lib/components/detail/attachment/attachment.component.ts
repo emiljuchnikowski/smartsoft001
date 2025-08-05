@@ -1,6 +1,5 @@
 import {ChangeDetectorRef, Component} from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { AsyncPipe } from '@angular/common';
 
 import {IEntity} from "@smartsoft001/domain-core";
 
@@ -14,7 +13,7 @@ import { ButtonComponent } from '../../button';
     template: `
       @let item = options?.item();
       @if (item && options?.key) {
-        <smart-button [options]="getButtonOptions(item[options.key!])">
+        <smart-button [options]="getButtonOptions(item[options.key])">
           {{ 'download' | translate }}
         </smart-button>
       }
@@ -22,11 +21,10 @@ import { ButtonComponent } from '../../button';
     imports: [
         ButtonComponent,
         TranslatePipe,
-        AsyncPipe
     ],
     styleUrls: ['./attachment.component.scss']
 })
-export class DetailAttachmentComponent<T extends IEntity<string> & { [key: string]: any }> extends DetailBaseComponent<T> {
+export class DetailAttachmentComponent<T extends IEntity<string>> extends DetailBaseComponent<T> {
     constructor(cd: ChangeDetectorRef, private fileService: FileService) {
         super(cd);
     }

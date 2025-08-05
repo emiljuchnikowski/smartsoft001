@@ -46,7 +46,6 @@ import { IEntity } from '@smartsoft001/domain-core';
     DetailImageComponent,
     DetailPhoneNumberPlComponent,
     DetailTextComponent,
-    AsyncPipe,
     ModelLabelPipe,
     InfoComponent,
     IonSkeletonText,
@@ -54,7 +53,7 @@ import { IEntity } from '@smartsoft001/domain-core';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DetailComponent<T extends IEntity<string> & { [key: string]: any; }> {
+export class DetailComponent<T extends IEntity<string>> {
   FieldType = FieldType;
 
   readonly options: InputSignal<IDetailOptions<T>> = input.required<IDetailOptions<T>>();

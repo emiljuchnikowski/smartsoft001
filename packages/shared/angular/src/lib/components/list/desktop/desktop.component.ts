@@ -66,7 +66,7 @@ import { PagingComponent } from '../../paging';
     PagingComponent
   ]
 })
-export class ListDesktopComponent<T extends IEntity<string & { [key: string]: any}>>
+export class ListDesktopComponent<T extends IEntity<string>>
   extends ListBaseComponent<T>
   implements OnInit, OnDestroy, AfterViewInit {
   private _subscriptions = new Subscription();

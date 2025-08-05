@@ -6,11 +6,8 @@ import {
   Type,
   ViewChild,
   ViewContainerRef,
-  inject, Signal
+  inject, Signal, computed
 } from '@angular/core';
-import { NavController } from '@ionic/angular';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from "@angular/router";
 
@@ -29,7 +26,7 @@ import {
   ICellPipe,
   DynamicComponentType,
   PaginationMode,
-  IListInternalOptions, IRemoveProvider, ItemOptions, IDetailsProvider, IDetailsComponentFactories
+  IListInternalOptions, IRemoveProvider, IDetailsProvider, IDetailsComponentFactories
 } from '../../../models';
 import { AlertService } from '../../../services';
 import { AuthService } from '../../../services';
@@ -37,7 +34,7 @@ import { CdkTableDataSourceInput } from '@angular/cdk/table';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 @Directive()
-export abstract class ListBaseComponent<T extends IEntity<string & { [key: string]: any }>>
+export abstract class ListBaseComponent<T extends IEntity<string>>
   implements OnInit
 {
   static smartType: DynamicComponentType = 'list';
@@ -68,7 +65,7 @@ export abstract class ListBaseComponent<T extends IEntity<string & { [key: strin
   loadNextPage: ((event?: any) => void) | null  = null;
 
   list!: Signal<CdkTableDataSourceInput<T> | null>;
-  loading$!: Observable<boolean>;
+  loading!: Signal<boolean>;
   page!: Signal<number | null>;
   totalPages!: Signal<number | null>;
 
@@ -156,7 +153,7 @@ export abstract class ListBaseComponent<T extends IEntity<string & { [key: strin
       this.detailsComponentProps = {
         item: details?.provider.item,
         type: val.type,
-        loading$: details?.provider.loading$,
+        loading: details?.provider.loading,
         itemHandler: this.itemHandler ?? null,
         removeHandler: this.removeHandler,
         componentFactories: details?.componentFactories,
@@ -185,8 +182,8 @@ export abstract class ListBaseComponent<T extends IEntity<string & { [key: strin
         });
       };
 
-      this.page = toSignal(val.pagination.page$, {initialValue: null});
-      this.totalPages = toSignal(val.pagination.totalPages$, {initialValue: null});
+      this.page = val.pagination.page;
+      this.totalPages = val.pagination.totalPages;
     }
 
     this.afterInitOptions();
@@ -201,7 +198,7 @@ export abstract class ListBaseComponent<T extends IEntity<string & { [key: strin
 
   constructor() {
     this.detailsButtonOptions = {
-      loading$: this.loading$,
+      loading: this.loading,
       click: () => {
         this.unselect();
       },
@@ -252,19 +249,18 @@ export abstract class ListBaseComponent<T extends IEntity<string & { [key: strin
   }
 
   protected initList(val: IListInternalOptions<T>): void {
-    this.list = toSignal(this.provider.list$.pipe(
-      map((list) => {
-        if (!list) return list;
-        const result = list.filter((item) => !this.removed.has(item.id));
-        this.initKeys(list);
+    this.list = computed(() => {
+      const list = this.provider.list();
+      if (!list) return list;
+      const result = list.filter((item) => !this.removed.has(item.id));
+      this.initKeys(list);
 
-        return result;
-      })
-    ), {initialValue: null});
+      return result;
+    });
   }
 
   protected initLoading(): void {
-    this.loading$ = this.provider.loading$;
+    this.loading = this.provider.loading;
   }
 
   ngOnInit() {}

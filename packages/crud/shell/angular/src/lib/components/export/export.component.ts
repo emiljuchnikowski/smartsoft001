@@ -1,7 +1,6 @@
-import {Component, ElementRef, OnInit} from '@angular/core';
-import {Observable} from "rxjs";
+import { Component, ElementRef, OnInit } from '@angular/core';
 
-import {BaseComponent, IButtonOptions, PopoverService, StyleService} from "@smartsoft001/angular";
+import { BaseComponent, ButtonComponent, IButtonOptions, PopoverService, StyleService } from '@smartsoft001/angular';
 import {IEntity} from "@smartsoft001/domain-core";
 
 import {CrudFacade} from "../../+state/crud.facade";
@@ -9,14 +8,15 @@ import {CrudFacade} from "../../+state/crud.facade";
 @Component({
   selector: 'smart-crud-export',
   templateUrl: './export.component.html',
+  imports: [
+    ButtonComponent
+  ],
   styleUrls: ['./export.component.scss']
 })
 export class ExportComponent<T extends IEntity<string>> extends BaseComponent implements OnInit {
 
   buttonExportCsvOptions: IButtonOptions = this.initButtonExportOptions('csv');
   buttonExportXlsxOptions: IButtonOptions = this.initButtonExportOptions('xlsx');
-
-  loading$: Observable<boolean> = this.facade.loading$;
 
   constructor(
       private facade: CrudFacade<T>,
@@ -35,18 +35,17 @@ export class ExportComponent<T extends IEntity<string>> extends BaseComponent im
     return {
       click: () => {
         this.facade.export({
-          ...this.facade.filter,
+          ...this.facade.filter(),
           offset: null,
           limit: null
         }, format);
 
-        const subscription = this.facade.loaded$.subscribe(val => {
-          if (!val) return;
-          this.popoverService.close();
-          subscription.unsubscribe();
-        });
+        const loading = this.facade.loading();
+        if (loading) return;
+        this.popoverService.close();
+
       },
-      loading$: this.facade.loading$,
+      loading: this.facade.loading,
       expand: 'block'
     }
   }

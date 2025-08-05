@@ -4,16 +4,6 @@ import {
   ViewContainerRef,
   AfterViewInit, Signal, computed
 } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { CdkTableDataSourceInput } from '@angular/cdk/table';
-
-import { IEntity } from '@smartsoft001/domain-core';
-import { FieldType, getModelFieldsWithOptions } from '@smartsoft001/models';
-
-import { ListBaseComponent } from '../base/base.component';
-import { IListComponentFactories, IListInternalOptions } from '../../../models';
-import { PagingComponent } from '../../paging';
 import {
   IonButton, IonCard, IonCardContent,
   IonCol,
@@ -22,7 +12,14 @@ import {
   IonInfiniteScrollContent,
   IonRow
 } from '@ionic/angular/standalone';
-import { AsyncPipe, NgOptimizedImage } from '@angular/common';
+import { NgOptimizedImage } from '@angular/common';
+
+import { IEntity } from '@smartsoft001/domain-core';
+import { FieldType, getModelFieldsWithOptions } from '@smartsoft001/models';
+
+import { ListBaseComponent } from '../base/base.component';
+import { IListComponentFactories, IListInternalOptions } from '../../../models';
+import { PagingComponent } from '../../paging';
 import { FileUrlPipe, ListCellPipe } from '../../../pipes';
 
 @Component({
@@ -33,7 +30,6 @@ import { FileUrlPipe, ListCellPipe } from '../../../pipes';
     PagingComponent,
     IonInfiniteScrollContent,
     IonInfiniteScroll,
-    AsyncPipe,
     IonIcon,
     IonButton,
     IonCol,
@@ -45,7 +41,7 @@ import { FileUrlPipe, ListCellPipe } from '../../../pipes';
     ListCellPipe
   ]
 })
-export class ListMasonryGridComponent<T extends IEntity<string & { [key: string]: any}>>
+export class ListMasonryGridComponent<T extends IEntity<string>>
   extends ListBaseComponent<T>
   implements AfterViewInit
 {

@@ -1,23 +1,16 @@
-import { Directive, Inject, input, InputSignal, OnInit, Optional, Signal } from '@angular/core';
+import { Directive, input, InputSignal, OnInit, Signal } from '@angular/core';
 import {Debounce} from "lodash-decorators";
-import {Observable} from "rxjs";
 import {TranslateService} from "@ngx-translate/core";
-import { toSignal } from '@angular/core/rxjs-interop';
 
 import {IEntity} from "@smartsoft001/domain-core";
 import {FieldType, IModelFilter} from "@smartsoft001/models";
 
 import {ICrudFilter} from '../../../models';
 import {CrudFacade} from "../../../+state/crud.facade";
-import {
-  CRUD_MODEL_POSSIBILITIES_PROVIDER,
-  ICrudModelPossibilitiesProvider,
-} from "../../../providers/model-possibilities/model-possibilities.provider";
 import {CrudConfig} from "../../../crud.config";
 
 @Directive()
 export class BaseComponent<T extends IEntity<string>> implements OnInit {
-  possibilities$: Observable<{ id: any; text: string }[]>; //!Used externally (inside check.component)
   possibilities: Signal<{ id: any; text: string }[]>;
 
   readonly item: InputSignal<IModelFilter> = input<IModelFilter>();
@@ -87,9 +80,6 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
   constructor(
     protected facade: CrudFacade<T>,
     private config: CrudConfig<T>,
-    @Optional()
-    @Inject(CRUD_MODEL_POSSIBILITIES_PROVIDER)
-    private modelPossibilitiesProvider: ICrudModelPossibilitiesProvider,
     protected translateService: TranslateService
   ) {}
 
@@ -147,16 +137,7 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
   }
 
   private initPossibilities(): void {
-    let possibilities = this.item().possibilities$;
-
-    if (this.modelPossibilitiesProvider) {
-      const possibilitiesFromProvider = this.modelPossibilitiesProvider.get(this.config.type);
-      if (possibilitiesFromProvider && possibilitiesFromProvider[this.item().key])
-        possibilities = possibilitiesFromProvider[this.item().key];
-    }
-
-    this.possibilities$ = possibilities;
-    this.possibilities = toSignal(possibilities);
+    this.possibilities = this.item().possibilities;
   }
 
   private isArrayType(): boolean {

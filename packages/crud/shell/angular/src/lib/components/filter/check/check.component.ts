@@ -1,6 +1,4 @@
-import { AfterContentInit, Component, Signal } from '@angular/core';
-import {map} from "rxjs/operators";
-import { combineLatest } from 'rxjs';
+import { AfterContentInit, Component, computed, Signal } from '@angular/core';
 import {
     IonButton,
     IonCheckbox,
@@ -12,7 +10,6 @@ import {
     IonRow
 } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 
 import {IEntity} from "@smartsoft001/domain-core";
 
@@ -63,14 +60,13 @@ export class FilterCheckComponent<T extends IEntity<string>> extends BaseCompone
     list: Signal<{ value: any, isCheck: boolean }[]>;
 
     ngAfterContentInit(): void {
-        this.list = toSignal(combineLatest([ this.possibilities$, this.facade.filter$]).pipe((
-            map(([possibilities]) => {
-                return possibilities.map(pos => ({
-                    value: pos,
-                    isCheck: this.value.some(r => r === pos.id)
-                }))
-            })
-        )));
+        this.list = computed(() => {
+            const possibilities = this.possibilities();
+            return possibilities.map(pos => ({
+                value: pos,
+                isCheck: this.value.some(r => r === pos.id)
+            }));
+        })
     }
 
     onCheckChange(checked: boolean, entry: { value: any; isCheck: boolean }) {

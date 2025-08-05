@@ -38,7 +38,7 @@ import { PagingComponent } from '../../paging';
     ListCellPipe
   ]
 })
-export class ListMobileComponent<T extends IEntity<string & { [key: string]: any; }>>
+export class ListMobileComponent<T extends IEntity<string>>
   extends ListBaseComponent<T>
   implements AfterViewInit {
 

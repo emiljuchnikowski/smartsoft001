@@ -14,9 +14,9 @@
   <ion-row>
     <ion-col></ion-col>
     <ion-col size="auto">
-      @let loading = internalOptions?.provider?.loading$ | async;
+      @let loading = internalOptions?.provider?.loading();
       <smart-loader [show]="loading ?? false"></smart-loader>
-      @if (!loading && !(internalOptions.provider.list$ | async)?.length) {
+      @if (!loading && !internalOptions.provider.list()?.length) {
         <h2>
           <br/>
           {{ 'noResults' | translate }}

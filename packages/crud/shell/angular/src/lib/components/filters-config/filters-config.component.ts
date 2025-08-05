@@ -1,20 +1,26 @@
-import {Component, ElementRef, OnInit} from '@angular/core';
-import {Observable} from "rxjs";
-import {map} from "rxjs/operators";
+import { IonChip, IonIcon, IonLabel, IonToolbar } from '@ionic/angular/standalone';
+import { Component, computed, ElementRef, OnInit, Signal } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
-import {IEntity} from "@smartsoft001/domain-core";
 import {StyleService} from "@smartsoft001/angular";
 
-import {ICrudFilterQueryItem} from '../../models/interfaces';
+import {ICrudFilterQueryItem} from '../../models';
 import { CrudFacade } from '../../+state/crud.facade';
 
 @Component({
   selector: 'smart-crud-filters-config',
   templateUrl: './filters-config.component.html',
+  imports: [
+    IonToolbar,
+    IonChip,
+    IonIcon,
+    IonLabel,
+    TranslatePipe
+  ],
   styleUrls: ['./filters-config.component.scss']
 })
-export class FiltersConfigComponent<T extends IEntity<string>> implements OnInit {
-  query$: Observable<ICrudFilterQueryItem[]>;
+export class FiltersConfigComponent implements OnInit {
+  query: Signal<ICrudFilterQueryItem[]>;
 
   constructor(
       private readonly facade: CrudFacade<any>,
@@ -23,20 +29,19 @@ export class FiltersConfigComponent<T extends IEntity<string>> implements OnInit
   ) { }
 
   onRemoveQuery(item: ICrudFilterQueryItem): void {
-    const index = this.facade.filter.query.indexOf(item);
+    const index = this.facade.filter().query.indexOf(item);
     if (index > -1) {
-      this.facade.filter.query.splice(index, 1);
+      this.facade.filter().query.splice(index, 1);
     }
-    this.facade.read(this.facade.filter);
+    this.facade.read(this.facade.filter());
   }
 
   ngOnInit(): void {
     this.styleService.init(this.elementRef);
 
-    this.query$ = this.facade.filter$.pipe(
-        map(filter => {
-          return filter?.query?.filter(i => !i.hidden);
-        })
-    );
+    this.query = computed(() => {
+      const filter = this.facade.filter();
+      return filter?.query?.filter(i => !i.hidden);
+    });
   }
 }

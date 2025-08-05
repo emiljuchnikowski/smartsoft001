@@ -1,18 +1,35 @@
 import {IEntity} from "@smartsoft001/domain-core";
-import {Component, OnInit} from "@angular/core";
-import {Observable, Subject} from "rxjs";
-import {tap} from "rxjs/operators";
+import { Component, computed, OnInit, Signal } from '@angular/core';
 import * as _ from "lodash";
+import { IonButton, IonButtons, IonHeader, IonIcon, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { TranslatePipe } from '@ngx-translate/core';
+import { NgComponentOutlet } from '@angular/common';
+import { DynamicIoDirective } from 'ng-dynamic-component';
 
 import {getModelFieldsWithOptions, IFieldEditMetadata} from "@smartsoft001/models";
-import {IButtonOptions, MenuService} from "@smartsoft001/angular";
+import { ButtonComponent, FormComponent, IButtonOptions, MenuService } from '@smartsoft001/angular';
 
 import {CrudFacade} from "../../+state/crud.facade";
-import {CrudConfig, CrudFullConfig} from "../../crud.config";
+import {CrudFullConfig} from "../../crud.config";
+import { FormOptionsPipe } from '../../pipes';
 
 @Component({
     selector: 'smart-crud-multiselect',
     templateUrl: './multiselect.component.html',
+    imports: [
+        IonHeader,
+        IonToolbar,
+        IonButtons,
+        IonButton,
+        IonIcon,
+        IonTitle,
+        TranslatePipe,
+        NgComponentOutlet,
+        DynamicIoDirective,
+        FormOptionsPipe,
+        FormComponent,
+        ButtonComponent
+    ],
     styleUrls: ['./multiselect.component.scss']
 })
 export class MultiselectComponent<T extends IEntity<string>> implements OnInit {
@@ -38,34 +55,35 @@ export class MultiselectComponent<T extends IEntity<string>> implements OnInit {
     lock: boolean;
     showForm = false;
 
-    list$: Observable<T[]>;
+    list: Signal<T[]>;
 
     constructor(
         private facade: CrudFacade<T>,
         public config: CrudFullConfig<T>,
         private menuService: MenuService
     ) {
-        this.list$ = this.facade.multiSelected$.pipe(
-            tap(list => {
-                this.lock = true;
-                const model = new this.config.type();
+        this.list = computed(() => {
+            const list = this.facade.multiSelected();
+            this.lock = true;
+            const model = new this.config.type();
 
-                const fieldsWithOptions = getModelFieldsWithOptions(model)
-                    .filter(f => (f.options.update as IFieldEditMetadata)?.multi);
+            const fieldsWithOptions = getModelFieldsWithOptions(model)
+              .filter(f => (f.options.update as IFieldEditMetadata)?.multi);
 
-                this.showForm = !!fieldsWithOptions.length;
+            this.showForm = !!fieldsWithOptions.length;
 
-                fieldsWithOptions.forEach(({ key }) => {
-                    const uniques = _.uniq(list.map(i => i[key]));
+            fieldsWithOptions.forEach(({ key }) => {
+                const uniques = _.uniq(list.map(i => i[key]));
 
-                    if (uniques.length === 1) {
-                        model[key] = uniques[0];
-                    }
-                });
+                if (uniques.length === 1) {
+                    model[key] = uniques[0];
+                }
+            });
 
-                this.item = model;
-            })
-        );
+            this.item = model;
+
+            return list;
+        });
     }
 
     async onClose(): Promise<void> {

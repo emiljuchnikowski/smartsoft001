@@ -1,13 +1,10 @@
-import { Injectable } from "@angular/core";
-
-import { map } from "rxjs/operators";
-import { combineLatest } from "rxjs";
+import { computed, Injectable } from '@angular/core';
 
 import { IEntity } from "@smartsoft001/domain-core";
 import {IListPaginationOptions, PaginationMode} from "@smartsoft001/angular";
 
 import {CrudFacade} from "../../+state/crud.facade";
-import {ICrudFilter} from "../../models/interfaces";
+import {ICrudFilter} from '../../models';
 
 @Injectable()
 export class CrudListPaginationFactory<T extends IEntity<string>> {
@@ -29,23 +26,19 @@ export class CrudListPaginationFactory<T extends IEntity<string>> {
           return Promise.resolve(false);
 
         return new Promise((res) => {
-          const sub = this.facade.loaded$.subscribe((l) => {
-            if (l) {
-              // if (sub && !sub.closed) sub.unsubscribe();
-              setTimeout(() => {
-                res(
-                  options.provider.getLinks() &&
-                    options.provider.getLinks().next
-                );
-              });
-            }
-          });
+          if (this.facade.loaded()) {
+            setTimeout(() => {
+              res(
+                options.provider.getLinks() &&
+                  options.provider.getLinks().next
+              );
+            });
+          }
 
+          const filter = options.provider.getFilter();
           this.facade.read({
-            ...options.provider.getFilter(),
-            offset:
-              options.provider.getFilter().offset +
-              options.provider.getFilter().limit,
+            ...filter,
+            offset: filter.offset + filter.limit,
           });
         });
       },
@@ -54,17 +47,15 @@ export class CrudListPaginationFactory<T extends IEntity<string>> {
           return Promise.resolve(false);
 
         return new Promise((res) => {
-          const sub = this.facade.loaded$.subscribe((l) => {
-            if (l) {
-              // if (sub && !sub.closed) sub.unsubscribe();
-              setTimeout(() => {
-                res(
-                  options.provider.getLinks() &&
-                    options.provider.getLinks().prev
-                );
-              });
-            }
-          });
+          const loaded = this.facade.loaded();
+          if (loaded) {
+            setTimeout(() => {
+              res(
+                options.provider.getLinks() &&
+                  options.provider.getLinks().prev
+              );
+            });
+          }
 
           this.facade.read({
             ...options.provider.getFilter(),
@@ -74,19 +65,15 @@ export class CrudListPaginationFactory<T extends IEntity<string>> {
           });
         });
       },
-      page$: this.facade.filter$.pipe(
-        map((f) => {
-          return f?.limit ? f.offset / f.limit + 1 : 0;
-        })
-      ),
-      totalPages$: combineLatest(
-        this.facade.filter$,
-        this.facade.totalCount$
-      ).pipe(
-        map(([filter, totalCount]) => {
-          return filter?.limit ? Math.ceil(totalCount / filter.limit) : 0;
-        })
-      ),
+      page: computed(() => {
+        const f = this.facade.filter();
+        return f?.limit ? f.offset / f.limit + 1 : 0;
+      }),
+      totalPages: computed(() => {
+        const filter = this.facade.filter();
+        const totalCount = this.facade.totalCount();
+        return filter?.limit ? Math.ceil(totalCount / filter.limit) : 0;
+      }),
     };
   }
 }

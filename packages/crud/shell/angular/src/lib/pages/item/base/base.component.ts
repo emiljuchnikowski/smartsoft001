@@ -4,7 +4,6 @@ import {
     ViewChild, ViewChildren,
     ViewContainerRef
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 
 import {
     BaseComponent,
@@ -49,6 +48,6 @@ export abstract class CrudItemPageBaseComponent<T extends IEntity<string>> exten
         public facade: CrudFacade<T>
     ) {
         super();
-        this.selected = toSignal(facade.selected$);
+        this.selected = facade.selected;
     }
 }

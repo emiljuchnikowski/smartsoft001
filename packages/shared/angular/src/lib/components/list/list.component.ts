@@ -5,7 +5,6 @@ import {
   ComponentFactoryResolver,
   Input,
   NgModuleRef,
-  OnInit,
   QueryList, signal,
   TemplateRef,
   ViewChild,
@@ -15,7 +14,7 @@ import {
 import * as _ from 'lodash';
 import { IonCol, IonRow } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
-import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 
 import { getModelFieldsWithOptions, IFieldListMetadata } from '@smartsoft001/models';
 import { IEntity } from '@smartsoft001/domain-core';
@@ -42,13 +41,14 @@ import { LoaderComponent } from '../loader';
     IonRow,
     IonCol,
     TranslatePipe,
-    AsyncPipe,
     NgTemplateOutlet,
     LoaderComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListComponent<T extends IEntity<string & { [key: string]: any }>> extends CreateDynamicComponent<ListBaseComponent<any>>('list') implements OnInit {
+export class ListComponent<
+  T extends IEntity<string>
+> extends CreateDynamicComponent<ListBaseComponent<any>>('list') {
   private _options!: WritableSignal<IListInternalOptions<T>>;
 
   mode: WritableSignal<ListMode> = signal<ListMode>(ListMode.desktop);
@@ -79,10 +79,6 @@ export class ListComponent<T extends IEntity<string & { [key: string]: any }>> e
       private componentFactoryResolver: ComponentFactoryResolver
   ) {
     super(cd, moduleRef, componentFactoryResolver);
-  }
-
-  ngOnInit() {
-
   }
 
   override refreshProperties(): void {

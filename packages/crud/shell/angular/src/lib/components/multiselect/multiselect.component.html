@@ -1,24 +1,29 @@
-<ng-container *ngIf="list$ | async; let list">
-    <ion-header>
-        <ion-toolbar>
-            <ion-buttons slot="end">
-                <ion-button (click)="onClose()">
-                    <ion-icon slot="icon-only" name="close"> </ion-icon>
-                </ion-button>
-            </ion-buttons>
-            <ion-title>{{ 'selected' | translate }}: {{ list?.length }}</ion-title>
-        </ion-toolbar>
-    </ion-header>
+@let list = this.list();
+@if (list) {
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="end">
+        <ion-button (click)="onClose()">
+          <ion-icon slot="icon-only" name="close"> </ion-icon>
+        </ion-button>
+      </ion-buttons>
+      <ion-title>{{ 'selected' | translate }}: {{ list?.length }}</ion-title>
+    </ion-toolbar>
+  </ion-header>
 
-    <div *ngIf="config?.list?.components?.multi">
-        <ng-template [ngComponentOutlet]="config?.list?.components?.multi"
-                     [ndcDynamicInputs]="{ items: list }"
-        ></ng-template>
+  @if (config?.list?.components?.multi) {
+    <div>
+      <ng-template [ngComponentOutlet]="config?.list?.components?.multi"
+                   [ndcDynamicInputs]="{ items: list }"
+      ></ng-template>
     </div>
+  }
 
-    <div *ngIf="showForm && item">
-        <smart-form [options]="item | smartFormOptions : 'multiUpdate' : config.type" (valuePartialChange)="onPartialChange($event, list)" (validChange)="onValidChange($event)"></smart-form>
+  @if (showForm && item) {
+    <div>
+      <smart-form [options]="item | smartFormOptions : 'multiUpdate' : config.type" (valuePartialChange)="onPartialChange($event, list)" (validChange)="onValidChange($event)"></smart-form>
 
-        <smart-button style="float: right" [disabled]="lock || !valid" [options]="buttonOptions">{{ 'change' | translate }}</smart-button>
+      <smart-button style="float: right" [disabled]="lock || !valid" [options]="buttonOptions">{{ 'change' | translate }}</smart-button>
     </div>
-</ng-container>
+  }
+}

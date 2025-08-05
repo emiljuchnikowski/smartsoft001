@@ -51,7 +51,7 @@ export type InputOptions<T> = IInputOptions & IInputFromFieldOptions<T>;
 export interface IInputOptions {
   treeLevel: number;
   control: AbstractControl;
-  possibilities$?: Observable<{ id: any, text: string }[]>;
+  possibilities?: Signal<{ id: any, text: string }[]>;
   component?: Type<InputBaseComponent<any>>;
 }
 
@@ -71,7 +71,7 @@ export interface IDetailsOptions<T extends IEntity<string>> {
   cellPipe?: ICellPipe<T>;
   type: any;
   item: Signal<T>;
-  loading$?: Observable<boolean>;
+  loading?: Signal<boolean>;
   itemHandler?: ((id: string) => void) | null;
   removeHandler?: ((item: T) => void) | null;
   componentFactories?: IDetailsComponentFactories<T>;
@@ -83,7 +83,7 @@ export interface IButtonOptions {
   confirm?: boolean;
   color?: 'primary' | 'light' | string;
   click: () => void;
-  loading$?: Observable<boolean>;
+  loading?: Signal<boolean>;
 }
 
 export interface IDetailOptions<T> {
@@ -111,8 +111,8 @@ export interface IListProvider<T> {
   getData: (filter: any) => void;
   onChangeMultiSelected?: (list: Array<T>) => void;
   onCleanMultiSelected$?: Observable<void>;
-  list$: Observable<T[]>;
-  loading$: Observable<boolean>;
+  list: Signal<T[]>;
+  loading: Signal<boolean>;
 }
 
 export interface IListPaginationOptions {
@@ -120,8 +120,8 @@ export interface IListPaginationOptions {
   limit: number,
   loadNextPage: () => Promise<boolean>,
   loadPrevPage: () => Promise<boolean>,
-  page$: Observable<number>,
-  totalPages$: Observable<number>
+  page: Signal<number>,
+  totalPages: Signal<number>
 }
 
 export enum PaginationMode {
@@ -155,7 +155,7 @@ export interface IDetailsProvider<T> {
   getData: (id: string) => void;
   clearData: () => void;
   item: Signal<T>;
-  loading$: Observable<boolean>;
+  loading: Signal<boolean>;
 }
 
 export interface IListOptions<T> {

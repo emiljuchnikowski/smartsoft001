@@ -1,7 +1,5 @@
-import {Component} from "@angular/core";
-import {map} from "rxjs/operators";
+import { Component, computed, Signal } from '@angular/core';
 import { ListComponent } from '@smartsoft001/angular';
-import { toSignal } from '@angular/core/rxjs-interop';
 
 import {IEntity} from "@smartsoft001/domain-core";
 
@@ -18,7 +16,7 @@ import { FiltersConfigComponent, GroupComponent } from '../../../components';
         @let groups = config.list?.groups;
         @if (listOptions) {
             <smart-list
-              [hidden]="!(!groups || isSearch())"
+              [hidden]="groups && !isSearch()"
               [options]="listOptions"
             ></smart-list>
         }
@@ -38,11 +36,7 @@ import { FiltersConfigComponent, GroupComponent } from '../../../components';
     ]
 })
 export class ListStandardComponent<T extends IEntity<string>> extends CrudListPageBaseComponent<T> {
-    isSearch = toSignal(this.facade.filter$.pipe(
-      map(filter => {
-          return !!filter?.searchText
-      })
-    ));
+    isSearch: Signal<boolean> = computed(() => !!this.facade.filter()?.searchText);
 
     constructor(
         private readonly facade: CrudFacade<T>,

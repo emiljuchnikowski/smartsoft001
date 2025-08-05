@@ -1,5 +1,4 @@
 import { Component, ElementRef, input, InputSignal, OnInit, Signal, WritableSignal } from '@angular/core';
-import { AsyncPipe } from '@angular/common';
 import {
   IonButton,
   IonButtons,
@@ -11,7 +10,6 @@ import {
   IonToolbar
 } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 
 import {MenuService, StyleService} from "@smartsoft001/angular";
 import {
@@ -144,6 +142,6 @@ export class FiltersComponent<T extends IEntity<string>> implements OnInit {
               fieldType: item.options.type
             }))
     ]);
-    this.filter = toSignal(this.facade.filter$);
+    this.filter = this.facade.filter;
   }
 }
