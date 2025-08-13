@@ -1,0 +1,28 @@
+@if (control) {
+  <ion-label position="floating">
+    {{ control?.parent?.value | smartModelLabel : internalOptions.fieldKey : internalOptions?.model?.constructor | async }}
+    @if (control.value) {
+      {{ control.value.fileName }}
+    }
+    <ion-text color="danger">\
+      @if (required) {
+        <span>*</span>
+      }
+    </ion-text>
+  </ion-label><br/>
+  <smart-button [options]="addButtonOptions">{{ (control.value ? 'change' : 'add') | translate }}</smart-button>
+
+  @if (control.value) {
+    <smart-button [options]="deleteButtonOptions">{{ 'delete' | translate }}</smart-button>
+  }
+
+  @if (loading()) {
+    <ion-progress-bar [value]="(percent() ?? 0) / 100"></ion-progress-bar>
+  }
+
+  @if (imageUrl) {
+    <ion-img style="max-width: 400px; max-height: 400px" [src]="imageUrl"></ion-img>
+    <br/>
+  }
+}
+<input type="file" accept=".jpg,.png,.jpeg" [hidden]="true" #inputObj>

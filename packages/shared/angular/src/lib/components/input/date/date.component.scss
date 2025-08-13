@@ -1,0 +1,24 @@
+@import "styles/smart-styles.scss";
+.label-floating {
+    --color: var(--smart-color-medium);
+    &.ios {
+        --color: var(--smart-color-medium);
+        margin-top: .6rem !important;
+    }
+}
+
+ion-row {
+    padding: 0;
+    ion-col {
+        padding-left: 0;
+        vertical-align: middle;
+    }
+}
+
+.squere-button {
+    height: var(--smart-button-height) !important;
+}
+
+.desktop-row {
+    width: calc(100% - 40px);
+}

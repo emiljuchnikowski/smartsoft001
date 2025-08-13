@@ -1,5 +1,4 @@
-import { ModuleWithProviders, NgModule, NO_ERRORS_SCHEMA } from "@angular/core";
-import { Store, StoreModule } from "@ngrx/store";
+import { ModuleWithProviders, NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 
@@ -7,56 +6,40 @@ import { IEntity } from "@smartsoft001/domain-core";
 import {
   FILE_SERVICE_CONFIG,
   IFileServiceConfig,
-  NgrxSharedModule,
-  NgrxStoreService,
   SharedModule,
 } from "@smartsoft001/angular";
 
 import { CrudConfig, CrudFullConfig } from "./crud.config";
-import { CrudEffects } from "./+state/crud.effects";
-import { getReducer } from "./+state/crud.reducer";
 import { CrudService } from "./services/crud/crud.service";
 import { CrudFacade } from "./+state/crud.facade";
-import { CrudPipesModule } from "./pipes/pipes.module";
+import { CrudPipesModule } from './pipes';
 import { CrudFullModule } from "./crud-full.module";
 import {NotSocketService, SocketService} from "./services/socket/socket.service";
 import { CrudListPaginationFactory } from "./factories/list-pagination/list-pagination.factory";
-import { CrudComponentsModule } from "./components/components.module";
+import { CrudComponentsModule } from './components';
 import {PageService} from "./services/page/page.service";
 import {CrudListGroupService} from "./services/list-group/list-group.service";
 
 @NgModule({
   imports: [
-    //AuthSharedModule,
-    StoreModule,
     SharedModule,
     CrudPipesModule,
     FormsModule,
     CommonModule,
     CrudComponentsModule,
-    NgrxSharedModule,
   ],
   exports: [CrudComponentsModule],
   providers: [
     CrudService,
     CrudListGroupService,
     PageService,
-    CrudEffects,
     CrudFacade,
     SocketService,
     CrudListPaginationFactory,
   ],
 })
 export class CrudCoreModule<T extends IEntity<string>> {
-  constructor(config: CrudConfig<T>, effects: CrudEffects<any>) {
-    NgrxStoreService.addReducer(
-      config.entity,
-      config.reducerFactory
-        ? config.reducerFactory()
-        : getReducer(config.entity)
-    );
-    effects.init();
-  }
+  constructor(config: CrudConfig<T>) {}
 }
 
 @NgModule({})

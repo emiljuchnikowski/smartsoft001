@@ -5,26 +5,42 @@ import {getModelFieldsWithOptions, IModelStep} from "@smartsoft001/models";
 import {ArrayService} from "@smartsoft001/utils";
 
 import {FormBaseComponent} from "../base/base.component";
+import { MatStep, MatStepLabel, MatStepper, MatStepperNext, MatStepperPrevious } from '@angular/material/stepper';
+import { IonList } from '@ionic/angular/standalone';
+import { InputComponent } from '../../input';
+import { TranslatePipe } from '@ngx-translate/core';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'smart-form-stepper',
     templateUrl: './stepper.component.html',
     styleUrls: ['./stepper.component.scss'],
+    imports: [
+        MatStepper,
+        MatStep,
+        IonList,
+        InputComponent,
+        TranslatePipe,
+        MatStepLabel,
+        MatButton,
+        MatStepperPrevious,
+        MatStepperNext
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormStepperComponent<T> extends FormBaseComponent<T> implements OnInit {
-    steps: Array<IModelStep & { fields: Array<string>, form: UntypedFormGroup }>;
+    steps!: Array<IModelStep & { fields: Array<string>, form: UntypedFormGroup }>;
 
     constructor(cd: ChangeDetectorRef, private fb: UntypedFormBuilder) {
         super(cd);
     }
 
-    protected afterSetOptions() {
+    protected override afterSetOptions() {
         super.afterSetOptions();
         this.initSteps();
     }
 
-    protected afterSetForm() {
+    protected override afterSetForm() {
         super.afterSetForm();
         this.initSteps();
     }
@@ -38,13 +54,13 @@ export class FormStepperComponent<T> extends FormBaseComponent<T> implements OnI
         const fieldWithOptions = getModelFieldsWithOptions(this.model).filter(fwo => fwo.options.step);
         const steps: Array<IModelStep & { fields: Array<string>, form: UntypedFormGroup }> = [];
 
-        ArrayService.sort(fieldWithOptions, fwo => fwo.options.step.number).forEach(fwo => {
-            let step = steps.find(s => s.number === fwo.options.step.number);
+        ArrayService.sort(fieldWithOptions, fwo => fwo.options.step?.number ?? 0).forEach(fwo => {
+            let step = steps.find(s => s.number === fwo.options.step?.number );
 
             if (!step) {
                 step = {
-                    number: fwo.options.step.number,
-                    name: fwo.options.step.name,
+                    number: fwo.options.step?.number ?? 0,
+                    name: fwo.options.step?.name ?? '',
                     fields: [],
                     form: this.fb.group({})
                 }

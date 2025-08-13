@@ -3,4 +3,5 @@ export * from './list-cell/list-cell.pipe';
 export * from './trust-html/trust-html.pipe';
 export * from './list-header/list-header.pipe';
 export * from './file-url/file-url.pipe';
+export * from './enum-to-list/enum-to-list.pipe';
 export * from './pipes.module';

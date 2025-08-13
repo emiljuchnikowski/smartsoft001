@@ -1,0 +1,8 @@
+@import "styles/smart-styles.scss";
+.label-floating {
+    --color: var(--smart-color-medium);
+    &.ios {
+        --color: var(--smart-color-medium);
+        margin-top: .6rem !important;
+    }
+}

@@ -15,7 +15,43 @@ import {CdkTableModule} from '@angular/cdk/table';
 import { DynamicComponent, DynamicModule } from 'ng-dynamic-component';
 import { MatButtonModule } from '@angular/material/button';
 
-import { ButtonComponent } from '@smartsoft001/angular';
+import {
+  AccordionBodyComponent,
+  AccordionComponent,
+  AccordionHeaderComponent,
+  ButtonComponent, DateRangeComponent, DateRangeModalComponent,
+  InputAddressComponent,
+  InputArrayComponent,
+  InputAttachmentComponent,
+  InputCheckComponent,
+  InputColorComponent,
+  InputComponent,
+  InputCurrencyComponent,
+  InputDateComponent,
+  InputDateRangeComponent,
+  InputDateWithEditComponent,
+  InputEmailComponent,
+  InputEnumComponent,
+  InputErrorComponent,
+  InputFileComponent,
+  InputFlagComponent,
+  InputFloatComponent,
+  InputImageComponent,
+  InputIntComponent,
+  InputIntsComponent,
+  InputLogoComponent,
+  InputLongTextComponent, InputNipComponent,
+  InputObjectComponent,
+  InputPasswordComponent,
+  InputPdfComponent,
+  InputPeselComponent,
+  InputPhoneNumberComponent,
+  InputPhoneNumberPlComponent,
+  InputRadioComponent,
+  InputStringsComponent,
+  InputTextComponent,
+  InputVideoComponent, PasswordStrengthComponent
+} from '@smartsoft001/angular';
 import { DetailComponent } from '@smartsoft001/angular';
 import { DetailEmailComponent } from '@smartsoft001/angular';
 import { DetailEnumComponent } from '@smartsoft001/angular';
@@ -53,12 +89,27 @@ import { PageComponent } from "./page/page.component";
 import { SharedPipesModule } from "../pipes/pipes.module";
 import { InfoComponent, InfoModalComponent } from "./info/info.component";
 import {DETAILS_COMPONENT_TOKEN, FORM_COMPONENT_TOKEN} from "../shared.inectors";
+import { DateEditComponent } from './date-edit';
 
-export const BUTTON_COMPONENTS = [ButtonComponent, ButtonStandardComponent];
+export const ACCORDION_COMPONENTS = [
+  AccordionComponent,
+  AccordionHeaderComponent,
+  AccordionBodyComponent,
+];
 
-export const CARD_COMPONENTS = [CardComponent];
+export const BUTTON_COMPONENTS = [
+  ButtonComponent,
+  ButtonStandardComponent
+];
 
-export const DETAILS_COMPONENTS = [DetailsComponent, DetailsStandardComponent];
+export const CARD_COMPONENTS = [
+  CardComponent
+];
+
+export const DETAILS_COMPONENTS = [
+  DetailsComponent,
+  DetailsStandardComponent
+];
 
 export const DETAIL_COMPONENTS = [
   DetailComponent,
@@ -79,7 +130,46 @@ export const DETAIL_COMPONENTS = [
   DetailPhoneNumberPlComponent
 ];
 
-export const FORM_COMPONENTS = [FormStandardComponent, FormStepperComponent, FormComponent];
+export const FORM_COMPONENTS = [
+  FormStandardComponent,
+  FormStepperComponent,
+  FormComponent
+];
+
+export const INPUT_COMPONENTS = [
+  InputComponent,
+  InputIntComponent,
+  InputErrorComponent,
+  InputTextComponent,
+  InputPasswordComponent,
+  InputFlagComponent,
+  InputEnumComponent,
+  InputEmailComponent,
+  InputCurrencyComponent,
+  InputDateComponent,
+  InputDateWithEditComponent,
+  InputFileComponent,
+  InputRadioComponent,
+  InputNipComponent,
+  InputStringsComponent,
+  InputLongTextComponent,
+  InputAddressComponent,
+  InputObjectComponent,
+  InputColorComponent,
+  InputLogoComponent,
+  InputCheckComponent,
+  InputIntsComponent,
+  InputPhoneNumberComponent,
+  InputPhoneNumberPlComponent,
+  InputPeselComponent,
+  InputArrayComponent,
+  InputPdfComponent,
+  InputVideoComponent,
+  InputAttachmentComponent,
+  InputDateRangeComponent,
+  InputImageComponent,
+  InputFloatComponent
+];
 
 export const LIST_COMPONENTS = [
   ListComponent,
@@ -93,13 +183,18 @@ export const LOADER_COMPONENTS = [LoaderComponent];
 export const PAGE_COMPONENTS = [PageStandardComponent, PageComponent];
 
 export const INFO_COMPONENTS = [InfoComponent, InfoModalComponent];
-
+export const DATE_RANGE_COMPONENTS = [DateRangeComponent, DateRangeModalComponent];
+export const DATE_EDIT_COMPONENTS = [DateEditComponent];
 
 export const DYNAMIC_COMPONENTS = [DynamicComponent];
 
 export const COMPONENTS = [
   ...FORM_COMPONENTS,
+  ...INPUT_COMPONENTS,
   ...PAGE_COMPONENTS,
+  ...ACCORDION_COMPONENTS,
+  ...DATE_RANGE_COMPONENTS,
+  ...DATE_EDIT_COMPONENTS,
   ...BUTTON_COMPONENTS,
   ...CARD_COMPONENTS,
   ...LIST_COMPONENTS,
@@ -109,7 +204,8 @@ export const COMPONENTS = [
   ...DYNAMIC_COMPONENTS,
   ...INFO_COMPONENTS,
   ExportComponent,
-  ImportComponent
+  ImportComponent,
+  PasswordStrengthComponent,
 ];
 
 export const IMPORTS = [

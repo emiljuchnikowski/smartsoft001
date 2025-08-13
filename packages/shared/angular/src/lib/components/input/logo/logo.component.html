@@ -1,0 +1,39 @@
+@if (control) {
+    <ion-label>
+        {{ control?.parent?.value | smartModelLabel : internalOptions.fieldKey : internalOptions?.model?.constructor | async }}
+        <ion-text color="danger">
+          @if (required) {
+            <span>*</span>
+          }
+        </ion-text>
+    </ion-label>
+
+    <ion-row>
+        <ion-col size="auto">
+            <ion-card>
+              @if (control?.value) {
+                <ion-img style="padding: 10px; width: 150px; height: 150px;" [src]="control?.value" (click)="set(inputFile)">
+                    ></ion-img>
+              }
+            </ion-card>
+        </ion-col>
+
+      @if (!control?.value) {
+        <ion-col size="auto">
+            <ion-button (click)="set(inputFile)">
+                <ion-icon name="image-outline"></ion-icon>
+            </ion-button>
+        </ion-col>
+      }
+
+      @if (control?.value) {
+        <ion-col size="auto">
+            <ion-button color="danger" (click)="clear()">
+                <ion-icon name="close-outline"></ion-icon>
+            </ion-button>
+        </ion-col>
+      }
+    </ion-row>
+}
+
+<input [hidden]="true" #inputFile accept="image/jpeg" type="file">

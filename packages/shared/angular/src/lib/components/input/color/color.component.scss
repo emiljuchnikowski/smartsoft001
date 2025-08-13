@@ -1,0 +1,20 @@
+@import "styles/smart-styles.scss";
+:host {
+    ion-label {
+        --color: var(--smart-color-medium);
+        &.ios {
+            --color: var(--smart-color-medium);
+            margin-top: .6rem !important;
+        }
+    }
+    .smart-color {
+        ion-card {
+            height: var(--smart-button-height);
+            margin: 0;
+        }
+        ion-card-header {
+            height: var(--smart-button-height);
+            margin: 0;
+        }
+    }
+}

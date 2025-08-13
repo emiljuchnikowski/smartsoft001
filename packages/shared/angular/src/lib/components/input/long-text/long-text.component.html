@@ -1,0 +1,18 @@
+@if (control) {
+  <ion-label>
+      {{ control?.parent?.value | smartModelLabel : internalOptions.fieldKey : internalOptions?.model?.constructor | async }}
+      <ion-text color="danger">
+        @if (required) {
+          <span>*</span>
+        }
+      </ion-text>
+  </ion-label>
+  <br/>
+  @if (editor) {
+    <div class="NgxEditor__Wrapper" style="min-height: 220px">
+        <ngx-editor-menu [editor]="editor" [toolbar]="toolbar"> </ngx-editor-menu>
+        <ngx-editor [outputFormat]="'html'" [editor]="editor" [formControl]="control" [placeholder]="placeholder"> </ngx-editor>
+    </div>
+  }
+  <br/>
+}

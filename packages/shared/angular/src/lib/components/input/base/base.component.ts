@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Input, Directive, Signal, signal } from '@angular/core';
+import { ChangeDetectorRef, Input, Directive, Signal } from '@angular/core';
 import {AbstractControl} from "@angular/forms";
 
 import {  IFieldOptions } from "@smartsoft001/models";
@@ -12,16 +12,18 @@ export abstract class InputBaseComponent<T> extends BaseComponent {
   control!: AbstractControl;
   required!: boolean;
 
-  possibilities!: Signal<{ id: any, text: string }[] | null>;
+  possibilities!: Signal<Array<{ id: any, text: string }> | null>;
 
-  @Input() fieldOptions!: IFieldOptions;
+  @Input() fieldOptions: IFieldOptions | undefined;
   @Input() set options(val: InputOptions<T>) {
     if (!val) return;
 
     this.internalOptions = val;
     this.control = this.internalOptions.control;
 
-    this.possibilities = val?.possibilities ?? signal(null);
+    if (val?.possibilities) {
+      this.possibilities = val.possibilities;
+    }
 
     this.setRequired();
 

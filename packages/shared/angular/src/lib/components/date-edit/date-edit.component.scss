@@ -1,0 +1,16 @@
+ion-grid {
+    max-width: 400px;
+    padding: 0;
+    margin: 0;
+}
+
+.cell {
+    background-color: #ededed;
+    ion-input {
+        margin-left: 1.2rem;
+    }
+}
+
+.invalid {
+    color: var(--smart-color-danger) !important;
+}

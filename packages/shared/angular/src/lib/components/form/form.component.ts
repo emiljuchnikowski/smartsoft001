@@ -1,5 +1,4 @@
 import {
-  AfterContentInit,
   ChangeDetectionStrategy, ChangeDetectorRef,
   Component, ComponentFactoryResolver, ElementRef,
   EventEmitter, Inject,
@@ -9,69 +8,90 @@ import {
 } from "@angular/core";
 import {Subscription} from "rxjs";
 import {filter} from "rxjs/operators";
+import { ReactiveFormsModule } from '@angular/forms';
 
 import {getModelFieldsWithOptions, getModelOptions} from "@smartsoft001/models";
 import {ObjectService} from "@smartsoft001/utils";
 
-import { IFormOptions } from "../../models/interfaces";
-import {FormFactory} from "../../factories/form/form.factory";
-import {IModelExportProvider, MODEL_EXPORT_PROVIDER} from "../../providers/model-export.provider";
-import {IModelImportProvider, MODEL_IMPORT_PROVIDER} from "../../providers/model-import.provider";
-import {SmartFormGroup} from "../../services/form/form.group";
+import { IFormOptions } from '../../models';
+import {FormFactory} from '../../factories';
+import {IModelExportProvider, MODEL_EXPORT_PROVIDER} from '../../providers';
+import {IModelImportProvider, MODEL_IMPORT_PROVIDER} from '../../providers';
+import {SmartFormGroup} from '../../services';
 import {FormBaseComponent} from "./base/base.component";
-import {CreateDynamicComponent} from "../base/base.component";
-import {DynamicContentDirective} from "../../directives/dynamic-content/dynamic-content.directive";
+import {CreateDynamicComponent} from '../base';
+import {DynamicContentDirective} from '../../directives';
+import { ExportComponent } from '../export';
+import { ImportComponent } from '../import';
+import { FormStepperComponent } from './stepper/stepper.component';
+import { FormStandardComponent } from './standard/standard.component';
 
 @Component({
-  selector: "smart-form",
+  selector: 'smart-form',
   template: `
-    <div *ngIf="export || import" style="text-align: right">
-      <smart-export *ngIf="export"
-                    [value]="options?.control?.value"
-                    [handler]="exportHandler"
-      ></smart-export>
-      <smart-import *ngIf="import"
-                    (set)="onSetValue($event)"
-                    [accept]="importAccept"
-      ></smart-import>
-    </div>
-      <form *ngIf="form" [formGroup]="form" (ngSubmit)="invokeSubmit.emit(form.value)" (keyup.enter)="invokeSubmit.emit(form.value)">
-        <ng-container *ngIf="template === 'default'">
-          <smart-form-standard
-              *ngIf="options && type === 'standard'"
+    @if (export || import) {
+      <div style="text-align: right">
+        @if (export) {
+          <smart-export [value]="options?.control?.value"
+                        [handler]="exportHandler"
+          ></smart-export>
+        }
+        @if (import) {
+          <smart-import (set)="onSetValue($event)"
+                        [accept]="importAccept"
+          ></smart-import>
+        }
+      </div>
+    }
+    @if (form) {
+      <form [formGroup]="form" (ngSubmit)="invokeSubmit.emit(form.value)"
+            (keyup.enter)="invokeSubmit.emit(form.value)">
+        @if (template() === 'default') {
+          @if (options && type === 'standard') {
+            <smart-form-standard
               [options]="options"
               [form]="form"
               (invokeSubmit)="invokeSubmit.emit($event)"
-          ></smart-form-standard>
+            ></smart-form-standard>
+          }
 
-          <smart-form-stepper
-              *ngIf="options && type === 'stepper'"
+          @if (options && type === 'stepper') {
+            <smart-form-stepper
               [options]="options"
               [form]="form"
               (invokeSubmit)="invokeSubmit.emit($event)"
-          ></smart-form-stepper>
-        </ng-container>
-        
+            ></smart-form-stepper>
+          }
+        }
+
         <div class="dynamic-content"></div>
       </form>
+    }
   `,
+  imports: [
+    ExportComponent,
+    ImportComponent,
+    ReactiveFormsModule,
+    FormStepperComponent,
+    FormStandardComponent
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormComponent<T> extends CreateDynamicComponent<FormBaseComponent<any>>("form") implements OnDestroy {
-  private _options: IFormOptions<T>;
+  private _options!: IFormOptions<T>;
   private _subscription = new Subscription();
-  private _mode: "create" | "update" | string;
-  private _uniqueProvider: (values: Record<keyof T, any>) => Promise<boolean>;
+  private _mode!: "create" | "update" | string;
+  private _uniqueProvider!: (values: Record<keyof T, any>) => Promise<boolean>;
 
-  form: SmartFormGroup;
-  type: "standard" | "stepper" | "custom";
-  export: boolean;
-  exportHandler: (val) => void;
-  import: boolean;
-  importAccept: string;
+  form!: SmartFormGroup;
+  type!: "standard" | "stepper" | "custom";
+  export!: boolean;
+  exportHandler!: (val: any) => void;
+  import!: boolean;
+  importAccept!: string;
 
   @ViewChild("customTpl", { read: ViewContainerRef, static: false })
-  customTpl: ViewContainerRef;
+  customTpl!: ViewContainerRef;
 
   @Input() set options(val: IFormOptions<T>) {
     if (!val) return;
@@ -86,8 +106,10 @@ export class FormComponent<T> extends CreateDynamicComponent<FormBaseComponent<a
 
     this.initExportImport();
 
-    this._mode = val.mode;
-    this._uniqueProvider = val.uniqueProvider;
+    this._mode = val?.mode ?? "create";
+    if (val?.uniqueProvider) {
+      this._uniqueProvider = val.uniqueProvider;
+    }
 
     if (val.control) {
       this.form = val.control as SmartFormGroup;
@@ -96,7 +118,7 @@ export class FormComponent<T> extends CreateDynamicComponent<FormBaseComponent<a
     } else {
       this.formFactory.create(this._options.model, {
         mode: this._mode,
-        uniqueProvider: this._uniqueProvider
+        uniqueProvider: this._uniqueProvider as (values: Record<string, any>) => Promise<boolean>
       })
           .then(res => {
             this.form = res;
@@ -120,10 +142,10 @@ export class FormComponent<T> extends CreateDynamicComponent<FormBaseComponent<a
   @Output() validChange = new EventEmitter<boolean>();
 
   @ViewChild("contentTpl", { read: TemplateRef, static: false })
-  contentTpl: TemplateRef<any>;
+  override contentTpl!: TemplateRef<any>;
 
   @ViewChildren(DynamicContentDirective, { read: DynamicContentDirective })
-  dynamicContents = new QueryList<DynamicContentDirective>();
+  override dynamicContents = new QueryList<DynamicContentDirective>();
 
   constructor(
       private formFactory: FormFactory,
@@ -148,7 +170,7 @@ export class FormComponent<T> extends CreateDynamicComponent<FormBaseComponent<a
 
     this.formFactory.create(this._options.model, {
       mode: this._mode,
-      uniqueProvider: this._uniqueProvider
+      uniqueProvider: this._uniqueProvider as (values: Record<string, any>) => Promise<boolean>
     })
         .then(res => {
           this.form.setForm(res);
@@ -157,13 +179,14 @@ export class FormComponent<T> extends CreateDynamicComponent<FormBaseComponent<a
         });
   }
 
-  refreshProperties(): void {
+  override refreshProperties(): void {
     this.baseInstance.options = this.options;
     this.baseInstance.form = this.form;
     this._subscription.add(this.baseInstance.invokeSubmit.subscribe(e => this.invokeSubmit.emit(e)));
   }
 
-  ngOnDestroy(): void {
+  override ngOnDestroy(): void {
+    super.ngOnDestroy();
     if (this._subscription){
       this._subscription.unsubscribe();
     }
@@ -191,8 +214,8 @@ export class FormComponent<T> extends CreateDynamicComponent<FormBaseComponent<a
       const partialModel = {} as Partial<T>;
       Object.keys(this.form.controls)
           .filter(key => !key.endsWith('Confirm') && this.form.controls[key].dirty)
-          .forEach(key => {
-            partialModel[key] = this.form.controls[key].value;
+          .forEach((key: string) => {
+            (partialModel as any)[key] = this.form.controls[key].value;
           });
 
       this.valuePartialChange.emit(partialModel);
@@ -222,8 +245,8 @@ export class FormComponent<T> extends CreateDynamicComponent<FormBaseComponent<a
       console.error("importProvider is not provided");
     }
 
-    this.export = modelOptions.export && !!this.exportProvider;
-    this.import = modelOptions.import && !!this.importProvider;
+    this.export = (modelOptions?.export ?? false) && !!this.exportProvider;
+    this.import = (modelOptions?.import ?? false) && !!this.importProvider;
 
     if (this.import) {
       this.importAccept = await this.importProvider.getAccept(this._options.model.constructor as Type<any>);

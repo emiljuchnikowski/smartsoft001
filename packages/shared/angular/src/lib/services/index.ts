@@ -14,4 +14,5 @@ export * from './menu/menu.service';
 export * from './modal/modal.service';
 export * from './alert/alert.service';
 export * from './popover/popover.service';
+export * from './ui/ui.service';
 

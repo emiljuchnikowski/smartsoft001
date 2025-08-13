@@ -1,15 +1,11 @@
 import {NgModule} from "@angular/core";
 import {RouterModule} from "@angular/router";
-import {Store, StoreModule} from "@ngrx/store";
 import {FormsModule} from "@angular/forms";
 import {CommonModule} from "@angular/common";
 
-import {NgrxStoreService, SharedModule} from "@smartsoft001/angular";
+import {SharedModule} from "@smartsoft001/angular";
 import {IEntity} from "@smartsoft001/domain-core";
 
-import {CrudConfig} from "./crud.config";
-import {CrudEffects} from "./+state/crud.effects";
-import {getReducer} from "./+state/crud.reducer";
 import {ListComponent} from './pages';
 import {ItemComponent} from './pages';
 import {CrudPipesModule} from './pipes';
@@ -30,11 +26,8 @@ export const PAGES = [
 ];
 
 @NgModule({
-    declarations: [
-        ...PAGES
-    ],
     imports: [
-        StoreModule,
+        ...PAGES,
         SharedModule,
         CrudPipesModule,
         RouterModule.forChild([
@@ -54,19 +47,8 @@ export const PAGES = [
         CrudService,
         CrudListGroupService,
         PageService,
-        CrudEffects,
         CrudFacade,
         CrudListPaginationFactory,
     ]
 })
-export class CrudFullModule<T extends IEntity<string>> {
-    constructor(store: Store<any>, config: CrudConfig<T>, effects: CrudEffects<any>) {
-        NgrxStoreService.addReducer(
-            config.entity,
-            config.reducerFactory
-                ? config.reducerFactory()
-                : getReducer(config.entity)
-        );
-        effects.init();
-    }
-}
+export class CrudFullModule<T extends IEntity<string>> {}

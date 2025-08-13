@@ -1,0 +1,61 @@
+@if (control) {
+  <ion-label position="static">
+      {{ control?.parent?.value | smartModelLabel : internalOptions.fieldKey : internalOptions?.model?.constructor | async }}
+      <ion-text color="danger">
+        @if (required) {
+          <span>*</span>
+        }
+      </ion-text>
+  </ion-label>
+  <ion-list class="array"
+            cdkDropList
+            [cdkDropListDisabled]="fieldOptions?.possibilities?.static"
+            (cdkDropListDropped)="drop($event)"
+  >
+    @for (options of childOptions; track options) {
+      @let index = $index;
+      <ion-item class="array-box" lines="none" cdkDrag>
+        @if (!(fieldOptions?.possibilities?.static)) {
+          <ion-card>
+            <smart-accordion [(show)]="!!options.show" >
+              <smart-accordion-header>
+                <ion-card-header>
+                  <ion-item lines="none">
+                    @if (!options.show && options.control?.value[options.modelOptions.titleKey!]) {
+                      <ion-label>
+                        {{ options?.control?.value[options.modelOptions.titleKey!] | translate }}
+                      </ion-label>
+                    }
+                    <ion-button (click)="onRemove(index)" size="small" fill="outline" slot="end">
+                      <ion-icon name="close-outline"></ion-icon>
+                    </ion-button>
+                  </ion-item>
+                </ion-card-header>
+              </smart-accordion-header>
+              <smart-accordion-body>
+                <ion-card-content>
+                  <ng-template [ngComponentOutlet]="formComponent"
+                               [ndcDynamicInputs]="{ options: options }"
+                  ></ng-template>
+                </ion-card-content>
+              </smart-accordion-body>
+            </smart-accordion>
+          </ion-card>
+        } @else {
+          <ion-card>
+            <ion-card-content>
+              <ng-template [ngComponentOutlet]="formComponent"
+                           [ndcDynamicInputs]="{ options: options }"
+              ></ng-template>
+            </ion-card-content>
+          </ion-card>
+        }
+      </ion-item>
+    }
+  </ion-list>
+  @if (!(fieldOptions?.possibilities?.static)) {
+    <smart-button [options]="addButtonOptions" class="add">
+      <span style="font-weight: 300">{{ control?.parent?.value | smartModelLabel : internalOptions.fieldKey : internalOptions?.model?.constructor | async }} > &nbsp;</span><b>{{ 'add' | translate }}</b>
+    </smart-button>
+  }
+}

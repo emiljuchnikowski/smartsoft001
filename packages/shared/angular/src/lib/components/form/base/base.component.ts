@@ -13,24 +13,24 @@ import {Observable, Subscription} from "rxjs";
 import {delay} from "rxjs/operators";
 
 import {DynamicComponentType, IFormOptions} from "../../../models";
-import {InputBaseComponent} from "../../input/base/base.component";
-import {BaseComponent} from "../../base/base.component";
+import {InputBaseComponent} from '../../input';
+import {BaseComponent} from '../../base';
 
 @Directive()
 export abstract class FormBaseComponent<T> extends BaseComponent {
   static smartType: DynamicComponentType = "form";
 
-  private _fields: Array<string>;
-  private _subscription: Subscription;
+  private _fields!: Array<string>;
+  private _subscription!: Subscription;
   private _model: any;
-  private _form: UntypedFormGroup;
-  private _possibilities: {
+  private _form!: UntypedFormGroup;
+  private _possibilities!: {
     [key: string]: Observable<{ id: any, text: string }[]>;
   };
-  private _inputComponents: { [key: string]: Type<InputBaseComponent<T>>; };
+  private _inputComponents!: { [key: string]: Type<InputBaseComponent<T>>; };
 
-  mode: string;
-  treeLevel: number;
+  mode!: string;
+  treeLevel!: number | undefined;
 
   get fields(): Array<string> {
     return this._fields;
@@ -74,7 +74,7 @@ export abstract class FormBaseComponent<T> extends BaseComponent {
 
   @Input() set options(obj: IFormOptions<T>) {
       this._model = obj.model;
-      this.mode = obj.mode;
+      this.mode = obj?.mode ?? '';
       this._possibilities = obj.possibilities ? obj.possibilities : {};
       this._inputComponents = obj.inputComponents ? obj.inputComponents : {};
 
@@ -86,7 +86,7 @@ export abstract class FormBaseComponent<T> extends BaseComponent {
   @Output() invokeSubmit = new EventEmitter();
 
   @ViewChild("contentTpl", { read: ViewContainerRef, static: true })
-  contentTpl: ViewContainerRef;
+  contentTpl!: ViewContainerRef;
 
   constructor(protected cd: ChangeDetectorRef) {
     super();

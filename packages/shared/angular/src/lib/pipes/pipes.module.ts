@@ -4,12 +4,14 @@ import {ModelLabelPipe} from "./model-label/model-label.pipe";
 import { ListCellPipe } from './list-cell/list-cell.pipe';
 import { TrustHtmlPipe } from './trust-html/trust-html.pipe';
 import { ListHeaderPipe } from './list-header/list-header.pipe';
+import { EnumToListPipe } from './enum-to-list/enum-to-list.pipe';
 
 export const PIPES = [
     ModelLabelPipe,
     ListCellPipe,
     TrustHtmlPipe,
-    ListHeaderPipe
+    ListHeaderPipe,
+    EnumToListPipe
 ];
 
 @NgModule({

@@ -1,0 +1,14 @@
+@if (control) {
+    <ion-label position="floating">
+        {{ control?.parent?.value | smartModelLabel : internalOptions.fieldKey : internalOptions?.model?.constructor | async }}
+        <ion-text color="danger">
+          @if (required) {
+            <span>*</span>
+          }
+        </ion-text>
+    </ion-label>
+    <br/>
+    <ng-template [ngComponentOutlet]="formComponent"
+                 [ndcDynamicInputs]="{ options: childOptions }"
+    ></ng-template>
+}

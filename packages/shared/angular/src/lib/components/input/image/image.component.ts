@@ -1,0 +1,61 @@
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef,
+    Component,
+    OnInit, Renderer2,
+} from '@angular/core';
+import {debounceTime} from "rxjs/operators";
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { IonImg, IonLabel, IonProgressBar, IonText } from '@ionic/angular/standalone';
+import { AsyncPipe } from '@angular/common';
+
+import {InputFileBaseComponent} from "../base/file.component";
+import {FileService} from '../../../services';
+import {ToastService} from '../../../services';
+import { ModelLabelPipe } from '../../../pipes';
+import { ButtonComponent } from '../../button';
+
+@Component({
+    selector: 'smart-input-image',
+    templateUrl: './image.component.html',
+    styleUrls: ['./image.component.scss'],
+    imports: [
+        IonLabel,
+        ModelLabelPipe,
+        AsyncPipe,
+        IonText,
+        ButtonComponent,
+        IonProgressBar,
+        IonImg,
+        TranslatePipe
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class InputImageComponent<T> extends InputFileBaseComponent<T> implements OnInit {
+    imageUrl: any;
+
+    constructor(
+        cd: ChangeDetectorRef,
+        renderer: Renderer2,
+        fileService: FileService,
+        toastService: ToastService,
+        translateService: TranslateService
+    ) {
+        super(cd, renderer, fileService, toastService, translateService);
+    }
+
+    override ngOnInit() {
+        super.ngOnInit();
+
+        this.control.valueChanges.pipe(
+            debounceTime(1000),
+            this.takeUntilDestroy
+        ).subscribe(() => this.initImage());
+
+        this.initImage();
+    }
+
+    private initImage(): void {
+        this.imageUrl = this.control.value ? this.fileService.getUrl(this.control.value.id) : null;
+        this.cd.detectChanges();
+    }
+}

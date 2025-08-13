@@ -7,7 +7,7 @@ import {
   IonCardTitle,
   IonIcon
 } from '@ionic/angular/standalone';
-import { Component, input, Input, InputSignal, OnInit } from '@angular/core';
+import { Component, input, InputSignal } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 
 import {ICardOptions} from "../../models";
@@ -51,13 +51,6 @@ import {ICardOptions} from "../../models";
   ],
   styleUrls: ['./card.component.scss']
 })
-export class CardComponent implements OnInit {
-
+export class CardComponent{
   readonly options: InputSignal<ICardOptions | undefined> = input<ICardOptions>();
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
 }
