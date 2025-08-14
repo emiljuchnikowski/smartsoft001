@@ -15,7 +15,7 @@ import {BehaviorSubject} from "rxjs";
   providedIn: "root",
 })
 export class MenuService {
-  private _endContainer: ViewContainerRef;
+  private _endContainer!: ViewContainerRef;
   private _openedEnd = false;
   private _menuItemsSource = new BehaviorSubject<IMenuItem[]>([]);
   private _disableSource = new BehaviorSubject<boolean>(false);

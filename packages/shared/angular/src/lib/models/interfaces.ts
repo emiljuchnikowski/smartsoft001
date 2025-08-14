@@ -77,6 +77,16 @@ export interface IDetailsOptions<T extends IEntity<string>> {
   componentFactories?: IDetailsComponentFactories<T>;
 }
 
+export interface IMenuItem {
+  mode?: 'divider' | 'default';
+  route?: string;
+  click?: (arg0: IMenuItem) => void;
+  caption?: string;
+  component?: any;
+  icon?: string;
+  infos?: Array<{ text: string }>;
+}
+
 export interface IButtonOptions {
   type?: "submit" | "button";
   expand?: "block" | "full" | undefined;

@@ -20,7 +20,6 @@ import {
 import { FiltersConfigComponent } from './filters-config/filters-config.component';
 import { FiltersComponent } from './filters/filters.component';
 import { MultiselectComponent } from './multiselect/multiselect.component';
-import { SocketService } from '../services/socket/socket.service';
 import { CrudPipesModule } from '../pipes';
 import { CrudService } from '../services/crud/crud.service';
 import { CrudFacade } from '../+state/crud.facade';
@@ -57,7 +56,6 @@ const COMPONENTS = [
   providers: [
     CrudService,
     CrudFacade,
-    SocketService,
     CrudListPaginationFactory,
   ],
 })

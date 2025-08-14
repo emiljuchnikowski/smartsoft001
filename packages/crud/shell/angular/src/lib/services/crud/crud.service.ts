@@ -7,7 +7,6 @@ import { IEntity } from "@smartsoft001/domain-core";
 
 import { CrudConfig } from "../../crud.config";
 import { ICrudCreateManyOptions, ICrudFilter } from '../../models';
-import { SocketService } from "../socket/socket.service";
 
 @Injectable()
 export class CrudService<T extends IEntity<string>> {
@@ -19,7 +18,6 @@ export class CrudService<T extends IEntity<string>> {
   constructor(
     protected config: CrudConfig<T>,
     protected http: HttpClient,
-    @Optional() protected socket: SocketService<T>
   ) {}
 
   create(item: T): Promise<string> {

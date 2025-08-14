@@ -4,7 +4,6 @@ import {
   ComponentFactoryResolver,
   Injectable,
   Injector,
-  NgModule,
 } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })

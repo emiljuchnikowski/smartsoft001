@@ -28,7 +28,7 @@ export class ToastService {
         side: b.position,
         role: 'cancel',
         handler: b.handler
-      }}) : null
+      }}) : undefined
     });
 
     await toast.present();
@@ -44,7 +44,7 @@ export class ToastService {
         text: b.text,
         side: b.position,
         handler: b.handler
-      }}) : null
+      }}) : undefined
     });
 
     await toast.present();
