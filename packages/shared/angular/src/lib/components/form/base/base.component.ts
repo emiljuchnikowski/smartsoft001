@@ -6,28 +6,28 @@ import {
   Type,
   ChangeDetectorRef,
   ViewChild,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
-import {UntypedFormGroup} from "@angular/forms";
-import {Observable, Subscription} from "rxjs";
-import {delay} from "rxjs/operators";
+import { UntypedFormGroup } from '@angular/forms';
+import { Observable, Subscription } from 'rxjs';
+import { delay } from 'rxjs/operators';
 
-import {DynamicComponentType, IFormOptions} from "../../../models";
-import {InputBaseComponent} from '../../input';
-import {BaseComponent} from '../../base';
+import { DynamicComponentType, IFormOptions } from '../../../models';
+import { BaseComponent } from '../../base';
+import { InputBaseComponent } from '../../input';
 
 @Directive()
 export abstract class FormBaseComponent<T> extends BaseComponent {
-  static smartType: DynamicComponentType = "form";
+  static smartType: DynamicComponentType = 'form';
 
   private _fields!: Array<string>;
   private _subscription!: Subscription;
   private _model: any;
   private _form!: UntypedFormGroup;
   private _possibilities!: {
-    [key: string]: Observable<{ id: any, text: string }[]>;
+    [key: string]: Observable<{ id: any; text: string }[]>;
   };
-  private _inputComponents!: { [key: string]: Type<InputBaseComponent<T>>; };
+  private _inputComponents!: { [key: string]: Type<InputBaseComponent<T>> };
 
   mode!: string;
   treeLevel!: number | undefined;
@@ -37,16 +37,16 @@ export abstract class FormBaseComponent<T> extends BaseComponent {
   }
 
   get model(): any {
-      return this._model;
+    return this._model;
   }
 
   get possibilities(): {
-    [key: string]: Observable<{ id: any, text: string }[]>;
+    [key: string]: Observable<{ id: any; text: string }[]>;
   } {
     return this._possibilities;
   }
 
-  get inputComponents(): { [key: string]: Type<InputBaseComponent<T>>; } {
+  get inputComponents(): { [key: string]: Type<InputBaseComponent<T>> } {
     return this._inputComponents;
   }
 
@@ -60,11 +60,11 @@ export abstract class FormBaseComponent<T> extends BaseComponent {
     this._form = val;
     this._fields = Object.keys(this._form.controls);
 
-    this._subscription.add(this._form.valueChanges.pipe(
-        delay(0)
-    ).subscribe(() => {
-      this.cd.detectChanges();
-    }));
+    this._subscription.add(
+      this._form.valueChanges.pipe(delay(0)).subscribe(() => {
+        this.cd.detectChanges();
+      }),
+    );
 
     this.afterSetForm();
   }
@@ -73,19 +73,19 @@ export abstract class FormBaseComponent<T> extends BaseComponent {
   }
 
   @Input() set options(obj: IFormOptions<T>) {
-      this._model = obj.model;
-      this.mode = obj?.mode ?? '';
-      this._possibilities = obj.possibilities ? obj.possibilities : {};
-      this._inputComponents = obj.inputComponents ? obj.inputComponents : {};
+    this._model = obj.model;
+    this.mode = obj?.mode ?? '';
+    this._possibilities = obj.possibilities ? obj.possibilities : {};
+    this._inputComponents = obj.inputComponents ? obj.inputComponents : {};
 
-      this.treeLevel = obj.treeLevel;
+    this.treeLevel = obj.treeLevel;
 
-      this.afterSetOptions();
+    this.afterSetOptions();
   }
 
   @Output() invokeSubmit = new EventEmitter();
 
-  @ViewChild("contentTpl", { read: ViewContainerRef, static: true })
+  @ViewChild('contentTpl', { read: ViewContainerRef, static: true })
   contentTpl!: ViewContainerRef;
 
   constructor(protected cd: ChangeDetectorRef) {
@@ -96,7 +96,11 @@ export abstract class FormBaseComponent<T> extends BaseComponent {
     this.invokeSubmit.emit(this.form.value);
   }
 
-  protected afterSetOptions(): void { }
+  protected afterSetOptions(){
+    // No base functionality
+  }
 
-  protected afterSetForm(): void { }
+  protected afterSetForm() {
+    // No base functionality
+  }
 }

@@ -1,1 +1,1 @@
-export * from "./paging.component";
+export * from './paging.component';

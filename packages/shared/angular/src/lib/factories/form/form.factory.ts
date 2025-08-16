@@ -1,61 +1,77 @@
-import "reflect-metadata";
-
-import {Inject, Injectable, Optional} from "@angular/core";
-import {AbstractControl, UntypedFormArray, UntypedFormBuilder, Validators,} from "@angular/forms";
-import * as _ from "lodash";
-import {delay, tap} from "rxjs/operators";
-
+import 'reflect-metadata';
+import { Inject, Injectable, Optional } from '@angular/core';
+import {
+  AbstractControl,
+  UntypedFormArray,
+  UntypedFormBuilder,
+  Validators,
+} from '@angular/forms';
 import {
   FieldType,
   getModelFieldsWithOptions,
   IFieldEditMetadata,
   IFieldModifyMetadata,
   IFieldOptions,
-  IFieldUniqueMetadata, ISpecification,
+  IFieldUniqueMetadata,
+  ISpecification,
   SYMBOL_FIELD,
   SYMBOL_MODEL,
-} from "@smartsoft001/models";
-import {PeselService, SPECIFICATION_ROOT_KEY, SpecificationService, ZipCodeService} from "@smartsoft001/utils";
+} from '@smartsoft001/models';
+import {
+  PeselService,
+  SPECIFICATION_ROOT_KEY,
+  SpecificationService,
+  ZipCodeService,
+} from '@smartsoft001/utils';
+import * as _ from 'lodash';
+import { delay, tap } from 'rxjs/operators';
 
-import {AuthService} from "../../services/auth/auth.service";
-import {IModelValidatorsProvider, MODEL_VALIDATORS_PROVIDER} from "../../providers/model-validators.provider";
-import {SmartFormGroup} from "../../services/form/form.group";
-import {DetailsService} from "../../services/details/details.service";
+import {
+  IModelValidatorsProvider,
+  MODEL_VALIDATORS_PROVIDER,
+} from '../../providers';
+import {
+  AuthService,
+  SmartFormGroup,
+  DetailsService,
+} from '../../services';
 
 @Injectable()
 export class FormFactory {
   constructor(
-      private fb: UntypedFormBuilder,
-      private authService: AuthService,
-      private detailsService: DetailsService,
-      @Optional() @Inject(MODEL_VALIDATORS_PROVIDER) private validatorsProvider: IModelValidatorsProvider
+    private fb: UntypedFormBuilder,
+    private authService: AuthService,
+    private detailsService: DetailsService,
+    @Optional()
+    @Inject(MODEL_VALIDATORS_PROVIDER)
+    private validatorsProvider: IModelValidatorsProvider,
   ) {}
 
   static checkModelMeta<T>(obj: T) {
-    if (!obj) throw new Error("You should set object as param");
+    if (!obj) throw new Error('You should set object as param');
 
     if (!Reflect.hasMetadata(SYMBOL_MODEL, obj.constructor))
-      throw new Error("You should mark class with @Model decorator");
+      throw new Error('You should mark class with @Model decorator');
   }
 
   static getOptions<T>(obj: T, key: string): IFieldOptions {
-    return Reflect.getMetadata(SYMBOL_FIELD, obj, key);
+    return Reflect.getMetadata(SYMBOL_FIELD, (obj as object), key);
   }
 
   static getOptionsFromMode(
     options: IFieldOptions,
-    mode?: "create" | "update" | string
+    mode?: 'create' | 'update' | string,
   ): IFieldOptions {
     let result = options;
 
     if (!mode) return result;
 
-    if (mode === "create" && _.isObject(options.create)) {
+    if (mode === 'create' && _.isObject(options.create)) {
       result = {
         ...options,
         ...(options.create as IFieldModifyMetadata),
       };
-    } else if (mode === "update" && _.isObject(options.update)) {
+    } else if (mode === 'update' && _.isObject(options.update)) {
       result = {
         ...options,
         ...(options.update as IFieldModifyMetadata),
@@ -68,10 +84,10 @@ export class FormFactory {
   async create<T>(
     obj: T,
     ops: {
-      mode?: "create" | "update" | "multiUpdate" | string;
+      mode?: 'create' | 'update' | 'multiUpdate' | string;
       uniqueProvider?: (values: Record<string, any>) => Promise<boolean>;
-      root?: AbstractControl
-    } = {}
+      root?: AbstractControl;
+    } = {},
   ): Promise<SmartFormGroup> {
     FormFactory.checkModelMeta(obj);
 
@@ -80,45 +96,59 @@ export class FormFactory {
     const fields = getModelFieldsWithOptions(obj).filter((field) => {
       return (
         !ops.mode ||
-        (ops.mode === "create" && field.options.create) ||
-        (ops.mode === "update" && field.options.update) ||
-        (ops.mode === "multiUpdate" && (field.options?.update as IFieldEditMetadata)?.multi) ||
-        (ops.mode !== "create" &&
-          ops.mode !== "update" &&
+        (ops.mode === 'create' && field.options.create) ||
+        (ops.mode === 'update' && field.options.update) ||
+        (ops.mode === 'multiUpdate' &&
+          (field.options?.update as IFieldEditMetadata)?.multi) ||
+        (ops.mode !== 'create' &&
+          ops.mode !== 'update' &&
           field.options.customs &&
           field.options.customs.some((custom) => custom.mode === ops.mode))
       );
     });
 
-    const enabledDefinitions: Array<{ key: string, control: AbstractControl, enabled: ISpecification }> = [];
+    const enabledDefinitions: Array<{
+      key: string;
+      control: AbstractControl;
+      enabled: ISpecification;
+    }> = [];
 
     for (let index = 0; index < fields.length; index++) {
       const field = fields[index];
-      let control: AbstractControl = null;
+      let control: AbstractControl | null = null;
 
       const options = FormFactory.getOptionsFromMode(field.options, ops.mode);
 
-      if (options.permissions && !this.authService.expectPermissions(options.permissions)) {
+      if (
+        options.permissions &&
+        !this.authService.expectPermissions(options.permissions)
+      ) {
         continue;
       }
 
       if (field.options.type === FieldType.object) {
-        control = await this.create(obj[field.key], {
+        control = await this.create((obj as any)[field.key], {
           ...ops,
-          root: ops.root ? ops.root : result
+          root: ops.root ? ops.root : result,
         });
       } else if (field.options.type === FieldType.array) {
         control = this.fb.array([]);
-        if (obj[field.key]) {
-          for (let indexField = 0; indexField < (obj[field.key] as []).length; indexField ++) {
-            (control as UntypedFormArray).push(await this.create(obj[field.key][indexField], {
-              ...ops,
-              root: ops.root ? ops.root : result
-            }))
+        if ((obj as any)[field.key]) {
+          for (
+            let indexField = 0;
+            indexField < ((obj as any)[field.key] as []).length;
+            indexField++
+          ) {
+            (control as UntypedFormArray).push(
+              await this.create((obj as any)[field.key][indexField], {
+                ...ops,
+                root: ops.root ? ops.root : result,
+              }),
+            );
           }
         }
       } else {
-        control = this.createControl(obj, field, options.required);
+        control = this.createControl(obj, field, options?.required ?? false);
       }
 
       this.setValidators(
@@ -126,28 +156,28 @@ export class FormFactory {
         control,
         options,
         result,
-        ops.uniqueProvider
+        ops.uniqueProvider,
       );
 
       if (this.validatorsProvider) {
         const providerResult = await this.validatorsProvider.get({
           key: field.key,
           instance: obj,
-          type: obj.constructor,
+          type: (obj as any).constructor,
           base: {
-            validators: control.validator,
-            asyncValidators: control.asyncValidator
-          }
+            validators: control?.validator ?? undefined,
+            asyncValidators: control?.asyncValidator ?? undefined,
+          },
         });
 
-        control.setValidators(providerResult.validators);
-        control.setAsyncValidators(providerResult.asyncValidators);
+        control.setValidators(providerResult?.validators ?? null);
+        control.setAsyncValidators(providerResult?.asyncValidators ?? null);
       }
 
       result.addControl(field.key, control);
 
       if (options.confirm && options.type === FieldType.object) {
-        throw Error("Object not supported confirms");
+        throw Error('Object not supported confirms');
       }
 
       if (options.confirm) {
@@ -164,55 +194,67 @@ export class FormFactory {
           },
         ]);
 
-        result.addControl(field.key + "Confirm", confirmControl);
+        result.addControl(field.key + 'Confirm', confirmControl);
       }
 
       if (options.enabled) {
         enabledDefinitions.push({
           key: field.key,
           control,
-          enabled: options.enabled
+          enabled: options.enabled,
         });
       }
     }
 
-    let rootCheck: AbstractControl = null;
+    let rootCheck: AbstractControl | null = null;
     if (
-        enabledDefinitions.some(d =>
-            d?.enabled?.criteria &&
-            Object.keys(d.enabled.criteria).some(k => k.indexOf(SPECIFICATION_ROOT_KEY) === 0)
-        ) && ops.root
+      enabledDefinitions.some(
+        (d) =>
+          d?.enabled?.criteria &&
+          Object.keys(d.enabled.criteria).some(
+            (k) => k.indexOf(SPECIFICATION_ROOT_KEY) === 0,
+          ),
+      ) &&
+      ops.root
     ) {
       rootCheck = ops.root;
     }
 
-    (rootCheck ? rootCheck : result).valueChanges.pipe(
+    (rootCheck ? rootCheck : result).valueChanges
+      .pipe(
         tap(() => {
-          enabledDefinitions.forEach(def => {
+          enabledDefinitions.forEach((def) => {
             const enabled = SpecificationService.valid(
-                {
-                  ...(obj ? obj : {}),
-                  ...result.value
-                }, def.enabled, {
-              $root: rootCheck?.value
-            });
-            def.control['__smartDisabled'] = !enabled;
+              {
+                ...(obj ? obj : {}),
+                ...result.value,
+              },
+              def.enabled,
+              {
+                $root: rootCheck?.value,
+              },
+            );
+            (def.control as any)['__smartDisabled'] = !enabled;
           });
         }),
-        delay(0)
-    ).subscribe(() => {
-      if (rootCheck) this.detailsService.setRoot(rootCheck.value, true);
+        delay(0),
+      )
+      .subscribe(() => {
+        if (rootCheck) this.detailsService.setRoot(rootCheck.value, true);
 
-      enabledDefinitions.forEach(def => {
-        if (!def.control['__smartDisabled'] && !result.controls[def.key]) {
-          result.addControl(def.key, def.control);
-          result.updateValueAndValidity();
-        } else if (def.control['__smartDisabled'] && result.controls[def.key]) {
-          result.removeControl(def.key);
-          result.updateValueAndValidity();
-        }
+        enabledDefinitions.forEach((def) => {
+          if (!(def.control as any)['__smartDisabled'] && !result.controls[def.key]) {
+            result.addControl(def.key, def.control);
+            result.updateValueAndValidity();
+          } else if (
+            (def.control as any)['__smartDisabled'] &&
+            result.controls[def.key]
+          ) {
+            result.removeControl(def.key);
+            result.updateValueAndValidity();
+          }
+        });
       });
-    });
 
     return result;
   }
@@ -222,7 +264,7 @@ export class FormFactory {
     control: AbstractControl,
     options: IFieldOptions,
     form: SmartFormGroup,
-    uniqueProvider: (values: Record<string, any>) => Promise<boolean>
+    uniqueProvider?: (values: Record<string, any>) => Promise<boolean>,
   ): void {
     const result = [];
     const asyncResult = [];
@@ -235,7 +277,9 @@ export class FormFactory {
       result.push((c: AbstractControl) => {
         if (!c.value) return;
 
-        const reg = new RegExp("^([a-zA-Z0-9_\\.\\-])+\\@(([a-zA-Z0-9\\-])+\\.)+([a-zA-Z0-9]{2,4})+$");
+        const reg = new RegExp(
+          '^([a-zA-Z0-9_\\.\\-])+\\@(([a-zA-Z0-9\\-])+\\.)+([a-zA-Z0-9]{2,4})+$',
+        );
         if (reg.test(c.value)) return null;
 
         return { email: true };
@@ -246,7 +290,7 @@ export class FormFactory {
       result.push((c: AbstractControl) => {
         if (!c.value) return;
 
-        const reg = new RegExp("^((\\+91-?)|0)?[0-9]{9}$");
+        const reg = new RegExp('^((\\+91-?)|0)?[0-9]{9}$');
         if (reg.test(c.value)) return null;
 
         return { phoneNumber: true };
@@ -282,35 +326,38 @@ export class FormFactory {
     if (options.unique && uniqueProvider) {
       asyncResult.push(async (c: AbstractControl) => {
         const record: Record<string, any> = {
-          [key]: options.type === FieldType.int ? c.value : `'${ c.value }'`
+          [key]: options.type === FieldType.int ? c.value : `'${c.value}'`,
         };
 
-        if (form.value && (options.unique as IFieldUniqueMetadata).withFields) {
-          (options.unique as IFieldUniqueMetadata).withFields.forEach(fieldKey => {
-            record[fieldKey] = form.value[fieldKey];
-          });
+        const withFields = (options.unique as IFieldUniqueMetadata)?.withFields;
+        if (form.value && withFields) {
+          withFields.forEach(
+            (fieldKey) => {
+              record[fieldKey] = form.value[fieldKey];
+            },
+          );
         }
 
         if (await uniqueProvider(record)) return null;
 
         return {
-          invalidUnique: true
-        }
+          invalidUnique: true,
+        };
       });
     }
 
-    control.setValidators(result);
+    control.setValidators(result as any);
     control.setAsyncValidators(asyncResult);
   }
 
   private createControl<T>(
     obj: T,
     field: { key: string; options: IFieldOptions },
-    required: boolean
+    required: boolean,
   ) {
     let result: AbstractControl;
 
-    const zipCodeValidator = (c) => {
+    const zipCodeValidator = (c: any) => {
       if (c.value && ZipCodeService.isInvalid(c.value)) {
         return {
           invalidZipCode: true,
@@ -323,12 +370,12 @@ export class FormFactory {
     switch (field.options.type) {
       case FieldType.address:
         result = this.fb.group({
-          city: ["", required ? [Validators.required] : null],
-          street: ["", required ? [Validators.required] : null],
-          buildingNumber: ["", required ? [Validators.required] : null],
-          flatNumber: [""],
+          city: ['', required ? [Validators.required] : null],
+          street: ['', required ? [Validators.required] : null],
+          buildingNumber: ['', required ? [Validators.required] : null],
+          flatNumber: [''],
           zipCode: [
-            "",
+            '',
             required
               ? [Validators.required, zipCodeValidator]
               : [zipCodeValidator],
@@ -340,11 +387,11 @@ export class FormFactory {
         break;
     }
 
-    const value = obj[field.key]
-      ? obj[field.key]
+    const value = (obj as any)[field.key]
+      ? (obj as any)[field.key]
       : field.options.defaltValue
-      ? field.options.defaltValue()
-      : null;
+        ? field.options.defaltValue()
+        : null;
 
     if (value) result.setValue(value);
 

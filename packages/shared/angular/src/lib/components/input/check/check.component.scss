@@ -1,16 +1,15 @@
-@import "styles/smart-styles.scss";
+@import 'styles/smart-styles.scss';
 .label {
-    --color: var(--smart-color-medium);
+  --color: var(--smart-color-medium);
 }
 
 :host {
-    ion-card & {
-        padding-left: 0 !important;
-        padding-right: 0 !important;
-    }
+  ion-card & {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
 
-    ion-select {
-        width: 100%;
-
-    }
+  ion-select {
+    width: 100%;
+  }
 }

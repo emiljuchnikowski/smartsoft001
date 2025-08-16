@@ -1,13 +1,12 @@
-import {ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
-import {Subscription} from "rxjs";
-
-import {InputBaseComponent} from "../base/base.component";
 import { AsyncPipe } from '@angular/common';
-import { IonCol, IonLabel, IonRow, IonText } from '@ionic/angular/standalone';
+import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { IonCol, IonLabel, IonRow, IonText } from '@ionic/angular/standalone';
+import { Subscription } from 'rxjs';
 
 import { ModelLabelPipe } from '../../../pipes';
 import { DateEditComponent } from '../../date-edit';
+import { InputBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-input-date-with-edit',
@@ -20,11 +19,14 @@ import { DateEditComponent } from '../../date-edit';
     IonLabel,
     IonText,
     ReactiveFormsModule,
-    DateEditComponent
+    DateEditComponent,
   ],
-  styleUrls: ['./date-with-edit.component.scss']
+  styleUrls: ['./date-with-edit.component.scss'],
 })
-export class InputDateWithEditComponent<T> extends InputBaseComponent<T> implements OnDestroy {
+export class InputDateWithEditComponent<T>
+  extends InputBaseComponent<T>
+  implements OnDestroy
+{
   private _subscriptions = new Subscription();
 
   constructor(cd: ChangeDetectorRef) {

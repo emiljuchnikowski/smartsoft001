@@ -13,17 +13,27 @@
 
   @if (config?.list?.components?.multi) {
     <div>
-      <ng-template [ngComponentOutlet]="config?.list?.components?.multi"
-                   [ndcDynamicInputs]="{ items: list }"
+      <ng-template
+        [ngComponentOutlet]="config?.list?.components?.multi"
+        [ndcDynamicInputs]="{ items: list }"
       ></ng-template>
     </div>
   }
 
   @if (showForm && item) {
     <div>
-      <smart-form [options]="item | smartFormOptions : 'multiUpdate' : config.type" (valuePartialChange)="onPartialChange($event, list)" (validChange)="onValidChange($event)"></smart-form>
+      <smart-form
+        [options]="item | smartFormOptions: 'multiUpdate' : config.type"
+        (valuePartialChange)="onPartialChange($event, list)"
+        (validChange)="onValidChange($event)"
+      ></smart-form>
 
-      <smart-button style="float: right" [disabled]="lock || !valid" [options]="buttonOptions">{{ 'change' | translate }}</smart-button>
+      <smart-button
+        style="float: right"
+        [disabled]="lock || !valid"
+        [options]="buttonOptions"
+        >{{ 'change' | translate }}</smart-button
+      >
     </div>
   }
 }

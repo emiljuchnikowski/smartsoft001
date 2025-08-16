@@ -1,9 +1,18 @@
 import { AsyncPipe } from '@angular/common';
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import { IonButton, IonCard, IonCol, IonIcon, IonImg, IonLabel, IonRow, IonText } from '@ionic/angular/standalone';
+import { ChangeDetectorRef, Component } from '@angular/core';
+import {
+  IonButton,
+  IonCard,
+  IonCol,
+  IonIcon,
+  IonImg,
+  IonLabel,
+  IonRow,
+  IonText,
+} from '@ionic/angular/standalone';
 
-import {InputBaseComponent} from "../base/base.component";
 import { ModelLabelPipe } from '../../../pipes';
+import { InputBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-input-logo',
@@ -19,8 +28,8 @@ import { ModelLabelPipe } from '../../../pipes';
     IonButton,
     IonIcon,
     ModelLabelPipe,
-    AsyncPipe
-  ]
+    AsyncPipe,
+  ],
 })
 export class InputLogoComponent<T> extends InputBaseComponent<T> {
   constructor(cd: ChangeDetectorRef) {
@@ -55,7 +64,7 @@ export class InputLogoComponent<T> extends InputBaseComponent<T> {
       reader.readAsBinaryString(inputFile.files[0]);
       inputFile.onchange = null;
       inputFile.files = null;
-    }
+    };
   }
 
   clear() {

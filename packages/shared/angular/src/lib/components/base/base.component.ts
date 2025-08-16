@@ -1,18 +1,22 @@
-import { MonoTypeOperatorFunction, Subject } from "rxjs";
 import {
   ChangeDetectorRef,
   ComponentFactoryResolver,
-  Directive, DoCheck,
+  Directive,
+  DoCheck,
   NgModuleRef,
-  OnDestroy, QueryList, signal,
+  OnDestroy,
+  QueryList,
+  signal,
   TemplateRef,
-  ViewContainerRef, WritableSignal
+  ViewContainerRef,
+  WritableSignal,
 } from '@angular/core';
-import { takeUntil } from "rxjs/operators";
+import { MonoTypeOperatorFunction, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
-import { DynamicComponentType } from "../../models";
+import { DynamicContentDirective } from '../../directives';
+import { DynamicComponentType } from '../../models';
 import { DynamicComponentStorageService } from '../../services';
-import {DynamicContentDirective} from "../../directives";
 
 @Directive()
 export abstract class BaseComponent implements OnDestroy {
@@ -30,7 +34,7 @@ export abstract class BaseComponent implements OnDestroy {
 
 export interface IDynamicComponent<T> extends BaseComponent {
   baseInstance: T;
-  template: WritableSignal<"custom" | "default">;
+  template: WritableSignal<'custom' | 'default'>;
 
   contentTpl: TemplateRef<any> | ViewContainerRef | null;
   dynamicContents: QueryList<DynamicContentDirective>;
@@ -40,13 +44,13 @@ export interface IDynamicComponent<T> extends BaseComponent {
 }
 
 export function CreateDynamicComponent<
-  T extends { contentTpl: TemplateRef<any> | ViewContainerRef | null } = any
+  T extends { contentTpl: TemplateRef<any> | ViewContainerRef | null } = any,
 >(
-  type: DynamicComponentType
+  type: DynamicComponentType,
 ): new (
   cd: ChangeDetectorRef,
   moduleRef: NgModuleRef<any>,
-  componentFactoryResolver: ComponentFactoryResolver
+  componentFactoryResolver: ComponentFactoryResolver,
 ) => IDynamicComponent<T> {
   @Directive()
   abstract class Component extends BaseComponent implements DoCheck {
@@ -64,7 +68,7 @@ export function CreateDynamicComponent<
     protected constructor(
       private cd: ChangeDetectorRef,
       private moduleRef: NgModuleRef<any>,
-      private componentFactoryResolver: ComponentFactoryResolver
+      private componentFactoryResolver: ComponentFactoryResolver,
     ) {
       super();
     }
@@ -83,9 +87,7 @@ export function CreateDynamicComponent<
 
       this._findDynamicContent = true;
 
-      this.dynamicContents.changes.pipe(
-          this.takeUntilDestroy
-      ).subscribe(() => {
+      this.dynamicContents.changes.pipe(this.takeUntilDestroy).subscribe(() => {
         this.init();
       });
       this.init();
@@ -93,17 +95,20 @@ export function CreateDynamicComponent<
 
     private init(): void {
       const component = DynamicComponentStorageService.get(
-          this.dynamicType,
-          this.moduleRef
+        this.dynamicType,
+        this.moduleRef,
       )[0];
-      this.template.set(component ? "custom" : "default");
+      this.template.set(component ? 'custom' : 'default');
 
       if (component && !this._renderCustom) {
         const factory =
-            this.componentFactoryResolver.resolveComponentFactory(component);
+          this.componentFactoryResolver.resolveComponentFactory(component);
         if (this.dynamicContents?.first) {
           this._renderCustom = true;
-          this.baseInstance = this.dynamicContents.first.container.createComponent(factory).instance;
+          this.baseInstance =
+            this.dynamicContents.first.container.createComponent(
+              factory,
+            ).instance;
           this.refreshDynamicInstance();
           this.baseInstance?.contentTpl?.createEmbeddedView(this.contentTpl);
         }

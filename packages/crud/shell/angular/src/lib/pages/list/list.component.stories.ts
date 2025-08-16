@@ -1,30 +1,27 @@
-import type { Meta, StoryObj } from '@storybook/angular';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { IonicModule } from '@ionic/angular';
+import { TranslateModule } from '@ngx-translate/core';
+import { SharedModule } from '@smartsoft001/angular';
+import { Field, Model } from '@smartsoft001/models';
 import { moduleMetadata } from '@storybook/angular';
-import { CommonModule } from "@angular/common";
-import { TranslateModule } from "@ngx-translate/core";
-import { RouterModule } from "@angular/router";
-import { IonicModule } from "@ionic/angular";
-import { Component } from "@angular/core";
+import type { Meta, StoryObj } from '@storybook/angular';
 
-import { Field, Model } from "@smartsoft001/models";
-import { SharedModule } from "@smartsoft001/angular";
-
-import { CrudModule } from "../../crud.module";
+import { CrudModule } from '../../crud.module';
 
 @Component({
-    template: `
-        <p>Test details</p>
-    `
+  template: ` <p>Test details</p> `,
 })
 export class TestDetailsComponent {}
 
 @Model({})
 export class Note {
-    @Field({ list: true })
-    title: string;
+  @Field({ list: true })
+  title: string;
 
-    @Field({ list: true })
-    body: string;
+  @Field({ list: true })
+  body: string;
 }
 
 const meta: Meta = {
@@ -43,16 +40,16 @@ const meta: Meta = {
           routing: true,
           config: {
             type: Note,
-            title: "Note",
-            entity: "notes",
+            title: 'Note',
+            entity: 'notes',
             export: true,
             pagination: { limit: 25 },
-            apiUrl: 'http://207.180.210.142:1201/api/notes'
+            apiUrl: 'http://207.180.210.142:1201/api/notes',
           },
         }),
       ],
-    })
-  ]
+    }),
+  ],
 };
 
 export default meta;
@@ -66,7 +63,7 @@ export const Export: Story = {
           <smart-crud-list-page></smart-crud-list-page>
       </div>
     `,
-  })
+  }),
 };
 
 export const CustomDetails: Story = {
@@ -77,5 +74,5 @@ export const CustomDetails: Story = {
           <smart-crud-list-page></smart-crud-list-page>
       </div>
     `,
-  })
+  }),
 };

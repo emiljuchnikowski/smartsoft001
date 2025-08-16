@@ -1,5 +1,11 @@
 <ion-button (click)="onClick()">
-    {{ (value?.start && value?.end) ? value.start + ' - ' + value.end : ('select' | translate) }}
+  {{
+    value?.start && value?.end
+      ? value.start + ' - ' + value.end
+      : ('select' | translate)
+  }}
 </ion-button>
 
-<ion-button *ngIf="value" (click)="onClear()">X</ion-button>
+@if (value) {
+  <ion-button (click)="onClear()">X</ion-button>
+}

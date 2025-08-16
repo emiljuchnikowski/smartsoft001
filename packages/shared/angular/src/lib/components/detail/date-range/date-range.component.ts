@@ -1,22 +1,22 @@
 import { Component } from '@angular/core';
 
-import {DetailBaseComponent} from "../base/base.component";
+import { DetailBaseComponent } from '../base/base.component';
 
 @Component({
-    selector: 'smart-detail-date-range',
-    template: `
-      @let item = options?.item();
-      @if (item && options?.key) {
-        <p>
-          @let range = item[options.key!];
-          @if (range) {
-            <ng-container>{{ range.start }} - {{ range.end }}</ng-container>
-          }
-        </p>
-      }
-    `,
-    styleUrls: ['./date-range.component.scss']
+  selector: 'smart-detail-date-range',
+  template: `
+    @let item = options?.item();
+    @if (item && options?.key) {
+      <p>
+        @let range = item[options.key!];
+        @if (range) {
+          <ng-container>{{ range.start }} - {{ range.end }}</ng-container>
+        }
+      </p>
+    }
+  `,
+  styleUrls: ['./date-range.component.scss'],
 })
-export class DetailDateRangeComponent<T extends { [key: string]: any }> extends DetailBaseComponent<T> {
-
-}
+export class DetailDateRangeComponent<
+  T extends { [key: string]: any },
+> extends DetailBaseComponent<T> {}

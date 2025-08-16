@@ -1,6 +1,12 @@
 @if (control) {
   <ion-label position="floating">
-    {{ control?.parent?.value | smartModelLabel : internalOptions.fieldKey : internalOptions?.model?.constructor | async }}
+    {{
+      control?.parent?.value
+        | smartModelLabel
+          : internalOptions.fieldKey
+          : internalOptions?.model?.constructor
+        | async
+    }}
     @if (control.value) {
       {{ control.value.fileName }}
     }
@@ -8,16 +14,22 @@
       @if (required) {
         <span>*</span>
       }
-    </ion-text>
-  </ion-label><br/>
-  <smart-button [options]="addButtonOptions">{{ (control.value ? 'change' : 'add') | translate }}</smart-button>
+    </ion-text> </ion-label
+  ><br />
+  <smart-button [options]="addButtonOptions">{{
+    (control.value ? 'change' : 'add') | translate
+  }}</smart-button>
 
   @if (control.value && !play) {
-    <smart-button [options]="playButtonOptions">{{ 'play' | translate }}</smart-button>
+    <smart-button [options]="playButtonOptions">{{
+      'play' | translate
+    }}</smart-button>
   }
 
   @if (control.value) {
-    <smart-button [options]="deleteButtonOptions">{{ 'delete' | translate }}</smart-button>
+    <smart-button [options]="deleteButtonOptions">{{
+      'delete' | translate
+    }}</smart-button>
   }
 
   @if (loading()) {
@@ -27,9 +39,9 @@
 
   @if (url && play) {
     <video style="width: 100%" controls controlsList="nodownload">
-        <source type="video/mp4" [src]="url">
-        Your browser does not support the video tag.
+      <source type="video/mp4" [src]="url" />
+      Your browser does not support the video tag.
     </video>
   }
 }
-<input type="file" accept=".mp4" [hidden]="true" #inputObj>
+<input type="file" accept=".mp4" [hidden]="true" #inputObj />

@@ -26,7 +26,13 @@
                   @if (list) {
                     <ion-checkbox
                       style="margin-right: 15px"
-                      (ionChange)="onChangeMultiselect($event.detail.checked, element, list)"
+                      (ionChange)="
+                        onChangeMultiselect(
+                          $event.detail.checked,
+                          element,
+                          list
+                        )
+                      "
                     ></ion-checkbox>
                   }
                 </td>
@@ -37,9 +43,7 @@
                 </th>
                 <td cdk-cell *matCellDef="let element">
                   @if (!checkRemoveHandler || checkRemoveHandler(element)) {
-                    <ion-button
-                      (click)="removeHandler?.(element)"
-                    >
+                    <ion-button (click)="removeHandler?.(element)">
                       <ion-icon slot="icon-only" name="trash"></ion-icon>
                     </ion-button>
                   }
@@ -55,7 +59,7 @@
                     [smartDetails]="{
                       component: detailsComponent,
                       params: detailsComponentProps,
-                      mode: 'bottom'
+                      mode: 'bottom',
                     }"
                     (smartDetailsShowed)="select && select(element.id)"
                   >
@@ -80,21 +84,34 @@
                 </td>
               }
               @default {
-                <th cdk-header-cell *matHeaderCellDef mat-sort-header="{{ key }}">
-                  {{ (list() | smartListHeader: key:type)() }}
+                <th
+                  cdk-header-cell
+                  *matHeaderCellDef
+                  mat-sort-header="{{ key }}"
+                >
+                  {{ (list() | smartListHeader: key : type)() }}
                   <ng-container *ngTemplateOutlet="pagination"></ng-container>
                 </th>
                 <ng-container *matCellDef="let element">
-                  @let cell = element | smartListCell: key:cellPipe:type;
+                  @let cell = element | smartListCell: key : cellPipe : type;
                   @if (cell) {
                     <td
                       cdk-cell
                       [attr.smart-item-key]="key"
-                      [style.width.px]="cell.type === FieldType.image ? 60 : null"
-                      [style.textAlign]="cell.type === FieldType.image ? 'center' : null"
+                      [style.width.px]="
+                        cell.type === FieldType.image ? 60 : null
+                      "
+                      [style.textAlign]="
+                        cell.type === FieldType.image ? 'center' : null
+                      "
                     >
                       @if (cell.type === FieldType.image) {
-                        <img height="50" [lazyLoad]="cell.value | smartFileUrl" alt="" src=""/>
+                        <img
+                          height="50"
+                          [lazyLoad]="cell.value | smartFileUrl"
+                          alt=""
+                          src=""
+                        />
                       } @else {
                         <div class="cell-html" [innerHTML]="cell.value"></div>
                       }
@@ -111,7 +128,7 @@
             @if (last && loadNextPage && totalPages()) {
               <div style="float: right">
                 <ion-chip>
-                  {{ "page" | translate }}:
+                  {{ 'page' | translate }}:
                   <b>{{ page() }}/{{ totalPages() }}</b>
                 </ion-chip>
               </div>
@@ -120,14 +137,23 @@
         </ng-container>
       }
 
-      <tr cdk-header-row *matHeaderRowDef="desktopKeys ?? []; sticky: true"></tr>
+      <tr
+        cdk-header-row
+        *matHeaderRowDef="desktopKeys ?? []; sticky: true"
+      ></tr>
       <tr cdk-row *matRowDef="let row; columns: desktopKeys ?? []"></tr>
     </table>
   </div>
 
-  @if (loadNextPage && Object.keys((list()) ?? [])?.length && options.pagination?.mode !== PaginationMode.singlePage) {
+  @if (
+    loadNextPage &&
+    Object.keys(list() ?? [])?.length &&
+    options.pagination?.mode !== PaginationMode.singlePage
+  ) {
     <ion-infinite-scroll threshold="100px" (ionInfinite)="loadNextPage($event)">
-      <ion-infinite-scroll-content loadingSpinner="circles"></ion-infinite-scroll-content>
+      <ion-infinite-scroll-content
+        loadingSpinner="circles"
+      ></ion-infinite-scroll-content>
     </ion-infinite-scroll>
   }
 </ion-content>

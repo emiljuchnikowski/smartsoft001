@@ -4,7 +4,8 @@
 
 table {
   width: 100%;
-  .mat-row, .mat-header-row {
+  .mat-row,
+  .mat-header-row {
     background: white;
     min-width: 1200px;
   }
@@ -14,7 +15,8 @@ table {
   height: 100%;
 }
 
-.mat-row, .mat-header-row {
+.mat-row,
+.mat-header-row {
   min-width: 1200px;
 }
 

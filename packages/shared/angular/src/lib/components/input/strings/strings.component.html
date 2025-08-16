@@ -1,7 +1,13 @@
 @if (control) {
-  <br/>
+  <br />
   <ion-label style="max-width: 100%">
-    {{ control?.parent?.value | smartModelLabel : internalOptions.fieldKey : internalOptions?.model?.constructor | async }}
+    {{
+      control?.parent?.value
+        | smartModelLabel
+          : internalOptions.fieldKey
+          : internalOptions?.model?.constructor
+        | async
+    }}
     <ion-text color="danger">
       @if (required) {
         <span>*</span>
@@ -13,10 +19,11 @@
       @let last = $last;
       <ion-item lines="none">
         <ion-icon slot="start" name="ellipse-outline"></ion-icon>
-        <ion-input [placeholder]="(last ? ('add' | translate) : '') + '...'"
-                   [formControl]="item"
-                   [attr.autofocus]="fieldOptions?.focused"
-                   (ionChange)="onItemChange()"
+        <ion-input
+          [placeholder]="(last ? ('add' | translate) : '') + '...'"
+          [formControl]="item"
+          [attr.autofocus]="fieldOptions?.focused"
+          (ionChange)="onItemChange()"
         ></ion-input>
         @if (!last) {
           <ion-button slot="end" color="danger" (click)="removeItem(item)">

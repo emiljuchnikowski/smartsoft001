@@ -6,15 +6,17 @@ import {
   Input,
   OnDestroy,
   Output,
-  QueryList, signal,
+  QueryList,
+  signal,
   ViewChildren,
-  ViewEncapsulation, WritableSignal
+  ViewEncapsulation,
+  WritableSignal,
 } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
-import { Subscription } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
 import { IonButton, IonIcon, IonSearchbar } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'smart-searchbar',
@@ -30,23 +32,29 @@ import { TranslatePipe } from '@ngx-translate/core';
     }
     @if (!show()) {
       <ion-button (click)="setShow()">
-        <ion-icon style="font-weight: bold" slot="icon-only" name="search"></ion-icon>
+        <ion-icon
+          style="font-weight: bold"
+          slot="icon-only"
+          name="search"
+        ></ion-icon>
       </ion-button>
     }
   `,
-  styles: [`
+  styles: [
+    `
       .searchbar-input {
-          border-radius: 2.1rem;
-          --border-radius: 2.1rem;
-          --background: var(--ion-color-light);
+        border-radius: 2.1rem;
+        --border-radius: 2.1rem;
+        --background: var(--ion-color-light);
       }
 
       ion-searchbar {
-          &.ios {
-              display: inline;
-          }
+        &.ios {
+          display: inline;
+        }
       }
-  `],
+    `,
+  ],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
@@ -54,8 +62,8 @@ import { TranslatePipe } from '@ngx-translate/core';
     ReactiveFormsModule,
     TranslatePipe,
     IonButton,
-    IonIcon
-  ]
+    IonIcon,
+  ],
 })
 export class SearchbarComponent implements OnDestroy, AfterViewInit {
   private _subscriptions = new Subscription();
@@ -88,17 +96,19 @@ export class SearchbarComponent implements OnDestroy, AfterViewInit {
 
   ngAfterViewInit(): void {
     this._subscriptions.add(
-      this.control().valueChanges.pipe(debounceTime(1000)).subscribe((val) => {
-        this.textChange.emit(val);
-      })
+      this.control()
+        .valueChanges.pipe(debounceTime(1000))
+        .subscribe((val) => {
+          this.textChange.emit(val);
+        }),
     );
 
     this._subscriptions.add(
       this.searchComponents.changes.subscribe(
         (searchComponents: QueryList<IonSearchbar>) => {
           if (searchComponents.length) searchComponents.first.setFocus().then();
-        }
-      )
+        },
+      ),
     );
   }
 

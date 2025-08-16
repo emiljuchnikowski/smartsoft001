@@ -1,18 +1,28 @@
 @if (control) {
   <ion-label position="stacked">
-      {{ control?.parent?.value | smartModelLabel : internalOptions.fieldKey : internalOptions?.model?.constructor | async }}
-      <ion-text color="danger">
-        @if (required) {
-          <span>*</span>
-        }
-      </ion-text>
+    {{
+      control?.parent?.value
+        | smartModelLabel
+          : internalOptions.fieldKey
+          : internalOptions?.model?.constructor
+        | async
+    }}
+    <ion-text color="danger">
+      @if (required) {
+        <span>*</span>
+      }
+    </ion-text>
   </ion-label>
   <ion-row>
-      <ion-col size="auto">
-          <ion-chip>48</ion-chip>
-      </ion-col>
-      <ion-col>
-          <ion-input type="tel" [formControl]="control" [attr.autofocus]="fieldOptions?.focused"></ion-input>
-      </ion-col>
+    <ion-col size="auto">
+      <ion-chip>48</ion-chip>
+    </ion-col>
+    <ion-col>
+      <ion-input
+        type="tel"
+        [formControl]="control"
+        [attr.autofocus]="fieldOptions?.focused"
+      ></ion-input>
+    </ion-col>
   </ion-row>
 }

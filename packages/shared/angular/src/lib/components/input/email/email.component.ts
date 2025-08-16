@@ -1,10 +1,10 @@
-import {ChangeDetectorRef, Component} from '@angular/core';
 import { AsyncPipe } from '@angular/common';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-
-import {InputBaseComponent} from "../base/base.component";
 import { IonInput, IonLabel, IonText } from '@ionic/angular/standalone';
+
 import { ModelLabelPipe } from '../../../pipes';
+import { InputBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-input-email',
@@ -16,8 +16,8 @@ import { ModelLabelPipe } from '../../../pipes';
     ModelLabelPipe,
     AsyncPipe,
     IonInput,
-    ReactiveFormsModule
-  ]
+    ReactiveFormsModule,
+  ],
 })
 export class InputEmailComponent<T> extends InputBaseComponent<T> {
   constructor(cd: ChangeDetectorRef) {

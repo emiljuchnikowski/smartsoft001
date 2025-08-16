@@ -1,63 +1,69 @@
 <div #topTpl></div>
 
 <div class="ion-padding">
-    <div id="container">
-      @for (item of listWithImages(); track item) {
-        <ion-card (click)='unselect?.()'>
-          @if (item.image) {
-            <img [ngSrc]="item.image | smartFileUrl" alt="" fill>
-          }
+  <div id="container">
+    @for (item of listWithImages(); track item) {
+      <ion-card (click)="unselect?.()">
+        @if (item.image) {
+          <img [ngSrc]="item.image | smartFileUrl" alt="" fill />
+        }
 
-          <ion-card-content>
-            @for (key of keys; track key) {
-              @let cell = item.data | smartListCell : key : cellPipe : type;
-              @if (cell && cell.value != item.image) {
-                @if ($index < 2) {
-                  <h3 [attr.smart-item-key]="key" [innerHTML]="cell.value"></h3>
-                } @else {
-                  <p [attr.smart-item-key]="key" [innerHTML]="cell.value"></p>
-                }
+        <ion-card-content>
+          @for (key of keys; track key) {
+            @let cell = item.data | smartListCell: key : cellPipe : type;
+            @if (cell && cell.value != item.image) {
+              @if ($index < 2) {
+                <h3 [attr.smart-item-key]="key" [innerHTML]="cell.value"></h3>
+              } @else {
+                <p [attr.smart-item-key]="key" [innerHTML]="cell.value"></p>
               }
             }
-          </ion-card-content>
+          }
+        </ion-card-content>
 
-          <ion-row>
-            @if (removeHandler) {
-              <ion-col size="auto">
-                @if (!checkRemoveHandler || checkRemoveHandler(item.data)) {
-                  <ion-button (click)="removeHandler?.(item.data)">
-                      <ion-icon slot="icon-only" name="trash"></ion-icon>
-                  </ion-button>
-                }
-              </ion-col>
-            }
-            <ion-col></ion-col>
-            @if (itemHandler) {
-              <ion-col size="auto">
-                  <ion-button (click)="itemHandler?.(item.data.id)">
-                      <ion-icon slot="icon-only" name="arrow-forward-outline"></ion-icon>
-                  </ion-button>
-              </ion-col>
-            }
-          </ion-row>
-        </ion-card>
-      }
-    </div>
+        <ion-row>
+          @if (removeHandler) {
+            <ion-col size="auto">
+              @if (!checkRemoveHandler || checkRemoveHandler(item.data)) {
+                <ion-button (click)="removeHandler?.(item.data)">
+                  <ion-icon slot="icon-only" name="trash"></ion-icon>
+                </ion-button>
+              }
+            </ion-col>
+          }
+          <ion-col></ion-col>
+          @if (itemHandler) {
+            <ion-col size="auto">
+              <ion-button (click)="itemHandler?.(item.data.id)">
+                <ion-icon
+                  slot="icon-only"
+                  name="arrow-forward-outline"
+                ></ion-icon>
+              </ion-button>
+            </ion-col>
+          }
+        </ion-row>
+      </ion-card>
+    }
+  </div>
 </div>
 
-@if (loadNextPage && Object.keys((list()) ?? [])?.length && options.pagination?.mode !== PaginationMode.singlePage) {
-  <ion-infinite-scroll threshold="100px"
-                       (ionInfinite)="loadNextPage?.($event)"
-  >
+@if (
+  loadNextPage &&
+  Object.keys(list() ?? [])?.length &&
+  options.pagination?.mode !== PaginationMode.singlePage
+) {
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadNextPage?.($event)">
     <ion-infinite-scroll-content loadingSpinner="circles">
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>
 }
 
 @if (options?.pagination?.mode === PaginationMode.singlePage) {
-  <smart-paging [page]="page()"
-                [totalPages]="totalPages()"
-                (prevPage)="loadPrevPage?.()"
-                (nextPage)="loadNextPage?.()"
+  <smart-paging
+    [page]="page()"
+    [totalPages]="totalPages()"
+    (prevPage)="loadPrevPage?.()"
+    (nextPage)="loadNextPage?.()"
   ></smart-paging>
 }

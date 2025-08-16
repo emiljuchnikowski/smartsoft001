@@ -1,27 +1,34 @@
 @if (control) {
-  <br/>
+  <br />
   <ion-list>
-      <ion-item>
-          {{ control?.parent?.value | smartModelLabel : internalOptions.fieldKey : internalOptions?.model?.constructor | async }}
-          <ion-text color="danger">
-            @if (required) {
-              <span>*</span>
-            }
-          </ion-text>
-      </ion-item>
+    <ion-item>
+      {{
+        control?.parent?.value
+          | smartModelLabel
+            : internalOptions.fieldKey
+            : internalOptions?.model?.constructor
+          | async
+      }}
+      <ion-text color="danger">
+        @if (required) {
+          <span>*</span>
+        }
+      </ion-text>
+    </ion-item>
     @for (item of list; track item) {
       @let last = $last;
       <ion-item lines="none">
         <ion-icon slot="start" name="ellipse-outline"></ion-icon>
-        <ion-input [placeholder]="(last ? ('add' | translate) : '') + '...'"
-                   [formControl]="item"
-                   type="number"
-                   [attr.autofocus]="fieldOptions?.focused"
-                   (ionChange)="onItemChange()"
+        <ion-input
+          [placeholder]="(last ? ('add' | translate) : '') + '...'"
+          [formControl]="item"
+          type="number"
+          [attr.autofocus]="fieldOptions?.focused"
+          (ionChange)="onItemChange()"
         ></ion-input>
         @if (!last) {
           <ion-button slot="end" color="danger" (click)="removeItem(item)">
-              <ion-icon name="close-outline"></ion-icon>
+            <ion-icon name="close-outline"></ion-icon>
           </ion-button>
         }
       </ion-item>

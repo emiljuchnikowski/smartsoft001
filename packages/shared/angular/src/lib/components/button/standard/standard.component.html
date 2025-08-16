@@ -1,8 +1,12 @@
 @if (mode() != 'confirm') {
   @let loading = options?.loading();
-  <ion-button [color]="options?.color" [expand]="options?.expand"
-              [type]="options?.type" (click)="invoke()"
-              [disabled]="disabled || loading">
+  <ion-button
+    [color]="options?.color"
+    [expand]="options?.expand"
+    [type]="options?.type"
+    (click)="invoke()"
+    [disabled]="disabled || loading"
+  >
     @if (loading) {
       <ion-spinner></ion-spinner>
     } @else {
@@ -10,6 +14,16 @@
     }
   </ion-button>
 } @else {
-  <ion-button [expand]="options?.expand" color="light" (click)="confirmCancel()">{{'cancel' | translate}}</ion-button>
-  <ion-button [expand]="options?.expand" color="primary" (click)="confirmInvoke()">{{'confirm' | translate}}</ion-button>
+  <ion-button
+    [expand]="options?.expand"
+    color="light"
+    (click)="confirmCancel()"
+    >{{ 'cancel' | translate }}</ion-button
+  >
+  <ion-button
+    [expand]="options?.expand"
+    color="primary"
+    (click)="confirmInvoke()"
+    >{{ 'confirm' | translate }}</ion-button
+  >
 }

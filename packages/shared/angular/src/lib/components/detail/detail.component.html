@@ -6,7 +6,7 @@
       }
     </div>
     <ion-label color="medium" position="stacked">
-      {{ options()?.item() | smartModelLabel : options().key : type()}}
+      {{ options()?.item() | smartModelLabel: options().key : type() }}
     </ion-label>
     @let item = options()?.item();
     @if (item) {
@@ -42,16 +42,22 @@
           <smart-detail-video [options]="options()"></smart-detail-video>
         }
         @case (FieldType.attachment) {
-          <smart-detail-attachment [options]="options()"></smart-detail-attachment>
+          <smart-detail-attachment
+            [options]="options()"
+          ></smart-detail-attachment>
         }
         @case (FieldType.dateRange) {
-          <smart-detail-date-range [options]="options()"></smart-detail-date-range>
+          <smart-detail-date-range
+            [options]="options()"
+          ></smart-detail-date-range>
         }
         @case (FieldType.image) {
           <smart-detail-image [options]="options()"></smart-detail-image>
         }
         @case (FieldType.phoneNumberPl) {
-          <smart-detail-phone-number-pl [options]="options()"></smart-detail-phone-number-pl>
+          <smart-detail-phone-number-pl
+            [options]="options()"
+          ></smart-detail-phone-number-pl>
         }
         @default {
           <smart-detail-text [options]="options()"></smart-detail-text>
@@ -64,5 +70,5 @@
 }
 
 <ng-template #skeletonTpl>
-    <ion-skeleton-text [animated]='true'></ion-skeleton-text>
+  <ion-skeleton-text [animated]="true"></ion-skeleton-text>
 </ng-template>

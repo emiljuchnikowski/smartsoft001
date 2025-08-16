@@ -1,5 +1,4 @@
 import {
-  Compiler,
   ComponentFactory,
   ComponentFactoryResolver,
   Injectable,

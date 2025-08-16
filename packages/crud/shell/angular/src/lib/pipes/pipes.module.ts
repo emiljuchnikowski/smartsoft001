@@ -1,15 +1,11 @@
-import {NgModule} from "@angular/core";
+import { NgModule } from '@angular/core';
 
-import {FormOptionsPipe} from "./form-options/form-options.pipe";
+import { FormOptionsPipe } from './form-options/form-options.pipe';
 
 @NgModule({
-    declarations: [
-        FormOptionsPipe
-    ],
-    exports: [
-        FormOptionsPipe
-    ]
+  exports: [FormOptionsPipe],
+  imports: [
+    FormOptionsPipe
+  ]
 })
-export class CrudPipesModule {
-
-}
+export class CrudPipesModule {}

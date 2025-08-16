@@ -1,36 +1,30 @@
 import { Component, computed, ElementRef, OnInit } from '@angular/core';
-import { NavParams } from "@ionic/angular";
-import { first } from "rxjs/operators";
+import { NavParams } from '@ionic/angular';
+import { IEntity } from '@smartsoft001/domain-core';
 
-import {IEntity} from "@smartsoft001/domain-core";
-
-import { IPageOptions, IDetailsOptions } from '../../models';
-import {ModalService} from '../../services';
-import {StyleService} from '../../services';
 import { DetailsComponent, PageComponent } from '../../components';
+import { IPageOptions, IDetailsOptions } from '../../models';
+import { ModalService, StyleService } from '../../services';
 
 @Component({
   templateUrl: './details.page.html',
-  imports: [
-    PageComponent,
-    DetailsComponent
-  ],
-  styleUrls: ['./details.page.scss']
+  imports: [PageComponent, DetailsComponent],
+  styleUrls: ['./details.page.scss'],
 })
 export class DetailsPage<T extends IEntity<string>> implements OnInit {
   pageOptions: IPageOptions = {
-    title: "details",
-    hideMenuButton: true
+    title: 'details',
+    hideMenuButton: true,
   };
   detailsOptions: IDetailsOptions<T>;
 
   constructor(
-      navParams: NavParams,
-      private modalService: ModalService,
-      private styleService: StyleService,
-      private elementRef: ElementRef
+    navParams: NavParams,
+    private modalService: ModalService,
+    private styleService: StyleService,
+    private elementRef: ElementRef,
   ) {
-    this.detailsOptions = navParams.get("value") as IDetailsOptions<T>;
+    this.detailsOptions = navParams.get('value') as IDetailsOptions<T>;
     this.initTitle();
     this.initButtons();
   }
@@ -56,7 +50,8 @@ export class DetailsPage<T extends IEntity<string>> implements OnInit {
             this.detailsOptions?.removeHandler?.(item);
             this.modalService.dismiss();
           });
-        }, icon: 'trash'
+        },
+        icon: 'trash',
       });
     }
 
@@ -68,7 +63,8 @@ export class DetailsPage<T extends IEntity<string>> implements OnInit {
             this.detailsOptions?.removeHandler?.(item);
             this.modalService.dismiss();
           });
-        }, icon: 'arrow-forward-outline'
+        },
+        icon: 'arrow-forward-outline',
       });
     }
 

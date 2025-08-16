@@ -1,21 +1,19 @@
 /* eslint-disable */
 export default {
   globals: {},
-  transform: { "^.+\\.(ts|js|html)$": "jest-preset-angular" },
+  transform: { '^.+\\.(ts|js|html)$': 'jest-preset-angular' },
   snapshotSerializers: [
-    "jest-preset-angular/build/serializers/no-ng-attributes",
-    "jest-preset-angular/build/serializers/ng-snapshot",
-    "jest-preset-angular/build/serializers/html-comment",
+    'jest-preset-angular/build/serializers/no-ng-attributes',
+    'jest-preset-angular/build/serializers/ng-snapshot',
+    'jest-preset-angular/build/serializers/html-comment',
   ],
-  displayName: "crud-shell-angular",
-  coverageDirectory: "../../../../coverage/packages/crud/shell/angular",
-  preset: "jest-preset-angular",
+  displayName: 'crud-shell-angular',
+  coverageDirectory: '../../../../coverage/packages/crud/shell/angular',
+  preset: 'jest-preset-angular',
   moduleFileExtensions: ['ts', 'html', 'js', 'json'],
-  transformIgnorePatterns: [
-    'node_modules/(?!(@angular|@ngrx|@smartsoft001)/)'
-  ],
+  transformIgnorePatterns: ['node_modules/(?!(@angular|@ngrx|@smartsoft001)/)'],
   moduleNameMapping: {
-    '^@angular/(.*)$': '<rootDir>/node_modules/@angular/$1'
+    '^@angular/(.*)$': '<rootDir>/node_modules/@angular/$1',
   },
   /* TODO: Update to latest Jest snapshotFormat
    * By default Nx has kept the older style of Jest Snapshot formats

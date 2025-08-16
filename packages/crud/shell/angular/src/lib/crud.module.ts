@@ -1,23 +1,22 @@
-import { ModuleWithProviders, NgModule } from "@angular/core";
-import { FormsModule } from "@angular/forms";
-import { CommonModule } from "@angular/common";
-
-import { IEntity } from "@smartsoft001/domain-core";
+import { CommonModule } from '@angular/common';
+import { ModuleWithProviders, NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import {
   FILE_SERVICE_CONFIG,
   IFileServiceConfig,
   SharedModule,
-} from "@smartsoft001/angular";
+} from '@smartsoft001/angular';
+import { IEntity } from '@smartsoft001/domain-core';
 
-import { CrudConfig, CrudFullConfig } from "./crud.config";
-import { CrudService } from "./services/crud/crud.service";
-import { CrudFacade } from "./+state/crud.facade";
-import { CrudPipesModule } from './pipes';
-import { CrudFullModule } from "./crud-full.module";
-import { CrudListPaginationFactory } from "./factories/list-pagination/list-pagination.factory";
+import { CrudFacade } from './+state/crud.facade';
 import { CrudComponentsModule } from './components';
-import {PageService} from "./services/page/page.service";
-import {CrudListGroupService} from "./services/list-group/list-group.service";
+import { CrudFullModule } from './crud-full.module';
+import { CrudConfig, CrudFullConfig } from './crud.config';
+import { CrudListPaginationFactory } from './factories/list-pagination/list-pagination.factory';
+import { CrudPipesModule } from './pipes';
+import { CrudService } from './services/crud/crud.service';
+import { CrudListGroupService } from './services/list-group/list-group.service';
+import { PageService } from './services/page/page.service';
 
 @NgModule({
   imports: [
@@ -36,16 +35,14 @@ import {CrudListGroupService} from "./services/list-group/list-group.service";
     CrudListPaginationFactory,
   ],
 })
-export class CrudCoreModule<T extends IEntity<string>> {
-  constructor(config: CrudConfig<T>) {}
-}
+export class CrudCoreModule{}
 
 @NgModule({})
 export class CrudModule<T extends IEntity<string>> {
   static forFeature<T extends IEntity<string>>(
     options:
       | ICrudModuleOptionsWithRoutng<T>
-      | ICrudModuleOptionsWithoutRoutng<T>
+      | ICrudModuleOptionsWithoutRoutng<T>,
   ): ModuleWithProviders<CrudModule<any>> {
     return {
       ngModule: options.routing ? CrudFullModule : CrudCoreModule,

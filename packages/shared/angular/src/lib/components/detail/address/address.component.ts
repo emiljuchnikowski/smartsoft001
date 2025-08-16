@@ -1,8 +1,7 @@
 import { Component, computed, Signal } from '@angular/core';
+import { IAddress } from '@smartsoft001/domain-core';
 
-import { IAddress } from "@smartsoft001/domain-core";
-
-import { DetailBaseComponent } from "../base/base.component";
+import { DetailBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-detail-address',
@@ -11,14 +10,20 @@ import { DetailBaseComponent } from "../base/base.component";
     @if (address) {
       <p>
         {{ address?.street }}
-        {{ address?.flatNumber ? address?.buildingNumber + "/" + address?.flatNumber : address?.buildingNumber }}
+        {{
+          address?.flatNumber
+            ? address?.buildingNumber + '/' + address?.flatNumber
+            : address?.buildingNumber
+        }}
         <br />{{ address?.zipCode }} {{ address?.city }}
       </p>
     }
   `,
   styleUrls: ['./address.component.scss'],
 })
-export class DetailAddressComponent<T extends { [key: string]: any }> extends DetailBaseComponent<T> {
+export class DetailAddressComponent<
+  T extends { [key: string]: any },
+> extends DetailBaseComponent<T> {
   thisAddress!: Signal<IAddress>;
 
   protected override afterSetOptionsHandler() {
@@ -26,7 +31,7 @@ export class DetailAddressComponent<T extends { [key: string]: any }> extends De
       this.thisAddress = computed<IAddress>(() => {
         const item = this.options?.item?.();
         return item?.[this.options.key!] ?? null;
-      }) 
+      });
     }
   }
 }

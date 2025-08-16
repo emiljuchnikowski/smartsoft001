@@ -2,15 +2,21 @@ import '@angular/compiler';
 import 'zone.js';
 import 'zone.js/testing';
 import { HttpClient } from '@angular/common/http';
-import { HttpTestingController, HttpClientTestingModule } from '@angular/common/http/testing';
+import {
+  HttpTestingController,
+  HttpClientTestingModule,
+} from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-
+import {
+  BrowserDynamicTestingModule,
+  platformBrowserDynamicTesting,
+} from '@angular/platform-browser-dynamic/testing';
 import { IEntity } from '@smartsoft001/domain-core';
 
 import { CrudService } from './crud.service';
 import { CrudConfig } from '../../crud.config';
 import { ICrudCreateManyOptions, ICrudFilter } from '../../models';
-import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
+
 
 interface TestEntity extends IEntity<string> {
   id: string;
@@ -31,8 +37,8 @@ describe('crud-shell-angular: CrudService', () => {
     BrowserDynamicTestingModule,
     platformBrowserDynamicTesting(),
     {
-      teardown: { destroyAfterEach: true }
-    }
+      teardown: { destroyAfterEach: true },
+    },
   );
 
   beforeEach(() => {
@@ -49,9 +55,10 @@ describe('crud-shell-angular: CrudService', () => {
         },
         {
           provide: CrudService,
-          useFactory: () => new CrudService<TestEntity>(config, TestBed.inject(HttpClient))
-        }
-      ]
+          useFactory: () =>
+            new CrudService<TestEntity>(config, TestBed.inject(HttpClient)),
+        },
+      ],
     });
 
     service = TestBed.inject(CrudService);
@@ -90,7 +97,7 @@ describe('crud-shell-angular: CrudService', () => {
     it('should create multiple entities', async () => {
       const testEntities: TestEntity[] = [
         { id: '', name: 'Entity 1' },
-        { id: '', name: 'Entity 2' }
+        { id: '', name: 'Entity 2' },
       ];
       const options: ICrudCreateManyOptions = { mode: 'default' };
 
@@ -128,7 +135,7 @@ describe('crud-shell-angular: CrudService', () => {
       const expectedResponse = {
         data: [{ id: '1', name: 'Entity 1' }],
         totalCount: 1,
-        links: {}
+        links: {},
       };
 
       const promise = service.getList();
@@ -147,7 +154,7 @@ describe('crud-shell-angular: CrudService', () => {
       const expectedResponse = {
         data: [{ id: '1', name: 'Test Entity' }],
         totalCount: 1,
-        links: {}
+        links: {},
       };
 
       const promise = service.getList(filter);
@@ -198,12 +205,12 @@ describe('crud-shell-angular: CrudService', () => {
     it('should update multiple entities partially', async () => {
       const updates = [
         { id: '1', name: 'Update 1' },
-        { id: '2', name: 'Update 2' }
+        { id: '2', name: 'Update 2' },
       ];
 
       const promise = service.updatePartialMany(updates);
 
-      updates.forEach(update => {
+      updates.forEach((update) => {
         const req = httpMock.expectOne(`${config.apiUrl}/${update.id}`);
         expect(req.request.method).toBe('PATCH');
         expect(req.request.body).toEqual(update);
@@ -281,7 +288,9 @@ describe('crud-shell-angular: CrudService', () => {
 
       const req = httpMock.expectOne(config.apiUrl);
       expect(req.request.method).toBe('GET');
-      expect(req.request.headers.get('Content-Type')).toBe('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+      expect(req.request.headers.get('Content-Type')).toBe(
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      );
 
       req.flush(xlsxData);
 

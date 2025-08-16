@@ -1,4 +1,11 @@
-import { Component, Input, Output, EventEmitter, signal, WritableSignal } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { IonIcon, IonItem } from '@ionic/angular/standalone';
 
 @Component({
@@ -17,15 +24,14 @@ import { IonIcon, IonItem } from '@ionic/angular/standalone';
       <ng-content select="smart-accordion-body"></ng-content>
     }
   `,
-  imports: [
-    IonItem,
-    IonIcon
-  ],
-  styles: [`
+  imports: [IonItem, IonIcon],
+  styles: [
+    `
       ion-icon {
-          margin-right: 1.6rem;
+        margin-right: 1.6rem;
       }
-  `]
+    `,
+  ],
 })
 export class AccordionComponent {
   private _show: WritableSignal<boolean> = signal<boolean>(false);

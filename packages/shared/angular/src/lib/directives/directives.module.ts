@@ -1,23 +1,12 @@
-import {NgModule} from "@angular/core";
+import { NgModule } from '@angular/core';
 
-import {SharedServicesModule} from "../services/services.module";
-import {DynamicContentDirective} from "./dynamic-content/dynamic-content.directive";
+import { SharedServicesModule } from '../services/services.module';
+import { DynamicContentDirective } from './dynamic-content/dynamic-content.directive';
 
-const DIRECTIVES = [
-    DynamicContentDirective,
-];
+const DIRECTIVES = [DynamicContentDirective];
 
 @NgModule({
-    imports: [
-        SharedServicesModule
-    ],
-    declarations: [
-        ...DIRECTIVES
-    ],
-    exports: [
-        ...DIRECTIVES
-    ]
+  imports: [SharedServicesModule, ...DIRECTIVES],
+  exports: [...DIRECTIVES],
 })
-export class SharedDirectivesModule {
-
-}
+export class SharedDirectivesModule {}

@@ -1,6 +1,5 @@
 import { CrudService } from '@smartsoft001/crud-shell-app-services';
-import { ItemChangedData } from '@smartsoft001/crud-shell-dtos';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 
 import { CrudGateway } from './crud.gateway';
 

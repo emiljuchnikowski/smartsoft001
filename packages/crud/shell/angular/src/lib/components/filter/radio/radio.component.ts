@@ -1,20 +1,20 @@
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import {
   IonButton,
   IonCol,
   IonIcon,
   IonItem,
   IonItemDivider,
-  IonLabel, IonRadio,
+  IonLabel,
+  IonRadio,
   IonRadioGroup,
-  IonRow
+  IonRow,
 } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FormsModule } from '@angular/forms';
+import { IEntity } from '@smartsoft001/domain-core';
 
-import {IEntity} from "@smartsoft001/domain-core";
-
-import {BaseComponent} from "../base/base.component";
+import { BaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-crud-filter-radio',
@@ -28,8 +28,12 @@ import {BaseComponent} from "../base/base.component";
               {{ item().label | translate }}
             </ion-label>
             @if (value || value === false) {
-              <ion-button slot="end" color="danger" (click)="refresh(null)"
-                          class="square-button">
+              <ion-button
+                slot="end"
+                color="danger"
+                (click)="refresh(null)"
+                class="square-button"
+              >
                 <ion-icon slot="icon-only" name="close-outline"></ion-icon>
               </ion-button>
             }
@@ -56,10 +60,10 @@ import {BaseComponent} from "../base/base.component";
     IonItem,
     IonRadio,
     TranslatePipe,
-    FormsModule
+    FormsModule,
   ],
-  styleUrls: ['./radio.component.scss']
+  styleUrls: ['./radio.component.scss'],
 })
-export class FilterRadioComponent<T extends IEntity<string>> extends BaseComponent<T> {
-
-}
+export class FilterRadioComponent<
+  T extends IEntity<string>,
+> extends BaseComponent<T> {}

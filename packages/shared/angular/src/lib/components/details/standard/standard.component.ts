@@ -1,13 +1,10 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-} from "@angular/core";
-import { IEntity } from "@smartsoft001/domain-core";
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { IonList } from '@ionic/angular/standalone';
+import { IEntity } from '@smartsoft001/domain-core';
 
-import { DetailsBaseComponent } from "../base/base.component";
 import { CardComponent } from '../../card';
 import { DetailComponent } from '../../detail';
+import { DetailsBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-details-standard',
@@ -17,13 +14,16 @@ import { DetailComponent } from '../../detail';
 
       <smart-card>
         @for (field of fields; track field.key) {
-          <smart-detail [type]="type" [options]="{
-          key: field.key,
-          options: field.options,
-          cellPipe: cellPipe() ?? undefined,
-          item: item ?? undefined,
-          loading$: loading$ ?? undefined
-          }"></smart-detail>
+          <smart-detail
+            [type]="type"
+            [options]="{
+              key: field.key,
+              options: field.options,
+              cellPipe: cellPipe() ?? undefined,
+              item: item ?? undefined,
+              loading: loading ?? undefined,
+            }"
+          ></smart-detail>
         }
       </smart-card>
 
@@ -32,11 +32,8 @@ import { DetailComponent } from '../../detail';
   `,
   styleUrls: ['./standard.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default,
-  imports: [
-    IonList,
-    CardComponent,
-    DetailComponent
-  ]
+  imports: [IonList, CardComponent, DetailComponent],
 })
-export class DetailsStandardComponent<T extends IEntity<string>> extends DetailsBaseComponent<T> {
-}
+export class DetailsStandardComponent<
+  T extends IEntity<string>,
+> extends DetailsBaseComponent<T> {}

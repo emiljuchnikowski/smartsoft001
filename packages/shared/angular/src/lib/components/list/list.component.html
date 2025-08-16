@@ -7,7 +7,9 @@
       <smart-list-mobile [options]="internalOptions"></smart-list-mobile>
     }
     @case (ListMode.masonryGrid) {
-      <smart-list-masonry-grid [options]="internalOptions"></smart-list-masonry-grid>
+      <smart-list-masonry-grid
+        [options]="internalOptions"
+      ></smart-list-masonry-grid>
     }
   }
 
@@ -18,7 +20,7 @@
       <smart-loader [show]="loading ?? false"></smart-loader>
       @if (!loading && !internalOptions.provider.list()?.length) {
         <h2>
-          <br/>
+          <br />
           {{ 'noResults' | translate }}
         </h2>
       }
@@ -30,6 +32,6 @@
 }
 
 <ng-template #contentTpl>
-    <ng-content></ng-content>
+  <ng-content></ng-content>
 </ng-template>
 <div class="dynamic-content"></div>

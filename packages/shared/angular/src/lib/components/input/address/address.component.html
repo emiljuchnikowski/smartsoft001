@@ -1,7 +1,13 @@
 @if (control) {
-  <br/>
+  <br />
   <ion-label>
-    {{ control?.parent?.value | smartModelLabel : internalOptions.fieldKey : internalOptions?.model?.constructor | async }}
+    {{
+      control?.parent?.value
+        | smartModelLabel
+          : internalOptions.fieldKey
+          : internalOptions?.model?.constructor
+        | async
+    }}
     <ion-text color="danger">
       @if (required) {
         <span>*</span>
@@ -43,7 +49,10 @@
           }
         </ion-text>
       </ion-label>
-      <ion-input formControlName="street" [attr.autofocus]="fieldOptions?.focused"></ion-input>
+      <ion-input
+        formControlName="street"
+        [attr.autofocus]="fieldOptions?.focused"
+      ></ion-input>
     </ion-item>
 
     <ion-item>

@@ -1,6 +1,10 @@
-import { signalStore, withState, withMethods, withComputed } from '@ngrx/signals';
 import { computed, Signal } from '@angular/core';
-
+import {
+  signalStore,
+  withState,
+  withMethods,
+  withComputed,
+} from '@ngrx/signals';
 import { IEntity } from '@smartsoft001/domain-core';
 
 import { ICrudCreateManyOptions, ICrudFilter } from '../models';
@@ -18,7 +22,7 @@ export interface CrudState<T> {
 }
 
 export const initialState: CrudState<any> = {
-  loaded: false
+  loaded: false,
 };
 
 interface CrudStore<T> extends CrudState<T> {
@@ -61,10 +65,12 @@ export function createCrudFeatureStore<T extends IEntity<string>>() {
       getList: computed(() => store.list()),
       getTotalCount: computed(() => store.totalCount()),
       getLinks: computed(() => store.links()),
-      getFilter: computed(() => store.filter())
+      getFilter: computed(() => store.filter()),
     })),
-    withMethods(CrudMethodsFactory<T>())
+    withMethods(CrudMethodsFactory<T>()),
   ) as unknown as CrudStore<T>;
 }
 
-export type CrudFeatureStore<T extends IEntity<string>> = ReturnType<typeof createCrudFeatureStore<T>>;
+export type CrudFeatureStore<T extends IEntity<string>> = ReturnType<
+  typeof createCrudFeatureStore<T>
+>;

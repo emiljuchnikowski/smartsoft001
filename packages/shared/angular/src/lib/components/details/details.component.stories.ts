@@ -1,25 +1,24 @@
+import { TranslateModule } from '@ngx-translate/core';
+import { IAddress } from '@smartsoft001/domain-core';
+import { FieldType, Field, Model } from '@smartsoft001/models';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
-import { TranslateModule } from "@ngx-translate/core";
 
-import { FieldType, Field, Model } from "@smartsoft001/models";
-import { IAddress } from "@smartsoft001/domain-core";
-
-import { SharedFactoriesModule } from "../../factories";
-import { COMPONENTS, IMPORTS } from "../components.module";
-import { DetailsComponent } from "./details.component";
+import { SharedFactoriesModule } from '../../factories';
+import { COMPONENTS, IMPORTS } from '../components.module';
+import { DetailsComponent } from './details.component';
 
 @Model({})
 class TestUserModel {
-    @Field({
-        details: true
-    })
-    firstName = 'Test first name';
+  @Field({
+    details: true,
+  })
+  firstName = 'Test first name';
 
-    @Field({
-        details: true
-    })
-    lastName = 'Test last name';
+  @Field({
+    details: true,
+  })
+  lastName = 'Test last name';
 }
 
 const meta: Meta<DetailsComponent<any>> = {
@@ -28,9 +27,9 @@ const meta: Meta<DetailsComponent<any>> = {
   decorators: [
     moduleMetadata({
       imports: [...IMPORTS, SharedFactoriesModule, TranslateModule.forRoot()],
-      declarations: COMPONENTS
-    })
-  ]
+      declarations: COMPONENTS,
+    }),
+  ],
 };
 
 export default meta;
@@ -46,14 +45,14 @@ export const Address: Story = {
           class TestModel {
             @Field({
               details: true,
-              type: FieldType.address
+              type: FieldType.address,
             })
             address: IAddress = {
               city: 'Test city',
               street: 'Test street',
               zipCode: '00-000',
               flatNumber: '2',
-              buildingNumber: '1A'
+              buildingNumber: '1A',
             };
           }
           return TestModel;
@@ -63,21 +62,21 @@ export const Address: Story = {
           class TestModel {
             @Field({
               details: true,
-              type: FieldType.address
+              type: FieldType.address,
             })
             address: IAddress = {
               city: 'Test city',
               street: 'Test street',
               zipCode: '00-000',
               flatNumber: '2',
-              buildingNumber: '1A'
+              buildingNumber: '1A',
             };
           }
           return TestModel;
-        })())()
-      }
-    }
-  })
+        })())(),
+      },
+    },
+  }),
 };
 
 export const StringArray: Story = {
@@ -90,9 +89,9 @@ export const StringArray: Story = {
           class TestModel {
             @Field({
               details: true,
-              type: FieldType.strings
+              type: FieldType.strings,
             })
-            strings = ["test1", "test2"];
+            strings = ['test1', 'test2'];
           }
           return TestModel;
         })(),
@@ -101,15 +100,15 @@ export const StringArray: Story = {
           class TestModel {
             @Field({
               details: true,
-              type: FieldType.strings
+              type: FieldType.strings,
             })
-            strings = ["test1", "test2"];
+            strings = ['test1', 'test2'];
           }
           return TestModel;
-        })())()
-      }
-    }
-  })
+        })())(),
+      },
+    },
+  }),
 };
 
 export const ObjectField: Story = {
@@ -121,7 +120,7 @@ export const ObjectField: Story = {
           @Model({})
           class TestModel {
             @Field({
-              details: true
+              details: true,
             })
             test = 'Test data';
 
@@ -137,7 +136,7 @@ export const ObjectField: Story = {
           @Model({})
           class TestModel {
             @Field({
-              details: true
+              details: true,
             })
             test = 'Test data';
 
@@ -148,8 +147,8 @@ export const ObjectField: Story = {
             user = new TestUserModel();
           }
           return TestModel;
-        })())()
-      }
-    }
-  })
+        })())(),
+      },
+    },
+  }),
 };

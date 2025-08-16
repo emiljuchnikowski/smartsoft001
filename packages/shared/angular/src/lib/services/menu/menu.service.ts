@@ -1,18 +1,20 @@
 import {
   ComponentFactoryResolver,
-  Injectable, Injector,
+  Injectable,
+  Injector,
   ViewContainerRef,
-} from "@angular/core";
-import { MenuController } from "@ionic/angular";
-import {IMenuItem} from "../../models";
-import {BehaviorSubject} from "rxjs";
+} from '@angular/core';
+import { MenuController } from '@ionic/angular';
+import { BehaviorSubject } from 'rxjs';
+
+import { IMenuItem } from '../../models';
 
 /**
  * Only to use in smart-page
  * @requires PageComponent
  */
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class MenuService {
   private _endContainer!: ViewContainerRef;
@@ -32,7 +34,7 @@ export class MenuService {
 
   constructor(
     private readonly menuCtrl: MenuController,
-    private readonly resolver: ComponentFactoryResolver
+    private readonly resolver: ComponentFactoryResolver,
   ) {}
 
   enable(): void {
@@ -44,11 +46,12 @@ export class MenuService {
   }
 
   changeMenuItemByRoute(route: string, changes: Partial<IMenuItem>): void {
-    const items = this._menuItemsSource.value.map(i => {
-      if (i.route === route) return {
-        ...i,
-        ...changes
-      }
+    const items = this._menuItemsSource.value.map((i) => {
+      if (i.route === route)
+        return {
+          ...i,
+          ...changes,
+        };
 
       return i;
     });
@@ -66,7 +69,7 @@ export class MenuService {
   async init(endContainer: ViewContainerRef): Promise<void> {
     this._endContainer = endContainer;
 
-    await this.menuCtrl.close("end");
+    await this.menuCtrl.close('end');
   }
 
   /**
@@ -76,8 +79,8 @@ export class MenuService {
    * @param {class} options.injector - angular injector to use in component
    */
   async openEnd(options: {
-    component: any,
-    injector: Injector,
+    component: any;
+    injector: Injector;
   }): Promise<void> {
     this._openedEnd = true;
 
@@ -89,8 +92,8 @@ export class MenuService {
       this._endContainer.createComponent(factory, 0, options.injector);
     }
 
-    await this.menuCtrl.enable(true, "end");
-    await this.menuCtrl.open("end");
+    await this.menuCtrl.enable(true, 'end');
+    await this.menuCtrl.open('end');
   }
 
   /**
@@ -99,8 +102,8 @@ export class MenuService {
   async closeStart(): Promise<void> {
     this._openedEnd = false;
 
-    await this.menuCtrl.close("start");
-    await this.menuCtrl.enable(false, "start");
+    await this.menuCtrl.close('start');
+    await this.menuCtrl.enable(false, 'start');
   }
 
   /**
@@ -109,8 +112,8 @@ export class MenuService {
   async closeEnd(): Promise<void> {
     this._openedEnd = false;
 
-    await this.menuCtrl.close("end");
-    await this.menuCtrl.enable(false, "end");
+    await this.menuCtrl.close('end');
+    await this.menuCtrl.enable(false, 'end');
 
     this._endContainer?.clear();
   }

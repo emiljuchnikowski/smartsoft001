@@ -1,22 +1,29 @@
-import { Component, OnDestroy, OnInit, signal, ViewChild, WritableSignal } from '@angular/core';
-import {Subscription} from "rxjs";
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  signal,
+  ViewChild,
+  WritableSignal,
+} from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import {
   IonButton,
   IonCol,
   IonDatetime,
   IonIcon,
-  IonInput, IonItem,
+  IonInput,
+  IonItem,
   IonLabel,
   IonPopover,
-  IonRow
+  IonRow,
 } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FormsModule } from '@angular/forms';
-
-import {IEntity} from "@smartsoft001/domain-core";
+import { IEntity } from '@smartsoft001/domain-core';
 import { GuidService } from '@smartsoft001/utils';
+import { Subscription } from 'rxjs';
 
-import {FilterDateComponent} from "../date/date.component";
+import { FilterDateComponent } from '../date/date.component';
 
 @Component({
   selector: 'smart-crud-filter-date-with-edit',
@@ -32,18 +39,21 @@ import {FilterDateComponent} from "../date/date.component";
     IonIcon,
     IonPopover,
     IonDatetime,
-    IonItem
+    IonItem,
   ],
-  styleUrls: ['./date-with-edit.component.scss']
+  styleUrls: ['./date-with-edit.component.scss'],
 })
-export class FilterDateWithEditComponent<T extends IEntity<string>> extends FilterDateComponent<T>
-implements OnInit, OnDestroy {
+export class FilterDateWithEditComponent<T extends IEntity<string>>
+  extends FilterDateComponent<T>
+  implements OnInit, OnDestroy
+{
   private _subscriptions = new Subscription();
 
   advanced: WritableSignal<boolean> = signal(false);
   id = GuidService.create();
 
-  @ViewChild(IonDatetime, { read: IonDatetime, static: false }) dateTimePicker: IonDatetime;
+  @ViewChild(IonDatetime, { read: IonDatetime, static: false })
+  dateTimePicker: IonDatetime;
 
   toggleAdvanced(): void {
     this.advanced.update((val) => !val);
@@ -56,9 +66,11 @@ implements OnInit, OnDestroy {
     super.ngOnInit();
 
     if (this.dateTimePicker) {
-      this._subscriptions.add(this.dateTimePicker.ionChange.subscribe((val: CustomEvent) => {
-        this.customValue = val.detail.value;
-      }));
+      this._subscriptions.add(
+        this.dateTimePicker.ionChange.subscribe((val: CustomEvent) => {
+          this.customValue = val.detail.value;
+        }),
+      );
     } else {
       console.error('dateTimePicker not found!');
     }
@@ -70,4 +82,3 @@ implements OnInit, OnDestroy {
     }
   }
 }
-

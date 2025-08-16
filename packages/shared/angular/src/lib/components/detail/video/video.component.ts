@@ -1,29 +1,33 @@
-import {ChangeDetectorRef, Component} from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
+import { IEntity } from '@smartsoft001/domain-core';
 
-import {IEntity} from "@smartsoft001/domain-core";
-
-import {DetailBaseComponent} from "../base/base.component";
-import {FileService} from '../../../services';
+import { FileService } from '../../../services';
+import { DetailBaseComponent } from '../base/base.component';
 
 @Component({
-    selector: 'smart-detail-video',
-    template: `
-      @let item = options?.item();
-      @if (item && options?.key) {
-        <video style="width: 100%" controls controlsList="nodownload">
-          <source type="video/mp4" [src]="getUrl(item[options.key!])">
-          Your browser does not support the video tag.
-        </video>
-      }
-    `,
-    styleUrls: ['./video.component.scss']
+  selector: 'smart-detail-video',
+  template: `
+    @let item = options?.item();
+    @if (item && options?.key) {
+      <video style="width: 100%" controls controlsList="nodownload">
+        <source type="video/mp4" [src]="getUrl(item)" />
+        Your browser does not support the video tag.
+      </video>
+    }
+  `,
+  styleUrls: ['./video.component.scss'],
 })
-export class DetailVideoComponent<T extends IEntity<string>> extends DetailBaseComponent<T> {
-    constructor(cd: ChangeDetectorRef, private fileService: FileService) {
-        super(cd);
-    }
+export class DetailVideoComponent<
+  T extends IEntity<string>,
+> extends DetailBaseComponent<T> {
+  constructor(
+    cd: ChangeDetectorRef,
+    private fileService: FileService,
+  ) {
+    super(cd);
+  }
 
-    getUrl(item: { id: string }): string {
-        return this.fileService.getUrl(item.id);
-    }
+  getUrl(item: T): string {
+    return this.fileService.getUrl((item as any)[this.options.key].id);
+  }
 }

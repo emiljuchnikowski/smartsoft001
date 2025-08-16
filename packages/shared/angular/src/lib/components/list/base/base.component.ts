@@ -1,24 +1,24 @@
+import { CdkTableDataSourceInput } from '@angular/cdk/table';
 import {
   ChangeDetectorRef,
   Input,
-  OnInit,
   Directive,
   Type,
   ViewChild,
   ViewContainerRef,
-  inject, Signal, computed
+  inject,
+  Signal,
+  computed,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { Router } from "@angular/router";
-
+import { IEntity } from '@smartsoft001/domain-core';
 import {
   FieldType,
   IFieldListMetadata,
   IFieldOptions,
 } from '@smartsoft001/models';
-import { IEntity } from '@smartsoft001/domain-core';
 
-import { DetailsPage } from '../../../pages';
 import {
   IDetailsOptions,
   IListProvider,
@@ -26,17 +26,17 @@ import {
   ICellPipe,
   DynamicComponentType,
   PaginationMode,
-  IListInternalOptions, IRemoveProvider, IDetailsProvider, IDetailsComponentFactories
+  IListInternalOptions,
+  IRemoveProvider,
+  IDetailsProvider,
+  IDetailsComponentFactories,
 } from '../../../models';
+import { DetailsPage } from '../../../pages';
 import { AlertService } from '../../../services';
 import { AuthService } from '../../../services';
-import { CdkTableDataSourceInput } from '@angular/cdk/table';
-import { toSignal } from '@angular/core/rxjs-interop';
 
 @Directive()
-export abstract class ListBaseComponent<T extends IEntity<string>>
-  implements OnInit
-{
+export abstract class ListBaseComponent<T extends IEntity<string>> {
   static smartType: DynamicComponentType = 'list';
 
   private _fields!: Array<{ key: string; options: IFieldOptions }>;
@@ -61,8 +61,8 @@ export abstract class ListBaseComponent<T extends IEntity<string>>
   removed: Set<string> = new Set<string>();
   keys!: Array<string>;
   cellPipe: ICellPipe<T> | null = null;
-  loadPrevPage: ((event?: any) => void) | null  = null;
-  loadNextPage: ((event?: any) => void) | null  = null;
+  loadPrevPage: ((event?: any) => void) | null = null;
+  loadNextPage: ((event?: any) => void) | null = null;
 
   list!: Signal<CdkTableDataSourceInput<T> | null>;
   loading!: Signal<boolean>;
@@ -121,9 +121,11 @@ export abstract class ListBaseComponent<T extends IEntity<string>>
     }
 
     if (val.item) {
-      const options = (val.item as {
-        options?: { select: (id: string) => void, routingPrefix: string };
-      }).options;
+      const options = (
+        val.item as {
+          options?: { select: (id: string) => void; routingPrefix: string };
+        }
+      ).options;
 
       if (!options) throw Error('Must set edit options');
 
@@ -136,8 +138,7 @@ export abstract class ListBaseComponent<T extends IEntity<string>>
             ]);
             this.cd.detectChanges();
           });
-        }
-        else if (options?.select) options.select(id);
+        } else if (options?.select) options.select(id);
       };
     }
 
@@ -215,7 +216,7 @@ export abstract class ListBaseComponent<T extends IEntity<string>>
           (field.options.list as IFieldListMetadata).permissions
         ) {
           return this.authService.expectPermissions(
-            (field.options.list as IFieldListMetadata)?.permissions ?? null
+            (field.options.list as IFieldListMetadata)?.permissions ?? null,
           );
         }
 
@@ -228,16 +229,15 @@ export abstract class ListBaseComponent<T extends IEntity<string>>
           ((data[0] as any)[field.key] as [])
             .map(
               (_, index) =>
-                `__array.${
-                  field.key
+                `__array.${field.key}.${index}.${
+                  (field.options.list as IFieldListMetadata)?.dynamic
+                    ?.headerKey ?? ''
                 }.${
-                  index
-                }.${
-                  (field.options.list as IFieldListMetadata)?.dynamic?.headerKey ?? ''
-                }.${
-                  (field.options.list as IFieldListMetadata)?.dynamic?.rowKey ?? ''
-                }`
-            ).forEach((item) => result.push(item as unknown as T));
+                  (field.options.list as IFieldListMetadata)?.dynamic?.rowKey ??
+                  ''
+                }`,
+            )
+            .forEach((item) => result.push(item as unknown as T));
 
           return;
         }
@@ -245,7 +245,8 @@ export abstract class ListBaseComponent<T extends IEntity<string>>
         result.push(field.key as unknown as T);
       });
 
-    if (!this.keys || this.keys.length !== result.length) this.keys = result as unknown as string[];
+    if (!this.keys || this.keys.length !== result.length)
+      this.keys = result as unknown as string[];
   }
 
   protected initList(val: IListInternalOptions<T>): void {
@@ -263,7 +264,7 @@ export abstract class ListBaseComponent<T extends IEntity<string>>
     this.loading = this.provider.loading;
   }
 
-  ngOnInit() {}
-
-  protected afterInitOptions(): void {}
+  protected afterInitOptions() {
+    // No base functionality
+  };
 }

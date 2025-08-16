@@ -1,20 +1,22 @@
-import { NgModule } from "@angular/core";
-import { IonicModule } from "@ionic/angular";
-import { TranslateModule } from "@ngx-translate/core";
-import { CookieModule } from "ngx-cookie";
+import { NgModule } from '@angular/core';
+import { IonicModule } from '@ionic/angular';
+import { TranslateModule } from '@ngx-translate/core';
+import {
+  HardwareService,
+  UIService,
+  DynamicComponentLoader,
+  PopoverService,
+  StorageService,
+  DetailsService,
+} from '@smartsoft001/angular';
+import { CookieModule } from 'ngx-cookie';
 
-import { HardwareService, UIService } from '@smartsoft001/angular';
-import { DynamicComponentLoader } from '@smartsoft001/angular';
-import { PopoverService } from '@smartsoft001/angular';
-import { StorageService } from '@smartsoft001/angular';
-import {DetailsService} from '@smartsoft001/angular';
-
-import { ToastService } from "./toast/toast.service";
-import { ModalService } from "./modal/modal.service";
-import { StyleService } from "./style/style.service";
-import { AuthService } from "./auth/auth.service";
-import {FileService} from "./file/file.service";
-import {AlertService} from "./alert/alert.service";
+import { AlertService } from './alert/alert.service';
+import { AuthService } from './auth/auth.service';
+import { FileService } from './file/file.service';
+import { ModalService } from './modal/modal.service';
+import { StyleService } from './style/style.service';
+import { ToastService } from './toast/toast.service';
 
 @NgModule({
   imports: [
@@ -34,7 +36,7 @@ import {AlertService} from "./alert/alert.service";
     FileService,
     AlertService,
     DetailsService,
-    UIService
+    UIService,
   ],
 })
 export class SharedServicesModule {}

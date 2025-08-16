@@ -1,13 +1,29 @@
 import {
+  CdkCell,
+  CdkHeaderCell,
+  CdkHeaderRow,
+  CdkRecycleRows,
+  CdkRow,
+  CdkTable,
+} from '@angular/cdk/table';
+import { NgTemplateOutlet } from '@angular/common';
+import {
   AfterViewInit,
   Component,
   OnDestroy,
-  OnInit, Signal,
+  OnInit,
+  Signal,
   ViewChild,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
-import { Subscription } from "rxjs";
 import { MatSort, MatSortHeader } from '@angular/material/sort';
+import {
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCellDef,
+  MatHeaderRowDef,
+  MatRowDef,
+} from '@angular/material/table';
 import {
   IonButton,
   IonCheckbox,
@@ -15,21 +31,18 @@ import {
   IonContent,
   IonIcon,
   IonInfiniteScroll,
-  IonInfiniteScrollContent
+  IonInfiniteScrollContent,
 } from '@ionic/angular/standalone';
-import { NgTemplateOutlet } from '@angular/common';
-import { CdkCell, CdkHeaderCell, CdkHeaderRow, CdkRecycleRows, CdkRow, CdkTable } from '@angular/cdk/table';
-import { MatCellDef, MatColumnDef, MatHeaderCellDef, MatHeaderRowDef, MatRowDef } from '@angular/material/table';
-import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { TranslatePipe } from '@ngx-translate/core';
+import { IEntity } from '@smartsoft001/domain-core';
+import { LazyLoadImageModule } from 'ng-lazyload-image';
+import { Subscription } from 'rxjs';
 
-import { IEntity } from "@smartsoft001/domain-core";
-
-import { ListBaseComponent } from "../base/base.component";
-import {IListComponentFactories, IListInternalOptions} from '../../../models';
 import { DetailsDirective } from '../../../directives';
+import { IListComponentFactories, IListInternalOptions } from '../../../models';
 import { FileUrlPipe, ListCellPipe, ListHeaderPipe } from '../../../pipes';
 import { PagingComponent } from '../../paging';
+import { ListBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-list-desktop',
@@ -63,12 +76,13 @@ import { PagingComponent } from '../../paging';
     MatRowDef,
     IonInfiniteScroll,
     IonInfiniteScrollContent,
-    PagingComponent
-  ]
+    PagingComponent,
+  ],
 })
 export class ListDesktopComponent<T extends IEntity<string>>
   extends ListBaseComponent<T>
-  implements OnInit, OnDestroy, AfterViewInit {
+  implements OnInit, OnDestroy, AfterViewInit
+{
   private _subscriptions = new Subscription();
   private _multiSelected: T[] = [];
 
@@ -79,12 +93,12 @@ export class ListDesktopComponent<T extends IEntity<string>>
   get desktopKeys(): Array<string> | null {
     if (this.keys) {
       return [
-        ...(this.selectMode === 'multi' ? ["selectMulti"] : []),
+        ...(this.selectMode === 'multi' ? ['selectMulti'] : []),
         ...this.keys,
-        ...(this.removeHandler ? ["removeAction"] : []),
-          // TODO : nikt tego nie chce :(
+        ...(this.removeHandler ? ['removeAction'] : []),
+        // TODO : nikt tego nie chce :(
         //...(this.detailsComponent ? ["detailsAction"] : []),
-        ...(this.itemHandler ? ["itemAction"] : []),
+        ...(this.itemHandler ? ['itemAction'] : []),
       ];
     }
 
@@ -93,7 +107,7 @@ export class ListDesktopComponent<T extends IEntity<string>>
 
   @ViewChild(MatSort, { static: true })
   sortObj!: MatSort;
-  @ViewChild("topTpl", { read: ViewContainerRef, static: true })
+  @ViewChild('topTpl', { read: ViewContainerRef, static: true })
   topTpl!: ViewContainerRef;
 
   protected override initList(val: IListInternalOptions<T>): void {
@@ -104,14 +118,18 @@ export class ListDesktopComponent<T extends IEntity<string>>
     this.generateDynamicComponents();
 
     if (this.provider?.onCleanMultiSelected$) {
-      this._subscriptions.add(this.provider.onCleanMultiSelected$.subscribe(() => {
-        this._multiSelected = [];
-      }));
+      this._subscriptions.add(
+        this.provider.onCleanMultiSelected$.subscribe(() => {
+          this._multiSelected = [];
+        }),
+      );
     }
   }
 
   onChangeMultiselect(checked: boolean, element: T, list: T[]) {
-    this._multiSelected = this._multiSelected.filter(m => list.some(i => i === m));
+    this._multiSelected = this._multiSelected.filter((m) =>
+      list.some((i) => i === m),
+    );
 
     if (checked) {
       this._multiSelected.push(element);
@@ -127,7 +145,7 @@ export class ListDesktopComponent<T extends IEntity<string>>
     }
   }
 
-  myTrackById(val: any){
+  myTrackById(val: any) {
     return val?.id;
   }
 
@@ -135,9 +153,7 @@ export class ListDesktopComponent<T extends IEntity<string>>
     this.generateDynamicComponents();
   }
 
-  override ngOnInit(): void {
-    super.ngOnInit();
-
+  ngOnInit(): void {
     const sort = this.sort as {
       default?: string | undefined;
       defaultDesc?: boolean | undefined;
@@ -145,16 +161,16 @@ export class ListDesktopComponent<T extends IEntity<string>>
 
     if (this.sort) {
       this.sortObj.active = sort?.default ?? '';
-      this.sortObj.direction = sort.defaultDesc ? "desc" : "asc";
+      this.sortObj.direction = sort.defaultDesc ? 'desc' : 'asc';
 
       this._subscriptions.add(
         this.sortObj.sortChange.subscribe((sort) => {
           this.provider.getData({
             offset: 0,
-            sortBy: sort.active ? sort.active : "",
-            sortDesc: this.sortObj.direction === "desc",
+            sortBy: sort.active ? sort.active : '',
+            sortDesc: this.sortObj.direction === 'desc',
           });
-        })
+        }),
       );
     } else {
       this.sortObj.disabled = true;

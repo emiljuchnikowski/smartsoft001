@@ -1,11 +1,15 @@
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
+import {
+  FormComponent,
+  IFormOptions,
+  SharedFactoriesModule,
+} from '@smartsoft001/angular';
+import { IAddress } from '@smartsoft001/domain-core';
+import { Field, FieldType, Model } from '@smartsoft001/models';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
-import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
-import { TranslateModule } from "@ngx-translate/core";
 
-import { IAddress } from "@smartsoft001/domain-core";
-import { FormComponent, IFormOptions, SharedFactoriesModule } from "@smartsoft001/angular";
-import { Field, FieldType, Model } from "@smartsoft001/models";
 import { COMPONENTS, IMPORTS } from '../components.module';
 
 const meta: Meta<FormComponent<any>> = {
@@ -16,8 +20,8 @@ const meta: Meta<FormComponent<any>> = {
       imports: [...IMPORTS, SharedFactoriesModule, TranslateModule.forRoot()],
       declarations: [...COMPONENTS],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    })
-  ]
+    }),
+  ],
 };
 
 export default meta;
@@ -35,13 +39,13 @@ export const Address: Story = {
               required: true,
               type: FieldType.address,
             })
-            address!: IAddress
+            address!: IAddress;
           }
           return new TestModel();
         })(),
       } as IFormOptions<any>,
     },
-  })
+  }),
 };
 
 export const Nip: Story = {
@@ -62,7 +66,7 @@ export const Nip: Story = {
         })(),
       } as IFormOptions<any>,
     },
-  })
+  }),
 };
 
 export const Strings: Story = {
@@ -77,13 +81,13 @@ export const Strings: Story = {
               required: true,
               type: FieldType.strings,
             })
-            strings = ["test1", "test2"];
+            strings = ['test1', 'test2'];
           }
           return new TestModel();
         })(),
       } as IFormOptions<any>,
     },
-  })
+  }),
 };
 
 export const Description: Story = {
@@ -104,7 +108,7 @@ export const Description: Story = {
         })(),
       } as IFormOptions<any>,
     },
-  })
+  }),
 };
 
 export const LongText: Story = {
@@ -125,33 +129,33 @@ export const LongText: Story = {
         })(),
       } as IFormOptions<any>,
     },
-  })
+  }),
 };
 
 @Model({})
 class TestUserModel {
-  @Field({ })
+  @Field({})
   firstName!: string;
 
   @Field({
-    required: true
+    required: true,
   })
   lastName!: string;
 
   @Field({
-    type: FieldType.color
+    type: FieldType.color,
   })
   color!: string;
 
   @Field({
-    type: FieldType.logo
+    type: FieldType.logo,
   })
   logo!: string;
 
   @Field({
     required: true,
     type: FieldType.password,
-    confirm: true
+    confirm: true,
   })
   password!: string;
 }
@@ -164,13 +168,13 @@ export const ComplexObject: Story = {
         model: (() => {
           @Model({})
           class TestModel {
-            @Field({ })
+            @Field({})
             test!: string;
 
             @Field({
               required: true,
               type: FieldType.object,
-              classType: TestUserModel
+              classType: TestUserModel,
             })
             user = new TestUserModel();
           }
@@ -178,7 +182,7 @@ export const ComplexObject: Story = {
         })(),
       } as IFormOptions<any>,
     },
-  })
+  }),
 };
 
 export const Color: Story = {
@@ -191,7 +195,7 @@ export const Color: Story = {
           class TestModel {
             @Field({
               type: FieldType.color,
-              required: true
+              required: true,
             })
             color = 'red';
           }
@@ -199,7 +203,7 @@ export const Color: Story = {
         })(),
       } as IFormOptions<any>,
     },
-  })
+  }),
 };
 
 export const Logo: Story = {
@@ -212,7 +216,7 @@ export const Logo: Story = {
           class TestModel {
             @Field({
               type: FieldType.logo,
-              required: true
+              required: true,
             })
             logo!: string;
           }
@@ -220,5 +224,5 @@ export const Logo: Story = {
         })(),
       } as IFormOptions<any>,
     },
-  })
+  }),
 };

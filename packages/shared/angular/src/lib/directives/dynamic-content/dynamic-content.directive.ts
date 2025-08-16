@@ -1,10 +1,9 @@
-import {Directive, ViewContainerRef} from "@angular/core";
+import { Directive, ViewContainerRef } from '@angular/core';
 
 @Directive({
-    // tslint:disable-next-line:directive-selector
-    selector: ".dynamic-content"
+  // tslint:disable-next-line:directive-selector
+  selector: '.dynamic-content',
 })
 export class DynamicContentDirective {
-    constructor(public container: ViewContainerRef) {
-    }
+  constructor(public container: ViewContainerRef) {}
 }

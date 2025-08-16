@@ -1,7 +1,12 @@
 import { Component } from '@angular/core';
-import { IonCard, IonCardHeader, IonCol, IonRow } from '@ionic/angular/standalone';
+import {
+  IonCard,
+  IonCardHeader,
+  IonCol,
+  IonRow,
+} from '@ionic/angular/standalone';
 
-import {DetailBaseComponent} from "../base/base.component";
+import { DetailBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-detail-color',
@@ -11,21 +16,15 @@ import {DetailBaseComponent} from "../base/base.component";
       <ion-row>
         <ion-col>
           <ion-card [style.background]="item[options.key!]">
-            <ion-card-header>
-            </ion-card-header>
+            <ion-card-header> </ion-card-header>
           </ion-card>
         </ion-col>
       </ion-row>
     }
   `,
-  imports: [
-    IonRow,
-    IonCol,
-    IonCard,
-    IonCardHeader
-  ],
-  styleUrls: ['./color.component.scss']
+  imports: [IonRow, IonCol, IonCard, IonCardHeader],
+  styleUrls: ['./color.component.scss'],
 })
-export class DetailColorComponent<T extends { [key: string]: any }> extends DetailBaseComponent<T> {
-
-}
+export class DetailColorComponent<
+  T extends { [key: string]: any },
+> extends DetailBaseComponent<T> {}

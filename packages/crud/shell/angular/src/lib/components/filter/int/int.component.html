@@ -1,7 +1,7 @@
 <ion-row>
   <ion-col>
     <ion-label>
-        {{ item().label | translate }}
+      {{ item().label | translate }}
     </ion-label>
     @if (!advanced()) {
       <ion-input [(ngModel)]="value" type="number" step="1"></ion-input>
@@ -9,7 +9,11 @@
   </ion-col>
   @if (allowAdvanced) {
     <ion-col size="auto">
-      <ion-button (click)="toggleAdvanced()" class="square-button" [disabled]="minValue || maxValue">
+      <ion-button
+        (click)="toggleAdvanced()"
+        class="square-button"
+        [disabled]="minValue || maxValue"
+      >
         @if (!advanced()) {
           <ion-icon slot="icon-only" name="settings-outline"></ion-icon>
         } @else {
@@ -38,7 +42,11 @@
     </ion-col>
     @if (minValue) {
       <ion-col size="auto">
-        <ion-button color="danger" (click)="refresh(null, '>=')" class="square-button">
+        <ion-button
+          color="danger"
+          (click)="refresh(null, '>=')"
+          class="square-button"
+        >
           <ion-icon slot="icon-only" name="close-outline"></ion-icon>
         </ion-button>
       </ion-col>
@@ -53,7 +61,11 @@
     </ion-col>
     @if (maxValue) {
       <ion-col size="auto">
-        <ion-button color="danger" (click)="refresh(null, '<=')" class="square-button">
+        <ion-button
+          color="danger"
+          (click)="refresh(null, '<=')"
+          class="square-button"
+        >
           <ion-icon slot="icon-only" name="close-outline"></ion-icon>
         </ion-button>
       </ion-col>

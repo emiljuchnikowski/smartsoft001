@@ -1,4 +1,9 @@
-import { Input, Directive, ChangeDetectorRef, WritableSignal } from '@angular/core';
+import {
+  Input,
+  Directive,
+  ChangeDetectorRef,
+  WritableSignal,
+} from '@angular/core';
 
 import { IDetailOptions } from '../../../models';
 
@@ -19,5 +24,7 @@ export abstract class DetailBaseComponent<T> {
 
   constructor(protected cd: ChangeDetectorRef) {}
 
-  protected afterSetOptionsHandler(): void {}
+  protected afterSetOptionsHandler(){
+    // no base functionality
+  }
 }

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-import { AsyncPipe } from '@angular/common';
 
-import {DetailBaseComponent} from "../base/base.component";
+import { DetailBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-detail-email',
@@ -13,9 +12,8 @@ import {DetailBaseComponent} from "../base/base.component";
       }
     </p>
   `,
-  imports: [
-    AsyncPipe
-  ],
-  styleUrls: ['./email.component.scss']
+  styleUrls: ['./email.component.scss'],
 })
-export class DetailEmailComponent<T extends { [key: string]: any }> extends DetailBaseComponent<T> {}
+export class DetailEmailComponent<
+  T extends { [key: string]: any },
+> extends DetailBaseComponent<T> {}

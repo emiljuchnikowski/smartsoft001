@@ -1,11 +1,15 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component} from '@angular/core';
-
-import {InputBaseComponent} from "../base/base.component";
-import { PasswordStrengthComponent } from '../../password-strength';
-import { ModelLabelPipe } from '../../../pipes';
 import { AsyncPipe } from '@angular/common';
-import { IonInput, IonLabel, IonText } from '@ionic/angular/standalone';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+} from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { IonInput, IonLabel, IonText } from '@ionic/angular/standalone';
+
+import { ModelLabelPipe } from '../../../pipes';
+import { PasswordStrengthComponent } from '../../password-strength';
+import { InputBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-input-password',
@@ -18,9 +22,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     IonLabel,
     IonText,
     IonInput,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputPasswordComponent<T> extends InputBaseComponent<T> {
   valid = true;
@@ -31,18 +35,18 @@ export class InputPasswordComponent<T> extends InputBaseComponent<T> {
   }
 
   override afterSetOptionsHandler() {
-    super.afterSetOptionsHandler();
+
     this.control.setValidators([
-        this.control.validator!,
+      this.control.validator!,
       (c) => {
         if (!this.valid) {
           return {
-            passwordStrength: true
+            passwordStrength: true,
           };
         }
 
         return null;
-      }
+      },
     ]);
   }
 
@@ -51,13 +55,15 @@ export class InputPasswordComponent<T> extends InputBaseComponent<T> {
     if (this.valid) {
       if (this.control.errors?.['passwordStrength']) {
         this.control.setErrors(
-            Object.keys(this.control.errors).length === 1 ?
-                null : { ...this.control.errors, passwordStrength: null }
+          Object.keys(this.control.errors).length === 1
+            ? null
+            : { ...this.control.errors, passwordStrength: null },
         );
       }
     } else {
-      const errors = this.control.errors ?
-          { ...this.control.errors, passwordStrength: true } : { passwordStrength: true };
+      const errors = this.control.errors
+        ? { ...this.control.errors, passwordStrength: true }
+        : { passwordStrength: true };
       this.control.setErrors(errors);
     }
 

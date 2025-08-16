@@ -1,9 +1,8 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { DynamicIoModule } from 'ng-dynamic-component';
-
 import { SharedModule } from '@smartsoft001/angular';
+import { DynamicIoModule } from 'ng-dynamic-component';
 
 import { ExportComponent } from './export/export.component';
 import {
@@ -17,14 +16,14 @@ import {
   FilterIntComponent,
   FilterDateTimeComponent,
 } from './filter';
-import { FiltersConfigComponent } from './filters-config/filters-config.component';
-import { FiltersComponent } from './filters/filters.component';
-import { MultiselectComponent } from './multiselect/multiselect.component';
 import { CrudPipesModule } from '../pipes';
-import { CrudService } from '../services/crud/crud.service';
+import { FiltersComponent } from './filters/filters.component';
+import { FiltersConfigComponent } from './filters-config/filters-config.component';
+import { MultiselectComponent } from './multiselect/multiselect.component';
 import { CrudFacade } from '../+state/crud.facade';
-import { CrudListPaginationFactory } from '../factories/list-pagination/list-pagination.factory';
 import { GroupComponent } from './group/group.component';
+import { CrudListPaginationFactory } from '../factories/list-pagination/list-pagination.factory';
+import { CrudService } from '../services/crud/crud.service';
 
 const COMPONENTS = [
   ExportComponent,
@@ -53,10 +52,6 @@ const COMPONENTS = [
     DynamicIoModule,
   ],
   exports: [CrudPipesModule, ...COMPONENTS],
-  providers: [
-    CrudService,
-    CrudFacade,
-    CrudListPaginationFactory,
-  ],
+  providers: [CrudService, CrudFacade, CrudListPaginationFactory],
 })
 export class CrudComponentsModule {}

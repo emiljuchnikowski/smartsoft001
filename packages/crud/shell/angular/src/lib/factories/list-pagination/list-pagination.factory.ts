@@ -1,17 +1,16 @@
 import { computed, Injectable } from '@angular/core';
+import { IListPaginationOptions, PaginationMode } from '@smartsoft001/angular';
+import { IEntity } from '@smartsoft001/domain-core';
 
-import { IEntity } from "@smartsoft001/domain-core";
-import {IListPaginationOptions, PaginationMode} from "@smartsoft001/angular";
-
-import {CrudFacade} from "../../+state/crud.facade";
-import {ICrudFilter} from '../../models';
+import { CrudFacade } from '../../+state/crud.facade';
+import { ICrudFilter } from '../../models';
 
 @Injectable()
 export class CrudListPaginationFactory<T extends IEntity<string>> {
   constructor(private readonly facade: CrudFacade<T>) {}
 
   async create(options: {
-    mode?: PaginationMode,
+    mode?: PaginationMode;
     limit: number;
     provider: {
       getLinks(): any;
@@ -29,8 +28,7 @@ export class CrudListPaginationFactory<T extends IEntity<string>> {
           if (this.facade.loaded()) {
             setTimeout(() => {
               res(
-                options.provider.getLinks() &&
-                  options.provider.getLinks().next
+                options.provider.getLinks() && options.provider.getLinks().next,
               );
             });
           }
@@ -51,8 +49,7 @@ export class CrudListPaginationFactory<T extends IEntity<string>> {
           if (loaded) {
             setTimeout(() => {
               res(
-                options.provider.getLinks() &&
-                  options.provider.getLinks().prev
+                options.provider.getLinks() && options.provider.getLinks().prev,
               );
             });
           }

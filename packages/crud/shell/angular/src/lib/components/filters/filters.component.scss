@@ -1,111 +1,159 @@
 :host {
-    ion-toolbar {
-        --background: linear-gradient(33deg, var(--ion-color-light), var(--ion-color-light-shade));
-        --color: var(--ion-color-dark);
-        ion-modal & {
-            --background: linear-gradient(33deg, var(--ion-color-light), var(--ion-color-light-shade));
-            --color: var(--ion-color-dark);
+  ion-toolbar {
+    --background: linear-gradient(
+      33deg,
+      var(--ion-color-light),
+      var(--ion-color-light-shade)
+    );
+    --color: var(--ion-color-dark);
+    ion-modal & {
+      --background: linear-gradient(
+        33deg,
+        var(--ion-color-light),
+        var(--ion-color-light-shade)
+      );
+      --color: var(--ion-color-dark);
+    }
+    // @media (max-width: var(--smart-tablet-breakpoint)) {
+    @media only screen and (max-width: 992px) {
+      --background: linear-gradient(
+        33deg,
+        var(--ion-color-primary),
+        var(--ion-color-tertiary)
+      );
+      --color: var(--ion-color-light);
+      ion-modal & {
+        --background: linear-gradient(
+          33deg,
+          var(--ion-color-light),
+          var(--ion-color-light-shade)
+        );
+        color: var(--ion-color-dark);
+      }
+    }
+    // @media (max-width: var(--smart-phone-breakpoint)) {
+    @media only screen and (max-width: 420px) {
+      --background: linear-gradient(
+        33deg,
+        var(--ion-color-primary),
+        var(--ion-color-tertiary)
+      );
+      --color: var(--ion-color-light);
+      ion-modal & {
+        --background: linear-gradient(
+          33deg,
+          var(--ion-color-light),
+          var(--ion-color-light-shade)
+        );
+        color: var(--ion-color-dark);
+      }
+    }
+    &.ios {
+      height: 4.6rem;
+      --background: linear-gradient(
+        33deg,
+        var(--ion-color-light),
+        var(--ion-color-light-shade)
+      );
+      --color: var(--ion-color-dark);
+      // @media (max-width: var(--smart-tablet-breakpoint)) {
+      @media only screen and (max-width: 992px) {
+        --background: linear-gradient(
+          33deg,
+          var(--ion-color-primary),
+          var(--ion-color-tertiary)
+        );
+        --color: var(--ion-color-light);
+        ion-title {
+          text-align: left;
+          padding-left: 5.2rem;
         }
+        ion-icon {
+          color: var(--ion-color-light);
+        }
+      }
+      // @media (max-width: var(--smart-phone-breakpoint)) {
+      @media only screen and (max-width: 420px) {
+        --background: linear-gradient(
+          33deg,
+          var(--ion-color-primary),
+          var(--ion-color-tertiary)
+        );
+        --color: var(--ion-color-light);
+        ion-title {
+          text-align: left;
+          padding-left: 5.2rem;
+        }
+        ion-icon {
+          color: var(--ion-color-light);
+        }
+      }
+      .modal-wrapper & {
+        --background: linear-gradient(
+          33deg,
+          var(--ion-color-light),
+          var(--ion-color-light-shade)
+        );
+        --color: var(--ion-color-dark);
         // @media (max-width: var(--smart-tablet-breakpoint)) {
         @media only screen and (max-width: 992px) {
-            --background: linear-gradient(33deg, var(--ion-color-primary), var(--ion-color-tertiary));
-            --color: var(--ion-color-light);
-            ion-modal & {
-                --background: linear-gradient(33deg, var(--ion-color-light), var(--ion-color-light-shade));
-                color: var(--ion-color-dark);
-            }
+          --background: linear-gradient(
+            33deg,
+            var(--ion-color-light),
+            var(--ion-color-light-shade)
+          );
+          color: var(--ion-color-dark);
+          ion-title {
+            text-align: left;
+            padding-left: 1.2rem;
+          }
+          ion-icon {
+            color: var(--ion-color-dark);
+          }
+          ion-buttons {
+            margin: 0;
+          }
         }
         // @media (max-width: var(--smart-phone-breakpoint)) {
         @media only screen and (max-width: 420px) {
-            --background: linear-gradient(33deg, var(--ion-color-primary), var(--ion-color-tertiary));
-            --color: var(--ion-color-light);
-            ion-modal & {
-                --background: linear-gradient(33deg, var(--ion-color-light), var(--ion-color-light-shade));
-                color: var(--ion-color-dark);
-            }
+          --background: linear-gradient(
+            33deg,
+            var(--ion-color-light),
+            var(--ion-color-light-shade)
+          );
+          color: var(--ion-color-dark);
+          ion-title {
+            text-align: left;
+            padding-left: 1.2rem;
+          }
+          ion-icon {
+            color: var(--ion-color-dark);
+          }
+          ion-buttons {
+            margin: 0;
+          }
         }
-        &.ios {
-            height: 4.6rem;
-            --background: linear-gradient(33deg, var(--ion-color-light), var(--ion-color-light-shade));
-            --color: var(--ion-color-dark);
-            // @media (max-width: var(--smart-tablet-breakpoint)) {
-            @media only screen and (max-width: 992px) {
-                --background: linear-gradient(33deg, var(--ion-color-primary), var(--ion-color-tertiary));
-                --color: var(--ion-color-light);
-                ion-title {
-                    text-align: left;
-                    padding-left: 5.2rem;
-                }
-                ion-icon {
-                    color: var(--ion-color-light);
-                }
-            }
-            // @media (max-width: var(--smart-phone-breakpoint)) {
-            @media only screen and (max-width: 420px) {
-                --background: linear-gradient(33deg, var(--ion-color-primary), var(--ion-color-tertiary));
-                --color: var(--ion-color-light);
-                ion-title {
-                    text-align: left;
-                    padding-left: 5.2rem;
-                }
-                ion-icon {
-                    color: var(--ion-color-light);
-                }
-            }
-            .modal-wrapper & {
-                --background: linear-gradient(33deg, var(--ion-color-light), var(--ion-color-light-shade));
-                --color: var(--ion-color-dark);
-                // @media (max-width: var(--smart-tablet-breakpoint)) {
-                @media only screen and (max-width: 992px) {
-                    --background: linear-gradient(33deg, var(--ion-color-light), var(--ion-color-light-shade));
-                    color: var(--ion-color-dark);
-                    ion-title {
-                        text-align: left;
-                        padding-left: 1.2rem;
-                    }
-                    ion-icon {
-                        color: var(--ion-color-dark);
-                    }
-                    ion-buttons {
-                        margin: 0;
-                    }
-                }
-                // @media (max-width: var(--smart-phone-breakpoint)) {
-                @media only screen and (max-width: 420px) {
-                    --background: linear-gradient(33deg, var(--ion-color-light), var(--ion-color-light-shade));
-                    color: var(--ion-color-dark);
-                    ion-title {
-                        text-align: left;
-                        padding-left: 1.2rem;
-                    }
-                    ion-icon {
-                        color: var(--ion-color-dark);
-                    }
-                    ion-buttons {
-                        margin: 0;
-                    }
-                }
-            }
-            &.toolbar-searchbar {
-                ion-buttons {
-                    height: var(--smart-button-height);
-                    margin: 0.4rem;
-                }
-            }
-        }
-        ion-menu-button {
-            color: var(--ion-color-light);
-        }
+      }
+      &.toolbar-searchbar {
         ion-buttons {
-            //height: var(--smart-button-height);
-            &.ios {
-                height: var(--smart-button-height);
-                margin: 0;
-            }
+          height: var(--smart-button-height);
+          margin: 0.4rem;
         }
+      }
     }
+    ion-menu-button {
+      color: var(--ion-color-light);
+    }
+    ion-buttons {
+      //height: var(--smart-button-height);
+      &.ios {
+        height: var(--smart-button-height);
+        margin: 0;
+      }
+    }
+  }
 
-    .menu-bottom-space {
-        height: 75px;
-    }
+  .menu-bottom-space {
+    height: 75px;
+  }
 }

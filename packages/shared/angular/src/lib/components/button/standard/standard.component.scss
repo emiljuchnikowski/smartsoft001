@@ -1,4 +1,4 @@
-@import "styles/smart-styles.scss";
+@import 'styles/smart-styles.scss';
 ion-button {
   height: var(--smart-button-height);
   min-width: var(--smart-button-min-width);
@@ -10,7 +10,7 @@ ion-button {
   --padding-end: var(--smart-button-padding-right);
   --padding-start: var(--smart-button-padding-left);
   --padding-top: var(--smart-button-padding-top);
-  &[color=light] {
+  &[color='light'] {
     --background: var(--ion-color-light);
   }
   ion-icon {
@@ -19,17 +19,17 @@ ion-button {
   &.squere-button {
     height: var(--smart-button-height);
     width: var(--smart-button-min-width);
-    --padding-bottom: var(--smart-button-padding-bottom)/2;
-    --padding-end: var(--smart-button-padding-right)/2;
-    --padding-start: var(--smart-button-padding-left)/2;
-    --padding-top: var(--smart-button-padding-top)/2;
+    --padding-bottom: var(--smart-button-padding-bottom) / 2;
+    --padding-end: var(--smart-button-padding-right) / 2;
+    --padding-start: var(--smart-button-padding-left) / 2;
+    --padding-top: var(--smart-button-padding-top) / 2;
   }
   &.button-clear {
     height: var(--smart-button-height);
-    --padding-bottom: var(--smart-button-padding-bottom)/2;
+    --padding-bottom: var(--smart-button-padding-bottom) / 2;
     // --padding-end: var(--smart-button-padding-right);
     // --padding-start: var(--smart-button-padding-left)/1.2;
-    --padding-top: var(--smart-button-padding-top)/2;
+    --padding-top: var(--smart-button-padding-top) / 2;
     // --color: var(--smart-color-light) !important;
     // --background: transparent;
     &.in-toolbar {

@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -5,29 +6,32 @@ import {
   ComponentFactoryResolver,
   Input,
   NgModuleRef,
-  QueryList, signal,
+  QueryList,
+  signal,
   TemplateRef,
   ViewChild,
   ViewChildren,
-  ViewEncapsulation, WritableSignal
+  ViewEncapsulation,
+  WritableSignal,
 } from '@angular/core';
-import * as _ from 'lodash';
 import { IonCol, IonRow } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
-import { NgTemplateOutlet } from '@angular/common';
-
-import { getModelFieldsWithOptions, IFieldListMetadata } from '@smartsoft001/models';
 import { IEntity } from '@smartsoft001/domain-core';
+import {
+  getModelFieldsWithOptions,
+  IFieldListMetadata,
+} from '@smartsoft001/models';
+import * as _ from 'lodash';
 
-import { IListInternalOptions, IListOptions, ListMode } from '../../models';
-import { HardwareService } from '../../services';
 import { CreateDynamicComponent } from '../base';
 import { ListBaseComponent } from './base/base.component';
 import { DynamicContentDirective } from '../../directives';
-import { ListDesktopComponent } from './desktop/desktop.component';
-import { ListMobileComponent } from './mobile/mobile.component';
-import { ListMasonryGridComponent } from './masonry-grid/masonry-grid.component';
+import { IListInternalOptions, IListOptions, ListMode } from '../../models';
+import { HardwareService } from '../../services';
 import { LoaderComponent } from '../loader';
+import { ListDesktopComponent } from './desktop/desktop.component';
+import { ListMasonryGridComponent } from './masonry-grid/masonry-grid.component';
+import { ListMobileComponent } from './mobile/mobile.component';
 
 @Component({
   selector: 'smart-list',
@@ -42,12 +46,12 @@ import { LoaderComponent } from '../loader';
     IonCol,
     TranslatePipe,
     NgTemplateOutlet,
-    LoaderComponent
+    LoaderComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListComponent<
-  T extends IEntity<string>
+  T extends IEntity<string>,
 > extends CreateDynamicComponent<ListBaseComponent<any>>('list') {
   private _options!: WritableSignal<IListInternalOptions<T>>;
 
@@ -66,17 +70,17 @@ export class ListComponent<
     return this._options();
   }
 
-  @ViewChild("contentTpl", { read: TemplateRef, static: false })
+  @ViewChild('contentTpl', { read: TemplateRef, static: false })
   override contentTpl!: TemplateRef<any>;
 
   @ViewChildren(DynamicContentDirective, { read: DynamicContentDirective })
   override dynamicContents = new QueryList<DynamicContentDirective>();
 
   constructor(
-      private hardwareService: HardwareService,
-      private cd: ChangeDetectorRef,
-      private moduleRef: NgModuleRef<any>,
-      private componentFactoryResolver: ComponentFactoryResolver
+    private hardwareService: HardwareService,
+    private cd: ChangeDetectorRef,
+    private moduleRef: NgModuleRef<any>,
+    private componentFactoryResolver: ComponentFactoryResolver,
   ) {
     super(cd, moduleRef, componentFactoryResolver);
   }
@@ -87,8 +91,10 @@ export class ListComponent<
 
   private initFields(): void {
     this._options().fields = _.sortBy(
-        getModelFieldsWithOptions(new (this._options() as any).type()).filter(item => item?.options?.list),
-        item => (item?.options?.list as IFieldListMetadata).order
+      getModelFieldsWithOptions(new (this._options() as any).type()).filter(
+        (item) => item?.options?.list,
+      ),
+      (item) => (item?.options?.list as IFieldListMetadata).order,
     );
   }
 
@@ -96,7 +102,9 @@ export class ListComponent<
     if (this._options()?.mode) {
       this.mode.set(this._options().mode!);
     } else {
-      this.mode.set(this.hardwareService.isMobile ? ListMode.mobile : ListMode.desktop);
+      this.mode.set(
+        this.hardwareService.isMobile ? ListMode.mobile : ListMode.desktop,
+      );
     }
   }
 }

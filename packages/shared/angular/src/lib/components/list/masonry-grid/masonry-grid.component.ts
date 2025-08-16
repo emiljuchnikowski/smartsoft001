@@ -1,26 +1,29 @@
+import { NgOptimizedImage } from '@angular/common';
 import {
   Component,
   ViewChild,
   ViewContainerRef,
-  AfterViewInit, Signal, computed
+  AfterViewInit,
+  Signal,
+  computed,
 } from '@angular/core';
 import {
-  IonButton, IonCard, IonCardContent,
+  IonButton,
+  IonCard,
+  IonCardContent,
   IonCol,
   IonIcon,
   IonInfiniteScroll,
   IonInfiniteScrollContent,
-  IonRow
+  IonRow,
 } from '@ionic/angular/standalone';
-import { NgOptimizedImage } from '@angular/common';
-
 import { IEntity } from '@smartsoft001/domain-core';
 import { FieldType, getModelFieldsWithOptions } from '@smartsoft001/models';
 
-import { ListBaseComponent } from '../base/base.component';
 import { IListComponentFactories, IListInternalOptions } from '../../../models';
-import { PagingComponent } from '../../paging';
 import { FileUrlPipe, ListCellPipe } from '../../../pipes';
+import { PagingComponent } from '../../paging';
+import { ListBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-list-masonry-grid',
@@ -38,8 +41,8 @@ import { FileUrlPipe, ListCellPipe } from '../../../pipes';
     FileUrlPipe,
     IonCardContent,
     NgOptimizedImage,
-    ListCellPipe
-  ]
+    ListCellPipe,
+  ],
 })
 export class ListMasonryGridComponent<T extends IEntity<string>>
   extends ListBaseComponent<T>
@@ -57,11 +60,9 @@ export class ListMasonryGridComponent<T extends IEntity<string>>
   }
 
   protected override afterInitOptions() {
-    super.afterInitOptions();
-
     const fieldOptions = getModelFieldsWithOptions(new this.type());
     const imageFieldOptions = fieldOptions.find(
-      (item) => item.options.type === FieldType.image
+      (item) => item.options.type === FieldType.image,
     );
 
     this.listWithImages = computed(() => {

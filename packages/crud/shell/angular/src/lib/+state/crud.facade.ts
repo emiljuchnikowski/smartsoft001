@@ -1,8 +1,7 @@
 import { computed, Injectable, Signal } from '@angular/core';
+import { IEntity } from '@smartsoft001/domain-core';
 
-import { IEntity } from "@smartsoft001/domain-core";
-
-import { CrudConfig } from "../crud.config";
+import { CrudConfig } from '../crud.config';
 import { ICrudCreateManyOptions, ICrudFilter } from '../models';
 import { createCrudFeatureStore } from './crud.feature.store';
 
@@ -38,10 +37,10 @@ export class CrudFacade<T extends IEntity<string>> {
 
     const fullFilter = {
       ...(filter ? filter : {}),
-      query: filter && filter.query ? filter.query : baseQuery
+      query: filter && filter.query ? filter.query : baseQuery,
     };
 
-    this.store.read(fullFilter)
+    this.store.read(fullFilter);
   }
 
   clear(): void {
@@ -72,7 +71,7 @@ export class CrudFacade<T extends IEntity<string>> {
     this.store.updatePartial(item);
   }
 
-  updatePartialMany(items: (Partial<T> & {id: string})[]) {
+  updatePartialMany(items: (Partial<T> & { id: string })[]) {
     this.store.updatePartialMany(items);
   }
 

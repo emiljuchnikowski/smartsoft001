@@ -1,10 +1,9 @@
 import { ChangeDetectorRef, Input, Directive, Signal } from '@angular/core';
-import {AbstractControl} from "@angular/forms";
+import { AbstractControl } from '@angular/forms';
+import { IFieldOptions } from '@smartsoft001/models';
 
-import {  IFieldOptions } from "@smartsoft001/models";
-
-import { InputOptions } from "../../../models";
-import {BaseComponent} from "../../base";
+import { InputOptions } from '../../../models';
+import { BaseComponent } from '../../base';
 
 @Directive()
 export abstract class InputBaseComponent<T> extends BaseComponent {
@@ -12,7 +11,7 @@ export abstract class InputBaseComponent<T> extends BaseComponent {
   control!: AbstractControl;
   required!: boolean;
 
-  possibilities!: Signal<Array<{ id: any, text: string }> | null>;
+  possibilities!: Signal<Array<{ id: any; text: string }> | null>;
 
   @Input() fieldOptions: IFieldOptions | undefined;
   @Input() set options(val: InputOptions<T>) {
@@ -36,12 +35,14 @@ export abstract class InputBaseComponent<T> extends BaseComponent {
     super();
   }
 
-  protected afterSetOptionsHandler(): void {
-
-  }
+  protected afterSetOptionsHandler() {
+    // No base functionality
+  };
 
   private setRequired(): void {
-    const validator = this.control?.validator ? this.control.validator({} as AbstractControl) : null;
+    const validator = this.control?.validator
+      ? this.control.validator({} as AbstractControl)
+      : null;
     this.required = validator && validator['required'];
   }
 }

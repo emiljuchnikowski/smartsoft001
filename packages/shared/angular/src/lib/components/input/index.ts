@@ -17,7 +17,7 @@ export * from './object/object.component';
 export * from './password/password.component';
 export * from './radio/radio.component';
 export * from './strings/strings.component';
-export * from './text/text.component'
+export * from './text/text.component';
 export * from './logo/logo.component';
 export * from './check/check.component';
 export * from './ints/ints.component';
@@ -30,4 +30,4 @@ export * from './attachment/attachment.component';
 export * from './date-range/date-range.component';
 export * from './image/image.component';
 export * from './float/float.component';
-export * from "./phone-number-pl/phone-number-pl.component";
+export * from './phone-number-pl/phone-number-pl.component';

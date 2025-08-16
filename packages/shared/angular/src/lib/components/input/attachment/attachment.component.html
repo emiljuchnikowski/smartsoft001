@@ -1,6 +1,12 @@
 @if (control) {
   <ion-label position="floating">
-    {{ control?.parent?.value | smartModelLabel : internalOptions.fieldKey : internalOptions?.model?.constructor | async }}
+    {{
+      control?.parent?.value
+        | smartModelLabel
+          : internalOptions.fieldKey
+          : internalOptions?.model?.constructor
+        | async
+    }}
     @if (control.value) {
       {{ control.value.fileName }}
     }
@@ -8,20 +14,31 @@
       @if (required) {
         <span>*</span>
       }
-    </ion-text>
-  </ion-label><br/>
-  <smart-button [options]="addButtonOptions">{{ (control.value ? 'change' : 'add') | translate }}</smart-button>
+    </ion-text> </ion-label
+  ><br />
+  <smart-button [options]="addButtonOptions">{{
+    (control.value ? 'change' : 'add') | translate
+  }}</smart-button>
 
   @if (control.value) {
-    <smart-button [options]="showButtonOptions">{{ 'download' | translate }}</smart-button>
+    <smart-button [options]="showButtonOptions">{{
+      'download' | translate
+    }}</smart-button>
   }
   @if (control.value) {
-    <smart-button [options]="deleteButtonOptions">{{ 'delete' | translate }}</smart-button>
+    <smart-button [options]="deleteButtonOptions">{{
+      'delete' | translate
+    }}</smart-button>
   }
 
   @if (loading()) {
     @let percentage = percent();
-    <ion-progress-bar  [value]="(percentage ?? 0) / 100"></ion-progress-bar>
+    <ion-progress-bar [value]="(percentage ?? 0) / 100"></ion-progress-bar>
   }
 }
-<input type="file" [attr.accept]="fieldOptions?.possibilities" [hidden]="true" #inputObj>
+<input
+  type="file"
+  [attr.accept]="fieldOptions?.possibilities"
+  [hidden]="true"
+  #inputObj
+/>

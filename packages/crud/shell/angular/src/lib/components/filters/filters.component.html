@@ -8,13 +8,11 @@
     <ion-title>{{ 'filters' | translate }}</ion-title>
   </ion-toolbar>
 </ion-header>
-<ion-content style="height: 100vh;">
+<ion-content style="height: 100vh">
   <ion-list>
     @for (item of list(); track item) {
       <smart-crud-filter [item]="item" [filter]="filter()"></smart-crud-filter>
     }
   </ion-list>
-  <div class="menu-bottom-space">
-      &nbsp;
-  </div>
+  <div class="menu-bottom-space">&nbsp;</div>
 </ion-content>

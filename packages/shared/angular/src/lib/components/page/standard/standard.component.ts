@@ -1,21 +1,27 @@
-import {ChangeDetectionStrategy, Component, ElementRef, Renderer2} from '@angular/core';
 import { AsyncPipe, Location, NgTemplateOutlet } from '@angular/common';
-import {PopoverController} from "@ionic/angular";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Renderer2,
+} from '@angular/core';
+import { PopoverController } from '@ionic/angular';
 import {
   IonBadge,
   IonButton,
-  IonButtons, IonContent,
+  IonButtons,
+  IonContent,
   IonHeader,
   IonIcon,
   IonMenuButton,
   IonTitle,
-  IonToolbar
+  IonToolbar,
 } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import {PageBaseComponent} from "../base/base.component";
 import { AppService, HardwareService } from '../../../services';
 import { SearchbarComponent } from '../../searchbar';
+import { PageBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-page-standard',
@@ -34,18 +40,18 @@ import { SearchbarComponent } from '../../searchbar';
     AsyncPipe,
     IonContent,
     IonBadge,
-    NgTemplateOutlet
+    NgTemplateOutlet,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PageStandardComponent extends PageBaseComponent {
   constructor(
-      el: ElementRef,
-      renderer: Renderer2,
-      location: Location,
-      popover: PopoverController,
-      appService: AppService,
-      hardwareService: HardwareService
+    el: ElementRef,
+    renderer: Renderer2,
+    location: Location,
+    popover: PopoverController,
+    appService: AppService,
+    hardwareService: HardwareService,
   ) {
     super(el, renderer, location, popover, appService, hardwareService);
   }

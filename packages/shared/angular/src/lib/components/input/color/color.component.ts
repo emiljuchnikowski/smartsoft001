@@ -1,4 +1,5 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import {
   IonButton,
   IonCard,
@@ -7,13 +8,12 @@ import {
   IonIcon,
   IonLabel,
   IonRow,
-  IonText
+  IonText,
 } from '@ionic/angular/standalone';
 import { ColorPickerDirective } from 'ngx-color-picker';
-import { AsyncPipe } from '@angular/common';
 
-import {InputBaseComponent} from "../base/base.component";
 import { ModelLabelPipe } from '../../../pipes';
+import { InputBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-input-color',
@@ -30,8 +30,8 @@ import { ModelLabelPipe } from '../../../pipes';
     IonIcon,
     ColorPickerDirective,
     ModelLabelPipe,
-    AsyncPipe
-  ]
+    AsyncPipe,
+  ],
 })
 export class InputColorComponent<T> extends InputBaseComponent<T> {
   color!: string | null;
@@ -41,7 +41,7 @@ export class InputColorComponent<T> extends InputBaseComponent<T> {
   }
 
   protected override afterSetOptionsHandler() {
-    super.afterSetOptionsHandler();
+
 
     this.color = this.control.value;
   }
@@ -53,7 +53,7 @@ export class InputColorComponent<T> extends InputBaseComponent<T> {
   }
 
   clear() {
-    this.color = null
+    this.color = null;
     this.control.markAsDirty();
     this.control.markAllAsTouched();
     this.control.setValue(null);

@@ -1,11 +1,16 @@
-import {ChangeDetectorRef, Component, ElementRef, ViewChild} from '@angular/core';
 import { AsyncPipe } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  ViewChild,
+} from '@angular/core';
 import { IonLabel, IonText } from '@ionic/angular/standalone';
+import { TranslatePipe } from '@ngx-translate/core';
 
-import {InputBaseComponent} from "../base/base.component";
-import { ButtonComponent } from '../../button';
 import { ModelLabelPipe } from '../../../pipes';
+import { ButtonComponent } from '../../button';
+import { InputBaseComponent } from '../base/base.component';
 
 /**
  * @example
@@ -36,9 +41,9 @@ import { ModelLabelPipe } from '../../../pipes';
     ButtonComponent,
     ModelLabelPipe,
     AsyncPipe,
-    TranslatePipe
+    TranslatePipe,
   ],
-  styleUrls: ['./file.component.scss']
+  styleUrls: ['./file.component.scss'],
 })
 export class InputFileComponent<T> extends InputBaseComponent<T> {
   addButtonOptions = {
@@ -46,7 +51,7 @@ export class InputFileComponent<T> extends InputBaseComponent<T> {
       this.control.markAsDirty();
       this.control.markAsTouched();
       (this.inputElementRef.nativeElement as HTMLInputElement).click();
-    }
+    },
   };
 
   @ViewChild('inputObj', { read: ElementRef })
@@ -56,7 +61,7 @@ export class InputFileComponent<T> extends InputBaseComponent<T> {
     super(cd);
   }
 
-  changeListener($event: any) : void {
+  changeListener($event: any): void {
     const file = $event.target.files[0];
 
     $event.target.type = 'text';

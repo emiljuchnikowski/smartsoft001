@@ -1,43 +1,52 @@
 <ion-item>
   @switch (item.fieldType) {
     @case (FieldType.date) {
-      <smart-crud-filter-date [item]="item" [filter]="filter"></smart-crud-filter-date>
+      <smart-crud-filter-date
+        [item]="item"
+        [filter]="filter"
+      ></smart-crud-filter-date>
     }
     @case (FieldType.dateWithEdit) {
-      <smart-crud-filter-date-with-edit [item]="item" [filter]="filter"></smart-crud-filter-date-with-edit>
+      <smart-crud-filter-date-with-edit
+        [item]="item"
+        [filter]="filter"
+      ></smart-crud-filter-date-with-edit>
     }
     @case (FieldType.dateTime) {
-      <smart-crud-filter-date-time [item]="item" [filter]="filter"></smart-crud-filter-date-time>
+      <smart-crud-filter-date-time
+        [item]="item"
+        [filter]="filter"
+      ></smart-crud-filter-date-time>
     }
     @case (FieldType.radio) {
-      <smart-crud-filter-radio [item]="item" [filter]="filter"></smart-crud-filter-radio>
+      <smart-crud-filter-radio
+        [item]="item"
+        [filter]="filter"
+      ></smart-crud-filter-radio>
     }
     @case (FieldType.check) {
-      <smart-crud-filter-check [item]="item" [filter]="filter"></smart-crud-filter-check>
+      <smart-crud-filter-check
+        [item]="item"
+        [filter]="filter"
+      ></smart-crud-filter-check>
     }
     @case (FieldType.flag) {
-       <smart-crud-filter-flag [item]="item" [filter]="filter"></smart-crud-filter-flag>
+      <smart-crud-filter-flag
+        [item]="item"
+        [filter]="filter"
+      ></smart-crud-filter-flag>
     }
     @case (FieldType.int) {
-      <smart-crud-filter-int [item]="item" [filter]="filter"></smart-crud-filter-int>
+      <smart-crud-filter-int
+        [item]="item"
+        [filter]="filter"
+      ></smart-crud-filter-int>
     }
     @default {
-      <smart-crud-filter-text [item]="item" [filter]="filter"></smart-crud-filter-text>
+      <smart-crud-filter-text
+        [item]="item"
+        [filter]="filter"
+      ></smart-crud-filter-text>
     }
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </ion-item>

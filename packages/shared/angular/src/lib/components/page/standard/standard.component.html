@@ -1,7 +1,9 @@
 <ion-header [hidden]="!options || options.hideHeader">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-menu-button [hidden]="!options || options.hideMenuButton"></ion-menu-button>
+      <ion-menu-button
+        [hidden]="!options || options.hideMenuButton"
+      ></ion-menu-button>
       @if (options?.showBackButton) {
         <ion-button (click)="back()">
           <ion-icon slot="icon-only" name="arrow-back"> </ion-icon>
@@ -12,21 +14,32 @@
 
     <ion-buttons slot="end">
       @if (options?.search) {
-        <smart-searchbar [text]="options!.search!.text()" (textChange)="options!.search!.set($event)"></smart-searchbar>
+        <smart-searchbar
+          [text]="options!.search!.text()"
+          (textChange)="options!.search!.set($event)"
+        ></smart-searchbar>
       }
 
       @if (options?.endButtons) {
         @for (btn of options!.endButtons; track btn.number) {
           @if (btn.type === 'popover') {
-            <ion-button (click)="presentPopover($event, btn)" [disabled]="btn.disabled$ | async">
-              <ng-container [ngTemplateOutlet]="btnContent"
-                            [ngTemplateOutletContext]="{ btn: btn }"
+            <ion-button
+              (click)="presentPopover($event, btn)"
+              [disabled]="btn.disabled$ | async"
+            >
+              <ng-container
+                [ngTemplateOutlet]="btnContent"
+                [ngTemplateOutletContext]="{ btn: btn }"
               ></ng-container>
             </ion-button>
           } @else {
-            <ion-button (click)="btn?.handler?.()" [disabled]="btn.disabled$ | async">
-              <ng-container [ngTemplateOutlet]="btnContent"
-                            [ngTemplateOutletContext]="{ btn: btn }"
+            <ion-button
+              (click)="btn?.handler?.()"
+              [disabled]="btn.disabled$ | async"
+            >
+              <ng-container
+                [ngTemplateOutlet]="btnContent"
+                [ngTemplateOutletContext]="{ btn: btn }"
               ></ng-container>
             </ion-button>
           }
@@ -35,15 +48,23 @@
 
       @for (btn of appService.endButtons$ | async; track btn.number) {
         @if (btn.type === 'popover') {
-          <ion-button (click)="presentPopover($event, btn)" [disabled]="btn.disabled$ | async">
-            <ng-container [ngTemplateOutlet]="btnContent"
-                          [ngTemplateOutletContext]="{ btn: btn }"
+          <ion-button
+            (click)="presentPopover($event, btn)"
+            [disabled]="btn.disabled$ | async"
+          >
+            <ng-container
+              [ngTemplateOutlet]="btnContent"
+              [ngTemplateOutletContext]="{ btn: btn }"
             ></ng-container>
           </ion-button>
         } @else {
-          <ion-button (click)="btn?.handler?.()" [disabled]="btn.disabled$ | async">
-            <ng-container [ngTemplateOutlet]="btnContent"
-                          [ngTemplateOutletContext]="{ btn: btn }"
+          <ion-button
+            (click)="btn?.handler?.()"
+            [disabled]="btn.disabled$ | async"
+          >
+            <ng-container
+              [ngTemplateOutlet]="btnContent"
+              [ngTemplateOutletContext]="{ btn: btn }"
             ></ng-container>
           </ion-button>
         }
@@ -52,7 +73,7 @@
   </ion-toolbar>
 </ion-header>
 <ion-content scroll>
-    <ng-content></ng-content>
+  <ng-content></ng-content>
 </ion-content>
 
 <ng-template #btnContent let-btn="btn">
@@ -60,12 +81,12 @@
     <ion-icon slot="start" [name]="btn.icon"></ion-icon>
     {{ btn.text | translate }}
     @if (btn.number) {
-      <ion-badge color="primary">{{btn.number}}</ion-badge>
+      <ion-badge color="primary">{{ btn.number }}</ion-badge>
     }
   } @else if (isMobile || !btn.text) {
     <ion-icon slot="icon-only" [name]="btn.icon"></ion-icon>
     @if (btn.number) {
-      <ion-badge color="primary">{{btn.number}}</ion-badge>
+      <ion-badge color="primary">{{ btn.number }}</ion-badge>
     }
   }
 </ng-template>

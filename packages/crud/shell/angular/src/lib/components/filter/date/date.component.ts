@@ -1,22 +1,22 @@
 import { Component } from '@angular/core';
-import moment from "moment";
+import { FormsModule } from '@angular/forms';
 import {
   IonButton,
   IonCol,
-  IonDatetime, IonIcon,
+  IonDatetime,
+  IonIcon,
   IonItem,
   IonLabel,
   IonPopover,
   IonRow,
-  IonText
+  IonText,
 } from '@ionic/angular/standalone';
-import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
+import { IEntity } from '@smartsoft001/domain-core';
+import { GuidService } from '@smartsoft001/utils';
+import moment from 'moment';
 
-import {GuidService} from "@smartsoft001/utils";
-import {IEntity} from "@smartsoft001/domain-core";
-
-import {BaseComponent} from "../base/base.component";
+import { BaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-crud-filter-date',
@@ -32,11 +32,13 @@ import {BaseComponent} from "../base/base.component";
     FormsModule,
     IonButton,
     IonIcon,
-    TranslatePipe
+    TranslatePipe,
   ],
-  styleUrls: ['./date.component.scss']
+  styleUrls: ['./date.component.scss'],
 })
-export class FilterDateComponent<T extends IEntity<string>> extends BaseComponent<T> {
+export class FilterDateComponent<
+  T extends IEntity<string>,
+> extends BaseComponent<T> {
   id = GuidService.create();
 
   get allowAdvanced(): boolean {
@@ -45,7 +47,10 @@ export class FilterDateComponent<T extends IEntity<string>> extends BaseComponen
 
   set customValue(val) {
     const momentDate = moment(val);
-    this.value = (val as string)?.length >= 10 && momentDate.isValid() ? momentDate.format('YYYY-MM-DD') : val;
+    this.value =
+      (val as string)?.length >= 10 && momentDate.isValid()
+        ? momentDate.format('YYYY-MM-DD')
+        : val;
   }
 
   get customValue(): any {
@@ -54,7 +59,10 @@ export class FilterDateComponent<T extends IEntity<string>> extends BaseComponen
 
   set customMinValue(val) {
     const momentDate = moment(val);
-    this.minValue = (val as string)?.length >= 10 && momentDate.isValid() ? momentDate.format('YYYY-MM-DD') : val;
+    this.minValue =
+      (val as string)?.length >= 10 && momentDate.isValid()
+        ? momentDate.format('YYYY-MM-DD')
+        : val;
   }
 
   get customMinValue(): any {
@@ -63,7 +71,10 @@ export class FilterDateComponent<T extends IEntity<string>> extends BaseComponen
 
   set customMaxValue(val) {
     const momentDate = moment(val);
-    this.maxValue = (val as string)?.length >= 10 && momentDate.isValid() ? momentDate.format('YYYY-MM-DD') : val;
+    this.maxValue =
+      (val as string)?.length >= 10 && momentDate.isValid()
+        ? momentDate.format('YYYY-MM-DD')
+        : val;
   }
 
   get customMaxValue(): any {

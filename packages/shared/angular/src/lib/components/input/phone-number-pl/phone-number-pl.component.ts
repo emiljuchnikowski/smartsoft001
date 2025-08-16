@@ -1,10 +1,17 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import { ReactiveFormsModule, Validators } from '@angular/forms';
-import { IonChip, IonCol, IonInput, IonLabel, IonRow, IonText } from '@ionic/angular/standalone';
 import { AsyncPipe } from '@angular/common';
+import { ChangeDetectorRef, Component } from '@angular/core';
+import { ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  IonChip,
+  IonCol,
+  IonInput,
+  IonLabel,
+  IonRow,
+  IonText,
+} from '@ionic/angular/standalone';
 
-import {InputBaseComponent} from "../base/base.component";
 import { ModelLabelPipe } from '../../../pipes';
+import { InputBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-input-phone-number-pl',
@@ -19,18 +26,17 @@ import { ModelLabelPipe } from '../../../pipes';
     IonInput,
     ReactiveFormsModule,
     ModelLabelPipe,
-    AsyncPipe
-  ]
+    AsyncPipe,
+  ],
 })
-export class InputPhoneNumberPlComponent<T> extends InputBaseComponent<T>{
-
+export class InputPhoneNumberPlComponent<T> extends InputBaseComponent<T> {
   constructor(cd: ChangeDetectorRef) {
     super(cd);
   }
 
   override afterSetOptionsHandler() {
-    super.afterSetOptionsHandler();
-    const validators = this.control.validator ? [ this.control.validator ] : [];
+
+    const validators = this.control.validator ? [this.control.validator] : [];
 
     validators.push(Validators.minLength(9));
     validators.push(Validators.maxLength(9));

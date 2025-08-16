@@ -5,25 +5,39 @@
   <ion-list>
     @for (item of list; track item.id) {
       <ion-item-sliding>
-        @if (removeHandler && (!checkRemoveHandler || checkRemoveHandler(item))) {
+        @if (
+          removeHandler && (!checkRemoveHandler || checkRemoveHandler(item))
+        ) {
           <ion-item-options side="start" (ionSwipe)="removeHandler?.(item)">
-            <ion-item-option color="danger" expandable (click)="removeHandler?.(item)">
+            <ion-item-option
+              color="danger"
+              expandable
+              (click)="removeHandler?.(item)"
+            >
               {{ 'delete' | translate }}
             </ion-item-option>
           </ion-item-options>
         }
 
-        <ion-item (click)='itemHandler ? itemHandler(item.id) : unselect && unselect()'>
+        <ion-item
+          (click)="itemHandler ? itemHandler(item.id) : unselect && unselect()"
+        >
           <ion-label>
             @for (key of keys; track key) {
-              @let cell = item | smartListCell : key : cellPipe : type;
+              @let cell = item | smartListCell: key : cellPipe : type;
               @if (cell) {
                 @if (cell.type === FieldType.image) {
-                  <img [attr.smart-item-key]="key" height="100" [lazyLoad]="cell.value | smartFileUrl" alt="" src="">
+                  <img
+                    [attr.smart-item-key]="key"
+                    height="100"
+                    [lazyLoad]="cell.value | smartFileUrl"
+                    alt=""
+                    src=""
+                  />
                 } @else if ($first) {
                   <h2 [attr.smart-item-key]="key" [innerHTML]="cell.value"></h2>
                 } @else {
-                  <p  [attr.smart-item-key]="key" [innerHTML]="cell.value"></p>
+                  <p [attr.smart-item-key]="key" [innerHTML]="cell.value"></p>
                 }
               }
             }
@@ -34,16 +48,23 @@
   </ion-list>
 }
 
-@if (loadNextPage && list?.length && options.pagination?.mode !== PaginationMode.singlePage) {
+@if (
+  loadNextPage &&
+  list?.length &&
+  options.pagination?.mode !== PaginationMode.singlePage
+) {
   <ion-infinite-scroll threshold="100px" (ionInfinite)="loadNextPage?.($event)">
-    <ion-infinite-scroll-content loadingSpinner="circles"></ion-infinite-scroll-content>
+    <ion-infinite-scroll-content
+      loadingSpinner="circles"
+    ></ion-infinite-scroll-content>
   </ion-infinite-scroll>
 }
 
 @if (options?.pagination?.mode === PaginationMode.singlePage) {
-  <smart-paging [page]="page()"
-                [totalPages]="totalPages()"
-                (prevPage)="loadPrevPage?.()"
-                (nextPage)="loadNextPage?.()"
+  <smart-paging
+    [page]="page()"
+    [totalPages]="totalPages()"
+    (prevPage)="loadPrevPage?.()"
+    (nextPage)="loadNextPage?.()"
   ></smart-paging>
 }

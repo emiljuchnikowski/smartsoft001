@@ -1,56 +1,60 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
-  ComponentFactory, ComponentFactoryResolver, computed,
-  Injector, NgModuleRef, OnDestroy,
-  OnInit, QueryList, Signal, TemplateRef,
-  ViewChild, ViewChildren,
-  ViewContainerRef, WritableSignal
+  ComponentFactory,
+  ComponentFactoryResolver,
+  computed,
+  Injector,
+  NgModuleRef,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  Signal,
+  TemplateRef,
+  ViewChild,
+  ViewChildren,
+  ViewContainerRef,
+  WritableSignal,
 } from '@angular/core';
-import { map } from "rxjs/operators";
-import { Router } from "@angular/router";
-import {Subject} from "rxjs";
-import { SpecificationService } from "@smartsoft001/utils";
-import { NgTemplateOutlet } from '@angular/common';
-import { toSignal } from '@angular/core/rxjs-interop';
-
+import { Router } from '@angular/router';
 import {
   CreateDynamicComponent,
-  DynamicComponentLoader, DynamicContentDirective,
+  DynamicComponentLoader,
+  DynamicContentDirective,
   HardwareService,
   IIconButtonOptions,
   IListOptions,
   IPageOptions,
   ListMode,
-  MenuService, PageComponent, StyleService
+  MenuService,
+  PageComponent,
 } from '@smartsoft001/angular';
-import { IEntity } from "@smartsoft001/domain-core";
+import { IEntity } from '@smartsoft001/domain-core';
 import {
   getModelFieldsWithOptions,
   getModelOptions,
   IFieldEditMetadata,
   IFieldListMetadata,
-} from "@smartsoft001/models";
+} from '@smartsoft001/models';
+import { SpecificationService } from '@smartsoft001/utils';
+import { Subject } from 'rxjs';
 
-import { CrudFacade } from "../../+state/crud.facade";
-import { CrudFullConfig } from "../../crud.config";
-import { ICrudFilter } from '../../models';
+import { CrudFacade } from '../../+state/crud.facade';
 import { ExportComponent } from '../../components';
 import { FiltersComponent } from '../../components';
 import { MultiselectComponent } from '../../components';
-import { CrudListPaginationFactory } from "../../factories/list-pagination/list-pagination.factory";
-import {PageService} from "../../services/page/page.service";
-import {CrudListPageBaseComponent} from "./base/base.component";
-import {CrudSearchService} from "../../services/search/search.service";
+import { CrudFullConfig } from '../../crud.config';
+import { CrudListPageBaseComponent } from './base/base.component';
+import { CrudListPaginationFactory } from '../../factories/list-pagination/list-pagination.factory';
+import { ICrudFilter } from '../../models';
 import { ListStandardComponent } from './standard/standard.component';
+import { PageService } from '../../services/page/page.service';
+import { CrudSearchService } from '../../services/search/search.service';
 
 @Component({
   selector: 'smart-crud-list-page',
-  imports: [
-    PageComponent,
-    ListStandardComponent,
-    NgTemplateOutlet,
-  ],
+  imports: [PageComponent, ListStandardComponent, NgTemplateOutlet],
   template: `
     @if (filter()) {
       <smart-page [options]="pageOptions()">
@@ -67,10 +71,12 @@ import { ListStandardComponent } from './standard/standard.component';
         <div class="dynamic-content"></div>
       </smart-page>
     }
-  `
+  `,
 })
 export class ListComponent<T extends IEntity<string>>
-    extends CreateDynamicComponent<CrudListPageBaseComponent<any>>('crud-list-page')
+  extends CreateDynamicComponent<CrudListPageBaseComponent<any>>(
+    'crud-list-page',
+  )
   implements OnInit, OnDestroy
 {
   private _cleanMultiSelected$ = new Subject<void>();
@@ -81,10 +87,10 @@ export class ListComponent<T extends IEntity<string>>
 
   filter: Signal<ICrudFilter> = this.facade.filter;
 
-  @ViewChild("topTpl", { read: ViewContainerRef, static: false })
+  @ViewChild('topTpl', { read: ViewContainerRef, static: false })
   topTpl: ViewContainerRef;
 
-  @ViewChild("contentTpl", { read: TemplateRef, static: false })
+  @ViewChild('contentTpl', { read: TemplateRef, static: false })
   contentTpl: TemplateRef<any>;
 
   @ViewChildren(DynamicContentDirective, { read: DynamicContentDirective })
@@ -103,7 +109,7 @@ export class ListComponent<T extends IEntity<string>>
     public config: CrudFullConfig<T>,
     private searchService: CrudSearchService,
     private moduleRef: NgModuleRef<any>,
-    private componentFactoryResolver: ComponentFactoryResolver
+    private componentFactoryResolver: ComponentFactoryResolver,
   ) {
     super(cd, moduleRef, componentFactoryResolver);
 
@@ -123,29 +129,43 @@ export class ListComponent<T extends IEntity<string>>
 
     if (this.config.list?.resetQuery === 'beforeInit') {
       newFilter = {
-        query: this.config.baseQuery ? [ ...this.config.baseQuery ] : [],
+        query: this.config.baseQuery ? [...this.config.baseQuery] : [],
         paginationMode: this.config.list.paginationMode,
         limit: this.config.pagination ? this.config.pagination.limit : null,
         offset: this.config.pagination ? 0 : null,
-        sortBy: this.config.sort ? this.config.sort["default"] : null,
-        sortDesc: this.config.sort ? this.config.sort["defaultDesc"] : null,
-        ...this.searchService.filter
+        sortBy: this.config.sort ? this.config.sort['default'] : null,
+        sortDesc: this.config.sort ? this.config.sort['defaultDesc'] : null,
+        ...this.searchService.filter,
       };
     } else if (this.filter()) {
       newFilter = this.filter();
     } else {
       newFilter = {
         paginationMode: this.config.list.paginationMode,
-        limit: this.searchService.filter?.limit ? this.searchService.filter.limit : this.config.pagination
-            ? this.config.pagination.limit : null,
-        offset: this.searchService.filter?.offset || this.searchService.filter?.offset === 0
-            ? this.searchService.filter.offset : this.config.pagination ? 0 : null,
-        sortBy: this.searchService.filter?.sortBy ? this.searchService.filter.sortBy : this.config.sort
-            ? this.config.sort["default"] : null,
-        sortDesc: this.searchService.filter?.sortDesc ? this.searchService.filter.sortDesc :  this.config.sort
-            ? this.config.sort["defaultDesc"] : null,
-        query: this.config.baseQuery ? [ ...this.config.baseQuery ] : [],
-        ...this.searchService.filter
+        limit: this.searchService.filter?.limit
+          ? this.searchService.filter.limit
+          : this.config.pagination
+            ? this.config.pagination.limit
+            : null,
+        offset:
+          this.searchService.filter?.offset ||
+          this.searchService.filter?.offset === 0
+            ? this.searchService.filter.offset
+            : this.config.pagination
+              ? 0
+              : null,
+        sortBy: this.searchService.filter?.sortBy
+          ? this.searchService.filter.sortBy
+          : this.config.sort
+            ? this.config.sort['default']
+            : null,
+        sortDesc: this.searchService.filter?.sortDesc
+          ? this.searchService.filter.sortDesc
+          : this.config.sort
+            ? this.config.sort['defaultDesc']
+            : null,
+        query: this.config.baseQuery ? [...this.config.baseQuery] : [],
+        ...this.searchService.filter,
       };
     }
 
@@ -153,11 +173,11 @@ export class ListComponent<T extends IEntity<string>>
 
     const endButtons = this.getEndButtons();
 
-    this.pageOptions = computed( () => ({
+    this.pageOptions = computed(() => ({
       title: this.config.title,
       search: this.config.search
         ? {
-            text: computed(() => (this.filter().searchText ?? null)),
+            text: computed(() => this.filter().searchText ?? null),
             set: (txt) => {
               if (txt !== this.filter().searchText)
                 this.facade.read({
@@ -175,19 +195,19 @@ export class ListComponent<T extends IEntity<string>>
       await this.dynamicComponentLoader.getComponentsWithFactories({
         components: [
           ...(this.config.details &&
-          this.config.details["components"] &&
-          this.config.details["components"].top
-            ? [this.config.details["components"].top]
+          this.config.details['components'] &&
+          this.config.details['components'].top
+            ? [this.config.details['components'].top]
             : []),
           ...(this.config.details &&
-          this.config.details["components"] &&
-          this.config.details["components"].bottom
-            ? [this.config.details["components"].bottom]
+          this.config.details['components'] &&
+          this.config.details['components'].bottom
+            ? [this.config.details['components'].bottom]
             : []),
           ...(this.config.list &&
-          this.config.list["components"] &&
-          this.config.list["components"].top
-            ? [this.config.list["components"].top]
+          this.config.list['components'] &&
+          this.config.list['components'].top
+            ? [this.config.list['components'].top]
             : []),
         ],
       });
@@ -215,7 +235,7 @@ export class ListComponent<T extends IEntity<string>>
         },
         list: this.facade.list,
         loading: this.facade.loading,
-        onCleanMultiSelected$: this._cleanMultiSelected$
+        onCleanMultiSelected$: this._cleanMultiSelected$,
       },
       cellPipe: this.config.list ? this.config.list.cellPipe : null,
       mode: this.config.list?.mode,
@@ -235,21 +255,21 @@ export class ListComponent<T extends IEntity<string>>
             componentFactories: {
               top:
                 this.config.details &&
-                this.config.details["components"] &&
-                this.config.details["components"].top
+                this.config.details['components'] &&
+                this.config.details['components'].top
                   ? compiledComponents.find(
                       (cc) =>
-                        cc.component === this.config.details["components"].top
+                        cc.component === this.config.details['components'].top,
                     ).factory
                   : null,
               bottom:
                 this.config.details &&
-                this.config.details["components"] &&
-                this.config.details["components"].bottom
+                this.config.details['components'] &&
+                this.config.details['components'].bottom
                   ? compiledComponents.find(
                       (cc) =>
                         cc.component ===
-                        this.config.details["components"].bottom
+                        this.config.details['components'].bottom,
                     ).factory
                   : null,
             },
@@ -259,7 +279,7 @@ export class ListComponent<T extends IEntity<string>>
         !!this.config.edit || this.config.details
           ? {
               options: {
-                routingPrefix: "/" + this.router.routerState.snapshot.url + "/",
+                routingPrefix: '/' + this.router.routerState.snapshot.url + '/',
                 edit: !!this.config.edit,
               },
             }
@@ -269,8 +289,10 @@ export class ListComponent<T extends IEntity<string>>
             provider: {
               invoke: (id) => this.facade.delete(id),
               check: (item: T) => {
-                return options?.remove?.enabled ? SpecificationService.valid(item, options?.remove?.enabled) : true;
-              }
+                return options?.remove?.enabled
+                  ? SpecificationService.valid(item, options?.remove?.enabled)
+                  : true;
+              },
             },
           }
         : null,
@@ -304,10 +326,10 @@ export class ListComponent<T extends IEntity<string>>
   private async clear() {
     await this.menuService.closeEnd();
 
-    this.listOptions.update((val => ({
+    this.listOptions.update((val) => ({
       ...val,
-      select: null
-    })));
+      select: null,
+    }));
 
     this.facade.multiSelect([]);
   }
@@ -318,35 +340,33 @@ export class ListComponent<T extends IEntity<string>>
 
     const showFilters =
       fieldsWithOptions.some(
-        (x) => (x.options?.list as IFieldListMetadata)?.filter
+        (x) => (x.options?.list as IFieldListMetadata)?.filter,
       ) || modelOptions?.filters?.length;
 
     const showMultiEdit =
-        this.config.list?.components?.multi ||
-        (
-            this.config.edit &&
-            fieldsWithOptions.some(
-                (x) => (x.options?.update as IFieldEditMetadata)?.multi
-            ) &&
-            !this.hardwareService.isMobile &&
-            (!this.config?.list?.mode ||
-                this.config?.list?.mode === ListMode.desktop)
-        );
+      this.config.list?.components?.multi ||
+      (this.config.edit &&
+        fieldsWithOptions.some(
+          (x) => (x.options?.update as IFieldEditMetadata)?.multi,
+        ) &&
+        !this.hardwareService.isMobile &&
+        (!this.config?.list?.mode ||
+          this.config?.list?.mode === ListMode.desktop));
 
     return [
       ...(showMultiEdit
         ? [
             {
-              icon: "checkbox-outline",
-              text: "multi",
+              icon: 'checkbox-outline',
+              text: 'multi',
               handler: () => {
                 this.facade.multiSelect([]);
                 this._cleanMultiSelected$.next();
 
                 setTimeout(async () => {
-                  this.listOptions.update(val => ({
+                  this.listOptions.update((val) => ({
                     ...val,
-                    select: val.select === "multi" ? null : "multi",
+                    select: val.select === 'multi' ? null : 'multi',
                   }));
                   if (this.menuService.openedEnd)
                     await this.menuService.closeEnd();
@@ -359,8 +379,8 @@ export class ListComponent<T extends IEntity<string>>
       ...(showFilters
         ? [
             {
-              icon: "filter-outline",
-              text: "filters",
+              icon: 'filter-outline',
+              text: 'filters',
               handler: async () => {
                 await this.menuService.openEnd({
                   injector: this.injector,
@@ -373,11 +393,11 @@ export class ListComponent<T extends IEntity<string>>
       ...(this.config.add
         ? [
             {
-              icon: "add",
-              text: "add",
+              icon: 'add',
+              text: 'add',
               handler: () => {
                 this.router.navigate([
-                  "/" + this.router.routerState.snapshot.url + "/add",
+                  '/' + this.router.routerState.snapshot.url + '/add',
                 ]);
               },
             },
@@ -386,9 +406,9 @@ export class ListComponent<T extends IEntity<string>>
       ...(this.config.export
         ? [
             {
-              text: "export",
-              icon: "download-outline",
-              type: "popover" as "popover",
+              text: 'export',
+              icon: 'download-outline',
+              type: 'popover' as const,
               component: ExportComponent,
             },
           ]
@@ -401,14 +421,14 @@ export class ListComponent<T extends IEntity<string>>
     compiledComponents: {
       component: any;
       factory: ComponentFactory<any>;
-    }[]
+    }[],
   ) {
     const factory =
       this.config.list &&
-      this.config.list["components"] &&
-      this.config.list["components"].top
+      this.config.list['components'] &&
+      this.config.list['components'].top
         ? compiledComponents.find(
-            (cc) => cc.component === this.config.list["components"].top
+            (cc) => cc.component === this.config.list['components'].top,
           ).factory
         : null;
 

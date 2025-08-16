@@ -1,11 +1,17 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import { IonInput, IonItem, IonLabel, IonList, IonText } from '@ionic/angular/standalone';
-import { TranslatePipe } from '@ngx-translate/core';
-import { ReactiveFormsModule } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
+import { ChangeDetectorRef, Component } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import {
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonText,
+} from '@ionic/angular/standalone';
+import { TranslatePipe } from '@ngx-translate/core';
 
-import {InputBaseComponent} from "../base/base.component";
 import { ModelLabelPipe } from '../../../pipes';
+import { InputBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-input-address',
@@ -20,8 +26,8 @@ import { ModelLabelPipe } from '../../../pipes';
     ReactiveFormsModule,
     ModelLabelPipe,
     AsyncPipe,
-    IonInput
-  ]
+    IonInput,
+  ],
 })
 export class InputAddressComponent<T> extends InputBaseComponent<T> {
   constructor(cd: ChangeDetectorRef) {

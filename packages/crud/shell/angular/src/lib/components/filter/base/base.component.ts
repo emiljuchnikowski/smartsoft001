@@ -1,13 +1,12 @@
 import { Directive, input, InputSignal, OnInit, Signal } from '@angular/core';
-import {Debounce} from "lodash-decorators";
-import {TranslateService} from "@ngx-translate/core";
+import { TranslateService } from '@ngx-translate/core';
+import { IEntity } from '@smartsoft001/domain-core';
+import { FieldType, IModelFilter } from '@smartsoft001/models';
+import { Debounce } from 'lodash-decorators';
 
-import {IEntity} from "@smartsoft001/domain-core";
-import {FieldType, IModelFilter} from "@smartsoft001/models";
-
-import {ICrudFilter} from '../../../models';
-import {CrudFacade} from "../../../+state/crud.facade";
-import {CrudConfig} from "../../../crud.config";
+import { CrudFacade } from '../../../+state/crud.facade';
+import { CrudConfig } from '../../../crud.config';
+import { ICrudFilter } from '../../../models';
 
 @Directive()
 export class BaseComponent<T extends IEntity<string>> implements OnInit {
@@ -18,15 +17,15 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
 
   get value(): any {
     if (this.isArrayType()) {
-      return this.filter().query
-          .filter(
-            (q) => q.key === this.item().key && q.type === this.item().type
-          )
-          .map(q => q.value);
+      return this.filter()
+        .query.filter(
+          (q) => q.key === this.item().key && q.type === this.item().type,
+        )
+        .map((q) => q.value);
     }
 
     const query = this.filter().query.find(
-      (q) => q.key === this.item().key && q.type === this.item().type
+      (q) => q.key === this.item().key && q.type === this.item().type,
     );
     return query?.value;
   }
@@ -37,40 +36,36 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
 
   get minValue(): any {
     if (this.isArrayType()) {
-      return this.filter().query
-          .filter(
-              (q) => q.key === this.item().key && q.type === ">="
-          )
-          .map(q => q.value);
+      return this.filter()
+        .query.filter((q) => q.key === this.item().key && q.type === '>=')
+        .map((q) => q.value);
     }
 
     const query = this.filter().query.find(
-        (q) => q.key === this.item().key && q.type === ">="
+      (q) => q.key === this.item().key && q.type === '>=',
     );
     return query?.value;
   }
 
   set minValue(val: any) {
-    this.refresh(val, ">=");
+    this.refresh(val, '>=');
   }
 
   get maxValue(): any {
     if (this.isArrayType()) {
-      return this.filter().query
-          .filter(
-              (q) => q.key === this.item().key && q.type === "<="
-          )
-          .map(q => q.value);
+      return this.filter()
+        .query.filter((q) => q.key === this.item().key && q.type === '<=')
+        .map((q) => q.value);
     }
 
     const query = this.filter().query.find(
-        (q) => q.key === this.item().key && q.type === "<="
+      (q) => q.key === this.item().key && q.type === '<=',
     );
     return query?.value;
   }
 
   set maxValue(val: any) {
-    this.refresh(val, "<=");
+    this.refresh(val, '<=');
   }
 
   get lang(): string {
@@ -80,7 +75,7 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
   constructor(
     protected facade: CrudFacade<T>,
     private config: CrudConfig<T>,
-    protected translateService: TranslateService
+    protected translateService: TranslateService,
   ) {}
 
   @Debounce(500)
@@ -95,7 +90,7 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
     }
 
     let query = this.filter().query.find(
-        (q) => q.key === this.item().key && q.type === type
+      (q) => q.key === this.item().key && q.type === type,
     );
 
     if (val === null || val === undefined || val === '') {
@@ -126,7 +121,7 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
 
   clear(): void {
     this.filter().query = this.filter().query.filter(
-        (q) => q.key !== this.item().key
+      (q) => q.key !== this.item().key,
     );
     this.filter().offset = 0;
     this.facade.read(this.filter());
@@ -141,15 +136,15 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
   }
 
   private isArrayType(): boolean {
-    return (this.item()?.fieldType === FieldType.check);
+    return this.item()?.fieldType === FieldType.check;
   }
 
   private refreshForArray(vals: [], type): void {
     const queries = this.filter().query.filter(
-        (q) => q.key === this.item().key && q.type === type
+      (q) => q.key === this.item().key && q.type === type,
     );
 
-    queries.forEach(query => {
+    queries.forEach((query) => {
       const index = this.filter().query.indexOf(query);
       if (index > -1) {
         this.filter().query.splice(index, 1);
@@ -161,7 +156,7 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
       return;
     }
 
-    vals.forEach(val => {
+    vals.forEach((val) => {
       const query = {
         key: this.item().key,
         type: type,

@@ -1,8 +1,6 @@
 {
   "extends": "../../../../.eslintrc",
-  "rules": {
-
-  },
+  "rules": {},
   "ignorePatterns": ["!**/*"],
   "overrides": [
     {

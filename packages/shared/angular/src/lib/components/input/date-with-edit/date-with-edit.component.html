@@ -1,16 +1,22 @@
 @if (control) {
   <ion-row>
-      <ion-col>
-          <ion-label position="floating">
-              {{ control?.parent?.value | smartModelLabel : internalOptions.fieldKey : internalOptions?.model?.constructor | async }}
-              <ion-text color="danger">
-                @if (required) {
-                  <span>*</span>
-                }
-              </ion-text>
-          </ion-label>
-          <br/>
-          <smart-date-edit [formControl]="control"></smart-date-edit>
-      </ion-col>
+    <ion-col>
+      <ion-label position="floating">
+        {{
+          control?.parent?.value
+            | smartModelLabel
+              : internalOptions.fieldKey
+              : internalOptions?.model?.constructor
+            | async
+        }}
+        <ion-text color="danger">
+          @if (required) {
+            <span>*</span>
+          }
+        </ion-text>
+      </ion-label>
+      <br />
+      <smart-date-edit [formControl]="control"></smart-date-edit>
+    </ion-col>
   </ion-row>
 }

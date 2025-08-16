@@ -1,34 +1,34 @@
 :host {
-    cursor: pointer;
-    font-size: 2.4rem;
-    transform: translate(0, -50%);
+  cursor: pointer;
+  font-size: 2.4rem;
+  transform: translate(0, -50%);
+  ion-icon {
+    color: var(--smart-color-primary);
+  }
+  .item-multiple-inputs & {
+    height: 100%;
+    width: 0.1rem;
+    border: 0.1rem dotted rgba(var(--smart-color-primary-rgb), 0.3) !important;
+    right: 3.2rem;
     ion-icon {
-        color: var(--smart-color-primary);
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 666;
+      color: var(--smart-color-primary);
+      background-color: #fff;
+      border-radius: 50%;
+      padding-left: 0.1rem;
     }
-    .item-multiple-inputs & {
-        height: 100%;
-        width: .1rem;
-        border: .1rem dotted rgba(var(--smart-color-primary-rgb), .3) !important;
-        right: 3.2rem;
-        ion-icon {
-            position: absolute;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 666;
-            color: var(--smart-color-primary);
-            background-color: #FFF;
-            border-radius: 50%;
-            padding-left: .1rem;
-        }
-    }
-    .item-multiple-inputs.item-datetime & {
-        right: 7.8rem;
-        height: 2.4rem;
-        margin-top: -.3rem;
-        border: none !important;
-    }
-    .item-datetime & {
-        right: 6.4rem;
-        height: 2.4rem;
-    }
+  }
+  .item-multiple-inputs.item-datetime & {
+    right: 7.8rem;
+    height: 2.4rem;
+    margin-top: -0.3rem;
+    border: none !important;
+  }
+  .item-datetime & {
+    right: 6.4rem;
+    height: 2.4rem;
+  }
 }

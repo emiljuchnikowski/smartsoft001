@@ -1,127 +1,127 @@
 .heading-container {
-    padding: 1.2rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: var(--ion-color-tertiary);
-    color: white;
-    #dismiss-div {
-        position: absolute;
-        right: 0px;
-        top: 5px;
-        font-size: 22px;
-        width: 50px;
-        padding: 0px 10px;
-        text-align: center;
-    }
-    #dismiss-div:active {
-        opacity: 0.5;
-    }
-    p {
-        font-size: 16px;
-        margin-bottom: 10px;
-    }
-    #border-bottom {
-        height: 2px;
-        background: rgba(255, 255, 255, .16);
-        width: 60%;
-        margin-top: 10px;
-    }
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: var(--ion-color-tertiary);
+  color: white;
+  #dismiss-div {
+    position: absolute;
+    right: 0px;
+    top: 5px;
+    font-size: 22px;
+    width: 50px;
+    padding: 0px 10px;
+    text-align: center;
+  }
+  #dismiss-div:active {
+    opacity: 0.5;
+  }
+  p {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  #border-bottom {
+    height: 2px;
+    background: rgba(255, 255, 255, 0.16);
+    width: 60%;
+    margin-top: 10px;
+  }
 }
 
 //The Grids
 .day-of-week,
 .date-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    grid-row-gap: 10px;
-    grid-column-gap: 1px;
-    align-items: center;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-row-gap: 10px;
+  grid-column-gap: 1px;
+  align-items: center;
 }
 
 .day-of-week {
-    border-bottom: .1rem solid #ededed;
+  border-bottom: 0.1rem solid #ededed;
 }
 
 .sizeOf-div {
-    height: 30px;
-    text-align: center;
+  height: 30px;
+  text-align: center;
 }
 
 .heading-month-year {
-    margin-left: 0;
-    padding: 1.2rem;
-    font-size: 16px;
-    font-weight: 500;
-    color: var(--ion-color-primary);
-    background-color: #fdfdfd;
-    border-top: .1rem solid #efefef;
-    border-bottom: .1rem solid #efefef;
+  margin-left: 0;
+  padding: 1.2rem;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ion-color-primary);
+  background-color: #fdfdfd;
+  border-top: 0.1rem solid #efefef;
+  border-bottom: 0.1rem solid #efefef;
 }
 
 .span-day {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: #36485b;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #36485b;
 }
 
 //Filters
 .grid-filter-btns {
-    display: grid;
-    grid-template-rows: 1fr 1fr;
-    grid-template-columns: repeat(3, 1fr);
-    width: 100%;
-    margin: 0px auto;
-    grid-column-gap: 10px;
-    grid-row-gap: 20px;
-    padding: 20px;
-    background-color: var(--ion-color-tertiary);
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
+  width: 100%;
+  margin: 0px auto;
+  grid-column-gap: 10px;
+  grid-row-gap: 20px;
+  padding: 20px;
+  background-color: var(--ion-color-tertiary);
 }
 
 .span-filter {
-    margin: 0px;
-    padding: 7px;
-    height: auto;
-    color: white;
-    border-radius: 15px;
-    font-size: 0.8em;
-    text-align: center;
+  margin: 0px;
+  padding: 7px;
+  height: auto;
+  color: white;
+  border-radius: 15px;
+  font-size: 0.8em;
+  text-align: center;
 }
 
 .selected-filter {
-    background: white;
-    color: var(--ion-color-tertiary);
+  background: white;
+  color: var(--ion-color-tertiary);
 }
 
 @media (max-width: 320px) {
-    .span-filter {
-        font-size: 3.5vw;
-    }
+  .span-filter {
+    font-size: 3.5vw;
+  }
 }
 
 //############## date-selection css #################//
 .selection-start {
-    background-color: var(--ion-color-tertiary);
-    color: white;
-    border-top-left-radius: 25%;
-    border-bottom-left-radius: 25%;
+  background-color: var(--ion-color-tertiary);
+  color: white;
+  border-top-left-radius: 25%;
+  border-bottom-left-radius: 25%;
 }
 
 .selection-end {
-    background-color: var(--ion-color-tertiary);
-    color: white;
-    border-top-right-radius: 25%;
-    border-bottom-right-radius: 25%;
+  background-color: var(--ion-color-tertiary);
+  color: white;
+  border-top-right-radius: 25%;
+  border-bottom-right-radius: 25%;
 }
 
 .same-date {
-    border-radius: 25%;
+  border-radius: 25%;
 }
 
 .in-range {
-    font-weight: bold;
-    background-color: #e9eaea;
+  font-weight: bold;
+  background-color: #e9eaea;
 }

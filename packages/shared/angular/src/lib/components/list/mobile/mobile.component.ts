@@ -1,22 +1,28 @@
-import { AfterViewInit, Component, Signal, ViewChild, ViewContainerRef } from '@angular/core';
 import {
-  IonInfiniteScroll, IonInfiniteScrollContent,
+  AfterViewInit,
+  Component,
+  Signal,
+  ViewChild,
+  ViewContainerRef,
+} from '@angular/core';
+import {
+  IonInfiniteScroll,
+  IonInfiniteScrollContent,
   IonItem,
   IonItemOption,
   IonItemOptions,
   IonItemSliding,
   IonLabel,
-  IonList
+  IonList,
 } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
+import { IEntity } from '@smartsoft001/domain-core';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 
-import { IEntity } from "@smartsoft001/domain-core";
-
-import { ListBaseComponent } from "../base/base.component";
-import {IListComponentFactories, IListInternalOptions} from "../../../models";
+import { IListComponentFactories, IListInternalOptions } from '../../../models';
 import { FileUrlPipe, ListCellPipe } from '../../../pipes';
 import { PagingComponent } from '../../paging';
+import { ListBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-list-mobile',
@@ -35,18 +41,17 @@ import { PagingComponent } from '../../paging';
     IonInfiniteScroll,
     IonInfiniteScrollContent,
     PagingComponent,
-    ListCellPipe
-  ]
+    ListCellPipe,
+  ],
 })
 export class ListMobileComponent<T extends IEntity<string>>
   extends ListBaseComponent<T>
-  implements AfterViewInit {
-
+  implements AfterViewInit
+{
   listMobile = this.list as Signal<T[]>;
-
   componentFactories: IListComponentFactories<T> | null = null;
 
-  @ViewChild("topTpl", { read: ViewContainerRef, static: true })
+  @ViewChild('topTpl', { read: ViewContainerRef, static: true })
   topTpl!: ViewContainerRef;
 
   protected override initList(val: IListInternalOptions<T>): void {

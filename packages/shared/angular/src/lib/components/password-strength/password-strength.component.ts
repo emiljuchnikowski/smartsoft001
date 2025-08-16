@@ -6,7 +6,7 @@ import {
   SimpleChange,
   EventEmitter,
   Output,
-} from "@angular/core";
+} from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
@@ -14,12 +14,10 @@ import { TranslatePipe } from '@ngx-translate/core';
   templateUrl: './password-strength.component.html',
   styleUrls: ['./password-strength.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    TranslatePipe
-  ]
+  imports: [TranslatePipe],
 })
 export class PasswordStrengthComponent implements OnChanges {
-  private _colors = ["darkred", "orangered", "yellowgreen"];
+  private _colors = ['darkred', 'orangered', 'yellowgreen'];
 
   bar0!: string;
   bar1!: string;
@@ -31,7 +29,7 @@ export class PasswordStrengthComponent implements OnChanges {
     lowerLetters: false,
     upperLetters: false,
     symbols: false,
-    passLength: false
+    passLength: false,
   };
 
   @Input() public passwordToCheck!: string;
@@ -44,8 +42,8 @@ export class PasswordStrengthComponent implements OnChanges {
     let force = 0;
 
     // 2
-    const regex = /[$-/:-?{-~!"^_@`\[\]]/g;
-    const lowerLetters: boolean = !!p && (/[a-z]+/.test(p));
+    const regex = /[$-/:-?{-~!"^_@`[\]]/g;
+    const lowerLetters: boolean = !!p && /[a-z]+/.test(p);
     const upperLetters = /[A-Z]+/.test(p);
     const symbols = regex.test(p);
 
@@ -75,19 +73,21 @@ export class PasswordStrengthComponent implements OnChanges {
       lowerLetters,
       upperLetters,
       symbols,
-      passLength
+      passLength,
     };
 
     return force;
   }
 
-  async ngOnChanges(changes: { [propName: string]: SimpleChange }): Promise<void> {
-    await new Promise<void>(res => res());
+  async ngOnChanges(changes: {
+    [propName: string]: SimpleChange;
+  }): Promise<void> {
+    await new Promise<void>((res) => res());
 
     if (!changes['passwordToCheck']) return;
 
     const password = changes['passwordToCheck'].currentValue;
-    this.setBarColors(3, "#DDD");
+    this.setBarColors(3, '#DDD');
 
     this.msg = '';
 
@@ -97,9 +97,11 @@ export class PasswordStrengthComponent implements OnChanges {
     }
 
     const pwdStrength = this.checkStrength(password);
-    pwdStrength === 30
-      ? this.passwordStrength.emit(true)
-      : this.passwordStrength.emit(false);
+    if (pwdStrength === 30) {
+      this.passwordStrength.emit(true);
+    } else {
+      this.passwordStrength.emit(false);
+    }
 
     switch (pwdStrength) {
       case 10:
@@ -136,7 +138,7 @@ export class PasswordStrengthComponent implements OnChanges {
 
   private setBarColors(count: number, col: string) {
     for (let n = 0; n < count; n++) {
-      (this as any)["bar" + n] = col;
+      (this as any)['bar' + n] = col;
     }
   }
 }

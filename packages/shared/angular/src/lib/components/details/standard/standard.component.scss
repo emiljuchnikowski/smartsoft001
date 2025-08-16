@@ -1,19 +1,19 @@
-@import "styles/smart-styles.scss";
+@import 'styles/smart-styles.scss';
 smart-loader {
-    margin-left: auto !important;
-    margin-right: auto !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 
 .top-content,
 .bottom-content {
-    font-size: 1.2rem;
-    padding: .6rem 0;
-    &:empty {
-        padding: 0;
-    }
+  font-size: 1.2rem;
+  padding: 0.6rem 0;
+  &:empty {
+    padding: 0;
+  }
 }
 
 ion-list {
-    margin: 0;
-    padding: 0 !important;
+  margin: 0;
+  padding: 0 !important;
 }

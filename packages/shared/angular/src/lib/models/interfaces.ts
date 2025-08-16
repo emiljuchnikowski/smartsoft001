@@ -1,9 +1,8 @@
-import { Observable } from 'rxjs';
 import { ComponentFactory, PipeTransform, Signal, Type } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
-
 import { IEntity } from '@smartsoft001/domain-core';
 import { IFieldOptions } from '@smartsoft001/models';
+import { Observable } from 'rxjs';
 
 import { InputBaseComponent } from '../components';
 
@@ -23,8 +22,13 @@ export interface IIconButtonOptions {
 }
 
 export type DynamicComponentType =
-  "form" | "page" | "button" | "details" | "list" |
-  "crud-list-page" | "crud-item-page";
+  | 'form'
+  | 'page'
+  | 'button'
+  | 'details'
+  | 'list'
+  | 'crud-list-page'
+  | 'crud-item-page';
 export interface IDynamicComponentData {
   key: DynamicComponentType;
   component: Type<any>;
@@ -35,15 +39,15 @@ export interface IFormOptions<T> {
   treeLevel?: number;
   model: T;
   control?: AbstractControl;
-  mode?: "create" | "update" | string;
+  mode?: 'create' | 'update' | string;
   loading$?: Observable<boolean>;
-  uniqueProvider?: (values: Record<keyof T, any>) => Promise<boolean>,
+  uniqueProvider?: (values: Record<keyof T, any>) => Promise<boolean>;
   possibilities?: {
-    [key: string]: Observable<{ id: any, text: string }[]>;
-  }
+    [key: string]: Observable<{ id: any; text: string }[]>;
+  };
   inputComponents?: {
     [key: string]: Type<InputBaseComponent<T>>;
-  }
+  };
 }
 
 export type InputOptions<T> = IInputOptions & IInputFromFieldOptions<T>;
@@ -51,14 +55,14 @@ export type InputOptions<T> = IInputOptions & IInputFromFieldOptions<T>;
 export interface IInputOptions {
   treeLevel: number;
   control: AbstractControl;
-  possibilities?: Signal<{ id: any, text: string }[]>;
+  possibilities?: Signal<{ id: any; text: string }[]>;
   component?: Type<InputBaseComponent<any>>;
 }
 
 export interface IInputFromFieldOptions<T> {
   model: T;
   fieldKey: string;
-  mode?: "create" | "update" | string;
+  mode?: 'create' | 'update' | string;
 }
 
 export interface IDetailsComponentFactories<T> {
@@ -88,8 +92,8 @@ export interface IMenuItem {
 }
 
 export interface IButtonOptions {
-  type?: "submit" | "button";
-  expand?: "block" | "full" | undefined;
+  type?: 'submit' | 'button';
+  expand?: 'block' | 'full' | undefined;
   confirm?: boolean;
   color?: 'primary' | 'light' | string;
   click: () => void;
@@ -101,11 +105,15 @@ export interface IDetailOptions<T> {
   item?: Signal<T>;
   options: IFieldOptions;
   cellPipe?: ICellPipe<T>;
-  loading$?: Observable<boolean>;
+  loading?: Signal<boolean>;
 }
 
 export interface ICellPipe<T> extends PipeTransform {
-  transform(value: T, columnName: string, translate?: (val: string) => string): string;
+  transform(
+    value: T,
+    columnName: string,
+    translate?: (val: string) => string,
+  ): string;
 }
 
 export interface IPageOptions {
@@ -114,7 +122,7 @@ export interface IPageOptions {
   hideMenuButton?: boolean;
   showBackButton?: boolean;
   endButtons?: Array<IIconButtonOptions>;
-  search?: { text: Signal<string>, set: (txt: string) => void }
+  search?: { text: Signal<string>; set: (txt: string) => void };
 }
 
 export interface IListProvider<T> {
@@ -126,23 +134,23 @@ export interface IListProvider<T> {
 }
 
 export interface IListPaginationOptions {
-  mode?: PaginationMode,
-  limit: number,
-  loadNextPage: () => Promise<boolean>,
-  loadPrevPage: () => Promise<boolean>,
-  page: Signal<number>,
-  totalPages: Signal<number>
+  mode?: PaginationMode;
+  limit: number;
+  loadNextPage: () => Promise<boolean>;
+  loadPrevPage: () => Promise<boolean>;
+  page: Signal<number>;
+  totalPages: Signal<number>;
 }
 
 export enum PaginationMode {
-  infiniteScroll = "infiniteScroll",
-  singlePage = "singlePage"
+  infiniteScroll = 'infiniteScroll',
+  singlePage = 'singlePage',
 }
 
 export enum ListMode {
-  mobile = "mobile",
-  desktop = "desktop",
-  masonryGrid = "masonryGrid"
+  mobile = 'mobile',
+  desktop = 'desktop',
+  masonryGrid = 'masonryGrid',
 }
 
 export interface IItemOptionsForPage {
@@ -176,32 +184,34 @@ export interface IListOptions<T> {
   pagination?: IListPaginationOptions;
 
   cellPipe?: ICellPipe<T>;
-  componentFactories?: IListComponentFactories<T>,
-  sort?: boolean | {
-    default?: string;
-    defaultDesc?: boolean;
-  }
+  componentFactories?: IListComponentFactories<T>;
+  sort?:
+    | boolean
+    | {
+        default?: string;
+        defaultDesc?: boolean;
+      };
 
   details?:
     | boolean
     | {
-    provider?: IDetailsProvider<T>;
-    componentFactories?: IDetailsComponentFactories<T>;
-  };
+        provider?: IDetailsProvider<T>;
+        componentFactories?: IDetailsComponentFactories<T>;
+      };
 
   item?:
     | boolean
     | {
-    options?: ItemOptions;
-  };
+        options?: ItemOptions;
+      };
 
   remove?:
     | boolean
     | {
-    provider?: IRemoveProvider<T>;
-  };
+        provider?: IRemoveProvider<T>;
+      };
 
-  select?: 'multi'
+  select?: 'multi';
 }
 
 export interface IRemoveProvider<T> {
@@ -210,5 +220,5 @@ export interface IRemoveProvider<T> {
 }
 
 export interface IListInternalOptions<T> extends IListOptions<T> {
-  fields?: Array<{ key: string, options: IFieldOptions }>;
+  fields?: Array<{ key: string; options: IFieldOptions }>;
 }

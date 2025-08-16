@@ -1,13 +1,23 @@
 @if (control) {
   <ion-item lines="none">
-      <ion-label class="checkbox-label">
-          {{ control?.parent?.value | smartModelLabel : internalOptions.fieldKey : internalOptions?.model?.constructor | async }}
-          <ion-text color="danger">
-            @if (required) {
-              <span>*</span>
-            }
-          </ion-text>
-      </ion-label>
-      <ion-checkbox [formControl]="control" [attr.autofocus]="fieldOptions?.focused" slot="end"></ion-checkbox>
+    <ion-label class="checkbox-label">
+      {{
+        control?.parent?.value
+          | smartModelLabel
+            : internalOptions.fieldKey
+            : internalOptions?.model?.constructor
+          | async
+      }}
+      <ion-text color="danger">
+        @if (required) {
+          <span>*</span>
+        }
+      </ion-text>
+    </ion-label>
+    <ion-checkbox
+      [formControl]="control"
+      [attr.autofocus]="fieldOptions?.focused"
+      slot="end"
+    ></ion-checkbox>
   </ion-item>
 }

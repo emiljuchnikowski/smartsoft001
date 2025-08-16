@@ -1,22 +1,23 @@
-import { Pipe, PipeTransform, Type } from "@angular/core";
-import { Memoize } from "lodash-decorators";
-import { TranslateService } from "@ngx-translate/core";
-
-import { FieldTypeDef, getModelFieldOptions } from "@smartsoft001/models";
+import { Pipe, PipeTransform, Type } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { FieldTypeDef, getModelFieldOptions } from '@smartsoft001/models';
+import { Memoize } from 'lodash-decorators';
 
 import { ICellPipe } from '../../models';
 
 @Pipe({
-  name: "smartListCell",
+  name: 'smartListCell',
 })
-export class ListCellPipe<T extends { [key: string]: any }> implements PipeTransform {
+export class ListCellPipe<T extends { [key: string]: any }>
+  implements PipeTransform
+{
   constructor(private readonly translateService: TranslateService) {}
 
   transform(
     obj: T,
     key: string,
     pipe: ICellPipe<T>,
-    type?: Type<T>
+    type?: Type<T>,
   ): { value?: any; type?: FieldTypeDef | null } {
     if (!obj) return {};
 
@@ -32,12 +33,12 @@ export class ListCellPipe<T extends { [key: string]: any }> implements PipeTrans
     }
     if (!result) return result;
 
-    if (typeof result === "string") {
+    if (typeof result === 'string') {
       result = this.translateService.instant(result);
     }
 
     if (fieldType === 'enum') {
-      result = result.map((item : any) => {
+      result = result.map((item: any) => {
         return this.translateService.instant(item);
       });
     }
@@ -57,8 +58,8 @@ export class ListCellPipe<T extends { [key: string]: any }> implements PipeTrans
   }
 
   private getValue(value: T, key: string) {
-    if (key.indexOf("__array") === 0) {
-      const info = key.split(".");
+    if (key.indexOf('__array') === 0) {
+      const info = key.split('.');
       const arrayKey = info[1];
       const index = Number(info[2]);
       const rowKey = info[4];

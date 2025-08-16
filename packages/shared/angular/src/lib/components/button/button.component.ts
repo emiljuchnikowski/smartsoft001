@@ -1,13 +1,20 @@
-import {
-  ChangeDetectionStrategy, Component, Input, QueryList, TemplateRef, ViewChild,
-  ViewChildren, ViewEncapsulation, WritableSignal
-} from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  QueryList,
+  TemplateRef,
+  ViewChild,
+  ViewChildren,
+  ViewEncapsulation,
+  WritableSignal,
+} from '@angular/core';
 
-import {IButtonOptions} from '../../models';
-import {ButtonBaseComponent} from "./base/base.component";
-import {CreateDynamicComponent} from '../base';
-import {DynamicContentDirective} from '../../directives';
+import { DynamicContentDirective } from '../../directives';
+import { IButtonOptions } from '../../models';
+import { CreateDynamicComponent } from '../base';
+import { ButtonBaseComponent } from './base/base.component';
 import { ButtonStandardComponent } from './standard/standard.component';
 
 @Component({
@@ -24,13 +31,12 @@ import { ButtonStandardComponent } from './standard/standard.component';
     <div class="dynamic-content"></div>
   `,
   encapsulation: ViewEncapsulation.None,
-  imports: [
-    ButtonStandardComponent,
-    NgTemplateOutlet
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  imports: [ButtonStandardComponent, NgTemplateOutlet],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ButtonComponent extends CreateDynamicComponent<ButtonBaseComponent>("button") {
+export class ButtonComponent extends CreateDynamicComponent<ButtonBaseComponent>(
+  'button',
+) {
   private _options!: WritableSignal<IButtonOptions>;
   private _disabled!: WritableSignal<boolean>;
 
@@ -38,15 +44,19 @@ export class ButtonComponent extends CreateDynamicComponent<ButtonBaseComponent>
     this._options.set(val);
     this.refreshDynamicInstance();
   }
-  get options(): IButtonOptions { return this._options(); }
+  get options(): IButtonOptions {
+    return this._options();
+  }
 
   @Input() set disabled(val: boolean) {
     this._disabled.set(val);
     this.refreshDynamicInstance();
   }
-  get disabled(): boolean { return this._disabled(); }
+  get disabled(): boolean {
+    return this._disabled();
+  }
 
-  @ViewChild("contentTpl", { read: TemplateRef, static: false })
+  @ViewChild('contentTpl', { read: TemplateRef, static: false })
   override contentTpl: TemplateRef<any> | null = null;
 
   @ViewChildren(DynamicContentDirective, { read: DynamicContentDirective })
