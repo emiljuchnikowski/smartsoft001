@@ -7,13 +7,13 @@ import {
   Signal,
   Type,
 } from '@angular/core';
-import {
-  IModelPossibilitiesProvider,
-  MODEL_POSSIBILITIES_PROVIDER,
-} from '@smartsoft001/angular';
 import { debounceTime } from 'rxjs/operators';
 
 import { InputBaseComponent } from './base.component';
+import {
+  IModelPossibilitiesProvider,
+  MODEL_POSSIBILITIES_PROVIDER,
+} from '../../../providers';
 
 @Directive()
 export abstract class InputPossibilitiesBaseComponent<

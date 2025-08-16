@@ -11,11 +11,12 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
-import { IButtonOptions } from '@smartsoft001/angular';
-import { FileService } from '@smartsoft001/angular';
-import { ToastService } from '@smartsoft001/angular';
+
+import { File } from 'buffer';
 
 import { InputBaseComponent } from './base.component';
+import { IButtonOptions } from '../../../models';
+import { FileService, ToastService } from '../../../services';
 
 @Directive()
 export abstract class InputFileBaseComponent<T>

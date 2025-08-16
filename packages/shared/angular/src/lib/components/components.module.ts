@@ -12,90 +12,94 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
+import { DynamicComponent, DynamicModule } from 'ng-dynamic-component';
+import { LazyLoadImageModule } from 'ng-lazyload-image';
+
+import { SharedPipesModule } from '../pipes/pipes.module';
 import {
-  AccordionBodyComponent,
+  DETAILS_COMPONENT_TOKEN,
+  FORM_COMPONENT_TOKEN,
+} from '../shared.inectors';
+import {
   AccordionComponent,
   AccordionHeaderComponent,
-  ButtonComponent,
-  DateRangeComponent,
-  DateRangeModalComponent,
-  InputAddressComponent,
-  InputArrayComponent,
-  InputAttachmentComponent,
-  InputCheckComponent,
-  InputColorComponent,
-  InputComponent,
-  InputCurrencyComponent,
-  InputDateComponent,
-  InputDateRangeComponent,
-  InputDateWithEditComponent,
-  InputEmailComponent,
-  InputEnumComponent,
-  InputErrorComponent,
-  InputFileComponent,
-  InputFlagComponent,
-  InputFloatComponent,
-  InputImageComponent,
-  InputIntComponent,
-  InputIntsComponent,
-  InputLogoComponent,
-  InputLongTextComponent,
-  InputNipComponent,
-  InputObjectComponent,
-  InputPasswordComponent,
-  InputPdfComponent,
-  InputPeselComponent,
-  InputPhoneNumberComponent,
-  InputPhoneNumberPlComponent,
-  InputRadioComponent,
-  InputStringsComponent,
-  InputTextComponent,
-  InputVideoComponent,
-  PasswordStrengthComponent,
+  AccordionBodyComponent,
+} from './accordion';
+import { ButtonComponent, ButtonStandardComponent } from './button';
+import { CardComponent } from './card/card.component';
+import { DateEditComponent } from './date-edit';
+import { DateRangeComponent, DateRangeModalComponent } from './date-range';
+import {
   DetailComponent,
-  DetailEmailComponent,
-  DetailEnumComponent,
-  DetailFlagComponent,
   DetailTextComponent,
-  DetailsComponent,
-  DetailsStandardComponent,
-  FormStandardComponent,
-  ListDesktopComponent,
-  ListMobileComponent,
-  LoaderComponent,
-  PageStandardComponent,
-  SharedDirectivesModule,
+  DetailFlagComponent,
+  DetailEnumComponent,
+  DetailEmailComponent,
   DetailAddressComponent,
   DetailObjectComponent,
   DetailColorComponent,
   DetailLogoComponent,
-  ExportComponent,
-  ImportComponent,
   DetailArrayComponent,
   DetailPdfComponent,
   DetailVideoComponent,
   DetailAttachmentComponent,
   DetailDateRangeComponent,
   DetailImageComponent,
-  ListMasonryGridComponent,
-  FormStepperComponent,
-  ButtonStandardComponent,
   DetailPhoneNumberPlComponent,
-} from '@smartsoft001/angular';
-import { DynamicComponent, DynamicModule } from 'ng-dynamic-component';
-import { LazyLoadImageModule } from 'ng-lazyload-image';
-
-import { CardComponent } from './card/card.component';
-import { DateEditComponent } from './date-edit';
-import { FormComponent } from './form/form.component';
-import { InfoComponent, InfoModalComponent } from './info/info.component';
-import { ListComponent } from './list/list.component';
-import { PageComponent } from './page/page.component';
-import { SharedPipesModule } from '../pipes/pipes.module';
+} from './detail';
+import { DetailsComponent, DetailsStandardComponent } from './details';
+import { SharedDirectivesModule } from '../directives';
+import { ExportComponent } from './export';
 import {
-  DETAILS_COMPONENT_TOKEN,
-  FORM_COMPONENT_TOKEN,
-} from '../shared.inectors';
+  FormComponent,
+  FormStandardComponent,
+  FormStepperComponent,
+} from './form';
+import { ImportComponent } from './import';
+import { InfoComponent, InfoModalComponent } from './info';
+import {
+  InputComponent,
+  InputIntComponent,
+  InputErrorComponent,
+  InputTextComponent,
+  InputPasswordComponent,
+  InputFlagComponent,
+  InputEnumComponent,
+  InputEmailComponent,
+  InputCurrencyComponent,
+  InputDateComponent,
+  InputDateWithEditComponent,
+  InputFileComponent,
+  InputRadioComponent,
+  InputNipComponent,
+  InputStringsComponent,
+  InputLongTextComponent,
+  InputAddressComponent,
+  InputObjectComponent,
+  InputColorComponent,
+  InputLogoComponent,
+  InputCheckComponent,
+  InputIntsComponent,
+  InputPhoneNumberComponent,
+  InputPhoneNumberPlComponent,
+  InputPeselComponent,
+  InputArrayComponent,
+  InputPdfComponent,
+  InputVideoComponent,
+  InputAttachmentComponent,
+  InputDateRangeComponent,
+  InputImageComponent,
+  InputFloatComponent,
+} from './input';
+import {
+  ListComponent,
+  ListMobileComponent,
+  ListDesktopComponent,
+  ListMasonryGridComponent,
+} from './list';
+import { LoaderComponent } from './loader';
+import { PageComponent, PageStandardComponent } from './page';
+import { PasswordStrengthComponent } from './password-strength';
 
 export const ACCORDION_COMPONENTS = [
   AccordionComponent,
