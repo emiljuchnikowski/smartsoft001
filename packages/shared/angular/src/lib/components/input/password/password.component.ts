@@ -35,7 +35,6 @@ export class InputPasswordComponent<T> extends InputBaseComponent<T> {
   }
 
   override afterSetOptionsHandler() {
-
     this.control.setValidators([
       this.control.validator!,
       (c) => {

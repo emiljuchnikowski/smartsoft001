@@ -46,7 +46,6 @@ export class InputIntsComponent<T> extends InputBaseComponent<T> {
   }
 
   override afterSetOptionsHandler() {
-
     if (this.control.value) {
       this.list = [];
       this.control.value.forEach((i: any) => this.add(i));

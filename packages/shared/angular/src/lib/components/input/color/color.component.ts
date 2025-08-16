@@ -41,8 +41,6 @@ export class InputColorComponent<T> extends InputBaseComponent<T> {
   }
 
   protected override afterSetOptionsHandler() {
-
-
     this.color = this.control.value;
   }
 

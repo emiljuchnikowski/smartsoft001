@@ -96,7 +96,7 @@ export abstract class FormBaseComponent<T> extends BaseComponent {
     this.invokeSubmit.emit(this.form.value);
   }
 
-  protected afterSetOptions(){
+  protected afterSetOptions() {
     // No base functionality
   }
 

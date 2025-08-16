@@ -56,8 +56,6 @@ export class InputVideoComponent<T>
   }
 
   protected override afterSetOptionsHandler() {
-
-
     this.control.valueChanges
       .pipe(
         tap(() => {

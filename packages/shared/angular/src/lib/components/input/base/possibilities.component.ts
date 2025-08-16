@@ -29,8 +29,6 @@ export abstract class InputPossibilitiesBaseComponent<
   }
 
   protected override afterSetOptionsHandler() {
-
-
     const refreshPossibilities = () => {
       if (this.getPossibilitiesFromProvider()) {
         this.possibilities = this.getPossibilitiesFromProvider();

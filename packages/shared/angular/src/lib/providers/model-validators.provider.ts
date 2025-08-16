@@ -1,5 +1,5 @@
-import {InjectionToken, Type} from "@angular/core";
-import {AsyncValidatorFn, ValidatorFn} from "@angular/forms";
+import { InjectionToken, Type } from '@angular/core';
+import { AsyncValidatorFn, ValidatorFn } from '@angular/forms';
 
 /**
  * @example
@@ -37,23 +37,20 @@ import {AsyncValidatorFn, ValidatorFn} from "@angular/forms";
 }
  */
 export abstract class IModelValidatorsProvider {
-    abstract get(options: IModelValidatorsOptions): Promise<IModelValidators>;
+  abstract get(options: IModelValidatorsOptions): Promise<IModelValidators>;
 }
 
 export interface IModelValidatorsOptions {
-    key: string;
-    instance: any;
-    type?: Type<any> | (() => void);
-    base?: IModelValidators;
+  key: string;
+  instance: any;
+  type?: Type<any> | (() => void);
+  base?: IModelValidators;
 }
 
 export interface IModelValidators {
-    validators?: ValidatorFn | ValidatorFn[];
-    asyncValidators?: AsyncValidatorFn | AsyncValidatorFn[];
+  validators?: ValidatorFn | ValidatorFn[];
+  asyncValidators?: AsyncValidatorFn | AsyncValidatorFn[];
 }
 
 export const MODEL_VALIDATORS_PROVIDER =
-    new InjectionToken<IModelValidatorsProvider>("MODEL_VALIDATORS_PROVIDER");
-
-
-
+  new InjectionToken<IModelValidatorsProvider>('MODEL_VALIDATORS_PROVIDER');

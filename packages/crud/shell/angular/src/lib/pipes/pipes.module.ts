@@ -4,8 +4,6 @@ import { FormOptionsPipe } from './form-options/form-options.pipe';
 
 @NgModule({
   exports: [FormOptionsPipe],
-  imports: [
-    FormOptionsPipe
-  ]
+  imports: [FormOptionsPipe],
 })
 export class CrudPipesModule {}

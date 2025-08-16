@@ -43,7 +43,6 @@ export class DetailObjectComponent<
   }
 
   protected override afterSetOptionsHandler() {
-
     if (this.options?.item) {
       this.childOptions = computed(() => {
         const item = this.options?.item?.();

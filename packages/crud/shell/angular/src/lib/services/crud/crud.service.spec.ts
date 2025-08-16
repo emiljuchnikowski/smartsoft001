@@ -17,7 +17,6 @@ import { CrudService } from './crud.service';
 import { CrudConfig } from '../../crud.config';
 import { ICrudCreateManyOptions, ICrudFilter } from '../../models';
 
-
 interface TestEntity extends IEntity<string> {
   id: string;
   name: string;

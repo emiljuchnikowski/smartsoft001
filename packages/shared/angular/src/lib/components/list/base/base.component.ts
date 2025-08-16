@@ -266,5 +266,5 @@ export abstract class ListBaseComponent<T extends IEntity<string>> {
 
   protected afterInitOptions() {
     // No base functionality
-  };
+  }
 }

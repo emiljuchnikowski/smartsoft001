@@ -30,11 +30,7 @@ import {
   IModelValidatorsProvider,
   MODEL_VALIDATORS_PROVIDER,
 } from '../../providers';
-import {
-  AuthService,
-  SmartFormGroup,
-  DetailsService,
-} from '../../services';
+import { AuthService, SmartFormGroup, DetailsService } from '../../services';
 
 @Injectable()
 export class FormFactory {
@@ -55,7 +51,7 @@ export class FormFactory {
   }
 
   static getOptions<T>(obj: T, key: string): IFieldOptions {
-    return Reflect.getMetadata(SYMBOL_FIELD, (obj as object), key);
+    return Reflect.getMetadata(SYMBOL_FIELD, obj as object, key);
   }
 
   static getOptionsFromMode(
@@ -243,7 +239,10 @@ export class FormFactory {
         if (rootCheck) this.detailsService.setRoot(rootCheck.value, true);
 
         enabledDefinitions.forEach((def) => {
-          if (!(def.control as any)['__smartDisabled'] && !result.controls[def.key]) {
+          if (
+            !(def.control as any)['__smartDisabled'] &&
+            !result.controls[def.key]
+          ) {
             result.addControl(def.key, def.control);
             result.updateValueAndValidity();
           } else if (
@@ -331,11 +330,9 @@ export class FormFactory {
 
         const withFields = (options.unique as IFieldUniqueMetadata)?.withFields;
         if (form.value && withFields) {
-          withFields.forEach(
-            (fieldKey) => {
-              record[fieldKey] = form.value[fieldKey];
-            },
-          );
+          withFields.forEach((fieldKey) => {
+            record[fieldKey] = form.value[fieldKey];
+          });
         }
 
         if (await uniqueProvider(record)) return null;

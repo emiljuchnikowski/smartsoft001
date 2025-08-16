@@ -93,13 +93,12 @@ export abstract class InputFileBaseComponent<T>
           .toLowerCase();
 
         if (!acceptTypes.some((a) => a === fileType)) {
-          this.toastService
-            .error({
-              duration: 3000,
-              message:
-                this.translateService.instant('INPUT.ERRORS.invalidFileType') +
-                ` (${(this.inputElementRef.nativeElement as HTMLInputElement).accept})`,
-            })
+          this.toastService.error({
+            duration: 3000,
+            message:
+              this.translateService.instant('INPUT.ERRORS.invalidFileType') +
+              ` (${(this.inputElementRef.nativeElement as HTMLInputElement).accept})`,
+          });
           this.loading.set(false);
           return;
         }

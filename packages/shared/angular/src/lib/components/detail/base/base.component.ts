@@ -24,7 +24,7 @@ export abstract class DetailBaseComponent<T> {
 
   constructor(protected cd: ChangeDetectorRef) {}
 
-  protected afterSetOptionsHandler(){
+  protected afterSetOptionsHandler() {
     // no base functionality
   }
 }

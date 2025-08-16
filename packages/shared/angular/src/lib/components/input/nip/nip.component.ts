@@ -26,7 +26,6 @@ export class InputNipComponent<T> extends InputBaseComponent<T> {
   }
 
   override afterSetOptionsHandler() {
-
     const validators = this.control.validator ? [this.control.validator] : [];
 
     validators.push((c) => {

@@ -16,10 +16,7 @@ import { IonButton, IonIcon } from '@ionic/angular/standalone';
   templateUrl: './import.component.html',
   styleUrls: ['./import.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    IonButton,
-    IonIcon
-  ]
+  imports: [IonButton, IonIcon],
 })
 export class ImportComponent implements AfterViewInit {
   @Input() accept = 'application/json';
@@ -36,10 +33,9 @@ export class ImportComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.renderer.listen(this.inputElementRef.nativeElement, 'change', () => {
-
-      const file: File | null = (
-        this.inputElementRef.nativeElement as HTMLInputElement
-      ).files?.[0] ?? null;
+      const file: File | null =
+        (this.inputElementRef.nativeElement as HTMLInputElement).files?.[0] ??
+        null;
 
       (this.inputElementRef.nativeElement as HTMLInputElement).type = 'text';
       (this.inputElementRef.nativeElement as HTMLInputElement).type = 'file';

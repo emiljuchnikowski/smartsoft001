@@ -35,7 +35,6 @@ export class InputPhoneNumberPlComponent<T> extends InputBaseComponent<T> {
   }
 
   override afterSetOptionsHandler() {
-
     const validators = this.control.validator ? [this.control.validator] : [];
 
     validators.push(Validators.minLength(9));

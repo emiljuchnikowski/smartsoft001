@@ -27,7 +27,6 @@ import { ObjectService } from '@smartsoft001/utils';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-
 import { FormFactory } from '../../factories';
 import { IFormOptions } from '../../models';
 import { IModelExportProvider, MODEL_EXPORT_PROVIDER } from '../../providers';
@@ -284,7 +283,9 @@ export class FormComponent<T>
   }
 
   private async initExportImport() {
-    const modelOptions = getModelOptions((this._options.model as any).constructor);
+    const modelOptions = getModelOptions(
+      (this._options.model as any).constructor,
+    );
     if (modelOptions.export && !this.exportProvider) {
       console.error('exportProvider is not provided');
     }

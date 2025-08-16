@@ -29,7 +29,9 @@
     <div (click)="selectLastSevenDays()" style="text-align: center">
       <span
         class="span-filter"
-        [ngClass]="{ 'selected-filter': selectedButtonName === 'LastSevenDays' }"
+        [ngClass]="{
+          'selected-filter': selectedButtonName === 'LastSevenDays',
+        }"
       >
         {{ 'CALENDAR.LastSevenDays' | translate }}
       </span>
@@ -56,7 +58,9 @@
     <div (click)="selectLastThirtyDays()" style="text-align: center">
       <span
         class="span-filter"
-        [ngClass]="{ 'selected-filter': selectedButtonName === 'LastThirtyDays' }"
+        [ngClass]="{
+          'selected-filter': selectedButtonName === 'LastThirtyDays',
+        }"
       >
         {{ 'CALENDAR.LastThirtyDays' | translate }}
       </span>
@@ -101,11 +105,11 @@
         <div
           class="sizeOf-div span-day"
           [ngClass]="{
-          'selection-start': isSelectionStart(day),
-          'selection-end': isSelectionEnd(day),
-          'in-range': isInRange(day),
-          'same-date': isStartAndEndDateSame(),
-        }"
+            'selection-start': isSelectionStart(day),
+            'selection-end': isSelectionEnd(day),
+            'in-range': isInRange(day),
+            'same-date': isStartAndEndDateSame(),
+          }"
           id="dateRef"
           (click)="subject$.next({ date: day, event: $event })"
         >

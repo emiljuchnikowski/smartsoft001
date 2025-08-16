@@ -32,7 +32,6 @@ export class InputObjectComponent<T, TChild> extends InputBaseComponent<T> {
   }
 
   protected override afterSetOptionsHandler() {
-
     this.childOptions = {
       treeLevel: this.internalOptions.treeLevel + 1,
       mode: this.internalOptions.mode,

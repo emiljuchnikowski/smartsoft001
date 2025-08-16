@@ -33,8 +33,6 @@ export class DetailImageComponent<
   }
 
   protected override afterSetOptionsHandler() {
-
-
     if (this.options?.item) {
       this.imageUrl = computed(() => {
         const item = this.options?.item?.();

@@ -38,9 +38,7 @@ import { FormBaseComponent } from '../base/base.component';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormStepperComponent<T>
-  extends FormBaseComponent<T>
-{
+export class FormStepperComponent<T> extends FormBaseComponent<T> {
   steps!: Array<IModelStep & { fields: Array<string>; form: UntypedFormGroup }>;
 
   constructor(

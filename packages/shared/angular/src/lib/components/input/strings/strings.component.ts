@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectorRef, Component} from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import {
   ReactiveFormsModule,
   UntypedFormBuilder,
@@ -48,7 +48,6 @@ export class InputStringsComponent<T> extends InputBaseComponent<T> {
   }
 
   override afterSetOptionsHandler() {
-
     if (this.control.value) {
       this.list = [];
       this.control.value.forEach((i: any) => this.add(i));

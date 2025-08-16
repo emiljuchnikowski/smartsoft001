@@ -34,8 +34,6 @@ export class InputEnumComponent<T> extends InputBaseComponent<T> {
   }
 
   protected override afterSetOptionsHandler(): void {
-
-
     this.value = this.control.value ? [...this.control.value] : [];
   }
 

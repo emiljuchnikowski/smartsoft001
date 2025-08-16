@@ -20,18 +20,17 @@ import {
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
-import {
-  DomController,
-  ModalController,
-  NavParams,
-} from '@ionic/angular';
+import { DomController, ModalController, NavParams } from '@ionic/angular';
 import {
   IonButton,
-  IonContent, IonFooter,
+  IonContent,
+  IonFooter,
   IonIcon,
-  IonInfiniteScroll, IonInfiniteScrollContent,
+  IonInfiniteScroll,
+  IonInfiniteScrollContent,
   IonRefresher,
-  IonRefresherContent, IonToolbar
+  IonRefresherContent,
+  IonToolbar,
 } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
 import { IDateRange } from '@smartsoft001/domain-core';
@@ -47,7 +46,6 @@ import {
   UIService,
 } from '../../services';
 
-
 @Component({
   selector: 'smart-date-range',
   templateUrl: './date-range.component.html',
@@ -56,13 +54,10 @@ import {
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => DateRangeComponent),
-      multi: true
-    }
+      multi: true,
+    },
   ],
-  imports: [
-    IonButton,
-    TranslatePipe
-  ]
+  imports: [IonButton, TranslatePipe],
 })
 export class DateRangeComponent implements ControlValueAccessor {
   value: any;
@@ -186,8 +181,8 @@ export interface CalendarState {
     IonInfiniteScrollContent,
     IonFooter,
     IonToolbar,
-    IonButton
-  ]
+    IonButton,
+  ],
 })
 export class DateRangeModalComponent implements OnInit, AfterContentInit {
   @Input() showFilterBtns = false;
@@ -306,7 +301,7 @@ export class DateRangeModalComponent implements OnInit, AfterContentInit {
 
     if (this.scrollMe) {
       if (this.scrollPositionValue) {
-        this.scrollMe.scrollToPoint(0, this.scrollPositionValue - 300, 300)
+        this.scrollMe.scrollToPoint(0, this.scrollPositionValue - 300, 300);
       } else {
         this.scrollMe.scrollToPoint(0, this.valueTop, 300);
       }

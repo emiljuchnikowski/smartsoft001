@@ -1,17 +1,8 @@
-import {
-  Inject,
-  Optional,
-  Pipe,
-  PipeTransform,
-  Type,
-} from '@angular/core';
+import { Inject, Optional, Pipe, PipeTransform, Type } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 
-import {
-  IModelLabelProvider,
-  MODEL_LABEL_PROVIDER,
-} from '../../providers';
+import { IModelLabelProvider, MODEL_LABEL_PROVIDER } from '../../providers';
 
 @Pipe({
   name: 'smartModelLabel',

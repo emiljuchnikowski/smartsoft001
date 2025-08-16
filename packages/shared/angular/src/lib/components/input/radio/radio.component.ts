@@ -58,8 +58,6 @@ export class InputRadioComponent<T> extends InputPossibilitiesBaseComponent<T> {
   }
 
   protected override afterSetOptionsHandler(): void {
-
-
     if (this.internalOptions && !this.possibilities()) {
       let options = getModelFieldOptions(
         this.internalOptions.model,

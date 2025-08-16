@@ -37,7 +37,7 @@ export abstract class InputBaseComponent<T> extends BaseComponent {
 
   protected afterSetOptionsHandler() {
     // No base functionality
-  };
+  }
 
   private setRequired(): void {
     const validator = this.control?.validator

@@ -35,7 +35,7 @@ import { PageService } from './services/page/page.service';
     CrudListPaginationFactory,
   ],
 })
-export class CrudCoreModule{}
+export class CrudCoreModule {}
 
 @NgModule({})
 export class CrudModule<T extends IEntity<string>> {

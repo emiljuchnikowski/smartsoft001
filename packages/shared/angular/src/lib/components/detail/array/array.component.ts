@@ -45,8 +45,6 @@ export class DetailArrayComponent<
   }
 
   protected override afterSetOptionsHandler() {
-
-
     if (this.options?.key) {
       this.childOptions = computed(() => {
         const item = this.options?.item?.();
