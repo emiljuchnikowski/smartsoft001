@@ -1,0 +1,21 @@
+@import 'smart-fonts';
+:root {
+  // Default font
+  --default-smart-font: 'Roboto';
+  --default-smart-font-size: 2.4rem;
+  --default-smart-font-weight: 200;
+  --default-smart-font-style: italic;
+  // Android font
+  --default-md-smart-font: 'Roboto';
+  --default-md-smart-font-size: 2.4rem;
+  --default-md-smart-font-weight: bold;
+  --default-md-smart-font-style: normal;
+  // iOs font
+  --default-ios-smart-font: 'SF Text';
+  --default-ios-smart-font-size: 2.4rem;
+  --default-ios-smart-font-weight: thin;
+  --default-ios-smart-font-style: italic;
+  //
+  --default-font-size: 14px;
+  --small-font-size: 12px;
+}

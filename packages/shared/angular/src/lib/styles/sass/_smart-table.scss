@@ -1,0 +1,40 @@
+tr {
+  &.cdk-row {
+    &:nth-child(even) {
+      background-color: #fdfdfd;
+    }
+    &:hover {
+      background-color: rgba(var(--smart-color-primary-rgb), 0.05) !important;
+    }
+  }
+}
+
+td {
+  &.cdk-cell {
+    padding-left: 0.6rem !important;
+    border-right: 0.1rem solid #f6f6f6;
+    border-bottom: 0.1rem solid #e6e6e6;
+    text-overflow: unset;
+    &:last-child {
+      border-right: 0;
+    }
+    &:first-child {
+      padding-left: 1.2rem !important;
+    }
+  }
+}
+
+th {
+  background-color: var(--smart-color-light);
+  padding-left: 0.6rem !important;
+  text-align: left !important;
+  &.cdk-header-cell {
+    color: var(--smart-color-secondary) !important;
+  }
+  &:first-child {
+    padding-left: 1.2rem !important;
+  }
+  .cdk-sort-header-button {
+    color: var(--smart-color-secondary);
+  }
+}
