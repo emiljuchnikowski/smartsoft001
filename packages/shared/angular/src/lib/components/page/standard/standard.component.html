@@ -10,7 +10,7 @@
         </ion-button>
       }
     </ion-buttons>
-    <ion-title [innerHTML]="options?.title | translate"></ion-title>
+    <ion-title [innerHTML]="options?.title ?? '' | translate"></ion-title>
 
     <ion-buttons slot="end">
       @if (options?.search) {

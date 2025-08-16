@@ -6,7 +6,7 @@ import {
   Type,
   ChangeDetectorRef,
   ViewChild,
-  ViewContainerRef,
+  ViewContainerRef, Signal
 } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
@@ -25,7 +25,7 @@ export abstract class FormBaseComponent<T> extends BaseComponent {
   private _model: any;
   private _form!: UntypedFormGroup;
   private _possibilities!: {
-    [key: string]: Observable<{ id: any; text: string }[]>;
+    [key: string]: Signal<{ id: any; text: string }[]>;
   };
   private _inputComponents!: { [key: string]: Type<InputBaseComponent<T>> };
 
@@ -41,7 +41,7 @@ export abstract class FormBaseComponent<T> extends BaseComponent {
   }
 
   get possibilities(): {
-    [key: string]: Observable<{ id: any; text: string }[]>;
+    [key: string]: Signal<{ id: any; text: string }[]>;
   } {
     return this._possibilities;
   }

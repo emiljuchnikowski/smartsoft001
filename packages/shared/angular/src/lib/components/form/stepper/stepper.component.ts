@@ -48,11 +48,11 @@ export class FormStepperComponent<T> extends FormBaseComponent<T> {
     super(cd);
   }
 
-  protected afterSetOptions() {
+  protected override afterSetOptions() {
     this.initSteps();
   }
 
-  protected afterSetForm() {
+  protected override afterSetForm() {
     this.initSteps();
   }
 
@@ -98,5 +98,9 @@ export class FormStepperComponent<T> extends FormBaseComponent<T> {
     this.cd.detectChanges();
 
     this.form.updateValueAndValidity();
+  }
+
+  public __smartDisabled(field: string) {
+    return (this.form.controls[field] as any)['__smartDisabled'];
   }
 }

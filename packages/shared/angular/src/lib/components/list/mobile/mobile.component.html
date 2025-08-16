@@ -20,7 +20,7 @@
         }
 
         <ion-item
-          (click)="itemHandler ? itemHandler(item.id) : unselect && unselect()"
+          (click)="itemHandler ? itemHandler(item.id) : unselect()"
         >
           <ion-label>
             @for (key of keys; track key) {

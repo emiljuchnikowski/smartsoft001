@@ -3,7 +3,7 @@
     @if (form.controls[field] && !form.controls[field]['__smartDisabled']) {
       <smart-input
         [options]="{
-          treeLevel: treeLevel,
+          treeLevel: treeLevel ?? 0,
           fieldKey: field,
           control: form.controls[field],
           model: model,
