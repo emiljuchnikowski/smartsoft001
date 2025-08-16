@@ -1,4 +1,4 @@
-import { computed, effect, Injectable, Signal } from '@angular/core';
+import { computed, Injectable, Signal } from '@angular/core';
 
 import { IEntity } from "@smartsoft001/domain-core";
 

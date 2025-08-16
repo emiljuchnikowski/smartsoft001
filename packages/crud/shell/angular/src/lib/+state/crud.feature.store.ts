@@ -1,5 +1,5 @@
-import { signalStore, withState, withMethods, withComputed, patchState } from '@ngrx/signals';
-import { computed, inject, Signal, WritableSignal } from '@angular/core';
+import { signalStore, withState, withMethods, withComputed } from '@ngrx/signals';
+import { computed, Signal } from '@angular/core';
 
 import { IEntity } from '@smartsoft001/domain-core';
 

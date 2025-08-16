@@ -15,6 +15,5 @@
     "**/*.spec.ts",
     "**/*.test.ts",
     "**/*.d.ts",
-    "jest.config.ts"
   ]
 }

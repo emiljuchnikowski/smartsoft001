@@ -9,7 +9,14 @@ export default {
   ],
   displayName: "crud-shell-angular",
   coverageDirectory: "../../../../coverage/packages/crud/shell/angular",
-  preset: "../../../../jest.preset.js",
+  preset: "jest-preset-angular",
+  moduleFileExtensions: ['ts', 'html', 'js', 'json'],
+  transformIgnorePatterns: [
+    'node_modules/(?!(@angular|@ngrx|@smartsoft001)/)'
+  ],
+  moduleNameMapping: {
+    '^@angular/(.*)$': '<rootDir>/node_modules/@angular/$1'
+  },
   /* TODO: Update to latest Jest snapshotFormat
    * By default Nx has kept the older style of Jest Snapshot formats
    * to prevent breaking of any existing tests with snapshots.

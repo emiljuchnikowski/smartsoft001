@@ -63,7 +63,7 @@ export class CrudService<T extends IEntity<string>> {
     );
   }
 
-  exportList(filter: ICrudFilter = null, format): Promise<void> {
+  exportList(filter: ICrudFilter = null, format: 'csv' | 'xlsx'): Promise<void> {
     if (!format) {
       format = "csv";
     }
