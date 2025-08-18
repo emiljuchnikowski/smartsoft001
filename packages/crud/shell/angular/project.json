@@ -28,12 +28,10 @@
       "outputs": ["{workspaceRoot}/coverage/packages/crud/shell/angular"]
     },
     "build": {
-      "executor": "@nx/esbuild:esbuild",
+      "executor": "@nx/angular:package",
       "options": {
-        "outputPath": "dist/packages/crud/shell/angular",
         "tsConfig": "packages/crud/shell/angular/tsconfig.lib.json",
-        "project": "packages/crud/shell/angular/ng-package.json",
-        "buildableProjectDepsInPackageJsonType": "dependencies"
+        "project": "packages/crud/shell/angular/ng-package.json"
       },
       "configurations": {
         "production": {

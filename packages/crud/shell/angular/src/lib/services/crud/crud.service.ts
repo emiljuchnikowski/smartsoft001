@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, Optional } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { IEntity } from '@smartsoft001/domain-core';
 import { firstValueFrom } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -81,8 +81,7 @@ export class CrudService<T extends IEntity<string>> {
               const downloadLink = document.createElement('a');
               const blob = res.body;
 
-              const url = URL.createObjectURL(blob);
-              downloadLink.href = url;
+              downloadLink.href = URL.createObjectURL(blob);
               downloadLink.download = 'data.' + format;
 
               document.body.appendChild(downloadLink);
@@ -106,8 +105,7 @@ export class CrudService<T extends IEntity<string>> {
             const downloadLink = document.createElement('a');
             const blob = new Blob(['\ufeff', res]);
 
-            const url = URL.createObjectURL(blob);
-            downloadLink.href = url;
+            downloadLink.href = URL.createObjectURL(blob);
             downloadLink.download = 'data.' + format;
 
             document.body.appendChild(downloadLink);

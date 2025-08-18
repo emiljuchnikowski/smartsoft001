@@ -41,6 +41,7 @@ export class FormOptionsPipe<T extends IEntity<string>>
         inputComponents,
         uniqueProvider,
         model: new type(),
+        show: true,
       };
     } else {
       const model = new type();
@@ -57,6 +58,7 @@ export class FormOptionsPipe<T extends IEntity<string>>
         possibilities: possibilities,
         inputComponents,
         model: model,
+        show: true,
       };
     }
   }

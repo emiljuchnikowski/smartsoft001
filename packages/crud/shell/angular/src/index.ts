@@ -10,3 +10,4 @@ export * from './lib/services/search/search.service';
 export * from './lib/+state/crud.facade';
 export * from './lib/models';
 export * from './lib/pages';
+export * from './lib/providers/model-possibilities/model-possibilities.provider';
