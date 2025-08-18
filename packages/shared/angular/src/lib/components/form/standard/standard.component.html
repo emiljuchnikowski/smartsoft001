@@ -1,14 +1,14 @@
 <ion-list class="smart-list">
   @for (field of fields; track field) {
-    @if (form.controls[field] && !form.controls[field]['__smartDisabled']) {
+    @if (form.controls[field] && !get__smartDisabled(field)) {
       <smart-input
         [options]="{
           treeLevel: treeLevel ?? 0,
           fieldKey: field,
-          control: form.controls[field],
+          control: getUntypedFormControl(field),
           model: model,
           mode: mode,
-          possibilities$: possibilities[field],
+          possibilities: possibilities[field],
           component: inputComponents[field],
         }"
       ></smart-input>

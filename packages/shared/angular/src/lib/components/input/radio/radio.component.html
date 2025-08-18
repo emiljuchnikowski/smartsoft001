@@ -2,7 +2,7 @@
   @let length = possibilities()?.length;
   @if (length && length <= 5) {
     <ion-radio-group
-      [formControl]="control"
+      [formControl]="formControl"
       [attr.autofocus]="fieldOptions?.focused"
     >
       <ion-list-header>
@@ -44,7 +44,7 @@
         </ion-text>
       </ion-label>
       <ion-select
-        [formControl]="control"
+        [formControl]="formControl"
         [attr.autofocus]="fieldOptions?.focused"
         [cancelText]="'cancel' | translate"
         [okText]="'ok' | translate"

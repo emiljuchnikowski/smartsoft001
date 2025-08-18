@@ -12,8 +12,6 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 
-import { File } from 'buffer';
-
 import { InputBaseComponent } from './base.component';
 import { IButtonOptions } from '../../../models';
 import { FileService, ToastService } from '../../../services';

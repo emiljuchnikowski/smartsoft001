@@ -5,7 +5,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
-import { SharedComponentsModule } from './components/components.module';
 import { SharedDirectivesModule } from './directives';
 import { SharedFactoriesModule } from './factories';
 import { SharedPagesModule } from './pages';
@@ -24,7 +23,6 @@ import { setDefaultTranslationsAndLang } from './translations-default';
     SharedFactoriesModule,
     SharedServicesModule,
     SharedPipesModule,
-    SharedComponentsModule,
     SharedPagesModule,
     SharedDirectivesModule,
   ],

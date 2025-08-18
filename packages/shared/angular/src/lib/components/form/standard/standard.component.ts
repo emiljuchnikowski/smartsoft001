@@ -11,4 +11,8 @@ import { FormBaseComponent } from '../base/base.component';
   imports: [IonList, InputComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormStandardComponent<T> extends FormBaseComponent<T> {}
+export class FormStandardComponent<T> extends FormBaseComponent<T> {
+  get__smartDisabled(field: string) {
+    return (this.form.controls[field] as any)['__smartDisabled'];
+  }
+}

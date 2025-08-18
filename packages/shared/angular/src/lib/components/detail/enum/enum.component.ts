@@ -26,7 +26,7 @@ import { DetailBaseComponent } from '../base/base.component';
   styleUrls: ['./enum.component.scss'],
 })
 export class DetailEnumComponent<
-  T extends Record<string, unknown>,
+  T extends { [key: string]: any }
 > extends DetailBaseComponent<T> {
   protected getValues(item: T, key: string): string[] {
     const value = item[key];

@@ -39,6 +39,7 @@ export class InputObjectComponent<T, TChild> extends InputBaseComponent<T> {
       model: (this.internalOptions.model as any)[
         this.internalOptions.fieldKey
       ] as TChild,
+      show: true,
     };
   }
 }

@@ -1,7 +1,7 @@
 import { ComponentFactory, PipeTransform, Signal, Type } from '@angular/core';
-import { AbstractControl } from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormControl } from '@angular/forms';
 import { IEntity } from '@smartsoft001/domain-core';
-import { IFieldOptions } from '@smartsoft001/models';
+import { IFieldOptions, IModelOptions } from '@smartsoft001/models';
 import { Observable } from 'rxjs';
 
 import { InputBaseComponent } from '../components';
@@ -36,8 +36,9 @@ export interface IDynamicComponentData {
 }
 
 export interface IFormOptions<T> {
-  treeLevel?: number;
   model: T;
+  show: boolean;
+  treeLevel?: number;
   control?: AbstractControl;
   mode?: 'create' | 'update' | string;
   loading$?: Observable<boolean>;
@@ -48,13 +49,15 @@ export interface IFormOptions<T> {
   inputComponents?: {
     [key: string]: Type<InputBaseComponent<T>>;
   };
+  fieldOptions?: IFieldOptions;
+  modelOptions?: IModelOptions;
 }
 
 export type InputOptions<T> = IInputOptions & IInputFromFieldOptions<T>;
 
 export interface IInputOptions {
   treeLevel: number;
-  control: AbstractControl;
+  control: UntypedFormControl | UntypedFormArray;
   possibilities?: Signal<{ id: any; text: string }[]>;
   component?: Type<InputBaseComponent<any>>;
 }

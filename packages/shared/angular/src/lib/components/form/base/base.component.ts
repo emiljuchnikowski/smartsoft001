@@ -9,7 +9,7 @@ import {
   ViewContainerRef,
   Signal,
 } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { delay } from 'rxjs/operators';
 
@@ -103,5 +103,9 @@ export abstract class FormBaseComponent<T> extends BaseComponent {
 
   protected afterSetForm() {
     // No base functionality
+  }
+
+  getUntypedFormControl(field: string) {
+    return this.form.controls[field] as UntypedFormControl;
   }
 }

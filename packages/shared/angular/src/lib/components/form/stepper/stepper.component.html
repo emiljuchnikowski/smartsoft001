@@ -12,7 +12,7 @@
               [options]="{
                 treeLevel: treeLevel ?? 0,
                 fieldKey: field,
-                control: form.controls[field],
+                control: getUntypedFormControl(field),
                 model: model,
                 mode: mode,
                 possibilities: possibilities[field],

@@ -24,18 +24,18 @@
       <ion-item class="array-box" lines="none" cdkDrag>
         @if (!fieldOptions?.possibilities?.static) {
           <ion-card>
-            <smart-accordion [(show)]="!!options.show">
+            <smart-accordion [(show)]="options.show">
               <smart-accordion-header>
                 <ion-card-header>
                   <ion-item lines="none">
                     @if (
-                      !options.show &&
-                      options.control?.value[options.modelOptions.titleKey!]
+                      !options.show && options?.modelOptions?.titleKey &&
+                      options.control?.value[options.modelOptions!.titleKey!]
                     ) {
                       <ion-label>
                         {{
                           options?.control?.value[
-                            options.modelOptions.titleKey!
+                            options.modelOptions!.titleKey!
                           ] | translate
                         }}
                       </ion-label>

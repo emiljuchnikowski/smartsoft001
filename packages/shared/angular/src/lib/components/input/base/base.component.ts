@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Input, Directive, Signal } from '@angular/core';
-import { AbstractControl } from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { IFieldOptions } from '@smartsoft001/models';
 
 import { InputOptions } from '../../../models';
@@ -8,7 +8,7 @@ import { BaseComponent } from '../../base';
 @Directive()
 export abstract class InputBaseComponent<T> extends BaseComponent {
   internalOptions!: InputOptions<T>;
-  control!: AbstractControl;
+  control!: UntypedFormControl | UntypedFormArray | UntypedFormGroup;
   required!: boolean;
 
   possibilities!: Signal<Array<{ id: any; text: string }> | null>;
@@ -44,5 +44,17 @@ export abstract class InputBaseComponent<T> extends BaseComponent {
       ? this.control.validator({} as AbstractControl)
       : null;
     this.required = validator && validator['required'];
+  }
+
+  get formControl(): UntypedFormControl {
+    return this.control as UntypedFormControl;
+  }
+
+  get formControlArray(): UntypedFormArray {
+    return this.control as UntypedFormArray;
+  }
+
+  get formControlGroup(): UntypedFormGroup {
+    return this.control as UntypedFormGroup;
   }
 }

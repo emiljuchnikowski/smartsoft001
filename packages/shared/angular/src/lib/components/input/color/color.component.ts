@@ -34,7 +34,7 @@ import { InputBaseComponent } from '../base/base.component';
   ],
 })
 export class InputColorComponent<T> extends InputBaseComponent<T> {
-  color!: string | null;
+  color!: string;
 
   constructor(cd: ChangeDetectorRef) {
     super(cd);
@@ -51,7 +51,7 @@ export class InputColorComponent<T> extends InputBaseComponent<T> {
   }
 
   clear() {
-    this.color = null;
+    this.color = '';
     this.control.markAsDirty();
     this.control.markAllAsTouched();
     this.control.setValue(null);

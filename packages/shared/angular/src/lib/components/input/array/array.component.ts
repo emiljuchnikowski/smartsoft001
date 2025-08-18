@@ -64,13 +64,7 @@ import { InputBaseComponent } from '../base/base.component';
   ],
 })
 export class InputArrayComponent<T, TChild> extends InputBaseComponent<T> {
-  childOptions!: Array<
-    IFormOptions<TChild> & {
-      fieldOptions: IFieldOptions;
-      show?: boolean;
-      modelOptions: IModelOptions;
-    }
-  >;
+  childOptions!: Array<IFormOptions<TChild>>;
   addButtonOptions: IButtonOptions = {
     click: async () => {
       const options = this.getOptions();
