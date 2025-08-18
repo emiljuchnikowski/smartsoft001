@@ -6,10 +6,11 @@ import {
   Type,
   ChangeDetectorRef,
   ViewChild,
-  ViewContainerRef, Signal
+  ViewContainerRef,
+  Signal,
 } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { delay } from 'rxjs/operators';
 
 import { DynamicComponentType, IFormOptions } from '../../../models';
