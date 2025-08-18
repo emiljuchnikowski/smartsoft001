@@ -29,7 +29,8 @@
                 <ion-card-header>
                   <ion-item lines="none">
                     @if (
-                      !options.show && options?.modelOptions?.titleKey &&
+                      !options.show &&
+                      options?.modelOptions?.titleKey &&
                       options.control?.value[options.modelOptions!.titleKey!]
                     ) {
                       <ion-label>

@@ -1,5 +1,10 @@
 import { ChangeDetectorRef, Input, Directive, Signal } from '@angular/core';
-import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormArray,
+  UntypedFormControl,
+  UntypedFormGroup,
+} from '@angular/forms';
 import { IFieldOptions } from '@smartsoft001/models';
 
 import { InputOptions } from '../../../models';

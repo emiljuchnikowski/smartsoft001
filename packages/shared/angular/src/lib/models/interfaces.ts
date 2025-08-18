@@ -1,5 +1,9 @@
 import { ComponentFactory, PipeTransform, Signal, Type } from '@angular/core';
-import { AbstractControl, UntypedFormArray, UntypedFormControl } from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormArray,
+  UntypedFormControl,
+} from '@angular/forms';
 import { IEntity } from '@smartsoft001/domain-core';
 import { IFieldOptions, IModelOptions } from '@smartsoft001/models';
 import { Observable } from 'rxjs';

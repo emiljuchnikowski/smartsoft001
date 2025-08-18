@@ -18,5 +18,5 @@ import { DetailBaseComponent } from '../base/base.component';
   styleUrls: ['./flag.component.scss'],
 })
 export class DetailFlagComponent<
-  T extends { [key: string]: any }
+  T extends { [key: string]: any },
 > extends DetailBaseComponent<T> {}
