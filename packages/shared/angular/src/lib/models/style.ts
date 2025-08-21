@@ -1,4 +1,4 @@
-export type IStyle = Record<string, undefined>;
+export type IStyle = Record<string, string | undefined>;
 
 export type StyleType =
   | 'color-primary'

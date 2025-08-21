@@ -48,7 +48,11 @@ export class DynamicComponentStorageService {
     // Attempt to look in the root AppModule if not found in the current moduleRef
     if (!components.length && moduleRef) {
       const applicationRef = moduleRef.injector.get(ApplicationRef, null);
-      if (applicationRef && applicationRef.components.length > 0) {
+      if (
+        applicationRef &&
+        applicationRef.components &&
+        applicationRef.components.length > 0
+      ) {
         // Try to find AppComponent, otherwise use the first available component's injector
         let appComponentInjector = applicationRef.components.find(
           (t) => t.componentType.name === 'AppComponent',

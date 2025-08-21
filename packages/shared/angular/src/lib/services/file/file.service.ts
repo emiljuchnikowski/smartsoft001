@@ -1,6 +1,6 @@
 import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
 import { Inject, Injectable, InjectionToken, Optional } from '@angular/core';
-import { Observable } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 export const FILE_SERVICE_CONFIG = new InjectionToken<IFileServiceConfig>(
@@ -47,9 +47,9 @@ export class FileService {
   }
 
   delete(id: string): Promise<void> {
-    return this.http
-      .delete<void>(this.config.apiUrl + '/attachments/' + id)
-      .toPromise();
+    return firstValueFrom(
+      this.http.delete<void>(this.config.apiUrl + '/attachments/' + id),
+    );
   }
 
   getUrl(id: string): string {
