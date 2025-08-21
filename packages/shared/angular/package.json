@@ -1,6 +1,6 @@
 {
   "name": "@smartsoft001/angular",
-  "version": "0.0.1",
+  "version": "2.68.0",
   "sideEffects": false,
   "peerDependencies": {
     "@angular/common": "~19.2.0",
