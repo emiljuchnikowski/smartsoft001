@@ -23,6 +23,16 @@ const config: Config = {
   moduleFileExtensions: ['ts', 'html', 'js', 'json', 'mjs'],
   transformIgnorePatterns: ['node_modules/(?!(@angular|@ngrx)/)'],
   snapshotFormat: { escapeString: true, printBasicPrototype: true },
+  moduleNameMapper: {
+    '^@smartsoft001/angular$':
+      '<rootDir>/../../../../packages/shared/angular/src/index.ts',
+    '^@smartsoft001/angular/(.*)$':
+      '<rootDir>/../../../../packages/shared/angular/src/$1',
+    '^@smartsoft001/models$':
+      '<rootDir>/../../../../packages/shared/models/src/index.ts',
+    '^@smartsoft001/models/(.*)$':
+      '<rootDir>/../../../../packages/shared/models/src/$1',
+  },
 };
 
 export default config;
