@@ -21,28 +21,31 @@ jobs:
       - run: npx nx run-many -t test --max-parallel=4
       - run: npx nx run-many -t build --max-parallel=4
       - name: Claude Code Review
-        uses: anthropics/claude-code-review@v1
-        with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          review_prompt: |
-            Please review the code changes in this pull request and provide feedback on:
-
-            1. **Critical Issues**: Identify any security vulnerabilities, breaking changes, or critical bugs
-            2. **Code Quality**: Check for TypeScript best practices, proper error handling, and architectural consistency
-            3. **Domain Architecture**: Ensure changes follow the domain-driven design patterns used in this codebase
-            4. **Testing**: Verify that appropriate tests are included for new functionality
-            5. **Dependencies**: Flag any suspicious or unnecessary dependency additions
-            6. **Performance**: Identify potential performance issues or memory leaks
-
-            Focus on:
-            - NestJS and Angular best practices
-            - Proper use of decorators and dependency injection
-            - Database query optimization (MongoDB/TypeORM)
-            - Authentication and authorization security
-            - Payment processing security (PayU, PayPal, Paynow, Revolut integrations)
-
-            Provide a summary with:
-            - ✅ Approved changes
-            - ⚠️ Warnings that should be addressed
-            - 🚨 Critical issues that must be fixed before merge
+        if: github.event_name == 'pull_request'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.number }}
+        run: |
+          # Install Claude Code CLI
+          npm install -g @anthropic/claude-code
+          
+          # Get PR diff and changed files
+          git fetch origin main
+          CHANGED_FILES=$(git diff --name-only origin/main...HEAD)
+          
+          # Run Claude Code review on changed files
+          echo "Reviewing changed files: $CHANGED_FILES"
+          REVIEW_OUTPUT=$(echo "$CHANGED_FILES" | xargs claude-code review --prompt="$(cat tools/specs/CODE_REVIEW.md)" 2>&1 || echo "Review failed")
+          
+          # Escape JSON for GitHub API
+          ESCAPED_REVIEW=$(echo "$REVIEW_OUTPUT" | jq -Rs .)
+          
+          # Post comment to PR
+          curl -s -X POST \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/${{ github.repository }}/issues/$PR_NUMBER/comments" \
+            -d "{\"body\": \"## 🤖 Claude Code Review\\n\\n$ESCAPED_REVIEW\"}"
+          
+          echo "Code review completed and posted to PR #$PR_NUMBER"
