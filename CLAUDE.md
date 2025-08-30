@@ -16,6 +16,7 @@ The project follows a layered architecture with these main domains:
 - **shared**: Core utilities and services
 
 Each domain is structured as:
+
 - `domain/`: Core business logic and entities
 - `shell/`: Implementation layers:
   - `app-services/`: Application services
@@ -25,6 +26,7 @@ Each domain is structured as:
 ## Common Commands
 
 ### Testing
+
 ```bash
 # Run all tests
 nx run-many --target=test
@@ -37,6 +39,7 @@ nx test <project-name> --configuration=ci
 ```
 
 ### Building
+
 ```bash
 # Build all projects
 nx run-many --target=build --all
@@ -49,6 +52,7 @@ npx nx run-many -t build
 ```
 
 ### Linting
+
 ```bash
 # Lint all projects
 nx run-many --target=lint --all
@@ -58,6 +62,7 @@ nx lint <project-name>
 ```
 
 ### Project Management
+
 ```bash
 # List all projects
 nx show projects
@@ -72,6 +77,7 @@ nx show project <project-name> --target-names
 ## Key Project Names
 
 Major projects in the workspace:
+
 - `domain-core`: Core domain interfaces and repository patterns
 - `utils`: Utility services (NIP, PESEL, password hashing, etc.)
 - `models`: Data model decorators and metadata utilities

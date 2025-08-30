@@ -4,7 +4,6 @@ import { Request } from 'express';
 import { IAuthToken, IAuthTokenRequest } from '@smartsoft001/auth-domain';
 import { AuthService } from '@smartsoft001/auth-shell-app-services';
 
-
 @Controller('token')
 export class TokenController {
   constructor(private readonly service: AuthService) {}
