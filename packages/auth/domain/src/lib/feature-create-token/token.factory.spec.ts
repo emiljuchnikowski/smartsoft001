@@ -1,11 +1,12 @@
 import { JwtService } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
 import { DomainValidationError } from '@smartsoft001/domain-core';
 import { FbService } from '@smartsoft001/fb';
 import { GoogleService } from '@smartsoft001/google';
 import { PasswordService } from '@smartsoft001/utils';
-import { Repository } from 'typeorm';
 
 import { User } from '../entities';
 import { TokenConfig } from './token.config';

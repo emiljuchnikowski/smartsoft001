@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import { Guid } from 'guid-typescript';
+
 import {
   DomainValidationError,
   IItemRepository,
 } from '@smartsoft001/domain-core';
-import { Guid } from 'guid-typescript';
 
 import { ITransCreate } from './interfaces';
 import { Trans, TRANS_SYSTEMS } from '../entities/trans.entity';

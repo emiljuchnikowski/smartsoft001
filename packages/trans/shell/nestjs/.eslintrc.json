@@ -1,8 +1,6 @@
 {
   "extends": "../../../../.eslintrc.json",
-  "rules": {
-
-  },
+  "rules": {},
   "ignorePatterns": ["!**/*"],
   "overrides": [
     {

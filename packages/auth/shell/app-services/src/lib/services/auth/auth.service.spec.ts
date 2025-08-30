@@ -1,5 +1,7 @@
 import { ModuleRef } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
+import { Request } from 'express';
+
 import {
   AUTH_TOKEN_PAYLOAD_PROVIDER,
   AUTH_TOKEN_USER_PROVIDER,
@@ -7,7 +9,6 @@ import {
   IAuthToken,
   TokenFactory,
 } from '@smartsoft001/auth-domain';
-import { Request } from 'express';
 
 import { AuthService } from './auth.service';
 

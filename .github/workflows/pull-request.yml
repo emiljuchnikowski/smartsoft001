@@ -15,8 +15,33 @@ jobs:
         id: cache-deps
         uses: ./.github/actions/cached-deps
         with:
-          node-version: '22'
+          node-version: '24'
       - run: npx nx format:check
       - run: npx nx run-many -t lint --max-parallel=4
       - run: npx nx run-many -t test --max-parallel=4
       - run: npx nx run-many -t build --max-parallel=4
+
+      - name: Install Claude Code SDK
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Comment PR with Claude Code Review
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: claude-code-review
+          message: 🔎 Code Review in progress...
+
+      - name: Run Claude Code Review
+        run: |
+          PR_DIFF=$(git diff origin/main...HEAD)
+          CLAUDE_CR_PROMPT=$(cat tools/specs/CODE_REVIEW.md)
+          claude --append-system-prompt "$CLAUDE_CR_PROMPT" \
+            --print "Do Code Review:\n\n $PR_DIFF" \
+            > claude-review.md
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+      - name: Comment PR with Claude Code Review
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: claude-code-review
+          path: claude-review.md

@@ -1,9 +1,7 @@
 {
   "extends": ["../../../.eslintrc.json"],
   "ignorePatterns": ["!**/*"],
-  "rules": {
-
-  },
+  "rules": {},
   "overrides": [
     {
       "files": ["*.json"],
