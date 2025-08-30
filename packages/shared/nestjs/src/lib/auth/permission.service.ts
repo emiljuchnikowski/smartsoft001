@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+
 import { DomainForbiddenError } from '@smartsoft001/domain-core';
 import { IUser } from '@smartsoft001/users';
 

@@ -1,13 +1,14 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
+import * as CryptoJS from 'crypto-js';
+
 import {
   ITransPaymentSingleService,
   Trans,
   TransStatus,
 } from '@smartsoft001/trans-domain';
 import { GuidService } from '@smartsoft001/utils';
-import * as CryptoJS from 'crypto-js';
 
 import {
   IPaynowConfigProvider,

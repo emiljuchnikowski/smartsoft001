@@ -3,6 +3,7 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/shared/mongo/src",
   "projectType": "library",
+  "tags": ["scope:shared", "type:util"],
   "generators": {},
   "targets": {
     "lint": {
@@ -43,6 +44,5 @@
       },
       "dependsOn": ["build"]
     }
-  },
-  "tags": ["scope:shared", "type:util"]
+  }
 }

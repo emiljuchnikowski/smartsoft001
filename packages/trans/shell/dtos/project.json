@@ -3,6 +3,7 @@
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/trans/shell/dtos/src",
   "projectType": "library",
+  "tags": ["scope:trans", "type:shell"],
   "generators": {},
   "targets": {
     "lint": {
@@ -34,6 +35,5 @@
         "assets": ["packages/trans/shell/dtos/*.md"]
       }
     }
-  },
-  "tags": ["scope:trans", "type:shell"]
+  }
 }
