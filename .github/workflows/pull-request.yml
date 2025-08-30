@@ -20,3 +20,29 @@ jobs:
       - run: npx nx run-many -t lint --max-parallel=4
       - run: npx nx run-many -t test --max-parallel=4
       - run: npx nx run-many -t build --max-parallel=4
+      - name: Claude Code Review
+        uses: anthropics/claude-code-review@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          review_prompt: |
+            Please review the code changes in this pull request and provide feedback on:
+            
+            1. **Critical Issues**: Identify any security vulnerabilities, breaking changes, or critical bugs
+            2. **Code Quality**: Check for TypeScript best practices, proper error handling, and architectural consistency
+            3. **Domain Architecture**: Ensure changes follow the domain-driven design patterns used in this codebase
+            4. **Testing**: Verify that appropriate tests are included for new functionality
+            5. **Dependencies**: Flag any suspicious or unnecessary dependency additions
+            6. **Performance**: Identify potential performance issues or memory leaks
+            
+            Focus on:
+            - NestJS and Angular best practices
+            - Proper use of decorators and dependency injection
+            - Database query optimization (MongoDB/TypeORM)
+            - Authentication and authorization security
+            - Payment processing security (PayU, PayPal, Paynow, Revolut integrations)
+            
+            Provide a summary with:
+            - ✅ Approved changes
+            - ⚠️ Warnings that should be addressed
+            - 🚨 Critical issues that must be fixed before merge
