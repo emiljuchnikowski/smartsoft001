@@ -1,4 +1,3 @@
-
 import { IEntity } from '@smartsoft001/domain-core';
 import { IUser, IUserCredentials } from '@smartsoft001/users';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
