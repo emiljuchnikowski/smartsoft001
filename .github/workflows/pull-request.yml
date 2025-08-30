@@ -15,13 +15,12 @@ jobs:
         id: cache-deps
         uses: ./.github/actions/cached-deps
         with:
-          node-version: '22'
+          node-version: '24'
       - run: npx nx format:check
       - run: npx nx run-many -t lint --max-parallel=4
       - run: npx nx run-many -t test --max-parallel=4
       - run: npx nx run-many -t build --max-parallel=4
       - name: Claude Code Review
-        if: github.event_name == 'pull_request'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
