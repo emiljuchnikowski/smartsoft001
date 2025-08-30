@@ -1,5 +1,6 @@
-import { IUser } from '@smartsoft001/users';
 import { Observable } from 'rxjs';
+
+import { IUser } from '@smartsoft001/users';
 
 import { IEntity, ISpecification } from './interfaces';
 
