@@ -29,23 +29,23 @@ jobs:
         run: |
           # Install Claude Code CLI
           npm install -g @anthropic/claude-code
-          
+
           # Get PR diff and changed files
           git fetch origin main
           CHANGED_FILES=$(git diff --name-only origin/main...HEAD)
-          
+
           # Run Claude Code review on changed files
           echo "Reviewing changed files: $CHANGED_FILES"
           REVIEW_OUTPUT=$(echo "$CHANGED_FILES" | xargs claude-code review --prompt="$(cat tools/specs/CODE_REVIEW.md)" 2>&1 || echo "Review failed")
-          
+
           # Escape JSON for GitHub API
           ESCAPED_REVIEW=$(echo "$REVIEW_OUTPUT" | jq -Rs .)
-          
+
           # Post comment to PR
           curl -s -X POST \
             -H "Authorization: token $GITHUB_TOKEN" \
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/repos/${{ github.repository }}/issues/$PR_NUMBER/comments" \
             -d "{\"body\": \"## 🤖 Claude Code Review\\n\\n$ESCAPED_REVIEW\"}"
-          
+
           echo "Code review completed and posted to PR #$PR_NUMBER"
