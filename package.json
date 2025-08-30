@@ -120,7 +120,8 @@
     "socket.io": "^4.8.1",
     "tslib": "^2.3.0",
     "typeorm": "^0.3.21",
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "zone.js": "~0.15.0"
   },
   "resolutions": {
     "paypal-rest-sdk": "1.8.1",
