@@ -11,6 +11,7 @@ import {
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting,
 } from '@angular/platform-browser-dynamic/testing';
+
 import { IEntity } from '@smartsoft001/domain-core';
 
 import { CrudService } from './crud.service';

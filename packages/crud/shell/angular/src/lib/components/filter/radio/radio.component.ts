@@ -12,6 +12,7 @@ import {
   IonRow,
 } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
+
 import { IEntity } from '@smartsoft001/domain-core';
 
 import { BaseComponent } from '../base/base.component';

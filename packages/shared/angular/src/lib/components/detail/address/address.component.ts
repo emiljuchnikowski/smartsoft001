@@ -1,4 +1,5 @@
 import { Component, computed, Signal } from '@angular/core';
+
 import { IAddress } from '@smartsoft001/domain-core';
 
 import { DetailBaseComponent } from '../base/base.component';

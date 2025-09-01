@@ -1,8 +1,9 @@
 import { TranslateModule } from '@ngx-translate/core';
-import { IAddress } from '@smartsoft001/domain-core';
-import { FieldType, Field, Model } from '@smartsoft001/models';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
+
+import { IAddress } from '@smartsoft001/domain-core';
+import { FieldType, Field, Model } from '@smartsoft001/models';
 
 import { SharedFactoriesModule } from '../../factories';
 import { COMPONENTS, IMPORTS } from '../components.module';

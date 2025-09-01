@@ -33,11 +33,12 @@ import {
   IonToolbar,
 } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
-import { IDateRange } from '@smartsoft001/domain-core';
 // @ts-expect-error moment package
 import moment from 'moment';
 import { Subject, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter, tap } from 'rxjs/operators';
+
+import { IDateRange } from '@smartsoft001/domain-core';
 
 import {
   CalendarService,

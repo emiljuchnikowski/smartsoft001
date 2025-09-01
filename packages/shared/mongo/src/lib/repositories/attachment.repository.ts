@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { IEntity, IAttachmentRepository } from '@smartsoft001/domain-core';
 import { MongoClient } from 'mongodb';
 import * as mongo from 'mongodb';
+
+import { IEntity, IAttachmentRepository } from '@smartsoft001/domain-core';
 
 import { Readable, Stream } from 'stream';
 
@@ -44,7 +45,7 @@ export class MongoAttachmentRepository<
 
       if (options?.streamCallback) options.streamCallback(writeStream);
 
-      data.stream.pipe(writeStream);
+      data.stream.pipe(writeStream as any);
 
       writeStream.on('error', (error) => {
         rej(error);

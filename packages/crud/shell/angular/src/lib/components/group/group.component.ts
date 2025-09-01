@@ -9,6 +9,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+
 import {
   AccordionBodyComponent,
   AccordionComponent,

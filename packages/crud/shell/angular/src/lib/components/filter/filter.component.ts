@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { IonItem } from '@ionic/angular/standalone';
+
 import { FieldType, IModelFilter } from '@smartsoft001/models';
 
 import { ICrudFilter } from '../../models';

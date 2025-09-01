@@ -9,19 +9,20 @@ import {
   IonToolbar,
 } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
+import * as _ from 'lodash';
+import { DynamicIoDirective } from 'ng-dynamic-component';
+
 import {
   ButtonComponent,
   FormComponent,
   IButtonOptions,
-  MenuService,
+  MenuService
 } from '@smartsoft001/angular';
 import { IEntity } from '@smartsoft001/domain-core';
 import {
   getModelFieldsWithOptions,
   IFieldEditMetadata,
 } from '@smartsoft001/models';
-import * as _ from 'lodash';
-import { DynamicIoDirective } from 'ng-dynamic-component';
 
 import { CrudFacade } from '../../+state/crud.facade';
 import { CrudFullConfig } from '../../crud.config';
@@ -42,7 +43,7 @@ import { FormOptionsPipe } from '../../pipes';
     DynamicIoDirective,
     FormOptionsPipe,
     FormComponent,
-    ButtonComponent,
+    ButtonComponent
   ],
   styleUrls: ['./multiselect.component.scss'],
 })

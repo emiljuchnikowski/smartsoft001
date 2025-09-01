@@ -13,6 +13,7 @@ import {
   ViewChildren,
   WritableSignal,
 } from '@angular/core';
+
 import { IEntity } from '@smartsoft001/domain-core';
 
 import { DynamicContentDirective } from '../../directives';

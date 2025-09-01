@@ -1,5 +1,6 @@
 import { Component, computed, ElementRef, OnInit } from '@angular/core';
 import { NavParams } from '@ionic/angular';
+
 import { IEntity } from '@smartsoft001/domain-core';
 
 import { DetailsComponent, PageComponent } from '../../components';

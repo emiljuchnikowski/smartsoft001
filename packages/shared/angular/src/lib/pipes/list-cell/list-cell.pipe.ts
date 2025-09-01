@@ -1,7 +1,8 @@
 import { Pipe, PipeTransform, Type } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { FieldTypeDef, getModelFieldOptions } from '@smartsoft001/models';
 import { Memoize } from 'lodash-decorators';
+
+import { FieldTypeDef, getModelFieldOptions } from '@smartsoft001/models';
 
 import { ICellPipe } from '../../models';
 

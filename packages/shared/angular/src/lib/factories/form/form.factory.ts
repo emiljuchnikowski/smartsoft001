@@ -6,6 +6,9 @@ import {
   UntypedFormBuilder,
   Validators,
 } from '@angular/forms';
+import * as _ from 'lodash';
+import { delay, tap } from 'rxjs/operators';
+
 import {
   FieldType,
   getModelFieldsWithOptions,
@@ -23,8 +26,6 @@ import {
   SpecificationService,
   ZipCodeService,
 } from '@smartsoft001/utils';
-import * as _ from 'lodash';
-import { delay, tap } from 'rxjs/operators';
 
 import {
   IModelValidatorsProvider,

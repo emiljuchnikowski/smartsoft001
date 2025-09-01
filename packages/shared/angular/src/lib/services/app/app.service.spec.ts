@@ -2,8 +2,9 @@ import { TestBed } from '@angular/core/testing';
 import { Title } from '@angular/platform-browser';
 import { Router, NavigationEnd } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { ArrayService } from '@smartsoft001/utils';
 import { BehaviorSubject } from 'rxjs';
+
+import { ArrayService } from '@smartsoft001/utils';
 
 import { AppService } from './app.service';
 

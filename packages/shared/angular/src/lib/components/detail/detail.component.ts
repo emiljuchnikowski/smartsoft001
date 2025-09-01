@@ -6,6 +6,7 @@ import {
   InputSignal,
 } from '@angular/core';
 import { IonItem, IonLabel, IonSkeletonText } from '@ionic/angular/standalone';
+
 import { IEntity } from '@smartsoft001/domain-core';
 import { FieldType } from '@smartsoft001/models';
 

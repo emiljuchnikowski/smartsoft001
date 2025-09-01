@@ -12,13 +12,14 @@ import {
 } from '@angular/core';
 import { UntypedFormArray } from '@angular/forms';
 import { IonItem } from '@ionic/angular/standalone';
+import * as _ from 'lodash';
+
 import {
   FieldType,
   getModelFieldOptions,
   getModelFieldsWithOptions,
   IFieldOptions,
 } from '@smartsoft001/models';
-import * as _ from 'lodash';
 
 import { InputOptions } from '../../models';
 import { StyleService } from '../../services';

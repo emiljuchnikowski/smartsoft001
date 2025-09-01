@@ -16,12 +16,13 @@ import {
 } from '@angular/core';
 import { IonCol, IonRow } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
+import * as _ from 'lodash';
+
 import { IEntity } from '@smartsoft001/domain-core';
 import {
   getModelFieldsWithOptions,
   IFieldListMetadata,
 } from '@smartsoft001/models';
-import * as _ from 'lodash';
 
 import { CreateDynamicComponent } from '../base';
 import { ListBaseComponent } from './base/base.component';

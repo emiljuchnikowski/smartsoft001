@@ -12,9 +12,10 @@ import {
   IonText,
 } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
+import moment from 'moment';
+
 import { IEntity } from '@smartsoft001/domain-core';
 import { GuidService } from '@smartsoft001/utils';
-import moment from 'moment';
 
 import { BaseComponent } from '../base/base.component';
 

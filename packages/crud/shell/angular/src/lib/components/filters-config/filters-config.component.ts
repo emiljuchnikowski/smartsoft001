@@ -6,6 +6,7 @@ import {
   IonToolbar,
 } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
+
 import { StyleService } from '@smartsoft001/angular';
 
 import { CrudFacade } from '../../+state/crud.facade';

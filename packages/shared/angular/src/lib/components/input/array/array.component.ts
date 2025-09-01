@@ -14,6 +14,8 @@ import {
   IonText,
 } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
+import { DynamicIoDirective } from 'ng-dynamic-component';
+
 import {
   FieldType,
   getModelFieldOptions,
@@ -22,7 +24,6 @@ import {
   IModelOptions,
 } from '@smartsoft001/models';
 import { ObjectService } from '@smartsoft001/utils';
-import { DynamicIoDirective } from 'ng-dynamic-component';
 
 import { FormFactory } from '../../../factories';
 import { IButtonOptions, IFormOptions } from '../../../models';

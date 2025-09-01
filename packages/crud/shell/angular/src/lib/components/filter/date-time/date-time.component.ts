@@ -11,9 +11,10 @@ import {
   IonRow,
 } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
+
 import { IEntity } from '@smartsoft001/domain-core';
 import { GuidService } from '@smartsoft001/utils';
-import { Subscription } from 'rxjs';
 
 import { FilterDateComponent } from '../date/date.component';
 

@@ -1,5 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { Component } from '@angular/core';
+
 import { DetailsComponent, FormComponent } from '@smartsoft001/angular';
 import { IEntity } from '@smartsoft001/domain-core';
 
@@ -36,7 +37,7 @@ import { CrudItemPageBaseComponent } from '../base/base.component';
     <br /><br />
   `,
   styleUrls: ['./standard.component.scss'],
-  imports: [DetailsComponent, FormComponent, FormOptionsPipe, NgTemplateOutlet],
+  imports: [DetailsComponent, FormComponent, FormOptionsPipe, NgTemplateOutlet, FormComponent]
 })
 export class ItemStandardComponent<
   T extends IEntity<string>,

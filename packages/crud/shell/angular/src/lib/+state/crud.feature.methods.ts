@@ -1,5 +1,6 @@
 import { inject } from '@angular/core';
 import { patchState } from '@ngrx/signals';
+
 import { PaginationMode } from '@smartsoft001/angular';
 import { IEntity } from '@smartsoft001/domain-core';
 

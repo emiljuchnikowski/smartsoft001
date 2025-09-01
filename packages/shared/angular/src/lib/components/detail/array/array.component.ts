@@ -7,8 +7,9 @@ import {
   signal,
   Signal,
 } from '@angular/core';
-import { IEntity } from '@smartsoft001/domain-core';
 import { DynamicIoDirective } from 'ng-dynamic-component';
+
+import { IEntity } from '@smartsoft001/domain-core';
 
 import { IDetailsOptions } from '../../../models';
 import { DETAILS_COMPONENT_TOKEN } from '../../../shared.inectors';

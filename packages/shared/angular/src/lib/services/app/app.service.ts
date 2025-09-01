@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { NavigationEnd, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { ArrayService } from '@smartsoft001/utils';
 import { BehaviorSubject } from 'rxjs';
+
+import { ArrayService } from '@smartsoft001/utils';
 
 import { IIconButtonOptions } from '../../models';
 

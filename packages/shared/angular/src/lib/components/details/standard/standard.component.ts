@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { IonList } from '@ionic/angular/standalone';
+
 import { IEntity } from '@smartsoft001/domain-core';
 
 import { CardComponent } from '../../card';

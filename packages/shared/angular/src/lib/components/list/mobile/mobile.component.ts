@@ -16,8 +16,9 @@ import {
   IonList,
 } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
-import { IEntity } from '@smartsoft001/domain-core';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
+
+import { IEntity } from '@smartsoft001/domain-core';
 
 import { IListComponentFactories, IListInternalOptions } from '../../../models';
 import { FileUrlPipe, ListCellPipe } from '../../../pipes';

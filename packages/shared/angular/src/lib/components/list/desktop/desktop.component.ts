@@ -34,9 +34,10 @@ import {
   IonInfiniteScrollContent,
 } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
-import { IEntity } from '@smartsoft001/domain-core';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { Subscription } from 'rxjs';
+
+import { IEntity } from '@smartsoft001/domain-core';
 
 import { DetailsDirective } from '../../../directives';
 import { IListComponentFactories, IListInternalOptions } from '../../../models';

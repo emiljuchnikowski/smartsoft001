@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IEntity } from '@smartsoft001/domain-core';
 import { firstValueFrom } from 'rxjs';
 import { map } from 'rxjs/operators';
+
+import { IEntity } from '@smartsoft001/domain-core';
 
 import { CrudConfig } from '../../crud.config';
 import { ICrudCreateManyOptions, ICrudFilter } from '../../models';

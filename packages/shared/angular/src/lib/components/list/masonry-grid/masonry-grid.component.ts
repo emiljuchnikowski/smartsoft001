@@ -17,6 +17,7 @@ import {
   IonInfiniteScrollContent,
   IonRow,
 } from '@ionic/angular/standalone';
+
 import { IEntity } from '@smartsoft001/domain-core';
 import { FieldType, getModelFieldsWithOptions } from '@smartsoft001/models';
 

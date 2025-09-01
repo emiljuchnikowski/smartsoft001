@@ -18,8 +18,9 @@ import {
   IonText,
 } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
-import { getModelFieldOptions } from '@smartsoft001/models';
 import * as _ from 'lodash';
+
+import { getModelFieldOptions } from '@smartsoft001/models';
 
 import { ModelLabelPipe } from '../../../pipes';
 import {

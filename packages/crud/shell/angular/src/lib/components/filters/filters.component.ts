@@ -18,6 +18,7 @@ import {
   IonToolbar,
 } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
+
 import { MenuService, StyleService } from '@smartsoft001/angular';
 import { IEntity } from '@smartsoft001/domain-core';
 import {

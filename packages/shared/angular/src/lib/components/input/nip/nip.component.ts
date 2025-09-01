@@ -2,6 +2,7 @@ import { AsyncPipe } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { IonInput, IonLabel, IonText } from '@ionic/angular/standalone';
+
 import { NipService } from '@smartsoft001/utils';
 
 import { ModelLabelPipe } from '../../../pipes';

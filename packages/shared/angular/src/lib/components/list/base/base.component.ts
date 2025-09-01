@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+
 import { IEntity } from '@smartsoft001/domain-core';
 import {
   FieldType,

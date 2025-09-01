@@ -1,4 +1,5 @@
 import { computed, Injectable, Signal } from '@angular/core';
+
 import { IEntity } from '@smartsoft001/domain-core';
 
 import { CrudConfig } from '../crud.config';

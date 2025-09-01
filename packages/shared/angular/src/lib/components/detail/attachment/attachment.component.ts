@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+
 import { IEntity } from '@smartsoft001/domain-core';
 
 import { IButtonOptions } from '../../../models';

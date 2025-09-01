@@ -3,10 +3,11 @@ import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
-import { SharedModule } from '@smartsoft001/angular';
-import { Field, Model } from '@smartsoft001/models';
 import { moduleMetadata } from '@storybook/angular';
 import type { Meta, StoryObj } from '@storybook/angular';
+
+import { SharedModule } from '@smartsoft001/angular';
+import { Field, Model } from '@smartsoft001/models';
 
 import { CrudModule } from '../../crud.module';
 

@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { SharedModule } from '@smartsoft001/angular';
 import { DynamicIoModule } from 'ng-dynamic-component';
+
+import { SharedModule } from '@smartsoft001/angular';
 
 import { ExportComponent } from './export/export.component';
 import {
