@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Request } from 'express';
+import { Guid } from 'guid-typescript';
+import { Repository } from 'typeorm';
+
 import { DomainValidationError, IFactory } from '@smartsoft001/domain-core';
 import { FbService } from '@smartsoft001/fb';
 import { GoogleService } from '@smartsoft001/google';
 import { PasswordService } from '@smartsoft001/utils';
-import { Request } from 'express';
-import { Guid } from 'guid-typescript';
-import { Repository } from 'typeorm';
 
 import { User } from '../entities';
 import { IAuthToken, IAuthTokenRequest } from './interfaces';

@@ -15,7 +15,6 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@smartsoft001/angular": ["packages/shared/angular/src/index.ts"],
       "@smartsoft001/auth-domain": ["packages/auth/domain/src/index.ts"],
       "@smartsoft001/auth-shell-app-services": [
         "packages/auth/shell/app-services/src/index.ts"

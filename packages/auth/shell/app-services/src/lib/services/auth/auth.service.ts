@@ -1,5 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
+import { Request } from 'express';
+
 import {
   AUTH_TOKEN_PAYLOAD_PROVIDER,
   AUTH_TOKEN_USER_PROVIDER,
@@ -11,7 +13,6 @@ import {
   ITokenValidationProvider,
   TokenFactory,
 } from '@smartsoft001/auth-domain';
-import { Request } from 'express';
 
 @Injectable()
 export class AuthService {
