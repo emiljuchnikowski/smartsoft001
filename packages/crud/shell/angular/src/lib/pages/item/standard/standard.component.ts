@@ -37,7 +37,13 @@ import { CrudItemPageBaseComponent } from '../base/base.component';
     <br /><br />
   `,
   styleUrls: ['./standard.component.scss'],
-  imports: [DetailsComponent, FormComponent, FormOptionsPipe, NgTemplateOutlet, FormComponent]
+  imports: [
+    DetailsComponent,
+    FormComponent,
+    FormOptionsPipe,
+    NgTemplateOutlet,
+    FormComponent,
+  ],
 })
 export class ItemStandardComponent<
   T extends IEntity<string>,

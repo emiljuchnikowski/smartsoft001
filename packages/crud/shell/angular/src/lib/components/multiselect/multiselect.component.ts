@@ -16,7 +16,7 @@ import {
   ButtonComponent,
   FormComponent,
   IButtonOptions,
-  MenuService
+  MenuService,
 } from '@smartsoft001/angular';
 import { IEntity } from '@smartsoft001/domain-core';
 import {
@@ -43,7 +43,7 @@ import { FormOptionsPipe } from '../../pipes';
     DynamicIoDirective,
     FormOptionsPipe,
     FormComponent,
-    ButtonComponent
+    ButtonComponent,
   ],
   styleUrls: ['./multiselect.component.scss'],
 })
