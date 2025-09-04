@@ -1,20 +1,21 @@
 @if (control) {
-  <ion-label position="floating">
-    {{
-      control?.parent?.value
-        | smartModelLabel
-          : internalOptions.fieldKey
-          : internalOptions?.model?.constructor
-        | async
-    }}
-    @if (control.value) {
-      {{ control.value.fileName }}
-    }
-    <ion-text color="danger">
-      @if (required) {
-        <span>*</span>
-      }
-    </ion-text> </ion-label
+  <!--  <ion-label position="floating">-->
+  {{
+    control?.parent?.value
+      | smartModelLabel
+        : internalOptions.fieldKey
+        : internalOptions?.model?.constructor
+      | async
+  }}
+  @if (control.value) {
+    {{ control.value.fileName }}
+  }
+  <!--    <ion-text color="danger">-->
+  @if (required) {
+    <span>*</span>
+  }
+  <!--    </ion-text> -->
+  <!--  </ion-label-->
   ><br />
   <smart-button [options]="addButtonOptions">{{
     (control.value ? 'change' : 'add') | translate
@@ -34,7 +35,7 @@
 
   @if (loading()) {
     @let percentage = percent();
-    <ion-progress-bar [value]="(percentage ?? 0) / 100"></ion-progress-bar>
+    <!--    <ion-progress-bar [value]="(percentage ?? 0) / 100"></ion-progress-bar>-->
   }
 
   @if (url && play) {

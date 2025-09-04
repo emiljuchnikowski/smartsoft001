@@ -1,12 +1,12 @@
 @if (errors?.required) {
   <span>
-    <ion-icon name="alert-circle-outline"></ion-icon>
+    <!--    <ion-icon name="alert-circle-outline"></ion-icon>-->
     {{ 'INPUT.ERRORS.required' | translate }}
   </span>
 } @else {
   @if (errors?.confirm) {
     <span>
-      <ion-icon name="alert-circle-outline"></ion-icon>
+      <!--      <ion-icon name="alert-circle-outline"></ion-icon>-->
       {{ 'INPUT.ERRORS.confirm' | translate }}
     </span>
   }
@@ -14,42 +14,42 @@
 
 @if (errors?.invalidNip) {
   <span>
-    <ion-icon name="alert-circle-outline"></ion-icon>
+    <!--    <ion-icon name="alert-circle-outline"></ion-icon>-->
     {{ 'INPUT.ERRORS.invalidNip' | translate }}
   </span>
 }
 
 @if (errors?.invalidUnique) {
   <span>
-    <ion-icon name="alert-circle-outline"></ion-icon>
+    <!--    <ion-icon name="alert-circle-outline"></ion-icon>-->
     {{ 'INPUT.ERRORS.invalidUnique' | translate }}
   </span>
 }
 
 @if (errors?.email) {
   <span>
-    <ion-icon name="alert-circle-outline"></ion-icon>
+    <!--    <ion-icon name="alert-circle-outline"></ion-icon>-->
     {{ 'INPUT.ERRORS.invalidEmailFormat' | translate }}
   </span>
 }
 
 @if (errors?.phoneNumber) {
   <span>
-    <ion-icon name="alert-circle-outline"></ion-icon>
+    <!--    <ion-icon name="alert-circle-outline"></ion-icon>-->
     {{ 'INPUT.ERRORS.invalidPhoneNumberFormat' | translate }}
   </span>
 }
 
 @if (errors?.pesel) {
   <span>
-    <ion-icon name="alert-circle-outline"></ion-icon>
+    <!--    <ion-icon name="alert-circle-outline"></ion-icon>-->
     {{ 'INPUT.ERRORS.invalidPeselFormat' | translate }}
   </span>
 }
 
 @if (errors?.minlength) {
   <span>
-    <ion-icon name="alert-circle-outline"></ion-icon>
+    <!--    <ion-icon name="alert-circle-outline"></ion-icon>-->
     {{ 'INPUT.ERRORS.invalidMinLength' | translate }}:
     {{ errors?.minlength?.requiredLength }}
   </span>
@@ -57,7 +57,7 @@
 
 @if (errors?.maxlength) {
   <span>
-    <ion-icon name="alert-circle-outline"></ion-icon>
+    <!--    <ion-icon name="alert-circle-outline"></ion-icon>-->
     {{ 'INPUT.ERRORS.invalidMaxLength' | translate }}:
     {{ errors?.maxlength?.requiredLength }}
   </span>
@@ -65,21 +65,21 @@
 
 @if (errors?.min) {
   <span>
-    <ion-icon name="alert-circle-outline"></ion-icon>
+    <!--    <ion-icon name="alert-circle-outline"></ion-icon>-->
     {{ 'INPUT.ERRORS.invalidMin' | translate }}: {{ errors?.min?.min }}
   </span>
 }
 
 @if (errors?.max) {
   <span>
-    <ion-icon name="alert-circle-outline"></ion-icon>
+    <!--    <ion-icon name="alert-circle-outline"></ion-icon>-->
     {{ 'INPUT.ERRORS.invalidMax' | translate }}: {{ errors?.max?.max }}
   </span>
 }
 
 @if (errors?.customMessage) {
   <span>
-    <ion-icon name="alert-circle-outline"></ion-icon>
+    <!--    <ion-icon name="alert-circle-outline"></ion-icon>-->
     {{ errors?.customMessage }}
   </span>
 }

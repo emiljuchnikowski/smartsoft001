@@ -7,15 +7,15 @@ import { DetailBaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-detail-image',
   template: `
-    <ion-card>
-      @let url = imageUrl();
-      @if (url) {
-        <ion-img
-          style="margin: 10px; height: 150px; width: 150px"
-          [src]="url"
-        ></ion-img>
-      }
-    </ion-card>
+    <!--    <ion-card>-->
+    @let url = imageUrl();
+    @if (url) {
+      <!--        <ion-img-->
+      <!--          style="margin: 10px; height: 150px; width: 150px"-->
+      <!--          [src]="url"-->
+      <!--        ></ion-img>-->
+    }
+    <!--    </ion-card>-->
   `,
   imports: [IonCard, IonImg],
   styleUrls: ['./image.component.scss'],

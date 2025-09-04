@@ -13,20 +13,20 @@
     }
   }
 
-  <ion-row>
-    <ion-col></ion-col>
-    <ion-col size="auto">
-      @let loading = internalOptions?.provider?.loading();
-      <smart-loader [show]="loading ?? false"></smart-loader>
-      @if (!loading && !internalOptions.provider.list()?.length) {
-        <h2>
-          <br />
-          {{ 'noResults' | translate }}
-        </h2>
-      }
-    </ion-col>
-    <ion-col></ion-col>
-  </ion-row>
+  <!--  <ion-row>-->
+  <!--    <ion-col></ion-col>-->
+  <!--    <ion-col size="auto">-->
+  @let loading = internalOptions?.provider?.loading();
+  <smart-loader [show]="loading ?? false"></smart-loader>
+  @if (!loading && !internalOptions.provider.list()?.length) {
+    <h2>
+      <br />
+      {{ 'noResults' | translate }}
+    </h2>
+  }
+  <!--    </ion-col>-->
+  <!--    <ion-col></ion-col>-->
+  <!--  </ion-row>-->
 
   <ng-container [ngTemplateOutlet]="contentTpl"></ng-container>
 }

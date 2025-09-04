@@ -13,13 +13,13 @@ import { DetailBaseComponent } from '../base/base.component';
   template: `
     @let item = options?.item();
     @if (item && options?.key) {
-      <ion-row>
-        <ion-col>
-          <ion-card [style.background]="item[options.key!]">
-            <ion-card-header> </ion-card-header>
-          </ion-card>
-        </ion-col>
-      </ion-row>
+      <!--      <ion-row>-->
+      <!--        <ion-col>-->
+      <!--          <ion-card [style.background]="item[options.key!]">-->
+      <!--            <ion-card-header> </ion-card-header>-->
+      <!--          </ion-card>-->
+      <!--        </ion-col>-->
+      <!--      </ion-row>-->
     }
   `,
   imports: [IonRow, IonCol, IonCard, IonCardHeader],

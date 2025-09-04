@@ -1,17 +1,17 @@
 @if (control) {
-  <ion-label position="floating">
-    {{
-      control?.parent?.value
-        | smartModelLabel
-          : internalOptions.fieldKey
-          : internalOptions?.model?.constructor
-        | async
-    }}
-    <ion-text color="danger">
-      @if (required) {
-        <span>*</span>
-      }
-    </ion-text> </ion-label
+  <!--  <ion-label position="floating">-->
+  {{
+    control?.parent?.value
+      | smartModelLabel
+        : internalOptions.fieldKey
+        : internalOptions?.model?.constructor
+      | async
+  }}
+  <!--    <ion-text color="danger">-->
+  @if (required) {
+    <span>*</span>
+  }
+  <!--    </ion-text> </ion-label-->
   ><br />
   <smart-button [options]="addButtonOptions">{{
     (control.value ? 'change' : 'add') | translate

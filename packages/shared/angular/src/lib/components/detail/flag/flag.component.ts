@@ -8,10 +8,10 @@ import { DetailBaseComponent } from '../base/base.component';
   template: `
     @let item = options?.item();
     @if (item && options?.key) {
-      <ion-checkbox
-        [disabled]="true"
-        [checked]="item[options.key!]"
-      ></ion-checkbox>
+      <!--      <ion-checkbox-->
+      <!--        [disabled]="true"-->
+      <!--        [checked]="item[options.key!]"-->
+      <!--      ></ion-checkbox>-->
     }
   `,
   imports: [IonCheckbox],

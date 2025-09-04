@@ -5,7 +5,7 @@ import { IonSpinner } from '@ionic/angular/standalone';
   selector: 'smart-loader',
   template: `
     @if (show()) {
-      <ion-spinner [style.height]="height()"></ion-spinner>
+      <!--      <ion-spinner [style.height]="height()"></ion-spinner>-->
     }
   `,
   imports: [IonSpinner],

@@ -11,14 +11,14 @@ import { IonIcon, IonItem } from '@ionic/angular/standalone';
 @Component({
   selector: 'smart-accordion',
   template: `
-    <ion-item (click)="show = !show">
-      <ng-content select="smart-accordion-header"></ng-content>
-      @if (show) {
-        <ion-icon name="caret-up-outline" slot="end"></ion-icon>
-      } @else {
-        <ion-icon name="caret-down-outline" slot="end"></ion-icon>
-      }
-    </ion-item>
+    <!--    <ion-item (click)="show = !show">-->
+    <ng-content select="smart-accordion-header"></ng-content>
+    @if (show) {
+      <!--        <ion-icon name="caret-up-outline" slot="end"></ion-icon>-->
+    } @else {
+      <!--        <ion-icon name="caret-down-outline" slot="end"></ion-icon>-->
+    }
+    <!--    </ion-item>-->
 
     @if (show) {
       <ng-content select="smart-accordion-body"></ng-content>

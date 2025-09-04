@@ -6,15 +6,15 @@ import { DetailBaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-detail-logo',
   template: `
-    <ion-card>
-      @let item = options?.item();
-      @if (item && options?.key) {
-        <ion-img
-          style="margin: 10px; height: 150px; width: 150px"
-          [src]="item[options.key!]"
-        ></ion-img>
-      }
-    </ion-card>
+    <!--    <ion-card>-->
+    @let item = options?.item();
+    @if (item && options?.key) {
+      <!--        <ion-img-->
+      <!--          style="margin: 10px; height: 150px; width: 150px"-->
+      <!--          [src]="item[options.key!]"-->
+      <!--        ></ion-img>-->
+    }
+    <!--    </ion-card>-->
   `,
   imports: [IonCard, IonImg],
   styleUrls: ['./logo.component.scss'],

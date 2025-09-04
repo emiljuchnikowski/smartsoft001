@@ -1,36 +1,36 @@
 @if (control) {
   <br />
-  <ion-label style="max-width: 100%">
-    {{
-      control?.parent?.value
-        | smartModelLabel
-          : internalOptions.fieldKey
-          : internalOptions?.model?.constructor
-        | async
-    }}
-    <ion-text color="danger">
-      @if (required) {
-        <span>*</span>
-      }
-    </ion-text>
-  </ion-label>
-  <ion-list>
-    @for (item of list; track item) {
-      @let last = $last;
-      <ion-item lines="none">
-        <ion-icon slot="start" name="ellipse-outline"></ion-icon>
-        <ion-input
-          [placeholder]="(last ? ('add' | translate) : '') + '...'"
-          [formControl]="item"
-          [attr.autofocus]="fieldOptions?.focused"
-          (ionChange)="onItemChange()"
-        ></ion-input>
-        @if (!last) {
-          <ion-button slot="end" color="danger" (click)="removeItem(item)">
-            <ion-icon name="close-outline"></ion-icon>
-          </ion-button>
-        }
-      </ion-item>
+  <!--  <ion-label style="max-width: 100%">-->
+  {{
+    control?.parent?.value
+      | smartModelLabel
+        : internalOptions.fieldKey
+        : internalOptions?.model?.constructor
+      | async
+  }}
+  <!--    <ion-text color="danger">-->
+  @if (required) {
+    <span>*</span>
+  }
+  <!--    </ion-text>-->
+  <!--  </ion-label>-->
+  <!--  <ion-list>-->
+  @for (item of list; track item) {
+    @let last = $last;
+    <!--      <ion-item lines="none">-->
+    <!--        <ion-icon slot="start" name="ellipse-outline"></ion-icon>-->
+    <!--        <ion-input-->
+    <!--          [placeholder]="(last ? ('add' | translate) : '') + '...'"-->
+    <!--          [formControl]="item"-->
+    <!--          [attr.autofocus]="fieldOptions?.focused"-->
+    <!--          (ionChange)="onItemChange()"-->
+    <!--        ></ion-input>-->
+    @if (!last) {
+      <!--          <ion-button slot="end" color="danger" (click)="removeItem(item)">-->
+      <!--            <ion-icon name="close-outline"></ion-icon>-->
+      <!--          </ion-button>-->
     }
-  </ion-list>
+    <!--      </ion-item>-->
+  }
+  <!--  </ion-list>-->
 }

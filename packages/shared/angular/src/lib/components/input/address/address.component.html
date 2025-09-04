@@ -1,76 +1,76 @@
 @if (control) {
   <br />
-  <ion-label>
-    {{
-      control?.parent?.value
-        | smartModelLabel
-          : internalOptions.fieldKey
-          : internalOptions?.model?.constructor
-        | async
-    }}
-    <ion-text color="danger">
-      @if (required) {
-        <span>*</span>
-      }
-    </ion-text>
-  </ion-label>
+  <!--  <ion-label>-->
+  {{
+    control?.parent?.value
+      | smartModelLabel
+        : internalOptions.fieldKey
+        : internalOptions?.model?.constructor
+      | async
+  }}
+  <!--    <ion-text color="danger">-->
+  @if (required) {
+    <span>*</span>
+  }
+  <!--    </ion-text>-->
+  <!--  </ion-label>-->
 
-  <ion-list [formGroup]="formControlGroup">
-    <ion-item>
-      <ion-label position="floating">
-        {{ 'MODEL.city' | translate }}
-        <ion-text color="danger">
-          @if (required) {
-            <span>*</span>
-          }
-        </ion-text>
-      </ion-label>
-      <ion-input formControlName="city"></ion-input>
-    </ion-item>
+  <!--  <ion-list [formGroup]="formControlGroup">-->
+  <!--    <ion-item>-->
+  <!--      <ion-label position="floating">-->
+  {{ 'MODEL.city' | translate }}
+  <!--        <ion-text color="danger">-->
+  @if (required) {
+    <span>*</span>
+  }
+  <!--        </ion-text>-->
+  <!--      </ion-label>-->
+  <!--      <ion-input formControlName="city"></ion-input>-->
+  <!--    </ion-item>-->
 
-    <ion-item>
-      <ion-label position="floating">
-        {{ 'MODEL.zipCode' | translate }}
-        <ion-text color="danger">
-          @if (required) {
-            <span>*</span>
-          }
-        </ion-text>
-      </ion-label>
-      <ion-input formControlName="zipCode"></ion-input>
-    </ion-item>
+  <!--    <ion-item>-->
+  <!--      <ion-label position="floating">-->
+  {{ 'MODEL.zipCode' | translate }}
+  <!--        <ion-text color="danger">-->
+  @if (required) {
+    <span>*</span>
+  }
+  <!--        </ion-text>-->
+  <!--      </ion-label>-->
+  <!--      <ion-input formControlName="zipCode"></ion-input>-->
+  <!--    </ion-item>-->
 
-    <ion-item>
-      <ion-label position="floating">
-        {{ 'MODEL.street' | translate }}
-        <ion-text color="danger">
-          @if (required) {
-            <span>*</span>
-          }
-        </ion-text>
-      </ion-label>
-      <ion-input
-        formControlName="street"
-        [attr.autofocus]="fieldOptions?.focused"
-      ></ion-input>
-    </ion-item>
+  <!--    <ion-item>-->
+  <!--      <ion-label position="floating">-->
+  {{ 'MODEL.street' | translate }}
+  <!--        <ion-text color="danger">-->
+  @if (required) {
+    <span>*</span>
+  }
+  <!--        </ion-text>-->
+  <!--      </ion-label>-->
+  <!--      <ion-input-->
+  <!--        formControlName="street"-->
+  <!--        [attr.autofocus]="fieldOptions?.focused"-->
+  <!--      ></ion-input>-->
+  <!--    </ion-item>-->
 
-    <ion-item>
-      <ion-label position="floating">
-        {{ 'MODEL.buildingNumber' | translate }}
-        <ion-text color="danger">
-          @if (required) {
-            <span>*</span>
-          }
-        </ion-text>
-      </ion-label>
-      <ion-input formControlName="buildingNumber"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label position="floating">
-        {{ 'MODEL.flatNumber' | translate }}
-      </ion-label>
-      <ion-input formControlName="flatNumber"></ion-input>
-    </ion-item>
-  </ion-list>
+  <!--    <ion-item>-->
+  <!--      <ion-label position="floating">-->
+  {{ 'MODEL.buildingNumber' | translate }}
+  <!--        <ion-text color="danger">-->
+  @if (required) {
+    <span>*</span>
+  }
+  <!--        </ion-text>-->
+  <!--      </ion-label>-->
+  <!--      <ion-input formControlName="buildingNumber"></ion-input>-->
+  <!--    </ion-item>-->
+  <!--    <ion-item>-->
+  <!--      <ion-label position="floating">-->
+  {{ 'MODEL.flatNumber' | translate }}
+  <!--      </ion-label>-->
+  <!--      <ion-input formControlName="flatNumber"></ion-input>-->
+  <!--    </ion-item>-->
+  <!--  </ion-list>-->
 }

@@ -22,22 +22,22 @@ import { debounceTime } from 'rxjs/operators';
   selector: 'smart-searchbar',
   template: `
     @if (control() && show()) {
-      <ion-searchbar
-        #searchbar
-        animated
-        (ionBlur)="tryHide()"
-        [formControl]="control()"
-        [placeholder]="('search' | translate) + '...'"
-      ></ion-searchbar>
+      <!--      <ion-searchbar-->
+      <!--        #searchbar-->
+      <!--        animated-->
+      <!--        (ionBlur)="tryHide()"-->
+      <!--        [formControl]="control()"-->
+      <!--        [placeholder]="('search' | translate) + '...'"-->
+      <!--      ></ion-searchbar>-->
     }
     @if (!show()) {
-      <ion-button (click)="setShow()">
-        <ion-icon
-          style="font-weight: bold"
-          slot="icon-only"
-          name="search"
-        ></ion-icon>
-      </ion-button>
+      <!--      <ion-button (click)="setShow()">-->
+      <!--        <ion-icon-->
+      <!--          style="font-weight: bold"-->
+      <!--          slot="icon-only"-->
+      <!--          name="search"-->
+      <!--        ></ion-icon>-->
+      <!--      </ion-button>-->
     }
   `,
   styles: [

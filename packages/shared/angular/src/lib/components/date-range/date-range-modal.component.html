@@ -10,7 +10,7 @@
     </span>
   </div>
   <div id="dismiss-div" (click)="dismissPage()">
-    <ion-icon name="close-outline"></ion-icon>
+    <!--    <ion-icon name="close-outline"></ion-icon>-->
   </div>
   <div id="border-bottom"></div>
 </div>
@@ -87,52 +87,52 @@
   <div>{{ 'CALENDAR.DAY_OF_WEEK.Sat' | translate }}</div>
 </div>
 
-<ion-content #scrollMe>
-  <ion-refresher slot="fixed" (ionRefresh)="loadDataPrev($event)">
-    <ion-refresher-content
-      pullingIcon="chevron-down-circle-outline"
-      refreshingSpinner="circles"
-    >
-    </ion-refresher-content>
-  </ion-refresher>
+<!--<ion-content #scrollMe>-->
+<!--  <ion-refresher slot="fixed" (ionRefresh)="loadDataPrev($event)">-->
+<!--    <ion-refresher-content-->
+<!--      pullingIcon="chevron-down-circle-outline"-->
+<!--      refreshingSpinner="circles"-->
+<!--    >-->
+<!--    </ion-refresher-content>-->
+<!--  </ion-refresher>-->
 
-  @for (month of calendar; track month) {
-    <p class="heading-month-year">
-      {{ 'CALENDAR.MONTH.' + month.monthName | translate }} {{ month.year }}
-    </p>
-    <div class="date-grid">
-      @for (day of month.dates; track day) {
-        <div
-          class="sizeOf-div span-day"
-          [ngClass]="{
-            'selection-start': isSelectionStart(day),
-            'selection-end': isSelectionEnd(day),
-            'in-range': isInRange(day),
-            'same-date': isStartAndEndDateSame(),
-          }"
-          id="dateRef"
-          (click)="subject$.next({ date: day, event: $event })"
-        >
-          {{ day?.date() }}
-        </div>
-      }
-    </div>
-  }
-  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadDataNext($event)">
-    <ion-infinite-scroll-content
-      loadingSpinner="bubbles"
-    ></ion-infinite-scroll-content>
-  </ion-infinite-scroll>
-</ion-content>
-<ion-footer>
-  <ion-toolbar>
-    <ion-button
-      style="margin: 0 1.2rem"
-      expand="block"
-      (click)="applyDates()"
-      [disabled]="restrictSelectionTo && !isSelectionInRestrictedRange()"
-    >
-      {{ 'select' | translate }}
-    </ion-button>
-  </ion-toolbar>
-</ion-footer>
+@for (month of calendar; track month) {
+  <p class="heading-month-year">
+    {{ 'CALENDAR.MONTH.' + month.monthName | translate }} {{ month.year }}
+  </p>
+  <div class="date-grid">
+    @for (day of month.dates; track day) {
+      <div
+        class="sizeOf-div span-day"
+        [ngClass]="{
+          'selection-start': isSelectionStart(day),
+          'selection-end': isSelectionEnd(day),
+          'in-range': isInRange(day),
+          'same-date': isStartAndEndDateSame(),
+        }"
+        id="dateRef"
+        (click)="subject$.next({ date: day, event: $event })"
+      >
+        {{ day?.date() }}
+      </div>
+    }
+  </div>
+}
+<!--  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadDataNext($event)">-->
+<!--    <ion-infinite-scroll-content-->
+<!--      loadingSpinner="bubbles"-->
+<!--    ></ion-infinite-scroll-content>-->
+<!--  </ion-infinite-scroll>-->
+<!--</ion-content>-->
+<!--<ion-footer>-->
+<!--  <ion-toolbar>-->
+<!--    <ion-button-->
+<!--      style="margin: 0 1.2rem"-->
+<!--      expand="block"-->
+<!--      (click)="applyDates()"-->
+<!--      [disabled]="restrictSelectionTo && !isSelectionInRestrictedRange()"-->
+<!--    >-->
+{{ 'select' | translate }}
+<!--    </ion-button>-->
+<!--  </ion-toolbar>-->
+<!--</ion-footer>-->

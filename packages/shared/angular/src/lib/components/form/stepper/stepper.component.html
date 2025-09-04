@@ -5,23 +5,23 @@
     <mat-step [stepControl]="step.form">
       <ng-template matStepLabel>{{ step.name | translate }}</ng-template>
 
-      <ion-list class="smart-list">
-        @for (field of step.fields; track field) {
-          @if (form.controls[field] && !__smartDisabled(field)) {
-            <smart-input
-              [options]="{
-                treeLevel: treeLevel ?? 0,
-                fieldKey: field,
-                control: getUntypedFormControl(field),
-                model: model,
-                mode: mode,
-                possibilities: possibilities[field],
-                component: inputComponents[field],
-              }"
-            ></smart-input>
-          }
+      <!--      <ion-list class="smart-list">-->
+      @for (field of step.fields; track field) {
+        @if (form.controls[field] && !__smartDisabled(field)) {
+          <smart-input
+            [options]="{
+              treeLevel: treeLevel ?? 0,
+              fieldKey: field,
+              control: getUntypedFormControl(field),
+              model: model,
+              mode: mode,
+              possibilities: possibilities[field],
+              component: inputComponents[field],
+            }"
+          ></smart-input>
         }
-      </ion-list>
+      }
+      <!--      </ion-list>-->
 
       <div style="float: right">
         @if (!first) {

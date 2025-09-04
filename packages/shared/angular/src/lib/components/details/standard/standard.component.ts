@@ -10,26 +10,26 @@ import { DetailsBaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-details-standard',
   template: `
-    <ion-list>
-      <div #topTpl class="top-content"></div>
+    <!--    <ion-list>-->
+    <div #topTpl class="top-content"></div>
 
-      <smart-card>
-        @for (field of fields; track field.key) {
-          <smart-detail
-            [type]="type"
-            [options]="{
-              key: field.key,
-              options: field.options,
-              cellPipe: cellPipe() ?? undefined,
-              item: item ?? undefined,
-              loading: loading ?? undefined,
-            }"
-          ></smart-detail>
-        }
-      </smart-card>
+    <smart-card>
+      @for (field of fields; track field.key) {
+        <smart-detail
+          [type]="type"
+          [options]="{
+            key: field.key,
+            options: field.options,
+            cellPipe: cellPipe() ?? undefined,
+            item: item ?? undefined,
+            loading: loading ?? undefined,
+          }"
+        ></smart-detail>
+      }
+    </smart-card>
 
-      <div #bottomTpl class="bottom-content"></div>
-    </ion-list>
+    <div #bottomTpl class="bottom-content"></div>
+    <!--    </ion-list>-->
   `,
   styleUrls: ['./standard.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default,

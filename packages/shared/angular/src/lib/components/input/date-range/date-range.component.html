@@ -1,18 +1,18 @@
 @if (control && internalOptions) {
-  <ion-label position="floating">
-    {{
-      control?.parent?.value
-        | smartModelLabel
-          : internalOptions.fieldKey
-          : internalOptions?.model?.constructor
-        | async
-    }}
-    <ion-text color="danger">
-      @if (required) {
-        <span>*</span>
-      }
-    </ion-text>
-  </ion-label>
+  <!--  <ion-label position="floating">-->
+  {{
+    control?.parent?.value
+      | smartModelLabel
+        : internalOptions.fieldKey
+        : internalOptions?.model?.constructor
+      | async
+  }}
+  <!--    <ion-text color="danger">-->
+  @if (required) {
+    <span>*</span>
+  }
+  <!--    </ion-text>-->
+  <!--  </ion-label>-->
   <br />
   <smart-date-range
     (click)="control.markAsTouched()"
