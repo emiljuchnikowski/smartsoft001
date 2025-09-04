@@ -13,9 +13,21 @@ import { CrudFacade } from '../../+state/crud.facade';
 
 @Component({
   selector: 'smart-crud-export',
-  templateUrl: './export.component.html',
+  template: `
+    <div class="p-5">
+      <p class="my-2.5 mx-0">
+        <smart-button [options]="buttonExportCsvOptions" class="w-full block"
+          >CSV</smart-button
+        >
+      </p>
+      <p>
+        <smart-button [options]="buttonExportXlsxOptions" class="w-full block"
+          >XLSX</smart-button
+        >
+      </p>
+    </div>
+  `,
   imports: [ButtonComponent],
-  styleUrls: ['./export.component.scss'],
 })
 export class ExportComponent<T extends IEntity<string>>
   extends BaseComponent

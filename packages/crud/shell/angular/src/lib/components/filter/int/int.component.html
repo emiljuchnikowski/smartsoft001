@@ -1,74 +1,74 @@
-<ion-row>
-  <ion-col>
-    <ion-label>
-      {{ item().label | translate }}
-    </ion-label>
-    @if (!advanced()) {
-      <ion-input [(ngModel)]="value" type="number" step="1"></ion-input>
-    }
-  </ion-col>
-  @if (allowAdvanced) {
-    <ion-col size="auto">
-      <ion-button
-        (click)="toggleAdvanced()"
-        class="square-button"
-        [disabled]="minValue || maxValue"
-      >
-        @if (!advanced()) {
-          <ion-icon slot="icon-only" name="settings-outline"></ion-icon>
-        } @else {
-          <ion-icon slot="icon-only" name="settings"></ion-icon>
-        }
-      </ion-button>
-    </ion-col>
+<!--<ion-row>-->
+<!--  <ion-col>-->
+<!--    <ion-label>-->
+{{ item().label | translate }}
+<!--    </ion-label>-->
+@if (!advanced()) {
+  <!--      <ion-input [(ngModel)]="value" type="number" step="1"></ion-input>-->
+}
+<!--  </ion-col>-->
+@if (allowAdvanced) {
+  <!--    <ion-col size="auto">-->
+  <!--      <ion-button-->
+  <!--        (click)="toggleAdvanced()"-->
+  <!--        class="square-button"-->
+  <!--        [disabled]="minValue || maxValue"-->
+  <!--      >-->
+  @if (!advanced()) {
+    <!--          <ion-icon slot="icon-only" name="settings-outline"></ion-icon>-->
+  } @else {
+    <!--          <ion-icon slot="icon-only" name="settings"></ion-icon>-->
   }
-  @if (value || minValue || maxValue) {
-    <ion-col size="auto">
-      <ion-button color="danger" (click)="clear()" class="square-button">
-        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
-      </ion-button>
-    </ion-col>
-  }
-</ion-row>
+  <!--      </ion-button>-->
+  <!--    </ion-col>-->
+}
+@if (value || minValue || maxValue) {
+  <!--    <ion-col size="auto">-->
+  <!--      <ion-button color="danger" (click)="clear()" class="square-button">-->
+  <!--        <ion-icon slot="icon-only" name="close-outline"></ion-icon>-->
+  <!--      </ion-button>-->
+  <!--    </ion-col>-->
+}
+<!--</ion-row>-->
 @if ((advanced() || minValue || maxValue) && allowAdvanced) {
-  <ion-row>
-    <ion-col>
-      <ion-item>
-        <ion-label>
-          {{ 'from' | translate }}
-        </ion-label>
-        <ion-input [(ngModel)]="minValue" type="number" step="1"></ion-input>
-      </ion-item>
-    </ion-col>
-    @if (minValue) {
-      <ion-col size="auto">
-        <ion-button
-          color="danger"
-          (click)="refresh(null, '>=')"
-          class="square-button"
-        >
-          <ion-icon slot="icon-only" name="close-outline"></ion-icon>
-        </ion-button>
-      </ion-col>
-    }
-    <ion-col>
-      <ion-item>
-        <ion-label>
-          {{ 'to' | translate }}
-        </ion-label>
-        <ion-input [(ngModel)]="maxValue" type="number" step="1"></ion-input>
-      </ion-item>
-    </ion-col>
-    @if (maxValue) {
-      <ion-col size="auto">
-        <ion-button
-          color="danger"
-          (click)="refresh(null, '<=')"
-          class="square-button"
-        >
-          <ion-icon slot="icon-only" name="close-outline"></ion-icon>
-        </ion-button>
-      </ion-col>
-    }
-  </ion-row>
+  <!--  <ion-row>-->
+  <!--    <ion-col>-->
+  <!--      <ion-item>-->
+  <!--        <ion-label>-->
+  {{ 'from' | translate }}
+  <!--        </ion-label>-->
+  <!--        <ion-input [(ngModel)]="minValue" type="number" step="1"></ion-input>-->
+  <!--      </ion-item>-->
+  <!--    </ion-col>-->
+  @if (minValue) {
+    <!--      <ion-col size="auto">-->
+    <!--        <ion-button-->
+    <!--          color="danger"-->
+    <!--          (click)="refresh(null, '>=')"-->
+    <!--          class="square-button"-->
+    <!--        >-->
+    <!--          <ion-icon slot="icon-only" name="close-outline"></ion-icon>-->
+    <!--        </ion-button>-->
+    <!--      </ion-col>-->
+  }
+  <!--    <ion-col>-->
+  <!--      <ion-item>-->
+  <!--        <ion-label>-->
+  {{ 'to' | translate }}
+  <!--        </ion-label>-->
+  <!--        <ion-input [(ngModel)]="maxValue" type="number" step="1"></ion-input>-->
+  <!--      </ion-item>-->
+  <!--    </ion-col>-->
+  @if (maxValue) {
+    <!--      <ion-col size="auto">-->
+    <!--        <ion-button-->
+    <!--          color="danger"-->
+    <!--          (click)="refresh(null, '<=')"-->
+    <!--          class="square-button"-->
+    <!--        >-->
+    <!--          <ion-icon slot="icon-only" name="close-outline"></ion-icon>-->
+    <!--        </ion-button>-->
+    <!--      </ion-col>-->
+  }
+  <!--  </ion-row>-->
 }

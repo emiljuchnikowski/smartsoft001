@@ -17,27 +17,27 @@ import { BaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-crud-filter-flag',
   template: `
-    <ion-row>
-      <ion-col>
-        <div class="flag-container">
-          <ion-label position="static">
-            {{ item().label | translate }}
-          </ion-label>
-          <ion-checkbox [(ngModel)]="value" slot="end"></ion-checkbox>
-        </div>
-      </ion-col>
-      @if (typeof value === 'boolean') {
-        <ion-col size="auto">
-          <ion-button
-            color="danger"
-            (click)="refresh(null)"
-            class="square-button"
-          >
-            <ion-icon slot="icon-only" name="close-outline"></ion-icon>
-          </ion-button>
-        </ion-col>
-      }
-    </ion-row>
+    <!--    <ion-row>-->
+    <!--      <ion-col>-->
+    <div class="flag-container">
+      <!--          <ion-label position="static">-->
+      {{ item().label | translate }}
+      <!--          </ion-label>-->
+      <!--          <ion-checkbox [(ngModel)]="value" slot="end"></ion-checkbox>-->
+    </div>
+    <!--      </ion-col>-->
+    @if (typeof value === 'boolean') {
+      <!--        <ion-col size="auto">-->
+      <!--          <ion-button-->
+      <!--            color="danger"-->
+      <!--            (click)="refresh(null)"-->
+      <!--            class="square-button"-->
+      <!--          >-->
+      <!--            <ion-icon slot="icon-only" name="close-outline"></ion-icon>-->
+      <!--          </ion-button>-->
+      <!--        </ion-col>-->
+    }
+    <!--    </ion-row>-->
   `,
   imports: [
     IonRow,

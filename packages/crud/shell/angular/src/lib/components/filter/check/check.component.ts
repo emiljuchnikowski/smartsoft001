@@ -18,37 +18,38 @@ import { BaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-crud-filter-check',
   template: `
-    <ion-row>
-      <ion-col>
-        <ion-item-divider>
-          <ion-icon slot="start" name="filter-outline"></ion-icon>
-          <ion-label>
-            {{ item().label | translate }}
-          </ion-label>
-          @if (value?.length) {
-            <ion-button
-              slot="end"
-              color="danger"
-              (click)="refresh([])"
-              class="square-button"
-            >
-              <ion-icon slot="icon-only" name="close-outline"></ion-icon>
-            </ion-button>
-          }
-        </ion-item-divider>
+    <!--    <ion-row>-->
+    <!--      <ion-col>-->
+    <!--        <ion-item-divider>-->
+    <!--          <ion-icon slot="start" name="filter-outline"></ion-icon>-->
+    <!--          <ion-label>-->
+    {{ item().label | translate }}
+    <!--          </ion-label>-->
+    @if (value?.length) {
+      <!--            <ion-button-->
+      <!--              slot="end"-->
+      <!--              color="danger"-->
+      <!--              (click)="refresh([])"-->
+      <!--              class="square-button"-->
+      <!--            >-->
+      <!--              <ion-icon slot="icon-only" name="close-outline"></ion-icon>-->
+      <!--            </ion-button>-->
+    }
+    <!--        </ion-item-divider>-->
 
-        @for (entry of list(); track entry) {
-          <ion-item>
-            <ion-label>{{ entry.value.text | translate }}</ion-label>
-            <ion-checkbox
-              slot="end"
-              [checked]="entry.isCheck"
-              (ionChange)="onCheckChange($event.detail.checked, entry)"
-            ></ion-checkbox>
-          </ion-item>
-        }
-      </ion-col>
-    </ion-row>
+    @for (entry of list(); track entry) {
+      <!--          <ion-item>-->
+      <!--<ion-label>-->{{ entry.value.text | translate
+      }}<!--</ion-label>-->
+      <!--            <ion-checkbox-->
+      <!--              slot="end"-->
+      <!--              [checked]="entry.isCheck"-->
+      <!--              (ionChange)="onCheckChange($event.detail.checked, entry)"-->
+      <!--            ></ion-checkbox>-->
+      <!--          </ion-item>-->
+    }
+    <!--      </ion-col>-->
+    <!--    </ion-row>-->
   `,
   imports: [
     IonRow,
