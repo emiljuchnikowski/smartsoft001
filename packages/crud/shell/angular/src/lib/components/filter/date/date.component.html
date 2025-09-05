@@ -1,0 +1,30 @@
+<!--<ion-row>-->
+<!--  <ion-col>-->
+<!--    <ion-label>-->
+{{ item().label | translate }}
+<!--    </ion-label>-->
+<!--    <ion-item button="true" id="open-date-input-{{ id }}" color="primary">-->
+<!--      <ion-text>-->
+{{ customValue ? customValue : ('select' | translate) }}
+<!--      </ion-text>-->
+<!--      <ion-popover trigger="open-date-input-{{ id }}" show-backdrop="false">-->
+<ng-template>
+  <!--          <ion-datetime-->
+  <!--            displayFormat="YYYY-MM-DD"-->
+  <!--            pickerFormat="YYYY-MM-DD"-->
+  <!--            [(ngModel)]="customValue"-->
+  <!--            presentation="date"-->
+  <!--          ></ion-datetime>-->
+</ng-template>
+<!--      </ion-popover>-->
+<!--    </ion-item>-->
+<!--  </ion-col>-->
+
+@if (value) {
+  <!--    <ion-col size="auto">-->
+  <!--      <ion-button color="danger" (click)="refresh(null)" class="square-button m-3">-->
+  <!--        <ion-icon slot="icon-only" name="close-outline"></ion-icon>-->
+  <!--      </ion-button>-->
+  <!--    </ion-col>-->
+}
+<!--</ion-row>-->

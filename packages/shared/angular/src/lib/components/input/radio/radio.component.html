@@ -1,0 +1,61 @@
+@if (control && possibilities()) {
+  @let length = possibilities()?.length;
+  @if (length && length <= 5) {
+    <!--    <ion-radio-group-->
+    <!--      [formControl]="formControl"-->
+    <!--      [attr.autofocus]="fieldOptions?.focused"-->
+    <!--    >-->
+    <!--      <ion-list-header>-->
+    {{
+      control?.parent?.value
+        | smartModelLabel
+          : internalOptions.fieldKey
+          : internalOptions?.model?.constructor
+        | async
+    }}
+    <!--        <ion-text color="danger">-->
+    @if (required) {
+      <span>*</span>
+    }
+    <!--        </ion-text>-->
+    <!--      </ion-list-header>-->
+
+    @for (item of possibilities(); track item) {
+      <!--        <ion-item>-->
+      <!--<ion-label class="w-full max-w-none">-->{{ item.text | translate
+      }}<!--</ion-label>-->
+      <!--          <ion-radio [value]="item.id"></ion-radio>-->
+      <!--        </ion-item>-->
+    }
+    <!--    </ion-radio-group>-->
+  } @else {
+    <!--    <ion-item>-->
+    <!--      <ion-label>-->
+    {{
+      control?.parent?.value
+        | smartModelLabel
+          : internalOptions.fieldKey
+          : internalOptions?.model?.constructor
+        | async
+    }}
+    <!--        <ion-text color="danger">-->
+    @if (required) {
+      <span>*</span>
+    }
+    <!--        </ion-text>-->
+    <!--      </ion-label>-->
+    <!--      <ion-select-->
+    <!--        [formControl]="formControl"-->
+    <!--        [attr.autofocus]="fieldOptions?.focused"-->
+    <!--        [cancelText]="'cancel' | translate"-->
+    <!--        [okText]="'ok' | translate"-->
+    <!--      >-->
+    @for (item of possibilities(); track item) {
+      <!--          <ion-select-option [value]="item.id">-->
+      {{ item.text | translate }}
+      <!--          </ion-select-option>-->
+    }
+    <!--      </ion-select>-->
+    <!--    </ion-item>-->
+  }
+}

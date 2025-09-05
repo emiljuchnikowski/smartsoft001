@@ -1,0 +1,35 @@
+//TODO: write classes for colors with tailwind
+.heading-container {
+  background: var(--smart-color-tertiary);
+  #dismiss-div:active {
+    opacity: 0.5;
+  }
+}
+
+.heading-month-year {
+  color: var(--smart-color-primary);
+}
+
+//Filters
+.grid-filter-btns {
+  background-color: var(--smart-color-tertiary);
+}
+
+.selected-filter {
+  color: var(--smart-color-tertiary);
+}
+
+@media (max-width: 320px) {
+  .span-filter {
+    font-size: 3.5vw;
+  }
+}
+
+//############## date-selection css #################//
+.selection-start {
+  background-color: var(--smart-color-tertiary);
+}
+
+.selection-end {
+  background-color: var(--smart-color-tertiary);
+}

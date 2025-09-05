@@ -1,0 +1,42 @@
+@import url(https://fonts.googleapis.com/css2?family=Material+Icons);
+@import url(https://fonts.googleapis.com/css2?family=Material+Icons+Outlined);
+// $IconPath: "../../fonts";
+// $IconName: "material2";
+// $IconVersion: "1.0";
+// @import "../font-mixins";
+// @font-face {
+//     font-family: 'Material Icons';
+//     font-style: normal;
+//     font-weight: 400;
+//     src: local('Material Icons'), local('material2');
+//     @include icons-def($IconPath, $IconName, $IconVersion, $eot: true, $woff2: true, $woff: true, $ttf: true, $svg: true, $otf: false);
+// }
+// @font-face {
+//     font-family: 'Material Icons';
+//     font-style: normal;
+//     font-weight: 400;
+//     src: url(fonts/materialdesignicons.ttf);
+//     src: local('Material Icons'), local('materialdesignicons'), url(../fonts/materialdesignicons.ttf) format('truetype');
+// }
+// .material-icons {
+//     font-family: 'Material Icons';
+//     font-weight: normal;
+//     font-style: normal;
+//     font-size: 2.4rem;
+//     /* Preferred icon size */
+//     display: inline-block;
+//     line-height: 1;
+//     text-transform: none;
+//     letter-spacing: normal;
+//     word-wrap: normal;
+//     white-space: nowrap;
+//     direction: ltr;
+//     /* Support for all WebKit browsers. */
+//     -webkit-font-smoothing: antialiased;
+//     /* Support for Safari and Chrome. */
+//     text-rendering: optimizeLegibility;
+//     /* Support for Firefox. */
+//     -moz-osx-font-smoothing: grayscale;
+//     /* Support for IE. */
+//     font-feature-settings: 'liga';
+// }

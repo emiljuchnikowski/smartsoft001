@@ -1,5 +1,5 @@
 import { IAuthTokenRequest } from './interfaces';
-import { User } from '../entities/user.entity';
+import { User } from '../entities';
 
 export const AUTH_TOKEN_VALIDATION_PROVIDER = 'AUTH_TOKEN_VALIDATION_PROVIDER';
 
