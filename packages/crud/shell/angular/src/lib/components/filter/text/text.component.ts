@@ -1,13 +1,5 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import {
-  IonButton,
-  IonCol,
-  IonIcon,
-  IonInput,
-  IonLabel,
-  IonRow,
-} from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { IEntity } from '@smartsoft001/domain-core';
@@ -29,7 +21,7 @@ import { BaseComponent } from '../base/base.component';
       <!--          <ion-button-->
       <!--            color="danger"-->
       <!--            (click)="refresh(null)"-->
-      <!--            class="square-button"-->
+      <!--            class="square-button m-3"-->
       <!--          >-->
       <!--            <ion-icon slot="icon-only" name="close-outline"></ion-icon>-->
       <!--          </ion-button>-->
@@ -37,17 +29,17 @@ import { BaseComponent } from '../base/base.component';
     }
     <!--    </ion-row>-->
   `,
-  imports: [
-    IonRow,
-    IonCol,
-    IonLabel,
-    TranslatePipe,
-    IonInput,
-    IonButton,
-    IonIcon,
-    FormsModule,
+  imports: [TranslatePipe, FormsModule],
+  styles: [
+    `
+      :host {
+        width: 100%;
+        .square-button {
+          height: var(--smart-button-height) !important;
+        }
+      }
+    `,
   ],
-  styleUrls: ['./text.component.scss'],
 })
 export class FilterTextComponent<
   T extends IEntity<string>,

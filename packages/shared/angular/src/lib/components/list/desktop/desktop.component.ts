@@ -24,15 +24,6 @@ import {
   MatHeaderRowDef,
   MatRowDef,
 } from '@angular/material/table';
-import {
-  IonButton,
-  IonCheckbox,
-  IonChip,
-  IonContent,
-  IonIcon,
-  IonInfiniteScroll,
-  IonInfiniteScrollContent,
-} from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { Subscription } from 'rxjs';
@@ -48,18 +39,33 @@ import { ListBaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-list-desktop',
   templateUrl: './desktop.component.html',
-  styleUrls: ['./desktop.component.scss', '../../../styles/desktop.scss'],
+  //TODO: research if these classes are used anywhere
+  styles: [
+    `
+      table {
+        .mat-row,
+        .mat-header-row {
+          background: white;
+          min-width: 1200px;
+        }
+      }
+      .wrapper {
+        height: 100%;
+      }
+
+      .mat-row,
+      .mat-header-row {
+        min-width: 1200px;
+      }
+    `,
+  ],
   imports: [
-    IonContent,
-    IonCheckbox,
     CdkTable,
     MatSort,
     CdkRecycleRows,
     MatColumnDef,
     CdkHeaderCell,
     CdkCell,
-    IonButton,
-    IonIcon,
     MatHeaderCellDef,
     NgTemplateOutlet,
     MatCellDef,
@@ -70,13 +76,10 @@ import { ListBaseComponent } from '../base/base.component';
     LazyLoadImageModule,
     FileUrlPipe,
     TranslatePipe,
-    IonChip,
     MatHeaderRowDef,
     CdkHeaderRow,
     CdkRow,
     MatRowDef,
-    IonInfiniteScroll,
-    IonInfiniteScrollContent,
     PagingComponent,
   ],
 })

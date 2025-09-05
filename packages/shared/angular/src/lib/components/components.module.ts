@@ -10,7 +10,6 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSortModule } from '@angular/material/sort';
 import { MatStepperModule } from '@angular/material/stepper';
 import { RouterModule } from '@angular/router';
-import { IonicModule } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { DynamicComponent, DynamicModule } from 'ng-dynamic-component';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
@@ -215,7 +214,6 @@ export const COMPONENTS = [
 
 export const IMPORTS = [
   CommonModule,
-  IonicModule,
   ReactiveFormsModule,
   FormsModule,
   TranslateModule,

@@ -10,15 +10,6 @@ import {
   signal,
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import {
-  IonCheckbox,
-  IonItem,
-  IonItemGroup,
-  IonLabel,
-  IonListHeader,
-  IonSelect,
-  IonSelectOption,
-} from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { getModelFieldOptions } from '@smartsoft001/models';
@@ -33,20 +24,7 @@ import { InputPossibilitiesBaseComponent } from '../base/possibilities.component
 @Component({
   selector: 'smart-input-check',
   templateUrl: './check.component.html',
-  imports: [
-    IonItemGroup,
-    IonListHeader,
-    ModelLabelPipe,
-    AsyncPipe,
-    IonItem,
-    IonLabel,
-    IonCheckbox,
-    TranslatePipe,
-    IonSelect,
-    IonSelectOption,
-    ReactiveFormsModule,
-  ],
-  styleUrls: ['./check.component.scss'],
+  imports: [ModelLabelPipe, AsyncPipe, TranslatePipe, ReactiveFormsModule],
 })
 export class InputCheckComponent<T> extends InputPossibilitiesBaseComponent<T> {
   override possibilities: Signal<Array<{

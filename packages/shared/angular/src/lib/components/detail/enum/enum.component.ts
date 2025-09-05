@@ -23,7 +23,6 @@ import { DetailBaseComponent } from '../base/base.component';
     }
   `,
   imports: [TranslatePipe],
-  styleUrls: ['./enum.component.scss'],
 })
 export class DetailEnumComponent<
   T extends { [key: string]: any },

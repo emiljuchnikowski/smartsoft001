@@ -4,7 +4,6 @@ import {
   Injector,
   ViewContainerRef,
 } from '@angular/core';
-import { MenuController } from '@ionic/angular';
 import { BehaviorSubject } from 'rxjs';
 
 import { IMenuItem } from '../../models';
@@ -33,7 +32,7 @@ export class MenuService {
   }
 
   constructor(
-    private readonly menuCtrl: MenuController,
+    // private readonly menuCtrl: MenuController,
     private readonly resolver: ComponentFactoryResolver,
   ) {}
 
@@ -69,7 +68,7 @@ export class MenuService {
   async init(endContainer: ViewContainerRef): Promise<void> {
     this._endContainer = endContainer;
 
-    await this.menuCtrl.close('end');
+    // await this.menuCtrl.close('end');
   }
 
   /**
@@ -92,8 +91,8 @@ export class MenuService {
       this._endContainer.createComponent(factory, 0, options.injector);
     }
 
-    await this.menuCtrl.enable(true, 'end');
-    await this.menuCtrl.open('end');
+    // await this.menuCtrl.enable(true, 'end');
+    // await this.menuCtrl.open('end');
   }
 
   /**
@@ -102,8 +101,8 @@ export class MenuService {
   async closeStart(): Promise<void> {
     this._openedEnd = false;
 
-    await this.menuCtrl.close('start');
-    await this.menuCtrl.enable(false, 'start');
+    // await this.menuCtrl.close('start');
+    // await this.menuCtrl.enable(false, 'start');
   }
 
   /**
@@ -112,8 +111,8 @@ export class MenuService {
   async closeEnd(): Promise<void> {
     this._openedEnd = false;
 
-    await this.menuCtrl.close('end');
-    await this.menuCtrl.enable(false, 'end');
+    // await this.menuCtrl.close('end');
+    // await this.menuCtrl.enable(false, 'end');
 
     this._endContainer?.clear();
   }

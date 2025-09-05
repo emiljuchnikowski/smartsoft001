@@ -13,7 +13,6 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
-import { IonButton, IonIcon, IonSearchbar } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -43,27 +42,21 @@ import { debounceTime } from 'rxjs/operators';
   styles: [
     `
       .searchbar-input {
-        border-radius: 2.1rem;
-        --border-radius: 2.1rem;
-        --background: var(--ion-color-light);
+        /*border-radius: 2.1rem;*/
+        /*--border-radius: 2.1rem;*/
+        /*--background: var(--ion-color-light);*/
       }
 
       ion-searchbar {
-        &.ios {
-          display: inline;
-        }
+        /*&.ios {*/
+        /*  display: inline;*/
+        /*}*/
       }
     `,
   ],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    IonSearchbar,
-    ReactiveFormsModule,
-    TranslatePipe,
-    IonButton,
-    IonIcon,
-  ],
+  imports: [ReactiveFormsModule, TranslatePipe],
 })
 export class SearchbarComponent implements OnDestroy, AfterViewInit {
   private _subscriptions = new Subscription();
@@ -79,8 +72,8 @@ export class SearchbarComponent implements OnDestroy, AfterViewInit {
 
   @Output() textChange = new EventEmitter<string>();
 
-  @ViewChildren(IonSearchbar, { read: IonSearchbar }) searchComponents =
-    new QueryList();
+  // @ViewChildren(IonSearchbar, { read: IonSearchbar }) searchComponents =
+  //   new QueryList();
 
   constructor() {
     this.control = signal(new UntypedFormControl());
@@ -103,13 +96,13 @@ export class SearchbarComponent implements OnDestroy, AfterViewInit {
         }),
     );
 
-    this._subscriptions.add(
-      this.searchComponents.changes.subscribe(
-        (searchComponents: QueryList<IonSearchbar>) => {
-          if (searchComponents.length) searchComponents.first.setFocus().then();
-        },
-      ),
-    );
+    // this._subscriptions.add(
+    //   this.searchComponents.changes.subscribe(
+    //     (searchComponents: QueryList<IonSearchbar>) => {
+    //       if (searchComponents.length) searchComponents.first.setFocus().then();
+    //     },
+    //   ),
+    // );
   }
 
   ngOnDestroy() {

@@ -5,7 +5,6 @@ import {
   Component,
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { IonInput, IonLabel, IonText } from '@ionic/angular/standalone';
 
 import { ModelLabelPipe } from '../../../pipes';
 import { PasswordStrengthComponent } from '../../password-strength';
@@ -13,15 +12,43 @@ import { InputBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-input-password',
-  templateUrl: './password.component.html',
+  template: `
+    @if (control) {
+      <!--  <ion-label position="floating">-->
+      {{
+        control?.parent?.value
+          | smartModelLabel
+            : internalOptions.fieldKey
+            : internalOptions?.model?.constructor
+          | async
+      }}
+      <!--    <ion-text color="danger">-->
+      @if (required) {
+        <span>*</span>
+      }
+      <!--    </ion-text>-->
+      <!--  </ion-label>-->
+      <!--  <ion-input-->
+      <!--    (ionBlur)="focus = false"-->
+      <!--    (ionFocus)="focus = true"-->
+      <!--    type="password"-->
+      <!--    [formControl]="formControl"-->
+      <!--    [attr.autofocus]="fieldOptions?.focused"-->
+      <!--  ></ion-input>-->
+      @if (fieldOptions?.possibilities?.strength) {
+        <smart-password-strength
+          [passwordToCheck]="control.value"
+          [showHint]="focus"
+          (passwordStrength)="onChangePasswordStrength($event)"
+        ></smart-password-strength>
+      }
+    }
+  `,
   styleUrls: ['./password.component.scss'],
   imports: [
     PasswordStrengthComponent,
     ModelLabelPipe,
     AsyncPipe,
-    IonLabel,
-    IonText,
-    IonInput,
     ReactiveFormsModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,

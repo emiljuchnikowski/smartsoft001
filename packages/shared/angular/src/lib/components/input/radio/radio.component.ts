@@ -7,16 +7,6 @@ import {
   Optional,
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import {
-  IonItem,
-  IonLabel,
-  IonListHeader,
-  IonRadio,
-  IonRadioGroup,
-  IonSelect,
-  IonSelectOption,
-  IonText,
-} from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
 import * as _ from 'lodash';
 
@@ -32,20 +22,7 @@ import { InputPossibilitiesBaseComponent } from '../base/possibilities.component
 @Component({
   selector: 'smart-input-radio',
   templateUrl: './radio.component.html',
-  imports: [
-    IonRadioGroup,
-    IonListHeader,
-    IonText,
-    ModelLabelPipe,
-    AsyncPipe,
-    ReactiveFormsModule,
-    IonItem,
-    IonLabel,
-    IonRadio,
-    TranslatePipe,
-    IonSelect,
-    IonSelectOption,
-  ],
+  imports: [ModelLabelPipe, AsyncPipe, ReactiveFormsModule, TranslatePipe],
   styleUrls: ['./radio.component.scss'],
 })
 export class InputRadioComponent<T> extends InputPossibilitiesBaseComponent<T> {

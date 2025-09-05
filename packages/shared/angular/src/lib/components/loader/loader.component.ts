@@ -1,5 +1,4 @@
 import { Component, input, InputSignal } from '@angular/core';
-import { IonSpinner } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'smart-loader',
@@ -8,8 +7,6 @@ import { IonSpinner } from '@ionic/angular/standalone';
       <!--      <ion-spinner [style.height]="height()"></ion-spinner>-->
     }
   `,
-  imports: [IonSpinner],
-  styleUrls: ['./loader.component.scss'],
 })
 export class LoaderComponent {
   readonly show: InputSignal<boolean> = input<boolean>(false);

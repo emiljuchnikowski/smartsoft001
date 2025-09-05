@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
-import { AlertController } from '@ionic/angular';
 
 @Injectable()
 export class AlertService {
-  constructor(private readonly alertCtrl: AlertController) {}
+  // constructor(private readonly alertCtrl: AlertController) {}
 
   async show(options: IAlertOptions): Promise<void> {
-    const alert = await this.alertCtrl.create(options);
-    await alert.present();
+    // const alert = await this.alertCtrl.create(options);
+    // await alert.present();
   }
 }
 

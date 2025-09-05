@@ -26,8 +26,8 @@
     <!--    ></ion-datetime>-->
   }
   @if (!isMobile) {
-    <!--    <ion-row (click)="picker.open()" class="desktop-row">-->
-    <!--      <ion-col>-->
+    <!--    <ion-row (click)="picker.open()" class="desktop-row p-0">-->
+    <!--      <ion-col class="pl-0 align-middle">-->
     <!--        <ion-label position="floating">-->
     {{
       control?.parent?.value
@@ -53,7 +53,7 @@
     </div>
     <mat-datepicker [hidden]="true" #picker></mat-datepicker>
     <!--      </ion-col>-->
-    <!--      <ion-col size="auto">-->
+    <!--      <ion-col class="pl-0 align-middle" size="auto">-->
     <!--        <ion-button class="squere-button">-->
     <!--          <ion-icon slot="icon-only" name="calendar-outline"></ion-icon>-->
     <!--        </ion-button>-->

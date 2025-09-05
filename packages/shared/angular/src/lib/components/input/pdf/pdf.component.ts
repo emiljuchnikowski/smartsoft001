@@ -6,7 +6,6 @@ import {
   OnInit,
   Renderer2,
 } from '@angular/core';
-import { IonLabel, IonProgressBar, IonText } from '@ionic/angular/standalone';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { ModelLabelPipe } from '../../../pipes';
@@ -18,16 +17,7 @@ import { InputFileBaseComponent } from '../base/file.component';
 @Component({
   selector: 'smart-input-pdf',
   templateUrl: './pdf.component.html',
-  styleUrls: ['./pdf.component.scss'],
-  imports: [
-    IonLabel,
-    IonText,
-    ButtonComponent,
-    ModelLabelPipe,
-    TranslatePipe,
-    IonProgressBar,
-    AsyncPipe,
-  ],
+  imports: [ButtonComponent, ModelLabelPipe, TranslatePipe, AsyncPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputPdfComponent<T>

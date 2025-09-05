@@ -1,16 +1,5 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import {
-  IonButton,
-  IonCol,
-  IonDatetime,
-  IonIcon,
-  IonItem,
-  IonLabel,
-  IonPopover,
-  IonRow,
-  IonText,
-} from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
 import moment from 'moment';
 
@@ -22,20 +11,17 @@ import { BaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-crud-filter-date',
   templateUrl: './date.component.html',
-  imports: [
-    IonRow,
-    IonCol,
-    IonLabel,
-    IonItem,
-    IonText,
-    IonPopover,
-    IonDatetime,
-    FormsModule,
-    IonButton,
-    IonIcon,
-    TranslatePipe,
+  imports: [FormsModule, TranslatePipe],
+  styles: [
+    `
+      :host {
+        width: 100%;
+        .square-button {
+          height: var(--smart-button-height) !important;
+        }
+      }
+    `,
   ],
-  styleUrls: ['./date.component.scss'],
 })
 export class FilterDateComponent<
   T extends IEntity<string>,

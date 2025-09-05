@@ -12,7 +12,17 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
   selector: 'smart-password-strength',
   templateUrl: './password-strength.component.html',
-  styleUrls: ['./password-strength.component.scss'],
+  styles: [
+    `
+      .point {
+        width: 32%;
+      }
+
+      p {
+        font-size: var(--default-font-size);
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TranslatePipe],
 })

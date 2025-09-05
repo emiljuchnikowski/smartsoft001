@@ -1,21 +1,29 @@
 <div #topTpl></div>
 
 <div class="ion-padding">
-  <div id="container">
+  <div class="gap-3">
     @for (item of listWithImages(); track item) {
-      <!--      <ion-card (click)="unselect?.()">-->
+      <!--      <ion-card class="w-full my-2.5 break-inside-avoid border border-gray-100" (click)="unselect?.()">-->
       @if (item.image) {
         <img [ngSrc]="item.image | smartFileUrl" alt="" fill />
       }
 
-      <!--        <ion-card-content>-->
+      <!--        <ion-card-content class="overflow-hidden">-->
       @for (key of keys; track key) {
         @let cell = item.data | smartListCell: key : cellPipe : type;
         @if (cell && cell.value != item.image) {
           @if ($index < 2) {
-            <h3 [attr.smart-item-key]="key" [innerHTML]="cell.value"></h3>
+            <h3
+              [attr.smart-item-key]="key"
+              class="text-gray-800"
+              [innerHTML]="cell.value"
+            ></h3>
           } @else {
-            <p [attr.smart-item-key]="key" [innerHTML]="cell.value"></p>
+            <p
+              [attr.smart-item-key]="key"
+              class="text-gray-500"
+              [innerHTML]="cell.value"
+            ></p>
           }
         }
       }

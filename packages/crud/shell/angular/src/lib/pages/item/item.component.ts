@@ -24,7 +24,6 @@ import {
   UntypedFormGroup,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IonContent } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 
@@ -59,7 +58,7 @@ import { PageService } from '../../services/page/page.service';
   imports: [PageComponent, ItemStandardComponent, NgTemplateOutlet],
   template: `
     <smart-page [options]="pageOptions()">
-      <div #topTpl class="top-content"></div>
+      <div #topTpl class="text-xl py-2.5 separator"></div>
       @if (template() === 'default') {
         <smart-crud-item-standard-page
           [detailsOptions]="detailsOptions()"
@@ -76,7 +75,7 @@ import { PageService } from '../../services/page/page.service';
         <ng-content></ng-content>
       </ng-template>
       <div class="dynamic-content"></div>
-      <div #bottomTpl class="bottom-content"></div>
+      <div #bottomTpl class="text-xl py-2.5 separator"></div>
     </smart-page>
   `,
 })
@@ -115,7 +114,7 @@ export class ItemComponent<T extends IEntity<string>>
 
   @ViewChildren(ItemStandardComponent, { read: ItemStandardComponent })
   standardComponents = new QueryList<ItemStandardComponent<any>>();
-  @ViewChild(IonContent, { static: true }) content: IonContent;
+  // @ViewChild(IonContent, { static: true }) content: IonContent;
 
   @ViewChild('contentTpl', { read: TemplateRef, static: false })
   contentTpl: TemplateRef<any>;

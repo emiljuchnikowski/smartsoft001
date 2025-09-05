@@ -16,7 +16,6 @@ import { DetailBaseComponent } from '../base/base.component';
       </video>
     }
   `,
-  styleUrls: ['./video.component.scss'],
 })
 export class DetailVideoComponent<
   T extends IEntity<string>,

@@ -1,5 +1,4 @@
 import { Component, computed, ElementRef, OnInit } from '@angular/core';
-import { NavParams } from '@ionic/angular';
 
 import { IEntity } from '@smartsoft001/domain-core';
 
@@ -20,12 +19,12 @@ export class DetailsPage<T extends IEntity<string>> implements OnInit {
   detailsOptions: IDetailsOptions<T>;
 
   constructor(
-    navParams: NavParams,
+    // navParams: NavParams,
     private modalService: ModalService,
     private styleService: StyleService,
     private elementRef: ElementRef,
   ) {
-    this.detailsOptions = navParams.get('value') as IDetailsOptions<T>;
+    this.detailsOptions = /*navParams.get('value')*/ {} as IDetailsOptions<T>;
     this.initTitle();
     this.initButtons();
   }

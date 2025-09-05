@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { IonChip, IonCol, IonRow } from '@ionic/angular/standalone';
 
 import { ListCellPipe } from '../../../pipes';
 import { DetailBaseComponent } from '../base/base.component';
@@ -14,7 +13,7 @@ import { DetailBaseComponent } from '../base/base.component';
     @let item = options?.item();
     @if (item) {
       <!--        <ion-col>-->
-      <p class="container-tel">
+      <p class="mt-3">
         @let value =
           (item | smartListCell: options?.key : options.cellPipe)?.value;
         @if (value) {
@@ -25,7 +24,6 @@ import { DetailBaseComponent } from '../base/base.component';
     }
     <!--    </ion-row>-->
   `,
-  imports: [IonRow, IonCol, IonChip, ListCellPipe],
-  styleUrls: ['./phone-number-pl.component.scss'],
+  imports: [ListCellPipe],
 })
 export class DetailPhoneNumberPlComponent<T> extends DetailBaseComponent<T> {}

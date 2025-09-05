@@ -5,16 +5,6 @@ import {
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
-import {
-  IonInfiniteScroll,
-  IonInfiniteScrollContent,
-  IonItem,
-  IonItemOption,
-  IonItemOptions,
-  IonItemSliding,
-  IonLabel,
-  IonList,
-} from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 
@@ -28,19 +18,10 @@ import { ListBaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-list-mobile',
   templateUrl: './mobile.component.html',
-  styleUrls: ['./mobile.component.scss'],
   imports: [
-    IonList,
-    IonItemSliding,
-    IonItemOptions,
-    IonItemOption,
     TranslatePipe,
-    IonItem,
-    IonLabel,
     FileUrlPipe,
     LazyLoadImageModule,
-    IonInfiniteScroll,
-    IonInfiniteScrollContent,
     PagingComponent,
     ListCellPipe,
   ],

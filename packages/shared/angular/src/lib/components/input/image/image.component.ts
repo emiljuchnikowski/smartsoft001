@@ -6,12 +6,6 @@ import {
   OnInit,
   Renderer2,
 } from '@angular/core';
-import {
-  IonImg,
-  IonLabel,
-  IonProgressBar,
-  IonText,
-} from '@ionic/angular/standalone';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { debounceTime } from 'rxjs/operators';
 
@@ -24,17 +18,7 @@ import { InputFileBaseComponent } from '../base/file.component';
 @Component({
   selector: 'smart-input-image',
   templateUrl: './image.component.html',
-  styleUrls: ['./image.component.scss'],
-  imports: [
-    IonLabel,
-    ModelLabelPipe,
-    AsyncPipe,
-    IonText,
-    ButtonComponent,
-    IonProgressBar,
-    IonImg,
-    TranslatePipe,
-  ],
+  imports: [ModelLabelPipe, AsyncPipe, ButtonComponent, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputImageComponent<T>

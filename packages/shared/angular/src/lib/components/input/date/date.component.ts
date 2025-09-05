@@ -14,15 +14,6 @@ import {
   MomentDateAdapter,
   MAT_MOMENT_DATE_ADAPTER_OPTIONS,
 } from '@angular/material-moment-adapter';
-import {
-  IonButton,
-  IonCol,
-  IonDatetime,
-  IonIcon,
-  IonLabel,
-  IonRow,
-  IonText,
-} from '@ionic/angular/standalone';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 // @ts-expect-error moment package
 import moment from 'moment';
@@ -48,18 +39,11 @@ export const MY_FORMATS = {
   templateUrl: './date.component.html',
   styleUrls: ['./date.component.scss'],
   imports: [
-    IonLabel,
-    IonText,
-    IonDatetime,
     ModelLabelPipe,
     ReactiveFormsModule,
     TranslatePipe,
-    IonRow,
-    IonCol,
     MatDatepickerInput,
     MatDatepicker,
-    IonButton,
-    IonIcon,
     AsyncPipe,
   ],
   providers: [

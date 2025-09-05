@@ -27,7 +27,6 @@ import { DetailBaseComponent } from '../base/base.component';
       ></ng-template>
     }
   `,
-  styleUrls: ['./object.component.scss'],
   imports: [NgComponentOutlet, DynamicIoDirective],
 })
 export class DetailObjectComponent<

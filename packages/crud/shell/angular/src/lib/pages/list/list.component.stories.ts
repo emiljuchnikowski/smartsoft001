@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { IonicModule } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { moduleMetadata } from '@storybook/angular';
 import type { Meta, StoryObj } from '@storybook/angular';
@@ -33,7 +32,6 @@ const meta: Meta = {
       declarations: [TestDetailsComponent],
       imports: [
         CommonModule,
-        IonicModule.forRoot(),
         SharedModule,
         TranslateModule.forRoot(),
         RouterModule.forRoot([], { useHash: true }),

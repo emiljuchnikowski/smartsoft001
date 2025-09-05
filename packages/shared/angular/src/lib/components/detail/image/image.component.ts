@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component, computed, Signal } from '@angular/core';
-import { IonCard, IonImg } from '@ionic/angular/standalone';
 
 import { FileService } from '../../../services';
 import { DetailBaseComponent } from '../base/base.component';
@@ -17,8 +16,6 @@ import { DetailBaseComponent } from '../base/base.component';
     }
     <!--    </ion-card>-->
   `,
-  imports: [IonCard, IonImg],
-  styleUrls: ['./image.component.scss'],
 })
 export class DetailImageComponent<
   T extends { [key: string]: any },

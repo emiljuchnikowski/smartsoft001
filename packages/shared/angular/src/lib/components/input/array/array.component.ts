@@ -2,17 +2,6 @@ import { CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
 import { AsyncPipe, NgComponentOutlet } from '@angular/common';
 import { ChangeDetectorRef, Component, Inject } from '@angular/core';
 import { UntypedFormArray } from '@angular/forms';
-import {
-  IonButton,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonIcon,
-  IonItem,
-  IonLabel,
-  IonList,
-  IonText,
-} from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DynamicIoDirective } from 'ng-dynamic-component';
 
@@ -42,24 +31,15 @@ import { InputBaseComponent } from '../base/base.component';
   templateUrl: './array.component.html',
   styleUrls: ['./array.component.scss'],
   imports: [
-    IonLabel,
-    IonText,
     ModelLabelPipe,
     AsyncPipe,
-    IonList,
     CdkDropList,
     ButtonComponent,
     TranslatePipe,
-    IonCard,
-    IonCardContent,
     NgComponentOutlet,
     DynamicIoDirective,
-    IonItem,
     AccordionComponent,
     AccordionHeaderComponent,
-    IonCardHeader,
-    IonButton,
-    IonIcon,
     AccordionBodyComponent,
     CdkDrag,
   ],

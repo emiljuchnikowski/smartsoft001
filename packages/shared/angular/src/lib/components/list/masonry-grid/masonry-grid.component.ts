@@ -7,16 +7,6 @@ import {
   Signal,
   computed,
 } from '@angular/core';
-import {
-  IonButton,
-  IonCard,
-  IonCardContent,
-  IonCol,
-  IonIcon,
-  IonInfiniteScroll,
-  IonInfiniteScrollContent,
-  IonRow,
-} from '@ionic/angular/standalone';
 
 import { IEntity } from '@smartsoft001/domain-core';
 import { FieldType, getModelFieldsWithOptions } from '@smartsoft001/models';
@@ -30,20 +20,7 @@ import { ListBaseComponent } from '../base/base.component';
   selector: 'smart-list-masonry-grid',
   templateUrl: './masonry-grid.component.html',
   styleUrls: ['./masonry-grid.component.scss'],
-  imports: [
-    PagingComponent,
-    IonInfiniteScrollContent,
-    IonInfiniteScroll,
-    IonIcon,
-    IonButton,
-    IonCol,
-    IonRow,
-    IonCard,
-    FileUrlPipe,
-    IonCardContent,
-    NgOptimizedImage,
-    ListCellPipe,
-  ],
+  imports: [PagingComponent, FileUrlPipe, NgOptimizedImage, ListCellPipe],
 })
 export class ListMasonryGridComponent<T extends IEntity<string>>
   extends ListBaseComponent<T>

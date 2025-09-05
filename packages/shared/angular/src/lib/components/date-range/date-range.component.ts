@@ -20,18 +20,6 @@ import {
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
-import { DomController, ModalController, NavParams } from '@ionic/angular';
-import {
-  IonButton,
-  IonContent,
-  IonFooter,
-  IonIcon,
-  IonInfiniteScroll,
-  IonInfiniteScrollContent,
-  IonRefresher,
-  IonRefresherContent,
-  IonToolbar,
-} from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
 // @ts-expect-error moment package
 import moment from 'moment';
@@ -50,7 +38,6 @@ import {
 @Component({
   selector: 'smart-date-range',
   templateUrl: './date-range.component.html',
-  styleUrls: ['./date-range.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -58,7 +45,7 @@ import {
       multi: true,
     },
   ],
-  imports: [IonButton, TranslatePipe],
+  imports: [TranslatePipe],
 })
 export class DateRangeComponent implements ControlValueAccessor {
   value: any;
@@ -79,7 +66,7 @@ export class DateRangeComponent implements ControlValueAccessor {
   };
 
   constructor(
-    private modalCtrl: ModalController,
+    // private modalCtrl: ModalController,
     private cd: ChangeDetectorRef,
   ) {}
 
@@ -90,32 +77,32 @@ export class DateRangeComponent implements ControlValueAccessor {
 
     this.propagateTouched();
 
-    const modal = await this.modalCtrl.create({
-      backdropDismiss: true,
-      component: DateRangeModalComponent,
-      componentProps: {
-        previousState: this.calendarData,
-      },
-    });
+    // const modal = await this.modalCtrl.create({
+    //   backdropDismiss: true,
+    //   component: DateRangeModalComponent,
+    //   componentProps: {
+    //     previousState: this.calendarData,
+    //   },
+    // });
 
-    modal.onDidDismiss().then((data: any) => {
-      if (!data.data) {
-        return;
-      }
-      this.calendarData = data.data['calendarData'];
-      if (this.calendarData.dateFrom) {
-        const value = {
-          start: this.calendarData.dateFrom.format('YYYY-MM-DD'),
-          end: this.calendarData.dateTo.format('YYYY-MM-DD'),
-        };
-
-        this.writeValue(value);
-        this.ngModelChange.emit(this.value);
-        this.propagateChange(this.value);
-      }
-    });
-
-    await modal.present();
+    // modal.onDidDismiss().then((data: any) => {
+    //   if (!data.data) {
+    //     return;
+    //   }
+    //   this.calendarData = data.data['calendarData'];
+    //   if (this.calendarData.dateFrom) {
+    //     const value = {
+    //       start: this.calendarData.dateFrom.format('YYYY-MM-DD'),
+    //       end: this.calendarData.dateTo.format('YYYY-MM-DD'),
+    //     };
+    //
+    //     this.writeValue(value);
+    //     this.ngModelChange.emit(this.value);
+    //     this.propagateChange(this.value);
+    //   }
+    // });
+    //
+    // await modal.present();
   }
 
   writeValue(value: any): void {
@@ -171,24 +158,12 @@ export interface CalendarState {
   templateUrl: './date-range-modal.component.html',
   providers: [CalendarService],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    IonIcon,
-    NgClass,
-    TranslatePipe,
-    IonContent,
-    IonRefresher,
-    IonRefresherContent,
-    IonInfiniteScroll,
-    IonInfiniteScrollContent,
-    IonFooter,
-    IonToolbar,
-    IonButton,
-  ],
+  imports: [NgClass, TranslatePipe],
 })
 export class DateRangeModalComponent implements OnInit, AfterContentInit {
   @Input() showFilterBtns = false;
   @Input() restrictSelectionTo!: number;
-  @ViewChild('scrollMe', { static: true }) scrollMe!: IonContent;
+  // @ViewChild('scrollMe', { static: true }) scrollMe!: IonContent;
   public currentDate = moment().clone();
   public dateForm!: UntypedFormGroup;
   calendar: month[] = [];
@@ -206,18 +181,18 @@ export class DateRangeModalComponent implements OnInit, AfterContentInit {
 
   constructor(
     private fb: UntypedFormBuilder,
-    private modalController: ModalController,
-    private navParams: NavParams,
+    // private modalController: ModalController,
+    // private navParams: NavParams,
     private uiService: UIService,
     private changeDetectionRef: ChangeDetectorRef,
-    private domController: DomController,
+    // private domController: DomController,
     private calendarService: CalendarService,
     private zone: NgZone,
     private styleService: StyleService,
     private elementRef: ElementRef,
   ) {
     this.initDateRangeForm();
-    this.previousState = this.navParams.get('previousState');
+    // this.previousState = this.navParams.get('previousState');
   }
 
   private initDateRangeForm(): void {
@@ -241,7 +216,7 @@ export class DateRangeModalComponent implements OnInit, AfterContentInit {
       this.setPreviousStateData();
     } else {
       this.selectToday();
-      this.scrollMe.scrollToPoint(0, this.valueTop, 300);
+      // this.scrollMe.scrollToPoint(0, this.valueTop, 300);
     }
   }
 
@@ -254,9 +229,9 @@ export class DateRangeModalComponent implements OnInit, AfterContentInit {
         ),
         tap(({ event }) => {
           this.selectedButtonName = FilterBtnConstants.empthyString;
-          this.domController.read(() => {
-            this.scrollPositionValue = event.target.offsetTop;
-          });
+          // this.domController.read(() => {
+          //   this.scrollPositionValue = event.target.offsetTop;
+          // });
         }),
       )
       .subscribe(({ date }) => {
@@ -300,13 +275,13 @@ export class DateRangeModalComponent implements OnInit, AfterContentInit {
     this.scrollPositionValue = scrollPosition;
     this.selectedButtonName = selectedButtonName;
 
-    if (this.scrollMe) {
-      if (this.scrollPositionValue) {
-        this.scrollMe.scrollToPoint(0, this.scrollPositionValue - 300, 300);
-      } else {
-        this.scrollMe.scrollToPoint(0, this.valueTop, 300);
-      }
-    }
+    // if (this.scrollMe) {
+    //   if (this.scrollPositionValue) {
+    //     this.scrollMe.scrollToPoint(0, this.scrollPositionValue - 300, 300);
+    //   } else {
+    //     this.scrollMe.scrollToPoint(0, this.valueTop, 300);
+    //   }
+    // }
   }
 
   noop() {} // eslint-disable-line
@@ -451,16 +426,16 @@ export class DateRangeModalComponent implements OnInit, AfterContentInit {
   private scrollToBottom(): void {
     this.zone.runOutsideAngular(() => {
       setTimeout(() => {
-        if (this.scrollMe) {
-          this.scrollMe.scrollToBottom(300);
-        }
+        // if (this.scrollMe) {
+        //   this.scrollMe.scrollToBottom(300);
+        // }
       });
     });
   }
 
   public dismissPage(): void {
     this.unsubscribe();
-    this.modalController.dismiss();
+    // this.modalController.dismiss();
   }
 
   private unsubscribe(): void {
@@ -477,9 +452,9 @@ export class DateRangeModalComponent implements OnInit, AfterContentInit {
       selectedButtonName: this.selectedButtonName,
     };
     this.unsubscribe();
-    this.modalController.dismiss({
-      calendarData: data,
-    });
+    // this.modalController.dismiss({
+    //   calendarData: data,
+    // });
   }
 
   loadDataNext(event: any) {

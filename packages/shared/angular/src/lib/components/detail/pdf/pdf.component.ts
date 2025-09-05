@@ -19,7 +19,6 @@ import { DetailBaseComponent } from '../base/base.component';
     }
   `,
   imports: [ButtonComponent, TranslatePipe],
-  styleUrls: ['./pdf.component.scss'],
 })
 export class DetailPdfComponent<
   T extends IEntity<string>,

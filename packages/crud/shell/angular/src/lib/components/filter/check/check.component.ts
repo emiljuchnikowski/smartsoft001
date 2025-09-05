@@ -1,14 +1,4 @@
 import { AfterContentInit, Component, computed, Signal } from '@angular/core';
-import {
-  IonButton,
-  IonCheckbox,
-  IonCol,
-  IonIcon,
-  IonItem,
-  IonItemDivider,
-  IonLabel,
-  IonRow,
-} from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { IEntity } from '@smartsoft001/domain-core';
@@ -20,8 +10,8 @@ import { BaseComponent } from '../base/base.component';
   template: `
     <!--    <ion-row>-->
     <!--      <ion-col>-->
-    <!--        <ion-item-divider>-->
-    <!--          <ion-icon slot="start" name="filter-outline"></ion-icon>-->
+    <!--        <ion-item-divider class="text-xl font-light">-->
+    <!--          <ion-icon class="mr-6 text-2xl" slot="start" name="filter-outline"></ion-icon>-->
     <!--          <ion-label>-->
     {{ item().label | translate }}
     <!--          </ion-label>-->
@@ -30,9 +20,9 @@ import { BaseComponent } from '../base/base.component';
       <!--              slot="end"-->
       <!--              color="danger"-->
       <!--              (click)="refresh([])"-->
-      <!--              class="square-button"-->
+      <!--              class="square-button m-0 p-0 text-lg h-9 w-9"-->
       <!--            >-->
-      <!--              <ion-icon slot="icon-only" name="close-outline"></ion-icon>-->
+      <!--              <ion-icon class="text-2xl m-0 p-0" slot="icon-only" name="close-outline"></ion-icon>-->
       <!--            </ion-button>-->
     }
     <!--        </ion-item-divider>-->
@@ -51,17 +41,7 @@ import { BaseComponent } from '../base/base.component';
     <!--      </ion-col>-->
     <!--    </ion-row>-->
   `,
-  imports: [
-    IonRow,
-    IonCol,
-    IonItemDivider,
-    IonIcon,
-    IonLabel,
-    TranslatePipe,
-    IonButton,
-    IonItem,
-    IonCheckbox,
-  ],
+  imports: [TranslatePipe],
   styleUrls: ['./check.component.scss'],
 })
 export class FilterCheckComponent<T extends IEntity<string>>

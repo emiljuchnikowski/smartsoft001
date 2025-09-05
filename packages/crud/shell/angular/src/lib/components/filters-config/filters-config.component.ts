@@ -1,10 +1,4 @@
 import { Component, computed, ElementRef, OnInit, Signal } from '@angular/core';
-import {
-  IonChip,
-  IonIcon,
-  IonLabel,
-  IonToolbar,
-} from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { StyleService } from '@smartsoft001/angular';
@@ -14,9 +8,33 @@ import { ICrudFilterQueryItem } from '../../models';
 
 @Component({
   selector: 'smart-crud-filters-config',
-  templateUrl: './filters-config.component.html',
-  imports: [IonToolbar, IonChip, IonIcon, IonLabel, TranslatePipe],
-  styleUrls: ['./filters-config.component.scss'],
+  template: `
+    @let query = this.query();
+    @if (query && query?.length) {
+      <!--  <ion-toolbar>-->
+      @for (item of query; track item) {
+        <!--      <ion-chip (click)="onRemoveQuery(item)" color="medium" outline="true">-->
+        <!--        <ion-icon name="filter-circle-outline" color="primary"></ion-icon>-->
+        <!--        <ion-label>-->
+        {{ 'MODEL.' + item.key | translate }} {{ item.type }}
+        {{ item.value | translate }}
+        <!--        </ion-label>-->
+        <!--        <ion-icon name="close" color="danger"></ion-icon>-->
+        <!--      </ion-chip>-->
+      }
+      <!--  </ion-toolbar>-->
+    }
+  `,
+  imports: [TranslatePipe],
+  styles: [
+    `
+      :host {
+        ion-label {
+          font-size: var(--small-font-size);
+        }
+      }
+    `,
+  ],
 })
 export class FiltersConfigComponent implements OnInit {
   query: Signal<ICrudFilterQueryItem[]>;

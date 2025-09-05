@@ -7,17 +7,6 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import {
-  IonButton,
-  IonCol,
-  IonDatetime,
-  IonIcon,
-  IonInput,
-  IonItem,
-  IonLabel,
-  IonPopover,
-  IonRow,
-} from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
@@ -29,20 +18,17 @@ import { FilterDateComponent } from '../date/date.component';
 @Component({
   selector: 'smart-crud-filter-date-with-edit',
   templateUrl: './date-with-edit.component.html',
-  imports: [
-    IonRow,
-    IonCol,
-    IonLabel,
-    TranslatePipe,
-    IonInput,
-    FormsModule,
-    IonButton,
-    IonIcon,
-    IonPopover,
-    IonDatetime,
-    IonItem,
+  imports: [TranslatePipe, FormsModule],
+  styles: [
+    `
+      :host {
+        width: 100%;
+        .square-button {
+          height: var(--smart-button-height) !important;
+        }
+      }
+    `,
   ],
-  styleUrls: ['./date-with-edit.component.scss'],
 })
 export class FilterDateWithEditComponent<T extends IEntity<string>>
   extends FilterDateComponent<T>
@@ -53,8 +39,8 @@ export class FilterDateWithEditComponent<T extends IEntity<string>>
   advanced: WritableSignal<boolean> = signal(false);
   id = GuidService.create();
 
-  @ViewChild(IonDatetime, { read: IonDatetime, static: false })
-  dateTimePicker: IonDatetime;
+  // @ViewChild(IonDatetime, { read: IonDatetime, static: false })
+  // dateTimePicker: IonDatetime;
 
   toggleAdvanced(): void {
     this.advanced.update((val) => !val);
@@ -66,15 +52,15 @@ export class FilterDateWithEditComponent<T extends IEntity<string>>
   ngOnInit(): void {
     super.ngOnInit();
 
-    if (this.dateTimePicker) {
-      this._subscriptions.add(
-        this.dateTimePicker.ionChange.subscribe((val: CustomEvent) => {
-          this.customValue = val.detail.value;
-        }),
-      );
-    } else {
-      console.error('dateTimePicker not found!');
-    }
+    // if (this.dateTimePicker) {
+    //   this._subscriptions.add(
+    //     this.dateTimePicker.ionChange.subscribe((val: CustomEvent) => {
+    //       this.customValue = val.detail.value;
+    //     }),
+    //   );
+    // } else {
+    //   console.error('dateTimePicker not found!');
+    // }
   }
 
   ngOnDestroy(): void {

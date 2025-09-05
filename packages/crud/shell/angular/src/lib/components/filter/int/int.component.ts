@@ -6,15 +6,6 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import {
-  IonButton,
-  IonCol,
-  IonIcon,
-  IonInput,
-  IonItem,
-  IonLabel,
-  IonRow,
-} from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
@@ -25,18 +16,17 @@ import { BaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-crud-filter-int',
   templateUrl: './int.component.html',
-  imports: [
-    IonRow,
-    IonCol,
-    IonLabel,
-    TranslatePipe,
-    FormsModule,
-    IonInput,
-    IonButton,
-    IonIcon,
-    IonItem,
+  imports: [TranslatePipe, FormsModule],
+  styles: [
+    `
+      :host {
+        width: 100%;
+        .square-button {
+          height: var(--smart-button-height) !important;
+        }
+      }
+    `,
   ],
-  styleUrls: ['./int.component.scss'],
 })
 export class FilterIntComponent<T extends IEntity<string>>
   extends BaseComponent<T>

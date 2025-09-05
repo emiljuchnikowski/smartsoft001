@@ -7,7 +7,6 @@ import {
   inject,
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { IonLabel, IonText } from '@ionic/angular/standalone';
 import { TranslateService } from '@ngx-translate/core';
 import {
   Editor,
@@ -25,8 +24,6 @@ import { InputBaseComponent } from '../base/base.component';
   templateUrl: './long-text.component.html',
   styleUrls: ['./long-text.component.scss'],
   imports: [
-    IonLabel,
-    IonText,
     ModelLabelPipe,
     AsyncPipe,
     NgxEditorMenuComponent,

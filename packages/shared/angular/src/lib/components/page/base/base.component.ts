@@ -12,7 +12,6 @@ import {
   WritableSignal,
   signal,
 } from '@angular/core';
-import { PopoverController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
 import {
@@ -48,7 +47,7 @@ export abstract class PageBaseComponent implements OnInit, OnDestroy {
     private el: ElementRef,
     private renderer: Renderer2,
     private location: Location,
-    private popover: PopoverController,
+    // private popover: PopoverController,
     public appService: AppService,
     public hardwareService: HardwareService,
   ) {}
@@ -58,13 +57,13 @@ export abstract class PageBaseComponent implements OnInit, OnDestroy {
   }
 
   async presentPopover(ev: any, btn: IIconButtonOptions): Promise<void> {
-    const instance = await this.popover.create({
-      event: ev,
-      component: btn.component,
-      translucent: true,
-    });
-
-    await instance.present();
+    // const instance = await this.popover.create({
+    //   event: ev,
+    //   component: btn.component,
+    //   translucent: true,
+    // });
+    //
+    // await instance.present();
   }
 
   ngOnInit() {

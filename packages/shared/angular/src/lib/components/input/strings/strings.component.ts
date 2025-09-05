@@ -5,15 +5,6 @@ import {
   UntypedFormBuilder,
   UntypedFormControl,
 } from '@angular/forms';
-import {
-  IonButton,
-  IonIcon,
-  IonInput,
-  IonItem,
-  IonLabel,
-  IonList,
-  IonText,
-} from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { ModelLabelPipe } from '../../../pipes';
@@ -23,19 +14,7 @@ import { InputBaseComponent } from '../base/base.component';
   selector: 'smart-input-strings',
   templateUrl: './strings.component.html',
   styleUrls: ['./strings.component.scss'],
-  imports: [
-    IonLabel,
-    IonText,
-    IonList,
-    IonItem,
-    IonIcon,
-    IonInput,
-    IonButton,
-    ReactiveFormsModule,
-    TranslatePipe,
-    ModelLabelPipe,
-    AsyncPipe,
-  ],
+  imports: [ReactiveFormsModule, TranslatePipe, ModelLabelPipe, AsyncPipe],
 })
 export class InputStringsComponent<T> extends InputBaseComponent<T> {
   list: Array<UntypedFormControl> = [];

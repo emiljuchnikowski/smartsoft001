@@ -1,33 +1,44 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
-import {
-  IonChip,
-  IonCol,
-  IonInput,
-  IonLabel,
-  IonRow,
-  IonText,
-} from '@ionic/angular/standalone';
 
 import { ModelLabelPipe } from '../../../pipes';
 import { InputBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-input-phone-number-pl',
-  templateUrl: './phone-number-pl.component.html',
+  template: `
+    @if (control) {
+      <!--  <ion-label position="stacked">-->
+      {{
+        control?.parent?.value
+          | smartModelLabel
+            : internalOptions.fieldKey
+            : internalOptions?.model?.constructor
+          | async
+      }}
+      <!--    <ion-text color="danger">-->
+      @if (required) {
+        <span>*</span>
+      }
+      <!--    </ion-text>-->
+      <!--  </ion-label>-->
+      <!--  <ion-row>-->
+      <!--    <ion-col size="auto">-->
+      <!--<ion-chip>-->48<!--</ion-chip>-->
+      <!--    </ion-col>-->
+      <!--    <ion-col>-->
+      <!--      <ion-input-->
+      <!--        type="tel"-->
+      <!--        [formControl]="formControl"-->
+      <!--        [attr.autofocus]="fieldOptions?.focused"-->
+      <!--      ></ion-input>-->
+      <!--    </ion-col>-->
+      <!--  </ion-row>-->
+    }
+  `,
   styleUrls: ['./phone-number-pl.component.scss'],
-  imports: [
-    IonLabel,
-    IonText,
-    IonRow,
-    IonCol,
-    IonChip,
-    IonInput,
-    ReactiveFormsModule,
-    ModelLabelPipe,
-    AsyncPipe,
-  ],
+  imports: [ReactiveFormsModule, ModelLabelPipe, AsyncPipe],
 })
 export class InputPhoneNumberPlComponent<T> extends InputBaseComponent<T> {
   constructor(cd: ChangeDetectorRef) {

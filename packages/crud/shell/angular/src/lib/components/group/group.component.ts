@@ -29,7 +29,7 @@ import { CrudListGroupService } from '../../services/list-group/list-group.servi
   template: `
     @for (item of groups(); track item.key) {
       <smart-accordion [(show)]="item.show" (showChange)="change($event, item)">
-        <smart-accordion-header [ngClass]="{ 'accordion-show': item.show }"
+        <smart-accordion-header [ngClass]="{ 'font-bold': item.show }"
           >{{ item.text | translate }}
         </smart-accordion-header>
         <smart-accordion-body>
@@ -57,7 +57,6 @@ import { CrudListGroupService } from '../../services/list-group/list-group.servi
     NgClass,
     TranslatePipe,
   ],
-  styleUrls: ['./group.component.scss'],
 })
 export class GroupComponent<T extends IEntity<string>>
   extends BaseComponent

@@ -1,11 +1,22 @@
 import { Component, Input } from '@angular/core';
-import { IonButton, IonIcon } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'smart-export',
-  templateUrl: './export.component.html',
-  imports: [IonButton, IonIcon],
-  styleUrls: ['./export.component.scss'],
+  template: `
+    <!--<ion-button title="export" (click)="onClick()" slot="icon-only">-->
+    <!--  <ion-icon name="download"></ion-icon>-->
+    <!--</ion-button>-->
+  `,
+  styles: [
+    `
+      :host {
+        cursor: pointer;
+        font-size: 3rem;
+        height: 3rem;
+        margin: 10px;
+      }
+    `,
+  ],
 })
 export class ExportComponent {
   @Input() value: any;

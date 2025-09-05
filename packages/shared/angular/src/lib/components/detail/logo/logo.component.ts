@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { IonCard, IonImg } from '@ionic/angular/standalone';
 
 import { DetailBaseComponent } from '../base/base.component';
 
@@ -16,8 +15,6 @@ import { DetailBaseComponent } from '../base/base.component';
     }
     <!--    </ion-card>-->
   `,
-  imports: [IonCard, IonImg],
-  styleUrls: ['./logo.component.scss'],
 })
 export class DetailLogoComponent<
   T extends { [key: string]: any },

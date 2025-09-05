@@ -12,7 +12,6 @@ import {
   MatStepperNext,
   MatStepperPrevious,
 } from '@angular/material/stepper';
-import { IonList } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { getModelFieldsWithOptions, IModelStep } from '@smartsoft001/models';
@@ -24,11 +23,9 @@ import { FormBaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-form-stepper',
   templateUrl: './stepper.component.html',
-  styleUrls: ['./stepper.component.scss'],
   imports: [
     MatStepper,
     MatStep,
-    IonList,
     InputComponent,
     TranslatePipe,
     MatStepLabel,

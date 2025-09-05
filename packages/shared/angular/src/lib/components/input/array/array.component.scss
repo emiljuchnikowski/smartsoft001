@@ -5,11 +5,7 @@ ion-label {
     margin-top: 1.6rem;
   }
 }
-
-.add {
-  float: right;
-}
-
+//TODO: refactor usage of FormComponent and styles
 smart-form {
   width: 100%;
   margin: 0.3rem 0;
@@ -221,17 +217,12 @@ smart-form {
 }
 
 ion-card {
-  width: 100%;
-  margin: 0.3rem;
-  padding-left: 0;
   ion-card-header {
-    padding: 0;
-    margin: 0;
     ion-item {
-      margin: 0;
+      //TODO: refactor ionic element styles
       item-inner {
-        margin: 0;
-        padding: 0;
+        //margin: 0;
+        //padding: 0;
       }
     }
     ion-button {
@@ -241,12 +232,8 @@ ion-card {
       }
     }
   }
-  ion-card-content {
-    padding: 0;
-  }
 }
 
-.array,
 .smart-list {
   max-width: 100%;
   min-height: 60px;
@@ -255,18 +242,6 @@ ion-card {
   overflow: hidden;
   padding-top: 0 !important;
   padding-bottom: 0 !important;
-}
-
-.array-box {
-  padding: 0;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  box-sizing: border-box;
-  font-size: 14px;
-  background-color: transparent;
-  box-shadow: none;
 }
 
 .cdk-drag-preview {
@@ -291,8 +266,4 @@ ion-card {
 
 .array.cdk-drop-list-dragging .array-box:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-}
-
-smart-accordion-header {
-  cursor: move;
 }

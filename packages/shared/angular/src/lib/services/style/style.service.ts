@@ -1,6 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
 import { ElementRef, Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { Platform } from '@ionic/angular';
 
 import { IStyle, StyleType } from '../../models/style';
 
@@ -11,12 +10,12 @@ export class StyleService {
   private _elementRef!: ElementRef;
 
   static create(
-    platform: Platform,
+    // platform: Platform,
     platformId: object,
     el: ElementRef,
     style?: Partial<IStyle>,
   ): StyleService {
-    const result = new StyleService(platform, platformId);
+    const result = new StyleService(/*platform, */ platformId);
 
     result.init(el, style);
 
@@ -24,7 +23,7 @@ export class StyleService {
   }
 
   constructor(
-    private platform: Platform,
+    // private platform: Platform,
     @Inject(PLATFORM_ID) private platformId: object,
   ) {}
 
@@ -116,22 +115,22 @@ export class StyleService {
   }
 
   private setFont(): void {
-    if (isPlatformBrowser(this.platformId) && this.platform.is('ios')) {
-      this.setProperty('--ion-font-family', 'ios-font');
-      this.setProperty('--default-font-weight', 'ios-font-weight');
-      this.setProperty('--default-font-style', 'ios-font-style');
-    } else if (
-      isPlatformBrowser(this.platformId) &&
-      this.platform.is('android')
-    ) {
-      this.setProperty('--ion-font-family', 'md-font');
-      this.setProperty('--default-font-weight', 'md-font-weight');
-      this.setProperty('--default-font-style', 'md-font-style');
-    } else {
-      this.setProperty('--ion-font-family', 'font');
-      this.setProperty('--default-font-weight', 'font-weight');
-      this.setProperty('--default-font-style', 'font-style');
-    }
+    // if (isPlatformBrowser(this.platformId) && this.platform.is('ios')) {
+    //   this.setProperty('--ion-font-family', 'ios-font');
+    //   this.setProperty('--default-font-weight', 'ios-font-weight');
+    //   this.setProperty('--default-font-style', 'ios-font-style');
+    // } else if (
+    //   isPlatformBrowser(this.platformId) &&
+    //   this.platform.is('android')
+    // ) {
+    //   this.setProperty('--ion-font-family', 'md-font');
+    //   this.setProperty('--default-font-weight', 'md-font-weight');
+    //   this.setProperty('--default-font-style', 'md-font-style');
+    // } else {
+    this.setProperty('--ion-font-family', 'font');
+    this.setProperty('--default-font-weight', 'font-weight');
+    this.setProperty('--default-font-style', 'font-style');
+    // }
   }
 
   private setButton(): void {

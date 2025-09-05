@@ -6,7 +6,6 @@ import {
   OnInit,
   Renderer2,
 } from '@angular/core';
-import { IonLabel, IonProgressBar, IonText } from '@ionic/angular/standalone';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { delay, tap } from 'rxjs/operators';
 
@@ -20,16 +19,7 @@ import { InputFileBaseComponent } from '../base/file.component';
 @Component({
   selector: 'smart-input-video',
   templateUrl: './video.component.html',
-  styleUrls: ['./video.component.scss'],
-  imports: [
-    IonLabel,
-    ModelLabelPipe,
-    AsyncPipe,
-    IonText,
-    ButtonComponent,
-    TranslatePipe,
-    IonProgressBar,
-  ],
+  imports: [ModelLabelPipe, AsyncPipe, ButtonComponent, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputVideoComponent<T>

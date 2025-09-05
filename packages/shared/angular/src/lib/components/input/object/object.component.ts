@@ -1,6 +1,5 @@
 import { AsyncPipe, NgComponentOutlet } from '@angular/common';
 import { ChangeDetectorRef, Component, Inject } from '@angular/core';
-import { IonLabel, IonText } from '@ionic/angular/standalone';
 import { DynamicIoDirective } from 'ng-dynamic-component';
 
 import { IFormOptions } from '../../../models';
@@ -10,16 +9,31 @@ import { InputBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-input-object',
-  templateUrl: './object.component.html',
+  template: `
+    @if (control) {
+      <!--  <ion-label position="floating">-->
+      {{
+        control?.parent?.value
+          | smartModelLabel
+            : internalOptions.fieldKey
+            : internalOptions?.model?.constructor
+          | async
+      }}
+      <!--    <ion-text color="danger">-->
+      @if (required) {
+        <span>*</span>
+      }
+      <!--    </ion-text>-->
+      <!--  </ion-label>-->
+      <br />
+      <ng-template
+        [ngComponentOutlet]="formComponent"
+        [ndcDynamicInputs]="{ options: childOptions }"
+      ></ng-template>
+    }
+  `,
   styleUrls: ['./object.component.scss'],
-  imports: [
-    IonLabel,
-    IonText,
-    ModelLabelPipe,
-    AsyncPipe,
-    NgComponentOutlet,
-    DynamicIoDirective,
-  ],
+  imports: [ModelLabelPipe, AsyncPipe, NgComponentOutlet, DynamicIoDirective],
 })
 export class InputObjectComponent<T, TChild> extends InputBaseComponent<T> {
   childOptions!: IFormOptions<TChild>;

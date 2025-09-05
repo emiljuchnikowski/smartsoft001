@@ -7,16 +7,6 @@ import {
   Signal,
   WritableSignal,
 } from '@angular/core';
-import {
-  IonButton,
-  IonButtons,
-  IonContent,
-  IonHeader,
-  IonIcon,
-  IonList,
-  IonTitle,
-  IonToolbar,
-} from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { MenuService, StyleService } from '@smartsoft001/angular';
@@ -91,19 +81,27 @@ import { FilterComponent } from '../filter';
  */
 @Component({
   selector: 'smart-crud-filters',
-  templateUrl: './filters.component.html',
-  imports: [
-    FilterComponent,
-    IonHeader,
-    IonToolbar,
-    IonButtons,
-    IonButton,
-    IonIcon,
-    IonTitle,
-    IonContent,
-    IonList,
-    TranslatePipe,
-  ],
+  template: `
+    <!--<ion-header [hidden]="hideMenu()">-->
+    <!--  <ion-toolbar>-->
+    <!--    <ion-buttons slot="end">-->
+    <!--      <ion-button (click)="onClose()">-->
+    <!--        <ion-icon slot="icon-only" name="close"> </ion-icon>-->
+    <!--      </ion-button>-->
+    <!--    </ion-buttons>-->
+    <!--    <ion-title>{{ 'filters' | translate }}</ion-title>-->
+    <!--  </ion-toolbar>-->
+    <!--</ion-header>-->
+    <!--<ion-content style="height: 100vh">-->
+    <!--  <ion-list>-->
+    @for (item of list(); track item) {
+      <smart-crud-filter [item]="item" [filter]="filter()"></smart-crud-filter>
+    }
+    <!--  </ion-list>-->
+    <div class="h-20">&nbsp;</div>
+    <!--</ion-content>-->
+  `,
+  imports: [FilterComponent, TranslatePipe],
   styleUrls: ['./filters.component.scss'],
 })
 export class FiltersComponent<T extends IEntity<string>> implements OnInit {

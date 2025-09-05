@@ -11,15 +11,20 @@ import {
   FormsModule,
   NG_VALUE_ACCESSOR,
 } from '@angular/forms';
-import { IonCol, IonGrid, IonInput, IonRow } from '@ionic/angular/standalone';
 // @ts-expect-error moment package
 import moment from 'moment';
 
 @Component({
   selector: 'smart-date-edit',
   templateUrl: './date-edit.component.html',
-  styleUrls: ['./date-edit.component.scss'],
-  imports: [IonGrid, IonRow, IonCol, IonInput, FormsModule],
+  styles: [
+    `
+      .invalid {
+        color: var(--smart-color-danger) !important;
+      }
+    `,
+  ],
+  imports: [FormsModule],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -117,43 +122,43 @@ export class DateEditComponent implements ControlValueAccessor {
     this.propagateTouched = fn;
   }
 
-  async moveTo(event: KeyboardEvent, el: IonInput): Promise<void> {
-    if (event.key === 'Backspace' || event.key === 'Enter') return;
+  // async moveTo(event: KeyboardEvent, el: IonInput): Promise<void> {
+  //   if (event.key === 'Backspace' || event.key === 'Enter') return;
+  //
+  //   const allowKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+  //
+  //   if (!allowKeys.some((k) => k === event.key)) {
+  //     (event.target as HTMLInputElement).value = '0';
+  //     return;
+  //   }
+  //
+  //   (event.target as HTMLInputElement).value = (
+  //     event.target as HTMLInputElement
+  //   ).value.substr(0, 1);
+  //
+  //   await el.setFocus();
+  //
+  //   await this.select(el);
+  // }
 
-    const allowKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-
-    if (!allowKeys.some((k) => k === event.key)) {
-      (event.target as HTMLInputElement).value = '0';
-      return;
-    }
-
-    (event.target as HTMLInputElement).value = (
-      event.target as HTMLInputElement
-    ).value.substr(0, 1);
-
-    await el.setFocus();
-
-    await this.select(el);
-  }
-
-  async select(el: IonInput): Promise<void> {
-    setTimeout(async () => {
-      const nativeEl: HTMLInputElement = await el.getInputElement();
-
-      if (nativeEl) {
-        nativeEl.value = nativeEl.value.substr(0, 1);
-
-        if (nativeEl.setSelectionRange) {
-          nativeEl.type = 'text';
-          nativeEl.setSelectionRange(0, nativeEl.value.length);
-          nativeEl.type = 'number';
-          return;
-        }
-
-        nativeEl.select();
-      }
-    });
-  }
+  // async select(el: IonInput): Promise<void> {
+  //   setTimeout(async () => {
+  //     const nativeEl: HTMLInputElement = await el.getInputElement();
+  //
+  //     if (nativeEl) {
+  //       nativeEl.value = nativeEl.value.substr(0, 1);
+  //
+  //       if (nativeEl.setSelectionRange) {
+  //         nativeEl.type = 'text';
+  //         nativeEl.setSelectionRange(0, nativeEl.value.length);
+  //         nativeEl.type = 'number';
+  //         return;
+  //       }
+  //
+  //       nativeEl.select();
+  //     }
+  //   });
+  // }
 
   private setValueAt(val: string, index: number): void {
     if (val === null) return;

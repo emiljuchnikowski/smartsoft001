@@ -5,7 +5,6 @@ import {
   ElementRef,
   ViewChild,
 } from '@angular/core';
-import { IonLabel, IonText } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { ModelLabelPipe } from '../../../pipes';
@@ -34,15 +33,37 @@ import { InputBaseComponent } from '../base/base.component';
  */
 @Component({
   selector: 'smart-input-file',
-  templateUrl: './file.component.html',
-  imports: [
-    IonLabel,
-    IonText,
-    ButtonComponent,
-    ModelLabelPipe,
-    AsyncPipe,
-    TranslatePipe,
-  ],
+  template: `
+    @if (control) {
+      <!--  <ion-label position="floating">-->
+      {{
+        control?.parent?.value
+          | smartModelLabel
+            : internalOptions.fieldKey
+            : internalOptions?.model?.constructor
+          | async
+      }}
+      <!--    <ion-text color="danger">-->
+      @if (required) {
+        <span>*</span>
+      }
+      <!--    </ion-text> </ion-label-->
+      ><br />
+      <smart-button [options]="addButtonOptions">{{
+        (control.value ? 'change' : 'add') | translate
+      }}</smart-button>
+      <input
+        type="file"
+        #inputObj
+        (change)="changeListener($event)"
+        [hidden]="true"
+        [attr.accept]="fieldOptions?.possibilities"
+        [attr.autofocus]="fieldOptions?.focused"
+      />
+      {{ control.value?.name }}
+    }
+  `,
+  imports: [ButtonComponent, ModelLabelPipe, AsyncPipe, TranslatePipe],
   styleUrls: ['./file.component.scss'],
 })
 export class InputFileComponent<T> extends InputBaseComponent<T> {

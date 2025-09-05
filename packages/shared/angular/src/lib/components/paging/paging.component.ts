@@ -6,7 +6,6 @@ import {
   InputSignal,
   Output,
 } from '@angular/core';
-import { IonButton, IonCol, IonGrid, IonRow } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
@@ -46,7 +45,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [IonGrid, IonRow, IonCol, IonButton, TranslatePipe],
+  imports: [TranslatePipe],
 })
 export class PagingComponent {
   readonly page: InputSignal<number | null> = input<number | null>(null);

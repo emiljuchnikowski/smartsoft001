@@ -1,15 +1,5 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
-import {
-  IonButton,
-  IonCard,
-  IonCol,
-  IonIcon,
-  IonImg,
-  IonLabel,
-  IonRow,
-  IonText,
-} from '@ionic/angular/standalone';
 
 import { ModelLabelPipe } from '../../../pipes';
 import { InputBaseComponent } from '../base/base.component';
@@ -18,18 +8,7 @@ import { InputBaseComponent } from '../base/base.component';
   selector: 'smart-input-logo',
   templateUrl: './logo.component.html',
   styleUrls: ['./logo.component.scss'],
-  imports: [
-    IonLabel,
-    IonText,
-    IonRow,
-    IonCol,
-    IonCard,
-    IonImg,
-    IonButton,
-    IonIcon,
-    ModelLabelPipe,
-    AsyncPipe,
-  ],
+  imports: [ModelLabelPipe, AsyncPipe],
 })
 export class InputLogoComponent<T> extends InputBaseComponent<T> {
   constructor(cd: ChangeDetectorRef) {

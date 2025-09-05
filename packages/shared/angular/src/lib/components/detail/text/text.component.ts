@@ -17,6 +17,5 @@ import { DetailBaseComponent } from '../base/base.component';
     }
   `,
   imports: [ListCellPipe, TrustHtmlPipe],
-  styleUrls: ['./text.component.scss'],
 })
 export class DetailTextComponent<T> extends DetailBaseComponent<T> {}

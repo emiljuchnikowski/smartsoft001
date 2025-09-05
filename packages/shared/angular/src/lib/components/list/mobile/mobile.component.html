@@ -17,7 +17,7 @@
       <!--          </ion-item-options>-->
     }
 
-    <!--        <ion-item (click)="itemHandler ? itemHandler(item.id) : unselect()">-->
+    <!--        <ion-item class="pl-5" (click)="itemHandler ? itemHandler(item.id) : unselect()">-->
     <!--          <ion-label>-->
     @for (key of keys; track key) {
       @let cell = item | smartListCell: key : cellPipe : type;

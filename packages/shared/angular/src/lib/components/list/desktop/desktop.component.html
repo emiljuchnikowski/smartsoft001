@@ -1,26 +1,22 @@
 <div #topTpl></div>
 
 <!--<ion-content>-->
-<div style="width: 100%; overflow-y: auto">
+<div class="w-full overflow-y-auto">
   <table
     cdk-table
     matSort
     [dataSource]="list() ?? []"
     recycleRows
     [trackBy]="myTrackById"
-    style="overflow-y: auto"
+    class="w-full overflow-y-auto"
   >
     @for (key of desktopKeys; track key) {
       @let last = $last;
-      <ng-container
-        matColumnDef="{{ key }}"
-        class="col-sm"
-        style="text-align: left"
-      >
+      <ng-container matColumnDef="{{ key }}" class="col-sm text-left">
         <div>
           @switch (key) {
             @case ('selectMulti') {
-              <th cdk-header-cell class="cell-details" *matHeaderCellDef></th>
+              <th cdk-header-cell class="w-5" *matHeaderCellDef></th>
               <td cdk-cell *matCellDef="let element">
                 @let list = desktopList();
                 @if (list) {
@@ -38,7 +34,7 @@
               </td>
             }
             @case ('removeAction') {
-              <th cdk-header-cell class="cell-details" *matHeaderCellDef>
+              <th cdk-header-cell class="w-5" *matHeaderCellDef>
                 <ng-container *ngTemplateOutlet="pagination"></ng-container>
               </th>
               <td cdk-cell *matCellDef="let element">
@@ -50,7 +46,7 @@
               </td>
             }
             @case ('detailsAction') {
-              <th cdk-header-cell class="cell-details" *matHeaderCellDef>
+              <th cdk-header-cell class="w-5" *matHeaderCellDef>
                 <ng-container *ngTemplateOutlet="pagination"></ng-container>
               </th>
               <td cdk-cell *matCellDef="let element">
@@ -71,7 +67,7 @@
               </td>
             }
             @case ('itemAction') {
-              <th cdk-header-cell class="cell-details" *matHeaderCellDef>
+              <th cdk-header-cell class="w-5" *matHeaderCellDef>
                 <ng-container *ngTemplateOutlet="pagination"></ng-container>
               </th>
               <td cdk-cell *matCellDef="let element">
@@ -107,7 +103,10 @@
                         src=""
                       />
                     } @else {
-                      <div class="cell-html" [innerHTML]="cell.value"></div>
+                      <div
+                        class="min-h-8 pt-1.5"
+                        [innerHTML]="cell.value"
+                      ></div>
                     }
                   </td>
                 } @else {

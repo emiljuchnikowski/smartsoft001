@@ -11,7 +11,6 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { UntypedFormArray } from '@angular/forms';
-import { IonItem } from '@ionic/angular/standalone';
 import * as _ from 'lodash';
 
 import {
@@ -61,9 +60,15 @@ import { InputVideoComponent } from './video/video.component';
 @Component({
   selector: 'smart-input',
   templateUrl: './input.component.html',
-  styleUrls: ['./input.component.scss'],
+  styles: [
+    `
+      .container-right {
+        top: 15%;
+        z-index: 666;
+      }
+    `,
+  ],
   imports: [
-    IonItem,
     InfoComponent,
     LoaderComponent,
     InputCurrencyComponent,

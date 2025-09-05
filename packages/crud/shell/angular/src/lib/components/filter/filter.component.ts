@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { IonItem } from '@ionic/angular/standalone';
 
 import { FieldType, IModelFilter } from '@smartsoft001/models';
 
@@ -16,7 +15,6 @@ import { FilterTextComponent } from './text/text.component';
 @Component({
   selector: 'smart-crud-filter',
   templateUrl: './filter.component.html',
-  styleUrls: ['./filter.component.scss'],
   imports: [
     FilterTextComponent,
     FilterIntComponent,
@@ -26,7 +24,6 @@ import { FilterTextComponent } from './text/text.component';
     FilterDateTimeComponent,
     FilterDateWithEditComponent,
     FilterDateComponent,
-    IonItem,
   ],
 })
 export class FilterComponent {

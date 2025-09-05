@@ -29,7 +29,13 @@ import { DetailBaseComponent } from '../base/base.component';
       }
     }
   `,
-  styleUrls: ['./array.component.scss'],
+  styles: [
+    `
+      :host {
+        width: 100%;
+      }
+    `,
+  ],
   imports: [NgComponentOutlet, DynamicIoDirective],
 })
 export class DetailArrayComponent<

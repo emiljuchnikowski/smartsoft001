@@ -1,13 +1,5 @@
 import { NgComponentOutlet } from '@angular/common';
 import { Component, computed, OnInit, Signal } from '@angular/core';
-import {
-  IonButton,
-  IonButtons,
-  IonHeader,
-  IonIcon,
-  IonTitle,
-  IonToolbar,
-} from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
 import * as _ from 'lodash';
 import { DynamicIoDirective } from 'ng-dynamic-component';
@@ -32,12 +24,6 @@ import { FormOptionsPipe } from '../../pipes';
   selector: 'smart-crud-multiselect',
   templateUrl: './multiselect.component.html',
   imports: [
-    IonHeader,
-    IonToolbar,
-    IonButtons,
-    IonButton,
-    IonIcon,
-    IonTitle,
     TranslatePipe,
     NgComponentOutlet,
     DynamicIoDirective,

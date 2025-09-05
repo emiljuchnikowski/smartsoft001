@@ -9,14 +9,31 @@ import {
   AfterViewInit,
   Input,
 } from '@angular/core';
-import { IonButton, IonIcon } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'smart-import',
-  templateUrl: './import.component.html',
-  styleUrls: ['./import.component.scss'],
+  template: `
+    <!--<ion-button title="import" (click)="onClick()" slot="icon-only">-->
+    <!--  <ion-icon name="cloud-upload"></ion-icon>-->
+    <!--</ion-button>-->
+    <input
+      type="file"
+      [accept]="accept ? accept : 'application/json'"
+      [hidden]="true"
+      #inputObj
+    />
+  `,
+  styles: [
+    `
+      :host {
+        cursor: pointer;
+        font-size: 3rem;
+        height: 3rem;
+        margin: 10px;
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [IonButton, IonIcon],
 })
 export class ImportComponent implements AfterViewInit {
   @Input() accept = 'application/json';

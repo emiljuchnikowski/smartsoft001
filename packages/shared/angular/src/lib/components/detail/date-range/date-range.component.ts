@@ -15,7 +15,6 @@ import { DetailBaseComponent } from '../base/base.component';
       </p>
     }
   `,
-  styleUrls: ['./date-range.component.scss'],
 })
 export class DetailDateRangeComponent<
   T extends { [key: string]: any },

@@ -5,23 +5,37 @@ import {
   Component,
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { IonInput, IonLabel, IonText } from '@ionic/angular/standalone';
 
 import { ModelLabelPipe } from '../../../pipes';
 import { InputBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-input-float',
-  templateUrl: './float.component.html',
+  template: `
+    @if (control) {
+      <!--  <ion-label position="floating">-->
+      {{
+        control?.parent?.value
+          | smartModelLabel
+            : internalOptions.fieldKey
+            : internalOptions?.model?.constructor
+          | async
+      }}
+      <!--    <ion-text color="danger">-->
+      @if (required) {
+        <span>*</span>
+      }
+      <!--    </ion-text>-->
+      <!--  </ion-label>-->
+      <!--  <ion-input-->
+      <!--    [formControl]="formControl"-->
+      <!--    type="number"-->
+      <!--    [attr.autofocus]="fieldOptions?.focused"-->
+      <!--  ></ion-input>-->
+    }
+  `,
   styleUrls: ['./float.component.scss'],
-  imports: [
-    IonInput,
-    IonText,
-    IonLabel,
-    ModelLabelPipe,
-    AsyncPipe,
-    ReactiveFormsModule,
-  ],
+  imports: [ModelLabelPipe, AsyncPipe, ReactiveFormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputFloatComponent<T> extends InputBaseComponent<T> {

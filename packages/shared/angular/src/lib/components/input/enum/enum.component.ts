@@ -1,11 +1,5 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
-import {
-  IonCheckbox,
-  IonItem,
-  IonLabel,
-  IonText,
-} from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { EnumToListPipe, ModelLabelPipe } from '../../../pipes';
@@ -13,17 +7,42 @@ import { InputBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-input-enum',
-  templateUrl: './enum.component.html',
-  imports: [
-    IonLabel,
-    IonText,
-    ModelLabelPipe,
-    AsyncPipe,
-    IonItem,
-    IonCheckbox,
-    TranslatePipe,
-    EnumToListPipe,
-  ],
+  template: `
+    <!--<ion-label class="main-label">-->
+    {{
+      control?.parent?.value
+        | smartModelLabel
+          : internalOptions.fieldKey
+          : internalOptions?.model?.constructor
+        | async
+    }}
+    <!--  <ion-text color="danger">-->
+    @if (required) {
+      <span>*</span>
+    }
+    <!--  </ion-text>-->
+    <!--</ion-label>-->
+
+    @for (item of fieldOptions?.possibilities | smartEnumToList; track item) {
+      <!--  <ion-item lines="none">-->
+      <!--    <ion-label class="checkbox-label">{{ item | translate }}</ion-label>-->
+      @if (checked(item)) {
+        <!--      <ion-checkbox-->
+        <!--        slot="end"-->
+        <!--        [checked]="true"-->
+        <!--        (ionChange)="change(item)"-->
+        <!--      ></ion-checkbox>-->
+      } @else {
+        <!--      <ion-checkbox-->
+        <!--        slot="end"-->
+        <!--        [checked]="false"-->
+        <!--        (ionChange)="change(item)"-->
+        <!--      ></ion-checkbox>-->
+      }
+      <!--  </ion-item>-->
+    }
+  `,
+  imports: [ModelLabelPipe, AsyncPipe, TranslatePipe, EnumToListPipe],
   styleUrls: ['./enum.component.scss'],
 })
 export class InputEnumComponent<T> extends InputBaseComponent<T> {

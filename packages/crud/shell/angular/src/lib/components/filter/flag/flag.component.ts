@@ -1,13 +1,5 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import {
-  IonButton,
-  IonCheckbox,
-  IonCol,
-  IonIcon,
-  IonLabel,
-  IonRow,
-} from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { IEntity } from '@smartsoft001/domain-core';
@@ -19,8 +11,10 @@ import { BaseComponent } from '../base/base.component';
   template: `
     <!--    <ion-row>-->
     <!--      <ion-col>-->
-    <div class="flag-container">
-      <!--          <ion-label position="static">-->
+    <div
+      class="flag-container w-full flex flex-row flex-nowrap justify-between pr-5"
+    >
+      <!--          <ion-label class="align-middle my-6" position="static">-->
       {{ item().label | translate }}
       <!--          </ion-label>-->
       <!--          <ion-checkbox [(ngModel)]="value" slot="end"></ion-checkbox>-->
@@ -31,7 +25,7 @@ import { BaseComponent } from '../base/base.component';
       <!--          <ion-button-->
       <!--            color="danger"-->
       <!--            (click)="refresh(null)"-->
-      <!--            class="square-button"-->
+      <!--            class="square-button m-3"-->
       <!--          >-->
       <!--            <ion-icon slot="icon-only" name="close-outline"></ion-icon>-->
       <!--          </ion-button>-->
@@ -39,17 +33,22 @@ import { BaseComponent } from '../base/base.component';
     }
     <!--    </ion-row>-->
   `,
-  imports: [
-    IonRow,
-    IonCol,
-    IonLabel,
-    TranslatePipe,
-    IonCheckbox,
-    IonButton,
-    IonIcon,
-    FormsModule,
+  imports: [TranslatePipe, FormsModule],
+  styles: [
+    `
+      :host {
+        width: 100%;
+        .flag-container {
+          ion-label {
+            /*--color: var(--smart-color-dark);*/
+          }
+        }
+        .square-button {
+          height: var(--smart-button-height) !important;
+        }
+      }
+    `,
   ],
-  styleUrls: ['./flag.component.scss'],
 })
 export class FilterFlagComponent<
   T extends IEntity<string>,

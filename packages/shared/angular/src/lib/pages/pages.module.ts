@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
 
 import { SharedServicesModule } from '../services/services.module';
 import { DetailsPage } from './details/details.page';
@@ -10,7 +9,6 @@ const COMPONENTS = [DetailsPage];
 
 @NgModule({
   imports: [
-    IonicModule,
     SharedServicesModule,
     SharedComponentsModule,
     SharedDirectivesModule,

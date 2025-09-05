@@ -20,7 +20,6 @@ import { DetailBaseComponent } from '../base/base.component';
       </p>
     }
   `,
-  styleUrls: ['./address.component.scss'],
 })
 export class DetailAddressComponent<
   T extends { [key: string]: any },

@@ -1,15 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonDatetime } from '@ionic/angular';
-import {
-  IonButton,
-  IonCol,
-  IonIcon,
-  IonInput,
-  IonItem,
-  IonLabel,
-  IonRow,
-} from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
@@ -21,18 +11,17 @@ import { FilterDateComponent } from '../date/date.component';
 @Component({
   selector: 'smart-crud-filter-date-time',
   templateUrl: './date-time.component.html',
-  imports: [
-    IonRow,
-    IonCol,
-    IonLabel,
-    TranslatePipe,
-    IonButton,
-    IonIcon,
-    IonItem,
-    IonInput,
-    FormsModule,
+  imports: [TranslatePipe, FormsModule],
+  styles: [
+    `
+      :host {
+        width: 100%;
+        .square-button {
+          height: var(--smart-button-height) !important;
+        }
+      }
+    `,
   ],
-  styleUrls: ['./date-time.component.scss'],
 })
 export class FilterDateTimeComponent<T extends IEntity<string>>
   extends FilterDateComponent<T>
@@ -42,21 +31,21 @@ export class FilterDateTimeComponent<T extends IEntity<string>>
 
   id = GuidService.create();
 
-  @ViewChild(IonDatetime, { read: IonDatetime, static: false })
-  dateTimePicker: IonDatetime;
+  // @ViewChild(IonDatetime, { read: IonDatetime, static: false })
+  // dateTimePicker: IonDatetime;
 
   ngOnInit(): void {
     super.ngOnInit();
 
-    if (this.dateTimePicker) {
-      this._subscriptions.add(
-        this.dateTimePicker.ionChange.subscribe((val: CustomEvent) => {
-          this.customValue = val.detail.value;
-        }),
-      );
-    } else {
-      console.error('dateTimePicker not found!');
-    }
+    // if (this.dateTimePicker) {
+    //   this._subscriptions.add(
+    //     this.dateTimePicker.ionChange.subscribe((val: CustomEvent) => {
+    //       this.customValue = val.detail.value;
+    //     }),
+    //   );
+    // } else {
+    //   console.error('dateTimePicker not found!');
+    // }
   }
 
   ngOnDestroy(): void {

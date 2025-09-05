@@ -1,14 +1,5 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, input, InputSignal } from '@angular/core';
-import {
-  IonButton,
-  IonButtons,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardTitle,
-  IonIcon,
-} from '@ionic/angular/standalone';
 
 import { ICardOptions } from '../../models';
 
@@ -42,16 +33,7 @@ import { ICardOptions } from '../../models';
     <!--      </ion-card-content>-->
     <!--    </ion-card>-->
   `,
-  imports: [
-    IonCard,
-    IonCardHeader,
-    IonCardTitle,
-    IonButtons,
-    IonButton,
-    IonIcon,
-    IonCardContent,
-    AsyncPipe,
-  ],
+  imports: [AsyncPipe],
   styleUrls: ['./card.component.scss'],
 })
 export class CardComponent {

@@ -103,7 +103,7 @@
     "@nestjs/swagger": "^11.2.0",
     "@nestjs/typeorm": "^11.0.0",
     "@ngx-translate/core": "^16.0.4",
-    "@ngrx/signals": "~19.2.0",
+    "@ngrx/signals": "20.0.1",
     "@nx/devkit": "21.3.11",
     "busboy": "^1.6.0",
     "class-validator": "^0.14.1",

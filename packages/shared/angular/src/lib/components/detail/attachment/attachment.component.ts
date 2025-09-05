@@ -19,7 +19,6 @@ import { DetailBaseComponent } from '../base/base.component';
     }
   `,
   imports: [ButtonComponent, TranslatePipe],
-  styleUrls: ['./attachment.component.scss'],
 })
 export class DetailAttachmentComponent<
   T extends IEntity<string>,

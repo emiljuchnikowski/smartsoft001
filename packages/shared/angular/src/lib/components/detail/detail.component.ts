@@ -5,7 +5,6 @@ import {
   input,
   InputSignal,
 } from '@angular/core';
-import { IonItem, IonLabel, IonSkeletonText } from '@ionic/angular/standalone';
 
 import { IEntity } from '@smartsoft001/domain-core';
 import { FieldType } from '@smartsoft001/models';
@@ -34,8 +33,6 @@ import { DetailVideoComponent } from './video/video.component';
   templateUrl: './detail.component.html',
   styleUrls: ['./detail.component.scss'],
   imports: [
-    IonItem,
-    IonLabel,
     DetailEmailComponent,
     DetailFlagComponent,
     DetailEnumComponent,
@@ -53,7 +50,6 @@ import { DetailVideoComponent } from './video/video.component';
     DetailTextComponent,
     ModelLabelPipe,
     InfoComponent,
-    IonSkeletonText,
     NgTemplateOutlet,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,

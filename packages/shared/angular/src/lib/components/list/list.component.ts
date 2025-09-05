@@ -14,7 +14,6 @@ import {
   ViewEncapsulation,
   WritableSignal,
 } from '@angular/core';
-import { IonCol, IonRow } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
 import * as _ from 'lodash';
 
@@ -37,14 +36,12 @@ import { ListMobileComponent } from './mobile/mobile.component';
 @Component({
   selector: 'smart-list',
   templateUrl: './list.component.html',
-  styleUrls: ['./list.component.scss', '../../styles/global.scss'],
+  styleUrls: ['../../styles/global.scss'],
   encapsulation: ViewEncapsulation.None,
   imports: [
     ListDesktopComponent,
     ListMobileComponent,
     ListMasonryGridComponent,
-    IonRow,
-    IonCol,
     TranslatePipe,
     NgTemplateOutlet,
     LoaderComponent,

@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { ToastController } from '@ionic/angular';
 
 @Injectable()
 export class ToastService {
   static lockError = 0;
 
-  constructor(private toastCtrl: ToastController) {}
+  // constructor(private toastCtrl: ToastController) {}
 
   addLockError(): void {
     ++ToastService.lockError;
@@ -18,44 +17,44 @@ export class ToastService {
   async error(config: IToastOptions): Promise<void> {
     if (ToastService.lockError) return;
 
-    const toast = await this.toastCtrl.create({
-      position: 'bottom',
-      header: config.title,
-      message: config.message,
-      duration: config.duration ? config.duration : 2000,
-      buttons: config.buttons
-        ? config.buttons.map((b) => {
-            return {
-              text: b.text,
-              side: b.position,
-              role: 'cancel',
-              handler: b.handler,
-            };
-          })
-        : undefined,
-    });
-
-    await toast.present();
+    // const toast = await this.toastCtrl.create({
+    //   position: 'bottom',
+    //   header: config.title,
+    //   message: config.message,
+    //   duration: config.duration ? config.duration : 2000,
+    //   buttons: config.buttons
+    //     ? config.buttons.map((b) => {
+    //         return {
+    //           text: b.text,
+    //           side: b.position,
+    //           role: 'cancel',
+    //           handler: b.handler,
+    //         };
+    //       })
+    //     : undefined,
+    // });
+    //
+    // await toast.present();
   }
 
   async info(config: IToastOptions): Promise<void> {
-    const toast = await this.toastCtrl.create({
-      position: 'bottom',
-      header: config.title,
-      message: config.message,
-      duration: config.duration ? config.duration : 2000,
-      buttons: config.buttons
-        ? config.buttons.map((b) => {
-            return {
-              text: b.text,
-              side: b.position,
-              handler: b.handler,
-            };
-          })
-        : undefined,
-    });
-
-    await toast.present();
+    // const toast = await this.toastCtrl.create({
+    //   position: 'bottom',
+    //   header: config.title,
+    //   message: config.message,
+    //   duration: config.duration ? config.duration : 2000,
+    //   buttons: config.buttons
+    //     ? config.buttons.map((b) => {
+    //         return {
+    //           text: b.text,
+    //           side: b.position,
+    //           handler: b.handler,
+    //         };
+    //       })
+    //     : undefined,
+    // });
+    //
+    // await toast.present();
   }
 }
 

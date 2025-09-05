@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { CookieModule } from 'ngx-cookie';
 
@@ -17,11 +16,7 @@ import { ToastService } from './toast/toast.service';
 import { UIService } from './ui/ui.service';
 
 @NgModule({
-  imports: [
-    IonicModule,
-    TranslateModule.forChild(),
-    CookieModule.withOptions(),
-  ],
+  imports: [TranslateModule.forChild(), CookieModule.withOptions()],
   providers: [
     ToastService,
     HardwareService,

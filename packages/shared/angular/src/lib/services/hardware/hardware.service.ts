@@ -1,23 +1,25 @@
 import { Injectable } from '@angular/core';
-import { App } from '@capacitor/app';
-import { PluginListenerHandle } from '@capacitor/core';
-import { Platform } from '@ionic/angular';
 
 @Injectable()
 export class HardwareService {
   get isMobile(): boolean {
-    return this.platform.is('capacitor');
+    // return this.platform.is('capacitor');
+    return false;
   }
 
   get isMobileWeb(): boolean {
-    return this.platform.is('mobileweb');
+    // return this.platform.is('mobileweb');
+    return false;
   }
 
-  constructor(private platform: Platform) {}
+  // constructor(private platform: Platform) {}
 
-  onBackButtonClick(callback: () => void): Promise<PluginListenerHandle> {
-    return App.addListener('backButton', () => {
+  async onBackButtonClick(
+    callback: () => void,
+  ): Promise</*PluginListenerHandle*/ any> {
+    /*App.addListener('backButton', () => {
       callback();
-    });
+    })*/
+    return {} as any;
   }
 }

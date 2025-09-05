@@ -6,7 +6,6 @@ import {
   signal,
   WritableSignal,
 } from '@angular/core';
-import { IonIcon, IonItem } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'smart-accordion',
@@ -14,9 +13,10 @@ import { IonIcon, IonItem } from '@ionic/angular/standalone';
     <!--    <ion-item (click)="show = !show">-->
     <ng-content select="smart-accordion-header"></ng-content>
     @if (show) {
-      <!--        <ion-icon name="caret-up-outline" slot="end"></ion-icon>-->
+      <!--      TODO: extend tailwind classes to have mr-6.5 = margin-right: 1.6rem-1.625rem-->
+      <!--        <ion-icon class="mr-6.5" name="caret-up-outline" slot="end"></ion-icon>-->
     } @else {
-      <!--        <ion-icon name="caret-down-outline" slot="end"></ion-icon>-->
+      <!--        <ion-icon class="mr-6.5" name="caret-down-outline" slot="end"></ion-icon>-->
     }
     <!--    </ion-item>-->
 
@@ -24,14 +24,6 @@ import { IonIcon, IonItem } from '@ionic/angular/standalone';
       <ng-content select="smart-accordion-body"></ng-content>
     }
   `,
-  imports: [IonItem, IonIcon],
-  styles: [
-    `
-      ion-icon {
-        margin-right: 1.6rem;
-      }
-    `,
-  ],
 })
 export class AccordionComponent {
   private _show: WritableSignal<boolean> = signal<boolean>(false);
