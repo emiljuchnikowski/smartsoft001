@@ -10,12 +10,12 @@ import { DetailBaseComponent } from '../base/base.component';
     <!--      <ion-col size="auto">-->
     <!--<ion-chip>-->48<!--</ion-chip>-->
     <!--      </ion-col>-->
-    @let item = options?.item();
+    @let item = options()?.item?.();
     @if (item) {
       <!--        <ion-col>-->
       <p class="mt-3">
         @let value =
-          (item | smartListCell: options?.key : options.cellPipe)?.value;
+          (item | smartListCell: options()?.key : options()?.cellPipe)?.value;
         @if (value) {
           <a [innerHTML]="value" [href]="value ? 'tel:48' + value : ''"></a>
         }

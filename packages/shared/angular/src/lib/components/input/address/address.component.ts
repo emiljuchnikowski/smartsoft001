@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -12,8 +12,4 @@ import { InputBaseComponent } from '../base/base.component';
   styleUrls: ['./address.component.scss'],
   imports: [TranslatePipe, ReactiveFormsModule, ModelLabelPipe, AsyncPipe],
 })
-export class InputAddressComponent<T> extends InputBaseComponent<T> {
-  constructor(cd: ChangeDetectorRef) {
-    super(cd);
-  }
-}
+export class InputAddressComponent<T> extends InputBaseComponent<T> {}

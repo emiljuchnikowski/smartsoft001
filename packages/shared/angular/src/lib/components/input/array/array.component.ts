@@ -1,6 +1,6 @@
-import { CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { AsyncPipe, NgComponentOutlet } from '@angular/common';
-import { ChangeDetectorRef, Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { UntypedFormArray } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DynamicIoDirective } from 'ng-dynamic-component';
@@ -33,7 +33,6 @@ import { InputBaseComponent } from '../base/base.component';
   imports: [
     ModelLabelPipe,
     AsyncPipe,
-    CdkDropList,
     ButtonComponent,
     TranslatePipe,
     NgComponentOutlet,
@@ -41,17 +40,19 @@ import { InputBaseComponent } from '../base/base.component';
     AccordionComponent,
     AccordionHeaderComponent,
     AccordionBodyComponent,
-    CdkDrag,
   ],
 })
 export class InputArrayComponent<T, TChild> extends InputBaseComponent<T> {
   childOptions!: Array<IFormOptions<TChild>>;
+  public formComponent = inject(FORM_COMPONENT_TOKEN);
+  private factory = inject(FormFactory);
+
   addButtonOptions: IButtonOptions = {
     click: async () => {
       const options = this.getOptions();
       const modelOptions = getModelOptions(options.classType);
-      const control = await this.factory.create(
-        new this.fieldOptions!.classType(),
+      const control = await this.factory.create<IFieldOptions>(
+        new (this.fieldOptions() as any).classType(),
         {
           mode: this.internalOptions.mode,
           root: this.internalOptions.control.root,
@@ -76,14 +77,6 @@ export class InputArrayComponent<T, TChild> extends InputBaseComponent<T> {
   };
 
   FieldType = FieldType;
-
-  constructor(
-    cd: ChangeDetectorRef,
-    private factory: FormFactory,
-    @Inject(FORM_COMPONENT_TOKEN) public formComponent: any,
-  ) {
-    super(cd);
-  }
 
   protected override afterSetOptionsHandler() {
     this.initData();

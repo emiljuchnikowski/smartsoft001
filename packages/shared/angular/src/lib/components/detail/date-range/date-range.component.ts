@@ -5,10 +5,11 @@ import { DetailBaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-detail-date-range',
   template: `
-    @let item = options?.item();
-    @if (item && options?.key) {
+    @let item = options()?.item?.();
+    @let key = options()?.key;
+    @if (item && key) {
       <p>
-        @let range = item[options.key!];
+        @let range = item[key];
         @if (range) {
           <ng-container>{{ range.start }} - {{ range.end }}</ng-container>
         }
@@ -17,5 +18,5 @@ import { DetailBaseComponent } from '../base/base.component';
   `,
 })
 export class DetailDateRangeComponent<
-  T extends { [key: string]: any },
+  T extends { [key: string]: any } | undefined,
 > extends DetailBaseComponent<T> {}

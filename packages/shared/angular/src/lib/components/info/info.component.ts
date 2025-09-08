@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input} from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
@@ -24,9 +24,9 @@ import { TranslatePipe } from '@ngx-translate/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InfoComponent {
-  @Input() text!: string;
+  // private popoverCtrl: PopoverController TODO: to be rewritten
 
-  // constructor(private popoverCtrl: PopoverController) {}
+  text = input.required<string>();
 
   async onClick(ev: any): Promise<void> {
     // const popover = await this.popoverCtrl.create({

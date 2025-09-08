@@ -1,24 +1,19 @@
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component,
-  ComponentFactoryResolver,
+  Component, effect,
   ElementRef,
-  EventEmitter,
-  Inject,
-  Input,
-  NgModuleRef,
+  inject,
+  input,
   OnDestroy,
-  Optional,
-  Output,
-  QueryList,
+  output,
+  Signal,
   TemplateRef,
-  Type,
-  ViewChild,
-  ViewChildren,
-  ViewContainerRef,
+  Type, viewChild,
+  viewChildren,
+  ViewContainerRef
 } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
@@ -30,8 +25,8 @@ import { ObjectService } from '@smartsoft001/utils';
 
 import { FormFactory } from '../../factories';
 import { IFormOptions } from '../../models';
-import { IModelExportProvider, MODEL_EXPORT_PROVIDER } from '../../providers';
-import { IModelImportProvider, MODEL_IMPORT_PROVIDER } from '../../providers';
+import { MODEL_EXPORT_PROVIDER } from '../../providers';
+import { MODEL_IMPORT_PROVIDER } from '../../providers';
 import { SmartFormGroup } from '../../services';
 import { CreateDynamicComponent } from '../base';
 import { FormBaseComponent } from './base/base.component';
@@ -48,7 +43,7 @@ import { FormStepperComponent } from './stepper/stepper.component';
       <div style="text-align: right">
         @if (export) {
           <smart-export
-            [value]="options?.control?.value"
+            [value]="options()?.control?.value"
             [handler]="exportHandler"
           ></smart-export>
         }
@@ -67,17 +62,17 @@ import { FormStepperComponent } from './stepper/stepper.component';
         (keyup.enter)="invokeSubmit.emit(form.value)"
       >
         @if (template() === 'default') {
-          @if (options && type === 'standard') {
+          @if (options() && type === 'standard') {
             <smart-form-standard
-              [options]="options"
+              [options]="options()"
               [form]="form"
               (invokeSubmit)="invokeSubmit.emit($event)"
             ></smart-form-standard>
           }
 
-          @if (options && type === 'stepper') {
+          @if (options() && type === 'stepper') {
             <smart-form-stepper
-              [options]="options"
+              [options]="options()"
               [form]="form"
               (invokeSubmit)="invokeSubmit.emit($event)"
             ></smart-form-stepper>
@@ -101,6 +96,12 @@ export class FormComponent<T>
   extends CreateDynamicComponent<FormBaseComponent<any>>('form')
   implements OnDestroy
 {
+  public exportProvider = inject(MODEL_EXPORT_PROVIDER, { optional: true });
+  public importProvider = inject(MODEL_IMPORT_PROVIDER, { optional: true });
+  private formFactory = inject(FormFactory);
+  private cd = inject(ChangeDetectorRef);
+  private elementRef = inject(ElementRef);
+
   private _options!: IFormOptions<T>;
   private _subscription = new Subscription();
   private _mode!: 'create' | 'update' | string;
@@ -111,96 +112,77 @@ export class FormComponent<T>
   export!: boolean;
   exportHandler!: (val: any) => void;
   import!: boolean;
-  importAccept!: string;
+  importAccept!: string | undefined;
 
-  @ViewChild('customTpl', { read: ViewContainerRef, static: false })
-  customTpl!: ViewContainerRef;
+  customTpl = viewChild<ViewContainerRef | undefined>(ViewContainerRef);
+  options = input.required<IFormOptions<T>>();
 
-  @Input() set options(val: IFormOptions<T>) {
-    if (!val) return;
+  invokeSubmit = output();
+  valueChange = output<T>();
+  valuePartialChange = output<Partial<T>>();
+  validChange = output<boolean>();
 
-    if (!val.treeLevel) val.treeLevel = 1;
-    (this.elementRef.nativeElement as HTMLElement).setAttribute(
-      'tree-level',
-      val.treeLevel.toString(),
-    );
+  override contentTpl = viewChild<TemplateRef<any>>('contentTpl');
+  override dynamicContents: Signal<readonly DynamicContentDirective[]> = viewChildren<DynamicContentDirective>(DynamicContentDirective);
 
-    this._options = val;
+  constructor() {
+    super();
 
-    this.initLoading();
-    this.initType();
+    effect(() => {
+      const options = this.options();
+      if (!options) return;
 
-    this.initExportImport();
+      if (!options.treeLevel) options.treeLevel = 1;
+      (this.elementRef.nativeElement as HTMLElement).setAttribute(
+        'tree-level',
+        options.treeLevel.toString(),
+      );
 
-    this._mode = val?.mode ?? 'create';
-    if (val?.uniqueProvider) {
-      this._uniqueProvider = val.uniqueProvider;
-    }
+      this._options = options;
 
-    if (val.control) {
-      this.form = val.control as SmartFormGroup;
-      this.registerChanges();
-      this.cd.detectChanges();
-    } else {
-      this.formFactory
-        .create(this._options.model, {
-          mode: this._mode,
-          uniqueProvider: this._uniqueProvider as (
-            values: Record<string, any>,
-          ) => Promise<boolean>,
-        })
-        .then((res) => {
-          this.form = res;
-          this.registerChanges();
-          this.cd.detectChanges();
-        });
-    }
+      this.initLoading();
+      this.initType();
+      this.initExportImport();
 
-    setTimeout(() => {
-      this.refreshDynamicInstance();
+      this._mode = options?.mode ?? 'create';
+      if (options?.uniqueProvider) {
+        this._uniqueProvider = options.uniqueProvider;
+      }
+
+      if (options.control) {
+        this.form = options.control as SmartFormGroup;
+        this.registerChanges();
+        this.cd.detectChanges();
+      } else {
+        this.formFactory
+          .create(this._options.model, {
+            mode: this._mode,
+            uniqueProvider: this._uniqueProvider as (
+              values: Record<string, any>,
+            ) => Promise<boolean>,
+          })
+          .then((res) => {
+            this.form = res;
+            this.registerChanges();
+            this.cd.detectChanges();
+          });
+      }
+
+      setTimeout(() => {
+        this.refreshDynamicInstance();
+      });
     });
   }
 
-  get options(): IFormOptions<T> {
-    return this._options;
-  }
-
-  @Output() invokeSubmit = new EventEmitter();
-  @Output() valueChange = new EventEmitter<T>();
-  @Output() valuePartialChange = new EventEmitter<Partial<T>>();
-  @Output() validChange = new EventEmitter<boolean>();
-
-  @ViewChild('contentTpl', { read: TemplateRef, static: false })
-  override contentTpl!: TemplateRef<any>;
-
-  @ViewChildren(DynamicContentDirective, { read: DynamicContentDirective })
-  override dynamicContents = new QueryList<DynamicContentDirective>();
-
-  constructor(
-    private formFactory: FormFactory,
-    private cd: ChangeDetectorRef,
-    private elementRef: ElementRef,
-    @Optional()
-    @Inject(MODEL_EXPORT_PROVIDER)
-    public exportProvider: IModelExportProvider,
-    @Optional()
-    @Inject(MODEL_IMPORT_PROVIDER)
-    public importProvider: IModelImportProvider,
-    private moduleRef: NgModuleRef<any>,
-    private componentFactoryResolver: ComponentFactoryResolver,
-  ) {
-    super(cd, moduleRef, componentFactoryResolver);
-  }
-
   async onSetValue(file: File): Promise<void> {
-    const result = await this.importProvider.convert(
+    const result = await this.importProvider?.convert(
       (this._options.model as any).constructor as Type<any>,
       file,
     );
 
     this._options.model = ObjectService.createByType(
       result,
-      (this.options.model as any).constructor,
+      (this.options().model as any).constructor,
     );
 
     this.formFactory
@@ -219,7 +201,7 @@ export class FormComponent<T>
 
   override refreshProperties(): void {
     this.baseInstance.options = this.options;
-    this.baseInstance.form = this.form;
+    this.baseInstance.form = input(this.form as UntypedFormGroup);
     this._subscription.add(
       this.baseInstance.invokeSubmit.subscribe((e) =>
         this.invokeSubmit.emit(e),
@@ -299,7 +281,7 @@ export class FormComponent<T>
     this.import = (modelOptions?.import ?? false) && !!this.importProvider;
 
     if (this.import) {
-      this.importAccept = await this.importProvider.getAccept(
+      this.importAccept = await this.importProvider?.getAccept(
         (this._options.model as any).constructor as Type<any>,
       );
       if (this.importProvider) this.cd.detectChanges();
@@ -307,7 +289,7 @@ export class FormComponent<T>
 
     if (this.export) {
       this.exportHandler = (val) => {
-        this.exportProvider.execute(
+        this.exportProvider?.execute(
           (this._options.model as any).constructor as Type<any>,
           val,
         );

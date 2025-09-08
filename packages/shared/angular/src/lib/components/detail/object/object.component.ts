@@ -1,11 +1,9 @@
 import { NgComponentOutlet } from '@angular/common';
 import {
-  ChangeDetectorRef,
   Component,
-  computed,
-  Inject,
+  computed, inject,
   signal,
-  Signal,
+  Signal
 } from '@angular/core';
 import { DynamicIoDirective } from 'ng-dynamic-component';
 
@@ -23,35 +21,35 @@ import { DetailBaseComponent } from '../base/base.component';
     @if (options) {
       <ng-template
         [ngComponentOutlet]="detailsComponent"
-        [ndcDynamicInputs]="{ options: options }"
+        [ndcDynamicInputs]="{ options }"
       ></ng-template>
     }
   `,
   imports: [NgComponentOutlet, DynamicIoDirective],
 })
 export class DetailObjectComponent<
-  T extends IEntity<string> & { [key: string]: any },
+  T extends IEntity<string> & { [key: string]: any } | undefined,
   TChild extends IEntity<string>,
 > extends DetailBaseComponent<T> {
+  public detailsComponent = inject(DETAILS_COMPONENT_TOKEN);
+
   childOptions!: Signal<IDetailsOptions<TChild> | null>;
 
-  constructor(
-    cd: ChangeDetectorRef,
-    @Inject(DETAILS_COMPONENT_TOKEN) public detailsComponent: any,
-  ) {
-    super(cd);
-  }
-
   protected override afterSetOptionsHandler() {
-    if (this.options?.item) {
+    const item = this.options()?.item?.();
+    if (item) {
       this.childOptions = computed(() => {
-        const item = this.options?.item?.();
         if (!item) return null;
 
-        return {
-          type: item[this.options.key].constructor as any,
-          item: signal(item[this.options.key] as TChild),
-        } as IDetailsOptions<TChild>;
+        const key = this.options()?.key;
+        if (key) {
+          return {
+            type: item[key].constructor as any,
+            item: signal(item[key] as TChild),
+          } as IDetailsOptions<TChild>;
+        }
+
+        return null;
       });
     }
   }

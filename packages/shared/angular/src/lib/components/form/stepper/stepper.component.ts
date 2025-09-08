@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
+  Component, inject
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
@@ -36,14 +35,9 @@ import { FormBaseComponent } from '../base/base.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormStepperComponent<T> extends FormBaseComponent<T> {
-  steps!: Array<IModelStep & { fields: Array<string>; form: UntypedFormGroup }>;
+  private fb = inject(UntypedFormBuilder);
 
-  constructor(
-    cd: ChangeDetectorRef,
-    private fb: UntypedFormBuilder,
-  ) {
-    super(cd);
-  }
+  steps!: Array<IModelStep & { fields: Array<string>; form: UntypedFormGroup }>;
 
   protected override afterSetOptions() {
     this.initSteps();
@@ -54,7 +48,7 @@ export class FormStepperComponent<T> extends FormBaseComponent<T> {
   }
 
   private initSteps(): void {
-    if (!this.model || !this.form) return;
+    if (!this.model || !this.form()) return;
 
     const fieldWithOptions = getModelFieldsWithOptions(this.model).filter(
       (fwo) => fwo.options.step,
@@ -81,11 +75,11 @@ export class FormStepperComponent<T> extends FormBaseComponent<T> {
       }
 
       step.fields.push(fwo.key);
-      step.form.addControl(fwo.key, this.form.controls[fwo.key]);
+      step.form.addControl(fwo.key, this.form().controls[fwo.key]);
 
       step.form.valueChanges.pipe(this.takeUntilDestroy).subscribe((value) => {
-        this.form.setValue({
-          ...this.form.value,
+        this.form().setValue({
+          ...this.form().value,
           ...value,
         });
       });
@@ -94,10 +88,10 @@ export class FormStepperComponent<T> extends FormBaseComponent<T> {
     this.steps = steps;
     this.cd.detectChanges();
 
-    this.form.updateValueAndValidity();
+    this.form().updateValueAndValidity();
   }
 
   public __smartDisabled(field: string) {
-    return (this.form.controls[field] as any)['__smartDisabled'];
+    return (this.form().controls[field] as any)['__smartDisabled'];
   }
 }

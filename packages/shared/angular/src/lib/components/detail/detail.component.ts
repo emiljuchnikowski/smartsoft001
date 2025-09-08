@@ -54,10 +54,10 @@ import { DetailVideoComponent } from './video/video.component';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DetailComponent<T extends IEntity<string>> {
+export class DetailComponent<T extends IEntity<string> | undefined> {
   FieldType = FieldType;
 
-  readonly options: InputSignal<IDetailOptions<T>> =
-    input.required<IDetailOptions<T>>();
+  readonly options: InputSignal<IDetailOptions<T> | undefined> =
+    input.required<IDetailOptions<T> | undefined>();
   readonly type: InputSignal<any> = input.required<any>();
 }

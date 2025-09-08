@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 
 import { IEntity } from '@smartsoft001/domain-core';
 
@@ -8,8 +8,8 @@ import { DetailBaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-detail-video',
   template: `
-    @let item = options?.item();
-    @if (item && options?.key) {
+    @let item = options()?.item?.();
+    @if (item && options()?.key) {
       <video style="width: 100%" controls controlsList="nodownload">
         <source type="video/mp4" [src]="getUrl(item)" />
         Your browser does not support the video tag.
@@ -18,16 +18,16 @@ import { DetailBaseComponent } from '../base/base.component';
   `,
 })
 export class DetailVideoComponent<
-  T extends IEntity<string>,
+  T extends IEntity<string> | undefined,
 > extends DetailBaseComponent<T> {
-  constructor(
-    cd: ChangeDetectorRef,
-    private fileService: FileService,
-  ) {
-    super(cd);
-  }
+  private fileService = inject(FileService);
 
-  getUrl(item: T): string {
-    return this.fileService.getUrl((item as any)[this.options.key].id);
+  getUrl(item: T): string | null {
+    const key = this.options()?.key;
+    if (key) {
+      return this.fileService.getUrl((item as any)[key].id);
+    }
+
+    return null;
   }
 }

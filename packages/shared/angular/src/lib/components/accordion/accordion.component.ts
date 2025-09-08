@@ -1,18 +1,11 @@
-import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  signal,
-  WritableSignal,
-} from '@angular/core';
+import { Component, model, ModelSignal } from '@angular/core';
 
 @Component({
   selector: 'smart-accordion',
   template: `
-    <!--    <ion-item (click)="show = !show">-->
+<!--        <ion-item (click)="update()">-->
     <ng-content select="smart-accordion-header"></ng-content>
-    @if (show) {
+    @if (show()) {
       <!--      TODO: extend tailwind classes to have mr-6.5 = margin-right: 1.6rem-1.625rem-->
       <!--        <ion-icon class="mr-6.5" name="caret-up-outline" slot="end"></ion-icon>-->
     } @else {
@@ -20,21 +13,15 @@ import {
     }
     <!--    </ion-item>-->
 
-    @if (show) {
+    @if (show()) {
       <ng-content select="smart-accordion-body"></ng-content>
     }
   `,
 })
 export class AccordionComponent {
-  private _show: WritableSignal<boolean> = signal<boolean>(false);
+  show: ModelSignal<boolean> = model<boolean>(false);
 
-  @Input() set show(val: boolean) {
-    this._show.set(val);
-    this.showChange.emit(this._show);
+  update() {
+    this.show.update(val => !val);
   }
-  get show(): boolean {
-    return this._show();
-  }
-
-  @Output() showChange = new EventEmitter();
 }

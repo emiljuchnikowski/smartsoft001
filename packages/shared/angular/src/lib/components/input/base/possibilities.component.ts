@@ -1,17 +1,13 @@
 import {
-  ChangeDetectorRef,
-  Directive,
-  Inject,
-  Optional,
+  Directive, inject,
   signal,
   Signal,
-  Type,
+  Type
 } from '@angular/core';
 import { debounceTime } from 'rxjs/operators';
 
 import { InputBaseComponent } from './base.component';
 import {
-  IModelPossibilitiesProvider,
   MODEL_POSSIBILITIES_PROVIDER,
 } from '../../../providers';
 
@@ -19,14 +15,7 @@ import {
 export abstract class InputPossibilitiesBaseComponent<
   T,
 > extends InputBaseComponent<T> {
-  protected constructor(
-    cd: ChangeDetectorRef,
-    @Optional()
-    @Inject(MODEL_POSSIBILITIES_PROVIDER)
-    private modelPossibilitiesProvider: IModelPossibilitiesProvider,
-  ) {
-    super(cd);
-  }
+  private modelPossibilitiesProvider = inject(MODEL_POSSIBILITIES_PROVIDER);
 
   protected override afterSetOptionsHandler() {
     const refreshPossibilities = () => {

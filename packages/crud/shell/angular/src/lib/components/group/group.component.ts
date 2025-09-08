@@ -1,6 +1,5 @@
 import { NgClass } from '@angular/common';
 import {
-  ChangeDetectorRef,
   Component,
   ElementRef,
   input,
@@ -28,7 +27,7 @@ import { CrudListGroupService } from '../../services/list-group/list-group.servi
   selector: 'smart-crud-group',
   template: `
     @for (item of groups(); track item.key) {
-      <smart-accordion [(show)]="item.show" (showChange)="change($event, item)">
+      <smart-accordion [show]="item.show" (showChange)="change($event, item)">
         <smart-accordion-header [ngClass]="{ 'font-bold': item.show }"
           >{{ item.text | translate }}
         </smart-accordion-header>
@@ -69,30 +68,21 @@ export class GroupComponent<T extends IEntity<string>>
   constructor(
     private styleService: StyleService,
     private elementRef: ElementRef,
-    private cd: ChangeDetectorRef,
     private groupService: CrudListGroupService<T>,
   ) {
     super();
   }
 
-  change(val, item: ICrudListGroup, force = false): void {
+  change(val: boolean, item: ICrudListGroup, force = false): void {
     this.groups()
       .filter((i) => i.value !== item.value || i.key !== item.key)
       .forEach((i) => {
         i.show = false;
       });
 
-    this.groupService.change(val, item, this.groups(), force);
+    this.groupService.change(val, item, force);
 
-    if (val) {
-      setTimeout(() => {
-        item.show = val;
-        this.cd.detectChanges();
-      });
-    } else {
-      item.show = val;
-      this.cd.detectChanges();
-    }
+    item.show = val;
   }
 
   ngOnInit(): void {

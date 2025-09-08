@@ -1,11 +1,9 @@
 import { NgComponentOutlet } from '@angular/common';
 import {
-  ChangeDetectorRef,
   Component,
-  computed,
-  Inject,
+  computed, inject,
   signal,
-  Signal,
+  Signal
 } from '@angular/core';
 import { DynamicIoDirective } from 'ng-dynamic-component';
 
@@ -39,25 +37,20 @@ import { DetailBaseComponent } from '../base/base.component';
   imports: [NgComponentOutlet, DynamicIoDirective],
 })
 export class DetailArrayComponent<
-  T extends { [key: string]: any },
+  T extends { [key: string]: any } | undefined,
   TChild extends IEntity<string>,
 > extends DetailBaseComponent<T> {
+  public detailsComponent = inject(DETAILS_COMPONENT_TOKEN);
   childOptions!: Signal<IDetailsOptions<TChild>[]>;
 
-  constructor(
-    cd: ChangeDetectorRef,
-    @Inject(DETAILS_COMPONENT_TOKEN) public detailsComponent: any,
-  ) {
-    super(cd);
-  }
-
   protected override afterSetOptionsHandler() {
-    if (this.options?.key) {
+    const key = this.options()?.key;
+    if (key) {
       this.childOptions = computed(() => {
-        const item = this.options?.item?.();
-        if (!item || !item[this.options.key]) return [];
+        const item = this.options()?.item?.();
+        if (!item || !item[key]) return [];
 
-        return item[this.options.key].map((val: any) => {
+        return item[key].map((val: any) => {
           return {
             type: val.constructor as any,
             item: signal(val as TChild),

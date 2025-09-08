@@ -8,7 +8,7 @@ import { FormBaseComponent } from '../base/base.component';
   template: `
     <!--<ion-list class="w-full m-0">-->
     @for (field of fields; track field) {
-      @if (form.controls[field] && !get__smartDisabled(field)) {
+      @if (form().controls[field] && !get__smartDisabled(field)) {
         <smart-input
           [options]="{
             treeLevel: treeLevel ?? 0,
@@ -29,6 +29,6 @@ import { FormBaseComponent } from '../base/base.component';
 })
 export class FormStandardComponent<T> extends FormBaseComponent<T> {
   get__smartDisabled(field: string) {
-    return (this.form.controls[field] as any)['__smartDisabled'];
+    return (this.form().controls[field] as any)['__smartDisabled'];
   }
 }

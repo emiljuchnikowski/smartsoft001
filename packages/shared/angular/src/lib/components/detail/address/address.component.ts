@@ -22,15 +22,16 @@ import { DetailBaseComponent } from '../base/base.component';
   `,
 })
 export class DetailAddressComponent<
-  T extends { [key: string]: any },
+  T extends { [key: string]: any } | undefined,
 > extends DetailBaseComponent<T> {
   thisAddress!: Signal<IAddress>;
 
   protected override afterSetOptionsHandler() {
-    if (this.options?.item && this.options?.key) {
+    const item = this.options()?.item?.();
+    const key = this.options()?.key;
+    if (item && key) {
       this.thisAddress = computed<IAddress>(() => {
-        const item = this.options?.item?.();
-        return item?.[this.options.key!] ?? null;
+        return item[key] ?? null;
       });
     }
   }

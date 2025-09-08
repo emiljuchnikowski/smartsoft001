@@ -1,17 +1,10 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
-  ComponentFactoryResolver,
-  Input,
-  NgModuleRef,
+  effect, input,
   OnDestroy,
-  QueryList,
-  signal,
-  TemplateRef,
-  ViewChild,
-  ViewChildren,
-  WritableSignal,
+  TemplateRef, viewChild,
+  viewChildren,
 } from '@angular/core';
 
 import { IEntity } from '@smartsoft001/domain-core';
@@ -27,7 +20,7 @@ import { DetailsStandardComponent } from './standard/standard.component';
   selector: 'smart-details',
   template: `
     @if (options && template() === 'default') {
-      <smart-details-standard [options]="options"></smart-details-standard>
+      <smart-details-standard [options]="options()"></smart-details-standard>
     }
     <div #customTpl></div>
   `,
@@ -38,39 +31,29 @@ export class DetailsComponent<T extends IEntity<string>>
   extends CreateDynamicComponent<DetailsBaseComponent<any>>('details')
   implements OnDestroy
 {
-  private _options: WritableSignal<IDetailsOptions<T> | null> = signal(null);
-
   item: T | null = null;
 
-  @Input() set options(val: IDetailsOptions<T>) {
-    this._options.set(val);
+  options = input<IDetailsOptions<T> | undefined>(undefined);
 
-    const item = this._options()?.item();
-    if (item) {
-      this.detailsService.setRoot(item);
-      this.item = item;
-    }
+  override contentTpl = viewChild<TemplateRef<any>>('contentTpl');
 
-    this.refreshDynamicInstance();
-  }
-
-  get options(): IDetailsOptions<T> | null {
-    return this._options();
-  }
-
-  @ViewChild('contentTpl', { read: TemplateRef, static: false })
-  override contentTpl: TemplateRef<any> | null = null;
-
-  @ViewChildren(DynamicContentDirective, { read: DynamicContentDirective })
-  override dynamicContents = new QueryList<DynamicContentDirective>();
+  override dynamicContents = viewChildren<DynamicContentDirective>(DynamicContentDirective);
 
   constructor(
-    cd: ChangeDetectorRef,
-    moduleRef: NgModuleRef<any>,
-    cfr: ComponentFactoryResolver,
     private detailsService: DetailsService,
   ) {
-    super(cd, moduleRef, cfr);
+    super();
+
+    effect(() => {
+      const options = this.options();
+      const item = options?.item();
+      if (item) {
+        this.detailsService.setRoot(item);
+        this.item = item;
+      }
+
+      this.refreshDynamicInstance();
+    });
   }
 
   override refreshProperties(): void {

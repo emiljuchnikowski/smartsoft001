@@ -2,15 +2,16 @@ import {
   ChangeDetectorRef,
   ComponentFactoryResolver,
   Directive,
-  DoCheck,
+  DoCheck, inject,
   NgModuleRef,
   OnDestroy,
-  QueryList,
+  Signal,
   signal,
   TemplateRef,
   ViewContainerRef,
-  WritableSignal,
+  WritableSignal
 } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { MonoTypeOperatorFunction, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -36,24 +37,24 @@ export interface IDynamicComponent<T> extends BaseComponent {
   baseInstance: T;
   template: WritableSignal<'custom' | 'default'>;
 
-  contentTpl: TemplateRef<any> | ViewContainerRef | null;
-  dynamicContents: QueryList<DynamicContentDirective>;
+  contentTpl: Signal<TemplateRef<any> | ViewContainerRef | undefined>;
+  dynamicContents: Signal<readonly DynamicContentDirective[]>;
 
   refreshProperties(): void;
   refreshDynamicInstance(): void;
 }
 
 export function CreateDynamicComponent<
-  T extends { contentTpl: TemplateRef<any> | ViewContainerRef | null } = any,
+  T extends { contentTpl: Signal<TemplateRef<any> | ViewContainerRef | undefined>} = any,
 >(
   type: DynamicComponentType,
-): new (
-  cd: ChangeDetectorRef,
-  moduleRef: NgModuleRef<any>,
-  componentFactoryResolver: ComponentFactoryResolver,
-) => IDynamicComponent<T> {
+): new () => IDynamicComponent<T> {
   @Directive()
   abstract class Component extends BaseComponent implements DoCheck {
+    private cd = inject(ChangeDetectorRef);
+    private moduleRef = inject(NgModuleRef<any>);
+    private componentFactoryResolver = inject(ComponentFactoryResolver);
+
     private _renderCustom = false;
     private _findDynamicContent = false;
 
@@ -62,16 +63,8 @@ export function CreateDynamicComponent<
     dynamicType: Readonly<DynamicComponentType> = type;
     template: WritableSignal<'custom' | 'default'> = signal('default');
 
-    abstract contentTpl: TemplateRef<any> | ViewContainerRef | null;
-    abstract dynamicContents: QueryList<DynamicContentDirective>;
-
-    protected constructor(
-      private cd: ChangeDetectorRef,
-      private moduleRef: NgModuleRef<any>,
-      private componentFactoryResolver: ComponentFactoryResolver,
-    ) {
-      super();
-    }
+    abstract contentTpl: Signal<TemplateRef<any> | ViewContainerRef | undefined>;
+    abstract dynamicContents: Signal<readonly DynamicContentDirective[]>;
 
     refreshDynamicInstance() {
       this.init();
@@ -83,11 +76,11 @@ export function CreateDynamicComponent<
     abstract refreshProperties(): void;
 
     ngDoCheck(): void {
-      if (this._findDynamicContent || !this.dynamicContents) return;
+      if (this._findDynamicContent || !this.dynamicContents()) return;
 
       this._findDynamicContent = true;
 
-      this.dynamicContents.changes.pipe(this.takeUntilDestroy).subscribe(() => {
+      toObservable(this.dynamicContents).pipe(this.takeUntilDestroy).subscribe(() => {
         this.init();
       });
       this.init();
@@ -103,14 +96,15 @@ export function CreateDynamicComponent<
       if (component && !this._renderCustom) {
         const factory =
           this.componentFactoryResolver.resolveComponentFactory(component);
-        if (this.dynamicContents?.first) {
+        const first = this.dynamicContents()[0];
+        if (first) {
           this._renderCustom = true;
           this.baseInstance =
-            this.dynamicContents.first.container.createComponent(
+            first.container.createComponent(
               factory,
             ).instance;
           this.refreshDynamicInstance();
-          this.baseInstance?.contentTpl?.createEmbeddedView(this.contentTpl);
+          this.baseInstance?.contentTpl()?.createEmbeddedView(this.contentTpl());
         }
       }
 

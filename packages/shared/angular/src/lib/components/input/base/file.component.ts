@@ -1,13 +1,11 @@
 import {
-  ChangeDetectorRef,
   Directive,
-  ElementRef,
+  ElementRef, inject,
   OnInit,
   Renderer2,
   Signal,
-  signal,
-  ViewChild,
-  WritableSignal,
+  signal, viewChild,
+  WritableSignal
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
@@ -21,6 +19,11 @@ export abstract class InputFileBaseComponent<T>
   extends InputBaseComponent<T>
   implements OnInit
 {
+  protected renderer = inject(Renderer2);
+  protected fileService = inject(FileService);
+  protected toastService = inject(ToastService);
+  protected translateService = inject(TranslateService);
+
   valid = true;
   oldId!: number;
   file!: File | null;
@@ -32,7 +35,7 @@ export abstract class InputFileBaseComponent<T>
     click: () => {
       this.control.markAsDirty();
       this.control.markAsTouched();
-      (this.inputElementRef.nativeElement as HTMLInputElement).click();
+      (this.inputElementRef()?.nativeElement as HTMLInputElement).click();
     },
     loading: this.loading,
   };
@@ -54,35 +57,25 @@ export abstract class InputFileBaseComponent<T>
     confirm: true,
   };
 
-  @ViewChild('inputObj', { read: ElementRef }) inputElementRef!: ElementRef;
-
-  protected constructor(
-    cd: ChangeDetectorRef,
-    protected renderer: Renderer2,
-    protected fileService: FileService,
-    protected toastService: ToastService,
-    protected translateService: TranslateService,
-  ) {
-    super(cd);
-  }
+  inputElementRef = viewChild<ElementRef | undefined>('inputObj');
 
   ngOnInit(): void {
-    this.renderer.listen(this.inputElementRef.nativeElement, 'change', () => {
+    this.renderer.listen(this.inputElementRef()?.nativeElement, 'change', () => {
       this.loading.set(true);
       this.file =
-        (this.inputElementRef.nativeElement as HTMLInputElement).files?.[0] ??
+        (this.inputElementRef()?.nativeElement as HTMLInputElement).files?.[0] ??
         null;
 
-      (this.inputElementRef.nativeElement as HTMLInputElement).type = 'text';
-      (this.inputElementRef.nativeElement as HTMLInputElement).type = 'file';
+      (this.inputElementRef()?.nativeElement as HTMLInputElement).type = 'text';
+      (this.inputElementRef()?.nativeElement as HTMLInputElement).type = 'file';
 
       if (
-        (this.inputElementRef.nativeElement as HTMLInputElement).accept &&
+        (this.inputElementRef()?.nativeElement as HTMLInputElement).accept &&
         this.file &&
         this.file.name
       ) {
         const acceptTypes = (
-          this.inputElementRef.nativeElement as HTMLInputElement
+          this.inputElementRef()?.nativeElement as HTMLInputElement
         ).accept
           .split(',')
           .map((type) => type.replace('.', ''));
@@ -96,7 +89,7 @@ export abstract class InputFileBaseComponent<T>
             duration: 3000,
             message:
               this.translateService.instant('INPUT.ERRORS.invalidFileType') +
-              ` (${(this.inputElementRef.nativeElement as HTMLInputElement).accept})`,
+              ` (${(this.inputElementRef()?.nativeElement as HTMLInputElement).accept})`,
           });
           this.loading.set(false);
           return;

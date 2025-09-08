@@ -1,13 +1,9 @@
 import {
-  EventEmitter,
-  Input,
-  Output,
   Directive,
   Type,
   ChangeDetectorRef,
-  ViewChild,
   ViewContainerRef,
-  Signal,
+  Signal, input, effect, output, viewChild, inject
 } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -19,12 +15,12 @@ import { InputBaseComponent } from '../../input';
 
 @Directive()
 export abstract class FormBaseComponent<T> extends BaseComponent {
+  protected cd = inject(ChangeDetectorRef);
   static smartType: DynamicComponentType = 'form';
 
   private _fields!: Array<string>;
   private _subscription!: Subscription;
   private _model: any;
-  private _form!: UntypedFormGroup;
   private _possibilities!: {
     [key: string]: Signal<{ id: any; text: string }[]>;
   };
@@ -51,50 +47,49 @@ export abstract class FormBaseComponent<T> extends BaseComponent {
     return this._inputComponents;
   }
 
-  @Input() set form(val: UntypedFormGroup) {
-    if (this._subscription) {
-      this._subscription.unsubscribe();
-    }
+  form = input.required<UntypedFormGroup>();
+  options = input.required<IFormOptions<T>>()
 
-    this._subscription = new Subscription();
+  invokeSubmit = output<any>();
 
-    this._form = val;
-    this._fields = Object.keys(this._form.controls);
+  contentTpl = viewChild<ViewContainerRef | undefined>(ViewContainerRef);
 
-    this._subscription.add(
-      this._form.valueChanges.pipe(delay(0)).subscribe(() => {
-        this.cd.detectChanges();
-      }),
-    );
-
-    this.afterSetForm();
-  }
-  get form(): UntypedFormGroup {
-    return this._form;
-  }
-
-  @Input() set options(obj: IFormOptions<T>) {
-    this._model = obj.model;
-    this.mode = obj?.mode ?? '';
-    this._possibilities = obj.possibilities ? obj.possibilities : {};
-    this._inputComponents = obj.inputComponents ? obj.inputComponents : {};
-
-    this.treeLevel = obj.treeLevel;
-
-    this.afterSetOptions();
-  }
-
-  @Output() invokeSubmit = new EventEmitter();
-
-  @ViewChild('contentTpl', { read: ViewContainerRef, static: true })
-  contentTpl!: ViewContainerRef;
-
-  constructor(protected cd: ChangeDetectorRef) {
+  constructor() {
     super();
+
+    effect(() => {
+      if (this._subscription) {
+        this._subscription.unsubscribe();
+      }
+
+      this._subscription = new Subscription();
+
+      this._fields = Object.keys(this.form().controls);
+
+      this._subscription.add(
+        this.form().valueChanges.pipe(delay(0)).subscribe(() => {
+          this.cd.detectChanges();
+        }),
+      );
+
+      this.afterSetForm();
+    });
+
+    effect(() => {
+      const options = this.options();
+      this._model = options.model;
+      this.mode = options?.mode ?? '';
+      this._possibilities = options.possibilities ?? {};
+      this._inputComponents = options.inputComponents ?? {};
+
+      this.treeLevel = options.treeLevel;
+
+      this.afterSetOptions();
+    });
   }
 
   submit(): void {
-    this.invokeSubmit.emit(this.form.value);
+    this.invokeSubmit.emit(this.form().value);
   }
 
   protected afterSetOptions() {
@@ -106,6 +101,6 @@ export abstract class FormBaseComponent<T> extends BaseComponent {
   }
 
   getUntypedFormControl(field: string) {
-    return this.form.controls[field] as UntypedFormControl;
+    return this.form().controls[field] as UntypedFormControl;
   }
 }

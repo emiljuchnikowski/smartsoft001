@@ -7,7 +7,7 @@
 
       <!--      <ion-list class="w-full m-0">-->
       @for (field of step.fields; track field) {
-        @if (form.controls[field] && !__smartDisabled(field)) {
+        @if (form().controls[field] && !__smartDisabled(field)) {
           <smart-input
             [options]="{
               treeLevel: treeLevel ?? 0,

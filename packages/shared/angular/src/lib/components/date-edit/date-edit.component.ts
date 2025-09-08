@@ -1,10 +1,8 @@
 import {
   ChangeDetectorRef,
   Component,
-  EventEmitter,
-  forwardRef,
-  Input,
-  Output,
+  forwardRef, inject,
+  model, output,
 } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -34,83 +32,78 @@ import moment from 'moment';
   ],
 })
 export class DateEditComponent implements ControlValueAccessor {
+  private cd = inject(ChangeDetectorRef);
   DEFAULT_DATE = '2001-01-01';
 
   get d1(): string | null {
-    if (!this.value) return null;
-    return this.value[8];
+    if (!this.ngModel()) return null;
+    return this.ngModel()[8];
   }
   set d1(val: string) {
     this.setValueAt(val, 8);
   }
   get d2(): string | null {
-    if (!this.value) return null;
-    return this.value[9];
+    if (!this.ngModel()) return null;
+    return this.ngModel()[9];
   }
   set d2(val: string) {
     this.setValueAt(val, 9);
   }
 
   get m1(): string | null {
-    if (!this.value) return null;
-    return this.value[5];
+    if (!this.ngModel()) return null;
+    return this.ngModel()[5];
   }
   set m1(val: string) {
     this.setValueAt(val, 5);
   }
   get m2(): string | null {
-    if (!this.value) return null;
-    return this.value[6];
+    if (!this.ngModel()) return null;
+    return this.ngModel()[6];
   }
   set m2(val: string) {
     this.setValueAt(val, 6);
   }
 
   get y1(): string | null {
-    if (!this.value) return null;
-    return this.value[0];
+    if (!this.ngModel()) return null;
+    return this.ngModel()[0];
   }
   set y1(val: string) {
     this.setValueAt(val, 0);
   }
   get y2(): string | null {
-    if (!this.value) return null;
-    return this.value[1];
+    if (!this.ngModel()) return null;
+    return this.ngModel()[1];
   }
   set y2(val: string) {
     this.setValueAt(val, 1);
   }
   get y3(): string | null {
-    if (!this.value) return null;
-    return this.value[2];
+    if (!this.ngModel()) return null;
+    return this.ngModel()[2];
   }
   set y3(val: string) {
     this.setValueAt(val, 2);
   }
   get y4(): string | null {
-    if (!this.value) return null;
-    return this.value[3];
+    if (!this.ngModel()) return null;
+    return this.ngModel()[3];
   }
   set y4(val: string) {
     this.setValueAt(val, 3);
   }
 
-  value: any = this.DEFAULT_DATE;
+  ngModel = model(this.DEFAULT_DATE);
   validDate = true;
 
   propagateChange = (val: any) => {}; // eslint-disable-line
   propagateTouched = () => {}; // eslint-disable-line
 
-  @Input() set ngModel(val: string) {
-    this.value = val;
-  }
-  @Output() ngModelChange = new EventEmitter<string>();
-  @Output() validChange = new EventEmitter<boolean>();
-
-  constructor(private cd: ChangeDetectorRef) {}
+  validChange = output<boolean>();
 
   writeValue(value: any): void {
-    this.value = value;
+    this.ngModel.set(value);
     this.cd.detectChanges();
   }
 
@@ -165,15 +158,15 @@ export class DateEditComponent implements ControlValueAccessor {
 
     val = val.toString().substr(0, 1);
     const newValue = Number(val);
-    if (!this.value || newValue > 9 || newValue < 0)
-      this.value = this.DEFAULT_DATE;
-    this.value = this.setCharAt(this.value, index, newValue);
+    if (!this.ngModel() || newValue > 9 || newValue < 0)
+      this.ngModel.set(this.DEFAULT_DATE);
+    this.ngModel.set(this.setCharAt(this.ngModel(), index, newValue));
 
-    this.validDate = moment(this.value).isValid();
+    this.validDate = moment(this.ngModel()).isValid();
 
     if (this.validDate) {
-      this.writeValue(this.value);
-      this.propagateChange(this.value);
+      this.writeValue(this.ngModel());
+      this.propagateChange(this.ngModel());
       this.propagateTouched();
     } else {
       this.propagateChange(null);

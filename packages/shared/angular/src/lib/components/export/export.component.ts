@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'smart-export',
@@ -19,13 +19,14 @@ import { Component, Input } from '@angular/core';
   ],
 })
 export class ExportComponent {
-  @Input() value: any;
-  @Input() fileName!: string;
-  @Input() handler!: (value: any) => void;
+  value = input<any | undefined>(undefined);
+  fileName = input<string | undefined>();
+  handler = input.required<(value: any) => void>();
 
   async onClick(): Promise<void> {
-    if (this.handler) {
-      this.handler(this.value);
+    const value = this.value();
+    if (value) {
+      this.handler()(value);
       return;
     }
   }

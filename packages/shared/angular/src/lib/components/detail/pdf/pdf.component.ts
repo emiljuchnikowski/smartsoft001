@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { IEntity } from '@smartsoft001/domain-core';
@@ -11,8 +11,8 @@ import { DetailBaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-detail-pdf',
   template: `
-    @let item = options?.item();
-    @if (item && options.key) {
+    @let item = options()?.item?.();
+    @if (item && options()?.key) {
       <smart-button [options]="getButtonOptions(item)">
         {{ 'show' | translate }}
       </smart-button>
@@ -21,19 +21,17 @@ import { DetailBaseComponent } from '../base/base.component';
   imports: [ButtonComponent, TranslatePipe],
 })
 export class DetailPdfComponent<
-  T extends IEntity<string>,
+  T extends IEntity<string> | undefined,
 > extends DetailBaseComponent<T> {
-  constructor(
-    cd: ChangeDetectorRef,
-    private fileService: FileService,
-  ) {
-    super(cd);
-  }
+  private fileService = inject(FileService);
 
   getButtonOptions(item: T): IButtonOptions {
     return {
       click: () => {
-        this.fileService.download((item as any)[this.options.key].id);
+        const key = this.options()?.key;
+        if (key) {
+          this.fileService.download((item as any)[key].id);
+        }
       },
     };
   }

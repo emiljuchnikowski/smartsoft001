@@ -5,11 +5,12 @@ import { DetailBaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-detail-color',
   template: `
-    @let item = options?.item();
-    @if (item && options?.key) {
+    @let item = options()?.item();
+    @let key = options()?.key;
+    @if (item && key) {
       <!--      <ion-row>-->
       <!--        <ion-col>-->
-      <!--          <ion-card class="mt-1 mb-1 mx-0" [style.background]="item[options.key!]">-->
+      <!--          <ion-card class="mt-1 mb-1 mx-0" [style.background]="item[options().key!]">-->
       <!--            <ion-card-header class="m-0"> </ion-card-header>-->
       <!--          </ion-card>-->
       <!--        </ion-col>-->
@@ -29,5 +30,5 @@ import { DetailBaseComponent } from '../base/base.component';
   ],
 })
 export class DetailColorComponent<
-  T extends { [key: string]: any },
+  T extends { [key: string]: any } | undefined,
 > extends DetailBaseComponent<T> {}

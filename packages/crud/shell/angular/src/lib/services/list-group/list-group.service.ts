@@ -13,10 +13,9 @@ export class CrudListGroupService<T extends IEntity<string>> {
   constructor(private facade: CrudFacade<T>) {}
 
   change(
-    val,
+    val: boolean,
     item: ICrudListGroup,
-    groups: Array<ICrudListGroup>,
-    force: boolean,
+    force = false,
   ): void {
     if (val || force) {
       item.changed = true;

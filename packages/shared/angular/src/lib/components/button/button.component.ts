@@ -1,14 +1,10 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
-  Component,
-  Input,
-  QueryList,
-  TemplateRef,
-  ViewChild,
-  ViewChildren,
-  ViewEncapsulation,
-  WritableSignal,
+  Component, effect, input,
+  viewChild, viewChildren,
+  ViewContainerRef,
+  ViewEncapsulation
 } from '@angular/core';
 
 import { DynamicContentDirective } from '../../directives';
@@ -21,7 +17,7 @@ import { ButtonStandardComponent } from './standard/standard.component';
   selector: 'smart-button',
   template: `
     @if (template() === 'default') {
-      <smart-button-standard [options]="options" [disabled]="disabled">
+      <smart-button-standard [options]="options()" [disabled]="disabled()">
         <ng-container [ngTemplateOutlet]="contentTpl"></ng-container>
       </smart-button-standard>
     }
@@ -37,30 +33,22 @@ import { ButtonStandardComponent } from './standard/standard.component';
 export class ButtonComponent extends CreateDynamicComponent<ButtonBaseComponent>(
   'button',
 ) {
-  private _options!: WritableSignal<IButtonOptions>;
-  private _disabled!: WritableSignal<boolean>;
+  options = input.required<IButtonOptions>();
+  disabled = input<boolean>(false);
 
-  @Input() set options(val: IButtonOptions) {
-    this._options.set(val);
-    this.refreshDynamicInstance();
-  }
-  get options(): IButtonOptions {
-    return this._options();
-  }
+  override contentTpl = viewChild<ViewContainerRef>('contentTpl');
 
-  @Input() set disabled(val: boolean) {
-    this._disabled.set(val);
-    this.refreshDynamicInstance();
-  }
-  get disabled(): boolean {
-    return this._disabled();
-  }
+  override dynamicContents = viewChildren<DynamicContentDirective>(DynamicContentDirective);
 
-  @ViewChild('contentTpl', { read: TemplateRef, static: false })
-  override contentTpl: TemplateRef<any> | null = null;
+  constructor() {
+    super();
 
-  @ViewChildren(DynamicContentDirective, { read: DynamicContentDirective })
-  override dynamicContents = new QueryList<DynamicContentDirective>();
+    effect(() => {
+      this.options(); //Track changes only
+      this.disabled(); //Track changes only
+      this.refreshDynamicInstance();
+    });
+  }
 
   override refreshProperties(): void {
     this.baseInstance.options = this.options;

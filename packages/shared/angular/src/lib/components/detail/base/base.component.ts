@@ -1,28 +1,22 @@
 import {
-  Input,
-  Directive,
-  ChangeDetectorRef,
-  WritableSignal,
+  Directive, ChangeDetectorRef, inject, input, effect
 } from '@angular/core';
 
 import { IDetailOptions } from '../../../models';
 
 @Directive()
 export abstract class DetailBaseComponent<T> {
-  private _options!: WritableSignal<IDetailOptions<T>>;
+  protected cd = inject(ChangeDetectorRef);
 
-  @Input() set options(val: IDetailOptions<T>) {
-    this._options.set(val);
+  options = input<IDetailOptions<T>>();
 
-    this.afterSetOptionsHandler();
-
-    this.cd.detectChanges();
+  constructor() {
+    effect(() => {
+      this.options(); //Track changes only
+      this.afterSetOptionsHandler();
+      this.cd.detectChanges();
+    });
   }
-  get options(): IDetailOptions<T> {
-    return this._options();
-  }
-
-  constructor(protected cd: ChangeDetectorRef) {}
 
   protected afterSetOptionsHandler() {
     // no base functionality

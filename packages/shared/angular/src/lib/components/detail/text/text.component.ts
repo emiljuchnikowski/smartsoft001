@@ -6,11 +6,12 @@ import { DetailBaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-detail-text',
   template: `
-    @let item = options?.item();
-    @if (item) {
+    @let item = options()?.item?.();
+    @let key = options()?.key;
+    @if (item && key) {
       <p
         [innerHTML]="
-          (item | smartListCell: options?.key : options.cellPipe)?.value
+          (item | smartListCell: key : options()?.cellPipe)?.value
             | smartTrustHtml
         "
       ></p>

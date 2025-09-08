@@ -19,23 +19,23 @@
   <!--    [cdkDropListDisabled]="fieldOptions?.possibilities?.static"-->
   <!--    (cdkDropListDropped)="drop($event)"-->
   <!--  >-->
-  @for (options of childOptions; track options) {
+  @for (option of childOptions; track option) {
     @let index = $index;
     <!--      <ion-item class="array-box p-0 flex flex-row items-center justify-between box-border text-sm bg-transparent shadow-none" lines="none" cdkDrag>-->
-    @if (!fieldOptions?.possibilities?.static) {
+    @if (!fieldOptions()?.possibilities?.static) {
       <!--          <ion-card class="w-full p-0 m-1">-->
-      <smart-accordion [(show)]="options.show">
+      <smart-accordion [(show)]="option.show">
         <smart-accordion-header class="cursor-move">
           <!--                <ion-card-header class="m-0 p-0">-->
           <!--                  <ion-item class="m-0" lines="none">-->
           @if (
-            !options.show &&
-            options?.modelOptions?.titleKey &&
-            options.control?.value[options.modelOptions!.titleKey!]
+            !option.show &&
+            option?.modelOptions?.titleKey &&
+            option.control?.value[option.modelOptions!.titleKey!]
           ) {
             <!--                      <ion-label>-->
             {{
-              options?.control?.value[options.modelOptions!.titleKey!]
+              option?.control?.value[option.modelOptions!.titleKey!]
                 | translate
             }}
             <!--                      </ion-label>-->
@@ -56,7 +56,7 @@
           <!--          TODO: refactor usage of FormComponent and styles-->
           <ng-template
             [ngComponentOutlet]="formComponent"
-            [ndcDynamicInputs]="{ options: options }"
+            [ndcDynamicInputs]="{ options: option }"
           ></ng-template>
           <!--                </ion-card-content>-->
         </smart-accordion-body>
@@ -67,7 +67,7 @@
       <!--            <ion-card-content class="p-0">-->
       <ng-template
         [ngComponentOutlet]="formComponent"
-        [ndcDynamicInputs]="{ options: options }"
+        [ndcDynamicInputs]="{ options: option }"
       ></ng-template>
       <!--            </ion-card-content>-->
       <!--          </ion-card>-->
@@ -75,7 +75,7 @@
     <!--      </ion-item>-->
   }
   <!--  </ion-list>-->
-  @if (!fieldOptions?.possibilities?.static) {
+  @if (!fieldOptions()?.possibilities?.static) {
     <smart-button [options]="addButtonOptions" class="float-right">
       <span style="font-weight: 300"
         >{{

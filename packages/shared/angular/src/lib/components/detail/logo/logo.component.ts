@@ -6,16 +6,16 @@ import { DetailBaseComponent } from '../base/base.component';
   selector: 'smart-detail-logo',
   template: `
     <!--    <ion-card>-->
-    @let item = options?.item();
-    @if (item && options?.key) {
+    @let item = options()?.item?.();
+    @if (item && options()?.key) {
       <!--        <ion-img-->
       <!--          style="margin: 10px; height: 150px; width: 150px"-->
-      <!--          [src]="item[options.key!]"-->
+      <!--          [src]="item[options.key]"-->
       <!--        ></ion-img>-->
     }
     <!--    </ion-card>-->
   `,
 })
 export class DetailLogoComponent<
-  T extends { [key: string]: any },
+  T extends { [key: string]: any } | undefined,
 > extends DetailBaseComponent<T> {}

@@ -20,7 +20,7 @@ import { DetailsBaseComponent } from '../base/base.component';
             key: field.key,
             options: field.options,
             cellPipe: cellPipe() ?? undefined,
-            item: item ?? undefined,
+            item: item,
             loading: loading ?? undefined,
           }"
         ></smart-detail>

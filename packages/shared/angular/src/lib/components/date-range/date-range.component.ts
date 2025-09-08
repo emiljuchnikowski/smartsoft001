@@ -3,15 +3,12 @@ import {
   AfterContentInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component,
+  Component, effect,
   ElementRef,
-  EventEmitter,
-  forwardRef,
-  Input,
+  forwardRef, inject, input,
+  model,
   NgZone,
-  OnInit,
-  Output,
-  ViewChild,
+  OnInit
 } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -48,15 +45,15 @@ import {
   imports: [TranslatePipe],
 })
 export class DateRangeComponent implements ControlValueAccessor {
-  value: any;
+  // private modalCtrl: ModalController, //TODO: to be injected
+  private cd = inject(ChangeDetectorRef);
+
+  value: IDateRange | undefined = undefined;
 
   propagateChange = (val: any) => {}; // eslint-disable-line
   propagateTouched = () => {}; // eslint-disable-line
 
-  @Input() set ngModel(val: IDateRange) {
-    this.value = val;
-  }
-  @Output() ngModelChange = new EventEmitter<IDateRange>();
+  ngModel = model<IDateRange | undefined>(undefined);
 
   calendarData: CalendarState = {
     dateFrom: null,
@@ -65,15 +62,17 @@ export class DateRangeComponent implements ControlValueAccessor {
     selectedButtonName: FilterBtnConstants.empthyString,
   };
 
-  constructor(
-    // private modalCtrl: ModalController,
-    private cd: ChangeDetectorRef,
-  ) {}
+  constructor() {
+    effect(() => {
+      this.value = this.ngModel();
+    });
+  }
 
   async onClick(): Promise<void> {
-    if (this.ngModel?.start)
-      this.calendarData.dateFrom = moment(this.ngModel.start);
-    if (this.ngModel?.end) this.calendarData.dateTo = moment(this.ngModel.end);
+    const ngModel = this.ngModel();
+    if (ngModel?.start)
+      this.calendarData.dateFrom = moment(ngModel.start);
+    if (ngModel?.end) this.calendarData.dateTo = moment(ngModel.end);
 
     this.propagateTouched();
 
@@ -122,9 +121,7 @@ export class DateRangeComponent implements ControlValueAccessor {
     this.calendarData.dateFrom = null;
     this.calendarData.dateTo = null;
 
-    this.value = null;
-
-    this.ngModelChange.emit(this.value);
+    this.ngModel.set(undefined);
     this.propagateChange(this.value);
     this.propagateTouched();
   }
@@ -161,9 +158,21 @@ export interface CalendarState {
   imports: [NgClass, TranslatePipe],
 })
 export class DateRangeModalComponent implements OnInit, AfterContentInit {
-  @Input() showFilterBtns = false;
-  @Input() restrictSelectionTo!: number;
-  // @ViewChild('scrollMe', { static: true }) scrollMe!: IonContent;
+  private fb = inject(UntypedFormBuilder);
+  private uiService = inject(UIService);
+  private changeDetectionRef = inject(ChangeDetectorRef);
+  private calendarService = inject(CalendarService);
+  private zone = inject(NgZone);
+  private styleService = inject(StyleService);
+  private elementRef = inject(ElementRef);
+  // private modalController: ModalController, //TODO: to be injected
+  // private navParams: NavParams,//TODO: to be injected
+  // private domController: DomController,//TODO: to be injected
+
+  showFilterBtns = input<boolean>(false);
+  restrictSelectionTo = input.required<number>();
+  // @ViewChild('scrollMe', { static: true }) scrollMe!: IonContent; //TODO: to be rewritten
+
   public currentDate = moment().clone();
   public dateForm!: UntypedFormGroup;
   calendar: month[] = [];
@@ -179,18 +188,7 @@ export class DateRangeModalComponent implements OnInit, AfterContentInit {
   subject$ = new Subject<SubjectType>();
   subjectSubscription!: Subscription;
 
-  constructor(
-    private fb: UntypedFormBuilder,
-    // private modalController: ModalController,
-    // private navParams: NavParams,
-    private uiService: UIService,
-    private changeDetectionRef: ChangeDetectorRef,
-    // private domController: DomController,
-    private calendarService: CalendarService,
-    private zone: NgZone,
-    private styleService: StyleService,
-    private elementRef: ElementRef,
-  ) {
+  constructor() {
     this.initDateRangeForm();
     // this.previousState = this.navParams.get('previousState');
   }
@@ -304,7 +302,7 @@ export class DateRangeModalComponent implements OnInit, AfterContentInit {
   resetDates = (): void => this.datesRefGroup.reset();
 
   canSelectionBeRestricted = (): boolean =>
-    this.restrictSelectionTo &&
+    this.restrictSelectionTo() &&
     this.datesRefGroup.value.endDateRef &&
     !this.isSelectionInRestrictedRange();
 
@@ -312,7 +310,7 @@ export class DateRangeModalComponent implements OnInit, AfterContentInit {
     const { startDateRef } = this.datesRefGroup.value;
     this.uiService.showAlertWithDismissCallback(
       'Alert',
-      `Please select ${this.restrictSelectionTo} days`,
+      `Please select ${this.restrictSelectionTo()} days`,
       'Ok',
       () => {
         this.datesRefGroup.patchValue({ endDateRef: startDateRef });
@@ -326,7 +324,7 @@ export class DateRangeModalComponent implements OnInit, AfterContentInit {
     const { endDateRef, startDateRef } = this.datesRefGroup.value;
     const diff = endDateRef && endDateRef.diff(startDateRef, 'days') + 1;
     // tslint:disable-next-line:triple-equals
-    return diff && diff == this.restrictSelectionTo;
+    return diff && diff == this.restrictSelectionTo();
   }
 
   private formatDate(date: moment.Moment): string {

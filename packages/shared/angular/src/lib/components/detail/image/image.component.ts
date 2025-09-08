@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, computed, Signal } from '@angular/core';
+import { Component, computed, inject, Signal } from '@angular/core';
 
 import { FileService } from '../../../services';
 import { DetailBaseComponent } from '../base/base.component';
@@ -18,24 +18,20 @@ import { DetailBaseComponent } from '../base/base.component';
   `,
 })
 export class DetailImageComponent<
-  T extends { [key: string]: any },
+  T extends { [key: string]: any } | undefined,
 > extends DetailBaseComponent<T> {
+  private fileService = inject(FileService);
+
   imageUrl!: Signal<string | null>;
 
-  constructor(
-    cd: ChangeDetectorRef,
-    private fileService: FileService,
-  ) {
-    super(cd);
-  }
-
   protected override afterSetOptionsHandler() {
-    if (this.options?.item) {
+    const item = this.options()?.item?.();
+    if (item) {
       this.imageUrl = computed(() => {
-        const item = this.options?.item?.();
-        if (!item || !item[this.options.key]) return null;
+        const key = this.options()?.key;
+        if (!item || !key) return null;
 
-        return this.fileService.getUrl(item[this.options.key].id);
+        return this.fileService.getUrl(item[key].id);
       });
     }
   }
