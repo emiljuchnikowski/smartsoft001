@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Signal } from '@angular/core';
 
 export enum FieldTypeDef {
   address = 'address',
@@ -44,7 +44,7 @@ export interface IModelFilter {
   fieldType?: FieldTypeDef;
   key: string;
   type: '=' | '!=' | '>=' | '<=' | '<' | '>' | '~=';
-  possibilities$?: Observable<{ id: any; text: string }[]>;
+  possibilities?: Signal<{ id: any; text: string }[]>;
 }
 
 export interface IModelStep {

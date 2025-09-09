@@ -1,0 +1,49 @@
+import { AsyncPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
+import { delay, tap } from 'rxjs/operators';
+
+import { IButtonOptions } from '../../../models';
+import { ModelLabelPipe } from '../../../pipes';
+import { ButtonComponent } from '../../button';
+import { InputFileBaseComponent } from '../base/file.component';
+
+@Component({
+  selector: 'smart-input-video',
+  templateUrl: './video.component.html',
+  imports: [ModelLabelPipe, AsyncPipe, ButtonComponent, TranslatePipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class InputVideoComponent<T>
+  extends InputFileBaseComponent<T>
+  implements OnInit
+{
+  url!: string | null;
+  play!: boolean;
+  playButtonOptions: IButtonOptions = {
+    click: () => {
+      this.play = true;
+    },
+    loading: this.loading,
+  };
+
+  protected override afterSetOptionsHandler() {
+    this.control.valueChanges
+      .pipe(
+        tap(() => {
+          this.url = null;
+          this.play = false;
+          this.cd.detectChanges();
+        }),
+        delay(5000),
+        this.takeUntilDestroy,
+      )
+      .subscribe((value) => {
+        if (!value?.id) return;
+
+        this.url = this.fileService.getUrl(value.id);
+
+        this.cd.detectChanges();
+      });
+  }
+}

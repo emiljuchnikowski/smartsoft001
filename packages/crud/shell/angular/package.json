@@ -1,0 +1,25 @@
+{
+  "name": "@smartsoft001/crud-shell-angular",
+  "version": "2.68.0",
+  "description": "Utils and Angular components",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emiljuchnikowski/smartsoft.git"
+  },
+  "author": "Emil Juchnikowski",
+  "contributors": [
+    {
+      "name": "Andrii Bilych"
+    }
+  ],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/emiljuchnikowski/smartsoft/issues"
+  },
+  "homepage": "https://github.com/emiljuchnikowski/smartsoft#readme",
+  "peerDependencies": {
+    "@smartsoft001/angular": "^2.68.0",
+    "@angular/common": "^16.0.0",
+    "@angular/core": "^16.0.0"
+  }
+}

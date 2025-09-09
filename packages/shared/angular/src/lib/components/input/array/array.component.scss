@@ -1,0 +1,269 @@
+@import url(https://fonts.googleapis.com/css2?family=Material+Icons);
+@import url(https://fonts.googleapis.com/css2?family=Material+Icons+Outlined);
+ion-label {
+  &[position='static'] {
+    margin-top: 1.6rem;
+  }
+}
+//TODO: refactor usage of FormComponent and styles
+smart-form {
+  width: 100%;
+  margin: 0.3rem 0;
+  display: block;
+  border-radius: 0.5rem;
+  form {
+    margin: 0 -0.9rem;
+  }
+  ion-item {
+    --padding-start: 0 !important;
+    --padding-end: 0 !important;
+    width: 100%;
+    padding-inline-end: 0 !important;
+  }
+  &[tree-level='1'] {
+    margin: 0 !important;
+    border-left: 0.2rem solid var(--smart-color-primary);
+    border-bottom: 0.2rem solid var(--smart-color-primary);
+  }
+  &[tree-level='2'] {
+    margin: 0 !important;
+    border-left: 0.2rem solid #dedede;
+    border-bottom: 0.2rem solid #dedede;
+    .button-solid {
+      --background: #dedede !important;
+      --color: #333 !important;
+    }
+    &:before {
+      box-sizing: border-box;
+      position: absolute;
+      display: block;
+      width: 4.8rem;
+      height: 5rem;
+      border-radius: 0.5rem 50% 50% 0;
+      z-index: 666;
+      left: 0;
+      top: -4.8rem;
+      font-family: 'Material Icons Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 2.4rem;
+      display: inline-block;
+      line-height: 1;
+      text-transform: none;
+      letter-spacing: normal;
+      word-wrap: normal;
+      white-space: nowrap;
+      direction: ltr;
+      content: 'open_with';
+      padding: 1.3rem 0 0 0.9rem;
+      color: #999;
+      background-color: #dedede;
+    }
+  }
+  &[tree-level='3'] {
+    margin: 0 !important;
+    border-left: 0.2rem solid var(--smart-color-primary);
+    border-bottom: 0.2rem solid var(--smart-color-primary);
+    .button-solid {
+      --background: var(--smart-color-primary) !important;
+      --color: var(--smart-color-light) !important;
+    }
+    &:before {
+      box-sizing: border-box;
+      position: absolute;
+      display: block;
+      width: 4.8rem;
+      height: 5rem;
+      border-radius: 0.5rem 50% 50% 0;
+      z-index: 666;
+      left: 0;
+      top: -4.8rem;
+      font-family: 'Material Icons Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 2.4rem;
+      display: inline-block;
+      line-height: 1;
+      text-transform: none;
+      letter-spacing: normal;
+      word-wrap: normal;
+      white-space: nowrap;
+      direction: ltr;
+      content: 'open_with';
+      padding: 1.3rem 0 0 0.9rem;
+      color: #fff;
+      background-color: var(--smart-color-primary);
+    }
+  }
+  &[tree-level='4'] {
+    margin: 0 !important;
+    border-left: 0.2rem solid #dedede;
+    border-bottom: 0.2rem solid #dedede;
+    .button-solid {
+      --background: #dedede !important;
+      --color: #333 !important;
+    }
+    &:before {
+      box-sizing: border-box;
+      position: absolute;
+      display: block;
+      width: 4.8rem;
+      height: 5rem;
+      border-radius: 0.5rem 50% 50% 0;
+      z-index: 666;
+      left: 0;
+      top: -4.8rem;
+      font-family: 'Material Icons Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 2.4rem;
+      display: inline-block;
+      line-height: 1;
+      text-transform: none;
+      letter-spacing: normal;
+      word-wrap: normal;
+      white-space: nowrap;
+      direction: ltr;
+      content: 'open_with';
+      padding: 1.3rem 0 0 0.9rem;
+      color: #999;
+      background-color: #dedede;
+    }
+  }
+  &[tree-level='5'] {
+    margin: 0 !important;
+    border-left: 0.2rem solid var(--smart-color-primary);
+    border-bottom: 0.2rem solid var(--smart-color-primary);
+    .button-solid {
+      --background: var(--smart-color-primary) !important;
+      --color: var(--smart-color-light) !important;
+    }
+    &:before {
+      box-sizing: border-box;
+      position: absolute;
+      display: block;
+      width: 4.8rem;
+      height: 5rem;
+      border-radius: 0.5rem 50% 50% 0;
+      z-index: 666;
+      left: 0;
+      top: -4.8rem;
+      font-family: 'Material Icons Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 2.4rem;
+      display: inline-block;
+      line-height: 1;
+      text-transform: none;
+      letter-spacing: normal;
+      word-wrap: normal;
+      white-space: nowrap;
+      direction: ltr;
+      content: 'open_with';
+      padding: 1.3rem 0 0 0.9rem;
+      color: #fff;
+      background-color: var(--smart-color-primary);
+    }
+  }
+  &[tree-level='6'] {
+    margin: 0 !important;
+    border-left: 0.2rem solid #dedede;
+    border-bottom: 0.2rem solid #dedede;
+    .button-solid {
+      --background: #dedede !important;
+      --color: #333 !important;
+    }
+    &:before {
+      box-sizing: border-box;
+      position: absolute;
+      display: block;
+      width: 4.8rem;
+      height: 5rem;
+      border-radius: 0.5rem 50% 50% 0;
+      z-index: 666;
+      left: 0;
+      top: -4.8rem;
+      font-family: 'Material Icons Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 2.4rem;
+      display: inline-block;
+      line-height: 1;
+      text-transform: none;
+      letter-spacing: normal;
+      word-wrap: normal;
+      white-space: nowrap;
+      direction: ltr;
+      content: 'open_with';
+      padding: 1.3rem 0 0 0.9rem;
+      color: #999;
+      background-color: #dedede;
+    }
+  }
+  .cdk-drag-disabled & {
+    &[tree-level='1'],
+    &[tree-level='2'],
+    &[tree-level='3'],
+    &[tree-level='4'],
+    &[tree-level='5'],
+    &[tree-level='6'] {
+      border-left: 0.1rem solid #dedede;
+      border-bottom: 0.1rem solid #dedede;
+      &::before {
+        display: none;
+      }
+    }
+  }
+}
+
+ion-card {
+  ion-card-header {
+    ion-item {
+      //TODO: refactor ionic element styles
+      item-inner {
+        //margin: 0;
+        //padding: 0;
+      }
+    }
+    ion-button {
+      &[fill='outline'] {
+        --border-color: transparent !important;
+        margin-right: -1.2rem;
+      }
+    }
+  }
+}
+
+.smart-list {
+  max-width: 100%;
+  min-height: 60px;
+  display: block;
+  border-radius: 4px;
+  overflow: hidden;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.cdk-drag-preview {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  border-radius: 4px;
+  //box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.array-box:last-child {
+  border: none;
+}
+
+.array.cdk-drop-list-dragging .array-box:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}

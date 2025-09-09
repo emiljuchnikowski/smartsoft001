@@ -1,0 +1,175 @@
+import {
+  Directive,
+  inject,
+  input,
+  InputSignal,
+  OnInit,
+  Signal,
+} from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { Debounce } from 'lodash-decorators';
+
+import { IEntity } from '@smartsoft001/domain-core';
+import { FieldType, IModelFilter } from '@smartsoft001/models';
+
+import { CrudFacade } from '../../../+state/crud.facade';
+import { ICrudFilter } from '../../../models';
+
+@Directive()
+export class BaseComponent<T extends IEntity<string>> implements OnInit {
+  protected facade = inject(CrudFacade<T>);
+  protected translateService = inject(TranslateService);
+
+  possibilities: Signal<{ id: any; text: string }[]>;
+
+  readonly item: InputSignal<IModelFilter> = input<IModelFilter>();
+  readonly filter: InputSignal<ICrudFilter> = input<ICrudFilter>();
+
+  get value(): any {
+    if (this.isArrayType()) {
+      return this.filter()
+        .query.filter(
+          (q) => q.key === this.item().key && q.type === this.item().type,
+        )
+        .map((q) => q.value);
+    }
+
+    const query = this.filter().query.find(
+      (q) => q.key === this.item().key && q.type === this.item().type,
+    );
+    return query?.value;
+  }
+
+  set value(val: any) {
+    this.refresh(val);
+  }
+
+  get minValue(): any {
+    if (this.isArrayType()) {
+      return this.filter()
+        .query.filter((q) => q.key === this.item().key && q.type === '>=')
+        .map((q) => q.value);
+    }
+
+    const query = this.filter().query.find(
+      (q) => q.key === this.item().key && q.type === '>=',
+    );
+    return query?.value;
+  }
+
+  set minValue(val: any) {
+    this.refresh(val, '>=');
+  }
+
+  get maxValue(): any {
+    if (this.isArrayType()) {
+      return this.filter()
+        .query.filter((q) => q.key === this.item().key && q.type === '<=')
+        .map((q) => q.value);
+    }
+
+    const query = this.filter().query.find(
+      (q) => q.key === this.item().key && q.type === '<=',
+    );
+    return query?.value;
+  }
+
+  set maxValue(val: any) {
+    this.refresh(val, '<=');
+  }
+
+  get lang(): string {
+    return this.translateService.currentLang;
+  }
+
+  @Debounce(500)
+  refresh(val: any, type = null): void {
+    if (!type) type = this.item().type;
+
+    this.filter().offset = 0;
+
+    if (this.isArrayType()) {
+      this.refreshForArray(val as [], type);
+      return;
+    }
+
+    let query = this.filter().query.find(
+      (q) => q.key === this.item().key && q.type === type,
+    );
+
+    if (val === null || val === undefined || val === '') {
+      const index = this.filter().query.indexOf(query);
+      if (index > -1) {
+        this.filter().query.splice(index, 1);
+      }
+
+      this.facade.read(this.filter());
+      return;
+    }
+
+    if (!query) {
+      query = {
+        key: this.item().key,
+        type: type,
+        value: null,
+      };
+
+      this.filter().query.push(query);
+    }
+
+    query.value = val;
+    query.label = this.item().label;
+
+    this.facade.read(this.filter());
+  }
+
+  clear(): void {
+    this.filter().query = this.filter().query.filter(
+      (q) => q.key !== this.item().key,
+    );
+    this.filter().offset = 0;
+    this.facade.read(this.filter());
+  }
+
+  ngOnInit(): void {
+    this.initPossibilities();
+  }
+
+  private initPossibilities(): void {
+    this.possibilities = this.item().possibilities;
+  }
+
+  private isArrayType(): boolean {
+    return this.item()?.fieldType === FieldType.check;
+  }
+
+  private refreshForArray(vals: [], type): void {
+    const queries = this.filter().query.filter(
+      (q) => q.key === this.item().key && q.type === type,
+    );
+
+    queries.forEach((query) => {
+      const index = this.filter().query.indexOf(query);
+      if (index > -1) {
+        this.filter().query.splice(index, 1);
+      }
+    });
+
+    if (vals === null || vals === undefined || !vals.length) {
+      this.facade.read(this.filter());
+      return;
+    }
+
+    vals.forEach((val) => {
+      const query = {
+        key: this.item().key,
+        type: type,
+        value: val,
+      };
+
+      this.filter().query.push(query);
+    });
+
+    this.facade.read(this.filter());
+  }
+}

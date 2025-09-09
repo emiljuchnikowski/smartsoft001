@@ -1,0 +1,26 @@
+#container {
+  ion-card {
+    ion-card-content {
+      max-height: 48rem; // TODO: create custom tailwind class
+      &::after {
+        content: '';
+        height: 3.2rem; // TODO: create custom tailwind class
+      }
+    }
+  }
+  @media screen and (max-width: 480px) {
+    columns: 1;
+  }
+  @media screen and (min-width: 481px) and (max-width: 768px) {
+    columns: 2;
+  }
+  @media screen and (min-width: 769px) and (max-width: 1023px) {
+    columns: 3;
+  }
+  @media screen and (min-width: 1024px) and (max-width: 1599px) {
+    columns: 4;
+  }
+  @media screen and (min-width: 1600px) {
+    columns: 6;
+  }
+}

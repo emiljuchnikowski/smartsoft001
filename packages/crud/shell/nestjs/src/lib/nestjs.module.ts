@@ -1,6 +1,7 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
+
 import { SERVICES } from '@smartsoft001/crud-shell-app-services';
 import { MongoModule } from '@smartsoft001/mongo';
 import { SharedConfig, SharedModule } from '@smartsoft001/nestjs';

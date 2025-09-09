@@ -1,0 +1,48 @@
+@if (control) {
+  <!--  <ion-label position="floating">-->
+  {{
+    control?.parent?.value
+      | smartModelLabel
+        : internalOptions.fieldKey
+        : internalOptions?.model?.constructor
+      | async
+  }}
+  @if (control.value) {
+    {{ control.value.fileName }}
+  }
+  <!--    <ion-text color="danger">-->
+  @if (required) {
+    <span>*</span>
+  }
+  <!--    </ion-text> -->
+  <!--  </ion-label-->
+  ><br />
+  <smart-button [options]="addButtonOptions">{{
+    (control.value ? 'change' : 'add') | translate
+  }}</smart-button>
+
+  @if (control.value && !play) {
+    <smart-button [options]="playButtonOptions">{{
+      'play' | translate
+    }}</smart-button>
+  }
+
+  @if (control.value) {
+    <smart-button [options]="deleteButtonOptions">{{
+      'delete' | translate
+    }}</smart-button>
+  }
+
+  @if (loading()) {
+    @let percentage = percent();
+    <!--    <ion-progress-bar [value]="(percentage ?? 0) / 100"></ion-progress-bar>-->
+  }
+
+  @if (url && play) {
+    <video style="width: 100%" controls controlsList="nodownload">
+      <source type="video/mp4" [src]="url" />
+      Your browser does not support the video tag.
+    </video>
+  }
+}
+<input type="file" accept=".mp4" [hidden]="true" #inputObj />

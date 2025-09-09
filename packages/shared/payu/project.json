@@ -3,6 +3,7 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/shared/payu/src",
   "projectType": "library",
+  "tags": ["scope:shared", "type:util"],
   "generators": {},
   "targets": {
     "lint": {
@@ -32,6 +33,5 @@
       },
       "outputs": ["{options.outputPath}"]
     }
-  },
-  "tags": ["scope:shared", "type:util"]
+  }
 }

@@ -3,6 +3,7 @@
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/auth/shell/nestjs/src",
   "projectType": "library",
+  "tags": ["scope:auth", "type:shell"],
   "targets": {
     "lint": {
       "executor": "@nx/eslint:lint",
@@ -32,6 +33,5 @@
         "assets": ["packages/auth/shell/nestjs/*.md"]
       }
     }
-  },
-  "tags": ["scope:auth", "type:shell"]
+  }
 }

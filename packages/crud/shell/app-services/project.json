@@ -3,6 +3,7 @@
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/crud/shell/app-services/src",
   "projectType": "library",
+  "tags": ["scope:crud", "type:shell"],
   "generators": {},
   "targets": {
     "lint": {
@@ -38,6 +39,5 @@
       },
       "outputs": ["{options.outputPath}"]
     }
-  },
-  "tags": ["scope:crud", "type:shell"]
+  }
 }

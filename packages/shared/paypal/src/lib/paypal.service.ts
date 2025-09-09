@@ -1,12 +1,13 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
+import * as paypal from 'paypal-rest-sdk';
+
 import {
   ITransPaymentSingleService,
   Trans,
   TransStatus,
 } from '@smartsoft001/trans-domain';
-import * as paypal from 'paypal-rest-sdk';
 
 import {
   IPaypalConfigProvider,

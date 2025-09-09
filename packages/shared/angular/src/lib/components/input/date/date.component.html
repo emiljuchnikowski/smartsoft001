@@ -1,0 +1,63 @@
+@if (control) {
+  @if (isMobile) {
+    <!--    <ion-label position="floating">-->
+    {{
+      control?.parent?.value
+        | smartModelLabel
+          : internalOptions.fieldKey
+          : internalOptions?.model?.constructor
+        | async
+    }}
+    <!--      <ion-text color="danger">-->
+    @if (required) {
+      <span>*</span>
+    }
+    <!--      </ion-text>-->
+    <!--    </ion-label>-->
+    <!--    <ion-datetime-->
+    <!--      displayFormat="YYYY-MM-DD"-->
+    <!--      pickerFormat="YYYY-MM-DD"-->
+    <!--      [formControl]="formControl"-->
+    <!--      [attr.autofocus]="fieldOptions?.focused"-->
+    <!--      [cancelText]="'cancel' | translate"-->
+    <!--      [doneText]="'select' | translate"-->
+    <!--      presentation="date"-->
+    <!--      locale="pl-PL"-->
+    <!--    ></ion-datetime>-->
+  }
+  @if (!isMobile) {
+    <!--    <ion-row (click)="picker.open()" class="desktop-row p-0">-->
+    <!--      <ion-col class="pl-0 align-middle">-->
+    <!--        <ion-label position="floating">-->
+    {{
+      control?.parent?.value
+        | smartModelLabel
+          : internalOptions.fieldKey
+          : internalOptions?.model?.constructor
+        | async
+    }}
+    <!--          <ion-text color="danger">-->
+    @if (required) {
+      <span>*</span>
+    }
+    <!--          </ion-text>-->
+    <!--        </ion-label>-->
+    <div style="height: 35px">
+      <p style="width: 100%; position: absolute">{{ control.value }}</p>
+      <input
+        [formControl]="formControl"
+        readonly
+        style="width: 100%; opacity: 0; position: absolute"
+        [matDatepicker]="picker"
+      />
+    </div>
+    <mat-datepicker [hidden]="true" #picker></mat-datepicker>
+    <!--      </ion-col>-->
+    <!--      <ion-col class="pl-0 align-middle" size="auto">-->
+    <!--        <ion-button class="squere-button">-->
+    <!--          <ion-icon slot="icon-only" name="calendar-outline"></ion-icon>-->
+    <!--        </ion-button>-->
+    <!--      </ion-col>-->
+    <!--    </ion-row>-->
+  }
+}

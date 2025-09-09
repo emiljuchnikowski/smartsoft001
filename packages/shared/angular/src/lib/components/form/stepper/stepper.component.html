@@ -1,0 +1,38 @@
+<mat-vertical-stepper #stepper [linear]="true">
+  @for (step of steps; track step) {
+    @let first = $first;
+    @let last = $last;
+    <mat-step [stepControl]="step.form">
+      <ng-template matStepLabel>{{ step.name | translate }}</ng-template>
+
+      <!--      <ion-list class="w-full m-0">-->
+      @for (field of step.fields; track field) {
+        @if (form().controls[field] && !__smartDisabled(field)) {
+          <smart-input
+            [options]="{
+              treeLevel: treeLevel ?? 0,
+              fieldKey: field,
+              control: getUntypedFormControl(field),
+              model: model,
+              mode: mode,
+              possibilities: possibilities[field],
+              component: inputComponents[field],
+            }"
+          ></smart-input>
+        }
+      }
+      <!--      </ion-list>-->
+
+      <div style="float: right">
+        @if (!first) {
+          <button mat-button matStepperPrevious>
+            {{ 'prev' | translate }}
+          </button>
+        }
+        @if (!last) {
+          <button mat-button matStepperNext>{{ 'next' | translate }}</button>
+        }
+      </div>
+    </mat-step>
+  }
+</mat-vertical-stepper>

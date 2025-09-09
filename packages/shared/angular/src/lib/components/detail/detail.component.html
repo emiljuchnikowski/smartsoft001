@@ -1,0 +1,75 @@
+@let optionsLocal = options();
+@if (optionsLocal) {
+  <!--  <ion-item class="px-0">-->
+  <div class="h-10 absolute right-5 container-right">
+    @if (optionsLocal.options?.info) {
+      <smart-info [text]="optionsLocal.options?.info ?? ''"></smart-info>
+    }
+  </div>
+  <!--    <ion-label color="medium" position="stacked">-->
+  {{ optionsLocal?.item?.() | smartModelLabel: optionsLocal.key : type() }}
+  <!--    </ion-label>-->
+  @let item = optionsLocal?.item?.();
+  @if (item) {
+    @switch (optionsLocal.options.type) {
+      @case (FieldType.email) {
+        <smart-detail-email [options]="optionsLocal"></smart-detail-email>
+      }
+      @case (FieldType.flag) {
+        <smart-detail-flag [options]="optionsLocal"></smart-detail-flag>
+      }
+      @case (FieldType.enum) {
+        <smart-detail-enum [options]="optionsLocal"></smart-detail-enum>
+      }
+      @case (FieldType.address) {
+        <smart-detail-address [options]="optionsLocal"></smart-detail-address>
+      }
+      @case (FieldType.object) {
+        <smart-detail-object [options]="optionsLocal"></smart-detail-object>
+      }
+      @case (FieldType.color) {
+        <smart-detail-color [options]="optionsLocal"></smart-detail-color>
+      }
+      @case (FieldType.logo) {
+        <smart-detail-logo [options]="optionsLocal"></smart-detail-logo>
+      }
+      @case (FieldType.array) {
+        <smart-detail-array [options]="optionsLocal"></smart-detail-array>
+      }
+      @case (FieldType.pdf) {
+        <smart-detail-pdf [options]="optionsLocal"></smart-detail-pdf>
+      }
+      @case (FieldType.video) {
+        <smart-detail-video [options]="optionsLocal"></smart-detail-video>
+      }
+      @case (FieldType.attachment) {
+        <smart-detail-attachment
+          [options]="optionsLocal"
+        ></smart-detail-attachment>
+      }
+      @case (FieldType.dateRange) {
+        <smart-detail-date-range
+          [options]="optionsLocal"
+        ></smart-detail-date-range>
+      }
+      @case (FieldType.image) {
+        <smart-detail-image [options]="optionsLocal"></smart-detail-image>
+      }
+      @case (FieldType.phoneNumberPl) {
+        <smart-detail-phone-number-pl
+          [options]="optionsLocal"
+        ></smart-detail-phone-number-pl>
+      }
+      @default {
+        <smart-detail-text [options]="optionsLocal"></smart-detail-text>
+      }
+    }
+  } @else {
+    <ng-container *ngTemplateOutlet="skeletonTpl"></ng-container>
+  }
+  <!--  </ion-item>-->
+}
+
+<ng-template #skeletonTpl>
+  <!--  <ion-skeleton-text [animated]="true"></ion-skeleton-text>-->
+</ng-template>

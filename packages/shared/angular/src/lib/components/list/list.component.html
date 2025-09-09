@@ -1,0 +1,37 @@
+@if (template() === 'default') {
+  @switch (mode()) {
+    @case (ListMode.desktop) {
+      <smart-list-desktop [options]="internalOptions"></smart-list-desktop>
+    }
+    @case (ListMode.mobile) {
+      <smart-list-mobile [options]="internalOptions"></smart-list-mobile>
+    }
+    @case (ListMode.masonryGrid) {
+      <smart-list-masonry-grid
+        [options]="internalOptions"
+      ></smart-list-masonry-grid>
+    }
+  }
+
+  <!--  <ion-row>-->
+  <!--    <ion-col></ion-col>-->
+  <!--    <ion-col size="auto">-->
+  @let loading = internalOptions?.provider?.loading();
+  <smart-loader [show]="loading ?? false"></smart-loader>
+  @if (!loading && !internalOptions.provider.list()?.length) {
+    <h2>
+      <br />
+      {{ 'noResults' | translate }}
+    </h2>
+  }
+  <!--    </ion-col>-->
+  <!--    <ion-col></ion-col>-->
+  <!--  </ion-row>-->
+
+  <ng-container [ngTemplateOutlet]="contentTpl"></ng-container>
+}
+
+<ng-template #contentTpl>
+  <ng-content></ng-content>
+</ng-template>
+<div class="dynamic-content"></div>

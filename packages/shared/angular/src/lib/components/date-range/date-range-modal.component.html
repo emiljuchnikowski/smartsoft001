@@ -1,0 +1,160 @@
+<div
+  class="p-5 flex flex-col justify-center items-center text-white heading-container"
+  padding
+>
+  <div>
+    <span class="text-xs">
+      &nbsp;{{
+        dateForm.value.dateFrom
+          ? dateForm.value.dateFrom + ' - ' + dateForm.value.dateTo
+          : ''
+      }}
+    </span>
+  </div>
+  <div
+    id="dismiss-div"
+    class="absolute right-0 text-2xl py-0 top-1 w-12 px-2.5 text-center"
+    (click)="dismissPage()"
+  >
+    <!--    <ion-icon name="close-outline"></ion-icon>-->
+  </div>
+  <div class="h-0.5 bg-white/16 w-3/5 mt-2.5"></div>
+</div>
+
+@if (showFilterBtns()) {
+  <div
+    class="grid grid-rows-2 grid-cols-3 w-full mx-auto gap-x-2.5 gap-y-5 p-5 grid-filter-btns"
+  >
+    <div (click)="selectToday()">
+      <span
+        class="m-0 p-2 h-auto text-white rounded-2xl text-sm text-center span-filter"
+        [ngClass]="{
+          'bg-white selected-filter': selectedButtonName === 'Today',
+        }"
+      >
+        {{ 'CALENDAR.Today' | translate }}
+      </span>
+    </div>
+
+    <!--    TODO: move span-filter and styles to a separate component-->
+    <div (click)="selectLastSevenDays()" style="text-align: center">
+      <span
+        class="m-0 p-2 h-auto text-white rounded-2xl text-sm text-center span-filter"
+        [ngClass]="{
+          'bg-white selected-filter': selectedButtonName === 'LastSevenDays',
+        }"
+      >
+        {{ 'CALENDAR.LastSevenDays' | translate }}
+      </span>
+    </div>
+
+    <div (click)="selectThisMonth()" style="text-align: right">
+      <span
+        class="m-0 p-2 h-auto text-white rounded-2xl text-sm text-center span-filter"
+        [ngClass]="{
+          'bg-white selected-filter': selectedButtonName === 'ThisMonth',
+        }"
+      >
+        {{ 'CALENDAR.ThisMonth' | translate }}
+      </span>
+    </div>
+
+    <div (click)="selectYesterday()">
+      <span
+        class="m-0 p-2 h-auto text-white rounded-2xl text-sm text-center span-filter"
+        [ngClass]="{
+          'bg-white selected-filter': selectedButtonName === 'Yesterday',
+        }"
+      >
+        {{ 'CALENDAR.Yesterday' | translate }}
+      </span>
+    </div>
+
+    <div (click)="selectLastThirtyDays()" style="text-align: center">
+      <span
+        class="m-0 p-2 h-auto text-white rounded-2xl text-sm text-center span-filter"
+        [ngClass]="{
+          'bg-white selected-filter': selectedButtonName === 'LastThirtyDays',
+        }"
+      >
+        {{ 'CALENDAR.LastThirtyDays' | translate }}
+      </span>
+    </div>
+
+    <div (click)="selectLastMonth()" style="text-align: right">
+      <span
+        class="m-0 p-2 h-auto text-white rounded-2xl text-sm text-center span-filter"
+        [ngClass]="{
+          'bg-white selected-filter': selectedButtonName === 'LastMonth',
+        }"
+      >
+        {{ 'CALENDAR.LastMonth' | translate }}
+      </span>
+    </div>
+  </div>
+}
+
+<div
+  class="grid grid-cols-7 gap-y-2.5 gap-x-px items-center border-b border-gray-200 h-8 text-center"
+  style="background: #fbfcfc; color: #a6aaaf"
+>
+  <div>{{ 'CALENDAR.DAY_OF_WEEK.Sun' | translate }}</div>
+  <div>{{ 'CALENDAR.DAY_OF_WEEK.Mon' | translate }}</div>
+  <div>{{ 'CALENDAR.DAY_OF_WEEK.Tue' | translate }}</div>
+  <div>{{ 'CALENDAR.DAY_OF_WEEK.Wed' | translate }}</div>
+  <div>{{ 'CALENDAR.DAY_OF_WEEK.Thu' | translate }}</div>
+  <div>{{ 'CALENDAR.DAY_OF_WEEK.Fri' | translate }}</div>
+  <div>{{ 'CALENDAR.DAY_OF_WEEK.Sat' | translate }}</div>
+</div>
+
+<!--<ion-content #scrollMe>-->
+<!--  <ion-refresher slot="fixed" (ionRefresh)="loadDataPrev($event)">-->
+<!--    <ion-refresher-content-->
+<!--      pullingIcon="chevron-down-circle-outline"-->
+<!--      refreshingSpinner="circles"-->
+<!--    >-->
+<!--    </ion-refresher-content>-->
+<!--  </ion-refresher>-->
+
+@for (month of calendar; track month) {
+  <p
+    class="ml-0 p-5 text-base font-medium bg-gray-50 border-t border-b border-gray-200 text-base mb-2.5 heading-month-year"
+  >
+    {{ 'CALENDAR.MONTH.' + month.monthName | translate }} {{ month.year }}
+  </p>
+  <div class="grid grid-cols-7 gap-y-2.5 gap-x-px items-center">
+    @for (day of month.dates; track day) {
+      <div
+        class="h-8 text-center flex flex-col justify-center items-center text-slate-600"
+        [ngClass]="{
+          'text-white rounded-l-lg selection-start': isSelectionStart(day),
+          'text-white rounded-r-lg selection-end': isSelectionEnd(day),
+          'font-bold bg-gray-200': isInRange(day),
+          'rounded-lg': isStartAndEndDateSame(),
+        }"
+        id="dateRef"
+        (click)="subject$.next({ date: day, event: $event })"
+      >
+        {{ day?.date() }}
+      </div>
+    }
+  </div>
+}
+<!--  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadDataNext($event)">-->
+<!--    <ion-infinite-scroll-content-->
+<!--      loadingSpinner="bubbles"-->
+<!--    ></ion-infinite-scroll-content>-->
+<!--  </ion-infinite-scroll>-->
+<!--</ion-content>-->
+<!--<ion-footer>-->
+<!--  <ion-toolbar>-->
+<!--    <ion-button-->
+<!--      style="margin: 0 1.2rem"-->
+<!--      expand="block"-->
+<!--      (click)="applyDates()"-->
+<!--      [disabled]="restrictSelectionTo && !isSelectionInRestrictedRange()"-->
+<!--    >-->
+{{ 'select' | translate }}
+<!--    </ion-button>-->
+<!--  </ion-toolbar>-->
+<!--</ion-footer>-->

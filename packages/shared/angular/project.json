@@ -1,0 +1,108 @@
+{
+  "name": "angular",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/shared/angular/src",
+  "prefix": "lib",
+  "projectType": "library",
+  "release": {
+    "version": {
+      "generatorOptions": {
+        "packageRoot": "dist/{projectRoot}",
+        "currentVersionResolver": "git-tag",
+        "fallbackCurrentVersionResolver": "disk"
+      }
+    }
+  },
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:package",
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+      "options": {
+        "project": "packages/shared/angular/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "packages/shared/angular/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "packages/shared/angular/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "postbuild": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "npx tailwind -c packages/shared/angular/tailwind.config.js -i packages/shared/angular/src/lib/styles.css -o dist/packages/shared/angular/styles.css"
+        ]
+      }
+    },
+    "nx-release-publish": {
+      "options": {
+        "packageRoot": "dist/{projectRoot}"
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "packages/shared/angular/jest.config.ts"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "storybook": {
+      "executor": "@storybook/angular:start-storybook",
+      "options": {
+        "port": 4400,
+        "configDir": "packages/shared/angular/.storybook",
+        "browserTarget": "angular:build-storybook",
+        "compodoc": false,
+        "styles": ["packages/shared/angular/src/lib/styles.css"]
+      },
+      "configurations": {
+        "ci": {
+          "quiet": true
+        }
+      }
+    },
+    "build-storybook": {
+      "executor": "@storybook/angular:build-storybook",
+      "outputs": ["{options.outputDir}"],
+      "options": {
+        "outputDir": "dist/storybook/angular",
+        "configDir": "packages/shared/angular/.storybook",
+        "browserTarget": "angular:build-storybook",
+        "compodoc": false
+      },
+      "configurations": {
+        "ci": {
+          "quiet": true
+        }
+      }
+    },
+    "test-storybook": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "test-storybook -c packages/shared/angular/.storybook --url=http://localhost:4400"
+      }
+    },
+    "static-storybook": {
+      "executor": "@nx/web:file-server",
+      "dependsOn": ["build-storybook"],
+      "options": {
+        "buildTarget": "angular:build-storybook",
+        "staticFilePath": "dist/storybook/angular",
+        "spa": true
+      },
+      "configurations": {
+        "ci": {
+          "buildTarget": "angular:build-storybook:ci"
+        }
+      }
+    }
+  }
+}

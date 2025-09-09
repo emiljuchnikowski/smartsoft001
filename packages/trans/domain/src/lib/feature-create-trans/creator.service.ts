@@ -7,7 +7,7 @@ import {
 } from '@smartsoft001/domain-core';
 
 import { ITransCreate } from './interfaces';
-import { Trans, TRANS_SYSTEMS } from '../entities/trans.entity';
+import { Trans, TRANS_SYSTEMS } from '../entities';
 import { ITransInternalService, ITransPaymentService } from '../interfaces';
 import { TransBaseService } from '../trans.service';
 
