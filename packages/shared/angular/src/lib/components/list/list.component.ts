@@ -1,16 +1,15 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
-  ComponentFactoryResolver,
-  Input,
-  NgModuleRef,
-  QueryList,
+  computed,
+  effect,
+  input,
+  Signal,
   signal,
   TemplateRef,
-  ViewChild,
-  ViewChildren,
+  viewChild,
+  viewChildren,
   ViewEncapsulation,
   WritableSignal,
 } from '@angular/core';
@@ -53,56 +52,54 @@ export class ListComponent<
 > extends CreateDynamicComponent<ListBaseComponent<any>>('list') {
   private _options!: WritableSignal<IListInternalOptions<T>>;
 
-  mode: WritableSignal<ListMode> = signal<ListMode>(ListMode.desktop);
+  mode: Signal<ListMode> = signal<ListMode>(ListMode.desktop);
 
   ListMode = ListMode;
 
-  @Input() set options(val: IListOptions<T>) {
-    this._options.set(val);
-    this.initFields();
-    this.initModel();
-    this.refreshDynamicInstance();
-  }
+  options = input.required<IListOptions<T>>();
 
   get internalOptions(): IListInternalOptions<T> {
     return this._options();
   }
 
-  @ViewChild('contentTpl', { read: TemplateRef, static: false })
-  override contentTpl!: TemplateRef<any>;
+  override contentTpl = viewChild<TemplateRef<any>>('contentTpl');
 
-  @ViewChildren(DynamicContentDirective, { read: DynamicContentDirective })
-  override dynamicContents = new QueryList<DynamicContentDirective>();
+  override dynamicContents = viewChildren(DynamicContentDirective);
 
-  constructor(
-    private hardwareService: HardwareService,
-    private cd: ChangeDetectorRef,
-    private moduleRef: NgModuleRef<any>,
-    private componentFactoryResolver: ComponentFactoryResolver,
-  ) {
-    super(cd, moduleRef, componentFactoryResolver);
+  constructor(private hardwareService: HardwareService) {
+    super();
+
+    effect(() => {
+      this._options.set(this.options());
+      this.initFields();
+      this.initModel();
+      this.refreshDynamicInstance();
+    });
   }
 
   override refreshProperties(): void {
-    this.baseInstance.options = this.internalOptions;
+    this.baseComponentRef.setInput('options', this._options());
   }
 
   private initFields(): void {
-    this._options().fields = _.sortBy(
-      getModelFieldsWithOptions(new (this._options() as any).type()).filter(
-        (item) => item?.options?.list,
-      ),
-      (item) => (item?.options?.list as IFieldListMetadata).order,
-    );
+    this._options.update((options) => {
+      return {
+        ...options,
+        fields: _.sortBy(
+          getModelFieldsWithOptions(new (this._options() as any).type()).filter(
+            (item) => item?.options?.list,
+          ),
+          (item) => (item?.options?.list as IFieldListMetadata).order,
+        ),
+      };
+    });
   }
 
   private initModel(): void {
-    if (this._options()?.mode) {
-      this.mode.set(this._options().mode!);
-    } else {
-      this.mode.set(
-        this.hardwareService.isMobile ? ListMode.mobile : ListMode.desktop,
-      );
-    }
+    this.mode = computed(
+      () =>
+        this._options()?.mode ??
+        (this.hardwareService.isMobile ? ListMode.mobile : ListMode.desktop),
+    );
   }
 }

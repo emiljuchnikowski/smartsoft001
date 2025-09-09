@@ -42,10 +42,6 @@ export class InputDateWithEditComponent<T>
 {
   private _subscriptions = new Subscription();
 
-  constructor(cd: ChangeDetectorRef) {
-    super(cd);
-  }
-
   override ngOnDestroy(): void {
     super.ngOnDestroy();
     if (this._subscriptions) {

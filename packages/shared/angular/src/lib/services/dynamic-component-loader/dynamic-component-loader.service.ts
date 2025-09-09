@@ -1,19 +1,16 @@
 import {
   ComponentFactory,
   ComponentFactoryResolver,
+  inject,
   Injectable,
-  Injector,
 } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class DynamicComponentLoader<T> {
+  private resolver = inject(ComponentFactoryResolver);
+
   // Generic T is unused in original
   static declaredComponents: any[] = [];
-
-  constructor(
-    private resolver: ComponentFactoryResolver,
-    private injector: Injector,
-  ) {}
 
   async getComponentsWithFactories<C>(options: {
     // Generic C is unused in original

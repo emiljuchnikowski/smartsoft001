@@ -1,5 +1,5 @@
 import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
-import { Inject, Injectable, InjectionToken, Optional } from '@angular/core';
+import { inject, Injectable, InjectionToken } from '@angular/core';
 import { firstValueFrom, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -13,10 +13,8 @@ export interface IFileServiceConfig {
 
 @Injectable()
 export class FileService {
-  constructor(
-    @Optional() @Inject(FILE_SERVICE_CONFIG) private config: IFileServiceConfig,
-    private http: HttpClient,
-  ) {}
+  private config = inject(FILE_SERVICE_CONFIG);
+  private http = inject(HttpClient);
 
   upload<T>(file: File, callback?: (result: T) => void): Observable<number> {
     const formData = new FormData();

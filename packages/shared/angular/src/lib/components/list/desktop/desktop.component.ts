@@ -13,7 +13,7 @@ import {
   OnDestroy,
   OnInit,
   Signal,
-  ViewChild,
+  viewChild,
   ViewContainerRef,
 } from '@angular/core';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
@@ -100,8 +100,6 @@ export class ListDesktopComponent<T extends IEntity<string>>
         ...(this.selectMode === 'multi' ? ['selectMulti'] : []),
         ...this.keys,
         ...(this.removeHandler ? ['removeAction'] : []),
-        // TODO : nikt tego nie chce :(
-        //...(this.detailsComponent ? ["detailsAction"] : []),
         ...(this.itemHandler ? ['itemAction'] : []),
       ];
     }
@@ -109,10 +107,8 @@ export class ListDesktopComponent<T extends IEntity<string>>
     return null;
   }
 
-  @ViewChild(MatSort, { static: true })
-  sortObj!: MatSort;
-  @ViewChild('topTpl', { read: ViewContainerRef, static: true })
-  topTpl!: ViewContainerRef;
+  sortObj = viewChild(MatSort);
+  topTpl = viewChild<ViewContainerRef>('topTpl');
 
   protected override initList(val: IListInternalOptions<T>): void {
     super.initList(val);
@@ -163,21 +159,24 @@ export class ListDesktopComponent<T extends IEntity<string>>
       defaultDesc?: boolean | undefined;
     };
 
-    if (this.sort) {
-      this.sortObj.active = sort?.default ?? '';
-      this.sortObj.direction = sort.defaultDesc ? 'desc' : 'asc';
+    const sortObj = this.sortObj();
+    if (sortObj) {
+      if (this.sort) {
+        sortObj.active = sort?.default ?? '';
+        sortObj.direction = sort.defaultDesc ? 'desc' : 'asc';
 
-      this._subscriptions.add(
-        this.sortObj.sortChange.subscribe((sort) => {
-          this.provider.getData({
-            offset: 0,
-            sortBy: sort.active ? sort.active : '',
-            sortDesc: this.sortObj.direction === 'desc',
-          });
-        }),
-      );
-    } else {
-      this.sortObj.disabled = true;
+        this._subscriptions.add(
+          sortObj.sortChange.subscribe((sort) => {
+            this.provider.getData({
+              offset: 0,
+              sortBy: sort.active ? sort.active : '',
+              sortDesc: sortObj.direction === 'desc',
+            });
+          }),
+        );
+      } else {
+        sortObj.disabled = true;
+      }
     }
   }
 
@@ -190,9 +189,9 @@ export class ListDesktopComponent<T extends IEntity<string>>
   private generateDynamicComponents(): void {
     if (!this.componentFactories) return;
 
-    if (this.componentFactories.top && this.topTpl) {
-      if (!this.topTpl.get(0)) {
-        this.topTpl.createComponent(this.componentFactories.top);
+    if (this.componentFactories.top && this.topTpl()) {
+      if (!this.topTpl()?.get(0)) {
+        this.topTpl()?.createComponent(this.componentFactories.top);
       }
     }
   }

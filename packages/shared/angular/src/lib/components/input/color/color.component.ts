@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { ColorPickerDirective } from 'ngx-color-picker';
 
 import { ModelLabelPipe } from '../../../pipes';
@@ -13,10 +13,6 @@ import { InputBaseComponent } from '../base/base.component';
 })
 export class InputColorComponent<T> extends InputBaseComponent<T> {
   color!: string;
-
-  constructor(cd: ChangeDetectorRef) {
-    super(cd);
-  }
 
   protected override afterSetOptionsHandler() {
     this.color = this.control.value;

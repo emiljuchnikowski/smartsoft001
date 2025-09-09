@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 
 import { DetailBaseComponent } from '../base/base.component';
 
-
 @Component({
   selector: 'smart-detail-email',
   template: `
@@ -17,5 +16,5 @@ import { DetailBaseComponent } from '../base/base.component';
   styleUrls: ['./email.component.scss'],
 })
 export class DetailEmailComponent<
-  T extends { [key: string]: any } | undefined
+  T extends { [key: string]: any } | undefined,
 > extends DetailBaseComponent<T> {}

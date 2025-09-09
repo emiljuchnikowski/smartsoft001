@@ -1,10 +1,5 @@
 import { NgComponentOutlet } from '@angular/common';
-import {
-  Component,
-  computed, inject,
-  signal,
-  Signal
-} from '@angular/core';
+import { Component, computed, inject, signal, Signal } from '@angular/core';
 import { DynamicIoDirective } from 'ng-dynamic-component';
 
 import { IEntity } from '@smartsoft001/domain-core';
@@ -28,7 +23,7 @@ import { DetailBaseComponent } from '../base/base.component';
   imports: [NgComponentOutlet, DynamicIoDirective],
 })
 export class DetailObjectComponent<
-  T extends IEntity<string> & { [key: string]: any } | undefined,
+  T extends (IEntity<string> & { [key: string]: any }) | undefined,
   TChild extends IEntity<string>,
 > extends DetailBaseComponent<T> {
   public detailsComponent = inject(DETAILS_COMPONENT_TOKEN);

@@ -1,4 +1,11 @@
-import { Directive, input, InputSignal, OnInit, Signal } from '@angular/core';
+import {
+  Directive,
+  inject,
+  input,
+  InputSignal,
+  OnInit,
+  Signal,
+} from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Debounce } from 'lodash-decorators';
 
@@ -6,11 +13,13 @@ import { IEntity } from '@smartsoft001/domain-core';
 import { FieldType, IModelFilter } from '@smartsoft001/models';
 
 import { CrudFacade } from '../../../+state/crud.facade';
-import { CrudConfig } from '../../../crud.config';
 import { ICrudFilter } from '../../../models';
 
 @Directive()
 export class BaseComponent<T extends IEntity<string>> implements OnInit {
+  protected facade = inject(CrudFacade<T>);
+  protected translateService = inject(TranslateService);
+
   possibilities: Signal<{ id: any; text: string }[]>;
 
   readonly item: InputSignal<IModelFilter> = input<IModelFilter>();
@@ -72,12 +81,6 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
   get lang(): string {
     return this.translateService.currentLang;
   }
-
-  constructor(
-    protected facade: CrudFacade<T>,
-    private config: CrudConfig<T>,
-    protected translateService: TranslateService,
-  ) {}
 
   @Debounce(500)
   refresh(val: any, type = null): void {

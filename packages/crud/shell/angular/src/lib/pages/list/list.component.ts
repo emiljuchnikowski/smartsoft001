@@ -3,17 +3,16 @@ import {
   ChangeDetectorRef,
   Component,
   ComponentFactory,
-  ComponentFactoryResolver,
   computed,
+  inject,
   Injector,
-  NgModuleRef,
+  input,
   OnDestroy,
   OnInit,
-  QueryList,
   Signal,
   TemplateRef,
-  ViewChild,
-  ViewChildren,
+  viewChild,
+  viewChildren,
   ViewContainerRef,
   WritableSignal,
 } from '@angular/core';
@@ -80,6 +79,18 @@ export class ListComponent<T extends IEntity<string>>
   )
   implements OnInit, OnDestroy
 {
+  private facade = inject(CrudFacade<T>);
+  private router = inject(Router);
+  private dynamicComponentLoader = inject(DynamicComponentLoader<T>);
+  private injector = inject(Injector);
+  private cd = inject(ChangeDetectorRef);
+  private menuService = inject(MenuService);
+  private hardwareService = inject(HardwareService);
+  private paginationFacade = inject(CrudListPaginationFactory<T>);
+  private pageService = inject(PageService<T>);
+  public config = inject(CrudFullConfig<T>);
+  private searchService = inject(CrudSearchService);
+
   private _cleanMultiSelected$ = new Subject<void>();
 
   pageOptions: Signal<IPageOptions>;
@@ -88,37 +99,22 @@ export class ListComponent<T extends IEntity<string>>
 
   filter: Signal<ICrudFilter> = this.facade.filter;
 
-  @ViewChild('topTpl', { read: ViewContainerRef, static: false })
-  topTpl: ViewContainerRef;
+  topTpl = viewChild<ViewContainerRef>('topTpl');
 
-  @ViewChild('contentTpl', { read: TemplateRef, static: false })
-  contentTpl: TemplateRef<any>;
+  contentTpl = viewChild<TemplateRef<any>>('contentTpl');
 
-  @ViewChildren(DynamicContentDirective, { read: DynamicContentDirective })
-  dynamicContents = new QueryList<DynamicContentDirective>();
+  dynamicContents = viewChildren<DynamicContentDirective>(
+    DynamicContentDirective,
+  );
 
-  constructor(
-    private facade: CrudFacade<T>,
-    private router: Router,
-    private dynamicComponentLoader: DynamicComponentLoader<T>,
-    private injector: Injector,
-    private cd: ChangeDetectorRef,
-    private menuService: MenuService,
-    private hardwareService: HardwareService,
-    private paginationFacade: CrudListPaginationFactory<T>,
-    private pageService: PageService<T>,
-    public config: CrudFullConfig<T>,
-    private searchService: CrudSearchService,
-    private moduleRef: NgModuleRef<any>,
-    private componentFactoryResolver: ComponentFactoryResolver,
-  ) {
-    super(cd, moduleRef, componentFactoryResolver);
+  constructor() {
+    super();
 
-    this.links = facade.links();
+    this.links = this.facade.links();
   }
 
   refreshProperties(): void {
-    this.baseInstance.listOptions = this.listOptions();
+    this.baseComponentRef.setInput('listOptions', this.listOptions());
   }
 
   async ngOnInit(): Promise<void> {
@@ -434,8 +430,8 @@ export class ListComponent<T extends IEntity<string>>
         : null;
 
     setTimeout(() => {
-      if (factory && !this.topTpl.get(0)) {
-        this.topTpl.createComponent(factory);
+      if (factory && !this.topTpl().get(0)) {
+        this.topTpl().createComponent(factory);
       }
     });
   }

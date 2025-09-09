@@ -1,10 +1,5 @@
 import { NgComponentOutlet } from '@angular/common';
-import {
-  Component,
-  computed, inject,
-  signal,
-  Signal
-} from '@angular/core';
+import { Component, computed, inject, signal, Signal } from '@angular/core';
 import { DynamicIoDirective } from 'ng-dynamic-component';
 
 import { IEntity } from '@smartsoft001/domain-core';

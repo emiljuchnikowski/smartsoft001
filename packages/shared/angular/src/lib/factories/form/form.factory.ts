@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Inject, Injectable, Optional } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
   AbstractControl,
   UntypedFormArray,
@@ -27,22 +27,15 @@ import {
   ZipCodeService,
 } from '@smartsoft001/utils';
 
-import {
-  IModelValidatorsProvider,
-  MODEL_VALIDATORS_PROVIDER,
-} from '../../providers';
+import { MODEL_VALIDATORS_PROVIDER } from '../../providers';
 import { AuthService, SmartFormGroup, DetailsService } from '../../services';
 
 @Injectable()
 export class FormFactory {
-  constructor(
-    private fb: UntypedFormBuilder,
-    private authService: AuthService,
-    private detailsService: DetailsService,
-    @Optional()
-    @Inject(MODEL_VALIDATORS_PROVIDER)
-    private validatorsProvider: IModelValidatorsProvider,
-  ) {}
+  private fb = inject(UntypedFormBuilder);
+  private authService = inject(AuthService);
+  private detailsService = inject(DetailsService);
+  private validatorsProvider = inject(MODEL_VALIDATORS_PROVIDER);
 
   static checkModelMeta<T>(obj: T) {
     if (!obj) throw new Error('You should set object as param');

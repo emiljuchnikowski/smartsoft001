@@ -3,7 +3,6 @@ import {
   OnDestroy,
   OnInit,
   signal,
-  ViewChild,
   WritableSignal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';

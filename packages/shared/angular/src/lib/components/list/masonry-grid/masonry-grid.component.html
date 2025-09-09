@@ -8,7 +8,7 @@
         <img [ngSrc]="item.image | smartFileUrl" alt="" fill />
       }
 
-      <!--        <ion-card-content class="overflow-hidden">-->
+      <!--        <ion-card-content class="overflow-hidden after:block after:w-full after:bg-gradient-to-r after:from-transparent after:to-white after:absolute after:bottom-0">-->
       @for (key of keys; track key) {
         @let cell = item.data | smartListCell: key : cellPipe : type;
         @if (cell && cell.value != item.image) {
@@ -59,7 +59,7 @@
 @if (
   loadNextPage &&
   Object.keys(list() ?? [])?.length &&
-  options.pagination?.mode !== PaginationMode.singlePage
+  options().pagination?.mode !== PaginationMode.singlePage
 ) {
   <!--  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadNextPage?.($event)">-->
   <!--    <ion-infinite-scroll-content loadingSpinner="circles">-->
@@ -67,7 +67,7 @@
   <!--  </ion-infinite-scroll>-->
 }
 
-@if (options?.pagination?.mode === PaginationMode.singlePage) {
+@if (options()?.pagination?.mode === PaginationMode.singlePage) {
   <smart-paging
     [page]="page()"
     [totalPages]="totalPages()"

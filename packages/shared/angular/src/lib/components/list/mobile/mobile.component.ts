@@ -2,7 +2,7 @@ import {
   AfterViewInit,
   Component,
   Signal,
-  ViewChild,
+  viewChild,
   ViewContainerRef,
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -33,8 +33,7 @@ export class ListMobileComponent<T extends IEntity<string>>
   listMobile = this.list as Signal<T[]>;
   componentFactories: IListComponentFactories<T> | null = null;
 
-  @ViewChild('topTpl', { read: ViewContainerRef, static: true })
-  topTpl!: ViewContainerRef;
+  topTpl = viewChild<ViewContainerRef>('topTpl');
 
   protected override initList(val: IListInternalOptions<T>): void {
     super.initList(val);
@@ -51,9 +50,9 @@ export class ListMobileComponent<T extends IEntity<string>>
   private generateDynamicComponents(): void {
     if (!this.componentFactories) return;
 
-    if (this.componentFactories.top && this.topTpl) {
-      if (!this.topTpl.get(0)) {
-        this.topTpl.createComponent(this.componentFactories.top);
+    if (this.componentFactories.top && this.topTpl()) {
+      if (!this.topTpl()?.get(0)) {
+        this.topTpl()?.createComponent(this.componentFactories.top);
       }
     }
   }

@@ -1,8 +1,9 @@
 import {
   ChangeDetectorRef,
-  ComponentFactoryResolver,
+  ComponentFactoryResolver, ComponentRef,
   Directive,
-  DoCheck, inject,
+  DoCheck,
+  inject,
   NgModuleRef,
   OnDestroy,
   Signal,
@@ -35,6 +36,7 @@ export abstract class BaseComponent implements OnDestroy {
 
 export interface IDynamicComponent<T> extends BaseComponent {
   baseInstance: T;
+  baseComponentRef: ComponentRef<T>;
   template: WritableSignal<'custom' | 'default'>;
 
   contentTpl: Signal<TemplateRef<any> | ViewContainerRef | undefined>;
@@ -45,10 +47,10 @@ export interface IDynamicComponent<T> extends BaseComponent {
 }
 
 export function CreateDynamicComponent<
-  T extends { contentTpl: Signal<TemplateRef<any> | ViewContainerRef | undefined>} = any,
->(
-  type: DynamicComponentType,
-): new () => IDynamicComponent<T> {
+  T extends {
+    contentTpl: Signal<TemplateRef<any> | ViewContainerRef | undefined>;
+  } = any,
+>(type: DynamicComponentType): new () => IDynamicComponent<T> {
   @Directive()
   abstract class Component extends BaseComponent implements DoCheck {
     private cd = inject(ChangeDetectorRef);
@@ -59,11 +61,14 @@ export function CreateDynamicComponent<
     private _findDynamicContent = false;
 
     baseInstance: T | null = null;
+    baseComponentRef: ComponentRef<T> | null = null;
 
     dynamicType: Readonly<DynamicComponentType> = type;
     template: WritableSignal<'custom' | 'default'> = signal('default');
 
-    abstract contentTpl: Signal<TemplateRef<any> | ViewContainerRef | undefined>;
+    abstract contentTpl: Signal<
+      TemplateRef<any> | ViewContainerRef | undefined
+    >;
     abstract dynamicContents: Signal<readonly DynamicContentDirective[]>;
 
     refreshDynamicInstance() {
@@ -80,9 +85,11 @@ export function CreateDynamicComponent<
 
       this._findDynamicContent = true;
 
-      toObservable(this.dynamicContents).pipe(this.takeUntilDestroy).subscribe(() => {
-        this.init();
-      });
+      toObservable(this.dynamicContents)
+        .pipe(this.takeUntilDestroy)
+        .subscribe(() => {
+          this.init();
+        });
       this.init();
     }
 
@@ -99,12 +106,12 @@ export function CreateDynamicComponent<
         const first = this.dynamicContents()[0];
         if (first) {
           this._renderCustom = true;
-          this.baseInstance =
-            first.container.createComponent(
-              factory,
-            ).instance;
+          this.baseComponentRef = first.container.createComponent(factory)
+          this.baseInstance = this.baseComponentRef.instance;
           this.refreshDynamicInstance();
-          this.baseInstance?.contentTpl()?.createEmbeddedView(this.contentTpl());
+          this.baseInstance
+            ?.contentTpl()
+            ?.createEmbeddedView(this.contentTpl());
         }
       }
 

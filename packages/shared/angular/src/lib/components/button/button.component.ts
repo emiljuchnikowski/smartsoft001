@@ -1,10 +1,13 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
-  Component, effect, input,
-  viewChild, viewChildren,
+  Component,
+  effect,
+  input,
+  viewChild,
+  viewChildren,
   ViewContainerRef,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
 
 import { DynamicContentDirective } from '../../directives';
@@ -38,7 +41,9 @@ export class ButtonComponent extends CreateDynamicComponent<ButtonBaseComponent>
 
   override contentTpl = viewChild<ViewContainerRef>('contentTpl');
 
-  override dynamicContents = viewChildren<DynamicContentDirective>(DynamicContentDirective);
+  override dynamicContents = viewChildren<DynamicContentDirective>(
+    DynamicContentDirective,
+  );
 
   constructor() {
     super();

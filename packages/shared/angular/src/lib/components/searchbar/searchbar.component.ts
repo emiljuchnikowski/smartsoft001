@@ -2,13 +2,10 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Input,
+  effect,
+  model,
   OnDestroy,
-  Output,
-  QueryList,
   signal,
-  ViewChildren,
   ViewEncapsulation,
   WritableSignal,
 } from '@angular/core';
@@ -61,22 +58,22 @@ import { debounceTime } from 'rxjs/operators';
 export class SearchbarComponent implements OnDestroy, AfterViewInit {
   private _subscriptions = new Subscription();
 
-  control: WritableSignal<UntypedFormControl>;
-  @Input() show: WritableSignal<boolean> = signal<boolean>(true);
-
-  @Input() set text(val: string | null) {
-    if (val?.length) {
-      this.control().setValue(val);
-    }
-  }
-
-  @Output() textChange = new EventEmitter<string>();
+  control: WritableSignal<UntypedFormControl> = signal(
+    new UntypedFormControl(),
+  );
+  show = model<boolean>(true);
+  text = model.required<string>();
 
   // @ViewChildren(IonSearchbar, { read: IonSearchbar }) searchComponents =
-  //   new QueryList();
+  //   new QueryList(); //TODO: rewrite ionic usage
 
   constructor() {
-    this.control = signal(new UntypedFormControl());
+    effect(() => {
+      const text = this.text();
+      if (text?.length) {
+        this.control().setValue(text);
+      }
+    });
   }
 
   async setShow(): Promise<void> {
@@ -92,10 +89,11 @@ export class SearchbarComponent implements OnDestroy, AfterViewInit {
       this.control()
         .valueChanges.pipe(debounceTime(1000))
         .subscribe((val) => {
-          this.textChange.emit(val);
+          this.text.set(val);
         }),
     );
 
+    //TODO: rewrite ionic usage
     // this._subscriptions.add(
     //   this.searchComponents.changes.subscribe(
     //     (searchComponents: QueryList<IonSearchbar>) => {

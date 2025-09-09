@@ -41,10 +41,6 @@ import { InputBaseComponent } from '../base/base.component';
   imports: [ReactiveFormsModule, ModelLabelPipe, AsyncPipe],
 })
 export class InputPhoneNumberPlComponent<T> extends InputBaseComponent<T> {
-  constructor(cd: ChangeDetectorRef) {
-    super(cd);
-  }
-
   override afterSetOptionsHandler() {
     const validators = this.control.validator ? [this.control.validator] : [];
 

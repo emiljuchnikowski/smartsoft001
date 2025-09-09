@@ -1,7 +1,8 @@
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component, effect,
+  Component,
+  effect,
   ElementRef,
   inject,
   input,
@@ -9,9 +10,10 @@ import {
   output,
   Signal,
   TemplateRef,
-  Type, viewChild,
+  Type,
+  viewChild,
   viewChildren,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -123,7 +125,8 @@ export class FormComponent<T>
   validChange = output<boolean>();
 
   override contentTpl = viewChild<TemplateRef<any>>('contentTpl');
-  override dynamicContents: Signal<readonly DynamicContentDirective[]> = viewChildren<DynamicContentDirective>(DynamicContentDirective);
+  override dynamicContents: Signal<readonly DynamicContentDirective[]> =
+    viewChildren<DynamicContentDirective>(DynamicContentDirective);
 
   constructor() {
     super();
@@ -201,7 +204,7 @@ export class FormComponent<T>
 
   override refreshProperties(): void {
     this.baseInstance.options = this.options;
-    this.baseInstance.form = input(this.form as UntypedFormGroup);
+    this.baseComponentRef.setInput('form', this.form as UntypedFormGroup);
     this._subscription.add(
       this.baseInstance.invokeSubmit.subscribe((e) =>
         this.invokeSubmit.emit(e),

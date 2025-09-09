@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { debounce } from 'lodash-decorators';
 
 import { IEntity } from '@smartsoft001/domain-core';
@@ -8,15 +8,11 @@ import { ICrudListGroup } from '../../models';
 
 @Injectable()
 export class CrudListGroupService<T extends IEntity<string>> {
+  private facade = inject(CrudFacade<T>);
+
   private _destroyed: Array<ICrudListGroup> = [];
 
-  constructor(private facade: CrudFacade<T>) {}
-
-  change(
-    val: boolean,
-    item: ICrudListGroup,
-    force = false,
-  ): void {
+  change(val: boolean, item: ICrudListGroup, force = false): void {
     if (val || force) {
       item.changed = true;
 

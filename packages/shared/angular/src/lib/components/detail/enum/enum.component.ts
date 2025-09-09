@@ -10,11 +10,7 @@ import { DetailBaseComponent } from '../base/base.component';
     @let key = options()?.key;
     @if (item && key) {
       <p>
-        @for (
-          val of this.getValues(item, key);
-          track val;
-          let first = $first
-        ) {
+        @for (val of this.getValues(item, key); track val; let first = $first) {
           @if (!first) {
             ,&nbsp;
           }

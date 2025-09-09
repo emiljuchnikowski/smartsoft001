@@ -1,5 +1,9 @@
 import {
-  Directive, ChangeDetectorRef, inject, input, effect
+  Directive,
+  ChangeDetectorRef,
+  inject,
+  input,
+  effect,
 } from '@angular/core';
 
 import { IDetailOptions } from '../../../models';

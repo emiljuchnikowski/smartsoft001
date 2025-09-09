@@ -1,6 +1,7 @@
 import {
   Component,
   ElementRef,
+  inject,
   input,
   InputSignal,
   OnInit,
@@ -105,6 +106,12 @@ import { FilterComponent } from '../filter';
   styleUrls: ['./filters.component.scss'],
 })
 export class FiltersComponent<T extends IEntity<string>> implements OnInit {
+  private menuService = inject(MenuService);
+  private config = inject(CrudConfig<T>);
+  private facade = inject(CrudFacade<T>);
+  private styleService = inject(StyleService);
+  private elementRef = inject(ElementRef);
+
   list: WritableSignal<Array<IModelFilter>>;
 
   filter: Signal<ICrudFilter | undefined>;
@@ -113,14 +120,6 @@ export class FiltersComponent<T extends IEntity<string>> implements OnInit {
    * Hide menu used only from MenuService
    */
   readonly hideMenu: InputSignal<boolean> = input<boolean>(false);
-
-  constructor(
-    private menuService: MenuService,
-    private config: CrudConfig<T>,
-    private facade: CrudFacade<T>,
-    private styleService: StyleService,
-    private elementRef: ElementRef,
-  ) {}
 
   async onClose(): Promise<void> {
     await this.menuService.closeEnd();

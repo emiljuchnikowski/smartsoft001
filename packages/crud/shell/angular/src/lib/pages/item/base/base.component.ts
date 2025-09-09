@@ -1,12 +1,11 @@
 import {
   Directive,
-  EventEmitter,
-  Input,
-  Output,
-  QueryList,
+  inject,
+  input,
+  output,
   Signal,
-  ViewChild,
-  ViewChildren,
+  viewChild,
+  viewChildren,
   ViewContainerRef,
 } from '@angular/core';
 
@@ -25,39 +24,31 @@ import { CrudFullConfig } from '../../../crud.config';
 export abstract class CrudItemPageBaseComponent<
   T extends IEntity<string>,
 > extends BaseComponent {
+  public config = inject(CrudFullConfig<T>);
+  public facade = inject(CrudFacade<T>);
+
   static smartType: DynamicComponentType = 'crud-item-page';
 
   selected: Signal<T>;
 
-  @ViewChild('contentTpl', { read: ViewContainerRef, static: true })
-  contentTpl: ViewContainerRef;
+  contentTpl = viewChild<ViewContainerRef>('contentTpl');
 
-  @ViewChildren(FormComponent, { read: FormComponent }) formComponents =
-    new QueryList<FormComponent<any>>();
+  formComponents = viewChildren(FormComponent);
 
-  @Input()
-  detailsOptions: IDetailsOptions<T>; // !Set externally (outside of template)
+  detailsOptions = input<IDetailsOptions<T>>();
 
-  @Input()
-  mode: string; // !Set externally (outside of template)
+  mode = input<string>();
 
-  @Input()
-  uniqueProvider: (values: Record<keyof T, any>) => Promise<boolean>;
+  uniqueProvider = input<(values: Record<keyof T, any>) => Promise<boolean>>();
 
-  @Output()
-  onPartialChange = new EventEmitter<Partial<T>>();
+  onPartialChange = output<Partial<T>>();
 
-  @Output()
-  onChange = new EventEmitter<T>();
+  onChange = output<T>();
 
-  @Output()
-  onValidChange = new EventEmitter<boolean>();
+  onValidChange = output<boolean>();
 
-  constructor(
-    public config: CrudFullConfig<T>,
-    public facade: CrudFacade<T>,
-  ) {
+  constructor() {
     super();
-    this.selected = facade.selected;
+    this.selected = this.facade.selected;
   }
 }

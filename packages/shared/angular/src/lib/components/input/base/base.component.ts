@@ -1,4 +1,11 @@
-import { ChangeDetectorRef, Input, Directive, Signal, input, inject, effect } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Directive,
+  input,
+  inject,
+  effect,
+  WritableSignal,
+} from '@angular/core';
 import {
   AbstractControl,
   UntypedFormArray,
@@ -19,7 +26,11 @@ export abstract class InputBaseComponent<T> extends BaseComponent {
   control!: UntypedFormControl | UntypedFormArray | UntypedFormGroup;
   required!: boolean;
 
-  possibilities!: Signal<Array<{ id: any; text: string }> | null>;
+  possibilities!: WritableSignal<Array<{
+    id: any;
+    text: string;
+    checked: boolean;
+  }> | null>;
 
   fieldOptions = input.required<IFieldOptions | undefined>();
 

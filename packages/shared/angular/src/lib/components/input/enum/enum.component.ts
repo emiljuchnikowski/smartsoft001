@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { EnumToListPipe, ModelLabelPipe } from '../../../pipes';
@@ -23,7 +23,7 @@ import { InputBaseComponent } from '../base/base.component';
     <!--  </ion-text>-->
     <!--</ion-label>-->
 
-    @for (item of fieldOptions?.possibilities | smartEnumToList; track item) {
+    @for (item of fieldOptions()?.possibilities | smartEnumToList; track item) {
       <!--  <ion-item lines="none">-->
       <!--    <ion-label class="checkbox-label">{{ item | translate }}</ion-label>-->
       @if (checked(item)) {
@@ -47,10 +47,6 @@ import { InputBaseComponent } from '../base/base.component';
 })
 export class InputEnumComponent<T> extends InputBaseComponent<T> {
   value!: Array<string>;
-
-  constructor(cd: ChangeDetectorRef) {
-    super(cd);
-  }
 
   protected override afterSetOptionsHandler(): void {
     this.value = this.control.value ? [...this.control.value] : [];

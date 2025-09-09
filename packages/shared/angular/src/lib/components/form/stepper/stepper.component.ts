@@ -1,7 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component, inject
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import {

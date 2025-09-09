@@ -1,4 +1,4 @@
-import { computed, Injectable } from '@angular/core';
+import { computed, inject, Injectable } from '@angular/core';
 
 import { IListPaginationOptions, PaginationMode } from '@smartsoft001/angular';
 import { IEntity } from '@smartsoft001/domain-core';
@@ -8,7 +8,7 @@ import { ICrudFilter } from '../../models';
 
 @Injectable()
 export class CrudListPaginationFactory<T extends IEntity<string>> {
-  constructor(private readonly facade: CrudFacade<T>) {}
+  private readonly facade = inject(CrudFacade<T>);
 
   async create(options: {
     mode?: PaginationMode;

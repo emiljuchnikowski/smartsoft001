@@ -1,11 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import {
-  ChangeDetectorRef,
-  Component,
-  OnInit,
-  OnDestroy,
-  inject,
-} from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -35,6 +29,7 @@ export class InputLongTextComponent<T>
   extends InputBaseComponent<T>
   implements OnInit, OnDestroy
 {
+  private translateService = inject(TranslateService);
   hardwareService = inject(HardwareService);
 
   editor!: Editor;
@@ -57,13 +52,6 @@ export class InputLongTextComponent<T>
           ['align_left', 'align_center', 'align_right', 'align_justify'],
         ];
   placeholder!: string;
-
-  constructor(
-    cd: ChangeDetectorRef,
-    private translateService: TranslateService,
-  ) {
-    super(cd);
-  }
 
   ngOnInit() {
     this.placeholder = this.translateService.instant('writeHere') + '...';

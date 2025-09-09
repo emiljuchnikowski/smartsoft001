@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { Component, ElementRef, inject, OnInit } from '@angular/core';
 
 import {
   BaseComponent,
@@ -33,18 +33,14 @@ export class ExportComponent<T extends IEntity<string>>
   extends BaseComponent
   implements OnInit
 {
+  private facade = inject(CrudFacade<T>);
+  private popoverService = inject(PopoverService);
+  private styleService = inject(StyleService);
+  private elementRef = inject(ElementRef);
+
   buttonExportCsvOptions: IButtonOptions = this.initButtonExportOptions('csv');
   buttonExportXlsxOptions: IButtonOptions =
     this.initButtonExportOptions('xlsx');
-
-  constructor(
-    private facade: CrudFacade<T>,
-    private popoverService: PopoverService,
-    private styleService: StyleService,
-    private elementRef: ElementRef,
-  ) {
-    super();
-  }
 
   ngOnInit(): void {
     this.styleService.init(this.elementRef);

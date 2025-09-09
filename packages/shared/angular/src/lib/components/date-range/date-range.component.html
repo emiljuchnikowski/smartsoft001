@@ -1,9 +1,9 @@
 <!--<ion-button (click)="onClick()">-->
-{{
-  value?.start && value?.end
-    ? value.start + ' - ' + value.end
-    : ('select' | translate)
-}}
+@if (value && value?.start && value?.end) {
+  {{value.start + ' - ' + value.end}}
+} @else {
+  {{('select' | translate)}}
+}
 <!--</ion-button>-->
 
 @if (value) {

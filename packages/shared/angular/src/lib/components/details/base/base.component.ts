@@ -6,7 +6,11 @@ import {
   signal,
   Signal,
   computed,
-  untracked, viewChild, input, effect, inject
+  untracked,
+  viewChild,
+  input,
+  effect,
+  inject,
 } from '@angular/core';
 
 import { IEntity } from '@smartsoft001/domain-core';
@@ -53,7 +57,7 @@ export abstract class DetailsBaseComponent<T extends IEntity<string>>
     return this._type;
   }
 
-  item: Signal<T| undefined> | undefined;
+  item: Signal<T | undefined> | undefined;
   loading: Signal<boolean> | undefined;
 
   contentTpl = viewChild<ViewContainerRef | undefined>('contentTpl');
@@ -94,7 +98,7 @@ export abstract class DetailsBaseComponent<T extends IEntity<string>>
               (field.options.details as IFieldDetailsMetadata).permissions &&
               !this.authService.expectPermissions(
                 (field.options.details as IFieldDetailsMetadata)?.permissions ??
-                null,
+                  null,
               )
             );
           }),

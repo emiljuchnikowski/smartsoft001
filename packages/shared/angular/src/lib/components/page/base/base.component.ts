@@ -1,16 +1,15 @@
 import { Location } from '@angular/common';
 import {
   ElementRef,
-  Input,
   OnDestroy,
   OnInit,
   Renderer2,
   Directive,
-  ViewChild,
   ViewContainerRef,
   TemplateRef,
-  WritableSignal,
-  signal,
+  input,
+  viewChild,
+  inject,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 
@@ -24,33 +23,25 @@ import { HardwareService } from '../../../services';
 
 @Directive()
 export abstract class PageBaseComponent implements OnInit, OnDestroy {
+  private el = inject(ElementRef);
+  private renderer = inject(Renderer2);
+  private location = inject(Location);
+  public appService = inject(AppService);
+  public hardwareService = inject(HardwareService);
+  // private popover: PopoverController, //TODO: to be injected
+
   static smartType: DynamicComponentType = 'page';
 
-  private _options: WritableSignal<IPageOptions | null> = signal(null);
+  public options = input.required<IPageOptions>();
   private _subscriptions = new Subscription();
-
-  @Input() set options(val: IPageOptions | null) {
-    this._options.set(val);
-  }
-  get options(): IPageOptions | null {
-    return this._options();
-  }
 
   get isMobile(): boolean {
     return this.hardwareService.isMobile || this.hardwareService.isMobileWeb;
   }
 
-  @ViewChild('contentTpl', { read: ViewContainerRef, static: true })
-  contentTpl: TemplateRef<any> | ViewContainerRef | null = null;
-
-  protected constructor(
-    private el: ElementRef,
-    private renderer: Renderer2,
-    private location: Location,
-    // private popover: PopoverController,
-    public appService: AppService,
-    public hardwareService: HardwareService,
-  ) {}
+  contentTpl = viewChild<TemplateRef<any> | ViewContainerRef | undefined>(
+    'contentTpl',
+  );
 
   back(): void {
     this.location.back();

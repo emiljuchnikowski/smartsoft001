@@ -138,7 +138,7 @@
 @if (
   loadNextPage &&
   Object.keys(list() ?? [])?.length &&
-  options.pagination?.mode !== PaginationMode.singlePage
+  options().pagination?.mode !== PaginationMode.singlePage
 ) {
   <!--    <ion-infinite-scroll threshold="100px" (ionInfinite)="loadNextPage($event)">-->
   <!--      <ion-infinite-scroll-content-->
@@ -148,7 +148,7 @@
 }
 <!--</ion-content>-->
 
-@if (options?.pagination?.mode === PaginationMode.singlePage) {
+@if (options()?.pagination?.mode === PaginationMode.singlePage) {
   <smart-paging
     [page]="page()"
     [totalPages]="totalPages()"

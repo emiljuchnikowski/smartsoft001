@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { inject, Pipe, PipeTransform } from '@angular/core';
 
 import { FileService } from '../../services';
 
@@ -6,7 +6,7 @@ import { FileService } from '../../services';
   name: 'smartFileUrl',
 })
 export class FileUrlPipe implements PipeTransform {
-  constructor(private service: FileService) {}
+  private service = inject(FileService);
 
   transform(file: { id: any }): string {
     return this.service.getUrl(file.id);

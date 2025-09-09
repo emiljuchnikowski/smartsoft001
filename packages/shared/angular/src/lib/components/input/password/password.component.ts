@@ -35,7 +35,7 @@ import { InputBaseComponent } from '../base/base.component';
       <!--    [formControl]="formControl"-->
       <!--    [attr.autofocus]="fieldOptions?.focused"-->
       <!--  ></ion-input>-->
-      @if (fieldOptions?.possibilities?.strength) {
+      @if (fieldOptions()?.possibilities?.strength) {
         <smart-password-strength
           [passwordToCheck]="control.value"
           [showHint]="focus"
@@ -57,23 +57,18 @@ export class InputPasswordComponent<T> extends InputBaseComponent<T> {
   valid = true;
   focus = false;
 
-  constructor(cd: ChangeDetectorRef) {
-    super(cd);
-  }
-
   override afterSetOptionsHandler() {
-    this.control.setValidators([
-      this.control.validator!,
-      (c) => {
-        if (!this.valid) {
-          return {
-            passwordStrength: true,
-          };
-        }
+    this.control.addValidators(() => {
+      if (!this.valid) {
+        return {
+          passwordStrength: true,
+        };
+      }
 
-        return null;
-      },
-    ]);
+      return null;
+    });
+
+    this.control.updateValueAndValidity({ onlySelf: true });
   }
 
   onChangePasswordStrength(valid: boolean) {
@@ -93,6 +88,6 @@ export class InputPasswordComponent<T> extends InputBaseComponent<T> {
       this.control.setErrors(errors);
     }
 
-    this.control.updateValueAndValidity();
+    this.control.updateValueAndValidity({ onlySelf: true });
   }
 }

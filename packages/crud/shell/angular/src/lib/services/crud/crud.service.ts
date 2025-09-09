@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -10,15 +10,13 @@ import { ICrudCreateManyOptions, ICrudFilter } from '../../models';
 
 @Injectable()
 export class CrudService<T extends IEntity<string>> {
+  protected config = inject(CrudConfig<T>);
+  protected http = inject(HttpClient);
+
   protected _formatMap = {
     csv: 'text/csv',
     xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   };
-
-  constructor(
-    protected config: CrudConfig<T>,
-    protected http: HttpClient,
-  ) {}
 
   create(item: T): Promise<string> {
     return firstValueFrom(

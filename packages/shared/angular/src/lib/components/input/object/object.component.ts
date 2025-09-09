@@ -1,5 +1,5 @@
 import { AsyncPipe, NgComponentOutlet } from '@angular/common';
-import { ChangeDetectorRef, Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { DynamicIoDirective } from 'ng-dynamic-component';
 
 import { IFormOptions } from '../../../models';
@@ -36,14 +36,8 @@ import { InputBaseComponent } from '../base/base.component';
   imports: [ModelLabelPipe, AsyncPipe, NgComponentOutlet, DynamicIoDirective],
 })
 export class InputObjectComponent<T, TChild> extends InputBaseComponent<T> {
+  public formComponent = inject(FORM_COMPONENT_TOKEN);
   childOptions!: IFormOptions<TChild>;
-
-  constructor(
-    cd: ChangeDetectorRef,
-    @Inject(FORM_COMPONENT_TOKEN) public formComponent: any,
-  ) {
-    super(cd);
-  }
 
   protected override afterSetOptionsHandler() {
     this.childOptions = {

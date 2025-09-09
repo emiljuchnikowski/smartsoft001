@@ -1,4 +1,4 @@
-import { Component, computed, Signal } from '@angular/core';
+import { Component, computed, inject, Signal } from '@angular/core';
 
 import { ListComponent } from '@smartsoft001/angular';
 import { IEntity } from '@smartsoft001/domain-core';
@@ -17,13 +17,13 @@ import { CrudListPageBaseComponent } from '../base/base.component';
     @if (listOptions) {
       <smart-list
         [hidden]="groups && !isSearch()"
-        [options]="listOptions"
+        [options]="listOptions()"
       ></smart-list>
     }
     @if (groups && !isSearch()) {
       <smart-crud-group
         [groups]="groups"
-        [listOptions]="listOptions"
+        [listOptions]="listOptions()"
       ></smart-crud-group>
     }
   `,
@@ -33,14 +33,10 @@ import { CrudListPageBaseComponent } from '../base/base.component';
 export class ListStandardComponent<
   T extends IEntity<string>,
 > extends CrudListPageBaseComponent<T> {
+  private readonly facade = inject(CrudFacade<T>);
+  public readonly config = inject(CrudFullConfig<T>);
+
   isSearch: Signal<boolean> = computed(
     () => !!this.facade.filter()?.searchText,
   );
-
-  constructor(
-    private readonly facade: CrudFacade<T>,
-    public readonly config: CrudFullConfig<T>,
-  ) {
-    super(config);
-  }
 }

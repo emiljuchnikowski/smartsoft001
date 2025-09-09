@@ -1,8 +1,10 @@
 import {
   ChangeDetectorRef,
   Component,
-  forwardRef, inject,
-  model, output,
+  forwardRef,
+  inject,
+  model,
+  output,
 } from '@angular/core';
 import {
   ControlValueAccessor,

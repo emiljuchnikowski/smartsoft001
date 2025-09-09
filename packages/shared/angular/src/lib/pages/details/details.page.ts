@@ -1,9 +1,21 @@
-import { Component, computed, ElementRef, OnInit } from '@angular/core';
+import {
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  OnInit,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 
 import { IEntity } from '@smartsoft001/domain-core';
 
 import { DetailsComponent, PageComponent } from '../../components';
-import { IPageOptions, IDetailsOptions } from '../../models';
+import {
+  IPageOptions,
+  IDetailsOptions,
+  IIconButtonOptions,
+} from '../../models';
 import { ModalService, StyleService } from '../../services';
 
 @Component({
@@ -12,18 +24,18 @@ import { ModalService, StyleService } from '../../services';
   styleUrls: ['./details.page.scss'],
 })
 export class DetailsPage<T extends IEntity<string>> implements OnInit {
-  pageOptions: IPageOptions = {
+  private modalService = inject(ModalService);
+  private styleService = inject(StyleService);
+  private elementRef = inject(ElementRef);
+  // navParams: NavParams, //TODO: to be injected
+
+  pageOptions: WritableSignal<IPageOptions> = signal({
     title: 'details',
     hideMenuButton: true,
-  };
+  });
   detailsOptions: IDetailsOptions<T>;
 
-  constructor(
-    // navParams: NavParams,
-    private modalService: ModalService,
-    private styleService: StyleService,
-    private elementRef: ElementRef,
-  ) {
+  constructor() {
     this.detailsOptions = /*navParams.get('value')*/ {} as IDetailsOptions<T>;
     this.initTitle();
     this.initButtons();
@@ -34,13 +46,20 @@ export class DetailsPage<T extends IEntity<string>> implements OnInit {
   }
 
   private initTitle(): void {
-    if (this.detailsOptions.title) {
-      this.pageOptions.title = this.detailsOptions.title;
-    }
+    this.pageOptions.update((options) => {
+      if (this.detailsOptions.title) {
+        return {
+          ...options,
+          title: this.detailsOptions.title,
+        };
+      }
+
+      return options;
+    });
   }
 
   private initButtons(): void {
-    const buttons = [];
+    const buttons: IIconButtonOptions[] = [];
 
     if (this.detailsOptions.removeHandler) {
       buttons.push({
@@ -68,6 +87,6 @@ export class DetailsPage<T extends IEntity<string>> implements OnInit {
       });
     }
 
-    this.pageOptions.endButtons = buttons;
+    this.pageOptions.update((options) => ({ ...options, endButtons: buttons }));
   }
 }

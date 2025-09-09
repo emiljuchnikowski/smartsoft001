@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import {
   DateAdapter,
@@ -62,18 +62,17 @@ export class InputDateComponent<T>
   extends InputBaseComponent<T>
   implements OnInit
 {
+  private hardwareService = inject(HardwareService);
+  private dateAdapter = inject(DateAdapter<any>);
+  public translateService = inject(TranslateService);
+
   get isMobile(): boolean {
     return this.hardwareService.isMobile || this.hardwareService.isMobileWeb;
   }
 
-  constructor(
-    cd: ChangeDetectorRef,
-    private hardwareService: HardwareService,
-    private dateAdapter: DateAdapter<any>,
-    translateService: TranslateService,
-  ) {
-    super(cd);
-    this.dateAdapter.setLocale(translateService.currentLang);
+  constructor() {
+    super();
+    this.dateAdapter.setLocale(this.translateService.currentLang);
   }
 
   ngOnInit() {

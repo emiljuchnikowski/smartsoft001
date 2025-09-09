@@ -1,11 +1,10 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  Input,
   OnChanges,
   SimpleChange,
-  EventEmitter,
-  Output,
+  input,
+  output,
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -42,10 +41,10 @@ export class PasswordStrengthComponent implements OnChanges {
     passLength: false,
   };
 
-  @Input() public passwordToCheck!: string;
-  @Input() public showHint!: boolean;
+  public passwordToCheck = input.required<string>();
+  public showHint = input.required<boolean>();
 
-  @Output() passwordStrength = new EventEmitter<boolean>();
+  passwordStrength = output<boolean>();
 
   checkStrength(p = '') {
     // 1

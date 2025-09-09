@@ -1,4 +1,10 @@
-import { Directive, Input, ViewChild, ViewContainerRef } from '@angular/core';
+import {
+  Directive,
+  inject,
+  input,
+  viewChild,
+  ViewContainerRef,
+} from '@angular/core';
 
 import {
   BaseComponent,
@@ -13,15 +19,11 @@ import { CrudFullConfig } from '../../../crud.config';
 export abstract class CrudListPageBaseComponent<
   T extends IEntity<string>,
 > extends BaseComponent {
+  public config = inject(CrudFullConfig<T>);
+
   static smartType: DynamicComponentType = 'crud-list-page';
 
-  @ViewChild('contentTpl', { read: ViewContainerRef, static: true })
-  contentTpl: ViewContainerRef;
+  contentTpl = viewChild<ViewContainerRef>('contentTpl');
 
-  @Input()
-  listOptions: IListOptions<T>; // !Set externally (outside of template)
-
-  protected constructor(public config: CrudFullConfig<T>) {
-    super();
-  }
+  listOptions = input<IListOptions<T>>();
 }

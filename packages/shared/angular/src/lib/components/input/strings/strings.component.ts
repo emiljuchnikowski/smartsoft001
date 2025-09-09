@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   ReactiveFormsModule,
   UntypedFormBuilder,
@@ -17,14 +17,9 @@ import { InputBaseComponent } from '../base/base.component';
   imports: [ReactiveFormsModule, TranslatePipe, ModelLabelPipe, AsyncPipe],
 })
 export class InputStringsComponent<T> extends InputBaseComponent<T> {
-  list: Array<UntypedFormControl> = [];
+  private fb = inject(UntypedFormBuilder);
 
-  constructor(
-    cd: ChangeDetectorRef,
-    private fb: UntypedFormBuilder,
-  ) {
-    super(cd);
-  }
+  list: Array<UntypedFormControl> = [];
 
   override afterSetOptionsHandler() {
     if (this.control.value) {

@@ -1,19 +1,15 @@
-import { Inject, Optional, Pipe, PipeTransform, Type } from '@angular/core';
+import { inject, Pipe, PipeTransform, Type } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 
-import { IModelLabelProvider, MODEL_LABEL_PROVIDER } from '../../providers';
+import { IModelLabelProvider } from '../../providers';
 
 @Pipe({
   name: 'smartModelLabel',
 })
 export class ModelLabelPipe<T> implements PipeTransform {
-  constructor(
-    private translateService: TranslateService,
-    @Optional()
-    @Inject(MODEL_LABEL_PROVIDER)
-    private modelLabelProvider: IModelLabelProvider,
-  ) {}
+  private translateService = inject(TranslateService);
+  private modelLabelProvider = inject(IModelLabelProvider);
 
   transform(instance: T, key: string, type?: Type<any> | (() => void)): string {
     if (this.modelLabelProvider) {

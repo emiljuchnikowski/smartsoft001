@@ -1,9 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { ModelLabelPipe } from '../../../pipes';
@@ -38,8 +34,4 @@ import { InputBaseComponent } from '../base/base.component';
   imports: [ModelLabelPipe, AsyncPipe, ReactiveFormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InputFloatComponent<T> extends InputBaseComponent<T> {
-  constructor(cd: ChangeDetectorRef) {
-    super(cd);
-  }
-}
+export class InputFloatComponent<T> extends InputBaseComponent<T> {}

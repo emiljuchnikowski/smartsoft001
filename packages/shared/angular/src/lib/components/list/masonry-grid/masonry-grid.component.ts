@@ -1,11 +1,11 @@
 import { NgOptimizedImage } from '@angular/common';
 import {
   Component,
-  ViewChild,
   ViewContainerRef,
   AfterViewInit,
   Signal,
   computed,
+  viewChild,
 } from '@angular/core';
 
 import { IEntity } from '@smartsoft001/domain-core';
@@ -30,8 +30,7 @@ export class ListMasonryGridComponent<T extends IEntity<string>>
 
   listWithImages!: Signal<{ data: T; image: any }[] | null>;
 
-  @ViewChild('topTpl', { read: ViewContainerRef, static: true })
-  topTpl!: ViewContainerRef;
+  topTpl = viewChild<ViewContainerRef>('topTpl');
 
   ngAfterViewInit(): void {
     this.generateDynamicComponents();
@@ -67,9 +66,9 @@ export class ListMasonryGridComponent<T extends IEntity<string>>
   private generateDynamicComponents(): void {
     if (!this.componentFactories) return;
 
-    if (this.componentFactories.top && this.topTpl) {
-      if (!this.topTpl.get(0)) {
-        this.topTpl.createComponent(this.componentFactories.top);
+    if (this.componentFactories.top && this.topTpl()) {
+      if (!this.topTpl()?.get(0)) {
+        this.topTpl()?.createComponent(this.componentFactories.top);
       }
     }
   }

@@ -1,24 +1,11 @@
 import { AsyncPipe } from '@angular/common';
-import {
-  ChangeDetectorRef,
-  Component,
-  computed,
-  effect,
-  Inject,
-  Optional,
-  Signal,
-  signal,
-} from '@angular/core';
+import { Component, effect, signal, WritableSignal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { getModelFieldOptions } from '@smartsoft001/models';
 
 import { ModelLabelPipe } from '../../../pipes';
-import {
-  IModelPossibilitiesProvider,
-  MODEL_POSSIBILITIES_PROVIDER,
-} from '../../../providers';
 import { InputPossibilitiesBaseComponent } from '../base/possibilities.component';
 
 @Component({
@@ -27,20 +14,11 @@ import { InputPossibilitiesBaseComponent } from '../base/possibilities.component
   imports: [ModelLabelPipe, AsyncPipe, TranslatePipe, ReactiveFormsModule],
 })
 export class InputCheckComponent<T> extends InputPossibilitiesBaseComponent<T> {
-  override possibilities: Signal<Array<{
+  override possibilities: WritableSignal<Array<{
     id: any;
     text: string;
     checked: boolean;
   }> | null> = signal(null);
-
-  constructor(
-    cd: ChangeDetectorRef,
-    @Optional()
-    @Inject(MODEL_POSSIBILITIES_PROVIDER)
-    modelPossibilitiesProvider: IModelPossibilitiesProvider,
-  ) {
-    super(cd, modelPossibilitiesProvider);
-  }
 
   protected override afterSetOptionsHandler(): void {
     if (this.internalOptions && !this.possibilities) {
@@ -71,7 +49,7 @@ export class InputCheckComponent<T> extends InputPossibilitiesBaseComponent<T> {
           return item;
         });
 
-        this.possibilities = computed(() => result);
+        this.possibilities.set(result);
 
         this.cd.detectChanges();
       }

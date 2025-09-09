@@ -3,7 +3,11 @@ import {
   Type,
   ChangeDetectorRef,
   ViewContainerRef,
-  Signal, input, effect, output, viewChild, inject
+  input,
+  effect,
+  output,
+  viewChild,
+  inject, WritableSignal
 } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -22,7 +26,7 @@ export abstract class FormBaseComponent<T> extends BaseComponent {
   private _subscription!: Subscription;
   private _model: any;
   private _possibilities!: {
-    [key: string]: Signal<{ id: any; text: string }[]>;
+    [key: string]: WritableSignal<{ id: any; text: string, checked: boolean }[]>;
   };
   private _inputComponents!: { [key: string]: Type<InputBaseComponent<T>> };
 
@@ -38,7 +42,7 @@ export abstract class FormBaseComponent<T> extends BaseComponent {
   }
 
   get possibilities(): {
-    [key: string]: Signal<{ id: any; text: string }[]>;
+    [key: string]: WritableSignal<{ id: any; text: string, checked: boolean }[]>;
   } {
     return this._possibilities;
   }
@@ -48,7 +52,7 @@ export abstract class FormBaseComponent<T> extends BaseComponent {
   }
 
   form = input.required<UntypedFormGroup>();
-  options = input.required<IFormOptions<T>>()
+  options = input.required<IFormOptions<T>>();
 
   invokeSubmit = output<any>();
 
@@ -67,9 +71,11 @@ export abstract class FormBaseComponent<T> extends BaseComponent {
       this._fields = Object.keys(this.form().controls);
 
       this._subscription.add(
-        this.form().valueChanges.pipe(delay(0)).subscribe(() => {
-          this.cd.detectChanges();
-        }),
+        this.form()
+          .valueChanges.pipe(delay(0))
+          .subscribe(() => {
+            this.cd.detectChanges();
+          }),
       );
 
       this.afterSetForm();

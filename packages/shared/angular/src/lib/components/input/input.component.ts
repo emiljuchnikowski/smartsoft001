@@ -3,14 +3,15 @@ import {
   ChangeDetectorRef,
   Component,
   ComponentFactoryResolver,
+  effect,
   ElementRef,
+  inject,
   Injector,
-  Input,
+  input, model,
   OnInit,
-  ViewChild,
-  ViewContainerRef,
+  viewChild,
+  ViewContainerRef
 } from '@angular/core';
-import { UntypedFormArray } from '@angular/forms';
 import * as _ from 'lodash';
 
 import {
@@ -106,79 +107,74 @@ import { InputVideoComponent } from './video/video.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputComponent<T> implements OnInit {
-  private _options!: InputOptions<T>;
+  private componentFactoryResolver = inject(ComponentFactoryResolver);
+  private injector = inject(Injector);
 
   status!: any;
   fieldOptions: IFieldOptions | undefined;
   FieldType = FieldType;
 
-  @ViewChild('componentRef', { read: ViewContainerRef })
-  componentRef!: ViewContainerRef;
+  componentRef = viewChild<ViewContainerRef | undefined>('componentRef');
 
-  @Input() set options(val: InputOptions<T>) {
-    this._options = val;
-    let key = this._options.fieldKey;
+  options = input<InputOptions<T>>();
 
-    if (key && key.endsWith('Confirm')) {
-      key = key.replace('Confirm', '');
-    }
+  constructor() {
+    effect(() => {
+      const options = this.options();
+      let key = options?.fieldKey;
 
-    let fieldOptions: IFieldOptions | undefined = getModelFieldOptions(
-      this._options.model,
-      key,
-    );
-    if (!fieldOptions && (this._options.model as any)[0])
-      fieldOptions = getModelFieldOptions((this._options.model as any)[0], key);
-    if (!fieldOptions) {
-      fieldOptions = getModelFieldsWithOptions(this._options.model).find(
-        (x) => x.key === key,
-      )?.options;
-    }
+      if (options && key) {
+        if (key.endsWith('Confirm')) {
+          key = key.replace('Confirm', '');
+        }
 
-    if (fieldOptions) {
-      if (val.mode === 'create' && _.isObject(fieldOptions.create)) {
-        fieldOptions = {
-          ...fieldOptions,
-          ...(fieldOptions.create as IFieldOptions),
-        };
-      } else if (val.mode === 'update' && _.isObject(fieldOptions.update)) {
-        fieldOptions = {
-          ...fieldOptions,
-          ...(fieldOptions.update as IFieldOptions),
-        };
+        let fieldOptions: IFieldOptions | undefined = getModelFieldOptions(
+          options?.model,
+          key,
+        );
+        if (!fieldOptions && (options.model as any)[0])
+          fieldOptions = getModelFieldOptions((options.model as any)[0], key);
+        if (!fieldOptions) {
+          fieldOptions = getModelFieldsWithOptions(options.model).find(
+            (x) => x.key === key,
+          )?.options;
+        }
+
+        if (fieldOptions) {
+          if (options.mode === 'create' && _.isObject(fieldOptions.create)) {
+            fieldOptions = {
+              ...fieldOptions,
+              ...(fieldOptions.create as IFieldOptions),
+            };
+          } else if (
+            options.mode === 'update' &&
+            _.isObject(fieldOptions.update)
+          ) {
+            fieldOptions = {
+              ...fieldOptions,
+              ...(fieldOptions.update as IFieldOptions),
+            };
+          }
+        }
+
+        this.fieldOptions = fieldOptions;
+
+        this.initCustomComponent();
+
+        options.control.statusChanges.subscribe((status) => {
+          this.status = status;
+          (
+            this.injector.get(ChangeDetectorRef) as ChangeDetectorRef
+          ).detectChanges();
+        });
       }
-    }
-
-    this.fieldOptions = fieldOptions;
-
-    this.initCustomComponent().then();
-
-    this.options.control.statusChanges.subscribe((status) => {
-      this.status = status;
-      (
-        this.injector.get(ChangeDetectorRef) as ChangeDetectorRef
-      ).detectChanges();
     });
   }
-  get options(): InputOptions<T> {
-    return this._options;
-  }
-
-  constructor(
-    private componentFactoryResolver: ComponentFactoryResolver,
-    private injector: Injector,
-  ) {}
 
   oSetValue($event: any): void {
     if (!$event) return;
 
-    if (this.options.control instanceof UntypedFormArray) {
-      this.options.control.clear();
-    }
-
-    setTimeout(() => {
-      this.options.control.setValue($event);
-    });
+    this.options()?.control.setValue($event);
   }
 
   async ngOnInit(): Promise<void> {
@@ -193,25 +189,29 @@ export class InputComponent<T> implements OnInit {
   }
 
   private async initCustomComponent(): Promise<void> {
-    if (!this.options.component) return;
+    const component = this.options()?.component;
+    if (!component) return;
 
     await new Promise<void>((res) => res());
 
     const componentFactory =
       this.componentFactoryResolver.resolveComponentFactory<
         InputBaseComponent<any>
-      >(this.options.component);
+      >(component);
 
     const viewContainerRef = this.componentRef;
-    viewContainerRef.clear();
+    const resolvedViewContainerRef = viewContainerRef();
+    resolvedViewContainerRef?.clear();
 
-    const componentRef = viewContainerRef.createComponent(
-      componentFactory,
-      0,
-      this.injector,
-    );
+    if (resolvedViewContainerRef) {
+      const componentRef = resolvedViewContainerRef.createComponent(
+        componentFactory,
+        0,
+        this.injector,
+      );
 
-    componentRef.instance.options = this.options;
-    componentRef.instance.fieldOptions = this.fieldOptions;
+      componentRef.instance.options = this.options;
+      componentRef.setInput('fieldOptions', this.fieldOptions);
+    }
   }
 }

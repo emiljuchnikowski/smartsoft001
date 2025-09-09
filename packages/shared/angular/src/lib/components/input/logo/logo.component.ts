@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { ModelLabelPipe } from '../../../pipes';
 import { InputBaseComponent } from '../base/base.component';
@@ -11,10 +11,6 @@ import { InputBaseComponent } from '../base/base.component';
   imports: [ModelLabelPipe, AsyncPipe],
 })
 export class InputLogoComponent<T> extends InputBaseComponent<T> {
-  constructor(cd: ChangeDetectorRef) {
-    super(cd);
-  }
-
   set(inputFile: HTMLInputElement) {
     inputFile.click();
 

@@ -2,6 +2,7 @@ import { NgClass } from '@angular/common';
 import {
   Component,
   ElementRef,
+  inject,
   input,
   InputSignal,
   OnDestroy,
@@ -61,17 +62,13 @@ export class GroupComponent<T extends IEntity<string>>
   extends BaseComponent
   implements OnInit, OnDestroy
 {
+  private styleService = inject(StyleService);
+  private elementRef = inject(ElementRef);
+  private groupService = inject(CrudListGroupService<T>);
+
   readonly groups: InputSignal<Array<ICrudListGroup>> =
     input<Array<ICrudListGroup>>();
   readonly listOptions: InputSignal<IListOptions<T>> = input<IListOptions<T>>();
-
-  constructor(
-    private styleService: StyleService,
-    private elementRef: ElementRef,
-    private groupService: CrudListGroupService<T>,
-  ) {
-    super();
-  }
 
   change(val: boolean, item: ICrudListGroup, force = false): void {
     this.groups()

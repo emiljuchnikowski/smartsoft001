@@ -1,10 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import {
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, viewChild } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { ModelLabelPipe } from '../../../pipes';
@@ -57,8 +52,8 @@ import { InputBaseComponent } from '../base/base.component';
         #inputObj
         (change)="changeListener($event)"
         [hidden]="true"
-        [attr.accept]="fieldOptions?.possibilities"
-        [attr.autofocus]="fieldOptions?.focused"
+        [attr.accept]="fieldOptions()?.possibilities"
+        [attr.autofocus]="fieldOptions()?.focused"
       />
       {{ control.value?.name }}
     }
@@ -71,16 +66,11 @@ export class InputFileComponent<T> extends InputBaseComponent<T> {
     click: () => {
       this.control.markAsDirty();
       this.control.markAsTouched();
-      (this.inputElementRef.nativeElement as HTMLInputElement).click();
+      (this.inputElementRef()?.nativeElement as HTMLInputElement)?.click();
     },
   };
 
-  @ViewChild('inputObj', { read: ElementRef })
-  inputElementRef!: ElementRef;
-
-  constructor(cd: ChangeDetectorRef) {
-    super(cd);
-  }
+  inputElementRef = viewChild<ElementRef>('inputObj');
 
   changeListener($event: any): void {
     const file = $event.target.files[0];

@@ -1,9 +1,9 @@
-import { InjectionToken, Signal, Type } from '@angular/core';
+import { InjectionToken, Signal, Type, WritableSignal } from '@angular/core';
 
 export abstract class IModelPossibilitiesProvider {
   abstract get(
     options: IModelPossibilitiesOptions,
-  ): Signal<{ id: any; text: string }[]>;
+  ): WritableSignal<{ id: any; text: string; checked: boolean }[]>;
 }
 
 export interface IModelPossibilitiesOptions {

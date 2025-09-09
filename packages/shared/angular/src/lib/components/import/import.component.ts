@@ -4,7 +4,9 @@ import {
   ElementRef,
   Renderer2,
   AfterViewInit,
-  input, output, viewChild
+  input,
+  output,
+  viewChild,
 } from '@angular/core';
 
 @Component({
@@ -15,7 +17,7 @@ import {
     <!--</ion-button>-->
     <input
       type="file"
-      [accept]="accept ? accept : 'application/json'"
+      [accept]="accept() ? accept() : 'application/json'"
       [hidden]="true"
       #inputObj
     />
@@ -50,8 +52,7 @@ export class ImportComponent implements AfterViewInit {
     if (elementRef) {
       this.renderer.listen(elementRef?.nativeElement, 'change', () => {
         const file: File | null =
-          (elementRef?.nativeElement as HTMLInputElement).files?.[0] ??
-          null;
+          (elementRef?.nativeElement as HTMLInputElement).files?.[0] ?? null;
 
         (elementRef?.nativeElement as HTMLInputElement).type = 'text';
         (elementRef?.nativeElement as HTMLInputElement).type = 'file';

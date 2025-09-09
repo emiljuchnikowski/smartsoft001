@@ -3,12 +3,15 @@ import {
   AfterContentInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component, effect,
+  Component,
+  effect,
   ElementRef,
-  forwardRef, inject, input,
+  forwardRef,
+  inject,
+  input,
   model,
   NgZone,
-  OnInit
+  OnInit,
 } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -70,8 +73,7 @@ export class DateRangeComponent implements ControlValueAccessor {
 
   async onClick(): Promise<void> {
     const ngModel = this.ngModel();
-    if (ngModel?.start)
-      this.calendarData.dateFrom = moment(ngModel.start);
+    if (ngModel?.start) this.calendarData.dateFrom = moment(ngModel.start);
     if (ngModel?.end) this.calendarData.dateTo = moment(ngModel.end);
 
     this.propagateTouched();

@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform, Type } from '@angular/core';
+import { inject, Pipe, PipeTransform, Type } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Memoize } from 'lodash-decorators';
 
@@ -12,7 +12,7 @@ import { ICellPipe } from '../../models';
 export class ListCellPipe<T extends { [key: string]: any }>
   implements PipeTransform
 {
-  constructor(private readonly translateService: TranslateService) {}
+  private readonly translateService = inject(TranslateService);
 
   transform(
     obj: T,

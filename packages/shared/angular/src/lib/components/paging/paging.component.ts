@@ -1,10 +1,10 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
   input,
   InputSignal,
-  Output,
+  output,
+  OutputEmitterRef,
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -51,6 +51,6 @@ export class PagingComponent {
   readonly page: InputSignal<number | null> = input<number | null>(null);
   readonly totalPages: InputSignal<number | null> = input<number | null>(null);
 
-  @Output() nextPage = new EventEmitter();
-  @Output() prevPage = new EventEmitter();
+  nextPage: OutputEmitterRef<void> = output();
+  prevPage: OutputEmitterRef<void> = output();
 }

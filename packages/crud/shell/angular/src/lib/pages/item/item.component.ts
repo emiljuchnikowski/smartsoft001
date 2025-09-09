@@ -3,17 +3,17 @@ import {
   ChangeDetectorRef,
   Component,
   ComponentFactory,
-  ComponentFactoryResolver,
   effect,
   ElementRef,
-  NgModuleRef,
+  inject,
+  input,
+  OnDestroy,
   OnInit,
-  QueryList,
   Signal,
   signal,
   TemplateRef,
-  ViewChild,
-  ViewChildren,
+  viewChild,
+  viewChildren,
   ViewContainerRef,
   WritableSignal,
 } from '@angular/core';
@@ -25,10 +25,9 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 
 import {
-  AuthService,
   CreateDynamicComponent,
   DetailsService,
   DynamicComponentLoader,
@@ -83,8 +82,23 @@ export class ItemComponent<T extends IEntity<string>>
   extends CreateDynamicComponent<CrudItemPageBaseComponent<any>>(
     'crud-item-page',
   )
-  implements OnInit
+  implements OnInit, OnDestroy
 {
+  private router = inject(Router);
+  private activeRoute = inject(ActivatedRoute);
+  private facade = inject(CrudFacade<T>);
+  private service = inject(CrudService<T>);
+  private dynamicComponentLoader = inject(DynamicComponentLoader<T>);
+  private translateService = inject(TranslateService);
+  public config = inject(CrudFullConfig<T>);
+  private location = inject(Location);
+  private cd = inject(ChangeDetectorRef);
+  private styleService = inject(StyleService);
+  private elementRef = inject(ElementRef);
+  private toastService = inject(ToastService);
+  private pageService = inject(PageService<T>);
+  private detailsService = inject(DetailsService);
+
   private _mode: WritableSignal<string>;
 
   pageOptions: WritableSignal<IPageOptions> = signal({
@@ -112,60 +126,44 @@ export class ItemComponent<T extends IEntity<string>>
 
   selected: Signal<T>;
 
-  @ViewChildren(ItemStandardComponent, { read: ItemStandardComponent })
-  standardComponents = new QueryList<ItemStandardComponent<any>>();
-  // @ViewChild(IonContent, { static: true }) content: IonContent;
+  standardComponents = viewChildren(ItemStandardComponent);
+  // @ViewChild(IonContent, { static: true }) content: IonContent; //TODO: rewrite when rewriting ionic
 
-  @ViewChild('contentTpl', { read: TemplateRef, static: false })
-  contentTpl: TemplateRef<any>;
+  contentTpl = viewChild<TemplateRef<any>>('contentTpl');
 
-  @ViewChild('topTpl', { read: ViewContainerRef, static: true })
-  topTpl: ViewContainerRef;
+  topTpl = viewChild<ViewContainerRef>('topTpl');
 
-  @ViewChild('bottomTpl', { read: ViewContainerRef, static: true })
-  bottomTpl: ViewContainerRef;
+  bottomTpl = viewChild<ViewContainerRef>('bottomTpl');
 
-  @ViewChildren(DynamicContentDirective, { read: DynamicContentDirective })
-  dynamicContents = new QueryList<DynamicContentDirective>();
+  dynamicContents = viewChildren<DynamicContentDirective>(
+    DynamicContentDirective,
+  );
 
-  constructor(
-    private router: Router,
-    private activeRoute: ActivatedRoute,
-    private facade: CrudFacade<T>,
-    private service: CrudService<T>,
-    private route: ActivatedRoute,
-    private dynamicComponentLoader: DynamicComponentLoader<T>,
-    private translateService: TranslateService,
-    public config: CrudFullConfig<T>,
-    private location: Location,
-    private cd: ChangeDetectorRef,
-    authService: AuthService,
-    private styleService: StyleService,
-    private elementRef: ElementRef,
-    private toastService: ToastService,
-    private pageService: PageService<T>,
-    private moduleRef: NgModuleRef<any>,
-    private componentFactoryResolver: ComponentFactoryResolver,
-    private detailsService: DetailsService,
-  ) {
-    super(cd, moduleRef, componentFactoryResolver);
+  subscription = new Subscription();
+
+  constructor() {
+    super();
 
     this.selected = this.facade.selected;
   }
 
   refreshProperties() {
-    this.baseInstance.detailsOptions = this.detailsOptions();
-    this.baseInstance.mode = this.mode;
-    this.baseInstance.uniqueProvider = this.uniqueProvider();
-    this.baseInstance.onPartialChange
-      .pipe(this.takeUntilDestroy)
-      .subscribe((val) => this.onPartialChange(val));
-    this.baseInstance.onChange
-      .pipe(this.takeUntilDestroy)
-      .subscribe((val) => this.onChange(val));
-    this.baseInstance.onValidChange
-      .pipe(this.takeUntilDestroy)
-      .subscribe((val) => this.onValidChange(val));
+    this.baseComponentRef.setInput('detailsOptions', this.detailsOptions());
+    this.baseComponentRef.setInput('mode', this.mode);
+    this.baseComponentRef.setInput('uniqueProvider', this.uniqueProvider());
+    this.subscription.add(
+      this.baseInstance.onPartialChange.subscribe((val) =>
+        this.onPartialChange(val),
+      ),
+    );
+    this.subscription.add(
+      this.baseInstance.onChange.subscribe((val) => this.onChange(val)),
+    );
+    this.subscription.add(
+      this.baseInstance.onValidChange.subscribe((val) =>
+        this.onValidChange(val),
+      ),
+    );
   }
 
   async ngOnInit() {
@@ -285,6 +283,12 @@ export class ItemComponent<T extends IEntity<string>>
     this.refreshDynamicInstance();
   }
 
+  ngOnDestroy() {
+    super.ngOnDestroy();
+
+    this.subscription.unsubscribe();
+  }
+
   private async generateComponents(mode: 'add' | 'edit') {
     const compiledComponents =
       await this.dynamicComponentLoader.getComponentsWithFactories({
@@ -310,12 +314,12 @@ export class ItemComponent<T extends IEntity<string>>
       (cc) => cc.component === this.config[mode]['components']?.bottom,
     )?.factory;
 
-    if (!this.topTpl.get(0) && topComponentFactory) {
-      this.topTpl.createComponent(topComponentFactory);
+    if (!this.topTpl().get(0) && topComponentFactory) {
+      this.topTpl().createComponent(topComponentFactory);
     }
 
-    if (!this.bottomTpl.get(0) && bottomComponentFactory) {
-      this.bottomTpl.createComponent(bottomComponentFactory);
+    if (!this.bottomTpl().get(0) && bottomComponentFactory) {
+      this.bottomTpl().createComponent(bottomComponentFactory);
     }
   }
 
@@ -368,8 +372,8 @@ export class ItemComponent<T extends IEntity<string>>
                   handler: () => {
                     this.mode = 'details';
                     this.initPageOptions();
-                    this.topTpl.clear();
-                    this.bottomTpl.clear();
+                    this.topTpl().clear();
+                    this.bottomTpl().clear();
                   },
                   disabled$: new BehaviorSubject(false),
                 },
@@ -449,8 +453,8 @@ export class ItemComponent<T extends IEntity<string>>
 
     const form =
       this.template() === 'default'
-        ? this.standardComponents.first.formComponents.first.form
-        : this.baseInstance.formComponents.first.form;
+        ? this.standardComponents()?.[0]?.formComponents?.[0].form
+        : this.baseInstance.formComponents()[0].form;
 
     this.cd.detectChanges();
 

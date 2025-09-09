@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 import { AuthService } from '@smartsoft001/angular';
 import { getModelOptions } from '@smartsoft001/models';
@@ -7,10 +7,8 @@ import { CrudFullConfig } from '../../crud.config';
 
 @Injectable()
 export class PageService<T> {
-  constructor(
-    private authService: AuthService,
-    private config: CrudFullConfig<T>,
-  ) {}
+  private authService = inject(AuthService);
+  private config = inject(CrudFullConfig<T>);
 
   checkPermissions(): void {
     const val: CrudFullConfig<T> = this.config;

@@ -1,5 +1,6 @@
 import {
   ComponentFactoryResolver,
+  inject,
   Injectable,
   Injector,
   ViewContainerRef,
@@ -16,6 +17,9 @@ import { IMenuItem } from '../../models';
   providedIn: 'root',
 })
 export class MenuService {
+  private readonly resolver = inject(ComponentFactoryResolver);
+  // private readonly menuCtrl: MenuController, //TODO: to be injected
+
   private _endContainer!: ViewContainerRef;
   private _openedEnd = false;
   private _menuItemsSource = new BehaviorSubject<IMenuItem[]>([]);
@@ -30,11 +34,6 @@ export class MenuService {
   get openedEnd(): boolean {
     return this._openedEnd;
   }
-
-  constructor(
-    // private readonly menuCtrl: MenuController,
-    private readonly resolver: ComponentFactoryResolver,
-  ) {}
 
   enable(): void {
     this._disableSource.next(false);

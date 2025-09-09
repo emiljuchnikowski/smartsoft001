@@ -1,14 +1,15 @@
 import { CdkTableDataSourceInput } from '@angular/cdk/table';
 import {
   ChangeDetectorRef,
-  Input,
   Directive,
   Type,
-  ViewChild,
   ViewContainerRef,
   inject,
   Signal,
   computed,
+  effect,
+  input,
+  viewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -41,7 +42,6 @@ export abstract class ListBaseComponent<T extends IEntity<string>> {
   static smartType: DynamicComponentType = 'list';
 
   private _fields!: Array<{ key: string; options: IFieldOptions }>;
-  private _internalOptions!: IListInternalOptions<T>;
 
   protected provider!: IListProvider<T>;
   protected authService = inject(AuthService);
@@ -81,124 +81,120 @@ export abstract class ListBaseComponent<T extends IEntity<string>> {
         defaultDesc?: boolean;
       };
 
-  @Input() set options(val: IListInternalOptions<T>) {
-    this._internalOptions = val;
-    this._fields = val.fields ?? [];
-    this.provider = val.provider;
-    this.sort = val.sort ?? {};
-    this.cellPipe = val.cellPipe ?? null;
-    this.selectMode = val.select;
-    this.type = val.type;
-    this.initKeys();
-    this.initList(val);
-    this.initLoading();
+  options = input.required<IListInternalOptions<T>>();
 
-    const removeHandler = val.remove as {
-      provider?: IRemoveProvider<T>;
-    };
-
-    if (val.remove) {
-      if (removeHandler?.provider?.check) {
-        this.checkRemoveHandler = removeHandler.provider.check;
-      }
-      this.removeHandler = async (obj: T) => {
-        const alertResult = await this.alertService.show({
-          header: this.translateService.instant('OBJECT.confirmDelete'),
-          buttons: [
-            {
-              text: this.translateService.instant('cancel'),
-              role: 'cancel',
-            },
-            {
-              text: this.translateService.instant('confirm'),
-              handler: () => {
-                removeHandler?.provider?.invoke?.(obj.id);
-              },
-            },
-          ],
-          backdropDismiss: false,
-        });
-      };
-    }
-
-    if (val.item) {
-      const options = (
-        val.item as {
-          options?: { select: (id: string) => void; routingPrefix: string };
-        }
-      ).options;
-
-      if (!options) throw Error('Must set edit options');
-
-      this.itemHandler = (id) => {
-        if (options?.routingPrefix) {
-          setTimeout(async () => {
-            await this.router.navigate([
-              options.routingPrefix.replace('//', '/'),
-              id,
-            ]);
-            this.cd.detectChanges();
-          });
-        } else if (options?.select) options.select(id);
-      };
-    }
-
-    const details = val.details as {
-      provider?: IDetailsProvider<T>;
-      componentFactories?: IDetailsComponentFactories<T>;
-    };
-
-    if (val.details) {
-      if (!details?.provider) throw Error('Must set details provider');
-
-      this.detailsComponent = DetailsPage;
-      this.detailsComponentProps = {
-        item: details?.provider.item,
-        type: val.type,
-        loading: details?.provider.loading,
-        itemHandler: this.itemHandler ?? null,
-        removeHandler: this.removeHandler,
-        componentFactories: details?.componentFactories,
-      };
-
-      this.select = details?.provider.getData;
-      this.unselect = details?.provider.clearData;
-    }
-
-    if (val.pagination) {
-      this.loadNextPage = async (event = null) => {
-        await val?.pagination?.loadNextPage?.();
-        if (event) event.target.complete();
-
-        setTimeout(() => {
-          window.scrollTo(0, 0);
-        });
-      };
-
-      this.loadPrevPage = async (event = null) => {
-        await val?.pagination?.loadPrevPage?.();
-        if (event) event.target.complete();
-
-        setTimeout(() => {
-          window.scrollTo(0, 10000);
-        });
-      };
-
-      this.page = val.pagination.page;
-      this.totalPages = val.pagination.totalPages;
-    }
-
-    this.afterInitOptions();
-  }
-
-  get options(): IListInternalOptions<T> {
-    return this._internalOptions;
-  }
-
-  @ViewChild('contentTpl', { read: ViewContainerRef, static: true })
-  contentTpl!: ViewContainerRef;
+  contentTpl = viewChild<ViewContainerRef>('contentTpl');
 
   constructor() {
+    effect(() => {
+      const options = this.options();
+      this._fields = options.fields ?? [];
+      this.provider = options.provider;
+      this.sort = options.sort ?? {};
+      this.cellPipe = options.cellPipe ?? null;
+      this.selectMode = options.select;
+      this.type = options.type;
+      this.initKeys();
+      this.initList(options);
+      this.initLoading();
+
+      const removeHandler = options.remove as {
+        provider?: IRemoveProvider<T>;
+      };
+
+      if (options.remove) {
+        if (removeHandler?.provider?.check) {
+          this.checkRemoveHandler = removeHandler.provider.check;
+        }
+        this.removeHandler = async (obj: T) => {
+          await this.alertService.show({
+            header: this.translateService.instant('OBJECT.confirmDelete'),
+            buttons: [
+              {
+                text: this.translateService.instant('cancel'),
+                role: 'cancel',
+              },
+              {
+                text: this.translateService.instant('confirm'),
+                handler: () => {
+                  removeHandler?.provider?.invoke?.(obj.id);
+                },
+              },
+            ],
+            backdropDismiss: false,
+          });
+        };
+      }
+
+      if (options.item) {
+        const itemOptions = (
+          options.item as {
+            options?: { select: (id: string) => void; routingPrefix: string };
+          }
+        ).options;
+
+        if (!itemOptions) throw Error('Must set edit options');
+
+        this.itemHandler = (id) => {
+          if (itemOptions?.routingPrefix) {
+            setTimeout(async () => {
+              await this.router.navigate([
+                itemOptions.routingPrefix.replace('//', '/'),
+                id,
+              ]);
+              this.cd.detectChanges();
+            });
+          } else if (itemOptions?.select) itemOptions.select(id);
+        };
+      }
+
+      const details = options.details as {
+        provider?: IDetailsProvider<T>;
+        componentFactories?: IDetailsComponentFactories<T>;
+      };
+
+      if (options.details) {
+        if (!details?.provider) throw Error('Must set details provider');
+
+        this.detailsComponent = DetailsPage;
+        this.detailsComponentProps = {
+          item: details?.provider.item,
+          type: options.type,
+          loading: details?.provider.loading,
+          itemHandler: this.itemHandler ?? null,
+          removeHandler: this.removeHandler,
+          componentFactories: details?.componentFactories,
+        };
+
+        this.select = details?.provider.getData;
+        this.unselect = details?.provider.clearData;
+      }
+
+      if (options.pagination) {
+        this.loadNextPage = async (event = null) => {
+          await options?.pagination?.loadNextPage?.();
+          if (event) event.target.complete();
+
+          setTimeout(() => {
+            window.scrollTo(0, 0);
+          });
+        };
+
+        this.loadPrevPage = async (event = null) => {
+          await options?.pagination?.loadPrevPage?.();
+          if (event) event.target.complete();
+
+          setTimeout(() => {
+            window.scrollTo(0, 10000);
+          });
+        };
+
+        this.page = options.pagination.page;
+        this.totalPages = options.pagination.totalPages;
+      }
+
+      this.afterInitOptions();
+    });
     this.detailsButtonOptions = {
       loading: this.loading,
       click: () => {
@@ -250,6 +246,7 @@ export abstract class ListBaseComponent<T extends IEntity<string>> {
       this.keys = result as unknown as string[];
   }
 
+  //The parameter is used in the inherited classes
   protected initList(val: IListInternalOptions<T>): void {
     this.list = computed(() => {
       const list = this.provider.list();

@@ -1,18 +1,10 @@
 import { AsyncPipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  OnInit,
-  Renderer2,
-} from '@angular/core';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { delay, tap } from 'rxjs/operators';
 
 import { IButtonOptions } from '../../../models';
 import { ModelLabelPipe } from '../../../pipes';
-import { FileService } from '../../../services';
-import { ToastService } from '../../../services';
 import { ButtonComponent } from '../../button';
 import { InputFileBaseComponent } from '../base/file.component';
 
@@ -34,16 +26,6 @@ export class InputVideoComponent<T>
     },
     loading: this.loading,
   };
-
-  constructor(
-    cd: ChangeDetectorRef,
-    renderer: Renderer2,
-    fileService: FileService,
-    toastService: ToastService,
-    translateService: TranslateService,
-  ) {
-    super(cd, renderer, fileService, toastService, translateService);
-  }
 
   protected override afterSetOptionsHandler() {
     this.control.valueChanges

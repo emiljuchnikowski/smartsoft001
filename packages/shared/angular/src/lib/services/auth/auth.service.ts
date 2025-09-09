@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
 
 import { StorageService } from '../storage/storage.service'; // This path needs to be correct
@@ -7,7 +7,7 @@ export const AUTH_TOKEN = 'AUTH_TOKEN';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  constructor(protected storageService: StorageService) {}
+  protected storageService = inject(StorageService);
 
   isAuthenticated(): boolean {
     const token: { access_token: string } | null = this.getToken();

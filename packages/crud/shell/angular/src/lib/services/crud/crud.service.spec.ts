@@ -56,7 +56,7 @@ describe('crud-shell-angular: CrudService', () => {
         {
           provide: CrudService,
           useFactory: () =>
-            new CrudService<TestEntity>(config, TestBed.inject(HttpClient)),
+            new CrudService<TestEntity>(),
         },
       ],
     });

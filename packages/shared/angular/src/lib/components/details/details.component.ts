@@ -1,9 +1,11 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  effect, input,
+  effect,
+  input,
   OnDestroy,
-  TemplateRef, viewChild,
+  TemplateRef,
+  viewChild,
   viewChildren,
 } from '@angular/core';
 
@@ -19,7 +21,7 @@ import { DetailsStandardComponent } from './standard/standard.component';
 @Component({
   selector: 'smart-details',
   template: `
-    @if (options && template() === 'default') {
+    @if (options() && template() === 'default') {
       <smart-details-standard [options]="options()"></smart-details-standard>
     }
     <div #customTpl></div>
@@ -37,11 +39,11 @@ export class DetailsComponent<T extends IEntity<string>>
 
   override contentTpl = viewChild<TemplateRef<any>>('contentTpl');
 
-  override dynamicContents = viewChildren<DynamicContentDirective>(DynamicContentDirective);
+  override dynamicContents = viewChildren<DynamicContentDirective>(
+    DynamicContentDirective,
+  );
 
-  constructor(
-    private detailsService: DetailsService,
-  ) {
+  constructor(private detailsService: DetailsService) {
     super();
 
     effect(() => {

@@ -1,11 +1,11 @@
-@if (errors?.required) {
+@if (errors()?.required) {
   <!--  TODO: move span wrapper to a separate component-->
   <span class="text-xl min-h-10 pl-5 align-middle">
     <!--    <ion-icon class="text-4xl align-middle -mt-1" name="alert-circle-outline"></ion-icon>-->
     {{ 'INPUT.ERRORS.required' | translate }}
   </span>
 } @else {
-  @if (errors?.confirm) {
+  @if (errors()?.confirm) {
     <span class="text-xl min-h-10 pl-5 align-middle">
       <!--      <ion-icon class="text-4xl align-middle -mt-1" name="alert-circle-outline"></ion-icon>-->
       {{ 'INPUT.ERRORS.confirm' | translate }}
@@ -13,74 +13,74 @@
   }
 }
 
-@if (errors?.invalidNip) {
+@if (errors()?.invalidNip) {
   <span class="text-xl min-h-10 pl-5 align-middle">
     <!--    <ion-icon class="text-4xl align-middle -mt-1" name="alert-circle-outline"></ion-icon>-->
     {{ 'INPUT.ERRORS.invalidNip' | translate }}
   </span>
 }
 
-@if (errors?.invalidUnique) {
+@if (errors()?.invalidUnique) {
   <span class="text-xl min-h-10 pl-5 align-middle">
     <!--    <ion-icon class="text-4xl align-middle -mt-1" name="alert-circle-outline"></ion-icon>-->
     {{ 'INPUT.ERRORS.invalidUnique' | translate }}
   </span>
 }
 
-@if (errors?.email) {
+@if (errors()?.email) {
   <span class="text-xl min-h-10 pl-5 align-middle">
     <!--    <ion-icon class="text-4xl align-middle -mt-1" name="alert-circle-outline"></ion-icon>-->
     {{ 'INPUT.ERRORS.invalidEmailFormat' | translate }}
   </span>
 }
 
-@if (errors?.phoneNumber) {
+@if (errors()?.phoneNumber) {
   <span class="text-xl min-h-10 pl-5 align-middle">
     <!--    <ion-icon class="text-4xl align-middle -mt-1" name="alert-circle-outline"></ion-icon>-->
     {{ 'INPUT.ERRORS.invalidPhoneNumberFormat' | translate }}
   </span>
 }
 
-@if (errors?.pesel) {
+@if (errors()?.pesel) {
   <span class="text-xl min-h-10 pl-5 align-middle">
     <!--    <ion-icon class="text-4xl align-middle -mt-1" name="alert-circle-outline"></ion-icon>-->
     {{ 'INPUT.ERRORS.invalidPeselFormat' | translate }}
   </span>
 }
 
-@if (errors?.minlength) {
+@if (errors()?.minlength) {
   <span class="text-xl min-h-10 pl-5 align-middle">
     <!--    <ion-icon class="text-4xl align-middle -mt-1" name="alert-circle-outline"></ion-icon>-->
     {{ 'INPUT.ERRORS.invalidMinLength' | translate }}:
-    {{ errors?.minlength?.requiredLength }}
+    {{ errors()?.minlength?.requiredLength }}
   </span>
 }
 
-@if (errors?.maxlength) {
+@if (errors()?.maxlength) {
   <span class="text-xl min-h-10 pl-5 align-middle">
     <!--    <ion-icon class="text-4xl align-middle -mt-1" name="alert-circle-outline"></ion-icon>-->
     {{ 'INPUT.ERRORS.invalidMaxLength' | translate }}:
-    {{ errors?.maxlength?.requiredLength }}
+    {{ errors()?.maxlength?.requiredLength }}
   </span>
 }
 
-@if (errors?.min) {
+@if (errors()?.min) {
   <span class="text-xl min-h-10 pl-5 align-middle">
     <!--    <ion-icon class="text-4xl align-middle -mt-1" name="alert-circle-outline"></ion-icon>-->
-    {{ 'INPUT.ERRORS.invalidMin' | translate }}: {{ errors?.min?.min }}
+    {{ 'INPUT.ERRORS.invalidMin' | translate }}: {{ errors()?.min?.min }}
   </span>
 }
 
-@if (errors?.max) {
+@if (errors()?.max) {
   <span class="text-xl min-h-10 pl-5 align-middle">
     <!--    <ion-icon class="text-4xl align-middle -mt-1" name="alert-circle-outline"></ion-icon>-->
-    {{ 'INPUT.ERRORS.invalidMax' | translate }}: {{ errors?.max?.max }}
+    {{ 'INPUT.ERRORS.invalidMax' | translate }}: {{ errors()?.max?.max }}
   </span>
 }
 
-@if (errors?.customMessage) {
+@if (errors()?.customMessage) {
   <span class="text-xl min-h-10 pl-5 align-middle">
     <!--    <ion-icon class="text-4xl align-middle -mt-1" name="alert-circle-outline"></ion-icon>-->
-    {{ errors?.customMessage }}
+    {{ errors()?.customMessage }}
   </span>
 }

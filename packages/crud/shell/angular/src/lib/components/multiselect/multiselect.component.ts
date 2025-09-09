@@ -1,5 +1,5 @@
 import { NgComponentOutlet } from '@angular/common';
-import { Component, computed, OnInit, Signal } from '@angular/core';
+import { Component, computed, inject, Signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import * as _ from 'lodash';
 import { DynamicIoDirective } from 'ng-dynamic-component';
@@ -34,6 +34,10 @@ import { FormOptionsPipe } from '../../pipes';
   styleUrls: ['./multiselect.component.scss'],
 })
 export class MultiselectComponent<T extends IEntity<string>> {
+  private facade = inject(CrudFacade<T>);
+  public config = inject(CrudFullConfig<T>);
+  private menuService = inject(MenuService);
+
   private _list: Array<T>;
   private _changes: Partial<T>;
 
@@ -58,11 +62,7 @@ export class MultiselectComponent<T extends IEntity<string>> {
 
   list: Signal<T[]>;
 
-  constructor(
-    private facade: CrudFacade<T>,
-    public config: CrudFullConfig<T>,
-    private menuService: MenuService,
-  ) {
+  constructor() {
     this.list = computed(() => {
       const list = this.facade.multiSelected();
       this.lock = true;

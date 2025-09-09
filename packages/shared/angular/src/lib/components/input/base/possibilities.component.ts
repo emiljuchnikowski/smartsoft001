@@ -1,15 +1,15 @@
 import {
-  Directive, inject,
+  Directive,
+  inject,
   signal,
   Signal,
-  Type
+  Type,
+  WritableSignal,
 } from '@angular/core';
 import { debounceTime } from 'rxjs/operators';
 
 import { InputBaseComponent } from './base.component';
-import {
-  MODEL_POSSIBILITIES_PROVIDER,
-} from '../../../providers';
+import { MODEL_POSSIBILITIES_PROVIDER } from '../../../providers';
 
 @Directive()
 export abstract class InputPossibilitiesBaseComponent<
@@ -34,8 +34,8 @@ export abstract class InputPossibilitiesBaseComponent<
       });
   }
 
-  protected getPossibilitiesFromProvider(): Signal<
-    { id: any; text: string }[] | null
+  protected getPossibilitiesFromProvider(): WritableSignal<
+    { id: any; text: string; checked: boolean }[] | null
   > {
     if (!this.modelPossibilitiesProvider) return signal(null);
 

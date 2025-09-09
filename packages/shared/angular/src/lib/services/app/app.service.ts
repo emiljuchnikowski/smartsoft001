@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { NavigationEnd, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -12,18 +12,16 @@ import { IIconButtonOptions } from '../../models';
   providedIn: 'root',
 })
 export class AppService {
+  private titleService = inject(Title);
+  private translate = inject(TranslateService);
+  private router = inject(Router);
+
   private static _endButtonsSource$ = new BehaviorSubject<AppEndButton[]>([]);
   private static _titleSource$ = new BehaviorSubject<string>('');
   private _baseTitle: string | undefined;
 
   endButtons$ = AppService._endButtonsSource$.asObservable();
   title$ = AppService._titleSource$.asObservable();
-
-  constructor(
-    private titleService: Title,
-    private translate: TranslateService,
-    private router: Router,
-  ) {}
 
   addEndButton(button: AppEndButton): void {
     if (button.id) {

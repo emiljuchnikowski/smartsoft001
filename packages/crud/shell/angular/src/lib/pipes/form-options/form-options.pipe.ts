@@ -1,12 +1,9 @@
-import { Inject, Optional, Pipe, PipeTransform, Type } from '@angular/core';
+import { inject, Pipe, PipeTransform, Type } from '@angular/core';
 
 import { IFormOptions, InputBaseComponent } from '@smartsoft001/angular';
 import { IEntity } from '@smartsoft001/domain-core';
 
-import {
-  CRUD_MODEL_POSSIBILITIES_PROVIDER,
-  ICrudModelPossibilitiesProvider,
-} from '../../providers/model-possibilities/model-possibilities.provider';
+import { CRUD_MODEL_POSSIBILITIES_PROVIDER } from '../../providers/model-possibilities/model-possibilities.provider';
 
 @Pipe({
   name: 'smartFormOptions',
@@ -14,11 +11,9 @@ import {
 export class FormOptionsPipe<T extends IEntity<string>>
   implements PipeTransform
 {
-  constructor(
-    @Optional()
-    @Inject(CRUD_MODEL_POSSIBILITIES_PROVIDER)
-    private modelPossibilitiesProvider: ICrudModelPossibilitiesProvider,
-  ) {}
+  private modelPossibilitiesProvider = inject(
+    CRUD_MODEL_POSSIBILITIES_PROVIDER,
+  );
 
   transform(
     item: T,

@@ -39,7 +39,7 @@
 }
 <input
   type="file"
-  [attr.accept]="fieldOptions?.possibilities"
+  [attr.accept]="fieldOptions()?.possibilities"
   [hidden]="true"
   #inputObj
 />

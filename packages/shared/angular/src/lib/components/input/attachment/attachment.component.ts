@@ -23,14 +23,4 @@ import { InputFileBaseComponent } from '../base/file.component';
 export class InputAttachmentComponent<T>
   extends InputFileBaseComponent<T>
   implements OnInit
-{
-  constructor(
-    cd: ChangeDetectorRef,
-    renderer: Renderer2,
-    fileService: FileService,
-    toastService: ToastService,
-    translateService: TranslateService,
-  ) {
-    super(cd, renderer, fileService, toastService, translateService);
-  }
-}
+{}

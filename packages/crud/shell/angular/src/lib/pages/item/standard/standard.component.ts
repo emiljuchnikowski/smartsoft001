@@ -10,9 +10,9 @@ import { CrudItemPageBaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-crud-item-standard-page',
   template: `
-    @if (mode === 'details') {
-      @if (detailsOptions) {
-        <smart-details [options]="detailsOptions"></smart-details>
+    @if (mode() === 'details') {
+      @if (detailsOptions()) {
+        <smart-details [options]="detailsOptions()"></smart-details>
       }
     } @else {
       <ng-container [ngTemplateOutlet]="editTpl"></ng-container>
@@ -23,9 +23,9 @@ import { CrudItemPageBaseComponent } from '../base/base.component';
         [options]="
           selected()
             | smartFormOptions
-              : mode
+              : mode()
               : config?.type
-              : uniqueProvider
+              : uniqueProvider()
               : config.inputComponents
         "
         (valuePartialChange)="onPartialChange.emit($event)"

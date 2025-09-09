@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input} from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({

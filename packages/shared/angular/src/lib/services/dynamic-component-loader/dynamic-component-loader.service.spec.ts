@@ -1,24 +1,34 @@
 import {
   ComponentFactoryResolver,
-  Injector,
   ComponentFactory,
+  ɵNoopNgZone as NoopNgZone,
+  NgZone,
 } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 
 import { DynamicComponentLoader } from './dynamic-component-loader.service';
 
 describe('angular: DynamicComponentLoader', () => {
-  let resolver: ComponentFactoryResolver;
-  let injector: Injector;
   let loader: DynamicComponentLoader<any>;
+  let resolver: ComponentFactoryResolver;
 
   beforeEach(() => {
-    resolver = {
+    const mockResolver = {
       resolveComponentFactory: jest.fn(
         (comp) => ({ componentType: comp }) as ComponentFactory<any>,
       ),
-    } as any;
-    injector = {} as Injector;
-    loader = new DynamicComponentLoader(resolver, injector);
+    };
+
+    TestBed.configureTestingModule({
+      providers: [
+        DynamicComponentLoader,
+        { provide: ComponentFactoryResolver, useValue: mockResolver },
+        { provide: NgZone, useClass: NoopNgZone },
+      ],
+    });
+
+    loader = TestBed.inject(DynamicComponentLoader);
+    resolver = TestBed.inject(ComponentFactoryResolver);
     DynamicComponentLoader.declaredComponents = [];
   });
 

@@ -1,4 +1,11 @@
-import { Component, computed, ElementRef, OnInit, Signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  OnInit,
+  Signal,
+} from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { StyleService } from '@smartsoft001/angular';
@@ -37,13 +44,11 @@ import { ICrudFilterQueryItem } from '../../models';
   ],
 })
 export class FiltersConfigComponent implements OnInit {
-  query: Signal<ICrudFilterQueryItem[]>;
+  private readonly facade = inject(CrudFacade<any>);
+  private styleService = inject(StyleService);
+  private elementRef = inject(ElementRef);
 
-  constructor(
-    private readonly facade: CrudFacade<any>,
-    private styleService: StyleService,
-    private elementRef: ElementRef,
-  ) {}
+  query: Signal<ICrudFilterQueryItem[]>;
 
   onRemoveQuery(item: ICrudFilterQueryItem): void {
     const index = this.facade.filter().query.indexOf(item);

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 
 import { FieldType, IModelFilter } from '@smartsoft001/models';
 
@@ -29,6 +29,6 @@ import { FilterTextComponent } from './text/text.component';
 export class FilterComponent {
   FieldType = FieldType;
 
-  @Input() item: IModelFilter;
-  @Input() filter: ICrudFilter;
+  item = input<IModelFilter>();
+  filter = input<ICrudFilter>();
 }

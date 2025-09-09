@@ -1,9 +1,11 @@
 import {
-  Directive, input,
+  Directive,
+  input,
   InputSignal,
-  signal, viewChild,
+  signal,
+  viewChild,
   ViewContainerRef,
-  WritableSignal
+  WritableSignal,
 } from '@angular/core';
 
 import { DynamicComponentType, IButtonOptions } from '../../../models';

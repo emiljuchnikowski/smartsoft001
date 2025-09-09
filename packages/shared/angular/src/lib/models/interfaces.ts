@@ -1,4 +1,10 @@
-import { ComponentFactory, PipeTransform, Signal, Type } from '@angular/core';
+import {
+  ComponentFactory,
+  PipeTransform,
+  Signal,
+  Type,
+  WritableSignal,
+} from '@angular/core';
 import {
   AbstractControl,
   UntypedFormArray,
@@ -49,7 +55,7 @@ export interface IFormOptions<T> {
   loading$?: Observable<boolean>;
   uniqueProvider?: (values: Record<keyof T, any>) => Promise<boolean>;
   possibilities?: {
-    [key: string]: Signal<{ id: any; text: string }[]>;
+    [key: string]: WritableSignal<{ id: any; text: string, checked: boolean }[]>;
   };
   inputComponents?: {
     [key: string]: Type<InputBaseComponent<T>>;
@@ -63,7 +69,7 @@ export type InputOptions<T> = IInputOptions & IInputFromFieldOptions<T>;
 export interface IInputOptions {
   treeLevel: number;
   control: UntypedFormControl | UntypedFormArray;
-  possibilities?: Signal<{ id: any; text: string }[]>;
+  possibilities?: WritableSignal<{ id: any; text: string; checked: boolean }[]>;
   component?: Type<InputBaseComponent<any>>;
 }
 

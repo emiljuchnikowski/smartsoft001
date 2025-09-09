@@ -1,6 +1,5 @@
 import {
-  Inject,
-  Optional,
+  inject,
   Pipe,
   PipeTransform,
   signal,
@@ -9,18 +8,14 @@ import {
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
-import { IModelLabelProvider, MODEL_LABEL_PROVIDER } from '../../providers';
+import { IModelLabelProvider } from '../../providers';
 
 @Pipe({
   name: 'smartListHeader',
 })
 export class ListHeaderPipe<T> implements PipeTransform {
-  constructor(
-    private translateService: TranslateService,
-    @Optional()
-    @Inject(MODEL_LABEL_PROVIDER)
-    private modelLabelProvider: IModelLabelProvider,
-  ) {}
+  private translateService = inject(TranslateService);
+  private modelLabelProvider = inject(IModelLabelProvider);
 
   transform(data: T, key: string, type?: Type<any>): Signal<string> {
     if (key.indexOf('__array') === 0) {
