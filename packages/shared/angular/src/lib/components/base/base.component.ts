@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
-  ComponentFactoryResolver, ComponentRef,
+  ComponentFactoryResolver,
+  ComponentRef,
   Directive,
   DoCheck,
   inject,
@@ -10,7 +11,7 @@ import {
   signal,
   TemplateRef,
   ViewContainerRef,
-  WritableSignal
+  WritableSignal,
 } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { MonoTypeOperatorFunction, Subject } from 'rxjs';
@@ -106,7 +107,7 @@ export function CreateDynamicComponent<
         const first = this.dynamicContents()[0];
         if (first) {
           this._renderCustom = true;
-          this.baseComponentRef = first.container.createComponent(factory)
+          this.baseComponentRef = first.container.createComponent(factory);
           this.baseInstance = this.baseComponentRef.instance;
           this.refreshDynamicInstance();
           this.baseInstance

@@ -7,10 +7,11 @@ import {
   ElementRef,
   inject,
   Injector,
-  input, model,
+  input,
+  model,
   OnInit,
   viewChild,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
 import * as _ from 'lodash';
 

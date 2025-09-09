@@ -55,8 +55,7 @@ describe('crud-shell-angular: CrudService', () => {
         },
         {
           provide: CrudService,
-          useFactory: () =>
-            new CrudService<TestEntity>(),
+          useFactory: () => new CrudService<TestEntity>(),
         },
       ],
     });

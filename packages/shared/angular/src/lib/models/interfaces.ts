@@ -55,7 +55,9 @@ export interface IFormOptions<T> {
   loading$?: Observable<boolean>;
   uniqueProvider?: (values: Record<keyof T, any>) => Promise<boolean>;
   possibilities?: {
-    [key: string]: WritableSignal<{ id: any; text: string, checked: boolean }[]>;
+    [key: string]: WritableSignal<
+      { id: any; text: string; checked: boolean }[]
+    >;
   };
   inputComponents?: {
     [key: string]: Type<InputBaseComponent<T>>;

@@ -1,7 +1,10 @@
 // Create interface for our mock
 import { ɵNoopNgZone as NoopNgZone, NgZone } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { BrowserTestingModule, platformBrowserTesting } from '@angular/platform-browser/testing';
+import {
+  BrowserTestingModule,
+  platformBrowserTesting,
+} from '@angular/platform-browser/testing';
 
 interface MockAuthService {
   expectPermissions: jest.Mock;
@@ -16,20 +19,16 @@ jest.mock('@smartsoft001/models', () => ({
 // Mock entire @smartsoft001/angular module
 jest.mock('@smartsoft001/angular', () => ({
   AuthService: jest.fn().mockImplementation(() => ({
-    expectPermissions: jest.fn()
+    expectPermissions: jest.fn(),
   })),
 }));
-
 
 import { AuthService } from '@smartsoft001/angular';
 
 import { PageService } from './page.service';
 import { CrudFullConfig } from '../../crud.config';
 
-TestBed.initTestEnvironment(
-  BrowserTestingModule,
-  platformBrowserTesting()
-);
+TestBed.initTestEnvironment(BrowserTestingModule, platformBrowserTesting());
 
 describe('crud-shell-angular: PageService', () => {
   let service: PageService<any>;
@@ -52,8 +51,8 @@ describe('crud-shell-angular: PageService', () => {
         PageService,
         { provide: AuthService, useValue: { expectPermissions: jest.fn() } },
         { provide: CrudFullConfig, useValue: config },
-        { provide: NgZone, useClass: NoopNgZone }
-      ]
+        { provide: NgZone, useClass: NoopNgZone },
+      ],
     });
 
     service = TestBed.inject(PageService);

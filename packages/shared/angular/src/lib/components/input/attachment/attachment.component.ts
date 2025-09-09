@@ -22,5 +22,4 @@ import { InputFileBaseComponent } from '../base/file.component';
 })
 export class InputAttachmentComponent<T>
   extends InputFileBaseComponent<T>
-  implements OnInit
-{}
+  implements OnInit {}

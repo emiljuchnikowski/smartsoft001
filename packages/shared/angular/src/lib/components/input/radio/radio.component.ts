@@ -36,7 +36,7 @@ export class InputRadioComponent<T> extends InputPossibilitiesBaseComponent<T> {
         Object.keys(possibilities).map((key) => ({
           id: possibilities[key],
           text: key,
-          checked: false
+          checked: false,
         })),
       );
     }

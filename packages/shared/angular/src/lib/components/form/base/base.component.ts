@@ -7,7 +7,8 @@ import {
   effect,
   output,
   viewChild,
-  inject, WritableSignal
+  inject,
+  WritableSignal,
 } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -26,7 +27,9 @@ export abstract class FormBaseComponent<T> extends BaseComponent {
   private _subscription!: Subscription;
   private _model: any;
   private _possibilities!: {
-    [key: string]: WritableSignal<{ id: any; text: string, checked: boolean }[]>;
+    [key: string]: WritableSignal<
+      { id: any; text: string; checked: boolean }[]
+    >;
   };
   private _inputComponents!: { [key: string]: Type<InputBaseComponent<T>> };
 
@@ -42,7 +45,9 @@ export abstract class FormBaseComponent<T> extends BaseComponent {
   }
 
   get possibilities(): {
-    [key: string]: WritableSignal<{ id: any; text: string, checked: boolean }[]>;
+    [key: string]: WritableSignal<
+      { id: any; text: string; checked: boolean }[]
+    >;
   } {
     return this._possibilities;
   }
