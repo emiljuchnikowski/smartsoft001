@@ -39,7 +39,6 @@ jobs:
         with:
           header: claude-code-review
           message: 🔎 Code Review in progress...
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run Claude Code Review
         run: |
@@ -56,4 +55,4 @@ jobs:
         with:
           header: claude-code-review
           path: claude-review.md
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
