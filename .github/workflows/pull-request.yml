@@ -24,7 +24,7 @@ jobs:
         id: cache-deps
         uses: ./.github/actions/cached-deps
         with:
-          node-version: '24'
+          node-version: '24.5.0'
       - run: npx nx format:check --base=origin/${{ github.event.pull_request.base.ref }}
       - run: npx nx run-many -t lint --max-parallel=4
       - run: |
