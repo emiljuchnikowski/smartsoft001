@@ -1,4 +1,11 @@
-import { ComponentFactoryResolver, inject, Injectable, Injector, signal, ViewContainerRef } from '@angular/core';
+import {
+  ComponentFactoryResolver,
+  inject,
+  Injectable,
+  Injector,
+  signal,
+  ViewContainerRef,
+} from '@angular/core';
 
 import { IMenuItem } from '../../models';
 

@@ -1,12 +1,22 @@
-import { DOCUMENT } from "@angular/common";
-import { isPlatformBrowser } from "@angular/common";
+import { DOCUMENT } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectorRef,
   OnDestroy,
   Directive,
   ElementRef,
   PLATFORM_ID,
-  ViewContainerRef, AfterContentInit, input, effect, inject, viewChild, Signal, signal, computed, InputSignal, Injector
+  ViewContainerRef,
+  AfterContentInit,
+  input,
+  effect,
+  inject,
+  viewChild,
+  Signal,
+  signal,
+  computed,
+  InputSignal,
+  Injector,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
@@ -15,14 +25,14 @@ import {
   NavigationError,
   NavigationStart,
   Router,
-} from "@angular/router";
-import {Subscription} from "rxjs";
-import {filter} from "rxjs/operators";
+} from '@angular/router';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 import { IAppOptions, IMenuItem } from '../../../models';
-import {AppService} from '../../../services';
-import {AuthService} from '../../../services';
-import {MenuService} from '../../../services';
+import { AppService } from '../../../services';
+import { AuthService } from '../../../services';
+import { MenuService } from '../../../services';
 import { StyleService } from '../../../services';
 
 @Directive()
@@ -40,7 +50,7 @@ export abstract class AppBaseComponent implements OnDestroy, AfterContentInit {
 
   private _subscriptions = new Subscription();
 
-  selectedPath = "";
+  selectedPath = '';
   showMenu: Signal<boolean> = signal(false).asReadonly();
   menuItems: Signal<IMenuItem[]> = signal([]).asReadonly();
   logged: Signal<boolean> = signal(false).asReadonly();
@@ -50,7 +60,7 @@ export abstract class AppBaseComponent implements OnDestroy, AfterContentInit {
 
   routerEvents = toSignal(this.router.events);
   options: InputSignal<IAppOptions> = input.required<IAppOptions>();
-  endMenuContainer = viewChild<ViewContainerRef>("endMenuContainer");
+  endMenuContainer = viewChild<ViewContainerRef>('endMenuContainer');
 
   constructor() {
     effect(() => {
@@ -126,14 +136,13 @@ export abstract class AppBaseComponent implements OnDestroy, AfterContentInit {
           this.styleService.init(this.elementRef);
 
           this.cd.detectChanges();
-        })
+        }),
     );
   }
 
   private initLoader() {
-
     this.loadingPage = computed(() => {
-      const routerEvent = this.routerEvents()
+      const routerEvent = this.routerEvents();
       if (routerEvent instanceof NavigationStart) {
         return true;
       } else if (
@@ -153,9 +162,9 @@ export abstract class AppBaseComponent implements OnDestroy, AfterContentInit {
       setTimeout(() => {
         this.styleService.set(this.options()?.style);
 
-        const elementById = this.document.getElementById("app-favicon");
+        const elementById = this.document.getElementById('app-favicon');
         if (this.logo && elementById) {
-          elementById.setAttribute("href", this.logo);
+          elementById.setAttribute('href', this.logo);
         }
       });
     }
@@ -163,14 +172,19 @@ export abstract class AppBaseComponent implements OnDestroy, AfterContentInit {
 
   private initPermissionClasses() {
     if (isPlatformBrowser(this.platformId)) {
-      effect(() => {
-        const logged = this.options().provider.logged();
-        if (logged) {
-          this.authService.getPermissions().forEach(permission => {
-            (this.elementRef.nativeElement as HTMLElement).classList.add("auth-permissions-" + permission);
-          });
-        }
-      }, { injector: this.injector }); // Auto cleanup with component
+      effect(
+        () => {
+          const logged = this.options().provider.logged();
+          if (logged) {
+            this.authService.getPermissions().forEach((permission) => {
+              (this.elementRef.nativeElement as HTMLElement).classList.add(
+                'auth-permissions-' + permission,
+              );
+            });
+          }
+        },
+        { injector: this.injector },
+      ); // Auto cleanup with component
     }
   }
 }
