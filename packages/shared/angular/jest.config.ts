@@ -1,6 +1,4 @@
-import type { Config } from 'jest';
-
-const config: Config = {
+export default {
   displayName: 'angular',
   preset: '../../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
@@ -14,14 +12,10 @@ const config: Config = {
       },
     ],
   },
-  transformIgnorePatterns: [
-    'node_modules/(?!(@ionic|@stencil|@angular)/|.*\\.mjs$)',
-  ],
+  transformIgnorePatterns: ['node_modules/(?!.*\\.mjs$)'],
   snapshotSerializers: [
     'jest-preset-angular/build/serializers/no-ng-attributes',
     'jest-preset-angular/build/serializers/ng-snapshot',
     'jest-preset-angular/build/serializers/html-comment',
   ],
 };
-
-export default config;
