@@ -9,8 +9,6 @@ import {
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { ModelLabelPipe } from '../../../pipes';
-import { FileService } from '../../../services';
-import { ToastService } from '../../../services';
 import { ButtonComponent } from '../../button';
 import { InputFileBaseComponent } from '../base/file.component';
 

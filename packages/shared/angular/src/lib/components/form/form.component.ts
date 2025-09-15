@@ -36,7 +36,6 @@ import { DynamicContentDirective } from '../../directives';
 import { ExportComponent } from '../export';
 import { ImportComponent } from '../import';
 import { FormStandardComponent } from './standard/standard.component';
-import { FormStepperComponent } from './stepper/stepper.component';
 
 @Component({
   selector: 'smart-form',
@@ -71,14 +70,6 @@ import { FormStepperComponent } from './stepper/stepper.component';
               (invokeSubmit)="invokeSubmit.emit($event)"
             ></smart-form-standard>
           }
-
-          @if (options() && type === 'stepper') {
-            <smart-form-stepper
-              [options]="options()"
-              [form]="form"
-              (invokeSubmit)="invokeSubmit.emit($event)"
-            ></smart-form-stepper>
-          }
         }
 
         <div class="dynamic-content"></div>
@@ -89,7 +80,6 @@ import { FormStepperComponent } from './stepper/stepper.component';
     ExportComponent,
     ImportComponent,
     ReactiveFormsModule,
-    FormStepperComponent,
     FormStandardComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -110,7 +100,7 @@ export class FormComponent<T>
   private _uniqueProvider!: (values: Record<keyof T, any>) => Promise<boolean>;
 
   form!: SmartFormGroup;
-  type!: 'standard' | 'stepper' | 'custom';
+  type!: 'standard' | 'custom';
   export!: boolean;
   exportHandler!: (val: any) => void;
   import!: boolean;
@@ -259,12 +249,6 @@ export class FormComponent<T>
 
   private initType() {
     const fieldWithOptions = getModelFieldsWithOptions(this._options.model);
-
-    if (fieldWithOptions.some((fwo) => fwo.options.step)) {
-      this.type = 'stepper';
-      return;
-    }
-
     this.type = 'standard';
   }
 

@@ -18,16 +18,7 @@ import { DetailBaseComponent } from '../base/base.component';
     }
   `,
   // TODO: rework styles with tailwind
-  styles: [
-    `
-      ion-card {
-        /*height: var(--smart-button-height);*/
-      }
-      ion-card-header {
-        /*height: var(--smart-button-height);*/
-      }
-    `,
-  ],
+  styles: [ ],
 })
 export class DetailColorComponent<
   T extends { [key: string]: any } | undefined,

@@ -153,7 +153,6 @@ export interface CalendarState {
 
 @Component({
   selector: 'smart-date-range-modal',
-  styleUrls: ['./date-range-modal.component.scss'],
   templateUrl: './date-range-modal.component.html',
   providers: [CalendarService],
   changeDetection: ChangeDetectionStrategy.OnPush,

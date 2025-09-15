@@ -9,18 +9,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     <!--  (click)="onClick($event)"-->
     <!--&gt;</ion-icon>-->
   `,
-  styles: [
-    `
-      :host {
-        cursor: pointer;
-        font-size: 2.4rem;
-        transform: translate(0, -50%);
-        ion-icon {
-          color: var(--smart-color-primary);
-        }
-      }
-    `,
-  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InfoComponent {

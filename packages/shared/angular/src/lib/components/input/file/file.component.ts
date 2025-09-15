@@ -59,7 +59,6 @@ import { InputBaseComponent } from '../base/base.component';
     }
   `,
   imports: [ButtonComponent, ModelLabelPipe, AsyncPipe, TranslatePipe],
-  styleUrls: ['./file.component.scss'],
 })
 export class InputFileComponent<T> extends InputBaseComponent<T> {
   addButtonOptions = {

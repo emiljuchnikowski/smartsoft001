@@ -4,20 +4,18 @@
 <div class="w-full overflow-y-auto">
   <table
     cdk-table
-    matSort
     [dataSource]="list() ?? []"
-    recycleRows
     [trackBy]="myTrackById"
     class="w-full overflow-y-auto"
   >
     @for (key of desktopKeys; track key) {
       @let last = $last;
-      <ng-container matColumnDef="{{ key }}" class="col-sm text-left">
+      <ng-container class="col-sm text-left">
         <div>
           @switch (key) {
             @case ('selectMulti') {
               <th cdk-header-cell class="w-5" *matHeaderCellDef></th>
-              <td cdk-cell *matCellDef="let element">
+              <td cdk-cell>
                 @let list = desktopList();
                 @if (list) {
                   <!--                    <ion-checkbox-->
@@ -67,7 +65,7 @@
               </td>
             }
             @case ('itemAction') {
-              <th cdk-header-cell class="w-5" *matHeaderCellDef>
+              <th cdk-header-cell class="w-5">
                 <ng-container *ngTemplateOutlet="pagination"></ng-container>
               </th>
               <td cdk-cell *matCellDef="let element">
@@ -80,7 +78,7 @@
               </td>
             }
             @default {
-              <th cdk-header-cell *matHeaderCellDef mat-sort-header="{{ key }}">
+              <th cdk-header-cell>
                 {{ (list() | smartListHeader: key : type)() }}
                 <ng-container *ngTemplateOutlet="pagination"></ng-container>
               </th>

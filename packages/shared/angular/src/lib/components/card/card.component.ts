@@ -33,8 +33,6 @@ import { ICardOptions } from '../../models';
     <!--      </ion-card-content>-->
     <!--    </ion-card>-->
   `,
-  imports: [AsyncPipe],
-  styleUrls: ['./card.component.scss'],
 })
 export class CardComponent {
   readonly options: InputSignal<ICardOptions | undefined> =

@@ -4,7 +4,7 @@ import { IEntity } from '@smartsoft001/domain-core';
 
 import { CrudConfig } from '../crud.config';
 import { ICrudCreateManyOptions, ICrudFilter } from '../models';
-import { createCrudFeatureStore } from './crud.feature.store';
+import { createCrudFeatureStore } from './crud.store';
 
 @Injectable()
 export class CrudFacade<T extends IEntity<string>> {

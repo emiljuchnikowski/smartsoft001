@@ -13,7 +13,6 @@ import { InputBaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-input-ints',
   templateUrl: './ints.component.html',
-  styleUrls: ['./ints.component.scss'],
   imports: [ReactiveFormsModule, TranslatePipe, ModelLabelPipe, AsyncPipe],
 })
 export class InputIntsComponent<T> extends InputBaseComponent<T> {

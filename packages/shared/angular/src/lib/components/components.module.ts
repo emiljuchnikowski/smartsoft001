@@ -4,11 +4,6 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatSortModule } from '@angular/material/sort';
-import { MatStepperModule } from '@angular/material/stepper';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { DynamicComponent, DynamicModule } from 'ng-dynamic-component';
@@ -52,7 +47,6 @@ import { ExportComponent } from './export';
 import {
   FormComponent,
   FormStandardComponent,
-  FormStepperComponent,
 } from './form';
 import { ImportComponent } from './import';
 import { InfoComponent, InfoModalComponent } from './info';
@@ -133,7 +127,6 @@ export const DETAIL_COMPONENTS = [
 
 export const FORM_COMPONENTS = [
   FormStandardComponent,
-  FormStepperComponent,
   FormComponent,
 ];
 
@@ -221,13 +214,8 @@ export const IMPORTS = [
   SharedPipesModule,
   SharedDirectivesModule,
   HttpClientModule,
-  MatSortModule,
   LazyLoadImageModule,
   DragDropModule,
-  MatStepperModule,
-  MatButtonModule,
-  MatDatepickerModule,
-  MatNativeDateModule,
   CdkTableModule,
   DynamicModule,
 ];

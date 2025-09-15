@@ -31,7 +31,6 @@ import { DetailVideoComponent } from './video/video.component';
 @Component({
   selector: 'smart-detail',
   templateUrl: './detail.component.html',
-  styleUrls: ['./detail.component.scss'],
   imports: [
     DetailEmailComponent,
     DetailFlagComponent,

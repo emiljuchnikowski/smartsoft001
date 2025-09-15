@@ -19,7 +19,6 @@ import { ListBaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-list-masonry-grid',
   templateUrl: './masonry-grid.component.html',
-  styleUrls: ['./masonry-grid.component.scss'],
   imports: [PagingComponent, FileUrlPipe, NgOptimizedImage, ListCellPipe],
 })
 export class ListMasonryGridComponent<T extends IEntity<string>>

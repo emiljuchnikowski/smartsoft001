@@ -16,7 +16,6 @@ import { InputBaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-input-long-text',
   templateUrl: './long-text.component.html',
-  styleUrls: ['./long-text.component.scss'],
   imports: [
     ModelLabelPipe,
     AsyncPipe,

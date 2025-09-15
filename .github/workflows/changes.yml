@@ -1,0 +1,111 @@
+name: Auto Implement Linear Issue
+
+on:
+  workflow_dispatch:
+    inputs:
+      linear_issue_id:
+        description: 'Linear Issue ID'
+        required: true
+        type: string
+
+jobs:
+  implement-issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Fetch Linear issue details
+        id: linear
+        run: |
+          ISSUE_DATA=$(curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.LINEAR_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "query": "query($id: String!) { issue(id: $id) { title description state { name } comments { nodes { body user { name } createdAt } } } }",
+              "variables": { "id": "${{ github.event.inputs.linear_issue_id }}" }
+            }' \
+            https://api.linear.app/graphql)
+
+          echo "issue_data<<EOF" >> $GITHUB_OUTPUT
+          echo "$ISSUE_DATA" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create and switch to new branch
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git checkout -b "changes/${{ github.event.inputs.linear_issue_id }}"
+
+      - name: Implement changes with Claude
+        run: |
+          # Parse Linear issue data
+          TITLE=$(echo '${{ steps.linear.outputs.issue_data }}' | jq -r '.data.issue.title')
+          DESCRIPTION=$(echo '${{ steps.linear.outputs.issue_data }}' | jq -r '.data.issue.description')
+          COMMENTS=$(echo '${{ steps.linear.outputs.issue_data }}' | jq -r '.data.issue.comments.nodes[] | "Comment by \(.user.name) (\(.createdAt)): \(.body)"' | tr '\n' ' ')
+
+          # Create prompt for Claude
+          PROMPT="Based on this Linear issue, implement the necessary code changes:
+
+          Title: $TITLE
+          Description: $DESCRIPTION
+          Comments: $COMMENTS
+
+          This is a TypeScript/Angular project. Analyze the existing codebase and implement the required changes. Focus on:
+          1. Code functionality
+          2. Type safety
+          3. Angular best practices
+          4. Testing if needed
+
+          Please provide specific file changes needed."
+
+          # Use Claude API to generate code changes
+          CLAUDE_RESPONSE=$(curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.CLAUDE_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"model\": \"claude-3-sonnet-20240229\",
+              \"max_tokens\": 4000,
+              \"messages\": [{
+                \"role\": \"user\",
+                \"content\": \"$PROMPT\"
+              }]
+            }" \
+            https://api.anthropic.com/v1/messages)
+
+          echo "$CLAUDE_RESPONSE" > claude_response.json
+
+          # Extract and apply code changes (this would need custom parsing logic)
+          # For now, create a placeholder implementation file
+          echo "// Auto-generated implementation for Linear issue ${{ github.event.inputs.linear_issue_id }}" > implementation.ts
+          echo "// Title: $TITLE" >> implementation.ts
+          echo "// Description: $DESCRIPTION" >> implementation.ts
+
+      - name: Commit and push changes
+        run: |
+          git add .
+          git commit -m "Auto-implement Linear issue ${{ github.event.inputs.linear_issue_id }}"
+          git push origin "changes/${{ github.event.inputs.linear_issue_id }}"
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: 'changes/${{ github.event.inputs.linear_issue_id }}'
+          title: 'Auto-implement: Linear issue ${{ github.event.inputs.linear_issue_id }}'
+          body: |
+            Auto-generated implementation for Linear issue ${{ github.event.inputs.linear_issue_id }}
+
+            This PR was created automatically using Claude AI based on the Linear issue details.
+            Please review the changes carefully before merging.

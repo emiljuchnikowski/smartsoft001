@@ -1,11 +1,4 @@
-import {
-  CdkCell,
-  CdkHeaderCell,
-  CdkHeaderRow,
-  CdkRecycleRows,
-  CdkRow,
-  CdkTable,
-} from '@angular/cdk/table';
+import {CdkCell, CdkHeaderCell, CdkHeaderRow, CdkRow, CdkTable} from "@angular/cdk/table";
 import { NgTemplateOutlet } from '@angular/common';
 import {
   AfterViewInit,
@@ -16,21 +9,12 @@ import {
   viewChild,
   ViewContainerRef,
 } from '@angular/core';
-import { MatSort, MatSortHeader } from '@angular/material/sort';
-import {
-  MatCellDef,
-  MatColumnDef,
-  MatHeaderCellDef,
-  MatHeaderRowDef,
-  MatRowDef,
-} from '@angular/material/table';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { Subscription } from 'rxjs';
 
 import { IEntity } from '@smartsoft001/domain-core';
 
-import { DetailsDirective } from '../../../directives';
 import { IListComponentFactories, IListInternalOptions } from '../../../models';
 import { FileUrlPipe, ListCellPipe, ListHeaderPipe } from '../../../pipes';
 import { PagingComponent } from '../../paging';
@@ -59,29 +43,20 @@ import { ListBaseComponent } from '../base/base.component';
       }
     `,
   ],
-  imports: [
-    CdkTable,
-    MatSort,
-    CdkRecycleRows,
-    MatColumnDef,
-    CdkHeaderCell,
-    CdkCell,
-    MatHeaderCellDef,
-    NgTemplateOutlet,
-    MatCellDef,
-    DetailsDirective,
-    ListHeaderPipe,
-    MatSortHeader,
-    ListCellPipe,
-    LazyLoadImageModule,
-    FileUrlPipe,
-    TranslatePipe,
-    MatHeaderRowDef,
-    CdkHeaderRow,
-    CdkRow,
-    MatRowDef,
-    PagingComponent,
-  ],
+    imports: [
+        NgTemplateOutlet,
+        ListHeaderPipe,
+        ListCellPipe,
+        LazyLoadImageModule,
+        FileUrlPipe,
+        TranslatePipe,
+        PagingComponent,
+        CdkTable,
+        CdkHeaderCell,
+        CdkCell,
+        CdkHeaderRow,
+        CdkRow,
+    ],
 })
 export class ListDesktopComponent<T extends IEntity<string>>
   extends ListBaseComponent<T>
@@ -107,7 +82,6 @@ export class ListDesktopComponent<T extends IEntity<string>>
     return null;
   }
 
-  sortObj = viewChild(MatSort);
   topTpl = viewChild<ViewContainerRef>('topTpl');
 
   protected override initList(val: IListInternalOptions<T>): void {
@@ -158,26 +132,6 @@ export class ListDesktopComponent<T extends IEntity<string>>
       default?: string | undefined;
       defaultDesc?: boolean | undefined;
     };
-
-    const sortObj = this.sortObj();
-    if (sortObj) {
-      if (this.sort) {
-        sortObj.active = sort?.default ?? '';
-        sortObj.direction = sort.defaultDesc ? 'desc' : 'asc';
-
-        this._subscriptions.add(
-          sortObj.sortChange.subscribe((sort) => {
-            this.provider.getData({
-              offset: 0,
-              sortBy: sort.active ? sort.active : '',
-              sortDesc: sortObj.direction === 'desc',
-            });
-          }),
-        );
-      } else {
-        sortObj.disabled = true;
-      }
-    }
   }
 
   ngOnDestroy(): void {

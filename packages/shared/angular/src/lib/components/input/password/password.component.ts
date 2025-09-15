@@ -44,7 +44,6 @@ import { InputBaseComponent } from '../base/base.component';
       }
     }
   `,
-  styleUrls: ['./password.component.scss'],
   imports: [
     PasswordStrengthComponent,
     ModelLabelPipe,

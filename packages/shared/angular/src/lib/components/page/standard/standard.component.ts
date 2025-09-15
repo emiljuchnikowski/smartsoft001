@@ -8,7 +8,6 @@ import { PageBaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-page-standard',
   templateUrl: './standard.component.html',
-  styleUrls: ['./standard.component.scss'],
   imports: [TranslatePipe, SearchbarComponent, AsyncPipe, NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

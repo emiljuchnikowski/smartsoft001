@@ -8,7 +8,6 @@ import { InputBaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-input-color',
   templateUrl: './color.component.html',
-  styleUrls: ['./color.component.scss'],
   imports: [ColorPickerDirective, ModelLabelPipe, AsyncPipe],
 })
 export class InputColorComponent<T> extends InputBaseComponent<T> {

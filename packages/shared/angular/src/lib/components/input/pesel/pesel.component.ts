@@ -29,7 +29,6 @@ import { InputBaseComponent } from '../base/base.component';
       <!--  ></ion-input>-->
     }
   `,
-  styleUrls: ['./pesel.component.scss'],
   imports: [ModelLabelPipe, AsyncPipe, ReactiveFormsModule],
 })
 export class InputPeselComponent<T> extends InputBaseComponent<T> {}

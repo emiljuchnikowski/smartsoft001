@@ -13,7 +13,6 @@ import { InputPossibilitiesBaseComponent } from '../base/possibilities.component
   selector: 'smart-input-radio',
   templateUrl: './radio.component.html',
   imports: [ModelLabelPipe, AsyncPipe, ReactiveFormsModule, TranslatePipe],
-  styleUrls: ['./radio.component.scss'],
 })
 export class InputRadioComponent<T> extends InputPossibilitiesBaseComponent<T> {
   protected override afterSetOptionsHandler(): void {

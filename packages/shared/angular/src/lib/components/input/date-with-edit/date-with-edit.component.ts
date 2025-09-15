@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
@@ -34,7 +34,6 @@ import { InputBaseComponent } from '../base/base.component';
     }
   `,
   imports: [ModelLabelPipe, AsyncPipe, ReactiveFormsModule, DateEditComponent],
-  styleUrls: ['./date-with-edit.component.scss'],
 })
 export class InputDateWithEditComponent<T>
   extends InputBaseComponent<T>

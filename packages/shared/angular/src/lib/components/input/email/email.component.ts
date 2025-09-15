@@ -30,7 +30,6 @@ import { InputBaseComponent } from '../base/base.component';
       <!--  ></ion-input>-->
     }
   `,
-  styleUrls: ['./email.component.scss'],
   imports: [ModelLabelPipe, AsyncPipe, ReactiveFormsModule],
 })
 export class InputEmailComponent<T> extends InputBaseComponent<T> {}

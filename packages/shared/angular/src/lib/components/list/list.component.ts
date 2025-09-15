@@ -35,7 +35,6 @@ import { ListMobileComponent } from './mobile/mobile.component';
 @Component({
   selector: 'smart-list',
   templateUrl: './list.component.html',
-  styleUrls: ['../../styles/global.scss'],
   encapsulation: ViewEncapsulation.None,
   imports: [
     ListDesktopComponent,

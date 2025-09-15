@@ -8,7 +8,6 @@ import { InputBaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-input-currency',
   templateUrl: './currency.component.html',
-  styleUrls: ['./currency.component.scss'],
   imports: [ReactiveFormsModule, ModelLabelPipe, AsyncPipe],
 })
 export class InputCurrencyComponent<T> extends InputBaseComponent<T> {}

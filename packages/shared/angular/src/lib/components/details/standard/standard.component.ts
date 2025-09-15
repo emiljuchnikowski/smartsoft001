@@ -30,7 +30,6 @@ import { DetailsBaseComponent } from '../base/base.component';
     <div #bottomTpl class="text-xl py-2.5 separator"></div>
     <!--    </ion-list>-->
   `,
-  styleUrls: ['./standard.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default,
   imports: [CardComponent, DetailComponent],
 })

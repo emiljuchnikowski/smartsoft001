@@ -1,8 +1,0 @@
-@import '../../../styles/smart-styles.scss';
-.label-stacked {
-  --color: var(--smart-color-medium);
-  &.ios {
-    --color: var(--smart-color-medium);
-    margin-top: 0.6rem !important;
-  }
-}

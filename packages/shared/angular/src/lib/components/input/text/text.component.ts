@@ -29,7 +29,6 @@ import { InputBaseComponent } from '../base/base.component';
       <!--  ></ion-input>-->
     }
   `,
-  styleUrls: ['./text.component.scss'],
   imports: [ReactiveFormsModule, ModelLabelPipe, AsyncPipe],
 })
 export class InputTextComponent<T> extends InputBaseComponent<T> {}

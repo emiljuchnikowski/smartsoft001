@@ -7,7 +7,6 @@ import { InputBaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-input-logo',
   templateUrl: './logo.component.html',
-  styleUrls: ['./logo.component.scss'],
   imports: [ModelLabelPipe, AsyncPipe],
 })
 export class InputLogoComponent<T> extends InputBaseComponent<T> {

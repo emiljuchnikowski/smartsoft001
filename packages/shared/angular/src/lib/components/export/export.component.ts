@@ -7,16 +7,6 @@ import { Component, input } from '@angular/core';
     <!--  <ion-icon name="download"></ion-icon>-->
     <!--</ion-button>-->
   `,
-  styles: [
-    `
-      :host {
-        cursor: pointer;
-        font-size: 3rem;
-        height: 3rem;
-        margin: 10px;
-      }
-    `,
-  ],
 })
 export class ExportComponent {
   value = input<any | undefined>(undefined);

@@ -30,7 +30,6 @@ import { InputBaseComponent } from '../base/base.component';
       <!--  ></ion-input>-->
     }
   `,
-  styleUrls: ['./float.component.scss'],
   imports: [ModelLabelPipe, AsyncPipe, ReactiveFormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

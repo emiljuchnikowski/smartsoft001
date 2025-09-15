@@ -13,7 +13,6 @@ import { DetailBaseComponent } from '../base/base.component';
       }
     </p>
   `,
-  styleUrls: ['./email.component.scss'],
 })
 export class DetailEmailComponent<
   T extends { [key: string]: any } | undefined,

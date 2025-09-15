@@ -31,7 +31,6 @@ import { InputBaseComponent } from '../base/base.component';
       <!--  ></ion-input>-->
     }
   `,
-  styleUrls: ['./nip.component.scss'],
   imports: [ModelLabelPipe, AsyncPipe, ReactiveFormsModule],
 })
 export class InputNipComponent<T> extends InputBaseComponent<T> {

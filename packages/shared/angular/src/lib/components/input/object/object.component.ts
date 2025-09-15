@@ -32,7 +32,6 @@ import { InputBaseComponent } from '../base/base.component';
       ></ng-template>
     }
   `,
-  styleUrls: ['./object.component.scss'],
   imports: [ModelLabelPipe, AsyncPipe, NgComponentOutlet, DynamicIoDirective],
 })
 export class InputObjectComponent<T, TChild> extends InputBaseComponent<T> {

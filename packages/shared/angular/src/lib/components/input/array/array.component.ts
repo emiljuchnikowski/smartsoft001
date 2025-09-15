@@ -29,7 +29,6 @@ import { InputBaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-input-array',
   templateUrl: './array.component.html',
-  styleUrls: ['./array.component.scss'],
   imports: [
     ModelLabelPipe,
     AsyncPipe,

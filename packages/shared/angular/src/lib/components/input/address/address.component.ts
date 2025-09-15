@@ -9,7 +9,6 @@ import { InputBaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-input-address',
   templateUrl: './address.component.html',
-  styleUrls: ['./address.component.scss'],
   imports: [TranslatePipe, ReactiveFormsModule, ModelLabelPipe, AsyncPipe],
 })
 export class InputAddressComponent<T> extends InputBaseComponent<T> {}

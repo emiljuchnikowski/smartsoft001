@@ -1,6 +1,5 @@
 import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
 
 import { EnumToListPipe, ModelLabelPipe } from '../../../pipes';
 import { InputBaseComponent } from '../base/base.component';
@@ -42,8 +41,7 @@ import { InputBaseComponent } from '../base/base.component';
       <!--  </ion-item>-->
     }
   `,
-  imports: [ModelLabelPipe, AsyncPipe, TranslatePipe, EnumToListPipe],
-  styleUrls: ['./enum.component.scss'],
+  imports: [ModelLabelPipe, AsyncPipe, EnumToListPipe],
 })
 export class InputEnumComponent<T> extends InputBaseComponent<T> {
   value!: Array<string>;

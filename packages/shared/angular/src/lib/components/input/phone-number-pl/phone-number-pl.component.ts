@@ -37,7 +37,6 @@ import { InputBaseComponent } from '../base/base.component';
       <!--  </ion-row>-->
     }
   `,
-  styleUrls: ['./phone-number-pl.component.scss'],
   imports: [ReactiveFormsModule, ModelLabelPipe, AsyncPipe],
 })
 export class InputPhoneNumberPlComponent<T> extends InputBaseComponent<T> {

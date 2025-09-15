@@ -9,7 +9,7 @@ import {
 import { IEntity } from '@smartsoft001/domain-core';
 
 import { ICrudCreateManyOptions, ICrudFilter } from '../models';
-import { CrudMethodsFactory } from './crud.feature.methods';
+import { CrudMethodsFactory } from './crud.methods';
 
 export interface CrudState<T> {
   selected?: T;

@@ -31,7 +31,6 @@ import { InputBaseComponent } from '../base/base.component';
       <!--  ></ion-input>-->
     }
   `,
-  styleUrls: ['./int.component.scss'],
   imports: [ReactiveFormsModule, ModelLabelPipe, AsyncPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

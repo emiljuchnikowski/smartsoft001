@@ -5,7 +5,7 @@ import { PaginationMode } from '@smartsoft001/angular';
 import { IEntity } from '@smartsoft001/domain-core';
 
 import { ICrudCreateManyOptions, ICrudFilter } from '../models';
-import { initialState } from './crud.feature.store';
+import { initialState } from './crud.store';
 import { CrudService } from '../services/crud/crud.service';
 
 // "Actions, Reducers, Effects" in a normal store
