@@ -1,11 +1,4 @@
-import {
-  ComponentFactoryResolver,
-  inject,
-  Injectable,
-  Injector,
-  ViewContainerRef,
-} from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { ComponentFactoryResolver, inject, Injectable, Injector, signal, ViewContainerRef } from '@angular/core';
 
 import { IMenuItem } from '../../models';
 
@@ -22,11 +15,9 @@ export class MenuService {
 
   private _endContainer!: ViewContainerRef;
   private _openedEnd = false;
-  private _menuItemsSource = new BehaviorSubject<IMenuItem[]>([]);
-  private _disableSource = new BehaviorSubject<boolean>(false);
 
-  menuItems$ = this._menuItemsSource.asObservable();
-  disable$ = this._disableSource.asObservable();
+  menuItems = signal<IMenuItem[]>([]);
+  disabled = signal(false);
 
   /**
    * @desc checking if the menu is open (menu on the right side of the screen)
@@ -36,29 +27,29 @@ export class MenuService {
   }
 
   enable(): void {
-    this._disableSource.next(false);
+    this.disabled.set(false);
   }
 
   disable(): void {
-    this._disableSource.next(true);
+    this.disabled.set(true);
   }
 
   changeMenuItemByRoute(route: string, changes: Partial<IMenuItem>): void {
-    const items = this._menuItemsSource.value.map((i) => {
-      if (i.route === route)
-        return {
-          ...i,
-          ...changes,
-        };
+    this.menuItems.update((menuItems) => {
+      return menuItems.map((i) => {
+        if (i.route === route)
+          return {
+            ...i,
+            ...changes,
+          };
 
-      return i;
+        return i;
+      });
     });
-
-    this._menuItemsSource.next(items);
   }
 
   setMenuItems(items: IMenuItem[]): void {
-    this._menuItemsSource.next(items);
+    this.menuItems.set(items);
   }
 
   /**
