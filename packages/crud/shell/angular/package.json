@@ -1,6 +1,6 @@
 {
   "name": "@smartsoft001/crud-shell-angular",
-  "version": "2.74.0",
+  "version": "2.75.0",
   "description": "Utils and Angular components",
   "repository": {
     "type": "git",
@@ -20,6 +20,6 @@
   "peerDependencies": {
     "@angular/common": "20.1.0",
     "@angular/core": "20.1.0",
-    "@smartsoft001/angular": "^2.74.0"
+    "@smartsoft001/angular": "^2.75.0"
   }
 }
