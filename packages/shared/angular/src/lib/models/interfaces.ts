@@ -16,6 +16,18 @@ import { IEntity } from '@smartsoft001/domain-core';
 import { IFieldOptions, IModelOptions } from '@smartsoft001/models';
 
 import { InputBaseComponent } from '../components';
+import { IAppProvider } from '../providers';
+import { IStyle } from './style';
+
+export interface IAppOptions {
+  provider: IAppProvider;
+  logo?: string;
+  menu?: {
+    showForAnonymous?: boolean;
+    items?: IMenuItem[];
+  };
+  style?: IStyle;
+}
 
 export interface ICardOptions {
   title?: string;
