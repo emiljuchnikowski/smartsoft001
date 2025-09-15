@@ -15,18 +15,22 @@ jobs:
       - uses: actions/checkout@v4.2.2
         with:
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Fetch base branch
+        run: git fetch origin ${{ github.event.pull_request.base.ref }}:${{ github.event.pull_request.base.ref }}
+
       - name: Load & cache dependencies
         id: cache-deps
         uses: ./.github/actions/cached-deps
         with:
           node-version: '24'
-      - run: npx nx format:check
+      - run: npx nx format:check --base=origin/${{ github.event.pull_request.base.ref }}
       - run: npx nx run-many -t lint --max-parallel=4
       - run: |
           export NODE_OPTIONS="--max-old-space-size=8192"
           npx nx run-many -t test --max-parallel=4
       - run: npx nx run-many -t build --max-parallel=4
-
       - name: Install Claude Code SDK
         run: npm install -g @anthropic-ai/claude-code
 
@@ -35,7 +39,7 @@ jobs:
         with:
           header: claude-code-review
           message: 🔎 Code Review in progress...
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run Claude Code Review
         run: |
@@ -52,4 +56,4 @@ jobs:
         with:
           header: claude-code-review
           path: claude-review.md
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
