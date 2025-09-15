@@ -18,8 +18,6 @@
   },
   "homepage": "https://github.com/emiljuchnikowski/smartsoft#readme",
   "peerDependencies": {
-    "@angular/common": "20.1.0",
-    "@angular/core": "20.1.0",
-    "@smartsoft001/angular": "^2.74.0"
+
   }
 }
