@@ -52,8 +52,8 @@ export class ExportComponent<T extends IEntity<string>>
         this.facade.export(
           {
             ...this.facade.filter(),
-            offset: null,
-            limit: null,
+            offset: undefined,
+            limit: undefined,
           },
           format,
         );

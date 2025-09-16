@@ -22,7 +22,7 @@ export class FormOptionsPipe<T extends IEntity<string>>
     uniqueProvider?: (values: Record<keyof T, any>) => Promise<boolean>,
     inputComponents?: { [key: string]: Type<InputBaseComponent<any>> },
   ): IFormOptions<T> {
-    if (!mode || !type) return null;
+    if (!mode || !type) return null as any;
 
     let possibilities = {};
 
@@ -44,7 +44,7 @@ export class FormOptionsPipe<T extends IEntity<string>>
 
       if (item) {
         Object.keys(item).forEach((key) => {
-          model[key] = item[key];
+          (model as any)[key] = (item as any)[key];
         });
       }
 

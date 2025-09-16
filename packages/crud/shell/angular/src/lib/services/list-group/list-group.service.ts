@@ -16,9 +16,10 @@ export class CrudListGroupService<T extends IEntity<string>> {
     if (val || force) {
       item.changed = true;
 
-      let current = this.facade
-        .filter()
-        .query.find((q) => q.key === item.key && q.type === '=');
+      const filter = this.facade.filter();
+      let current = filter?.query?.find(
+        (q) => q.key === item.key && q.type === '=',
+      );
 
       if (!current) {
         current = {
@@ -26,7 +27,9 @@ export class CrudListGroupService<T extends IEntity<string>> {
           type: '=',
           value: null,
         };
-        this.facade.filter().query.push(current);
+        if (filter?.query) {
+          filter.query.push(current);
+        }
       }
 
       current.value = item.value;
@@ -53,9 +56,9 @@ export class CrudListGroupService<T extends IEntity<string>> {
     const list = this._destroyed;
     this._destroyed = [];
 
-    const newQuery = this.facade
-      .filter()
-      .query.filter((q) => !list.some((i) => q.key === i.key));
+    const filter = this.facade.filter();
+    const newQuery =
+      filter?.query?.filter((q) => !list.some((i) => q.key === i.key)) || [];
 
     this.facade.read({
       ...this.facade.filter(),

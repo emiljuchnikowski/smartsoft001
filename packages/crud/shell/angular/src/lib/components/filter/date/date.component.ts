@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
-import moment from 'moment';
+import * as moment from 'moment';
 
 import { IEntity } from '@smartsoft001/domain-core';
 import { GuidService } from '@smartsoft001/utils';
@@ -29,7 +29,8 @@ export class FilterDateComponent<
   id = GuidService.create();
 
   get allowAdvanced(): boolean {
-    return this.item()?.type === '=';
+    const item = this.item();
+    return item?.type === '=';
   }
 
   set customValue(val) {

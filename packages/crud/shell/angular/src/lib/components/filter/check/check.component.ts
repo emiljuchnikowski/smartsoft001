@@ -13,7 +13,7 @@ import { BaseComponent } from '../base/base.component';
     <!--        <ion-item-divider class="text-xl font-light">-->
     <!--          <ion-icon class="mr-6 text-2xl" slot="start" name="filter-outline"></ion-icon>-->
     <!--          <ion-label>-->
-    {{ item().label | translate }}
+    {{ item()?.label || '' | translate }}
     <!--          </ion-label>-->
     @if (value?.length) {
       <!--            <ion-button-->
@@ -48,25 +48,25 @@ export class FilterCheckComponent<T extends IEntity<string>>
   extends BaseComponent<T>
   implements AfterContentInit
 {
-  list: Signal<{ value: any; isCheck: boolean }[]>;
+  list!: Signal<{ value: any; isCheck: boolean }[]>;
 
   ngAfterContentInit(): void {
     this.list = computed(() => {
       const possibilities = this.possibilities();
       return possibilities.map((pos) => ({
         value: pos,
-        isCheck: this.value.some((r) => r === pos.id),
+        isCheck: this.value.some((r: any) => r === pos.id),
       }));
     });
   }
 
   onCheckChange(checked: boolean, entry: { value: any; isCheck: boolean }) {
-    if (checked && !this.value.some((r) => r === entry.value.id)) {
+    if (checked && !this.value.some((r: any) => r === entry.value.id)) {
       this.value = [...this.value, entry.value.id];
     }
 
-    if (!checked && this.value.some((r) => r === entry.value.id)) {
-      this.value = this.value.filter((r) => r !== entry.value.id);
+    if (!checked && this.value.some((r: any) => r === entry.value.id)) {
+      this.value = this.value.filter((r: any) => r !== entry.value.id);
     }
   }
 }

@@ -12,7 +12,7 @@ import { BaseComponent } from '../base/base.component';
     <!--    <ion-row>-->
     <!--      <ion-col>-->
     <!--        <ion-label position="floating">-->
-    {{ item().label | translate }}
+    {{ item()?.label || '' | translate }}
     <!--        </ion-label>-->
     <!--        <ion-input [(ngModel)]="value"></ion-input>-->
     <!--      </ion-col>-->

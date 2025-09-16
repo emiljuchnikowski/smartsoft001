@@ -40,7 +40,7 @@ export class FilterIntComponent<T extends IEntity<string>>
     return this.item()?.type === '=';
   }
 
-  ngOnInit(): void {
+  override ngOnInit(): void {
     super.ngOnInit();
   }
 
@@ -52,6 +52,6 @@ export class FilterIntComponent<T extends IEntity<string>>
 
   toggleAdvanced(): void {
     this.advanced.update((val) => !val);
-    if (this.advanced) this.value = null;
+    if (this.advanced()) this.value = null;
   }
 }

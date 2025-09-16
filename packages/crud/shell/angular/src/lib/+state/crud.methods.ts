@@ -21,7 +21,7 @@ export function CrudMethodsFactory<T extends IEntity<string>>() {
         try {
           await crudService.create(item);
           await this.createSuccess();
-        } catch (error) {
+        } catch (error: any) {
           methods.defaultFailure(error);
         }
       },
@@ -46,7 +46,7 @@ export function CrudMethodsFactory<T extends IEntity<string>>() {
         try {
           await crudService.createMany(data.items, data.options);
           await methods.createManySuccess();
-        } catch (e) {
+        } catch (e: any) {
           methods.defaultFailure(e);
         }
       },
@@ -70,7 +70,7 @@ export function CrudMethodsFactory<T extends IEntity<string>>() {
         try {
           await crudService.exportList(filter, format);
           methods.exportSuccess();
-        } catch (e) {
+        } catch (e: any) {
           methods.defaultFailure(e);
         }
       },
@@ -98,7 +98,7 @@ export function CrudMethodsFactory<T extends IEntity<string>>() {
             totalCount: result.totalCount,
             links: result.links,
           });
-        } catch (error) {
+        } catch (error: any) {
           methods.defaultFailure(error);
         }
       },
@@ -144,7 +144,7 @@ export function CrudMethodsFactory<T extends IEntity<string>>() {
         try {
           const result = await crudService.getById(id);
           methods.selectSuccess(result);
-        } catch (e) {
+        } catch (e: any) {
           methods.defaultFailure(e);
         }
       },
@@ -180,7 +180,7 @@ export function CrudMethodsFactory<T extends IEntity<string>>() {
         try {
           await crudService.updatePartial(item);
           await methods.updateSuccess(item.id);
-        } catch (e) {
+        } catch (e: any) {
           methods.defaultFailure(e);
         }
       },
@@ -199,7 +199,7 @@ export function CrudMethodsFactory<T extends IEntity<string>>() {
         try {
           await crudService.updatePartial(item);
           await methods.updatePartialSuccess(item.id);
-        } catch (e) {
+        } catch (e: any) {
           methods.defaultFailure(e);
         }
       },
@@ -218,7 +218,7 @@ export function CrudMethodsFactory<T extends IEntity<string>>() {
         try {
           await crudService.updatePartialMany(items);
           await methods.updatePartialManySuccess();
-        } catch (e) {
+        } catch (e: any) {
           methods.defaultFailure(e);
         }
       },
@@ -236,7 +236,7 @@ export function CrudMethodsFactory<T extends IEntity<string>>() {
         try {
           await crudService.delete(id);
           await methods.deleteSuccess();
-        } catch (e) {
+        } catch (e: any) {
           methods.defaultFailure(e);
         }
       },

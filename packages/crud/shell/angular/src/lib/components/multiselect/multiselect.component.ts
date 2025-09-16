@@ -38,11 +38,11 @@ export class MultiselectComponent<T extends IEntity<string>> {
   public config = inject(CrudFullConfig<T>);
   private menuService = inject(MenuService);
 
-  private _list: Array<T>;
-  private _changes: Partial<T>;
+  private _list!: Array<T>;
+  private _changes!: Partial<T>;
 
-  item: T;
-  valid: boolean;
+  item!: T;
+  valid!: boolean;
   buttonOptions: IButtonOptions = {
     click: async () => {
       const result = this._list.map((item) => {
@@ -57,14 +57,14 @@ export class MultiselectComponent<T extends IEntity<string>> {
     },
     confirm: true,
   };
-  lock: boolean;
+  lock!: boolean;
   showForm = false;
 
-  list: Signal<T[]>;
+  list!: Signal<T[]>;
 
   constructor() {
     this.list = computed(() => {
-      const list = this.facade.multiSelected();
+      const list = this.facade.multiSelected() || [];
       this.lock = true;
       const model = new this.config.type();
 

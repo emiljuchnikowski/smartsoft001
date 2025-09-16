@@ -1,7 +1,7 @@
 <!--<ion-row>-->
 <!--  <ion-col>-->
 <!--    <ion-label>-->
-{{ item().label | translate }}
+{{ item()?.label || '' | translate }}
 <!--    </ion-label>-->
 <!--  </ion-col>-->
 @if (value || minValue || maxValue) {

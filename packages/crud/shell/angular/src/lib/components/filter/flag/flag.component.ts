@@ -15,7 +15,7 @@ import { BaseComponent } from '../base/base.component';
       class="flag-container w-full flex flex-row flex-nowrap justify-between pr-5"
     >
       <!--          <ion-label class="align-middle my-6" position="static">-->
-      {{ item().label | translate }}
+      {{ item()?.label || '' | translate }}
       <!--          </ion-label>-->
       <!--          <ion-checkbox [(ngModel)]="value" slot="end"></ion-checkbox>-->
     </div>

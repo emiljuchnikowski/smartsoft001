@@ -28,13 +28,16 @@ import { CrudListGroupService } from '../../services/list-group/list-group.servi
   selector: 'smart-crud-group',
   template: `
     @for (item of groups(); track item.key) {
-      <smart-accordion [show]="item.show" (showChange)="change($event, item)">
+      <smart-accordion
+        [show]="item.show || false"
+        (showChange)="change($event, item)"
+      >
         <smart-accordion-header [ngClass]="{ 'font-bold': item.show }"
           >{{ item.text | translate }}
         </smart-accordion-header>
         <smart-accordion-body>
-          @if (item.show && !item.children && listOptions) {
-            <smart-list [options]="listOptions()"></smart-list>
+          @if (item.show && !item.children && listOptions()) {
+            <smart-list [options]="listOptions()!"></smart-list>
           }
           @if (item.children) {
             <div style="margin-left: 50px">
@@ -66,16 +69,20 @@ export class GroupComponent<T extends IEntity<string>>
   private elementRef = inject(ElementRef);
   private groupService = inject(CrudListGroupService<T>);
 
-  readonly groups: InputSignal<Array<ICrudListGroup>> =
+  readonly groups: InputSignal<Array<ICrudListGroup> | undefined> =
     input<Array<ICrudListGroup>>();
-  readonly listOptions: InputSignal<IListOptions<T>> = input<IListOptions<T>>();
+  readonly listOptions: InputSignal<IListOptions<T> | undefined> =
+    input<IListOptions<T>>();
 
   change(val: boolean, item: ICrudListGroup, force = false): void {
-    this.groups()
-      .filter((i) => i.value !== item.value || i.key !== item.key)
-      .forEach((i) => {
-        i.show = false;
-      });
+    const groups = this.groups();
+    if (groups) {
+      groups
+        .filter((i) => i.value !== item.value || i.key !== item.key)
+        .forEach((i) => {
+          i.show = false;
+        });
+    }
 
     this.groupService.change(val, item, force);
 
@@ -86,8 +93,11 @@ export class GroupComponent<T extends IEntity<string>>
     this.styleService.init(this.elementRef);
   }
 
-  ngOnDestroy(): void {
-    this.groupService.destroy(this.groups());
+  override ngOnDestroy(): void {
+    const groups = this.groups();
+    if (groups) {
+      this.groupService.destroy(groups);
+    }
     super.ngOnDestroy();
   }
 }

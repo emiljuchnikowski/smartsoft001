@@ -37,7 +37,7 @@ export class CrudListPaginationFactory<T extends IEntity<string>> {
           const filter = options.provider.getFilter();
           this.facade.read({
             ...filter,
-            offset: filter.offset + filter.limit,
+            offset: (filter.offset || 0) + (filter.limit || 0),
           });
         });
       },
@@ -55,22 +55,23 @@ export class CrudListPaginationFactory<T extends IEntity<string>> {
             });
           }
 
+          const filter = options.provider.getFilter();
           this.facade.read({
-            ...options.provider.getFilter(),
-            offset:
-              options.provider.getFilter().offset -
-              options.provider.getFilter().limit,
+            ...filter,
+            offset: (filter.offset || 0) - (filter.limit || 0),
           });
         });
       },
       page: computed(() => {
         const f = this.facade.filter();
-        return f?.limit ? f.offset / f.limit + 1 : 0;
+        return f?.limit ? (f.offset || 0) / f.limit + 1 : 0;
       }),
       totalPages: computed(() => {
         const filter = this.facade.filter();
         const totalCount = this.facade.totalCount();
-        return filter?.limit ? Math.ceil(totalCount / filter.limit) : 0;
+        return filter?.limit && totalCount
+          ? Math.ceil(totalCount / filter.limit)
+          : 0;
       }),
     };
   }

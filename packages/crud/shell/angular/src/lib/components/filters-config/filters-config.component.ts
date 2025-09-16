@@ -48,12 +48,15 @@ export class FiltersConfigComponent implements OnInit {
   private styleService = inject(StyleService);
   private elementRef = inject(ElementRef);
 
-  query: Signal<ICrudFilterQueryItem[]>;
+  query!: Signal<ICrudFilterQueryItem[]>;
 
   onRemoveQuery(item: ICrudFilterQueryItem): void {
-    const index = this.facade.filter().query.indexOf(item);
-    if (index > -1) {
-      this.facade.filter().query.splice(index, 1);
+    const filter = this.facade.filter();
+    if (filter?.query) {
+      const index = filter.query.indexOf(item);
+      if (index > -1) {
+        filter.query.splice(index, 1);
+      }
     }
     this.facade.read(this.facade.filter());
   }
@@ -63,7 +66,7 @@ export class FiltersConfigComponent implements OnInit {
 
     this.query = computed(() => {
       const filter = this.facade.filter();
-      return filter?.query?.filter((i) => !i.hidden);
+      return filter?.query?.filter((i) => !i.hidden) || [];
     });
   }
 }

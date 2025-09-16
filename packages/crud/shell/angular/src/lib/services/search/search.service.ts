@@ -8,12 +8,12 @@ import { ICrudFilter } from '../../models';
   providedIn: 'root',
 })
 export class CrudSearchService {
-  private _filterSource = new BehaviorSubject<Partial<ICrudFilter>>(null);
+  private _filterSource = new BehaviorSubject<Partial<ICrudFilter>>({});
   private _enabledSource = new BehaviorSubject<boolean>(false);
 
   get filter(): Partial<ICrudFilter> {
     if (!this._enabledSource.value) return {};
-    return this._filterSource.value;
+    return this._filterSource.value || {};
   }
 
   get enabled(): boolean {
