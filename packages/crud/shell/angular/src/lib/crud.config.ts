@@ -12,8 +12,8 @@ import { ICrudFilterQueryItem, ICrudListGroup } from './models';
 
 @Injectable()
 export class CrudConfig<T> {
-  apiUrl: string;
-  entity: string;
+  apiUrl!: string;
+  entity!: string;
   type?: any;
   reducerFactory?: () => any;
   baseQuery?: Array<ICrudFilterQueryItem>;
@@ -21,8 +21,7 @@ export class CrudConfig<T> {
 
 @Injectable()
 export class CrudFullConfig<T> extends CrudConfig<T> {
-  type: any;
-  title: string;
+  title!: string;
   details?:
     | boolean
     | {

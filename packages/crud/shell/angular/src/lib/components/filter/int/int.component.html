@@ -1,7 +1,7 @@
 <!--<ion-row>-->
 <!--  <ion-col>-->
 <!--    <ion-label>-->
-{{ item().label | translate }}
+{{ item()?.label || '' | translate }}
 <!--    </ion-label>-->
 @if (!advanced()) {
   <!--      <ion-input [(ngModel)]="value" type="number" step="1"></ion-input>-->

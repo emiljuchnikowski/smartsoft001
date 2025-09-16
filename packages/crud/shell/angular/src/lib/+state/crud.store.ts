@@ -58,16 +58,24 @@ export function createCrudFeatureStore<T extends IEntity<string>>() {
   return signalStore(
     { providedIn: 'root' },
     withState<CrudState<T>>(initialState),
-    withComputed((store) => ({
-      getError: computed(() => store.error()),
-      getLoaded: computed(() => store.loaded()),
-      getSelected: computed(() => store.selected()),
-      getMultiSelected: computed(() => store.multiSelected()),
-      getList: computed(() => store.list()),
-      getTotalCount: computed(() => store.totalCount()),
-      getLinks: computed(() => store.links()),
-      getFilter: computed(() => store.filter()),
-    })),
+    withComputed((store) => {
+      return {
+        getError: computed(() => (store.error ? store.error() : null)),
+        getLoaded: computed(() => store.loaded()),
+        getSelected: computed(() =>
+          store.selected ? store.selected() : undefined,
+        ),
+        getMultiSelected: computed(() =>
+          store.multiSelected ? store.multiSelected() : undefined,
+        ),
+        getList: computed(() => (store.list ? store.list() : undefined)),
+        getTotalCount: computed(() =>
+          store.totalCount ? store.totalCount() : undefined,
+        ),
+        getLinks: computed(() => (store.links ? store.links() : undefined)),
+        getFilter: computed(() => (store.filter ? store.filter() : undefined)),
+      };
+    }),
     withMethods(CrudMethodsFactory<T>()),
   ) as unknown as CrudStore<T>;
 }

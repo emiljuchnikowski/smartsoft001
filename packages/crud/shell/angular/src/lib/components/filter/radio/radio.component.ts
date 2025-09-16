@@ -15,7 +15,7 @@ import { BaseComponent } from '../base/base.component';
     <!--          <ion-item-divider class="font-light text-xl">-->
     <!--            <ion-icon class="mr-6 text-2xl" slot="start" name="filter-outline"></ion-icon>-->
     <!--            <ion-label>-->
-    {{ item().label | translate }}
+    {{ item()?.label || '' | translate }}
     <!--            </ion-label>-->
     @if (value || value === false) {
       <!--              <ion-button-->

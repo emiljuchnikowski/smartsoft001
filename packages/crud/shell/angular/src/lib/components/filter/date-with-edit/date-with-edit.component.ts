@@ -36,19 +36,19 @@ export class FilterDateWithEditComponent<T extends IEntity<string>>
   private _subscriptions = new Subscription();
 
   advanced: WritableSignal<boolean> = signal(false);
-  id = GuidService.create();
+  override id = GuidService.create();
 
   // @ViewChild(IonDatetime, { read: IonDatetime, static: false })
   // dateTimePicker: IonDatetime;
 
   toggleAdvanced(): void {
     this.advanced.update((val) => !val);
-    if (this.advanced) {
+    if (this.advanced()) {
       this.value = null;
     }
   }
 
-  ngOnInit(): void {
+  override ngOnInit(): void {
     super.ngOnInit();
 
     // if (this.dateTimePicker) {

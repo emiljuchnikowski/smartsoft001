@@ -93,17 +93,17 @@ export class ListComponent<T extends IEntity<string>>
 
   private _cleanMultiSelected$ = new Subject<void>();
 
-  pageOptions: Signal<IPageOptions>;
-  listOptions: WritableSignal<IListOptions<T>>;
-  links: { next; prev };
+  pageOptions!: Signal<IPageOptions>;
+  listOptions!: WritableSignal<IListOptions<T>>;
+  links: { next: any; prev: any };
 
-  filter: Signal<ICrudFilter> = this.facade.filter;
+  filter: Signal<ICrudFilter | undefined> = this.facade.filter;
 
   topTpl = viewChild<ViewContainerRef>('topTpl');
 
-  contentTpl = viewChild<TemplateRef<any>>('contentTpl');
+  override contentTpl = viewChild<TemplateRef<any>>('contentTpl');
 
-  dynamicContents = viewChildren<DynamicContentDirective>(
+  override dynamicContents = viewChildren<DynamicContentDirective>(
     DynamicContentDirective,
   );
 
@@ -113,7 +113,7 @@ export class ListComponent<T extends IEntity<string>>
     this.links = this.facade.links();
   }
 
-  refreshProperties(): void {
+  override refreshProperties(): void {
     this.baseComponentRef.setInput('listOptions', this.listOptions());
   }
 
@@ -127,40 +127,46 @@ export class ListComponent<T extends IEntity<string>>
     if (this.config.list?.resetQuery === 'beforeInit') {
       newFilter = {
         query: this.config.baseQuery ? [...this.config.baseQuery] : [],
-        paginationMode: this.config.list.paginationMode,
-        limit: this.config.pagination ? this.config.pagination.limit : null,
-        offset: this.config.pagination ? 0 : null,
-        sortBy: this.config.sort ? this.config.sort['default'] : null,
-        sortDesc: this.config.sort ? this.config.sort['defaultDesc'] : null,
+        paginationMode: this.config.list!.paginationMode,
+        limit: this.config.pagination
+          ? this.config.pagination.limit
+          : undefined,
+        offset: this.config.pagination ? 0 : undefined,
+        sortBy: this.config.sort
+          ? (this.config.sort as any)['default']
+          : undefined,
+        sortDesc: this.config.sort
+          ? (this.config.sort as any)['defaultDesc']
+          : undefined,
         ...this.searchService.filter,
       };
     } else if (this.filter()) {
       newFilter = this.filter();
     } else {
       newFilter = {
-        paginationMode: this.config.list.paginationMode,
+        paginationMode: this.config.list!.paginationMode,
         limit: this.searchService.filter?.limit
           ? this.searchService.filter.limit
           : this.config.pagination
             ? this.config.pagination.limit
-            : null,
+            : undefined,
         offset:
           this.searchService.filter?.offset ||
           this.searchService.filter?.offset === 0
             ? this.searchService.filter.offset
             : this.config.pagination
               ? 0
-              : null,
+              : undefined,
         sortBy: this.searchService.filter?.sortBy
           ? this.searchService.filter.sortBy
           : this.config.sort
-            ? this.config.sort['default']
-            : null,
+            ? (this.config.sort as any)['default']
+            : undefined,
         sortDesc: this.searchService.filter?.sortDesc
           ? this.searchService.filter.sortDesc
           : this.config.sort
-            ? this.config.sort['defaultDesc']
-            : null,
+            ? (this.config.sort as any)['defaultDesc']
+            : undefined,
         query: this.config.baseQuery ? [...this.config.baseQuery] : [],
         ...this.searchService.filter,
       };
@@ -171,12 +177,12 @@ export class ListComponent<T extends IEntity<string>>
     const endButtons = this.getEndButtons();
 
     this.pageOptions = computed(() => ({
-      title: this.config.title,
+      title: this.config.title || '',
       search: this.config.search
         ? {
-            text: computed(() => this.filter().searchText ?? null),
+            text: computed(() => this.filter()?.searchText ?? ''),
             set: (txt) => {
-              if (txt !== this.filter().searchText)
+              if (txt !== this.filter()?.searchText)
                 this.facade.read({
                   ...this.filter(),
                   searchText: txt,
@@ -184,7 +190,7 @@ export class ListComponent<T extends IEntity<string>>
                 });
             },
           }
-        : null,
+        : undefined,
       endButtons: endButtons,
     }));
 
@@ -192,19 +198,22 @@ export class ListComponent<T extends IEntity<string>>
       await this.dynamicComponentLoader.getComponentsWithFactories({
         components: [
           ...(this.config.details &&
-          this.config.details['components'] &&
-          this.config.details['components'].top
-            ? [this.config.details['components'].top]
+          typeof this.config.details === 'object' &&
+          'components' in this.config.details &&
+          this.config.details.components?.top
+            ? [this.config.details.components.top]
             : []),
           ...(this.config.details &&
-          this.config.details['components'] &&
-          this.config.details['components'].bottom
-            ? [this.config.details['components'].bottom]
+          typeof this.config.details === 'object' &&
+          'components' in this.config.details &&
+          this.config.details.components?.bottom
+            ? [this.config.details.components.bottom]
             : []),
           ...(this.config.list &&
-          this.config.list['components'] &&
-          this.config.list['components'].top
-            ? [this.config.list['components'].top]
+          typeof this.config.list === 'object' &&
+          'components' in this.config.list &&
+          this.config.list.components?.top
+            ? [this.config.list.components.top]
             : []),
         ],
       });
@@ -230,11 +239,11 @@ export class ListComponent<T extends IEntity<string>>
 
           this.facade.multiSelect(list);
         },
-        list: this.facade.list,
+        list: computed(() => this.facade.list() || []),
         loading: this.facade.loading,
         onCleanMultiSelected$: this._cleanMultiSelected$,
       },
-      cellPipe: this.config.list ? this.config.list.cellPipe : null,
+      cellPipe: this.config.list ? this.config.list.cellPipe : undefined,
       mode: this.config.list?.mode,
       type: this.config.type,
       details: this.config.details
@@ -252,26 +261,29 @@ export class ListComponent<T extends IEntity<string>>
             componentFactories: {
               top:
                 this.config.details &&
-                this.config.details['components'] &&
-                this.config.details['components'].top
-                  ? compiledComponents.find(
-                      (cc) =>
-                        cc.component === this.config.details['components'].top,
-                    ).factory
-                  : null,
-              bottom:
-                this.config.details &&
-                this.config.details['components'] &&
-                this.config.details['components'].bottom
+                typeof this.config.details === 'object' &&
+                'components' in this.config.details &&
+                this.config.details.components?.top
                   ? compiledComponents.find(
                       (cc) =>
                         cc.component ===
-                        this.config.details['components'].bottom,
-                    ).factory
-                  : null,
+                        (this.config.details as any).components.top,
+                    )?.factory
+                  : undefined,
+              bottom:
+                this.config.details &&
+                typeof this.config.details === 'object' &&
+                'components' in this.config.details &&
+                this.config.details.components?.bottom
+                  ? compiledComponents.find(
+                      (cc) =>
+                        cc.component ===
+                        (this.config.details as any).components.bottom,
+                    )?.factory
+                  : undefined,
             },
           }
-        : null,
+        : undefined,
       item:
         !!this.config.edit || this.config.details
           ? {
@@ -280,7 +292,7 @@ export class ListComponent<T extends IEntity<string>>
                 edit: !!this.config.edit,
               },
             }
-          : null,
+          : undefined,
       remove: this.config.remove
         ? {
             provider: {
@@ -292,13 +304,13 @@ export class ListComponent<T extends IEntity<string>>
               },
             },
           }
-        : null,
+        : undefined,
       pagination: await this.paginationFacade.create({
-        mode: this.config.list.paginationMode,
-        limit: this.config.pagination.limit,
+        mode: this.config.list!.paginationMode,
+        limit: this.config.pagination!.limit,
         provider: {
           getFilter: () => {
-            return this.filter();
+            return this.filter() || ({} as ICrudFilter);
           },
           getLinks: () => this.links,
         },
@@ -325,7 +337,7 @@ export class ListComponent<T extends IEntity<string>>
 
     this.listOptions.update((val) => ({
       ...val,
-      select: null,
+      select: undefined,
     }));
 
     this.facade.multiSelect([]);
@@ -363,7 +375,7 @@ export class ListComponent<T extends IEntity<string>>
                 setTimeout(async () => {
                   this.listOptions.update((val) => ({
                     ...val,
-                    select: val.select === 'multi' ? null : 'multi',
+                    select: val.select === 'multi' ? undefined : 'multi',
                   }));
                   if (this.menuService.openedEnd)
                     await this.menuService.closeEnd();
@@ -422,16 +434,17 @@ export class ListComponent<T extends IEntity<string>>
   ) {
     const factory =
       this.config.list &&
-      this.config.list['components'] &&
-      this.config.list['components'].top
+      typeof this.config.list === 'object' &&
+      'components' in this.config.list &&
+      this.config.list.components?.top
         ? compiledComponents.find(
-            (cc) => cc.component === this.config.list['components'].top,
-          ).factory
+            (cc) => cc.component === (this.config.list as any).components.top,
+          )?.factory
         : null;
 
     setTimeout(() => {
-      if (factory && !this.topTpl().get(0)) {
-        this.topTpl().createComponent(factory);
+      if (factory && !this.topTpl()?.get(0)) {
+        this.topTpl()?.createComponent(factory);
       }
     });
   }

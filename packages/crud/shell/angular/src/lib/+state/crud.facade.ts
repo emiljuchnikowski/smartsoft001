@@ -12,11 +12,11 @@ export class CrudFacade<T extends IEntity<string>> {
 
   loaded: Signal<boolean> = this.store.getLoaded;
   loading: Signal<boolean> = computed(() => !this.store.getLoaded());
-  selected: Signal<T> = this.store.getSelected;
-  multiSelected: Signal<T[]> = this.store.getMultiSelected;
-  list: Signal<T[]> = this.store.getList;
-  filter: Signal<ICrudFilter> = this.store.getFilter;
-  totalCount: Signal<number> = this.store.getTotalCount;
+  selected: Signal<T | undefined> = this.store.getSelected;
+  multiSelected: Signal<T[] | undefined> = this.store.getMultiSelected;
+  list: Signal<T[] | undefined> = this.store.getList;
+  filter: Signal<ICrudFilter | undefined> = this.store.getFilter;
+  totalCount: Signal<number | undefined> = this.store.getTotalCount;
   links: Signal<any> = this.store.getLinks;
   error: Signal<any> = this.store.getError;
 
@@ -30,8 +30,8 @@ export class CrudFacade<T extends IEntity<string>> {
     this.store.createMany({ items, options });
   }
 
-  read(filter: ICrudFilter = null): void {
-    let baseQuery = [];
+  read(filter: ICrudFilter | null = null): void {
+    let baseQuery: any[] = [];
     if (this.config.baseQuery) {
       baseQuery = this.config.baseQuery;
     }
@@ -64,8 +64,11 @@ export class CrudFacade<T extends IEntity<string>> {
     this.store.update(item);
   }
 
-  export(filter: ICrudFilter = null, format = null): void {
-    this.store.export(filter, format);
+  export(
+    filter: ICrudFilter | null = null,
+    format: string | null = null,
+  ): void {
+    this.store.export(filter || ({} as ICrudFilter), format);
   }
 
   updatePartial(item: Partial<T> & { id: string }): void {

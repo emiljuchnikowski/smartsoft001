@@ -24,7 +24,7 @@ export class CrudService<T extends IEntity<string>> {
         .post<void>(this.config.apiUrl, item, { observe: 'response' })
         .pipe(
           map((response) => {
-            const location = response.headers['Location'];
+            const location = (response.headers as any)['Location'];
             if (!location) return null;
             const array = location.split('/');
             return array[array.length - 1];
@@ -47,17 +47,17 @@ export class CrudService<T extends IEntity<string>> {
   }
 
   getList<T>(
-    filter: ICrudFilter = null,
-  ): Promise<{ data: T[]; totalCount: number; links }> {
+    filter: ICrudFilter | null = null,
+  ): Promise<{ data: T[]; totalCount: number; links: any }> {
     return firstValueFrom(
-      this.http.get<{ data: T[]; totalCount: number; links }>(
-        this.config.apiUrl + this.getQuery(filter),
+      this.http.get<{ data: T[]; totalCount: number; links: any }>(
+        this.config.apiUrl + this.getQuery(filter as ICrudFilter),
       ),
     );
   }
 
   exportList(
-    filter: ICrudFilter = null,
+    filter: ICrudFilter | null = null,
     format: 'csv' | 'xlsx',
   ): Promise<void> {
     if (!format) {
@@ -67,7 +67,7 @@ export class CrudService<T extends IEntity<string>> {
     if (format === 'xlsx') {
       return firstValueFrom(
         this.http
-          .get(this.config.apiUrl + this.getQuery(filter), {
+          .get(this.config.apiUrl + this.getQuery(filter as ICrudFilter), {
             headers: {
               'Content-Type': this._formatMap[format],
             },
@@ -80,7 +80,7 @@ export class CrudService<T extends IEntity<string>> {
               const downloadLink = document.createElement('a');
               const blob = res.body;
 
-              downloadLink.href = URL.createObjectURL(blob);
+              downloadLink.href = URL.createObjectURL(blob as Blob);
               downloadLink.download = 'data.' + format;
 
               document.body.appendChild(downloadLink);
@@ -93,12 +93,15 @@ export class CrudService<T extends IEntity<string>> {
 
     return firstValueFrom(
       this.http
-        .get<string>(this.config.apiUrl + this.getQuery(filter), {
-          headers: {
-            'Content-Type': this._formatMap[format],
+        .get<string>(
+          this.config.apiUrl + this.getQuery(filter as ICrudFilter),
+          {
+            headers: {
+              'Content-Type': this._formatMap[format],
+            },
+            responseType: 'text' as 'json',
           },
-          responseType: 'text' as 'json',
-        })
+        )
         .pipe(
           map((res) => {
             const downloadLink = document.createElement('a');

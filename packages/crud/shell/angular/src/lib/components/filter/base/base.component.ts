@@ -20,22 +20,24 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
   protected facade = inject(CrudFacade<T>);
   protected translateService = inject(TranslateService);
 
-  possibilities: Signal<{ id: any; text: string }[]>;
+  possibilities!: Signal<{ id: any; text: string }[]>;
 
-  readonly item: InputSignal<IModelFilter> = input<IModelFilter>();
-  readonly filter: InputSignal<ICrudFilter> = input<ICrudFilter>();
+  readonly item: InputSignal<IModelFilter | undefined> = input<IModelFilter>();
+  readonly filter: InputSignal<ICrudFilter | undefined> = input<ICrudFilter>();
 
   get value(): any {
+    const filter = this.filter();
+    const item = this.item();
+    if (!filter || !item || !filter.query) return null;
+
     if (this.isArrayType()) {
-      return this.filter()
-        .query.filter(
-          (q) => q.key === this.item().key && q.type === this.item().type,
-        )
+      return filter.query
+        .filter((q) => q.key === item.key && q.type === item.type)
         .map((q) => q.value);
     }
 
-    const query = this.filter().query.find(
-      (q) => q.key === this.item().key && q.type === this.item().type,
+    const query = filter.query.find(
+      (q) => q.key === item.key && q.type === item.type,
     );
     return query?.value;
   }
@@ -45,14 +47,18 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
   }
 
   get minValue(): any {
+    const filter = this.filter();
+    const item = this.item();
+    if (!filter || !item || !filter.query) return null;
+
     if (this.isArrayType()) {
-      return this.filter()
-        .query.filter((q) => q.key === this.item().key && q.type === '>=')
+      return filter.query
+        .filter((q) => q.key === item.key && q.type === '>=')
         .map((q) => q.value);
     }
 
-    const query = this.filter().query.find(
-      (q) => q.key === this.item().key && q.type === '>=',
+    const query = filter.query.find(
+      (q) => q.key === item.key && q.type === '>=',
     );
     return query?.value;
   }
@@ -62,14 +68,18 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
   }
 
   get maxValue(): any {
+    const filter = this.filter();
+    const item = this.item();
+    if (!filter || !item || !filter.query) return null;
+
     if (this.isArrayType()) {
-      return this.filter()
-        .query.filter((q) => q.key === this.item().key && q.type === '<=')
+      return filter.query
+        .filter((q) => q.key === item.key && q.type === '<=')
         .map((q) => q.value);
     }
 
-    const query = this.filter().query.find(
-      (q) => q.key === this.item().key && q.type === '<=',
+    const query = filter.query.find(
+      (q) => q.key === item.key && q.type === '<=',
     );
     return query?.value;
   }
@@ -83,52 +93,61 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
   }
 
   @Debounce(500)
-  refresh(val: any, type = null): void {
-    if (!type) type = this.item().type;
+  refresh(val: any, type: string | null = null): void {
+    const filter = this.filter();
+    const item = this.item();
+    if (!filter || !item) return;
 
-    this.filter().offset = 0;
+    if (!type) type = item.type;
+    if (!filter.query) filter.query = [];
+
+    filter.offset = 0;
 
     if (this.isArrayType()) {
       this.refreshForArray(val as [], type);
       return;
     }
 
-    let query = this.filter().query.find(
-      (q) => q.key === this.item().key && q.type === type,
+    let query = filter.query!.find(
+      (q) => q.key === item.key && q.type === type,
     );
 
     if (val === null || val === undefined || val === '') {
-      const index = this.filter().query.indexOf(query);
-      if (index > -1) {
-        this.filter().query.splice(index, 1);
+      if (query) {
+        const index = filter.query!.indexOf(query);
+        if (index > -1) {
+          filter.query!.splice(index, 1);
+        }
       }
 
-      this.facade.read(this.filter());
+      this.facade.read(filter);
       return;
     }
 
     if (!query) {
       query = {
-        key: this.item().key,
-        type: type,
+        key: item.key,
+        type: type as '=' | '!=' | '>=' | '<=' | '<' | '>',
         value: null,
       };
 
-      this.filter().query.push(query);
+      filter.query!.push(query);
     }
 
     query.value = val;
-    query.label = this.item().label;
+    query.label = item.label;
 
-    this.facade.read(this.filter());
+    this.facade.read(filter);
   }
 
   clear(): void {
-    this.filter().query = this.filter().query.filter(
-      (q) => q.key !== this.item().key,
-    );
-    this.filter().offset = 0;
-    this.facade.read(this.filter());
+    const filter = this.filter();
+    const item = this.item();
+    if (!filter || !item || !filter.query) return;
+
+    filter.query = filter.query.filter((q) => q.key !== item.key);
+    filter.offset = 0;
+    this.facade.read(filter);
   }
 
   ngOnInit(): void {
@@ -136,40 +155,49 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
   }
 
   private initPossibilities(): void {
-    this.possibilities = this.item().possibilities;
+    const item = this.item();
+    if (item?.possibilities) {
+      this.possibilities = item.possibilities;
+    }
   }
 
   private isArrayType(): boolean {
-    return this.item()?.fieldType === FieldType.check;
+    const item = this.item();
+    return item?.fieldType === FieldType.check;
   }
 
-  private refreshForArray(vals: [], type): void {
-    const queries = this.filter().query.filter(
-      (q) => q.key === this.item().key && q.type === type,
+  private refreshForArray(vals: [], type: string): void {
+    const filter = this.filter();
+    const item = this.item();
+    if (!filter || !item) return;
+    if (!filter.query) filter.query = [];
+
+    const queries = filter.query.filter(
+      (q) => q.key === item.key && q.type === type,
     );
 
     queries.forEach((query) => {
-      const index = this.filter().query.indexOf(query);
+      const index = filter.query!.indexOf(query);
       if (index > -1) {
-        this.filter().query.splice(index, 1);
+        filter.query!.splice(index, 1);
       }
     });
 
     if (vals === null || vals === undefined || !vals.length) {
-      this.facade.read(this.filter());
+      this.facade.read(filter);
       return;
     }
 
     vals.forEach((val) => {
       const query = {
-        key: this.item().key,
-        type: type,
+        key: item.key,
+        type: type as '=' | '!=' | '>=' | '<=' | '<' | '>',
         value: val,
       };
 
-      this.filter().query.push(query);
+      filter.query!.push(query);
     });
 
-    this.facade.read(this.filter());
+    this.facade.read(filter);
   }
 }

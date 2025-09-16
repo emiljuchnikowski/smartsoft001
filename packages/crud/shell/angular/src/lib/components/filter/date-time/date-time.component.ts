@@ -29,12 +29,12 @@ export class FilterDateTimeComponent<T extends IEntity<string>>
 {
   private _subscriptions = new Subscription();
 
-  id = GuidService.create();
+  override id = GuidService.create();
 
   // @ViewChild(IonDatetime, { read: IonDatetime, static: false })
   // dateTimePicker: IonDatetime;
 
-  ngOnInit(): void {
+  override ngOnInit(): void {
     super.ngOnInit();
 
     // if (this.dateTimePicker) {

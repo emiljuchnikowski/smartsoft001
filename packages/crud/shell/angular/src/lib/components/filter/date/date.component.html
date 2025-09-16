@@ -1,7 +1,7 @@
 <!--<ion-row>-->
 <!--  <ion-col>-->
 <!--    <ion-label>-->
-{{ item().label | translate }}
+{{ item()?.label || '' | translate }}
 <!--    </ion-label>-->
 <!--    <ion-item button="true" id="open-date-input-{{ id }}" color="primary">-->
 <!--      <ion-text>-->

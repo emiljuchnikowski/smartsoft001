@@ -6,6 +6,7 @@ import {
   InputSignal,
   OnInit,
   Signal,
+  signal,
   WritableSignal,
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -112,9 +113,9 @@ export class FiltersComponent<T extends IEntity<string>> implements OnInit {
   private styleService = inject(StyleService);
   private elementRef = inject(ElementRef);
 
-  list: WritableSignal<Array<IModelFilter>>;
+  list!: WritableSignal<Array<IModelFilter>>;
 
-  filter: Signal<ICrudFilter | undefined>;
+  filter!: Signal<ICrudFilter | undefined>;
 
   /**
    * Hide menu used only from MenuService
@@ -127,6 +128,7 @@ export class FiltersComponent<T extends IEntity<string>> implements OnInit {
 
   ngOnInit(): void {
     this.styleService.init(this.elementRef);
+    this.list = signal([]);
 
     const modelFilters = getModelOptions(this.config.type).filters;
 

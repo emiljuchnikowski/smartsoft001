@@ -14,10 +14,10 @@ import { CrudListPageBaseComponent } from '../base/base.component';
   template: `
     <smart-crud-filters-config></smart-crud-filters-config>
     @let groups = config.list?.groups;
-    @if (listOptions) {
+    @if (listOptions()) {
       <smart-list
         [hidden]="groups && !isSearch()"
-        [options]="listOptions()"
+        [options]="listOptions()!"
       ></smart-list>
     }
     @if (groups && !isSearch()) {
@@ -34,7 +34,7 @@ export class ListStandardComponent<
   T extends IEntity<string>,
 > extends CrudListPageBaseComponent<T> {
   private readonly facade = inject(CrudFacade<T>);
-  public readonly config = inject(CrudFullConfig<T>);
+  public override readonly config = inject(CrudFullConfig<T>);
 
   isSearch: Signal<boolean> = computed(
     () => !!this.facade.filter()?.searchText,

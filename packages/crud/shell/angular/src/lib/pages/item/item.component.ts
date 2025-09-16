@@ -99,20 +99,20 @@ export class ItemComponent<T extends IEntity<string>>
   private pageService = inject(PageService<T>);
   private detailsService = inject(DetailsService);
 
-  private _mode: WritableSignal<string>;
+  private _mode!: WritableSignal<string>;
 
   pageOptions: WritableSignal<IPageOptions> = signal({
     title: '',
     showBackButton: true,
     hideMenuButton: true,
   });
-  detailsOptions: WritableSignal<IDetailsOptions<T>>;
-  id: string;
-  formValue: T;
+  detailsOptions!: WritableSignal<IDetailsOptions<T>>;
+  id!: string;
+  formValue!: T;
   formValid = false;
-  item: T;
-  formPartialValue: Partial<T>;
-  uniqueProvider: WritableSignal<
+  item!: T;
+  formPartialValue!: Partial<T>;
+  uniqueProvider!: WritableSignal<
     (values: Record<keyof T, any>) => Promise<boolean>
   >;
 
@@ -129,13 +129,13 @@ export class ItemComponent<T extends IEntity<string>>
   standardComponents = viewChildren(ItemStandardComponent);
   // @ViewChild(IonContent, { static: true }) content: IonContent; //TODO: rewrite when rewriting ionic
 
-  contentTpl = viewChild<TemplateRef<any>>('contentTpl');
+  override contentTpl = viewChild<TemplateRef<any>>('contentTpl');
 
   topTpl = viewChild<ViewContainerRef>('topTpl');
 
   bottomTpl = viewChild<ViewContainerRef>('bottomTpl');
 
-  dynamicContents = viewChildren<DynamicContentDirective>(
+  override dynamicContents = viewChildren<DynamicContentDirective>(
     DynamicContentDirective,
   );
 
@@ -147,7 +147,7 @@ export class ItemComponent<T extends IEntity<string>>
     this.selected = this.facade.selected;
   }
 
-  refreshProperties() {
+  override refreshProperties() {
     this.baseComponentRef.setInput('detailsOptions', this.detailsOptions());
     this.baseComponentRef.setInput('mode', this.mode);
     this.baseComponentRef.setInput('uniqueProvider', this.uniqueProvider());
@@ -205,15 +205,15 @@ export class ItemComponent<T extends IEntity<string>>
       };
 
       Object.keys(values).forEach((key) => {
-        filter.query.push({
+        filter.query!.push({
           key: key,
-          value: values[key],
+          value: (values as any)[key],
           type: '=',
         });
       });
 
       if (this.id) {
-        filter.query.push({
+        filter.query!.push({
           key: 'id',
           value: this.id,
           type: '!=',
@@ -231,14 +231,14 @@ export class ItemComponent<T extends IEntity<string>>
       }[] = await this.dynamicComponentLoader.getComponentsWithFactories({
         components: [
           ...(this.config.details &&
-          this.config.details['components'] &&
-          this.config.details['components'].top
-            ? [this.config.details['components'].top]
+          (this.config.details as any)['components'] &&
+          (this.config.details as any)['components'].top
+            ? [(this.config.details as any)['components'].top]
             : []),
           ...(this.config.details &&
-          this.config.details['components'] &&
-          this.config.details['components'].bottom
-            ? [this.config.details['components'].bottom]
+          (this.config.details as any)['components'] &&
+          (this.config.details as any)['components'].bottom
+            ? [(this.config.details as any)['components'].bottom]
             : []),
         ],
       });
@@ -248,26 +248,28 @@ export class ItemComponent<T extends IEntity<string>>
         item: this.facade.selected,
         cellPipe: this.config.details
           ? (this.config.details as { cellPipe?: ICellPipe<T> }).cellPipe
-          : null,
+          : undefined,
         componentFactories: {
           top:
             this.config.details &&
-            this.config.details['components'] &&
-            this.config.details['components'].top
+            (this.config.details as any)['components'] &&
+            (this.config.details as any)['components'].top
               ? compiledComponents.find(
                   (cc) =>
-                    cc.component === this.config.details['components'].top,
-                ).factory
-              : null,
+                    cc.component ===
+                    (this.config.details as any)['components'].top,
+                )?.factory
+              : undefined,
           bottom:
             this.config.details &&
-            this.config.details['components'] &&
-            this.config.details['components'].bottom
+            (this.config.details as any)['components'] &&
+            (this.config.details as any)['components'].bottom
               ? compiledComponents.find(
                   (cc) =>
-                    cc.component === this.config.details['components'].bottom,
-                ).factory
-              : null,
+                    cc.component ===
+                    (this.config.details as any)['components'].bottom,
+                )?.factory
+              : undefined,
         },
       });
     }
@@ -283,7 +285,7 @@ export class ItemComponent<T extends IEntity<string>>
     this.refreshDynamicInstance();
   }
 
-  ngOnDestroy() {
+  override ngOnDestroy() {
     super.ngOnDestroy();
 
     this.subscription.unsubscribe();
@@ -294,32 +296,32 @@ export class ItemComponent<T extends IEntity<string>>
       await this.dynamicComponentLoader.getComponentsWithFactories({
         components: [
           ...(this.config[mode] &&
-          this.config[mode]['components'] &&
-          this.config[mode]['components'].top
-            ? [this.config[mode]['components'].top]
+          (this.config[mode] as any)['components'] &&
+          (this.config[mode] as any)['components'].top
+            ? [(this.config[mode] as any)['components'].top]
             : []),
           ...(this.config[mode] &&
-          this.config[mode]['components'] &&
-          this.config[mode]['components'].bottom
-            ? [this.config[mode]['components'].bottom]
+          (this.config[mode] as any)['components'] &&
+          (this.config[mode] as any)['components'].bottom
+            ? [(this.config[mode] as any)['components'].bottom]
             : []),
         ],
       });
 
     const topComponentFactory = compiledComponents.find(
-      (cc) => cc.component === this.config[mode]['components']?.top,
+      (cc) => cc.component === (this.config[mode] as any)['components']?.top,
     )?.factory;
 
     const bottomComponentFactory = compiledComponents.find(
-      (cc) => cc.component === this.config[mode]['components']?.bottom,
+      (cc) => cc.component === (this.config[mode] as any)['components']?.bottom,
     )?.factory;
 
-    if (!this.topTpl().get(0) && topComponentFactory) {
-      this.topTpl().createComponent(topComponentFactory);
+    if (!this.topTpl()?.get(0) && topComponentFactory) {
+      this.topTpl()?.createComponent(topComponentFactory);
     }
 
-    if (!this.bottomTpl().get(0) && bottomComponentFactory) {
-      this.bottomTpl().createComponent(bottomComponentFactory);
+    if (!this.bottomTpl()?.get(0) && bottomComponentFactory) {
+      this.bottomTpl()?.createComponent(bottomComponentFactory);
     }
   }
 
@@ -338,12 +340,12 @@ export class ItemComponent<T extends IEntity<string>>
   private initPageOptions(): void {
     this.pageOptions.set({
       ...this.pageOptions(),
-      title: this.getTitle(),
+      title: this.getTitle() || '',
       endButtons: this.getButtons(),
     });
   }
 
-  private getButtons(): Array<IIconButtonOptions> {
+  private getButtons(): Array<IIconButtonOptions> | undefined {
     const options = getModelOptions(this.config.type);
 
     switch (this.mode) {
@@ -372,8 +374,8 @@ export class ItemComponent<T extends IEntity<string>>
                   handler: () => {
                     this.mode = 'details';
                     this.initPageOptions();
-                    this.topTpl().clear();
-                    this.bottomTpl().clear();
+                    this.topTpl()?.clear();
+                    this.bottomTpl()?.clear();
                   },
                   disabled$: new BehaviorSubject(false),
                 },
@@ -416,15 +418,17 @@ export class ItemComponent<T extends IEntity<string>>
               },
             ]
           : [];
+      default:
+        return undefined;
     }
   }
 
-  private getTitle(): string {
+  private getTitle(): string | undefined {
     const options = getModelOptions(this.config.type);
 
     const prefix =
       options.titleKey && this.item
-        ? this.removeParagraph(this.item[options.titleKey]) + ' - '
+        ? this.removeParagraph((this.item as any)[options.titleKey]) + ' - '
         : '';
 
     switch (this.mode) {
@@ -434,6 +438,8 @@ export class ItemComponent<T extends IEntity<string>>
         return prefix + this.translateService.instant('change');
       case 'details':
         return prefix + this.translateService.instant('details');
+      default:
+        return undefined;
     }
   }
 
@@ -453,14 +459,14 @@ export class ItemComponent<T extends IEntity<string>>
 
     const form =
       this.template() === 'default'
-        ? this.standardComponents()?.[0]?.formComponents?.[0].form
+        ? (this.standardComponents() as any)?.[0]?.formComponents?.[0]?.form
         : this.baseInstance.formComponents()[0].form;
 
     this.cd.detectChanges();
 
     if (form.valid) return false;
 
-    const invalidFields = [];
+    const invalidFields: string[] = [];
 
     this.getInvalidFields(form, invalidFields, '');
 
@@ -484,8 +490,8 @@ export class ItemComponent<T extends IEntity<string>>
       ? baseField + ' > ' + this.translateService.instant('MODEL.' + key)
       : baseField;
 
-    if (control.errors?.customMessage) {
-      invalidFields.push(field + ` (${control.errors.customMessage})`);
+    if (control.errors?.['customMessage']) {
+      invalidFields.push(field + ` (${control.errors['customMessage']})`);
       return;
     }
 
@@ -499,7 +505,7 @@ export class ItemComponent<T extends IEntity<string>>
           control.controls[groupKey],
           invalidFields,
           field,
-          groupKey,
+          groupKey as any,
         );
       });
     }
