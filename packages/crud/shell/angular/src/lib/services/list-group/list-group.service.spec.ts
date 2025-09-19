@@ -73,15 +73,15 @@ describe('crud-shell-angular: CrudListGroupService', () => {
     it('should add a new query if not found', () => {
       const item: ICrudListGroup = { key: 'test', value: 'val' } as any;
       service.change(true, item, false);
-      expect(facade.filter().query.length).toBe(1);
-      expect(facade.filter().query[0].key).toBe('test');
+      expect(facade.filter()?.query?.length).toBe(1);
+      expect(facade.filter()?.query?.[0]?.key).toBe('test');
     });
 
     it('should update current.value and set current.hidden to true', () => {
       const item: ICrudListGroup = { key: 'test', value: 'val' } as any;
       service.change(true, item, false);
-      expect(facade.filter().query[0].value).toBe('val');
-      expect(facade.filter().query[0].hidden).toBe(true);
+      expect(facade.filter()?.query?.[0]?.value).toBe('val');
+      expect(facade.filter()?.query?.[0]?.hidden).toBe(true);
     });
   });
 });
