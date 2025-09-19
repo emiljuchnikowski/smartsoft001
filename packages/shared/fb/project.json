@@ -22,6 +22,11 @@
       },
       "outputs": ["{workspaceRoot}/coverage/packages/shared/fb"]
     },
+    "nx-release-publish": {
+      "options": {
+        "packageRoot": "dist/{projectRoot}"
+      }
+    },
     "build": {
       "executor": "@nx/esbuild:esbuild",
       "outputs": ["{options.outputPath}"],

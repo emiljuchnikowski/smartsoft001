@@ -21,6 +21,11 @@
         "jestConfig": "packages/auth/domain/jest.config.ts"
       }
     },
+    "nx-release-publish": {
+      "options": {
+        "packageRoot": "dist/{projectRoot}"
+      }
+    },
     "build": {
       "executor": "@nx/esbuild:esbuild",
       "outputs": ["{options.outputPath}"],

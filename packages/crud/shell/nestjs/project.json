@@ -28,6 +28,11 @@
       },
       "outputs": ["{workspaceRoot}/coverage/packages/crud/shell/nestjs"]
     },
+    "nx-release-publish": {
+      "options": {
+        "packageRoot": "dist/{projectRoot}"
+      }
+    },
     "build": {
       "executor": "@nx/esbuild:esbuild",
       "options": {

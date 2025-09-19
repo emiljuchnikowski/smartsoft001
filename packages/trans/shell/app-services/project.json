@@ -24,6 +24,11 @@
       },
       "outputs": ["{workspaceRoot}/coverage/packages/trans/shell/app-services"]
     },
+    "nx-release-publish": {
+      "options": {
+        "packageRoot": "dist/{projectRoot}"
+      }
+    },
     "build": {
       "executor": "@nx/esbuild:esbuild",
       "outputs": ["{options.outputPath}"],

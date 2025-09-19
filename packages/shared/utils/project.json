@@ -25,6 +25,11 @@
         "jestConfig": "packages/shared/utils/jest.config.ts"
       }
     },
+    "nx-release-publish": {
+      "options": {
+        "packageRoot": "dist/{projectRoot}"
+      }
+    },
     "deploy": {
       "executor": "ngx-deploy-npm:deploy",
       "options": {

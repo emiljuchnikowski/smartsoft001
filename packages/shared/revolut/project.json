@@ -33,6 +33,11 @@
         "assets": ["packages/shared/revolut/*.md"]
       }
     },
+    "nx-release-publish": {
+      "options": {
+        "packageRoot": "dist/{projectRoot}"
+      }
+    },
     "deploy": {
       "executor": "ngx-deploy-npm:deploy",
       "options": {
