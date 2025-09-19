@@ -42,7 +42,8 @@
         "production": {
           "tsConfig": "packages/crud/shell/angular/tsconfig.lib.prod.json"
         }
-      }
+      },
+      "defaultConfiguration": "production"
     }
   },
   "generators": {
