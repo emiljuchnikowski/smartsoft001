@@ -1,6 +1,6 @@
 {
   "name": "smartsoft001",
-  "version": "2.73.0",
+  "version": "2.80.0",
   "license": "MIT",
   "scripts": {
     "test": "nx run-many --target=test --all",

@@ -6,7 +6,7 @@
     "@smartsoft001/models": "^2.76.0",
     "@smartsoft001/users": "^2.76.0"
   },
-  "version": "2.76.0",
+  "version": "2.80.0",
   "main": "./src/index.js",
   "typings": "./src/index.d.ts"
 }
