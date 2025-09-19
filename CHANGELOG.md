@@ -1,3 +1,13 @@
+## 2.81.0 (2025-09-19)
+
+### 🚀 Features
+
+- **shared:** add default configuration for production environment ([e5bf47e](https://github.com/emiljuchnikowski/smartsoft001/commit/e5bf47e))
+
+### ❤️ Thank You
+
+- Emil Juchnikowski
+
 ## 2.74.0 (2025-09-19)
 
 ### 🚀 Features
