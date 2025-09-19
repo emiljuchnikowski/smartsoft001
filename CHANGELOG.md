@@ -1,3 +1,22 @@
+## 2.74.0 (2025-09-19)
+
+### 🚀 Features
+
+- Migrate several services to packages/shared/angular ([#10](https://github.com/emiljuchnikowski/smartsoft001/pull/10))
+- **shared:** add husky installation script to package.json ([814e8c1](https://github.com/emiljuchnikowski/smartsoft001/commit/814e8c1))
+- **shared:** add nx-release-publish configuration with packageRoot option ([84ef630](https://github.com/emiljuchnikowski/smartsoft001/commit/84ef630))
+
+### 🩹 Fixes
+
+- add dependencies for Angular and user package ([d0d3b1d](https://github.com/emiljuchnikowski/smartsoft001/commit/d0d3b1d))
+- add dependencies for Angular and user package ([94ccc7a](https://github.com/emiljuchnikowski/smartsoft001/commit/94ccc7a))
+- add dependencies for Angular and user package ([ed8d920](https://github.com/emiljuchnikowski/smartsoft001/commit/ed8d920))
+- update types to handle undefined values in CRUD components ([d31afb9](https://github.com/emiljuchnikowski/smartsoft001/commit/d31afb9))
+
+### ❤️ Thank You
+
+- Emil Juchnikowski
+
 ## 2.73.0 (2025-09-15)
 
 This was a version bump only, there were no code changes.
