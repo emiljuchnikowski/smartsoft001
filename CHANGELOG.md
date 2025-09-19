@@ -1,3 +1,7 @@
+## 2.82.0 (2025-09-19)
+
+This was a version bump only, there were no code changes.
+
 ## 2.81.0 (2025-09-19)
 
 ### 🚀 Features
