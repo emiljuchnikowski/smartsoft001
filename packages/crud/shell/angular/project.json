@@ -27,6 +27,11 @@
       },
       "outputs": ["{workspaceRoot}/coverage/packages/crud/shell/angular"]
     },
+    "nx-release-publish": {
+      "options": {
+        "packageRoot": "dist/{projectRoot}"
+      }
+    },
     "build": {
       "executor": "@nx/angular:package",
       "options": {
