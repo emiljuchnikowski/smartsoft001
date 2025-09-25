@@ -8,7 +8,6 @@ import {
   PaginationMode,
 } from '@smartsoft001/angular';
 
-import { CrudStoreOptions } from './+state/crud.store';
 import { ICrudFilterQueryItem, ICrudListGroup } from './models';
 
 @Injectable()
@@ -18,7 +17,6 @@ export class CrudConfig<T> {
   type?: any;
   reducerFactory?: () => any;
   baseQuery?: Array<ICrudFilterQueryItem>;
-  storeOptions?: CrudStoreOptions;
 }
 
 @Injectable()
