@@ -9,6 +9,10 @@ import {
 } from '@smartsoft001/angular';
 import { IEntity } from '@smartsoft001/domain-core';
 
+import {
+  CrudStoreProvider,
+  provideCrudStore,
+} from './+state/crud-store.provider';
 import { CrudFacade } from './+state/crud.facade';
 import { CrudComponentsModule } from './components';
 import { CrudFullModule } from './crud-full.module';
@@ -34,6 +38,7 @@ import { PageService } from './services/page/page.service';
     PageService,
     CrudFacade,
     CrudListPaginationFactory,
+    CrudStoreProvider,
   ],
 })
 export class CrudCoreModule {}
@@ -54,6 +59,7 @@ export class CrudModule<T extends IEntity<string>> {
           provide: FILE_SERVICE_CONFIG,
           useValue: { apiUrl: options.config.apiUrl } as IFileServiceConfig,
         },
+        provideCrudStore<T>(),
       ],
     };
   }

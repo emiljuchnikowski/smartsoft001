@@ -54,9 +54,18 @@ interface CrudStore<T> extends CrudState<T> {
   delete(id: string): void;
 }
 
-export function createCrudFeatureStore<T extends IEntity<string>>() {
+export interface CrudStoreOptions {
+  storeName?: string;
+  providedIn?: any;
+}
+
+export function createCrudFeatureStore<T extends IEntity<string>>(
+  options?: CrudStoreOptions,
+) {
   return signalStore(
-    { providedIn: 'root' },
+    options?.providedIn !== undefined
+      ? { providedIn: options.providedIn, key: options?.storeName }
+      : { providedIn: 'root', key: options?.storeName },
     withState<CrudState<T>>(initialState),
     withComputed((store) => {
       return {
