@@ -6,15 +6,13 @@
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@nx/esbuild:esbuild",
+      "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/shared/domain-core",
         "main": "packages/shared/domain-core/src/index.ts",
         "tsConfig": "packages/shared/domain-core/tsconfig.lib.json",
-        "assets": ["packages/shared/domain-core/*.md"],
-        "generatePackageJson": true,
-        "format": ["cjs"]
+        "assets": ["packages/shared/domain-core/*.md"]
       }
     },
     "deploy": {
