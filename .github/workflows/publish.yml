@@ -78,3 +78,19 @@ jobs:
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy:
+    needs: [main]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update dependencies
+        uses: actions/github-script@v8
+        with:
+          github-token: ${{ secrets.MOBILEMS_DEPLOY_TOKEN }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: 'smartsoft001',
+              repo: 'mobilems-framework',
+              ref: 'main',
+              workflow_id: 'update.yml'
+            })
