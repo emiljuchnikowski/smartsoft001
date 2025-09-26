@@ -7,7 +7,7 @@ export * from './lib/pipes';
 export * from './lib/services/crud/crud.service';
 export * from './lib/services/page/page.service';
 export * from './lib/services/search/search.service';
-export * from './lib/+state/crud.facade';
+export * from './lib/+state';
 export * from './lib/models';
 export * from './lib/pages';
 export * from './lib/providers/model-possibilities/model-possibilities.provider';
