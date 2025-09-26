@@ -74,9 +74,10 @@ export abstract class AppBaseComponent implements OnDestroy, AfterContentInit {
       }
 
       this.initLoader();
-      this.initPermissionClasses();
       this.refreshStyles();
     });
+
+    this.initPermissionClasses();
 
     this.initSelectedPath();
 
