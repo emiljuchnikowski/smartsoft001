@@ -1,3 +1,13 @@
+## 2.84.0 (2025-09-26)
+
+### 🚀 Features
+
+- **shared:** add decorators for Redux action and selection handling ([e532ae1](https://github.com/emiljuchnikowski/smartsoft001/commit/e532ae1))
+
+### ❤️ Thank You
+
+- Emil Juchnikowski
+
 ## 2.83.0 (2025-09-26)
 
 ### 🚀 Features
