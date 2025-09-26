@@ -35,15 +35,14 @@
       }
     },
     "build": {
-      "executor": "@nx/esbuild:esbuild",
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/crud/shell/dtos",
-        "tsConfig": "packages/crud/shell/dtos/tsconfig.lib.json",
-        "packageJson": "packages/crud/shell/dtos/package.json",
-        "main": "packages/crud/shell/dtos/src/index.ts",
-        "assets": ["packages/crud/shell/dtos/*.md"]
-      },
-      "outputs": ["{options.outputPath}"]
+        "main": "packages/crud/shell//dtos/src/index.ts",
+        "tsConfig": "packages/crud/shell//dtos/tsconfig.lib.json",
+        "assets": ["packages/crud/shell//dtos/*.md"]
+      }
     }
   }
 }
