@@ -100,32 +100,33 @@ const crudReducer = (
         links: null,
       };
 
-    case `[${entity}] Read Success`:
-      let list: any[] = [];
+    case `[${entity}] Read Success`: {
+        let list: any[] = [];
 
-      if (
-        action.filter &&
-        action.filter.offset &&
-        state.list &&
-        action.filter.paginationMode !== PaginationMode.singlePage
-      ) {
-        state.list.forEach((i) => {
-          list.push(i);
-        });
+        if (
+            action.filter &&
+            action.filter.offset &&
+            state.list &&
+            action.filter.paginationMode !== PaginationMode.singlePage
+        ) {
+            state.list.forEach((i) => {
+                list.push(i);
+            });
 
-        list = [...list, ...action.result.data];
-      } else {
-        list = action.result.data;
-      }
+            list = [...list, ...action.result.data];
+        } else {
+            list = action.result.data;
+        }
 
-      return {
-        ...state,
-        loaded: true,
-        list,
-        totalCount: action.result.totalCount,
-        links: action.result.links,
-        error: null,
-      };
+        return {
+            ...state,
+            loaded: true,
+            list,
+            totalCount: action.result.totalCount,
+            links: action.result.links,
+            error: null,
+        };
+    }
 
     case `[${entity}] Clear`:
       return { ...initialState };
