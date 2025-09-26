@@ -1,3 +1,13 @@
+## 2.83.0 (2025-09-26)
+
+### 🚀 Features
+
+- **crud:** add NgRx store integration and error handling services ([19d6971](https://github.com/emiljuchnikowski/smartsoft001/commit/19d6971))
+
+### ❤️ Thank You
+
+- Emil Juchnikowski
+
 ## 2.82.0 (2025-09-19)
 
 This was a version bump only, there were no code changes.
