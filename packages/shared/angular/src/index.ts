@@ -8,3 +8,4 @@ export * from './lib/pipes';
 export * from './lib/pages';
 export { SharedModule } from './lib/shared.module';
 export { NgrxSharedModule } from './lib/ngrx-shared.module';
+export * from './lib/decorators';
