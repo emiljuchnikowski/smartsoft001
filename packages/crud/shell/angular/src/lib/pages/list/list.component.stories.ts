@@ -1,18 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { moduleMetadata } from '@storybook/angular';
 import type { Meta, StoryObj } from '@storybook/angular';
-import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
-import { NgModule } from '@angular/core';
 
 import { SharedModule } from '@smartsoft001/angular';
 import { Field, Model } from '@smartsoft001/models';
 
-import { CrudModule } from '../../crud.module';
 import { ListComponent } from './list.component';
+import { CrudModule } from '../../crud.module';
 
 @Component({
   template: ` <p>Test details</p> `,

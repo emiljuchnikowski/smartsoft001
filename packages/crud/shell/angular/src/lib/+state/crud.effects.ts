@@ -49,7 +49,7 @@ export class CrudEffects<T extends IEntity<string>> {
             });
           break;
 
-        case `[${this.config.entity}] Create Success`:
+        case `[${this.config.entity}] Create Success`: {
           const createState = this.state.getValue()[this.config.entity];
           this.store.dispatch(
             CrudActions.read(
@@ -58,6 +58,7 @@ export class CrudEffects<T extends IEntity<string>> {
             ),
           );
           break;
+        }
 
         case `[${this.config.entity}] Create Many`:
           this.service
@@ -84,7 +85,7 @@ export class CrudEffects<T extends IEntity<string>> {
             });
           break;
 
-        case `[${this.config.entity}] Create Many Success`:
+        case `[${this.config.entity}] Create Many Success`: {
           const createManyState = this.state.getValue()[this.config.entity];
           this.store.dispatch(
             CrudActions.read(
@@ -95,6 +96,7 @@ export class CrudEffects<T extends IEntity<string>> {
             ),
           );
           break;
+        }
 
         case `[${this.config.entity}] Read`:
           this.service
