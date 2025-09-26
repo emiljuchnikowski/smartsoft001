@@ -44,6 +44,43 @@
         }
       },
       "defaultConfiguration": "production"
+    },
+    "postbuild": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "npx tailwind -c packages/shared/angular/tailwind.config.js -i packages/shared/angular/src/lib/styles.css -o dist/packages/shared/angular/styles.css",
+          "npx tailwind -c packages/crud/shell/angular/tailwind.config.js -i packages/crud/shell//angular/src/lib/styles.css -o dist/packages/crud/shell//angular/styles.css"
+        ]
+      }
+    },
+    "storybook": {
+      "executor": "@storybook/angular:start-storybook",
+      "options": {
+        "port": 4401,
+        "configDir": "packages/crud/shell/angular/.storybook",
+        "browserTarget": "angular:build-storybook",
+        "compodoc": false,
+        "styles": [
+          "packages/crud/shell/angular/src/lib/styles.css",
+          "packages/shared/angular/src/lib/styles.css"
+        ]
+      },
+      "configurations": {
+        "ci": {
+          "quiet": true
+        }
+      }
+    },
+    "build-storybook": {
+      "executor": "@storybook/angular:build-storybook",
+      "outputs": ["{options.outputDir}"],
+      "options": {
+        "outputDir": "dist/storybook/angular",
+        "configDir": "packages/crud/shell/angular/.storybook",
+        "browserTarget": "angular:build-storybook",
+        "compodoc": false
+      }
     }
   },
   "generators": {

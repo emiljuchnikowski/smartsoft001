@@ -60,7 +60,7 @@ export class ExportComponent<T extends IEntity<string>>
 
         const loading = this.facade.loading();
         if (loading) return;
-        this.popoverService.close();
+        this.popoverService.close().then();
       },
       loading: this.facade.loading,
       expand: 'block',

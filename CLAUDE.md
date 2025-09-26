@@ -2,41 +2,55 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Project Overview
+## Repository Overview
 
-This is a monorepo containing multiple TypeScript/NestJS libraries for Angular, NestJS, and Ionic projects. The codebase follows a domain-driven design pattern with clear separation between domain logic and shell implementations.
+Smartsoft001 is a collection of libraries for Angular, NestJS, and Ionic projects organized as an Nx monorepo. The codebase follows a modular architecture with shared libraries and domain-specific packages.
+
+### Framework Versions
+
+- **Angular**: 20.1.0
+- **NestJS**: 11.1.5
+- **Nx**: 21.3.11
+- **TypeScript**: 5.8.3
+- **NgRx**: 20.0.1
+- **Storybook**: 9.0.17
+- **Jest**: 29.7.0
+- **Node**: 18.16.9 (types)
+- **pnpm**: 9.11.0
 
 ## Architecture
 
-The project follows a layered architecture with these main domains:
+### Domain Structure
 
-- **auth**: Authentication and JWT token management
-- **crud**: Generic CRUD operations
-- **trans**: Transaction handling for payment providers (PayU, PayPal, Paynow, Revolut etc.)
-- **shared**: Core utilities and services
+The repository is organized around three main domains:
 
-Each domain is structured as:
+- **auth**: Authentication and authorization functionality
+- **crud**: Create, Read, Update, Delete operations and UI components
+- **trans**: Translation/internationalization features
 
-- `domain/`: Core business logic and entities
-- `shell/`: Implementation layers:
-  - `app-services/`: Application services
-  - `dtos/`: Data transfer objects
-  - `nestjs/`: NestJS controllers, gateways, and modules
+Each domain follows the same architectural pattern:
 
-## Common Commands
+- `domain/`: Core business logic and models
+- `shell/app-services/`: Application services layer
+- `shell/dtos/`: Data transfer objects
+- `shell/nestjs/`: NestJS-specific implementations
+- `shell/angular/`: Angular-specific UI components (for crud only)
 
-### Testing
+### Shared Libraries
 
-```bash
-# Run all tests
-nx run-many --target=test
+Located in `packages/shared/`:
 
-# Run tests for specific project
-nx test <project-name>
+- `domain-core`: Base repository patterns and tools
+- `models`: Data model decorators and utilities with metadata support
+- `angular`: Shared Angular components, services, and NgRx state management
+- `nestjs`: NestJS utilities and common functionality
+- `users`: User entity definitions
+- `utils`: Various utilities (NIP, PESEL, zip-code verification, password hashing, object operations)
+- Payment integrations: `paypal`, `payu`, `paynow`, `revolut`
+- Third-party integrations: `fb`, `google`
+- Database: `mongo` (MongoDB utilities)
 
-# Run tests with coverage
-nx test <project-name> --configuration=ci
-```
+## Development Commands
 
 ### Building
 
@@ -47,50 +61,104 @@ nx run-many --target=build --all
 # Build specific project
 nx build <project-name>
 
-# Build before release (used in CI)
+# Pre-release build (runs before versioning)
 npx nx run-many -t build
 ```
 
-### Linting
+### Testing
 
 ```bash
-# Lint all projects
-nx run-many --target=lint --all
+# Run all tests
+nx run-many --target=test --all
+npm test
+
+# Test specific project
+nx test <project-name>
+
+# Test with coverage (CI configuration)
+nx test <project-name> --configuration=ci
+```
+
+### Linting and Formatting
+
+```bash
+# Format code and fix lint issues
+nx format & nx run-many -t lint --fix
+npm run format
 
 # Lint specific project
 nx lint <project-name>
 ```
 
-### Project Management
+### Storybook
 
 ```bash
-# List all projects
-nx show projects
+# Run Storybook for Angular components
+nx storybook angular
 
-# Show project details
-nx show project <project-name>
+# Run Storybook for CRUD Angular components
+nx storybook crud-shell-angular
 
-# List available targets
-nx show project <project-name> --target-names
+# Build Storybook
+nx build-storybook <project-name>
+
+# Test Storybook components
+nx test-storybook <project-name>
 ```
 
-## Key Project Names
+### Package Management
 
-Major projects in the workspace:
+- Uses **pnpm** as the package manager
+- Workspaces are configured in `package.json`
+- Uses Nx for project management and task execution
 
-- `domain-core`: Core domain interfaces and repository patterns
-- `utils`: Utility services (NIP, PESEL, password hashing, etc.)
-- `models`: Data model decorators and metadata utilities
-- `auth-domain`: Authentication domain logic
-- `crud-domain`: CRUD operations domain logic
-- `trans-domain`: Transaction handling domain logic
-- `shared-mongo`: MongoDB integration
-- `nestjs`: Shared NestJS utilities
+## Code Style and Standards
 
-## Development Notes
+### ESLint Configuration
 
-- Uses Nx workspace with TypeScript and Jest
-- Follows Conventional Commits standard
-- Each package can be built and deployed independently to npm
-- Import order enforced by ESLint with `@op/**` packages grouped after external dependencies
-- Test naming convention: `describe('app/lib: ClassName', () => { ... })`
+- Uses flat ESLint configuration (`eslint.config.mjs`)
+- Import ordering rules with alphabetical sorting
+- Special handling for `@smartsoft001/**` imports
+- Enforces newlines between import groups
+
+### Component Generation
+
+- Angular components default to SCSS styling
+- Components use `smart` prefix for CRUD shell
+- Components use `lib` prefix for shared Angular library
+
+### Project Tags
+
+Projects are tagged for organizational purposes:
+
+- `scope:crud`, `scope:auth`, `scope:trans` for domain separation
+- `type:shell`, `type:domain` for architectural layers
+
+## State Management
+
+The codebase uses NgRx for state management in Angular applications:
+
+- Effects, actions, reducers, and selectors follow standard NgRx patterns
+- Facade pattern implemented for easier component interaction
+- Error handling integrated through shared error effects and services
+
+## Styling
+
+- Uses **Tailwind CSS** for styling
+- Custom Tailwind configurations per project
+- PostCSS processing for CSS optimization
+- SCSS support for component-level styling
+
+## Testing Framework
+
+- **Jest** as the primary testing framework
+- Uses `@nx/jest` for Nx integration
+- Angular testing with `jest-preset-angular`
+- Storybook testing integration with `@storybook/test-runner`
+
+## Git Workflow
+
+- Uses Husky for git hooks
+- Commitlint with conventional commit format
+- Main branch: `main`
+- Auto-versioning and publishing through GitHub Actions
