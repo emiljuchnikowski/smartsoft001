@@ -79,7 +79,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  deploy:
+  refresh-usage:
     needs: [main]
     runs-on: ubuntu-latest
     steps:
