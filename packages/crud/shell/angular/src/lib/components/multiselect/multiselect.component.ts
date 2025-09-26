@@ -31,7 +31,6 @@ import { FormOptionsPipe } from '../../pipes';
     FormComponent,
     ButtonComponent,
   ],
-  styleUrls: ['./multiselect.component.scss'],
 })
 export class MultiselectComponent<T extends IEntity<string>> {
   private facade = inject(CrudFacade<T>);

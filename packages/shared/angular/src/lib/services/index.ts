@@ -16,3 +16,5 @@ export * from './alert/alert.service';
 export * from './popover/popover.service';
 export * from './ui/ui.service';
 export * from './services.module';
+export * from './ngrx-store/ngrx-store.service';
+export * from './error/error.service';

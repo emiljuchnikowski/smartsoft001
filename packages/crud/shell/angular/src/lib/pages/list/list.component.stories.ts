@@ -1,61 +1,75 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { moduleMetadata } from '@storybook/angular';
 import type { Meta, StoryObj } from '@storybook/angular';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { NgModule } from '@angular/core';
 
 import { SharedModule } from '@smartsoft001/angular';
 import { Field, Model } from '@smartsoft001/models';
 
 import { CrudModule } from '../../crud.module';
+import { ListComponent } from './list.component';
 
 @Component({
   template: ` <p>Test details</p> `,
+  standalone: true,
 })
 export class TestDetailsComponent {}
 
 @Model({})
 export class Note {
-  @Field({ list: true })
-  title: string;
+  id!: string;
 
   @Field({ list: true })
-  body: string;
+  title!: string;
+
+  @Field({ list: true })
+  body!: string;
 }
 
-const meta: Meta = {
+// Create a dedicated module for Storybook with proper NgRx setup
+@NgModule({
+  imports: [
+    CommonModule,
+    StoreModule.forRoot({}),
+    EffectsModule.forRoot([]),
+    SharedModule,
+    TranslateModule.forRoot(),
+    RouterTestingModule,
+    CrudModule.forFeature({
+      routing: true,
+      config: {
+        type: Note,
+        title: 'Note',
+        entity: 'notes',
+        export: true,
+        pagination: { limit: 25 },
+        apiUrl: 'http://207.180.210.142:1201/api/notes',
+      },
+    }),
+  ],
+})
+export class StorybookTestModule {}
+
+const meta: Meta<ListComponent<Note>> = {
   title: 'Smart-Crud/List Page',
-  component: 'smart-crud-list-page',
+  component: ListComponent,
   decorators: [
     moduleMetadata({
-      declarations: [TestDetailsComponent],
-      imports: [
-        CommonModule,
-        SharedModule,
-        TranslateModule.forRoot(),
-        RouterModule.forRoot([], { useHash: true }),
-        CrudModule.forFeature({
-          routing: true,
-          config: {
-            type: Note,
-            title: 'Note',
-            entity: 'notes',
-            export: true,
-            pagination: { limit: 25 },
-            apiUrl: 'http://207.180.210.142:1201/api/notes',
-          },
-        }),
-      ],
+      imports: [StorybookTestModule],
     }),
   ],
 };
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<ListComponent<Note>>;
 
 export const Export: Story = {
-  name: 'Z eksportem',
+  name: 'With export',
   render: () => ({
     template: `
       <div style="height: 400px">
@@ -66,7 +80,7 @@ export const Export: Story = {
 };
 
 export const CustomDetails: Story = {
-  name: 'Niestandardowe szczegóły',
+  name: 'Custom details',
   render: () => ({
     template: `
       <div style="height: 400px">

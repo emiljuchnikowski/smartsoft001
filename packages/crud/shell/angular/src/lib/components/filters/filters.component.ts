@@ -9,7 +9,6 @@ import {
   signal,
   WritableSignal,
 } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
 
 import { MenuService, StyleService } from '@smartsoft001/angular';
 import { IEntity } from '@smartsoft001/domain-core';
@@ -103,8 +102,7 @@ import { FilterComponent } from '../filter';
     <div class="h-20">&nbsp;</div>
     <!--</ion-content>-->
   `,
-  imports: [FilterComponent, TranslatePipe],
-  styleUrls: ['./filters.component.scss'],
+  imports: [FilterComponent],
 })
 export class FiltersComponent<T extends IEntity<string>> implements OnInit {
   private menuService = inject(MenuService);
