@@ -145,6 +145,12 @@ export class ItemComponent<T extends IEntity<string>>
     super();
 
     this.selected = this.facade.selected;
+
+    effect(() => {
+      this.item = this.facade.selected();
+      this.initPageOptions();
+      this.cd.detectChanges();
+    });
   }
 
   override refreshProperties() {
@@ -275,12 +281,6 @@ export class ItemComponent<T extends IEntity<string>>
     }
 
     this.initPageOptions();
-
-    effect(() => {
-      this.item = this.facade.selected();
-      this.initPageOptions();
-      this.cd.detectChanges();
-    });
 
     this.refreshDynamicInstance();
   }
