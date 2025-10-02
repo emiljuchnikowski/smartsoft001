@@ -4,6 +4,7 @@ import {
   Component,
   computed,
   effect,
+  inject,
   input,
   Signal,
   signal,
@@ -50,6 +51,7 @@ export class ListComponent<
   T extends IEntity<string>,
 > extends CreateDynamicComponent<ListBaseComponent<any>>('list') {
   private _options!: WritableSignal<IListInternalOptions<T>>;
+  private hardwareService = inject(HardwareService);
 
   mode: Signal<ListMode> = signal<ListMode>(ListMode.desktop);
 
@@ -65,7 +67,7 @@ export class ListComponent<
 
   override dynamicContents = viewChildren(DynamicContentDirective);
 
-  constructor(private hardwareService: HardwareService) {
+  constructor() {
     super();
 
     effect(() => {
