@@ -34,7 +34,7 @@ jobs:
         id: cache-deps
         uses: ./.github/actions/cached-deps
         with:
-          node-version: '24.5.0'
+          node-version: '24.9.0'
       - run: npx pnpm dlx nx-cloud start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="build"
       - run: npx nx format:check
       - run: npx pnpm exec nx affected -t lint test build postbuild
