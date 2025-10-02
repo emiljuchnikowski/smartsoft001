@@ -1,3 +1,7 @@
+## 2.90.0 (2025-10-02)
+
+This was a version bump only, there were no code changes.
+
 ## 2.89.0 (2025-09-26)
 
 This was a version bump only, there were no code changes.
