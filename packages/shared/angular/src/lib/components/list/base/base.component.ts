@@ -33,7 +33,6 @@ import {
   IDetailsProvider,
   IDetailsComponentFactories,
 } from '../../../models';
-import { DetailsPage } from '../../../pages';
 import { AlertService } from '../../../services';
 import { AuthService } from '../../../services';
 
@@ -151,12 +150,14 @@ export abstract class ListBaseComponent<T extends IEntity<string>> {
       const details = options.details as {
         provider?: IDetailsProvider<T>;
         componentFactories?: IDetailsComponentFactories<T>;
+        component?: Type<any>;
       };
 
       if (options.details) {
         if (!details?.provider) throw Error('Must set details provider');
+        if (!details?.component) throw Error('Must set details component');
 
-        this.detailsComponent = DetailsPage;
+        this.detailsComponent = details.component;
         this.detailsComponentProps = {
           item: details?.provider.item,
           type: options.type,
