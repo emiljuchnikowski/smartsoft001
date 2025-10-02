@@ -1,6 +1,6 @@
 {
   "name": "@smartsoft001/users",
-  "version": "2.90.0",
+  "version": "2.91.0",
   "dependencies": {
     "tslib": "^2.3.0"
   },
