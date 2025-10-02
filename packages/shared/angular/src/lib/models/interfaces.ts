@@ -15,8 +15,8 @@ import { Observable } from 'rxjs';
 import { IEntity } from '@smartsoft001/domain-core';
 import { IFieldOptions, IModelOptions } from '@smartsoft001/models';
 
-import { InputBaseComponent } from '../components';
 import { IAppProvider } from '../providers';
+import { InputBaseComponentType } from './forward-types';
 import { IStyle } from './style';
 
 export interface IAppOptions {
@@ -72,7 +72,7 @@ export interface IFormOptions<T> {
     >;
   };
   inputComponents?: {
-    [key: string]: Type<InputBaseComponent<T>>;
+    [key: string]: InputBaseComponentType<T>;
   };
   fieldOptions?: IFieldOptions;
   modelOptions?: IModelOptions;
@@ -84,7 +84,7 @@ export interface IInputOptions {
   treeLevel: number;
   control: UntypedFormControl | UntypedFormArray;
   possibilities?: WritableSignal<{ id: any; text: string; checked: boolean }[]>;
-  component?: Type<InputBaseComponent<any>>;
+  component?: InputBaseComponentType<any>;
 }
 
 export interface IInputFromFieldOptions<T> {
@@ -225,6 +225,7 @@ export interface IListOptions<T> {
     | {
         provider?: IDetailsProvider<T>;
         componentFactories?: IDetailsComponentFactories<T>;
+        component?: Type<any>;
       };
 
   item?:

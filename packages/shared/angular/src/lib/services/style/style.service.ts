@@ -1,4 +1,3 @@
-import { isPlatformBrowser } from '@angular/common';
 import { ElementRef, Inject, Injectable, PLATFORM_ID } from '@angular/core';
 
 import { IStyle, StyleType } from '../../models/style';
