@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { EffectsModule } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 
 import { ErrorEffects } from './+state/error.effects';
