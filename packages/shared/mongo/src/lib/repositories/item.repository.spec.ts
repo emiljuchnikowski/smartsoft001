@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 import { IItemRepositoryOptions } from '@smartsoft001/domain-core';
 import { IUser } from '@smartsoft001/users';
 

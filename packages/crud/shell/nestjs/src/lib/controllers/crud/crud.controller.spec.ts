@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 import { Request } from 'express';
 import * as XLSX from 'xlsx';
 

@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 import { of } from 'rxjs';
 
 import { CrudService } from '@smartsoft001/crud-shell-app-services';

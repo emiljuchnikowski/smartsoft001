@@ -5,6 +5,8 @@
     "declaration": true,
     "declarationMap": true,
     "inlineSources": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "types": []
   },
   "exclude": [
