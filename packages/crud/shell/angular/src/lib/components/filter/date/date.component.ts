@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
-import * as moment from 'moment';
+import moment from 'moment';
 
 import { IEntity } from '@smartsoft001/domain-core';
 import { GuidService } from '@smartsoft001/utils';

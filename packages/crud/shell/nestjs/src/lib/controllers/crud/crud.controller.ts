@@ -18,7 +18,7 @@ import * as Busboy from 'busboy';
 import { Response, Request } from 'express';
 import { Parser } from 'json2csv';
 import * as _ from 'lodash';
-import * as moment from 'moment-timezone';
+import moment from 'moment-timezone';
 import * as XLSX from 'xlsx';
 
 import { CreateManyMode } from '@smartsoft001/crud-domain';
