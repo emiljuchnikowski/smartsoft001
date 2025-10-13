@@ -8,7 +8,10 @@ import { SharedModule } from './shared.module';
 
 @NgModule({
   providers: [NgrxStoreService],
-  imports: [SharedModule, EffectsModule.forFeature([ErrorEffects])],
+  imports: [
+    SharedModule,
+    //EffectsModule.forFeature([ErrorEffects])
+  ],
 })
 export class NgrxSharedModule {
   constructor(store: Store<any>, storeService: NgrxStoreService) {
