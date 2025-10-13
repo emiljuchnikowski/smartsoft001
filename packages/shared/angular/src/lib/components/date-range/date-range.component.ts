@@ -21,7 +21,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
-// @ts-expect-error moment package
 import moment from 'moment';
 import { Subject, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter, tap } from 'rxjs/operators';
@@ -59,8 +58,8 @@ export class DateRangeComponent implements ControlValueAccessor {
   ngModel = model<IDateRange | undefined>(undefined);
 
   calendarData: CalendarState = {
-    dateFrom: null,
-    dateTo: null,
+    dateFrom: null as any,
+    dateTo: null as any,
     scrollPosition: 0,
     selectedButtonName: FilterBtnConstants.empthyString,
   };
@@ -120,8 +119,8 @@ export class DateRangeComponent implements ControlValueAccessor {
   }
 
   onClear(): void {
-    this.calendarData.dateFrom = null;
-    this.calendarData.dateTo = null;
+    this.calendarData.dateFrom = null as any;
+    this.calendarData.dateTo = null as any;
 
     this.ngModel.set(undefined);
     this.propagateChange(this.value);
@@ -181,8 +180,8 @@ export class DateRangeModalComponent implements OnInit, AfterContentInit {
   scrollPositionValue = 0;
   valueTop = 6400; //calculated value of the scrollHeight
   previousState: CalendarState = {
-    dateFrom: null,
-    dateTo: null,
+    dateFrom: null as any,
+    dateTo: null as any,
     scrollPosition: 0,
     selectedButtonName: FilterBtnConstants.empthyString,
   };

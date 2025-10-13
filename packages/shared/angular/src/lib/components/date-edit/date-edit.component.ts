@@ -11,7 +11,6 @@ import {
   FormsModule,
   NG_VALUE_ACCESSOR,
 } from '@angular/forms';
-// @ts-expect-error moment package
 import moment from 'moment';
 
 @Component({
