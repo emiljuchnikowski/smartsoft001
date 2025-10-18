@@ -47,6 +47,7 @@ export const PAGES = [
     CrudListGroupService,
     PageService,
     CrudFacade,
+    CrudEffects,
     CrudListPaginationFactory,
   ],
 })

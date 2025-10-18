@@ -5,10 +5,13 @@ import { FormsModule } from '@angular/forms';
 import {
   FILE_SERVICE_CONFIG,
   IFileServiceConfig,
+  NgrxStoreService,
   SharedModule,
 } from '@smartsoft001/angular';
 import { IEntity } from '@smartsoft001/domain-core';
 
+import { getReducer } from './+state';
+import { CrudEffects } from './+state/crud.effects';
 import { CrudFacade } from './+state/crud.facade';
 import { CrudComponentsModule } from './components';
 import { CrudFullModule } from './crud-full.module';
@@ -31,12 +34,23 @@ import { PageService } from './services/page/page.service';
   providers: [
     CrudService,
     CrudListGroupService,
+    CrudEffects,
     PageService,
     CrudFacade,
     CrudListPaginationFactory,
   ],
 })
-export class CrudCoreModule {}
+export class CrudCoreModule<T extends IEntity<string>> {
+  constructor(config: CrudConfig<T>, effects: CrudEffects<any>) {
+    NgrxStoreService.addReducer(
+      config.entity,
+      config.reducerFactory
+        ? config.reducerFactory()
+        : getReducer(config.entity),
+    );
+    effects.init();
+  }
+}
 
 @NgModule({})
 export class CrudModule<T extends IEntity<string>> {
