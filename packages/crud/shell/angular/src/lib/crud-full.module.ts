@@ -3,11 +3,13 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
-import { SharedModule } from '@smartsoft001/angular';
+import { NgrxStoreService, SharedModule } from '@smartsoft001/angular';
 import { IEntity } from '@smartsoft001/domain-core';
 
-import { CrudFacade } from './+state/crud.facade';
+import { getReducer, CrudFacade } from './+state';
+import { CrudEffects } from './+state/crud.effects';
 import { CrudComponentsModule } from './components';
+import { CrudConfig } from './crud.config';
 import { CrudListPaginationFactory } from './factories/list-pagination/list-pagination.factory';
 import { ListComponent } from './pages';
 import { ItemComponent } from './pages';
@@ -48,4 +50,14 @@ export const PAGES = [
     CrudListPaginationFactory,
   ],
 })
-export class CrudFullModule<T extends IEntity<string>> {}
+export class CrudFullModule<T extends IEntity<string>> {
+  constructor(config: CrudConfig<T>, effects: CrudEffects<any>) {
+    NgrxStoreService.addReducer(
+      config.entity,
+      config.reducerFactory
+        ? config.reducerFactory()
+        : getReducer(config.entity),
+    );
+    effects.init();
+  }
+}
