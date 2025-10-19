@@ -71,7 +71,7 @@ describe('angular: DynamicComponentStorageService', () => {
     });
 
     it('falls back to root AppModule if no components found in current moduleRef', () => {
-      const compA = { smartType: 'test' };
+      const compA = { smartType: 'list' };
       const appModuleRefMock = {
         injector: {
           get: jest.fn((token) =>
@@ -97,7 +97,7 @@ describe('angular: DynamicComponentStorageService', () => {
         },
         instance: { constructor: {} },
       } as any;
-      const result = DynamicComponentStorageService.get('test', moduleRefMock);
+      const result = DynamicComponentStorageService.get('list', moduleRefMock);
       expect(result).toEqual([compA]);
     });
 
@@ -108,12 +108,12 @@ describe('angular: DynamicComponentStorageService', () => {
         instance: { constructor: {} },
       } as any;
       const result = DynamicComponentStorageService.get(
-        'notfound',
+        'form',
         moduleRefMock,
       );
       expect(result).toEqual([]);
       expect(warnSpy).toHaveBeenCalledWith(
-        `DynamicComponentStorageService: No components found for key 'notfound'`,
+        `DynamicComponentStorageService: No components found for key 'form'`,
       );
       warnSpy.mockRestore();
     });
