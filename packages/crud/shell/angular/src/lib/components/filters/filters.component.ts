@@ -128,7 +128,7 @@ export class FiltersComponent<T extends IEntity<string>> implements OnInit {
     this.styleService.init(this.elementRef);
     this.list = signal([]);
 
-    const modelFilters = getModelOptions(this.config.type).filters;
+    const modelFilters = getModelOptions(this.config.type)?.filters;
 
     this.list.set([
       ...(modelFilters

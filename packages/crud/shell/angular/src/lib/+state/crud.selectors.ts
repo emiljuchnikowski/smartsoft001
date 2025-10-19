@@ -22,7 +22,7 @@ export const getCrudLoaded = (entity: string) =>
   createSelector(getCrudState(entity), (state) => state.loaded);
 
 export const getCrudFilter = (entity: string) =>
-  createSelector(getCrudState(entity), (state) => state.filter);
+  createSelector(getCrudState(entity), (state) => state?.filter);
 
 export const getCrudError = (entity: string) =>
   createSelector(getCrudState(entity), (state) => state.error);

@@ -54,7 +54,7 @@ export class CrudEffects<T extends IEntity<string>> {
           this.store.dispatch(
             CrudActions.read(
               this.config.entity,
-              createState.filter ? { ...createState.filter, offset: 0 } : null,
+              createState?.filter ? { ...createState.filter, offset: 0 } : null,
             ),
           );
           break;
@@ -90,7 +90,7 @@ export class CrudEffects<T extends IEntity<string>> {
           this.store.dispatch(
             CrudActions.read(
               this.config.entity,
-              createManyState.filter
+              createManyState?.filter
                 ? { ...createManyState.filter, offset: 0 }
                 : null,
             ),
@@ -100,12 +100,12 @@ export class CrudEffects<T extends IEntity<string>> {
 
         case `[${this.config.entity}] Read`:
           this.service
-            .getList(action.filter)
+            .getList(action?.filter)
             .then((result) =>
               this.store.dispatch(
                 CrudActions.readSuccess(
                   this.config.entity,
-                  action.filter,
+                  action?.filter,
                   result as { data: T[]; totalCount: number; links: any },
                 ),
               ),
@@ -114,7 +114,7 @@ export class CrudEffects<T extends IEntity<string>> {
               this.store.dispatch(
                 CrudActions.readFailure(
                   this.config.entity,
-                  action.filter,
+                  action?.filter,
                   error,
                 ),
               );
@@ -123,12 +123,12 @@ export class CrudEffects<T extends IEntity<string>> {
 
         case `[${this.config.entity}] Export`:
           this.service
-            .exportList(action.filter, action.format)
+            .exportList(action?.filter, action.format)
             .then(() =>
               this.store.dispatch(
                 CrudActions.exportListSuccess(
                   this.config.entity,
-                  action.filter,
+                  action?.filter,
                 ),
               ),
             )
@@ -136,7 +136,7 @@ export class CrudEffects<T extends IEntity<string>> {
               this.store.dispatch(
                 CrudActions.exportListFailure(
                   this.config.entity,
-                  action.filter,
+                  action?.filter,
                   error,
                 ),
               );

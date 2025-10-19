@@ -145,7 +145,7 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
     const item = this.item();
     if (!filter || !item || !filter.query) return;
 
-    filter.query = filter.query.filter((q) => q.key !== item.key);
+    filter.query = filter.query?.filter((q) => q.key !== item.key);
     filter.offset = 0;
     this.facade.read(filter);
   }
@@ -172,9 +172,8 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
     if (!filter || !item) return;
     if (!filter.query) filter.query = [];
 
-    const queries = filter.query.filter(
-      (q) => q.key === item.key && q.type === type,
-    );
+    const queries =
+      filter.query?.filter((q) => q.key === item.key && q.type === type) || [];
 
     queries.forEach((query) => {
       const index = filter.query!.indexOf(query);

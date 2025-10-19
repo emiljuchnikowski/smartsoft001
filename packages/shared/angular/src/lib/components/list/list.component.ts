@@ -50,7 +50,9 @@ import { ListMobileComponent } from './mobile/mobile.component';
 export class ListComponent<
   T extends IEntity<string>,
 > extends CreateDynamicComponent<ListBaseComponent<any>>('list') {
-  private _options: WritableSignal<IListInternalOptions<T>> = signal({} as IListInternalOptions<T>);
+  private _options: WritableSignal<IListInternalOptions<T>> = signal(
+    {} as IListInternalOptions<T>,
+  );
   private hardwareService = inject(HardwareService);
 
   mode: Signal<ListMode> = signal<ListMode>(ListMode.desktop);
@@ -87,9 +89,9 @@ export class ListComponent<
       return {
         ...options,
         fields: _.sortBy(
-          getModelFieldsWithOptions(new (this._options() as any).type()).filter(
-            (item) => item?.options?.list,
-          ),
+          getModelFieldsWithOptions(
+            new (this._options() as any).type(),
+          )?.filter((item) => item?.options?.list),
           (item) => (item?.options?.list as IFieldListMetadata).order,
         ),
       };

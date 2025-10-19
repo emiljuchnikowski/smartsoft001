@@ -274,7 +274,7 @@ export class CrudService<T extends IEntity<string>> {
     if (!isModel(item)) return;
 
     const keys = Object.keys(item);
-    const array = getInvalidFields(item, 'update', permissions).filter(
+    const array = getInvalidFields(item, 'update', permissions)?.filter(
       (invalidField) => keys.some((key) => key === invalidField),
     );
 
