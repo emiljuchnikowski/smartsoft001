@@ -17,6 +17,16 @@ import {
 
 @Injectable()
 export class CrudFacade<T extends IEntity<string>> {
+  readonly loaded: Signal<boolean | undefined>;
+  readonly loading: Signal<boolean>;
+  readonly selected: Signal<T | undefined>;
+  readonly multiSelected: Signal<T[] | undefined>;
+  readonly list: Signal<T[] | undefined>;
+  readonly filter: Signal<ICrudFilter | undefined>;
+  readonly totalCount: Signal<number | undefined>;
+  readonly links: Signal<any>;
+  readonly error: Signal<any>;
+
   constructor(
     private readonly store: Store<any>,
     private config: CrudConfig<T>,
@@ -24,67 +34,50 @@ export class CrudFacade<T extends IEntity<string>> {
     if (NgrxStoreService.store) {
       this.store = NgrxStoreService.store;
     }
-  }
 
-  get loaded() {
-    return toSignal<boolean>(
+    // Initialize all signals in the constructor (injection context)
+    this.loaded = toSignal<boolean>(
       this.store.pipe(select(CrudSelectors.getCrudLoaded(this.config.entity))),
     );
-  }
 
-  get loading(): Signal<boolean> {
-    return toSignal<boolean>(
+    this.loading = toSignal<boolean>(
       this.store.pipe(
         select(CrudSelectors.getCrudLoaded(this.config.entity)),
         map((l) => !l),
       ),
     ) as Signal<boolean>;
-  }
 
-  get selected() {
-    return toSignal<T>(
+    this.selected = toSignal<T>(
       this.store.pipe(
         select(CrudSelectors.getCrudSelected(this.config.entity)),
       ),
     );
-  }
 
-  get multiSelected() {
-    return toSignal<T[]>(
+    this.multiSelected = toSignal<T[]>(
       this.store.pipe(
         select(CrudSelectors.getCrudMultiSelected(this.config.entity)),
       ),
     );
-  }
 
-  get list() {
-    return toSignal<T[]>(
+    this.list = toSignal<T[]>(
       this.store.pipe(select(CrudSelectors.getCrudList(this.config.entity))),
     );
-  }
 
-  get filter() {
-    return toSignal<ICrudFilter>(
+    this.filter = toSignal<ICrudFilter>(
       this.store.pipe(select(CrudSelectors.getCrudFilter(this.config.entity))),
     );
-  }
 
-  get totalCount() {
-    return toSignal<number>(
+    this.totalCount = toSignal<number>(
       this.store.pipe(
         select(CrudSelectors.getCrudTotalCount(this.config.entity)),
       ),
     );
-  }
 
-  get links() {
-    return toSignal<any>(
+    this.links = toSignal<any>(
       this.store.pipe(select(CrudSelectors.getCrudLinks(this.config.entity))),
     );
-  }
 
-  get error() {
-    return toSignal<any>(
+    this.error = toSignal<any>(
       this.store.pipe(select(CrudSelectors.getCrudError(this.config.entity))),
     );
   }

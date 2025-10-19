@@ -5,8 +5,10 @@ import {
   Directive,
   DoCheck,
   inject,
+  Injector,
   NgModuleRef,
   OnDestroy,
+  runInInjectionContext,
   Signal,
   signal,
   TemplateRef,
@@ -57,9 +59,11 @@ export function CreateDynamicComponent<
     private cd = inject(ChangeDetectorRef);
     private moduleRef = inject(NgModuleRef<any>);
     private componentFactoryResolver = inject(ComponentFactoryResolver);
+    private injector = inject(Injector);
 
     private _renderCustom = false;
     private _findDynamicContent = false;
+    private _dynamicContents$: any = null;
 
     baseInstance: T | null = null;
     baseComponentRef: ComponentRef<T> | null = null;
@@ -86,11 +90,15 @@ export function CreateDynamicComponent<
 
       this._findDynamicContent = true;
 
-      toObservable(this.dynamicContents)
-        .pipe(this.takeUntilDestroy)
-        .subscribe(() => {
-          this.init();
-        });
+      if (!this._dynamicContents$) {
+        this._dynamicContents$ = runInInjectionContext(this.injector, () =>
+          toObservable(this.dynamicContents),
+        );
+      }
+
+      this._dynamicContents$.pipe(this.takeUntilDestroy).subscribe(() => {
+        this.init();
+      });
       this.init();
     }
 
