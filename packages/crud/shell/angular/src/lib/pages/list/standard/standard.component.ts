@@ -23,7 +23,7 @@ import { CrudListPageBaseComponent } from '../base/base.component';
     @if (groups && !isSearch()) {
       <smart-crud-group
         [groups]="groups"
-        [listOptions]="listOptions()"
+        [listOptions]="listOptions() || null"
       ></smart-crud-group>
     }
   `,

@@ -9,6 +9,7 @@ import {
   input,
   OnDestroy,
   OnInit,
+  signal,
   Signal,
   TemplateRef,
   viewChild,
@@ -56,11 +57,11 @@ import { CrudSearchService } from '../../services/search/search.service';
   selector: 'smart-crud-list-page',
   imports: [PageComponent, ListStandardComponent, NgTemplateOutlet],
   template: `
-    @if (filter()) {
+    @if (filter() && pageOptions()) {
       <smart-page [options]="pageOptions()">
         <div #topTpl></div>
 
-        @if (template() === 'default') {
+        @if (template() === 'default' && listOptions()) {
           <smart-crud-list-standard-page [listOptions]="listOptions()">
             <ng-container [ngTemplateOutlet]="contentTpl"></ng-container>
           </smart-crud-list-standard-page>
@@ -93,9 +94,9 @@ export class ListComponent<T extends IEntity<string>>
 
   private _cleanMultiSelected$ = new Subject<void>();
 
-  pageOptions!: Signal<IPageOptions>;
-  listOptions!: WritableSignal<IListOptions<T>>;
-  links: { next: any; prev: any };
+  pageOptions = signal<IPageOptions | null>(null);
+  listOptions = signal<IListOptions<T> | null>(null);
+  links = this.facade.links;
 
   filter: Signal<ICrudFilter | undefined> = this.facade.filter;
 
@@ -106,12 +107,6 @@ export class ListComponent<T extends IEntity<string>>
   override dynamicContents = viewChildren<DynamicContentDirective>(
     DynamicContentDirective,
   );
-
-  constructor() {
-    super();
-
-    this.links = this.facade.links();
-  }
 
   override refreshProperties(): void {
     this.baseComponentRef.setInput('listOptions', this.listOptions());
@@ -176,7 +171,7 @@ export class ListComponent<T extends IEntity<string>>
 
     const endButtons = this.getEndButtons();
 
-    this.pageOptions = computed(() => ({
+    this.pageOptions.set({
       title: this.config.title || '',
       search: this.config.search
         ? {
@@ -192,7 +187,7 @@ export class ListComponent<T extends IEntity<string>>
           }
         : undefined,
       endButtons: endButtons,
-    }));
+    });
 
     const compiledComponents =
       await this.dynamicComponentLoader.getComponentsWithFactories({
@@ -312,7 +307,7 @@ export class ListComponent<T extends IEntity<string>>
           getFilter: () => {
             return this.filter() || ({} as ICrudFilter);
           },
-          getLinks: () => this.links,
+          getLinks: () => this.links(),
         },
       }),
       sort: this.config.sort,
@@ -336,7 +331,7 @@ export class ListComponent<T extends IEntity<string>>
     await this.menuService.closeEnd();
 
     this.listOptions.update((val) => ({
-      ...val,
+      ...(val as IListOptions<T>),
       select: undefined,
     }));
 
@@ -374,8 +369,8 @@ export class ListComponent<T extends IEntity<string>>
 
                 setTimeout(async () => {
                   this.listOptions.update((val) => ({
-                    ...val,
-                    select: val.select === 'multi' ? undefined : 'multi',
+                    ...(val as IListOptions<T>),
+                    select: val?.select === 'multi' ? undefined : 'multi',
                   }));
                   if (this.menuService.openedEnd)
                     await this.menuService.closeEnd();

@@ -4,7 +4,7 @@
 <!--      <ion-menu-button-->
 <!--        [hidden]="!options || options.hideMenuButton"-->
 <!--      ></ion-menu-button>-->
-@if (options().showBackButton) {
+@if (options()?.showBackButton) {
   <!--        <ion-button (click)="back()">-->
   <!--          <ion-icon slot="icon-only" name="arrow-back"> </ion-icon>-->
   <!--        </ion-button>-->
@@ -13,7 +13,7 @@
 <!--    <ion-title [innerHTML]="options?.title ?? '' | translate"></ion-title>-->
 
 <!--    <ion-buttons slot="end">-->
-@let search = options().search;
+@let search = options()?.search;
 @if (search) {
   <smart-searchbar
     [text]="search.text() ?? null"

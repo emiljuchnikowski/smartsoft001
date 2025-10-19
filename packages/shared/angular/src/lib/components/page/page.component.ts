@@ -42,7 +42,7 @@ export class PageComponent
   private el = inject(ElementRef);
   private renderer = inject(Renderer2);
 
-  options = input.required<IPageOptions>();
+  options = input<IPageOptions | null>();
 
   override contentTpl = viewChild<TemplateRef<any>>('contentTpl');
   override dynamicContents = viewChildren(DynamicContentDirective);
