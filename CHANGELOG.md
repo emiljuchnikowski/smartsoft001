@@ -1,3 +1,13 @@
+## 2.102.0 (2025-10-19)
+
+### 🚀 Features
+
+- **crud:** add constructor for initializing reducers and effects ([cd65fcf](https://github.com/emiljuchnikowski/smartsoft001/commit/cd65fcf))
+
+### ❤️ Thank You
+
+- Emil Juchnikowski
+
 ## 2.101.0 (2025-10-19)
 
 ### 🚀 Features
