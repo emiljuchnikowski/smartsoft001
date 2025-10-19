@@ -22,32 +22,39 @@ export class DynamicComponentStorageService {
     ): Type<any>[] => {
       if (!m) return [];
 
-      const fromStore = m.injector.get(DYNAMIC_COMPONENTS_STORE, null);
+      try {
+        const fromStore = m.injector.get(DYNAMIC_COMPONENTS_STORE, null);
 
-      return (
-        fromStore ? fromStore : m.instance.constructor['ɵmod'].declarations
-      ).filter((c: any) => c['smartType'] === k);
+        if (fromStore) {
+          return fromStore.filter((c: any) => c['smartType'] === k);
+        }
+      } catch (error) {
+        console.warn('Error getting components from store:', error);
+      }
+
+      return [];
     };
 
     let components = getComponents(key, moduleRef);
 
     if (!components.length && moduleRef) {
-      const applicationRef = moduleRef.injector.get(ApplicationRef);
-      let appComponentInjector = applicationRef.components.find(
-        (t) => t.componentType.name === 'AppComponent',
-      )?.injector;
+      try {
+        const applicationRef = moduleRef.injector.get(ApplicationRef);
+        let appComponentInjector = applicationRef.components.find(
+          (t) => t.componentType.name === 'AppComponent',
+        )?.injector;
 
-      if (!appComponentInjector) {
-        appComponentInjector = applicationRef.components[0]?.injector;
+        if (!appComponentInjector) {
+          appComponentInjector = applicationRef.components[0]?.injector;
+        }
+
+        if (appComponentInjector) {
+          const appModuleRef = appComponentInjector.get(NgModuleRef);
+          components = getComponents(key, appModuleRef);
+        }
+      } catch (error) {
+        console.warn('Error getting components from ApplicationRef:', error);
       }
-
-      if (!appComponentInjector) {
-        return [];
-      }
-
-      const appModuleRef = appComponentInjector.get(NgModuleRef);
-
-      components = getComponents(key, appModuleRef);
     }
 
     return components;
