@@ -52,7 +52,16 @@ export class CrudCoreModule<T extends IEntity<string>> {
   }
 }
 
-@NgModule({})
+@NgModule({
+    providers: [
+        CrudService,
+        CrudListGroupService,
+        CrudEffects,
+        PageService,
+        CrudFacade,
+        CrudListPaginationFactory,
+    ],
+})
 export class CrudModule<T extends IEntity<string>> {
   static forFeature<T extends IEntity<string>>(
     options:
