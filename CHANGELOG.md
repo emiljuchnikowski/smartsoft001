@@ -1,3 +1,13 @@
+## 2.101.0 (2025-10-19)
+
+### 🚀 Features
+
+- **crud:** add constructor for initializing reducers and effects ([1d93cce](https://github.com/emiljuchnikowski/smartsoft001/commit/1d93cce))
+
+### ❤️ Thank You
+
+- Emil Juchnikowski
+
 ## 2.100.0 (2025-10-19)
 
 This was a version bump only, there were no code changes.
