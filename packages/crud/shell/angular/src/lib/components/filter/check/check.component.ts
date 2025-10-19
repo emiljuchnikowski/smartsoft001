@@ -66,7 +66,7 @@ export class FilterCheckComponent<T extends IEntity<string>>
     }
 
     if (!checked && this.value.some((r: any) => r === entry.value.id)) {
-      this.value = this.value.filter((r: any) => r !== entry.value.id);
+      this.value = this.value?.filter((r: any) => r !== entry.value.id);
     }
   }
 }

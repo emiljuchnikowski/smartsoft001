@@ -67,7 +67,7 @@ export class MultiselectComponent<T extends IEntity<string>> {
       this.lock = true;
       const model = new this.config.type();
 
-      const fieldsWithOptions = getModelFieldsWithOptions(model).filter(
+      const fieldsWithOptions = getModelFieldsWithOptions(model)?.filter(
         (f) => (f.options.update as IFieldEditMetadata)?.multi,
       );
 
