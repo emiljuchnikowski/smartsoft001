@@ -1,3 +1,13 @@
+## 2.103.0 (2025-10-19)
+
+### 🚀 Features
+
+- **shared:** add slug pipe and service for URL-friendly text conversion ([b41bfb5](https://github.com/emiljuchnikowski/smartsoft001/commit/b41bfb5))
+
+### ❤️ Thank You
+
+- Emil Juchnikowski
+
 ## 2.102.0 (2025-10-19)
 
 ### 🚀 Features
