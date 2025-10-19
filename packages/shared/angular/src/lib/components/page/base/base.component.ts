@@ -32,7 +32,7 @@ export abstract class PageBaseComponent implements OnInit, OnDestroy {
 
   static smartType: DynamicComponentType = 'page';
 
-  public options = input.required<IPageOptions>();
+  public options = input<IPageOptions | null>();
   private _subscriptions = new Subscription();
 
   get isMobile(): boolean {

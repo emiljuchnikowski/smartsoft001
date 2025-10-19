@@ -69,10 +69,10 @@ export class GroupComponent<T extends IEntity<string>>
   private elementRef = inject(ElementRef);
   private groupService = inject(CrudListGroupService<T>);
 
-  readonly groups: InputSignal<Array<ICrudListGroup> | undefined> =
-    input<Array<ICrudListGroup>>();
-  readonly listOptions: InputSignal<IListOptions<T> | undefined> =
-    input<IListOptions<T>>();
+  readonly groups: InputSignal<Array<ICrudListGroup> | null> =
+    input<Array<ICrudListGroup> | null>(null);
+  readonly listOptions: InputSignal<IListOptions<T> | null> =
+    input<IListOptions<T> | null>(null);
 
   change(val: boolean, item: ICrudListGroup, force = false): void {
     const groups = this.groups();

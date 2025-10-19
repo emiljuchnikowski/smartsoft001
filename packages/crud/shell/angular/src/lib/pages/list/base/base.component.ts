@@ -25,5 +25,5 @@ export abstract class CrudListPageBaseComponent<
 
   contentTpl = viewChild<ViewContainerRef>('contentTpl');
 
-  listOptions = input<IListOptions<T>>();
+  listOptions = input<IListOptions<T> | null>();
 }
