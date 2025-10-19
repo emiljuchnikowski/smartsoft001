@@ -71,6 +71,16 @@ export class CrudModule<T extends IEntity<string>> {
       ],
     };
   }
+
+    constructor(config: CrudConfig<T>, effects: CrudEffects<any>) {
+        NgrxStoreService.addReducer(
+            config.entity,
+            config.reducerFactory
+                ? config.reducerFactory()
+                : getReducer(config.entity),
+        );
+        effects.init();
+    }
 }
 
 export interface ICrudModuleOptionsWithRoutng<T> {
