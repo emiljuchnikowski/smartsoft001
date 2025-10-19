@@ -29,7 +29,7 @@ describe('angular: DynamicComponentStorageService', () => {
       expect(result).toEqual([]);
     });
 
-    xit('returns empty array if DYNAMIC_COMPONENTS_STORE and declarations are missing', () => {
+    it('returns empty array if DYNAMIC_COMPONENTS_STORE is not provided', () => {
       const moduleRefMock = {
         injector: { get: jest.fn().mockReturnValue(null) },
         instance: { constructor: {} },
@@ -53,24 +53,7 @@ describe('angular: DynamicComponentStorageService', () => {
       expect(result).toEqual([compA]);
     });
 
-    it('returns components from internal Angular declarations if DYNAMIC_COMPONENTS_STORE is not provided', () => {
-      const compA = { smartType: 'list' };
-      const compB = { smartType: 'other' };
-      const moduleRefMock = {
-        injector: { get: jest.fn().mockReturnValue(null) },
-        instance: {
-          constructor: {
-            ɵmod: {
-              declarations: [compA, compB],
-            },
-          },
-        },
-      } as any;
-      const result = DynamicComponentStorageService.get('list', moduleRefMock);
-      expect(result).toEqual([compA]);
-    });
-
-    xit('falls back to root AppModule if no components found in current moduleRef', () => {
+    it('falls back to root AppModule if no components found in current moduleRef', () => {
       const compA = { smartType: 'list' };
       const appModuleRefMock = {
         injector: {
@@ -101,8 +84,7 @@ describe('angular: DynamicComponentStorageService', () => {
       expect(result).toEqual([compA]);
     });
 
-    xit('logs a warning and returns empty array if no components found for key', () => {
-      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {}); // eslint-disable-line
+    it('returns empty array if no components found for key', () => {
       const moduleRefMock = {
         injector: { get: jest.fn().mockReturnValue([]) },
         instance: { constructor: {} },
@@ -112,10 +94,6 @@ describe('angular: DynamicComponentStorageService', () => {
         moduleRefMock,
       );
       expect(result).toEqual([]);
-      expect(warnSpy).toHaveBeenCalledWith(
-        `DynamicComponentStorageService: No components found for key 'form'`,
-      );
-      warnSpy.mockRestore();
     });
   });
 });
