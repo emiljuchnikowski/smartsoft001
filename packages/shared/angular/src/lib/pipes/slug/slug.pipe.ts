@@ -7,7 +7,7 @@ import { SlugService } from '@smartsoft001/utils';
   standalone: true,
 })
 export class SlugPipe implements PipeTransform {
-  transform(value: string): string {
+  transform(value: string | undefined | null): string {
     return SlugService.create(value);
   }
 }

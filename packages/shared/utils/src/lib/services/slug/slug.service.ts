@@ -1,23 +1,23 @@
 export class SlugService {
   private static readonly polishToEnglishMap: Record<string, string> = {
-    'ą': 'a',
-    'ć': 'c',
-    'ę': 'e',
-    'ł': 'l',
-    'ń': 'n',
-    'ó': 'o',
-    'ś': 's',
-    'ź': 'z',
-    'ż': 'z',
-    'Ą': 'A',
-    'Ć': 'C',
-    'Ę': 'E',
-    'Ł': 'L',
-    'Ń': 'N',
-    'Ó': 'O',
-    'Ś': 'S',
-    'Ź': 'Z',
-    'Ż': 'Z'
+    ą: 'a',
+    ć: 'c',
+    ę: 'e',
+    ł: 'l',
+    ń: 'n',
+    ó: 'o',
+    ś: 's',
+    ź: 'z',
+    ż: 'z',
+    Ą: 'A',
+    Ć: 'C',
+    Ę: 'E',
+    Ł: 'L',
+    Ń: 'N',
+    Ó: 'O',
+    Ś: 'S',
+    Ź: 'Z',
+    Ż: 'Z',
   };
 
   /**
@@ -28,15 +28,16 @@ export class SlugService {
    * - Removes multiple consecutive hyphens
    * - Trims hyphens from start and end
    */
-  static create(text: string): string {
+  static create(text: string | undefined | null): string {
     if (!text) {
       return '';
     }
 
     // Replace Polish characters with English equivalents
-    let slug = text.split('').map(char =>
-      SlugService.polishToEnglishMap[char] || char
-    ).join('');
+    let slug = text
+      .split('')
+      .map((char) => SlugService.polishToEnglishMap[char] || char)
+      .join('');
 
     // Convert to lowercase
     slug = slug.toLowerCase();
