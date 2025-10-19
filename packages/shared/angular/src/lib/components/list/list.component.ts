@@ -50,7 +50,7 @@ import { ListMobileComponent } from './mobile/mobile.component';
 export class ListComponent<
   T extends IEntity<string>,
 > extends CreateDynamicComponent<ListBaseComponent<any>>('list') {
-  private _options!: WritableSignal<IListInternalOptions<T>>;
+  private _options: WritableSignal<IListInternalOptions<T>> = signal({} as IListInternalOptions<T>);
   private hardwareService = inject(HardwareService);
 
   mode: Signal<ListMode> = signal<ListMode>(ListMode.desktop);
