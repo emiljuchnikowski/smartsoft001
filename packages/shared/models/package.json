@@ -2,7 +2,7 @@
   "name": "@smartsoft001/models",
   "type": "commonjs",
   "dependencies": {},
-  "version": "2.94.0",
+  "version": "2.95.0",
   "main": "./src/index.js",
   "typings": "./src/index.d.ts"
 }
