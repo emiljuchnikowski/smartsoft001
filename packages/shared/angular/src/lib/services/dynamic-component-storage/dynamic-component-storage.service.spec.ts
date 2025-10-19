@@ -25,7 +25,7 @@ describe('angular: DynamicComponentStorageService', () => {
 
   describe('get', () => {
     it('returns empty array if moduleRef is null', () => {
-      const result = DynamicComponentStorageService.get('test', null as any);
+      const result = DynamicComponentStorageService.get('list', null as any);
       expect(result).toEqual([]);
     });
 
@@ -34,12 +34,12 @@ describe('angular: DynamicComponentStorageService', () => {
         injector: { get: jest.fn().mockReturnValue(null) },
         instance: { constructor: {} },
       } as any;
-      const result = DynamicComponentStorageService.get('test', moduleRefMock);
+      const result = DynamicComponentStorageService.get('list', moduleRefMock);
       expect(result).toEqual([]);
     });
 
     it('returns components from DYNAMIC_COMPONENTS_STORE matching smartType', () => {
-      const compA = { smartType: 'test' };
+      const compA = { smartType: 'list' };
       const compB = { smartType: 'other' };
       const moduleRefMock = {
         injector: {
@@ -49,12 +49,12 @@ describe('angular: DynamicComponentStorageService', () => {
         },
         instance: { constructor: {} },
       } as any;
-      const result = DynamicComponentStorageService.get('test', moduleRefMock);
+      const result = DynamicComponentStorageService.get('list', moduleRefMock);
       expect(result).toEqual([compA]);
     });
 
     it('returns components from internal Angular declarations if DYNAMIC_COMPONENTS_STORE is not provided', () => {
-      const compA = { smartType: 'test' };
+      const compA = { smartType: 'list' };
       const compB = { smartType: 'other' };
       const moduleRefMock = {
         injector: { get: jest.fn().mockReturnValue(null) },
@@ -66,7 +66,7 @@ describe('angular: DynamicComponentStorageService', () => {
           },
         },
       } as any;
-      const result = DynamicComponentStorageService.get('test', moduleRefMock);
+      const result = DynamicComponentStorageService.get('list', moduleRefMock);
       expect(result).toEqual([compA]);
     });
 
