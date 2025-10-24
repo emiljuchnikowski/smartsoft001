@@ -122,7 +122,7 @@ const crudReducer = (
         ...state,
         loaded: true,
         list,
-        totalCount: action.result.totalCount,
+        totalCount: action?.result?.totalCount,
         links: action.result.links,
         error: null,
       };
