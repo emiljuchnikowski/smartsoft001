@@ -104,7 +104,7 @@
     "@ngrx/signals": "^20.0.1",
     "@ngrx/store": "^20.0.1",
     "@ngx-translate/core": "^16.0.4",
-    "@nx/devkit": "21.3.11",
+    "@nx/devkit": "21.6.6",
     "busboy": "^1.6.0",
     "class-validator": "^0.14.1",
     "crypto-js": "^4.2.0",
