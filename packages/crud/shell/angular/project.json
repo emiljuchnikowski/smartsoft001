@@ -4,6 +4,12 @@
   "projectType": "library",
   "sourceRoot": "packages/crud/shell/angular/src",
   "prefix": "smart",
+  "tags": ["scope:crud", "type:shell"],
+  "generators": {
+    "@schematics/angular:component": {
+      "style": "scss"
+    }
+  },
   "targets": {
     "lint": {
       "executor": "@nx/eslint:lint",
@@ -23,7 +29,8 @@
       "executor": "@nx/jest:jest",
       "options": {
         "jestConfig": "packages/crud/shell/angular/jest.config.ts",
-        "passWithNoTests": true
+        "passWithNoTests": true,
+        "tsConfig": "packages/crud/shell/angular/tsconfig.spec.json"
       },
       "outputs": ["{workspaceRoot}/coverage/packages/crud/shell/angular"]
     },
@@ -82,11 +89,5 @@
         "compodoc": false
       }
     }
-  },
-  "generators": {
-    "@schematics/angular:component": {
-      "style": "scss"
-    }
-  },
-  "tags": ["scope:crud", "type:shell"]
+  }
 }
