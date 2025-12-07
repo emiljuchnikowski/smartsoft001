@@ -6,10 +6,10 @@ import { moduleMetadata } from '@storybook/angular';
 import { IAddress } from '@smartsoft001/domain-core';
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
+import { FormComponent } from './form.component';
 import { SharedFactoriesModule } from '../../factories';
 import { IFormOptions } from '../../models';
 import { COMPONENTS, IMPORTS } from '../components.module';
-import { FormComponent } from './form.component';
 
 const meta: Meta<FormComponent<any>> = {
   title: 'Smart-Form/Inputs',

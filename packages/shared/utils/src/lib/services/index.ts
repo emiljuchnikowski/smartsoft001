@@ -7,3 +7,4 @@ export * from './pesel/pesel.service';
 export * from './slug/slug.service';
 export * from './specification/specification.service';
 export * from './zip-code/zip-code.service';
+export * from './text/text.functions';

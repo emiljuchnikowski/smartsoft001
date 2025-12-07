@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 
-import { SharedServicesModule } from '../services';
-import { DetailsPage } from './details/details.page';
 import { SharedComponentsModule } from '../components/components.module';
 import { SharedDirectivesModule } from '../directives';
+import { SharedServicesModule } from '../services';
+import { DetailsPage } from './details/details.page';
 
 const COMPONENTS = [DetailsPage];
 
