@@ -132,6 +132,17 @@ Methods:
     </tr>
 </table>
 
+## 🔧 Functions
+
+### capitalize
+
+<table>
+    <tr>
+        <td>capitalize(val: string): string</td>
+        <td>capitalize first letter of a string</td>
+    </tr>
+</table>
+
 ## 🤝 Contributing
 
 Contributions are welcome! 🎉
