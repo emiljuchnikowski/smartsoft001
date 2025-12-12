@@ -1,3 +1,13 @@
+## 2.107.0 (2025-12-07)
+
+### 🚀 Features
+
+- **shared:** add capitalize function and corresponding tests ([af023f3](https://github.com/emiljuchnikowski/smartsoft001/commit/af023f3))
+
+### ❤️ Thank You
+
+- Emil Juchnikowski
+
 ## 2.106.0 (2025-11-14)
 
 This was a version bump only, there were no code changes.
