@@ -1,3 +1,5 @@
+import { RemoveHtmlService } from '../remove-html/remove-html.service';
+
 export class SlugService {
   private static readonly polishToEnglishMap: Record<string, string> = {
     ą: 'a',
@@ -22,6 +24,7 @@ export class SlugService {
 
   /**
    * Convert text to URL-friendly slug
+   * - Removes HTML tags and entities
    * - Replaces Polish characters with English equivalents
    * - Converts to lowercase
    * - Replaces spaces and special characters with hyphens
@@ -33,8 +36,11 @@ export class SlugService {
       return '';
     }
 
+    // Remove HTML tags and decode HTML entities
+    let slug = RemoveHtmlService.create(text);
+
     // Replace Polish characters with English equivalents
-    let slug = text
+    slug = slug
       .split('')
       .map((char) => SlugService.polishToEnglishMap[char] || char)
       .join('');

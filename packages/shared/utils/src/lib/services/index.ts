@@ -4,6 +4,7 @@ export * from './nip/nip.service';
 export * from './object/object.service';
 export * from './password/password.service';
 export * from './pesel/pesel.service';
+export * from './remove-html/remove-html.service';
 export * from './slug/slug.service';
 export * from './specification/specification.service';
 export * from './zip-code/zip-code.service';
