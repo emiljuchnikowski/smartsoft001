@@ -55,4 +55,38 @@ describe('shared-utils: SlugService', () => {
     const result = SlugService.create('ąćęłńóśźż ĄĆĘŁŃÓŚŹŻ');
     expect(result).toBe('acelnoszz-acelnoszz');
   });
+
+  it('should remove HTML tags', () => {
+    const result = SlugService.create('<p>Hello World</p>');
+    expect(result).toBe('hello-world');
+  });
+
+  it('should decode HTML entities', () => {
+    const result = SlugService.create('Hello&nbsp;World');
+    expect(result).toBe('hello-world');
+  });
+
+  it('should handle HTML tags and Polish characters', () => {
+    const result = SlugService.create('<h1>Zażółć gęślą</h1>');
+    expect(result).toBe('zazolc-gesla');
+  });
+
+  it('should handle complex HTML with entities and special characters', () => {
+    const result = SlugService.create(
+      '<p>Product &quot;Super&quot; &nbsp; 50% OFF!</p>',
+    );
+    expect(result).toBe('product-super-50-off');
+  });
+
+  it('should handle numeric entities', () => {
+    const result = SlugService.create('Test &#65; &#66; C');
+    expect(result).toBe('test-a-b-c');
+  });
+
+  it('should handle nested HTML tags with Polish content', () => {
+    const result = SlugService.create(
+      '<div><strong>Artykuł</strong> o &quot;TypeScript&quot;</div>',
+    );
+    expect(result).toBe('artykul-o-typescript');
+  });
 });

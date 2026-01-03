@@ -4,5 +4,6 @@ export * from './list-cell/list-cell.pipe';
 export * from './list-header/list-header.pipe';
 export * from './model-label/model-label.pipe';
 export * from './pipes.module';
+export * from './remove-html/remove-html.pipe';
 export * from './slug/slug.pipe';
 export * from './trust-html/trust-html.pipe';
