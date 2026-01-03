@@ -129,4 +129,113 @@ describe('shared-utils: RemoveHtmlService', () => {
     );
     expect(result).toBe('\n  Hello\n  World\n');
   });
+
+  it('should handle multiple consecutive entities', () => {
+    const result = RemoveHtmlService.create('&amp;&amp;&amp;');
+    expect(result).toBe('&&&');
+  });
+
+  it('should handle mixed entities in sequence', () => {
+    const result = RemoveHtmlService.create('&nbsp;&quot;&apos;&lt;&gt;&amp;');
+    expect(result).toBe(' "\'<>&');
+  });
+
+  it('should handle HTML comments', () => {
+    const result = RemoveHtmlService.create('Text<!-- comment -->More');
+    expect(result).toBe('TextMore');
+  });
+
+  it('should handle script tags', () => {
+    const result = RemoveHtmlService.create(
+      'Text<script>alert("xss")</script>More',
+    );
+    expect(result).toBe('Textalert("xss")More');
+  });
+
+  it('should handle style tags', () => {
+    const result = RemoveHtmlService.create(
+      'Text<style>body { color: red; }</style>More',
+    );
+    expect(result).toBe('Textbody { color: red; }More');
+  });
+
+  it('should handle unclosed tags', () => {
+    const result = RemoveHtmlService.create('<p>Unclosed paragraph');
+    expect(result).toBe('Unclosed paragraph');
+  });
+
+  it('should handle tags with newlines in attributes', () => {
+    const result = RemoveHtmlService.create(
+      '<div class="test"\n  id="element">Content</div>',
+    );
+    expect(result).toBe('Content');
+  });
+
+  it('should handle &copy; and &reg; entities', () => {
+    const result = RemoveHtmlService.create('&copy; 2024 &reg;');
+    expect(result).toBe(' 2024 ');
+  });
+
+  it('should handle &euro; entity', () => {
+    const result = RemoveHtmlService.create('Price: &#8364; 100');
+    expect(result).toBe('Price: € 100');
+  });
+
+  it('should handle &pound; entity', () => {
+    const result = RemoveHtmlService.create('Price: &#163; 50');
+    expect(result).toBe('Price: £ 50');
+  });
+
+  it('should handle consecutive HTML tags without spaces', () => {
+    const result = RemoveHtmlService.create('<p>Hello</p><p>World</p>');
+    expect(result).toBe('HelloWorld');
+  });
+
+  it('should handle HTML tags with inline styles', () => {
+    const result = RemoveHtmlService.create(
+      '<span style="color: red; font-size: 16px;">Styled text</span>',
+    );
+    expect(result).toBe('Styled text');
+  });
+
+  it('should handle deeply nested HTML', () => {
+    const result = RemoveHtmlService.create(
+      '<div><section><article><p><span>Deep content</span></p></article></section></div>',
+    );
+    expect(result).toBe('Deep content');
+  });
+
+  it('should handle mixed Polish characters and entities', () => {
+    const result = RemoveHtmlService.create(
+      'Artykuł &quot;Zażółć&quot; &nbsp; &copy; 2024',
+    );
+    expect(result).toBe('Artykuł "Zażółć"    2024');
+  });
+
+  it('should handle tabs and multiple spaces', () => {
+    const result = RemoveHtmlService.create('<p>Text\twith\t\ttabs</p>');
+    expect(result).toBe('Text\twith\t\ttabs');
+  });
+
+  it('should handle &curren; and &cent; entities', () => {
+    const result = RemoveHtmlService.create('&#164; &#162;');
+    expect(result).toBe('¤ ¢');
+  });
+
+  it('should handle empty tags', () => {
+    const result = RemoveHtmlService.create('Before<div></div>After');
+    expect(result).toBe('BeforeAfter');
+  });
+
+  it('should handle attributes with special characters', () => {
+    const result = RemoveHtmlService.create(
+      '<img alt="&quot;quoted&quot;" src="test.jpg" />Image',
+    );
+    expect(result).toBe('Image');
+  });
+
+  it('should handle incomplete numeric entities', () => {
+    const result = RemoveHtmlService.create('Test &#65 incomplete');
+    expect(result).toBe('Test &#65 incomplete');
+  });
 });
