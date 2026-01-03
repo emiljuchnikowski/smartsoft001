@@ -1,3 +1,13 @@
+## 2.109.0 (2026-01-03)
+
+### 🚀 Features
+
+- **shared:** add remove HTML utility and corresponding tests ([2741f86](https://github.com/emiljuchnikowski/smartsoft001/commit/2741f86))
+
+### ❤️ Thank You
+
+- Emil Juchnikowski
+
 ## 2.108.0 (2026-01-03)
 
 ### 🚀 Features
