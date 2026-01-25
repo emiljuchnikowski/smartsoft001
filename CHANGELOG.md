@@ -1,3 +1,13 @@
+## 2.110.0 (2026-01-25)
+
+### 🚀 Features
+
+- **shared:** add hooks configuration and validation scripts ([fb4c8f5](https://github.com/emiljuchnikowski/smartsoft001/commit/fb4c8f5))
+
+### ❤️ Thank You
+
+- Emil Juchnikowski
+
 ## 2.109.0 (2026-01-03)
 
 ### 🚀 Features
