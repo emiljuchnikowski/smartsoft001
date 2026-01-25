@@ -1,0 +1,14 @@
+{
+  "name": "smartsoft",
+  "description": "Smartsoft Integration Plugins",
+  "owner": {
+    "name": "Smartflow",
+    "email": "office@smartflow.biz.pl"
+  },
+  "plugins": [
+    {
+      "name": "smart",
+      "source": "./plugins/smart"
+    }
+  ]
+}

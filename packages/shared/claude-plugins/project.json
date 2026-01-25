@@ -1,0 +1,48 @@
+{
+  "root": "packages/shared/claude-plugins",
+  "sourceRoot": "packages/shared/claude-plugins/src",
+  "projectType": "library",
+  "targets": {
+    "nx-release-publish": {
+      "options": {
+        "packageRoot": "dist/{projectRoot}"
+      }
+    },
+    "update-version": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node packages/shared/claude-plugins/scripts/update-version.js"
+      }
+    },
+    "build": {
+      "executor": "@nx/js:tsc",
+      "dependsOn": ["update-version"],
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/shared/claude-plugins",
+        "main": "packages/shared/claude-plugins/src/index.ts",
+        "tsConfig": "packages/shared/claude-plugins/tsconfig.lib.json",
+        "assets": [
+          "packages/shared/claude-plugins/*.md",
+          {
+            "input": "packages/shared/claude-plugins/src/.claude-plugin",
+            "glob": "**/*",
+            "output": ".claude-plugin"
+          },
+          {
+            "input": "packages/shared/claude-plugins/src/plugins",
+            "glob": "**/*",
+            "output": "plugins"
+          }
+        ],
+        "generatePackageJson": true,
+        "additionalEntryPoints": []
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  },
+  "tags": [],
+  "name": "shared-claude-plugins"
+}
