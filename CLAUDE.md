@@ -200,9 +200,8 @@ packages/shared/claude-plugins/src/plugins/smart/
 
 1. Edit `packages/shared/claude-plugins/src/plugins/smart/.claude-plugin/settings.template.json`
 2. Add new permissions or hooks as needed
-3. Update `plugin.json` if adding new hooks
-4. Publish new version of `@smartsoft001/claude-plugins`
-5. In consumer projects, run merge script to update settings
+3. Publish new version of `@smartsoft001/claude-plugins`
+4./ In consumer projects, run merge script to update settings
 
 ### Consumer Project Update
 
