@@ -1,0 +1,94 @@
+{
+  "$schema": "https://raw.githubusercontent.com/anthropics/claude-code/main/schemas/settings.schema.json",
+  "_description": "Template settings for smart@smartsoft plugin. Merge these into your project's .claude/settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(source:*)",
+      "Bash(nvm use:*)",
+      "Bash(npm run format:*)",
+      "Bash(jq:*)"
+    ],
+    "ask": [],
+    "deny": []
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "_description": "Safety gate: blocks destructive bash commands",
+        "matcher": "Bash|Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node_modules/@smartsoft001/claude-plugins/plugins/smart/hooks/safety_validator.py"
+          }
+        ]
+      },
+      {
+        "_description": "Block sensitive files with detailed error message",
+        "matcher": "Read|Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "FILE=$(jq -r '.tool_input.file_path // empty'); echo \"$FILE\" | grep -qE '(\\.env|secrets|credentials)' && { echo \"BLOCKED: Access denied to sensitive file: $FILE\" >&2; exit 2; } || exit 0"
+          }
+        ]
+      },
+      {
+        "_description": "Audit trail: logs all PreToolUse events",
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node_modules/@smartsoft001/claude-plugins/plugins/smart/hooks/audit_logger.py"
+          }
+        ]
+      },
+      {
+        "_description": "Skill validator: soft enforcement warnings for skill files",
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node_modules/@smartsoft001/claude-plugins/plugins/smart/hooks/skill_validator.py"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "_description": "Auto-format files after Write/Edit",
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "source ~/.nvm/nvm.sh && nvm use 24 && npm run format"
+          }
+        ]
+      },
+      {
+        "_description": "Audit trail: logs all PostToolUse events",
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node_modules/@smartsoft001/claude-plugins/plugins/smart/hooks/audit_logger.py"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "_description": "Audit trail: logs all user prompt submissions",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node_modules/@smartsoft001/claude-plugins/plugins/smart/hooks/audit_logger.py"
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "smart@smartsoft": true
+  }
+}
