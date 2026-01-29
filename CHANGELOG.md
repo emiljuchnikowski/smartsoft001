@@ -1,3 +1,13 @@
+## 2.112.0 (2026-01-29)
+
+### 🚀 Features
+
+- **shared:** add Smart Plugin for Claude Code with safety validation and logging ([170434e](https://github.com/emiljuchnikowski/smartsoft001/commit/170434e))
+
+### ❤️ Thank You
+
+- Emil Juchnikowski
+
 ## 2.111.0 (2026-01-25)
 
 This was a version bump only, there were no code changes.
