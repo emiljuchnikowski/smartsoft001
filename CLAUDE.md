@@ -162,3 +162,69 @@ The codebase uses NgRx for state management in Angular applications:
 - Commitlint with conventional commit format
 - Main branch: `main`
 - Auto-versioning and publishing through GitHub Actions
+
+## Claude Code Plugin: smart@smartsoft
+
+This repository contains the `smart@smartsoft` plugin for Claude Code with safety, audit, and formatting hooks.
+
+### Plugin Location
+
+```
+packages/shared/claude-plugins/src/plugins/smart/
+├── .claude-plugin/
+│   ├── plugin.json              # Plugin metadata
+│   ├── settings.template.json   # Required permissions + hooks template
+│   ├── merge-permissions.js     # Auto-merge script
+│   └── README.md                # Installation guide
+└── hooks/
+    ├── safety_validator.py      # Blocks destructive commands
+    ├── audit_logger.py          # Logs all Claude actions
+    ├── skill_validator.py       # Validates skill file structure
+    ├── CONFIG.md                # Hook customization guide
+    └── README.md                # Hook documentation
+```
+
+### When to Update `settings.template.json`
+
+**Update the template when:**
+
+| Change | Action Required |
+|--------|-----------------|
+| New hook added | Add hook config to appropriate event in `hooks` section |
+| Hook requires new bash command | Add to `permissions.allow`: `Bash(command:*)` |
+| New blocked pattern in safety_validator | No template change needed (edit hook directly) |
+| New event type supported | Add new event key to `hooks` section |
+| Hook path changed | Update `command` path in all hook references |
+
+### How to Update
+
+1. Edit `packages/shared/claude-plugins/src/plugins/smart/.claude-plugin/settings.template.json`
+2. Add new permissions or hooks as needed
+3. Update `plugin.json` if adding new hooks
+4. Publish new version of `@smartsoft001/claude-plugins`
+5. In consumer projects, run merge script to update settings
+
+### Consumer Project Update
+
+After publishing new plugin version:
+
+```bash
+# In consumer project (e.g., mobilems-muzeum-swiatowid)
+npm update @smartsoft001/claude-plugins
+node node_modules/@smartsoft001/claude-plugins/plugins/smart/.claude-plugin/merge-permissions.js
+```
+
+### Hook Events
+
+| Event | When Triggered | Hooks |
+|-------|----------------|-------|
+| `PreToolUse` | Before tool executes | safety_validator, sensitive file blocker, audit_logger, skill_validator |
+| `PostToolUse` | After tool completes | auto-format, audit_logger |
+| `UserPromptSubmit` | User submits prompt | audit_logger |
+
+### Customizing Hooks
+
+See `hooks/CONFIG.md` for:
+- Adding custom blocked patterns to `safety_validator.py`
+- Changing audit log location
+- Creating new hooks

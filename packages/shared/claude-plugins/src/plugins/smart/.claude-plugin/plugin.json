@@ -1,18 +1,5 @@
 {
   "name": "smart",
   "description": "Smartsoft integration - safety validation, audit logging, and auto-formatting hooks",
-  "version": "2.110.0",
-  "settingsTemplate": "settings.template.json",
-  "hooks": [
-    "safety_validator.py",
-    "audit_logger.py",
-    "skill_validator.py"
-  ],
-  "features": [
-    "Safety validation (blocks destructive commands)",
-    "Sensitive file protection",
-    "Audit logging (all events)",
-    "Skill file validation",
-    "Auto-formatting (PostToolUse)"
-  ]
+  "version": "2.111.0"
 }
