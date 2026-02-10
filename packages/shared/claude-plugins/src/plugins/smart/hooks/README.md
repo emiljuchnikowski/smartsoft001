@@ -1,6 +1,6 @@
 # Hooks
 
-Claude Code hooks for skill activation, safety validation, formatting, and audit logging.
+Claude Code hooks for safety validation, sensitive file protection, formatting, and audit logging.
 
 ---
 
@@ -16,54 +16,37 @@ Hooks are scripts that run at specific points in Claude's workflow:
 
 ---
 
+## Configuration
+
+All hooks are configured in `hooks.json` in this directory. Claude Code reads this file automatically when the plugin is installed.
+
+---
+
 ## Current Hooks
 
 | Hook | Event | Purpose |
 |------|-------|---------|
-| `skill-suggester.py` | UserPromptSubmit | Suggests relevant skills based on prompt |
 | `safety_validator.py` | PreToolUse | Blocks destructive commands |
-| `skill-validator.py` | PreToolUse | Validates skill file structure |
-| `auto-format.sh` | PostToolUse | Auto-formats Python/JS/TS files |
+| `sensitive_file_blocker.py` | PreToolUse | Blocks access to sensitive files |
+| `skill_validator.py` | PreToolUse | Validates skill file structure |
+| `auto_format.sh` | PostToolUse | Auto-formats after file changes |
 | `audit_logger.py` | All events | Logs all actions for audit trail |
 
 ---
 
 ## Hook Details
 
-### skill-suggester.py (UserPromptSubmit)
-
-**Purpose:** Automatically suggests relevant skills based on user prompts and file context.
-
-**How it works:**
-1. Reads `.claude/skills/skill-rules.json`
-2. Matches prompt against keywords and intent patterns
-3. Matches file paths against path patterns
-4. Groups matches by priority (critical, high, medium, low)
-5. Outputs all matching skills in a visual block
-
-**Output example:**
-```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  SKILL ACTIVATION CHECK
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
->> RECOMMENDED SKILLS:
-   -> /python-dev (keyword: python)
-
-ACTION: Use slash command to activate skill
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-```
-
----
-
 ### safety_validator.py (PreToolUse)
 
 **Purpose:** Blocks destructive bash commands and sensitive file modifications.
 
+**Matcher:** `Bash|Write|Edit`
+
 **Blocks:**
 - `rm -rf /`, `rm -rf ~`, `rm -rf *`
-- Modifications to `.env`, `id_rsa`, `credentials` files
-- Other dangerous patterns
+- `dd` disk operations, `mkfs` formatting
+- Fork bombs
+- Bash access to `.env`, `id_rsa`, `credentials` files
 
 **Exit codes:**
 - `0` - Allow
@@ -71,9 +54,30 @@ ACTION: Use slash command to activate skill
 
 ---
 
-### skill-validator.py (PreToolUse)
+### sensitive_file_blocker.py (PreToolUse)
+
+**Purpose:** Blocks Read/Edit/Write access to sensitive files.
+
+**Matcher:** `Read|Edit|Write`
+
+**Blocked patterns:**
+- `.env` files (`.env`, `.env.local`, `.env.production`)
+- `secrets` in path
+- `credentials` in path
+
+**Exception:** Files ending with `.example` are allowed.
+
+**Exit codes:**
+- `0` - Allow
+- `2` - Block with message
+
+---
+
+### skill_validator.py (PreToolUse)
 
 **Purpose:** Validates skill files follow correct structure.
+
+**Matcher:** `Write|Edit`
 
 **Checks:**
 - YAML frontmatter (name, description)
@@ -85,15 +89,15 @@ ACTION: Use slash command to activate skill
 
 ---
 
-### auto-format.sh (PostToolUse)
+### auto_format.sh (PostToolUse)
 
 **Purpose:** Auto-formats files after Write/Edit operations.
 
-**Formatters:**
-- Python: `ruff format`
-- JS/TS: `prettier` (if available)
+**Matcher:** `Write|Edit`
 
-**Runs on:** Files matching `*.py`, `*.js`, `*.ts`, `*.tsx`
+**Runs:** `source ~/.nvm/nvm.sh && nvm use 24 && npm run format`
+
+**Requires:** Node.js 24 via nvm
 
 ---
 
@@ -111,20 +115,14 @@ ACTION: Use slash command to activate skill
 
 ---
 
-## Configuration
-
-All hooks are configured in `.claude/settings.json`. See [CONFIG.md](./CONFIG.md) for customization options.
-
----
-
 ## Adding New Hooks
 
-1. Create script in `.claude/hooks/`
+1. Create script in this `hooks/` directory
 2. Make executable: `chmod +x script.py`
-3. Add to `.claude/settings.json` under appropriate event
+3. Add to `hooks.json` under appropriate event
 4. Include `_description` for documentation
 
-Example:
+Example entry in `hooks.json`:
 ```json
 {
   "_description": "My custom hook: does something useful",
@@ -132,8 +130,10 @@ Example:
   "hooks": [
     {
       "type": "command",
-      "command": ".claude/hooks/my-hook.py"
+      "command": "./my-hook.py"
     }
   ]
 }
 ```
+
+See [CONFIG.md](./CONFIG.md) for customization options.

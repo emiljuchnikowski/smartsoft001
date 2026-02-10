@@ -1,5 +1,7 @@
 {
   "name": "smart",
-  "description": "Smartsoft integration - safety validation, audit logging, and auto-formatting hooks",
-  "version": "2.111.0"
+  "description": "Smartsoft integration - safety validation, audit logging, auto-formatting hooks, and project convention skills",
+  "version": "2.112.0",
+  "author": "smartsoft001",
+  "keywords": ["safety", "audit", "formatting", "conventions", "nx", "monorepo"]
 }

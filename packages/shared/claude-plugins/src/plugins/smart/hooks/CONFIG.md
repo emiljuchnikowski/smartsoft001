@@ -2,9 +2,9 @@
 
 This guide explains how to configure and customize the hooks system.
 
-## Current Configuration
+## Hook Configuration
 
-The hooks are configured in `.claude/settings.json`:
+All hooks are defined in `hooks.json` in this directory:
 
 ```json
 {
@@ -16,70 +16,7 @@ The hooks are configured in `.claude/settings.json`:
         "hooks": [
           {
             "type": "command",
-            "command": "node_modules/@smartsoft001/claude-plugins/plugins/smart/hooks/safety_validator.py"
-          }
-        ]
-      },
-      {
-        "_description": "Block sensitive files with detailed error message",
-        "matcher": "Read|Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "FILE=$(jq -r '.tool_input.file_path // empty'); echo \"$FILE\" | grep -qE '(\\.env|secrets|credentials)' && { echo \"BLOCKED: Access denied to sensitive file: $FILE\" >&2; exit 2; } || exit 0"
-          }
-        ]
-      },
-      {
-        "_description": "Audit trail: logs all PreToolUse events",
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node_modules/@smartsoft001/claude-plugins/plugins/smart/hooks/audit_logger.py"
-          }
-        ]
-      },
-      {
-        "_description": "Skill validator: soft enforcement warnings for skill files",
-        "matcher": "Write|Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node_modules/@smartsoft001/claude-plugins/plugins/smart/hooks/skill_validator.py"
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "_description": "Auto-format files after Write/Edit",
-        "matcher": "Write|Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "source ~/.nvm/nvm.sh && nvm use 24 && npm run format"
-          }
-        ]
-      },
-      {
-        "_description": "Audit trail: logs all PostToolUse events",
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node_modules/@smartsoft001/claude-plugins/plugins/smart/hooks/audit_logger.py"
-          }
-        ]
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "_description": "Audit trail: logs all user prompt submissions",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node_modules/@smartsoft001/claude-plugins/plugins/smart/hooks/audit_logger.py"
+            "command": "./safety_validator.py"
           }
         ]
       }
@@ -87,6 +24,8 @@ The hooks are configured in `.claude/settings.json`:
   }
 }
 ```
+
+Hook commands use relative paths (e.g., `./safety_validator.py`) resolved from the `hooks/` directory.
 
 ---
 
@@ -112,16 +51,45 @@ SENSITIVE_FILES = [
 
 ---
 
+### sensitive_file_blocker.py
+
+**Add blocked file patterns** by editing:
+
+```python
+SENSITIVE_PATTERNS = [
+    r"\.env(?:\.|$)",
+    r"secrets",
+    r"credentials",
+    # Add your patterns here
+]
+```
+
+---
+
 ### audit_logger.py
 
 **Change log location:**
 
 ```python
 # Default: .claude/audit_logs/YYYYMMDD_audit.jsonl
-LOG_DIR = Path(__file__).parent.parent / "audit_logs"
+LOG_DIR = Path(__file__).resolve().parent.parent / "audit_logs"
 
 # Custom location:
 LOG_DIR = Path("/var/log/claude-audit")
+```
+
+---
+
+### auto_format.sh
+
+**Change format command:**
+
+```bash
+# Default:
+source ~/.nvm/nvm.sh && nvm use 24 && npm run format
+
+# Custom (e.g., without nvm):
+npm run format
 ```
 
 ---
@@ -130,6 +98,8 @@ LOG_DIR = Path("/var/log/claude-audit")
 
 | Variable             | Purpose                | Default       |
 | -------------------- | ---------------------- | ------------- |
+| `CLAUDE_HOOK_EVENT`  | Hook event type        | Set by Claude |
+| `CLAUDE_SESSION_ID`  | Session identifier     | Set by Claude |
 | `CLAUDE_PROJECT_DIR` | Project root directory | Auto-detected |
 | `SKIP_AUDIT_LOG`     | Disable audit logging  | Not set       |
 
@@ -137,23 +107,25 @@ LOG_DIR = Path("/var/log/claude-audit")
 
 ## Hook Execution Order
 
-Hooks run in the order specified in `settings.json`:
+Hooks run in the order specified in `hooks.json`:
 
 **PreToolUse order:**
 
 1. safety_validator.py (can block)
-2. sensitive file blocker (can block)
+2. sensitive_file_blocker.py (can block)
 3. audit_logger.py (logs)
-4. skill-validator.py (warns)
+4. skill_validator.py (warns)
 
 **PostToolUse order:**
 
-1. auto-format.sh (formats)
+1. auto_format.sh (formats)
 2. audit_logger.py (logs)
 
 ---
 
 ## Selective Hook Enabling
+
+To use only specific hooks, edit `hooks.json` and remove unwanted entries.
 
 ### Safety Only (No Formatting)
 
@@ -167,7 +139,7 @@ Hooks run in the order specified in `settings.json`:
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/safety_validator.py"
+            "command": "./safety_validator.py"
           }
         ]
       }
@@ -224,5 +196,3 @@ FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')
 # Exit 0 = allow, Exit 2 = block
 exit 0
 ```
-
----

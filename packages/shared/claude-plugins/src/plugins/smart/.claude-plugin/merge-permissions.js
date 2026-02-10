@@ -1,12 +1,16 @@
 #!/usr/bin/env node
 /**
- * Merge smart plugin settings into project's .claude/settings.json
+ * LEGACY: Merge smart plugin settings into project's .claude/settings.json
  *
- * Usage:
- *   npx @smartsoft001/claude-plugins smart:merge-permissions
+ * This script is deprecated. The new plugin architecture uses:
+ * - hooks/hooks.json for hook configuration
+ * - skills/ directory for skill definitions
+ * - `claude plugin update smart@smartsoft --scope project` for installation
  *
- * Or directly:
- *   node node_modules/@smartsoft001/claude-plugins/plugins/smart/.claude-plugin/merge-permissions.js
+ * See MIGRATION.md for upgrade instructions.
+ *
+ * Usage (legacy):
+ *   node node_modules/@smartsoft001/claude-plugins/plugins/smart/_legacy/merge-permissions.js
  */
 
 const fs = require('fs');
@@ -38,9 +42,14 @@ function mergeHooks(existing, template) {
       merged[event] = hooks;
     } else {
       // Merge by checking _description to avoid duplicates
-      const existingDescriptions = merged[event].map(h => h._description).filter(Boolean);
+      const existingDescriptions = merged[event]
+        .map((h) => h._description)
+        .filter(Boolean);
       for (const hook of hooks) {
-        if (hook._description && !existingDescriptions.includes(hook._description)) {
+        if (
+          hook._description &&
+          !existingDescriptions.includes(hook._description)
+        ) {
           merged[event].push(hook);
         } else if (!hook._description) {
           merged[event].push(hook);
@@ -53,7 +62,10 @@ function mergeHooks(existing, template) {
 }
 
 function main() {
-  console.log('Smart Plugin - Merge Settings\n');
+  console.log('Smart Plugin - Merge Settings (LEGACY)\n');
+  console.log(
+    'WARNING: This script is deprecated. Use `claude plugin update smart@smartsoft --scope project` instead.\n',
+  );
 
   // Load template
   const template = loadJson(TEMPLATE_PATH);
@@ -71,7 +83,11 @@ function main() {
   }
 
   // Ensure structures exist
-  settings.permissions = settings.permissions || { allow: [], deny: [], ask: [] };
+  settings.permissions = settings.permissions || {
+    allow: [],
+    deny: [],
+    ask: [],
+  };
   settings.permissions.allow = settings.permissions.allow || [];
   settings.permissions.ask = settings.permissions.ask || [];
   settings.permissions.deny = settings.permissions.deny || [];
@@ -82,7 +98,10 @@ function main() {
   const beforeHooks = Object.keys(settings.hooks).length;
 
   // Merge permissions
-  settings.permissions.allow = mergeArrays(settings.permissions.allow, template.permissions.allow);
+  settings.permissions.allow = mergeArrays(
+    settings.permissions.allow,
+    template.permissions.allow,
+  );
 
   // Merge hooks
   settings.hooks = mergeHooks(settings.hooks, template.hooks);
@@ -99,7 +118,9 @@ function main() {
   const afterHooks = Object.keys(settings.hooks).length;
 
   console.log('Settings merged successfully!\n');
-  console.log(`  permissions.allow: ${beforeAllow} -> ${settings.permissions.allow.length} (+${addedAllow})`);
+  console.log(
+    `  permissions.allow: ${beforeAllow} -> ${settings.permissions.allow.length} (+${addedAllow})`,
+  );
   console.log(`  hooks events: ${beforeHooks} -> ${afterHooks}`);
   console.log(`\nPlugin enabled: smart@smartsoft`);
   console.log(`\nFile updated: ${SETTINGS_PATH}`);
