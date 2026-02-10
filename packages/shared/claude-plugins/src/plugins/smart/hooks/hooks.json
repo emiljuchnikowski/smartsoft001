@@ -1,16 +1,4 @@
 {
-  "$schema": "https://raw.githubusercontent.com/anthropics/claude-code/main/schemas/settings.schema.json",
-  "_description": "LEGACY: Template settings for smart@smartsoft plugin. Replaced by hooks/hooks.json and skills/ directory. See MIGRATION.md for upgrade guide.",
-  "permissions": {
-    "allow": [
-      "Bash(source:*)",
-      "Bash(nvm use:*)",
-      "Bash(npm run format:*)",
-      "Bash(jq:*)"
-    ],
-    "ask": [],
-    "deny": []
-  },
   "hooks": {
     "PreToolUse": [
       {
@@ -19,7 +7,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node_modules/@smartsoft001/claude-plugins/plugins/smart/hooks/safety_validator.py"
+            "command": "./safety_validator.py"
           }
         ]
       },
@@ -29,7 +17,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "FILE=$(jq -r '.tool_input.file_path // empty'); echo \"$FILE\" | grep -qE '(\\.env|secrets|credentials)' && { echo \"BLOCKED: Access denied to sensitive file: $FILE\" >&2; exit 2; } || exit 0"
+            "command": "./sensitive_file_blocker.py"
           }
         ]
       },
@@ -39,7 +27,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node_modules/@smartsoft001/claude-plugins/plugins/smart/hooks/audit_logger.py"
+            "command": "./audit_logger.py"
           }
         ]
       },
@@ -49,7 +37,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node_modules/@smartsoft001/claude-plugins/plugins/smart/hooks/skill_validator.py"
+            "command": "./skill_validator.py"
           }
         ]
       }
@@ -61,7 +49,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "source ~/.nvm/nvm.sh && nvm use 24 && npm run format"
+            "command": "./auto_format.sh"
           }
         ]
       },
@@ -71,7 +59,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node_modules/@smartsoft001/claude-plugins/plugins/smart/hooks/audit_logger.py"
+            "command": "./audit_logger.py"
           }
         ]
       }
@@ -82,13 +70,10 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node_modules/@smartsoft001/claude-plugins/plugins/smart/hooks/audit_logger.py"
+            "command": "./audit_logger.py"
           }
         ]
       }
     ]
-  },
-  "enabledPlugins": {
-    "smart@smartsoft": true
   }
 }
