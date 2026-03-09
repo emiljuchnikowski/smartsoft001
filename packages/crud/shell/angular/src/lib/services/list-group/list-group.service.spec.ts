@@ -1,10 +1,5 @@
 // Mock the facade before any imports
-import { ɵNoopNgZone as NoopNgZone, NgZone } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import {
-  BrowserTestingModule,
-  platformBrowserTesting,
-} from '@angular/platform-browser/testing';
 
 import { IEntity } from '@smartsoft001/domain-core';
 
@@ -35,8 +30,6 @@ export class MockCrudFacade<T> {
   }
 }
 
-TestBed.initTestEnvironment(BrowserTestingModule, platformBrowserTesting());
-
 describe('crud-shell-angular: CrudListGroupService', () => {
   let service: CrudListGroupService<IEntity<string>>;
   let facade: CrudFacade<IEntity<string>>;
@@ -46,7 +39,6 @@ describe('crud-shell-angular: CrudListGroupService', () => {
       providers: [
         CrudListGroupService,
         { provide: CrudFacade, useClass: MockCrudFacade },
-        { provide: NgZone, useClass: NoopNgZone },
       ],
     });
     service = TestBed.inject(CrudListGroupService);

@@ -8,13 +8,13 @@ Nx monorepo with shared libraries for Angular, NestJS, and Ionic projects. Organ
 
 ## Technology Stack
 
-- **Angular**: 20.1.0
+- **Angular**: 21.2.1
 - **NestJS**: 11.1.5
-- **Nx**: 21.3.11
-- **TypeScript**: 5.8.3
-- **NgRx**: 20.0.1
-- **Storybook**: 9.0.17
-- **Jest**: 29.7.0
+- **Nx**: 22.5.4
+- **TypeScript**: 5.9.3
+- **NgRx**: 21.0.1
+- **Storybook**: 10.2.16
+- **Jest**: 30.2.0
 - **pnpm**: 9.11.0
 
 ## Project Structure
