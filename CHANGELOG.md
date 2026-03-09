@@ -1,3 +1,15 @@
+## 2.114.0 (2026-03-09)
+
+### 🚀 Features
+
+- **shared:** add Claude Code agent and skill configurations ([e2103b2](https://github.com/emiljuchnikowski/smartsoft001/commit/e2103b2))
+- **shared:** upgrade Angular 21, Nx 22.5, Storybook 10, Jest 30 ([6376275](https://github.com/emiljuchnikowski/smartsoft001/commit/6376275))
+
+### ❤️ Thank You
+
+- Claude Opus 4.6
+- root
+
 ## 2.113.0 (2026-01-29)
 
 ### 🚀 Features
