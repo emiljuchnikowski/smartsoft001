@@ -22,14 +22,16 @@ import { TRANS_TOKEN_INTERNAL_SERVICE } from '../internal/internal.service';
 
 @Injectable()
 export class TransService {
-  private _paymentService: {
+  private get _paymentService(): {
     [key: string]: ITransPaymentSingleService;
-  } = {
-    payu: this.payuService,
-    paypal: this.paypalService,
-    paynow: this.paynowService,
-    revolut: this.revolutService,
-  };
+  } {
+    return {
+      payu: this.payuService,
+      paypal: this.paypalService,
+      paynow: this.paynowService,
+      revolut: this.revolutService,
+    };
+  }
 
   private _internalService = {
     create: (trans: Trans<any>) => {

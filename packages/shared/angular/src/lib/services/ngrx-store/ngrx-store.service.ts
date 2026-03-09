@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActionReducer, Store } from '@ngrx/store';
-import { Action } from '@ngrx/store/src/models';
+import { Action, ActionReducer, Store } from '@ngrx/store';
 
 @Injectable()
 export class NgrxStoreService {

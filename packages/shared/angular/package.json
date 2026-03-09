@@ -1,8 +1,5 @@
 {
   "name": "@smartsoft001/angular",
   "version": "2.105.0",
-  "sideEffects": false,
-  "peerDependencies": {},
-  "dependencies": {},
-  "devDependencies": {}
+  "sideEffects": false
 }
