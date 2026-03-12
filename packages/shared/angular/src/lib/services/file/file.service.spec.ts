@@ -101,7 +101,7 @@ describe('angular: FileService', () => {
   describe('delete', () => {
     it('should call HttpClient.delete with correct URL', () => {
       const id = 'del123';
-      httpClientMock.delete.mockReturnValue(Promise.resolve());
+      httpClientMock.delete.mockReturnValue(of(undefined));
       fileService.delete(id);
       expect(httpClientMock.delete).toHaveBeenCalledWith(
         apiUrl + '/attachments/' + id,
@@ -109,7 +109,7 @@ describe('angular: FileService', () => {
     });
     it('should return a Promise', () => {
       const id = 'del123';
-      httpClientMock.delete.mockReturnValue(Promise.resolve());
+      httpClientMock.delete.mockReturnValue(of(undefined));
       const result = fileService.delete(id);
       expect(result).toBeInstanceOf(Promise);
     });

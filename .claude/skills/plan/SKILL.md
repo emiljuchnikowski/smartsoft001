@@ -1,0 +1,197 @@
+---
+name: plan
+description: Create an implementation plan for a Linear task and save it as a comment. Analyzes codebase, previous commits, and dependencies to generate detailed plans.
+allowed-tools:
+  - Bash
+  - Read
+  - Glob
+  - Grep
+  - AskUserQuestion
+  - TaskCreate
+  - TaskUpdate
+  - TaskList
+  - TaskGet
+  - mcp__linear-server__get_issue
+  - mcp__linear-server__list_issues
+  - mcp__linear-server__list_comments
+  - mcp__linear-server__create_comment
+  - mcp__linear-server__delete_comment
+---
+
+# Plan Skill
+
+Create an implementation plan for a Linear task and save it as a comment. If the task has subtasks, create individual plans for each subtask.
+
+## Usage
+
+```
+/plan [linearTaskId]
+```
+
+## Parameters
+
+- `linearTaskId` - Linear task ID (e.g., ENG-123)
+
+## Execution Checklist
+
+Execute each step in order. Do not skip any step marked as MANDATORY.
+
+- [ ] **1. Fetch Linear task** — get title, description, labels, priority, estimate from MCP Linear server
+- [ ] **2. Fetch subtasks** — check for children; if present, plan each subtask individually
+- [ ] **3. Fetch existing comments** — check parent task and each subtask for existing context
+- [ ] **4. Determine planning needs** — check for existing plans and plan change requests; record old plan comment IDs for replacement
+- [ ] **5. Analyze previous commits** — `git log --all --grep="<taskId>"` for each task/subtask
+- [ ] **6. Analyze staged changes** — `git status` and `git diff --cached` for work in progress
+- [ ] **7. MANDATORY: Analyze codebase** — explore affected files, patterns, dependencies, and test coverage
+- [ ] **8. Analyze library package deps** — check if changes to other `@smartsoft001/*` packages are needed
+- [ ] **9. Create implementation plans** — generate structured plans per task/subtask with all required sections
+- [ ] **10. MANDATORY: Write plans in Polish** — all plan content must be in Polish language
+- [ ] **11. Show plans to user** — present plans for review and approval before saving
+- [ ] **12. MANDATORY: Confirm old plan deletion** — if replacing existing plans, ask user to confirm
+- [ ] **13. Delete old plan comments and save new ones** — delete outdated plan comments, post new plans via MCP
+- [ ] **14. Confirm to user** — list saved plans with summaries and Linear links
+
+### Task Progress Tracking
+
+**MANDATORY**: Use Claude Code's built-in task tracking.
+
+**Task naming convention**: `<linearTaskId> <step description>`
+
+## Role
+
+**You are a highly experienced software architect** specializing in Nx monorepo library design, Angular, NestJS, and TypeScript.
+
+You create plans that are:
+
+- **Specific**: each step is clearly defined
+- **Actionable**: the developer knows exactly what to do
+- **Complete**: nothing is omitted
+- **Realistic**: they account for constraints and dependencies
+
+## Instructions
+
+### Step 1: Fetch Linear Task Details
+
+Use MCP Linear server to fetch: title, description, labels/type, acceptance criteria, priority, estimate.
+
+### Step 2: Fetch Subtasks
+
+Check if the task has subtasks (children). If subtasks exist, create individual plans for each.
+
+### Step 3: Fetch Task Comments
+
+Fetch all existing comments. Check for existing plans and plan change requests.
+
+**Create a NEW plan if:**
+
+1. No plan exists
+2. Plan change requested (keywords: "zmien plan", "zaktualizuj plan", "popraw plan", "nowy plan")
+
+**SKIP planning if:**
+
+1. Plan exists and no change requested
+
+### Step 4: Analyze Previous Commits
+
+```bash
+git log --all --grep="<linearTaskId>" --oneline
+```
+
+### Step 5: Analyze Staged Changes
+
+```bash
+git status
+git diff --cached
+```
+
+### Step 6: Analyze the Codebase
+
+Explore affected files, patterns, dependencies, test coverage using Glob, Grep, Read.
+
+### Step 6a: Analyze Package Dependencies
+
+Check if the task requires changes to other `@smartsoft001/*` packages within this monorepo:
+
+- Domain packages (`packages/auth/`, `packages/crud/`, `packages/trans/`)
+- Shared packages (`packages/shared/`)
+- Cross-package dependencies via tsconfig paths
+
+### Step 7: Create Implementation Plans
+
+#### Plan format:
+
+```markdown
+## Implementation Plan
+
+### Summary
+
+[Brief overview]
+
+### Already Completed
+
+[Work done in previous commits - skip if none]
+
+### Currently In Progress
+
+[Staged changes - skip if none]
+
+### Remaining Work
+
+- [ ] [Remaining item 1]
+- [ ] [Remaining item 2]
+
+### Technical Analysis
+
+[Key findings from codebase exploration]
+
+### Implementation Steps
+
+1. [Step 1]
+2. [Step 2]
+
+### Files to Modify
+
+- `path/to/file.ts` - [reason]
+
+### New Files
+
+- `path/to/new-file.ts` - [purpose]
+
+### Cross-Package Dependencies
+
+[Other @smartsoft001/* packages affected]
+
+### Testing Strategy
+
+- [ ] Unit tests for [component/service]
+
+### Risks & Considerations
+
+- [Risk 1]
+
+### Estimated Complexity
+
+[Low / Medium / High]
+
+---
+
+_Plan generated by Claude Code_
+```
+
+### Step 8: Save Plans
+
+Use MCP Linear server to create comments with plans. Delete old plan comments if replacing.
+
+## Guidelines
+
+1. **Write plans in Polish**
+2. **Be specific** - reference actual file paths and code patterns
+3. **Consider edge cases** - error handling, validation
+4. **Follow project conventions** - maintain consistency with existing patterns
+5. **Identify cross-package dependencies** - note which packages are affected
+6. **Skip tasks with existing plans** - don't regenerate unnecessarily
+7. **Delete old plans when replacing** - keep Linear comments clean
+
+---
+
+**Important**: Before saving the plans, show them to the user for review and approval.

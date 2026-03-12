@@ -170,6 +170,7 @@ describe('crud-app-services: CrudService', () => {
     it('should upload and return id', async () => {
       const fakeStream = {
         pipe: jest.fn(),
+        compose: jest.fn(),
         addListener: jest.fn(),
         on: jest.fn(),
         once: jest.fn(),

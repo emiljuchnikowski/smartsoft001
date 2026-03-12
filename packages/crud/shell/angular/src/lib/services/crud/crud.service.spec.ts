@@ -1,16 +1,10 @@
 import '@angular/compiler';
-import 'zone.js';
-import 'zone.js/testing';
 import { HttpClient } from '@angular/common/http';
 import {
   HttpTestingController,
   HttpClientTestingModule,
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import {
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting,
-} from '@angular/platform-browser-dynamic/testing';
 
 import { IEntity } from '@smartsoft001/domain-core';
 
@@ -32,14 +26,6 @@ describe('crud-shell-angular: CrudService', () => {
   // Mock URL.createObjectURL globally before tests
   const mockCreateObjectURL = jest.fn().mockReturnValue('blob-url');
   global.URL.createObjectURL = mockCreateObjectURL;
-
-  TestBed.initTestEnvironment(
-    BrowserDynamicTestingModule,
-    platformBrowserDynamicTesting(),
-    {
-      teardown: { destroyAfterEach: true },
-    },
-  );
 
   beforeEach(() => {
     config = new CrudConfig<TestEntity>();

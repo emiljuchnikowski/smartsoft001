@@ -1,6 +1,6 @@
 {
   "name": "@smartsoft001/crud-shell-angular",
-  "version": "2.113.0",
+  "version": "2.114.0",
   "description": "Utils and Angular components",
   "repository": {
     "type": "git",
@@ -16,6 +16,5 @@
   "bugs": {
     "url": "https://github.com/emiljuchnikowski/smartsoft/issues"
   },
-  "homepage": "https://github.com/emiljuchnikowski/smartsoft#readme",
-  "peerDependencies": {}
+  "homepage": "https://github.com/emiljuchnikowski/smartsoft#readme"
 }
