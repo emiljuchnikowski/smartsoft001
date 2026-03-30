@@ -12,6 +12,7 @@ export * from './card';
 export * from './detail';
 export * from './info';
 export * from './button';
+export * from './icon';
 export * from './list';
 export * from './loader';
 export * from './paging';

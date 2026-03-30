@@ -14,15 +14,39 @@ import { DynamicContentDirective } from '../../directives';
 import { IButtonOptions } from '../../models';
 import { CreateDynamicComponent } from '../base';
 import { ButtonBaseComponent } from './base/base.component';
+import { ButtonCircularComponent } from './circular/circular.component';
+import { ButtonRoundedComponent } from './rounded/rounded.component';
 import { ButtonStandardComponent } from './standard/standard.component';
 
 @Component({
   selector: 'smart-button',
   template: `
     @if (template() === 'default') {
-      <smart-button-standard [options]="options()" [disabled]="disabled()">
-        <ng-container [ngTemplateOutlet]="contentTpl"></ng-container>
-      </smart-button-standard>
+      @if (options().circular) {
+        <smart-button-circular
+          [options]="options()"
+          [disabled]="disabled()"
+          [cssClass]="cssClass()"
+        >
+          <ng-container [ngTemplateOutlet]="contentTpl"></ng-container>
+        </smart-button-circular>
+      } @else if (options().rounded) {
+        <smart-button-rounded
+          [options]="options()"
+          [disabled]="disabled()"
+          [cssClass]="cssClass()"
+        >
+          <ng-container [ngTemplateOutlet]="contentTpl"></ng-container>
+        </smart-button-rounded>
+      } @else {
+        <smart-button-standard
+          [options]="options()"
+          [disabled]="disabled()"
+          [cssClass]="cssClass()"
+        >
+          <ng-container [ngTemplateOutlet]="contentTpl"></ng-container>
+        </smart-button-standard>
+      }
     }
     <ng-template #contentTpl>
       <ng-content></ng-content>
@@ -30,7 +54,12 @@ import { ButtonStandardComponent } from './standard/standard.component';
     <div class="dynamic-content"></div>
   `,
   encapsulation: ViewEncapsulation.None,
-  imports: [ButtonStandardComponent, NgTemplateOutlet],
+  imports: [
+    ButtonStandardComponent,
+    ButtonRoundedComponent,
+    ButtonCircularComponent,
+    NgTemplateOutlet,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonComponent extends CreateDynamicComponent<ButtonBaseComponent>(
@@ -38,6 +67,7 @@ export class ButtonComponent extends CreateDynamicComponent<ButtonBaseComponent>
 ) {
   options = input.required<IButtonOptions>();
   disabled = input<boolean>(false);
+  cssClass = input<string>('', { alias: 'class' });
 
   override contentTpl = viewChild<ViewContainerRef>('contentTpl');
 
@@ -58,5 +88,6 @@ export class ButtonComponent extends CreateDynamicComponent<ButtonBaseComponent>
   override refreshProperties(): void {
     this.baseInstance.options = this.options;
     this.baseInstance.disabled = this.disabled;
+    this.baseInstance.cssClass = this.cssClass;
   }
 }
