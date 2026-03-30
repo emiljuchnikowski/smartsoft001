@@ -178,6 +178,15 @@ export interface I<ComponentName>Options {
 
 Also add the `DynamicComponentType` union member: `'<component-name>'`.
 
+## MANDATORY: Plugin Sync
+
+Every time you **create or modify** a component, you MUST update the plugin smart:
+
+1. **Per-component skill** — `packages/shared/claude-plugins/src/plugins/smart/skills/angular-components-<name>/SKILL.md` (consumer-facing API docs)
+2. **Agent** — `packages/shared/claude-plugins/src/plugins/smart/agents/angular-components/AGENT.md` (add/update "Available Components" table and "Skills to Use" list)
+
+These files are distributed with `@smartsoft001/angular` and used by end-user projects to consume the components.
+
 ## Execution Checklist
 
 Execute each step in order. Use `shared-tdd-developer` agent for all code implementation (RED → GREEN → REFACTOR).
@@ -192,8 +201,9 @@ Execute each step in order. Use `shared-tdd-developer` agent for all code implem
 - [ ] **8. Update components index** — add `export * from './<component-name>'` to `components/index.ts`
 - [ ] **9. Create Storybook stories** — one story per variant with interactive controls
 - [ ] **10. Update README** — add component section to `packages/shared/angular/README.md`
-- [ ] **11. Create per-component skill** — `.claude/skills/angular-components-<component-name>/SKILL.md`
-- [ ] **12. Verify** — run tests (`nx test angular`), lint, build
+- [ ] **11. Create per-component plugin skill** — `packages/shared/claude-plugins/src/plugins/smart/skills/angular-components-<component-name>/SKILL.md` with component API, variants, usage examples (for **using** the component)
+- [ ] **12. Update plugin agent** — add component to "Available Components" table in `packages/shared/claude-plugins/src/plugins/smart/agents/angular-components/AGENT.md`
+- [ ] **13. Verify** — run tests (`nx test angular`), lint, build
 
 ## Styling Rules
 
@@ -359,6 +369,3 @@ export const AllVariants: Story = {
 Study these existing components as patterns:
 
 - `button/` — simple component with options interface
-- `page/` — component with multiple sections
-- `list/` — complex component with multiple modes/variants
-- `detail/` — component with many type variants
