@@ -15,7 +15,7 @@ Nx monorepo with shared libraries for Angular, NestJS, and Ionic projects. Organ
 - **NgRx**: 21.0.1
 - **Storybook**: 10.2.16
 - **Jest**: 30.2.0
-- **pnpm**: 9.11.0
+- **npm**: 10+
 
 ## Project Structure
 
@@ -123,7 +123,7 @@ nx storybook crud-shell-angular
 
 ## Key Configuration
 
-- **Package manager**: pnpm
+- **Package manager**: npm
 - **Path aliases**: `@smartsoft001/{package}` in `tsconfig.base.json`
 - **Component prefix**: `smart` (CRUD shell), `lib` (shared Angular)
 - **Project tags**: `scope:crud|auth|trans`, `type:shell|domain`
