@@ -63,7 +63,6 @@ export class ExportComponent<T extends IEntity<string>>
         this.popoverService.close().then();
       },
       loading: this.facade.loading,
-      expand: 'block',
     };
   }
 }
