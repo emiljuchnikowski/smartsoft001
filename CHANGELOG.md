@@ -1,3 +1,15 @@
+## 2.115.0 (2026-03-30)
+
+### 🚀 Features
+
+- **shared:** enhance Smart Plugin with new hooks and skills for safety and formatting ([1b28116](https://github.com/emiljuchnikowski/smartsoft001/commit/1b28116))
+- **shared:** add angular-components skill for UI component creation ([6aed350](https://github.com/emiljuchnikowski/smartsoft001/commit/6aed350))
+
+### ❤️ Thank You
+
+- Claude Opus 4.6 (1M context)
+- Emil Juchnikowski
+
 ## 2.114.0 (2026-03-09)
 
 ### 🚀 Features
