@@ -133,6 +133,34 @@ export class <ComponentName>Component extends CreateDynamicComponent<<ComponentN
 }
 ```
 
+## External `class` Input Pattern
+
+Every component MUST accept an external `class` attribute that gets merged onto the main DOM element. Use `input` with `alias: 'class'`:
+
+```typescript
+// In base component:
+cssClass: InputSignal<string> = input<string>('', { alias: 'class' });
+
+// In wrapper component:
+cssClass = input<string>('', { alias: 'class' });
+// Pass down to child: [cssClass]="cssClass()"
+// In refreshProperties: this.baseInstance.cssClass = this.cssClass;
+```
+
+In the shape/variant component's `buttonClasses` (or equivalent) computed, append the external class:
+
+```typescript
+buttonClasses = computed(() => {
+  const classes = [...this.variantClasses()];
+  // ... add size/shape classes ...
+  const extra = this.cssClass();
+  if (extra) classes.push(extra);
+  return classes.join(' ');
+});
+```
+
+Usage: `<smart-button class="smart-mt-4 custom-class" [options]="opts">Click</smart-button>`
+
 ## Interface Pattern
 
 Add the component options interface to `packages/shared/angular/src/lib/models/interfaces.ts`:
@@ -199,11 +227,123 @@ Execute each step in order. Use `shared-tdd-developer` agent for all code implem
 
 ## Storybook Requirements
 
-- One story per variant
-- Interactive controls for all configurable options
-- Proper `argTypes` with descriptions
-- Module imports via `moduleMetadata` decorator
+Every component MUST have exactly **2 stories**: `Playground` and `AllVariants`.
+
+### Critical configuration rules
+
+1. **Use sub-components directly** (e.g., `ButtonStandardComponent`) — NOT the wrapper component (`ButtonComponent`) which extends `CreateDynamicComponent`. The wrapper uses `toObservable` from `@angular/core/rxjs-interop` which is not compatible with Storybook webpack.
+2. **Provide `TranslateModule.forRoot()` via `applicationConfig`** (not `moduleMetadata`) — using `moduleMetadata` with `ModuleWithProviders` causes `ngModule` errors on navigation between stories.
+3. **Import sub-components via `moduleMetadata`** — standalone components go in `moduleMetadata({ imports: [...] })`.
+4. **AllVariants must disable all Controls** — use `argTypes: { propName: { table: { disable: true } } }` for each arg.
+
+### Meta configuration template
+
+```typescript
+import { importProvidersFrom, signal, WritableSignal } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
+import type { Meta, StoryObj } from '@storybook/angular';
+import { applicationConfig, moduleMetadata } from '@storybook/angular';
+
+const meta: Meta = {
+  title: 'Components/<ComponentName>',
+  tags: ['autodocs'],
+  decorators: [
+    applicationConfig({
+      providers: [importProvidersFrom(TranslateModule.forRoot())],
+    }),
+    moduleMetadata({
+      imports: [
+        // Import sub-components directly (NOT the wrapper)
+        <ComponentName>StandardComponent,
+        <ComponentName>RoundedComponent,
+        // ... other sub-components
+      ],
+    }),
+  ],
+  argTypes: {
+    variant: {
+      control: 'select',
+      options: ['primary', 'secondary', 'soft'],
+      description: '...',
+    },
+    size: {
+      control: 'select',
+      options: ['xs', 'sm', 'md', 'lg', 'xl'],
+      description: '...',
+    },
+    disabled: { control: 'boolean', description: '...' },
+    // ... all configurable properties as Controls
+  },
+  args: {
+    variant: 'primary',
+    size: 'md',
+    disabled: false,
+    // ... default values
+  },
+};
+```
+
+### Story 1: `Playground`
+
+- Interactive story — all options configurable via **Controls** tab
+- `render` function builds the options object from `args`
+- Uses sub-component selectors in template (e.g., `<smart-button-standard>`)
+
+```typescript
+export const Playground: Story = {
+  name: 'Playground',
+  render: (args: any) => {
+    const options = { click: () => {}, variant: args.variant, size: args.size, ... };
+    return {
+      props: { options, isDisabled: args.disabled, label: args.label },
+      template: `<smart-<component>-standard [options]="options" [disabled]="isDisabled">{{ label }}</smart-<component>-standard>`,
+    };
+  },
+};
+```
+
+### Story 2: `AllVariants`
+
+- Static showcase of **ALL** combinations in one HTML template
+- **All Controls disabled** via `argTypes: { propName: { table: { disable: true } } }`
+- Organized into `<section>` blocks with `<h3>` headings
+- Sections: each shape × each variant, each shape × all sizes, icons, states
+- Layout: `display: flex; flex-direction: column; gap: 32px` for sections, `display: flex; align-items: center; gap: 12px` for items
+
+```typescript
+export const AllVariants: Story = {
+  name: 'All Variants',
+  argTypes: {
+    variant: { table: { disable: true } },
+    size: { table: { disable: true } },
+    // ... disable ALL args
+  },
+  render: () => ({
+    props: {
+      /* all option objects as separate props */
+    },
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 32px;">
+        <section>
+          <h3 style="margin-bottom: 12px; font-weight: 600;">Standard</h3>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <smart-<component>-standard [options]="primary">Primary</smart-<component>-standard>
+            <smart-<component>-standard [options]="secondary">Secondary</smart-<component>-standard>
+            <smart-<component>-standard [options]="soft">Soft</smart-<component>-standard>
+          </div>
+        </section>
+        <!-- ... more sections: sizes, icons, states ... -->
+      </div>
+    `,
+  }),
+};
+```
+
+### General rules
+
 - File: `<component-name>.component.stories.ts`
+- All Tailwind classes with `smart-` prefix in templates
+- Reference: `button/button.component.stories.ts` as the canonical example
 
 ## Agent Delegation
 

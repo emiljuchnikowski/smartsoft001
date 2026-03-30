@@ -119,13 +119,43 @@ export interface IMenuItem {
   infos?: Array<{ text: string }>;
 }
 
+export type SmartVariant = 'primary' | 'secondary' | 'soft';
+export type SmartSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+
+export type SmartColor =
+  | 'slate'
+  | 'gray'
+  | 'zinc'
+  | 'neutral'
+  | 'stone'
+  | 'red'
+  | 'orange'
+  | 'amber'
+  | 'yellow'
+  | 'lime'
+  | 'green'
+  | 'emerald'
+  | 'teal'
+  | 'cyan'
+  | 'sky'
+  | 'blue'
+  | 'indigo'
+  | 'violet'
+  | 'purple'
+  | 'fuchsia'
+  | 'pink'
+  | 'rose';
+
 export interface IButtonOptions {
   type?: 'submit' | 'button';
-  expand?: 'block' | 'full' | undefined;
   confirm?: boolean;
-  color?: 'primary' | 'light' | string;
   click: () => void;
   loading?: Signal<boolean>;
+  variant?: SmartVariant;
+  size?: SmartSize;
+  color?: SmartColor;
+  rounded?: boolean;
+  circular?: boolean;
 }
 
 export interface IDetailOptions<T> {

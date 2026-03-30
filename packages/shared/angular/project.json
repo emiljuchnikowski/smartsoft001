@@ -33,7 +33,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "npx tailwind -c packages/shared/angular/tailwind.config.js -i packages/shared/angular/src/lib/styles.css -o dist/packages/shared/angular/styles.css"
+          "npx @tailwindcss/cli -i packages/shared/angular/src/lib/styles.css -o dist/packages/shared/angular/styles.css"
         ]
       }
     },
