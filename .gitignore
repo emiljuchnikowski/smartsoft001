@@ -31,6 +31,7 @@ node_modules
 /coverage
 /libpeerconnection.log
 npm-debug.log
+package-lock.json
 yarn-error.log
 testem.log
 /typings
@@ -48,3 +49,4 @@ Thumbs.db
 
 .angular
 /.claude/settings.local.json
+/packages/shared/claude-plugins/src/plugins/smart/audit_logs
