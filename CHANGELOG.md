@@ -1,3 +1,21 @@
+## 2.116.0 (2026-03-30)
+
+### 🚀 Features
+
+- **shared:** add button component with Tailwind v4 and color palette ([d1213ae](https://github.com/emiljuchnikowski/smartsoft001/commit/d1213ae))
+- **shared:** add button plugin skill and angular-components agent ([0a5c880](https://github.com/emiljuchnikowski/smartsoft001/commit/0a5c880))
+
+### 🩹 Fixes
+
+- **crud:** add postcss config for Tailwind v4 compatibility ([cb7e4a6](https://github.com/emiljuchnikowski/smartsoft001/commit/cb7e4a6))
+- **crud:** remove obsolete expand property from button options ([8f81c69](https://github.com/emiljuchnikowski/smartsoft001/commit/8f81c69))
+- **shared:** restore package-lock.json for CI compatibility ([a44d14e](https://github.com/emiljuchnikowski/smartsoft001/commit/a44d14e))
+
+### ❤️ Thank You
+
+- Claude Opus 4.6 (1M context)
+- Emil Juchnikowski
+
 ## 2.115.0 (2026-03-30)
 
 ### 🚀 Features
