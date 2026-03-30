@@ -86,18 +86,19 @@ packages/
 
 ### Utility Skills (automatic)
 
-| Skill               | Use For                                    |
-| ------------------- | ------------------------------------------ |
-| `test-unit`         | Jest test conventions (AAA pattern)        |
-| `test-e2e`          | Playwright E2E tests with Page Objects     |
-| `angular-patterns`  | Angular 20 signals, control flow, inject() |
-| `nx-conventions`    | Nx monorepo patterns and commands          |
-| `debug-helper`      | Cross-stack debugging workflows            |
-| `a11y-audit`        | Accessibility audits with axe-core         |
-| `browser-capture`   | Screenshot capture with Playwright         |
-| `linear-suggestion` | Create Linear issues for improvements      |
-| `maia-files-upload` | Upload files to Maia API storage           |
-| `maia-files-delete` | Delete files from Maia API storage         |
+| Skill                | Use For                                                      |
+| -------------------- | ------------------------------------------------------------ |
+| `test-unit`          | Jest test conventions (AAA pattern)                          |
+| `test-e2e`           | Playwright E2E tests with Page Objects                       |
+| `angular-patterns`   | Angular 20 signals, control flow, inject()                   |
+| `angular-components` | Create/modify Angular UI components (tests, Storybook, docs) |
+| `nx-conventions`     | Nx monorepo patterns and commands                            |
+| `debug-helper`       | Cross-stack debugging workflows                              |
+| `a11y-audit`         | Accessibility audits with axe-core                           |
+| `browser-capture`    | Screenshot capture with Playwright                           |
+| `linear-suggestion`  | Create Linear issues for improvements                        |
+| `maia-files-upload`  | Upload files to Maia API storage                             |
+| `maia-files-delete`  | Delete files from Maia API storage                           |
 
 ## Common Commands
 

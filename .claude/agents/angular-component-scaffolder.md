@@ -83,3 +83,9 @@ export class ItemCardComponent {
 - [ ] Uses `output()` for outputs
 - [ ] Uses `@if`/`@for` in template
 - [ ] Has `track` in all `@for` loops
+
+## Related Skills
+
+- `/angular-components` — Full component creation workflow (tests, Storybook, docs, dark/light mode)
+- `/angular-patterns` — Angular 20 modern patterns reference
+- `/test-unit` — Jest test conventions
