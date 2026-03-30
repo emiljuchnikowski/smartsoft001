@@ -159,7 +159,7 @@ buttonClasses = computed(() => {
 });
 ```
 
-Usage: `<smart-button class="smart-mt-4 custom-class" [options]="opts">Click</smart-button>`
+Usage: `<smart-button class="smart:mt-4 custom-class" [options]="opts">Click</smart-button>`
 
 ## Interface Pattern
 
@@ -207,9 +207,9 @@ Execute each step in order. Use `shared-tdd-developer` agent for all code implem
 
 ## Styling Rules
 
-- **Tailwind CSS** with `smart-` prefix for all utility classes (e.g., `smart-bg-white`, `smart-text-gray-900`, `smart-mt-4`)
-- **Dark mode**: use `dark:smart-` prefix (e.g., `dark:smart-bg-gray-900`, `dark:smart-text-white`)
-- **Light mode**: default prefixed classes (e.g., `smart-bg-white`, `smart-text-gray-900`)
+- **Tailwind CSS v4** with `smart:` prefix for all utility classes (e.g., `smart:bg-white`, `smart:text-gray-900`, `smart:mt-4`)
+- **Dark mode**: use `dark:smart:` prefix (e.g., `dark:smart:bg-gray-900`, `dark:smart:text-white`)
+- **Light mode**: default prefixed classes (e.g., `smart:bg-white`, `smart:text-gray-900`)
 - **ViewEncapsulation.None** on all styled components
 - **No inline styles** — use Tailwind utility classes only
 
@@ -352,7 +352,7 @@ export const AllVariants: Story = {
 ### General rules
 
 - File: `<component-name>.component.stories.ts`
-- All Tailwind classes with `smart-` prefix in templates
+- All Tailwind classes with `smart:` prefix in templates (Tailwind v4 syntax)
 - Reference: `button/button.component.stories.ts` as the canonical example
 
 ## Agent Delegation
