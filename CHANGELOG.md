@@ -1,3 +1,7 @@
+## 2.118.0 (2026-04-07)
+
+This was a version bump only, there were no code changes.
+
 ## 2.117.0 (2026-04-07)
 
 ### 🩹 Fixes
