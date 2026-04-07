@@ -5,7 +5,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-export type IconName = 'spinner';
+export type IconName = 'spinner' | 'chevron-down' | 'chevron-up';
 
 @Component({
   selector: 'smart-icon',

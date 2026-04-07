@@ -10,8 +10,10 @@ import {
   inject,
   input,
   model,
-  NgZone,
   OnInit,
+  output,
+  signal,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -33,100 +35,6 @@ import {
   StyleService,
   UIService,
 } from '../../services';
-
-@Component({
-  selector: 'smart-date-range',
-  templateUrl: './date-range.component.html',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => DateRangeComponent),
-      multi: true,
-    },
-  ],
-  imports: [TranslatePipe],
-})
-export class DateRangeComponent implements ControlValueAccessor {
-  // private modalCtrl: ModalController, //TODO: to be injected
-  private cd = inject(ChangeDetectorRef);
-
-  value: IDateRange | undefined = undefined;
-
-  propagateChange = (val: any) => {}; // eslint-disable-line
-  propagateTouched = () => {}; // eslint-disable-line
-
-  ngModel = model<IDateRange | undefined>(undefined);
-
-  calendarData: CalendarState = {
-    dateFrom: null as any,
-    dateTo: null as any,
-    scrollPosition: 0,
-    selectedButtonName: FilterBtnConstants.empthyString,
-  };
-
-  constructor() {
-    effect(() => {
-      this.value = this.ngModel();
-    });
-  }
-
-  async onClick(): Promise<void> {
-    const ngModel = this.ngModel();
-    if (ngModel?.start) this.calendarData.dateFrom = moment(ngModel.start);
-    if (ngModel?.end) this.calendarData.dateTo = moment(ngModel.end);
-
-    this.propagateTouched();
-
-    // const modal = await this.modalCtrl.create({
-    //   backdropDismiss: true,
-    //   component: DateRangeModalComponent,
-    //   componentProps: {
-    //     previousState: this.calendarData,
-    //   },
-    // });
-
-    // modal.onDidDismiss().then((data: any) => {
-    //   if (!data.data) {
-    //     return;
-    //   }
-    //   this.calendarData = data.data['calendarData'];
-    //   if (this.calendarData.dateFrom) {
-    //     const value = {
-    //       start: this.calendarData.dateFrom.format('YYYY-MM-DD'),
-    //       end: this.calendarData.dateTo.format('YYYY-MM-DD'),
-    //     };
-    //
-    //     this.writeValue(value);
-    //     this.ngModelChange.emit(this.value);
-    //     this.propagateChange(this.value);
-    //   }
-    // });
-    //
-    // await modal.present();
-  }
-
-  writeValue(value: any): void {
-    this.value = value;
-    this.cd.detectChanges();
-  }
-
-  registerOnChange(fn: any): void {
-    this.propagateChange = fn;
-  }
-
-  registerOnTouched(fn: any): void {
-    this.propagateTouched = fn;
-  }
-
-  onClear(): void {
-    this.calendarData.dateFrom = null as any;
-    this.calendarData.dateTo = null as any;
-
-    this.ngModel.set(undefined);
-    this.propagateChange(this.value);
-    this.propagateTouched();
-  }
-}
 
 export const enum FilterBtnConstants {
   empthyString = '',
@@ -154,6 +62,7 @@ export interface CalendarState {
   selector: 'smart-date-range-modal',
   templateUrl: './date-range-modal.component.html',
   providers: [CalendarService],
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgClass, TranslatePipe],
 })
@@ -162,35 +71,32 @@ export class DateRangeModalComponent implements OnInit, AfterContentInit {
   private uiService = inject(UIService);
   private changeDetectionRef = inject(ChangeDetectorRef);
   private calendarService = inject(CalendarService);
-  private zone = inject(NgZone);
   private styleService = inject(StyleService);
   private elementRef = inject(ElementRef);
-  // private modalController: ModalController, //TODO: to be injected
-  // private navParams: NavParams,//TODO: to be injected
-  // private domController: DomController,//TODO: to be injected
 
   showFilterBtns = input<boolean>(false);
-  restrictSelectionTo = input.required<number>();
-  // @ViewChild('scrollMe', { static: true }) scrollMe!: IonContent; //TODO: to be rewritten
+  restrictSelectionTo = input<number>(0);
+  previousState = input<CalendarState>({
+    dateFrom: null as any,
+    dateTo: null as any,
+    scrollPosition: 0,
+    selectedButtonName: FilterBtnConstants.empthyString,
+  });
+
+  apply = output<CalendarState>();
+  dismiss = output<void>();
 
   public currentDate = moment().clone();
   public dateForm!: UntypedFormGroup;
   calendar: month[] = [];
   selectedButtonName = FilterBtnConstants.empthyString;
   scrollPositionValue = 0;
-  valueTop = 6400; //calculated value of the scrollHeight
-  previousState: CalendarState = {
-    dateFrom: null as any,
-    dateTo: null as any,
-    scrollPosition: 0,
-    selectedButtonName: FilterBtnConstants.empthyString,
-  };
+  valueTop = 6400;
   subject$ = new Subject<SubjectType>();
   subjectSubscription!: Subscription;
 
   constructor() {
     this.initDateRangeForm();
-    // this.previousState = this.navParams.get('previousState');
   }
 
   private initDateRangeForm(): void {
@@ -210,11 +116,11 @@ export class DateRangeModalComponent implements OnInit, AfterContentInit {
 
   ngOnInit() {
     this.calendar = this.calendarService.getCalendar();
-    if (this.previousState.dateFrom) {
-      this.setPreviousStateData();
+    const state = this.previousState();
+    if (state.dateFrom) {
+      this.setPreviousStateData(state);
     } else {
       this.selectToday();
-      // this.scrollMe.scrollToPoint(0, this.valueTop, 300);
     }
   }
 
@@ -225,11 +131,8 @@ export class DateRangeModalComponent implements OnInit, AfterContentInit {
         distinctUntilChanged((prev, curr) =>
           prev.date.isSame(curr.date, 'day'),
         ),
-        tap(({ event }) => {
+        tap(() => {
           this.selectedButtonName = FilterBtnConstants.empthyString;
-          // this.domController.read(() => {
-          //   this.scrollPositionValue = event.target.offsetTop;
-          // });
         }),
       )
       .subscribe(({ date }) => {
@@ -259,9 +162,8 @@ export class DateRangeModalComponent implements OnInit, AfterContentInit {
     this.styleService.init(this.elementRef);
   }
 
-  private setPreviousStateData(): void {
-    const { dateFrom, dateTo, scrollPosition, selectedButtonName } =
-      this.previousState;
+  private setPreviousStateData(state: CalendarState): void {
+    const { dateFrom, dateTo, scrollPosition, selectedButtonName } = state;
     this.dateForm.patchValue({
       dateFrom: this.formatDate(dateFrom),
       dateTo: this.formatDate(dateTo),
@@ -272,14 +174,6 @@ export class DateRangeModalComponent implements OnInit, AfterContentInit {
     });
     this.scrollPositionValue = scrollPosition;
     this.selectedButtonName = selectedButtonName;
-
-    // if (this.scrollMe) {
-    //   if (this.scrollPositionValue) {
-    //     this.scrollMe.scrollToPoint(0, this.scrollPositionValue - 300, 300);
-    //   } else {
-    //     this.scrollMe.scrollToPoint(0, this.valueTop, 300);
-    //   }
-    // }
   }
 
   noop() {} // eslint-disable-line
@@ -302,7 +196,7 @@ export class DateRangeModalComponent implements OnInit, AfterContentInit {
   resetDates = (): void => this.datesRefGroup.reset();
 
   canSelectionBeRestricted = (): boolean =>
-    this.restrictSelectionTo() &&
+    !!this.restrictSelectionTo() &&
     this.datesRefGroup.value.endDateRef &&
     !this.isSelectionInRestrictedRange();
 
@@ -363,8 +257,6 @@ export class DateRangeModalComponent implements OnInit, AfterContentInit {
 
   public selectThisMonth(): void {
     this.selectedButtonName = FilterBtnConstants.thisMonth;
-    this.scrollPositionValue = this.valueTop;
-    this.scrollToBottom();
     const firstDay = moment().clone().startOf('month');
     const lastDay = moment().clone();
     this.setStartDate(firstDay, this.formatDate(firstDay));
@@ -372,9 +264,7 @@ export class DateRangeModalComponent implements OnInit, AfterContentInit {
   }
 
   public selectLastMonth(): void {
-    this.scrollToBottom();
     this.selectedButtonName = FilterBtnConstants.lastMonth;
-    this.scrollPositionValue = this.valueTop;
     const lastMonth = moment().clone().subtract(1, 'month');
     const firstDay = lastMonth.clone().startOf('month');
     const lastDay = lastMonth.clone().endOf('month');
@@ -384,15 +274,11 @@ export class DateRangeModalComponent implements OnInit, AfterContentInit {
 
   public selectLastThirtyDays(): void {
     this.selectedButtonName = FilterBtnConstants.lastThirtyDays;
-    this.scrollPositionValue = this.valueTop;
-    this.scrollToBottom();
     this.filterSelectionByDaysAgo(29);
   }
 
   public selectLastSevenDays(): void {
     this.selectedButtonName = FilterBtnConstants.lastSevenDays;
-    this.scrollPositionValue = this.valueTop;
-    this.scrollToBottom();
     this.filterSelectionByDaysAgo(6);
   }
 
@@ -405,8 +291,6 @@ export class DateRangeModalComponent implements OnInit, AfterContentInit {
 
   public selectYesterday(): void {
     this.selectedButtonName = FilterBtnConstants.yesterday;
-    this.scrollPositionValue = this.valueTop;
-    this.scrollToBottom();
     const yesterday = moment().clone().subtract(1, 'days');
     this.setStartDate(yesterday, this.formatDate(yesterday));
     this.setEndDate(yesterday, this.formatDate(yesterday));
@@ -414,30 +298,20 @@ export class DateRangeModalComponent implements OnInit, AfterContentInit {
 
   public selectToday(): void {
     this.selectedButtonName = FilterBtnConstants.today;
-    this.scrollPositionValue = this.valueTop;
-    this.scrollToBottom();
     const today = moment().clone();
     this.setStartDate(today, this.formatDate(today));
     this.setEndDate(today, this.formatDate(today));
   }
 
-  private scrollToBottom(): void {
-    this.zone.runOutsideAngular(() => {
-      setTimeout(() => {
-        // if (this.scrollMe) {
-        //   this.scrollMe.scrollToBottom(300);
-        // }
-      });
-    });
-  }
-
   public dismissPage(): void {
     this.unsubscribe();
-    // this.modalController.dismiss();
+    this.dismiss.emit();
   }
 
   private unsubscribe(): void {
-    this.subjectSubscription.unsubscribe();
+    if (this.subjectSubscription) {
+      this.subjectSubscription.unsubscribe();
+    }
   }
 
   public applyDates(): void {
@@ -450,24 +324,96 @@ export class DateRangeModalComponent implements OnInit, AfterContentInit {
       selectedButtonName: this.selectedButtonName,
     };
     this.unsubscribe();
-    // this.modalController.dismiss({
-    //   calendarData: data,
-    // });
+    this.apply.emit(data);
+  }
+}
+
+@Component({
+  selector: 'smart-date-range',
+  templateUrl: './date-range.component.html',
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => DateRangeComponent),
+      multi: true,
+    },
+  ],
+  imports: [TranslatePipe, DateRangeModalComponent],
+})
+export class DateRangeComponent implements ControlValueAccessor {
+  private cd = inject(ChangeDetectorRef);
+
+  value: IDateRange | undefined = undefined;
+  isOpen = signal(false);
+
+  propagateChange = (val: any) => {}; // eslint-disable-line
+  propagateTouched = () => {}; // eslint-disable-line
+
+  ngModel = model<IDateRange | undefined>(undefined);
+
+  calendarData: CalendarState = {
+    dateFrom: null as any,
+    dateTo: null as any,
+    scrollPosition: 0,
+    selectedButtonName: FilterBtnConstants.empthyString,
+  };
+
+  constructor() {
+    effect(() => {
+      this.value = this.ngModel();
+    });
   }
 
-  loadDataNext(event: any) {
-    this.calendarService.generateNextMonths();
-    this.calendar = this.calendarService.state.calendar;
-    this.changeDetectionRef.detectChanges();
+  onClick(): void {
+    const ngModel = this.ngModel();
+    if (ngModel?.start) this.calendarData.dateFrom = moment(ngModel.start);
+    if (ngModel?.end) this.calendarData.dateTo = moment(ngModel.end);
 
-    event.target.complete();
+    this.propagateTouched();
+    this.isOpen.set(true);
   }
 
-  loadDataPrev(event: any) {
-    this.calendarService.generatePrevMonths();
-    this.calendar = this.calendarService.state.calendar;
-    this.changeDetectionRef.detectChanges();
+  onModalApply(data: CalendarState): void {
+    this.calendarData = data;
+    if (this.calendarData.dateFrom) {
+      const value = {
+        start: this.calendarData.dateFrom.format('YYYY-MM-DD'),
+        end: this.calendarData.dateTo.format('YYYY-MM-DD'),
+      };
 
-    event.target.complete();
+      this.writeValue(value);
+      this.ngModel.set(this.value);
+      this.propagateChange(this.value);
+    }
+    this.isOpen.set(false);
+  }
+
+  onModalDismiss(): void {
+    this.isOpen.set(false);
+  }
+
+  writeValue(value: any): void {
+    this.value = value;
+    this.cd.detectChanges();
+  }
+
+  registerOnChange(fn: any): void {
+    this.propagateChange = fn;
+  }
+
+  registerOnTouched(fn: any): void {
+    this.propagateTouched = fn;
+  }
+
+  onClear(): void {
+    this.calendarData.dateFrom = null as any;
+    this.calendarData.dateTo = null as any;
+
+    this.ngModel.set(undefined);
+    this.value = undefined;
+    this.propagateChange(this.value);
+    this.propagateTouched();
   }
 }

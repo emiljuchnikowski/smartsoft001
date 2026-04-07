@@ -29,9 +29,19 @@ export interface IAppOptions {
   style?: IStyle;
 }
 
+export type SmartCardVariant =
+  | 'basic'
+  | 'edge-to-edge'
+  | 'well'
+  | 'well-on-gray'
+  | 'well-edge-to-edge';
+
 export interface ICardOptions {
   title?: string;
   buttons?: Array<IIconButtonOptions>;
+  variant?: SmartCardVariant;
+  grayFooter?: boolean;
+  grayBody?: boolean;
 }
 
 export interface IIconButtonOptions {
@@ -145,6 +155,12 @@ export type SmartColor =
   | 'fuchsia'
   | 'pink'
   | 'rose';
+
+export interface IAccordionOptions {
+  open?: boolean;
+  disabled?: boolean;
+  animated?: boolean;
+}
 
 export interface IButtonOptions {
   type?: 'submit' | 'button';
