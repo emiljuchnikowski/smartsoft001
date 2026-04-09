@@ -1,3 +1,18 @@
+## 2.118.0 (2026-04-07)
+
+This was a version bump only, there were no code changes.
+
+## 2.117.0 (2026-04-07)
+
+### 🩹 Fixes
+
+- **shared:** update Tailwind prefix to smart: in angular-components skill ([959e3c6](https://github.com/emiljuchnikowski/smartsoft001/commit/959e3c6))
+
+### ❤️ Thank You
+
+- Claude Opus 4.6 (1M context)
+- Emil Juchnikowski
+
 ## 2.116.0 (2026-03-30)
 
 ### 🚀 Features
