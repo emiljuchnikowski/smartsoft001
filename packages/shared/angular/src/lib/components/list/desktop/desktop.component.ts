@@ -1,4 +1,10 @@
-import {CdkCell, CdkHeaderCell, CdkHeaderRow, CdkRow, CdkTable} from "@angular/cdk/table";
+import {
+  CdkCell,
+  CdkHeaderCell,
+  CdkHeaderRow,
+  CdkRow,
+  CdkTable,
+} from '@angular/cdk/table';
 import { NgTemplateOutlet } from '@angular/common';
 import {
   AfterViewInit,
@@ -43,20 +49,20 @@ import { ListBaseComponent } from '../base/base.component';
       }
     `,
   ],
-    imports: [
-        NgTemplateOutlet,
-        ListHeaderPipe,
-        ListCellPipe,
-        LazyLoadImageModule,
-        FileUrlPipe,
-        TranslatePipe,
-        PagingComponent,
-        CdkTable,
-        CdkHeaderCell,
-        CdkCell,
-        CdkHeaderRow,
-        CdkRow,
-    ],
+  imports: [
+    NgTemplateOutlet,
+    ListHeaderPipe,
+    ListCellPipe,
+    LazyLoadImageModule,
+    FileUrlPipe,
+    TranslatePipe,
+    PagingComponent,
+    CdkTable,
+    CdkHeaderCell,
+    CdkCell,
+    CdkHeaderRow,
+    CdkRow,
+  ],
 })
 export class ListDesktopComponent<T extends IEntity<string>>
   extends ListBaseComponent<T>

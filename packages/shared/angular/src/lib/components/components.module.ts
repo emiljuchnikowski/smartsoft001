@@ -14,13 +14,6 @@ import {
   DETAILS_COMPONENT_TOKEN,
   FORM_COMPONENT_TOKEN,
 } from '../shared.inectors';
-import {
-  AccordionComponent,
-  AccordionHeaderComponent,
-  AccordionBodyComponent,
-} from './accordion';
-import { ButtonComponent, ButtonStandardComponent } from './button';
-import { CardComponent } from './card/card.component';
 import { DateEditComponent } from './date-edit';
 import { DateRangeComponent, DateRangeModalComponent } from './date-range';
 import {
@@ -44,10 +37,7 @@ import {
 import { DetailsComponent, DetailsStandardComponent } from './details';
 import { SharedDirectivesModule } from '../directives';
 import { ExportComponent } from './export';
-import {
-  FormComponent,
-  FormStandardComponent,
-} from './form';
+import { FormComponent, FormStandardComponent } from './form';
 import { ImportComponent } from './import';
 import { InfoComponent, InfoModalComponent } from './info';
 import {
@@ -94,16 +84,6 @@ import { LoaderComponent } from './loader';
 import { PageComponent, PageStandardComponent } from './page';
 import { PasswordStrengthComponent } from './password-strength';
 
-export const ACCORDION_COMPONENTS = [
-  AccordionComponent,
-  AccordionHeaderComponent,
-  AccordionBodyComponent,
-];
-
-export const BUTTON_COMPONENTS = [ButtonComponent, ButtonStandardComponent];
-
-export const CARD_COMPONENTS = [CardComponent];
-
 export const DETAILS_COMPONENTS = [DetailsComponent, DetailsStandardComponent];
 
 export const DETAIL_COMPONENTS = [
@@ -125,10 +105,7 @@ export const DETAIL_COMPONENTS = [
   DetailPhoneNumberPlComponent,
 ];
 
-export const FORM_COMPONENTS = [
-  FormStandardComponent,
-  FormComponent,
-];
+export const FORM_COMPONENTS = [FormStandardComponent, FormComponent];
 
 export const INPUT_COMPONENTS = [
   InputComponent,
@@ -189,11 +166,8 @@ export const COMPONENTS = [
   ...FORM_COMPONENTS,
   ...INPUT_COMPONENTS,
   ...PAGE_COMPONENTS,
-  ...ACCORDION_COMPONENTS,
   ...DATE_RANGE_COMPONENTS,
   ...DATE_EDIT_COMPONENTS,
-  ...BUTTON_COMPONENTS,
-  ...CARD_COMPONENTS,
   ...LIST_COMPONENTS,
   ...LOADER_COMPONENTS,
   ...DETAIL_COMPONENTS,

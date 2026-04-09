@@ -9,11 +9,7 @@ import { InputBaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-input-date',
   templateUrl: './date.component.html',
-  imports: [
-    ModelLabelPipe,
-    ReactiveFormsModule,
-    AsyncPipe,
-  ],
+  imports: [ModelLabelPipe, ReactiveFormsModule, AsyncPipe],
 })
 export class InputDateComponent<T>
   extends InputBaseComponent<T>
@@ -28,8 +24,8 @@ export class InputDateComponent<T>
   ngOnInit() {
     this.control.valueChanges.pipe(this.takeUntilDestroy).subscribe((value) => {
       if (value && value.length !== 10) {
-          // TODO: re-enable moment
-       // this.control.setValue(moment(value).format('YYYY-MM-DD'));
+        // TODO: re-enable moment
+        // this.control.setValue(moment(value).format('YYYY-MM-DD'));
       }
     });
   }
