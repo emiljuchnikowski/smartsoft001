@@ -3,7 +3,8 @@ import { Component, ElementRef, viewChild } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { ModelLabelPipe } from '../../../pipes';
-import { ButtonComponent } from '../../button';
+// TODO: ButtonComponent moved to @smartsoft001-pro/angular (FRA-110)
+// import { ButtonComponent } from '../../button';
 import { InputBaseComponent } from '../base/base.component';
 
 /**
@@ -44,9 +45,11 @@ import { InputBaseComponent } from '../base/base.component';
       }
       <!--    </ion-text> </ion-label-->
       ><br />
+      <!-- TODO: ButtonComponent moved to @smartsoft001-pro/angular (FRA-110)
       <smart-button [options]="addButtonOptions">{{
         (control.value ? 'change' : 'add') | translate
       }}</smart-button>
+      -->
       <input
         type="file"
         #inputObj
@@ -58,7 +61,7 @@ import { InputBaseComponent } from '../base/base.component';
       {{ control.value?.name }}
     }
   `,
-  imports: [ButtonComponent, ModelLabelPipe, AsyncPipe, TranslatePipe],
+  imports: [ModelLabelPipe, AsyncPipe, TranslatePipe],
 })
 export class InputFileComponent<T> extends InputBaseComponent<T> {
   addButtonOptions = {

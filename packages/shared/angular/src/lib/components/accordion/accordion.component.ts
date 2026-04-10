@@ -1,27 +1,48 @@
-import { Component, model, ModelSignal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  model,
+  ModelSignal,
+  ViewEncapsulation,
+} from '@angular/core';
+
+import { IAccordionOptions } from '../../models';
+import { AccordionBodyComponent } from './body/body.component';
+import { AccordionHeaderComponent } from './header/header.component';
 
 @Component({
   selector: 'smart-accordion',
   template: `
-    <!--        <ion-item (click)="update()">-->
-    <ng-content select="smart-accordion-header"></ng-content>
-    @if (show()) {
-      <!--      TODO: extend tailwind classes to have mr-6.5 = margin-right: 1.6rem-1.625rem-->
-      <!--        <ion-icon class="mr-6.5" name="caret-up-outline" slot="end"></ion-icon>-->
-    } @else {
-      <!--        <ion-icon class="mr-6.5" name="caret-down-outline" slot="end"></ion-icon>-->
-    }
-    <!--    </ion-item>-->
+    <div
+      class="smart:divide-y smart:divide-gray-200 smart:rounded-lg smart:border smart:border-gray-200 dark:smart:divide-white/10 dark:smart:border-white/10"
+    >
+      <div (click)="toggle()">
+        <smart-accordion-header
+          [open]="show()"
+          [disabled]="options()?.disabled ?? false"
+        >
+          <ng-content select="[accordionHeader]"></ng-content>
+        </smart-accordion-header>
+      </div>
 
-    @if (show()) {
-      <ng-content select="smart-accordion-body"></ng-content>
-    }
+      @if (show()) {
+        <smart-accordion-body>
+          <ng-content select="[accordionBody]"></ng-content>
+        </smart-accordion-body>
+      }
+    </div>
   `,
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AccordionHeaderComponent, AccordionBodyComponent],
 })
 export class AccordionComponent {
   show: ModelSignal<boolean> = model<boolean>(false);
+  options = input<IAccordionOptions>();
 
-  update() {
+  toggle(): void {
+    if (this.options()?.disabled) return;
     this.show.update((val) => !val);
   }
 }

@@ -1,144 +1,143 @@
-<!--<ion-grid class="max-w-sm p-0 m-0" [class.invalid]="!validDate">-->
-<!--  <ion-row>-->
-<!--    <ion-col>-->
-<div class="bg-gray-200">
-  <!--        <ion-input-->
-  <!--          type="number"-->
-  <!--          min="0"-->
-  <!--          max="9"-->
-  <!--          maxlength="1"-->
-  <!--          [(ngModel)]="d1"-->
-  <!--          #d1Element-->
-  <!--          (click)="select(d1Element)"-->
-  <!--          (keyup)="moveTo($event, d2Element)"-->
-  <!--        ></ion-input>-->
+<div class="smart:inline-flex smart:items-start smart:gap-3">
+  <div class="smart:flex smart:flex-col smart:items-center smart:gap-0.5">
+    <div class="smart:flex smart:items-center smart:gap-0.5">
+      <input
+        type="number"
+        min="0"
+        max="9"
+        maxlength="1"
+        [(ngModel)]="d1"
+        #d1Element
+        (click)="select(d1Element)"
+        (keyup)="moveTo($event, d2Element)"
+        class="smart:w-8 smart:h-10 smart:text-center smart:border smart:border-gray-300 smart:rounded-md smart:text-sm smart:font-medium smart:text-gray-900 focus:smart:ring-2 focus:smart:ring-indigo-500 focus:smart:border-indigo-500 dark:smart:bg-gray-800 dark:smart:border-gray-600 dark:smart:text-white"
+        [class.smart:border-red-500]="!validDate"
+        [class.smart:text-red-600]="!validDate"
+      />
+      <input
+        type="number"
+        min="0"
+        max="9"
+        maxlength="1"
+        [(ngModel)]="d2"
+        #d2Element
+        (click)="select(d2Element)"
+        (keyup)="moveTo($event, m1Element)"
+        class="smart:w-8 smart:h-10 smart:text-center smart:border smart:border-gray-300 smart:rounded-md smart:text-sm smart:font-medium smart:text-gray-900 focus:smart:ring-2 focus:smart:ring-indigo-500 focus:smart:border-indigo-500 dark:smart:bg-gray-800 dark:smart:border-gray-600 dark:smart:text-white"
+        [class.smart:border-red-500]="!validDate"
+        [class.smart:text-red-600]="!validDate"
+      />
+    </div>
+    <span
+      class="smart:text-xs smart:text-gray-400 dark:smart:text-gray-500"
+      [class.smart:text-red-500]="!validDate"
+      >DD</span
+    >
+  </div>
+
+  <span class="smart:text-gray-400 smart:mt-2.5 smart:text-sm smart:font-medium"
+    >-</span
+  >
+
+  <div class="smart:flex smart:flex-col smart:items-center smart:gap-0.5">
+    <div class="smart:flex smart:items-center smart:gap-0.5">
+      <input
+        type="number"
+        min="0"
+        max="9"
+        maxlength="1"
+        [(ngModel)]="m1"
+        #m1Element
+        (click)="select(m1Element)"
+        (keyup)="moveTo($event, m2Element)"
+        class="smart:w-8 smart:h-10 smart:text-center smart:border smart:border-gray-300 smart:rounded-md smart:text-sm smart:font-medium smart:text-gray-900 focus:smart:ring-2 focus:smart:ring-indigo-500 focus:smart:border-indigo-500 dark:smart:bg-gray-800 dark:smart:border-gray-600 dark:smart:text-white"
+        [class.smart:border-red-500]="!validDate"
+        [class.smart:text-red-600]="!validDate"
+      />
+      <input
+        type="number"
+        min="0"
+        max="9"
+        maxlength="1"
+        [(ngModel)]="m2"
+        #m2Element
+        (click)="select(m2Element)"
+        (keyup)="moveTo($event, y1Element)"
+        class="smart:w-8 smart:h-10 smart:text-center smart:border smart:border-gray-300 smart:rounded-md smart:text-sm smart:font-medium smart:text-gray-900 focus:smart:ring-2 focus:smart:ring-indigo-500 focus:smart:border-indigo-500 dark:smart:bg-gray-800 dark:smart:border-gray-600 dark:smart:text-white"
+        [class.smart:border-red-500]="!validDate"
+        [class.smart:text-red-600]="!validDate"
+      />
+    </div>
+    <span
+      class="smart:text-xs smart:text-gray-400 dark:smart:text-gray-500"
+      [class.smart:text-red-500]="!validDate"
+      >MM</span
+    >
+  </div>
+
+  <span class="smart:text-gray-400 smart:mt-2.5 smart:text-sm smart:font-medium"
+    >-</span
+  >
+
+  <div class="smart:flex smart:flex-col smart:items-center smart:gap-0.5">
+    <div class="smart:flex smart:items-center smart:gap-0.5">
+      <input
+        type="number"
+        min="0"
+        max="9"
+        maxlength="1"
+        [(ngModel)]="y1"
+        #y1Element
+        (click)="select(y1Element)"
+        (keyup)="moveTo($event, y2Element)"
+        class="smart:w-8 smart:h-10 smart:text-center smart:border smart:border-gray-300 smart:rounded-md smart:text-sm smart:font-medium smart:text-gray-900 focus:smart:ring-2 focus:smart:ring-indigo-500 focus:smart:border-indigo-500 dark:smart:bg-gray-800 dark:smart:border-gray-600 dark:smart:text-white"
+        [class.smart:border-red-500]="!validDate"
+        [class.smart:text-red-600]="!validDate"
+      />
+      <input
+        type="number"
+        min="0"
+        max="9"
+        maxlength="1"
+        [(ngModel)]="y2"
+        #y2Element
+        (click)="select(y2Element)"
+        (keyup)="moveTo($event, y3Element)"
+        class="smart:w-8 smart:h-10 smart:text-center smart:border smart:border-gray-300 smart:rounded-md smart:text-sm smart:font-medium smart:text-gray-900 focus:smart:ring-2 focus:smart:ring-indigo-500 focus:smart:border-indigo-500 dark:smart:bg-gray-800 dark:smart:border-gray-600 dark:smart:text-white"
+        [class.smart:border-red-500]="!validDate"
+        [class.smart:text-red-600]="!validDate"
+      />
+      <input
+        type="number"
+        min="0"
+        max="9"
+        maxlength="1"
+        [(ngModel)]="y3"
+        #y3Element
+        (click)="select(y3Element)"
+        (keyup)="moveTo($event, y4Element)"
+        class="smart:w-8 smart:h-10 smart:text-center smart:border smart:border-gray-300 smart:rounded-md smart:text-sm smart:font-medium smart:text-gray-900 focus:smart:ring-2 focus:smart:ring-indigo-500 focus:smart:border-indigo-500 dark:smart:bg-gray-800 dark:smart:border-gray-600 dark:smart:text-white"
+        [class.smart:border-red-500]="!validDate"
+        [class.smart:text-red-600]="!validDate"
+      />
+      <input
+        type="number"
+        min="0"
+        max="9"
+        maxlength="1"
+        [(ngModel)]="y4"
+        #y4Element
+        (click)="select(y4Element)"
+        (keyup)="select(y4Element)"
+        class="smart:w-8 smart:h-10 smart:text-center smart:border smart:border-gray-300 smart:rounded-md smart:text-sm smart:font-medium smart:text-gray-900 focus:smart:ring-2 focus:smart:ring-indigo-500 focus:smart:border-indigo-500 dark:smart:bg-gray-800 dark:smart:border-gray-600 dark:smart:text-white"
+        [class.smart:border-red-500]="!validDate"
+        [class.smart:text-red-600]="!validDate"
+      />
+    </div>
+    <span
+      class="smart:text-xs smart:text-gray-400 dark:smart:text-gray-500"
+      [class.smart:text-red-500]="!validDate"
+      >RRRR</span
+    >
+  </div>
 </div>
-<!--    </ion-col>-->
-<!--    <ion-col>-->
-<div class="bg-gray-200">
-  <!--        <ion-input-->
-  <!--          type="number"-->
-  <!--          min="0"-->
-  <!--          max="9"-->
-  <!--          maxlength="1"-->
-  <!--          [(ngModel)]="d2"-->
-  <!--          #d2Element-->
-  <!--          (click)="select(d2Element)"-->
-  <!--          (keyup)="moveTo($event, m1Element)"-->
-  <!--        ></ion-input>-->
-</div>
-<!--    </ion-col>-->
-<!--    <ion-col>-->
-<div style="text-align: center; vertical-align: middle; padding: 6px 0">-</div>
-<!--    </ion-col>-->
-<!--    <ion-col>-->
-<div class="bg-gray-200">
-  <!--        <ion-input-->
-  <!--          type="number"-->
-  <!--          min="0"-->
-  <!--          max="9"-->
-  <!--          maxlength="1"-->
-  <!--          [(ngModel)]="m1"-->
-  <!--          #m1Element-->
-  <!--          (click)="select(m1Element)"-->
-  <!--          (keyup)="moveTo($event, m2Element)"-->
-  <!--        ></ion-input>-->
-</div>
-<!--    </ion-col>-->
-<!--    <ion-col>-->
-<div class="bg-gray-200">
-  <!--        <ion-input-->
-  <!--          type="number"-->
-  <!--          min="0"-->
-  <!--          max="9"-->
-  <!--          maxlength="1"-->
-  <!--          [(ngModel)]="m2"-->
-  <!--          #m2Element-->
-  <!--          (click)="select(m2Element)"-->
-  <!--          (keyup)="moveTo($event, y1Element)"-->
-  <!--        ></ion-input>-->
-</div>
-<!--    </ion-col>-->
-<!--    <ion-col>-->
-<div style="text-align: center; vertical-align: middle; padding: 6px 0">-</div>
-<!--    </ion-col>-->
-<!--    <ion-col>-->
-<div class="bg-gray-200">
-  <!--        <ion-input-->
-  <!--          type="number"-->
-  <!--          min="0"-->
-  <!--          max="9"-->
-  <!--          maxlength="1"-->
-  <!--          [(ngModel)]="y1"-->
-  <!--          #y1Element-->
-  <!--          (click)="select(y1Element)"-->
-  <!--          (keyup)="moveTo($event, y2Element)"-->
-  <!--        ></ion-input>-->
-</div>
-<!--    </ion-col>-->
-<!--    <ion-col>-->
-<div class="bg-gray-200">
-  <!--        <ion-input-->
-  <!--          class="ml-5"-->
-  <!--          type="number"-->
-  <!--          min="0"-->
-  <!--          max="9"-->
-  <!--          maxlength="1"-->
-  <!--          [(ngModel)]="y2"-->
-  <!--          #y2Element-->
-  <!--          (click)="select(y2Element)"-->
-  <!--          (keyup)="moveTo($event, y3Element)"-->
-  <!--        ></ion-input>-->
-</div>
-<!--    </ion-col>-->
-<!--    <ion-col>-->
-<div class="bg-gray-200">
-  <!--        <ion-input-->
-  <!--          class="ml-5"-->
-  <!--          type="number"-->
-  <!--          min="0"-->
-  <!--          max="9"-->
-  <!--          maxlength="1"-->
-  <!--          [(ngModel)]="y3"-->
-  <!--          #y3Element-->
-  <!--          (click)="select(y3Element)"-->
-  <!--          (keyup)="moveTo($event, y4Element)"-->
-  <!--        ></ion-input>-->
-</div>
-<!--    </ion-col>-->
-<!--    <ion-col>-->
-<div class="bg-gray-200">
-  <!--        <ion-input-->
-  <!--          class="ml-5"-->
-  <!--          type="number"-->
-  <!--          min="0"-->
-  <!--          max="9"-->
-  <!--          maxlength="1"-->
-  <!--          [(ngModel)]="y4"-->
-  <!--          #y4Element-->
-  <!--          (click)="select(y4Element)"-->
-  <!--          (keyup)="select(y4Element)"-->
-  <!--        ></ion-input>-->
-</div>
-<!--    </ion-col>-->
-<!--  </ion-row>-->
-<!--  <ion-row>-->
-<!--    <ion-col size="2">-->
-<div [class.invalid]="!validDate" style="text-align: center; color: #ccc">
-  DD
-</div>
-<!--    </ion-col>-->
-<!--    <ion-col></ion-col>-->
-<!--    <ion-col size="2">-->
-<div [class.invalid]="!validDate" style="text-align: center; color: #ccc">
-  MM
-</div>
-<!--    </ion-col>-->
-<!--    <ion-col></ion-col>-->
-<!--    <ion-col size="4">-->
-<div [class.invalid]="!validDate" style="text-align: center; color: #ccc">
-  RRRR
-</div>
-<!--    </ion-col>-->
-<!--  </ion-row>-->
-<!--</ion-grid>-->

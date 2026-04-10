@@ -5,13 +5,14 @@ import { delay, tap } from 'rxjs/operators';
 
 import { IButtonOptions } from '../../../models';
 import { ModelLabelPipe } from '../../../pipes';
-import { ButtonComponent } from '../../button';
+// TODO: ButtonComponent moved to @smartsoft001-pro/angular (FRA-110)
+// import { ButtonComponent } from '../../button';
 import { InputFileBaseComponent } from '../base/file.component';
 
 @Component({
   selector: 'smart-input-video',
   templateUrl: './video.component.html',
-  imports: [ModelLabelPipe, AsyncPipe, ButtonComponent, TranslatePipe],
+  imports: [ModelLabelPipe, AsyncPipe, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputVideoComponent<T>

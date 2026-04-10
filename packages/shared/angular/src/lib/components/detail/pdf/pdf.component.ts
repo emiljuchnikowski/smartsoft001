@@ -5,7 +5,8 @@ import { IEntity } from '@smartsoft001/domain-core';
 
 import { IButtonOptions } from '../../../models';
 import { FileService } from '../../../services';
-import { ButtonComponent } from '../../button';
+// TODO: ButtonComponent moved to @smartsoft001-pro/angular (FRA-110)
+// import { ButtonComponent } from '../../button';
 import { DetailBaseComponent } from '../base/base.component';
 
 @Component({
@@ -13,12 +14,14 @@ import { DetailBaseComponent } from '../base/base.component';
   template: `
     @let item = options()?.item?.();
     @if (item && options()?.key) {
+      <!-- TODO: ButtonComponent moved to @smartsoft001-pro/angular (FRA-110)
       <smart-button [options]="getButtonOptions(item)">
         {{ 'show' | translate }}
       </smart-button>
+      -->
     }
   `,
-  imports: [ButtonComponent, TranslatePipe],
+  imports: [TranslatePipe],
 })
 export class DetailPdfComponent<
   T extends IEntity<string> | undefined,

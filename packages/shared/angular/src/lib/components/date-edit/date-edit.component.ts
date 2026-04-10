@@ -1,10 +1,12 @@
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   forwardRef,
   inject,
   model,
   output,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -18,11 +20,19 @@ import moment from 'moment';
   templateUrl: './date-edit.component.html',
   styles: [
     `
-      .invalid {
-        color: var(--smart-color-danger) !important;
+      smart-date-edit input[type='number']::-webkit-outer-spin-button,
+      smart-date-edit input[type='number']::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      smart-date-edit input[type='number'] {
+        -moz-appearance: textfield;
+        text-align: center;
       }
     `,
   ],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormsModule],
   providers: [
     {
@@ -116,43 +126,32 @@ export class DateEditComponent implements ControlValueAccessor {
     this.propagateTouched = fn;
   }
 
-  // async moveTo(event: KeyboardEvent, el: IonInput): Promise<void> {
-  //   if (event.key === 'Backspace' || event.key === 'Enter') return;
-  //
-  //   const allowKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-  //
-  //   if (!allowKeys.some((k) => k === event.key)) {
-  //     (event.target as HTMLInputElement).value = '0';
-  //     return;
-  //   }
-  //
-  //   (event.target as HTMLInputElement).value = (
-  //     event.target as HTMLInputElement
-  //   ).value.substr(0, 1);
-  //
-  //   await el.setFocus();
-  //
-  //   await this.select(el);
-  // }
+  moveTo(event: KeyboardEvent, el: HTMLInputElement): void {
+    if (event.key === 'Backspace' || event.key === 'Enter') return;
 
-  // async select(el: IonInput): Promise<void> {
-  //   setTimeout(async () => {
-  //     const nativeEl: HTMLInputElement = await el.getInputElement();
-  //
-  //     if (nativeEl) {
-  //       nativeEl.value = nativeEl.value.substr(0, 1);
-  //
-  //       if (nativeEl.setSelectionRange) {
-  //         nativeEl.type = 'text';
-  //         nativeEl.setSelectionRange(0, nativeEl.value.length);
-  //         nativeEl.type = 'number';
-  //         return;
-  //       }
-  //
-  //       nativeEl.select();
-  //     }
-  //   });
-  // }
+    const allowKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+
+    if (!allowKeys.some((k) => k === event.key)) {
+      (event.target as HTMLInputElement).value = '0';
+      return;
+    }
+
+    (event.target as HTMLInputElement).value = (
+      event.target as HTMLInputElement
+    ).value.substr(0, 1);
+
+    el.focus();
+    this.select(el);
+  }
+
+  select(el: HTMLInputElement): void {
+    setTimeout(() => {
+      if (el) {
+        el.value = el.value.substr(0, 1);
+        el.setSelectionRange(0, el.value.length);
+      }
+    });
+  }
 
   private setValueAt(val: string, index: number): void {
     if (val === null) return;

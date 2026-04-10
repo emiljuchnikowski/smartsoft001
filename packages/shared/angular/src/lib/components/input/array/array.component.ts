@@ -23,7 +23,8 @@ import {
   AccordionComponent,
   AccordionHeaderComponent,
 } from '../../accordion';
-import { ButtonComponent } from '../../button';
+// TODO: ButtonComponent moved to @smartsoft001-pro/angular (FRA-110)
+// import { ButtonComponent } from '../../button';
 import { InputBaseComponent } from '../base/base.component';
 
 @Component({
@@ -32,7 +33,6 @@ import { InputBaseComponent } from '../base/base.component';
   imports: [
     ModelLabelPipe,
     AsyncPipe,
-    ButtonComponent,
     TranslatePipe,
     NgComponentOutlet,
     DynamicIoDirective,
