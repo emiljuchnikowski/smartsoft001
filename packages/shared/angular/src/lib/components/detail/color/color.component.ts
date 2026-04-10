@@ -18,7 +18,7 @@ import { DetailBaseComponent } from '../base/base.component';
     }
   `,
   // TODO: rework styles with tailwind
-  styles: [],
+  styles: [ ],
 })
 export class DetailColorComponent<
   T extends { [key: string]: any } | undefined,

@@ -15,7 +15,6 @@ All commit messages must follow the **Conventional Commits** specification:
 ```
 
 ### Examples
-
 ```
 feat(auth): add JWT token validation
 fix(crud): resolve pagination bug in user list
@@ -44,14 +43,12 @@ Use one of the following commit types:
 The scope is **required** and must be one of the following:
 
 ### Package Scopes
-
 - **auth** - Authentication related changes
 - **crud** - CRUD operations and related functionality
 - **shared** - Shared utilities and common functionality
 - **trans** - Translation/internationalization features
 
 ### Infrastructure Scopes
-
 - **nx** - Nx workspace configuration and tooling
 - **github** - GitHub workflows, templates, and configuration
 - **docker** - Docker configuration and containerization
@@ -69,7 +66,6 @@ The scope is **required** and must be one of the following:
 ## Examples by Scope
 
 ### Authentication (auth)
-
 ```
 feat(auth): implement OAuth2 login flow
 fix(auth): resolve token expiration handling
@@ -78,7 +74,6 @@ refactor(auth): simplify JWT middleware
 ```
 
 ### CRUD Operations (crud)
-
 ```
 feat(crud): add soft delete functionality
 fix(crud): correct filtering in search endpoint
@@ -87,7 +82,6 @@ docs(crud): update API endpoint documentation
 ```
 
 ### Shared Utilities (shared)
-
 ```
 feat(shared): add new validation utilities
 fix(shared): resolve type definitions export
@@ -96,7 +90,6 @@ style(shared): format code according to eslint rules
 ```
 
 ### Translation (trans)
-
 ```
 feat(trans): add support for new language
 fix(trans): correct missing translation keys
@@ -104,7 +97,6 @@ chore(trans): update translation files
 ```
 
 ### Infrastructure
-
 ```
 chore(nx): update workspace to latest version
 ci(github): add automated testing workflow
@@ -145,23 +137,20 @@ Always include issue references when your commit is related to a specific issue,
 Use these keywords to automatically link and close issues:
 
 **Closing Keywords** (will close the issue when merged):
-
 - `Closes #123`
-- `Fixes #123`
+- `Fixes #123` 
 - `Resolves #123`
 - `Closes: #123`
 - `Fixes: #123`
 - `Resolves: #123`
 
 **Reference Keywords** (will link but not close):
-
 - `Refs #123`
 - `References #123`
 - `Related to #123`
 - `See #123`
 
 **Project-specific References**:
-
 - `Refs FRA-123` - Reference to specific project issue identifiers
 - `Refs FRA-*` - Use this format for project tracking system issues
 
@@ -224,7 +213,6 @@ Refs FRA-457
 ### GitHub Integration
 
 When using GitHub, issue references will:
-
 - Automatically link commits to issues
 - Close issues when using closing keywords
 - Create cross-references in issue comments
@@ -233,7 +221,6 @@ When using GitHub, issue references will:
 ## Common Mistakes to Avoid
 
 ❌ **Wrong:**
-
 ```
 Fix bug
 Update code
@@ -243,7 +230,6 @@ feat(wrong-scope): add something
 ```
 
 ✅ **Correct:**
-
 ```
 fix(auth): resolve login validation bug
 feat(crud): add pagination to user list
@@ -258,13 +244,11 @@ All commits are automatically validated using commitlint. If your commit message
 ## Tools Integration
 
 This workspace uses:
-
 - **Commitlint** for commit message validation
 - **Conventional Commits** for standardized format
 - **Semantic Release** for automated versioning
 
 Following these guidelines ensures proper:
-
 - Automated changelog generation
 - Semantic versioning
 - Clear project history

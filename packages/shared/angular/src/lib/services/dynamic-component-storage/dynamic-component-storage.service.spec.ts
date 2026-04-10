@@ -89,7 +89,10 @@ describe('angular: DynamicComponentStorageService', () => {
         injector: { get: jest.fn().mockReturnValue([]) },
         instance: { constructor: {} },
       } as any;
-      const result = DynamicComponentStorageService.get('form', moduleRefMock);
+      const result = DynamicComponentStorageService.get(
+        'form',
+        moduleRefMock,
+      );
       expect(result).toEqual([]);
     });
   });

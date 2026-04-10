@@ -53,14 +53,14 @@ export class CrudCoreModule<T extends IEntity<string>> {
 }
 
 @NgModule({
-  providers: [
-    CrudService,
-    CrudListGroupService,
-    CrudEffects,
-    PageService,
-    CrudFacade,
-    CrudListPaginationFactory,
-  ],
+    providers: [
+        CrudService,
+        CrudListGroupService,
+        CrudEffects,
+        PageService,
+        CrudFacade,
+        CrudListPaginationFactory,
+    ],
 })
 export class CrudModule<T extends IEntity<string>> {
   static forFeature<T extends IEntity<string>>(
@@ -81,15 +81,15 @@ export class CrudModule<T extends IEntity<string>> {
     };
   }
 
-  constructor(config: CrudConfig<T>, effects: CrudEffects<any>) {
-    NgrxStoreService.addReducer(
-      config.entity,
-      config.reducerFactory
-        ? config.reducerFactory()
-        : getReducer(config.entity),
-    );
-    effects.init();
-  }
+    constructor(config: CrudConfig<T>, effects: CrudEffects<any>) {
+        NgrxStoreService.addReducer(
+            config.entity,
+            config.reducerFactory
+                ? config.reducerFactory()
+                : getReducer(config.entity),
+        );
+        effects.init();
+    }
 }
 
 export interface ICrudModuleOptionsWithRoutng<T> {
