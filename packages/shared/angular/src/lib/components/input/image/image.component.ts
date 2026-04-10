@@ -4,13 +4,14 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { debounceTime } from 'rxjs/operators';
 
 import { ModelLabelPipe } from '../../../pipes';
-import { ButtonComponent } from '../../button';
+// TODO: ButtonComponent moved to @smartsoft001-pro/angular (FRA-110)
+// import { ButtonComponent } from '../../button';
 import { InputFileBaseComponent } from '../base/file.component';
 
 @Component({
   selector: 'smart-input-image',
   templateUrl: './image.component.html',
-  imports: [ModelLabelPipe, AsyncPipe, ButtonComponent, TranslatePipe],
+  imports: [ModelLabelPipe, AsyncPipe, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputImageComponent<T>

@@ -19,7 +19,8 @@ import {
   AccordionHeaderComponent,
   AccordionBodyComponent,
 } from './accordion';
-import { ButtonComponent, ButtonStandardComponent } from './button';
+// TODO: ButtonComponent moved to @smartsoft001-pro/angular (FRA-110)
+// import { ButtonComponent, ButtonStandardComponent } from './button';
 import { CardComponent } from './card/card.component';
 import { DateEditComponent } from './date-edit';
 import { DateRangeComponent, DateRangeModalComponent } from './date-range';
@@ -44,10 +45,7 @@ import {
 import { DetailsComponent, DetailsStandardComponent } from './details';
 import { SharedDirectivesModule } from '../directives';
 import { ExportComponent } from './export';
-import {
-  FormComponent,
-  FormStandardComponent,
-} from './form';
+import { FormComponent, FormStandardComponent } from './form';
 import { ImportComponent } from './import';
 import { InfoComponent, InfoModalComponent } from './info';
 import {
@@ -100,7 +98,8 @@ export const ACCORDION_COMPONENTS = [
   AccordionBodyComponent,
 ];
 
-export const BUTTON_COMPONENTS = [ButtonComponent, ButtonStandardComponent];
+// TODO: ButtonComponent moved to @smartsoft001-pro/angular (FRA-110)
+export const BUTTON_COMPONENTS: any[] = [];
 
 export const CARD_COMPONENTS = [CardComponent];
 
@@ -125,10 +124,7 @@ export const DETAIL_COMPONENTS = [
   DetailPhoneNumberPlComponent,
 ];
 
-export const FORM_COMPONENTS = [
-  FormStandardComponent,
-  FormComponent,
-];
+export const FORM_COMPONENTS = [FormStandardComponent, FormComponent];
 
 export const INPUT_COMPONENTS = [
   InputComponent,
