@@ -29,6 +29,7 @@
         (validChange)="onValidChange($event)"
       ></smart-form>
 
+      <!-- TODO: ButtonComponent moved to @smartsoft001-pro/angular (FRA-110)
       <smart-button
         style="float: right"
         [disabled]="lock || !valid"
@@ -36,6 +37,14 @@
       >
         {{ 'change' | translate }}
       </smart-button>
+      -->
+      <button
+        style="float: right"
+        [disabled]="lock || !valid"
+        (click)="buttonOptions.click()"
+      >
+        {{ 'change' | translate }}
+      </button>
     </div>
   }
 }

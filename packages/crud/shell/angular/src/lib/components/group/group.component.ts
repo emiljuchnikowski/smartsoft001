@@ -11,9 +11,10 @@ import {
 import { TranslatePipe } from '@ngx-translate/core';
 
 import {
-  AccordionBodyComponent,
-  AccordionComponent,
-  AccordionHeaderComponent,
+  // TODO: AccordionComponent moved to @smartsoft001-pro/angular (FRA-101)
+  // AccordionBodyComponent,
+  // AccordionComponent,
+  // AccordionHeaderComponent,
   BaseComponent,
   IListOptions,
   ListComponent,
@@ -27,13 +28,14 @@ import { CrudListGroupService } from '../../services/list-group/list-group.servi
 @Component({
   selector: 'smart-crud-group',
   template: `
+    <!-- TODO: AccordionComponent moved to @smartsoft001-pro/angular (FRA-101)
     @for (item of groups(); track item.key) {
       <smart-accordion
         [show]="item.show || false"
         (showChange)="change($event, item)"
       >
-        <smart-accordion-header [ngClass]="{ 'font-bold': item.show }"
-          >{{ item.text | translate }}
+        <smart-accordion-header [ngClass]="{ 'font-bold': item.show }">
+          {{ item.text | translate }}
         </smart-accordion-header>
         <smart-accordion-body>
           @if (item.show && !item.children && listOptions()) {
@@ -50,12 +52,31 @@ import { CrudListGroupService } from '../../services/list-group/list-group.servi
         </smart-accordion-body>
       </smart-accordion>
     }
-    <br /><br /><br />
+    -->
+
+    <!-- TODO: remove this template after moving to @smartsoft001-pro/angular (FRA-101) -->
+    @for (item of groups(); track item.key) {
+      <div (click)="change(!item.show, item)">
+        {{ item.text | translate }}
+      </div>
+      @if (item.show && !item.children && listOptions()) {
+        <smart-list [options]="listOptions()!"></smart-list>
+      }
+      @if (item.children) {
+        <div style="margin-left: 50px">
+          <smart-crud-group
+            [groups]="item.children"
+            [listOptions]="listOptions()"
+          ></smart-crud-group>
+        </div>
+      }
+    }
   `,
   imports: [
-    AccordionComponent,
-    AccordionHeaderComponent,
-    AccordionBodyComponent,
+    // TODO: AccordionComponent moved to @smartsoft001-pro/angular (FRA-101)
+    // AccordionComponent,
+    // AccordionHeaderComponent,
+    // AccordionBodyComponent,
     ListComponent,
     NgClass,
     TranslatePipe,

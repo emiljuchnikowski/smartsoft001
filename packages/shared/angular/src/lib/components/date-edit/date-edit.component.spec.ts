@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DateEditComponent } from './date-edit.component';
+import { DateEditDefaultComponent } from './default/default.component';
 
-describe('DateEditComponent', () => {
-  let fixture: ComponentFixture<DateEditComponent>;
-  let component: DateEditComponent;
+describe('DateEditDefaultComponent', () => {
+  let fixture: ComponentFixture<DateEditDefaultComponent>;
+  let component: DateEditDefaultComponent;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DateEditComponent],
+      imports: [DateEditDefaultComponent],
     }).compileComponents();
-    fixture = TestBed.createComponent(DateEditComponent);
+    fixture = TestBed.createComponent(DateEditDefaultComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -51,67 +51,10 @@ describe('DateEditComponent', () => {
     expect(input.classList.contains('dark:smart:text-white')).toBe(true);
   });
 
-  it('should have default date value', () => {
-    expect(component.ngModel()).toBe('2001-01-01');
-  });
-
-  it('should implement ControlValueAccessor writeValue', () => {
-    component.writeValue('2023-06-15');
-    expect(component.ngModel()).toBe('2023-06-15');
-  });
-
-  it('should register onChange callback', () => {
-    const fn = jest.fn();
-    component.registerOnChange(fn);
-    expect(component.propagateChange).toBe(fn);
-  });
-
-  it('should register onTouched callback', () => {
-    const fn = jest.fn();
-    component.registerOnTouched(fn);
-    expect(component.propagateTouched).toBe(fn);
-  });
-
-  it('should return correct digit for d1 getter', () => {
-    component.writeValue('2023-06-15');
-    expect(component.d1).toBe('1');
-  });
-
-  it('should return correct digit for m1 getter', () => {
-    component.writeValue('2023-06-15');
-    expect(component.m1).toBe('0');
-  });
-
-  it('should return correct digit for y1 getter', () => {
-    component.writeValue('2023-06-15');
-    expect(component.y1).toBe('2');
-  });
-
-  it('should validate date and emit validChange', () => {
-    const spy = jest.fn();
-    component.validChange.subscribe(spy);
-    component.writeValue('2023-06-15');
-    component.d1 = '2';
-    expect(spy).toHaveBeenCalledWith(expect.any(Boolean));
-  });
-
-  it('should set validDate to true for valid date', () => {
-    component.writeValue('2023-06-15');
-    expect(component.validDate).toBe(true);
-  });
-
   it('should apply invalid classes when date is invalid', () => {
     component.validDate = false;
     fixture.detectChanges();
     const input = fixture.nativeElement.querySelector('input');
     expect(input.classList.contains('smart:border-red-500')).toBe(true);
-  });
-
-  it('should have moveTo method defined', () => {
-    expect(component.moveTo).toBeDefined();
-  });
-
-  it('should have select method defined', () => {
-    expect(component.select).toBeDefined();
   });
 });

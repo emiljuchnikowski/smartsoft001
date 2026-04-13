@@ -18,11 +18,12 @@ import { FormFactory } from '../../../factories';
 import { IButtonOptions, IFormOptions } from '../../../models';
 import { ModelLabelPipe } from '../../../pipes';
 import { FORM_COMPONENT_TOKEN } from '../../../shared.inectors';
-import {
-  AccordionBodyComponent,
-  AccordionComponent,
-  AccordionHeaderComponent,
-} from '../../accordion';
+// TODO: AccordionComponent moved to @smartsoft001-pro/angular (FRA-101)
+// import {
+//   AccordionBodyComponent,
+//   AccordionComponent,
+//   AccordionHeaderComponent,
+// } from '../../accordion';
 // TODO: ButtonComponent moved to @smartsoft001-pro/angular (FRA-110)
 // import { ButtonComponent } from '../../button';
 import { InputBaseComponent } from '../base/base.component';
@@ -36,9 +37,10 @@ import { InputBaseComponent } from '../base/base.component';
     TranslatePipe,
     NgComponentOutlet,
     DynamicIoDirective,
-    AccordionComponent,
-    AccordionHeaderComponent,
-    AccordionBodyComponent,
+    // TODO: AccordionComponent moved to @smartsoft001-pro/angular (FRA-101)
+    // AccordionComponent,
+    // AccordionHeaderComponent,
+    // AccordionBodyComponent,
   ],
 })
 export class InputArrayComponent<T, TChild> extends InputBaseComponent<T> {

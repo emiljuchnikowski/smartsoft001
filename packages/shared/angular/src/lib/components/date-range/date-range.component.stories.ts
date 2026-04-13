@@ -3,10 +3,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { applicationConfig, moduleMetadata } from '@storybook/angular';
 
-import {
-  DateRangeComponent,
-  DateRangeModalComponent,
-} from './date-range.component';
+import { DateRangeDefaultComponent } from './default/date-range-default.component';
+import { DateRangeModalDefaultComponent } from './default/date-range-modal-default.component';
 import { StyleService, UIService } from '../../services';
 import {
   TRANSLATE_DATA_ENG,
@@ -34,7 +32,7 @@ const meta: Meta = {
       ],
     }),
     moduleMetadata({
-      imports: [DateRangeComponent, DateRangeModalComponent],
+      imports: [DateRangeDefaultComponent, DateRangeModalDefaultComponent],
       providers: [UIService, StyleService],
     }),
   ],

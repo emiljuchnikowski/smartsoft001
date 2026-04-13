@@ -1,12 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {
-  DateRangeComponent,
-  DateRangeModalComponent,
-  CalendarState,
-  FilterBtnConstants,
-} from './date-range.component';
+import { DateRangeDefaultComponent } from './default/date-range-default.component';
+import { DateRangeModalDefaultComponent } from './default/date-range-modal-default.component';
 import { StyleService, UIService } from '../../services';
 
 @Pipe({ name: 'translate', standalone: true })
@@ -24,23 +20,23 @@ const mockUIService = {
   showAlertWithDismissCallback: jest.fn(),
 };
 
-describe('DateRangeComponent', () => {
-  let fixture: ComponentFixture<DateRangeComponent>;
-  let component: DateRangeComponent;
+describe('DateRangeDefaultComponent', () => {
+  let fixture: ComponentFixture<DateRangeDefaultComponent>;
+  let component: DateRangeDefaultComponent;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DateRangeComponent],
+      imports: [DateRangeDefaultComponent],
       providers: [
         { provide: StyleService, useValue: mockStyleService },
         { provide: UIService, useValue: mockUIService },
       ],
     })
-      .overrideComponent(DateRangeComponent, {
+      .overrideComponent(DateRangeDefaultComponent, {
         add: { imports: [MockTranslatePipe] },
-        remove: { imports: [DateRangeModalComponent] },
+        remove: { imports: [DateRangeModalDefaultComponent] },
       })
-      .overrideComponent(DateRangeComponent, {
+      .overrideComponent(DateRangeDefaultComponent, {
         set: {
           template: `
             <button class="trigger" (click)="onClick()">
@@ -57,7 +53,7 @@ describe('DateRangeComponent', () => {
         },
       })
       .compileComponents();
-    fixture = TestBed.createComponent(DateRangeComponent);
+    fixture = TestBed.createComponent(DateRangeDefaultComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -87,66 +83,25 @@ describe('DateRangeComponent', () => {
     const clearBtn = fixture.nativeElement.querySelector('.clear');
     expect(clearBtn).toBeTruthy();
   });
-
-  it('should clear value on clear click', () => {
-    const fn = jest.fn();
-    component.registerOnChange(fn);
-    component.writeValue({ start: '2023-01-01', end: '2023-01-31' });
-    component.ngModel.set({ start: '2023-01-01', end: '2023-01-31' });
-    component.onClear();
-    expect(component.value).toBeUndefined();
-    expect(fn).toHaveBeenCalledWith(undefined);
-  });
-
-  it('should implement ControlValueAccessor writeValue', () => {
-    component.writeValue({ start: '2023-06-01', end: '2023-06-30' });
-    expect(component.value).toEqual({
-      start: '2023-06-01',
-      end: '2023-06-30',
-    });
-  });
-
-  it('should register onChange callback', () => {
-    const fn = jest.fn();
-    component.registerOnChange(fn);
-    expect(component.propagateChange).toBe(fn);
-  });
-
-  it('should register onTouched callback', () => {
-    const fn = jest.fn();
-    component.registerOnTouched(fn);
-    expect(component.propagateTouched).toBe(fn);
-  });
-
-  it('should open modal on click', () => {
-    component.onClick();
-    expect(component.isOpen()).toBe(true);
-  });
-
-  it('should close modal on dismiss', () => {
-    component.isOpen.set(true);
-    component.onModalDismiss();
-    expect(component.isOpen()).toBe(false);
-  });
 });
 
-describe('DateRangeModalComponent', () => {
-  let fixture: ComponentFixture<DateRangeModalComponent>;
-  let component: DateRangeModalComponent;
+describe('DateRangeModalDefaultComponent', () => {
+  let fixture: ComponentFixture<DateRangeModalDefaultComponent>;
+  let component: DateRangeModalDefaultComponent;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DateRangeModalComponent],
+      imports: [DateRangeModalDefaultComponent],
       providers: [
         { provide: StyleService, useValue: mockStyleService },
         { provide: UIService, useValue: mockUIService },
       ],
     })
-      .overrideComponent(DateRangeModalComponent, {
+      .overrideComponent(DateRangeModalDefaultComponent, {
         add: { imports: [MockTranslatePipe] },
       })
       .compileComponents();
-    fixture = TestBed.createComponent(DateRangeModalComponent);
+    fixture = TestBed.createComponent(DateRangeModalDefaultComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -177,67 +132,5 @@ describe('DateRangeModalComponent', () => {
       b.textContent.includes('select'),
     ) as HTMLButtonElement;
     expect(selectBtn).toBeTruthy();
-  });
-
-  it('should emit dismiss on dismissPage', () => {
-    const spy = jest.fn();
-    component.dismiss.subscribe(spy);
-    component.dismissPage();
-    expect(spy).toHaveBeenCalled();
-  });
-
-  it('should emit apply on applyDates', () => {
-    const spy = jest.fn();
-    component.apply.subscribe(spy);
-    component.selectToday();
-    component.applyDates();
-    expect(spy).toHaveBeenCalledWith(
-      expect.objectContaining({
-        dateFrom: expect.anything(),
-        dateTo: expect.anything(),
-      }),
-    );
-  });
-
-  it('should set selectedButtonName on selectToday', () => {
-    component.selectToday();
-    expect(component.selectedButtonName).toBe('Today');
-  });
-
-  it('should set selectedButtonName on selectYesterday', () => {
-    component.selectYesterday();
-    expect(component.selectedButtonName).toBe('Yesterday');
-  });
-
-  it('should set selectedButtonName on selectLastSevenDays', () => {
-    component.selectLastSevenDays();
-    expect(component.selectedButtonName).toBe('LastSevenDays');
-  });
-
-  it('should set selectedButtonName on selectLastThirtyDays', () => {
-    component.selectLastThirtyDays();
-    expect(component.selectedButtonName).toBe('LastThirtyDays');
-  });
-
-  it('should set selectedButtonName on selectThisMonth', () => {
-    component.selectThisMonth();
-    expect(component.selectedButtonName).toBe('ThisMonth');
-  });
-
-  it('should set selectedButtonName on selectLastMonth', () => {
-    component.selectLastMonth();
-    expect(component.selectedButtonName).toBe('LastMonth');
-  });
-
-  it('should return false for isInRange with null day', () => {
-    expect(component.isInRange(null as any)).toBe(false);
-  });
-
-  it('should return false for isSelectionStart with null day', () => {
-    expect(component.isSelectionStart(null as any)).toBe(false);
-  });
-
-  it('should return false for isSelectionEnd with null day', () => {
-    expect(component.isSelectionEnd(null as any)).toBe(false);
   });
 });

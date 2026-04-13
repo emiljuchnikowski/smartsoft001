@@ -1,40 +1,28 @@
-import { NgClass } from '@angular/common';
 import {
   AfterContentInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component,
-  effect,
+  Directive,
   ElementRef,
-  forwardRef,
   inject,
   input,
-  model,
   OnInit,
   output,
-  signal,
-  ViewEncapsulation,
 } from '@angular/core';
 import {
-  ControlValueAccessor,
-  NG_VALUE_ACCESSOR,
   UntypedFormBuilder,
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
-import { TranslatePipe } from '@ngx-translate/core';
 import moment from 'moment';
 import { Subject, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter, tap } from 'rxjs/operators';
-
-import { IDateRange } from '@smartsoft001/domain-core';
 
 import {
   CalendarService,
   month,
   StyleService,
   UIService,
-} from '../../services';
+} from '../../../services';
 
 export const enum FilterBtnConstants {
   empthyString = '',
@@ -58,21 +46,16 @@ export interface CalendarState {
   selectedButtonName: FilterBtnConstants;
 }
 
-@Component({
-  selector: 'smart-date-range-modal',
-  templateUrl: './date-range-modal.component.html',
-  providers: [CalendarService],
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgClass, TranslatePipe],
-})
-export class DateRangeModalComponent implements OnInit, AfterContentInit {
-  private fb = inject(UntypedFormBuilder);
-  private uiService = inject(UIService);
-  private changeDetectionRef = inject(ChangeDetectorRef);
-  private calendarService = inject(CalendarService);
-  private styleService = inject(StyleService);
-  private elementRef = inject(ElementRef);
+@Directive()
+export abstract class DateRangeModalBaseComponent
+  implements OnInit, AfterContentInit
+{
+  protected fb = inject(UntypedFormBuilder);
+  protected uiService = inject(UIService);
+  protected changeDetectionRef = inject(ChangeDetectorRef);
+  protected calendarService = inject(CalendarService);
+  protected styleService = inject(StyleService);
+  protected elementRef = inject(ElementRef);
 
   showFilterBtns = input<boolean>(false);
   restrictSelectionTo = input<number>(0);
@@ -325,95 +308,5 @@ export class DateRangeModalComponent implements OnInit, AfterContentInit {
     };
     this.unsubscribe();
     this.apply.emit(data);
-  }
-}
-
-@Component({
-  selector: 'smart-date-range',
-  templateUrl: './date-range.component.html',
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => DateRangeComponent),
-      multi: true,
-    },
-  ],
-  imports: [TranslatePipe, DateRangeModalComponent],
-})
-export class DateRangeComponent implements ControlValueAccessor {
-  private cd = inject(ChangeDetectorRef);
-
-  value: IDateRange | undefined = undefined;
-  isOpen = signal(false);
-
-  propagateChange = (val: any) => {}; // eslint-disable-line
-  propagateTouched = () => {}; // eslint-disable-line
-
-  ngModel = model<IDateRange | undefined>(undefined);
-
-  calendarData: CalendarState = {
-    dateFrom: null as any,
-    dateTo: null as any,
-    scrollPosition: 0,
-    selectedButtonName: FilterBtnConstants.empthyString,
-  };
-
-  constructor() {
-    effect(() => {
-      this.value = this.ngModel();
-    });
-  }
-
-  onClick(): void {
-    const ngModel = this.ngModel();
-    if (ngModel?.start) this.calendarData.dateFrom = moment(ngModel.start);
-    if (ngModel?.end) this.calendarData.dateTo = moment(ngModel.end);
-
-    this.propagateTouched();
-    this.isOpen.set(true);
-  }
-
-  onModalApply(data: CalendarState): void {
-    this.calendarData = data;
-    if (this.calendarData.dateFrom) {
-      const value = {
-        start: this.calendarData.dateFrom.format('YYYY-MM-DD'),
-        end: this.calendarData.dateTo.format('YYYY-MM-DD'),
-      };
-
-      this.writeValue(value);
-      this.ngModel.set(this.value);
-      this.propagateChange(this.value);
-    }
-    this.isOpen.set(false);
-  }
-
-  onModalDismiss(): void {
-    this.isOpen.set(false);
-  }
-
-  writeValue(value: any): void {
-    this.value = value;
-    this.cd.detectChanges();
-  }
-
-  registerOnChange(fn: any): void {
-    this.propagateChange = fn;
-  }
-
-  registerOnTouched(fn: any): void {
-    this.propagateTouched = fn;
-  }
-
-  onClear(): void {
-    this.calendarData.dateFrom = null as any;
-    this.calendarData.dateTo = null as any;
-
-    this.ngModel.set(undefined);
-    this.value = undefined;
-    this.propagateChange(this.value);
-    this.propagateTouched();
   }
 }

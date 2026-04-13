@@ -14,16 +14,21 @@ import {
   DETAILS_COMPONENT_TOKEN,
   FORM_COMPONENT_TOKEN,
 } from '../shared.inectors';
-import {
-  AccordionComponent,
-  AccordionHeaderComponent,
-  AccordionBodyComponent,
-} from './accordion';
+// TODO: AccordionComponent moved to @smartsoft001-pro/angular (FRA-101)
+// import {
+//   AccordionComponent,
+//   AccordionHeaderComponent,
+//   AccordionBodyComponent,
+// } from './accordion';
 // TODO: ButtonComponent moved to @smartsoft001-pro/angular (FRA-110)
 // import { ButtonComponent, ButtonStandardComponent } from './button';
-import { CardComponent } from './card/card.component';
-import { DateEditComponent } from './date-edit';
-import { DateRangeComponent, DateRangeModalComponent } from './date-range';
+// TODO: CardComponent moved to @smartsoft001-pro/angular (FRA-101)
+// import { CardComponent } from './card/card.component';
+import { DateEditDefaultComponent } from './date-edit';
+import {
+  DateRangeDefaultComponent,
+  DateRangeModalDefaultComponent,
+} from './date-range';
 import {
   DetailComponent,
   DetailTextComponent,
@@ -92,16 +97,14 @@ import { LoaderComponent } from './loader';
 import { PageComponent, PageStandardComponent } from './page';
 import { PasswordStrengthComponent } from './password-strength';
 
-export const ACCORDION_COMPONENTS = [
-  AccordionComponent,
-  AccordionHeaderComponent,
-  AccordionBodyComponent,
-];
+// TODO: AccordionComponent moved to @smartsoft001-pro/angular (FRA-101)
+export const ACCORDION_COMPONENTS: any[] = [];
 
 // TODO: ButtonComponent moved to @smartsoft001-pro/angular (FRA-110)
 export const BUTTON_COMPONENTS: any[] = [];
 
-export const CARD_COMPONENTS = [CardComponent];
+// TODO: CardComponent moved to @smartsoft001-pro/angular (FRA-101)
+export const CARD_COMPONENTS: any[] = [];
 
 export const DETAILS_COMPONENTS = [DetailsComponent, DetailsStandardComponent];
 
@@ -174,10 +177,10 @@ export const PAGE_COMPONENTS = [PageStandardComponent, PageComponent];
 
 export const INFO_COMPONENTS = [InfoComponent, InfoModalComponent];
 export const DATE_RANGE_COMPONENTS = [
-  DateRangeComponent,
-  DateRangeModalComponent,
+  DateRangeDefaultComponent,
+  DateRangeModalDefaultComponent,
 ];
-export const DATE_EDIT_COMPONENTS = [DateEditComponent];
+export const DATE_EDIT_COMPONENTS = [DateEditDefaultComponent];
 
 export const DYNAMIC_COMPONENTS = [DynamicComponent];
 

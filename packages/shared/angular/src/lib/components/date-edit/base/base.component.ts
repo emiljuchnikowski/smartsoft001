@@ -1,50 +1,25 @@
 import {
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component,
-  forwardRef,
+  Directive,
   inject,
   model,
   output,
-  ViewEncapsulation,
 } from '@angular/core';
-import {
-  ControlValueAccessor,
-  FormsModule,
-  NG_VALUE_ACCESSOR,
-} from '@angular/forms';
+import { ControlValueAccessor } from '@angular/forms';
 import moment from 'moment';
 
-@Component({
-  selector: 'smart-date-edit',
-  templateUrl: './date-edit.component.html',
-  styles: [
-    `
-      smart-date-edit input[type='number']::-webkit-outer-spin-button,
-      smart-date-edit input[type='number']::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-      }
-      smart-date-edit input[type='number'] {
-        -moz-appearance: textfield;
-        text-align: center;
-      }
-    `,
-  ],
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule],
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => DateEditComponent),
-      multi: true,
-    },
-  ],
-})
-export class DateEditComponent implements ControlValueAccessor {
-  private cd = inject(ChangeDetectorRef);
+@Directive()
+export abstract class DateEditBaseComponent implements ControlValueAccessor {
+  protected cd = inject(ChangeDetectorRef);
   DEFAULT_DATE = '2001-01-01';
+
+  ngModel = model(this.DEFAULT_DATE);
+  validDate = true;
+
+  propagateChange = (val: any) => {}; // eslint-disable-line
+  propagateTouched = () => {}; // eslint-disable-line
+
+  validChange = output<boolean>();
 
   get d1(): string | null {
     if (!this.ngModel()) return null;
@@ -105,14 +80,6 @@ export class DateEditComponent implements ControlValueAccessor {
     this.setValueAt(val, 3);
   }
 
-  ngModel = model(this.DEFAULT_DATE);
-  validDate = true;
-
-  propagateChange = (val: any) => {}; // eslint-disable-line
-  propagateTouched = () => {}; // eslint-disable-line
-
-  validChange = output<boolean>();
-
   writeValue(value: any): void {
     this.ngModel.set(value);
     this.cd.detectChanges();
@@ -153,7 +120,7 @@ export class DateEditComponent implements ControlValueAccessor {
     });
   }
 
-  private setValueAt(val: string, index: number): void {
+  protected setValueAt(val: string, index: number): void {
     if (val === null) return;
 
     val = val.toString().substr(0, 1);
