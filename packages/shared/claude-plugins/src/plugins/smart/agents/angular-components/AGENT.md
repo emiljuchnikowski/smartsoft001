@@ -14,19 +14,49 @@ Use this agent when a developer needs to:
 - Build a page or feature UI using `@smartsoft001/angular` components
 - Choose the right component for a UI requirement
 - Get correct usage, imports, and options for a component
+- Extend a base component class to create a custom implementation
 
-## Available Components
+## Component Availability
 
-| Component | Skill                       | Selector         | Description                                                                                             |
-| --------- | --------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------- |
-| Button    | `angular-components-button` | `<smart-button>` | Button with shapes (standard/rounded/circular), variants (primary/secondary/soft), sizes, color palette |
-| Icon      | —                           | `<smart-icon>`   | SVG icon component (spinner)                                                                            |
+This package contains two categories of components:
+
+### Ready-to-Use Components (base + default implementation)
+
+These have concrete selectors and can be used directly in templates.
+
+| Component  | Skill                           | Selector             | Description                                             |
+| ---------- | ------------------------------- | -------------------- | ------------------------------------------------------- |
+| Date Edit  | `angular-components-date-edit`  | `<smart-date-edit>`  | Digit-by-digit date input (DD-MM-RRRR) with validation  |
+| Date Range | `angular-components-date-range` | `<smart-date-range>` | Date range picker with modal calendar and quick filters |
+| Icon       | —                               | `<smart-icon>`       | SVG icon component (spinner)                            |
+
+### Base-Only Components (abstract classes for extension)
+
+These provide **only abstract base classes** (`@Directive()`). The concrete renderable components with selectors (`<smart-button>`, `<smart-card>`, `<smart-accordion>`) are available in `@smartsoft001-pro/angular`.
+
+| Component | Skill                          | Base Class               | Description                                                    |
+| --------- | ------------------------------ | ------------------------ | -------------------------------------------------------------- |
+| Button    | `angular-components-button`    | `ButtonBaseComponent`    | Variant/color computation, confirm mode, disabled state        |
+| Card      | `angular-components-card`      | `CardBaseComponent`      | Container classes, header/body/footer layout, gray backgrounds |
+| Accordion | `angular-components-accordion` | `AccordionBaseComponent` | Toggle logic, disabled state, container classes                |
+
+## Decision Logic
+
+When a developer asks about a component:
+
+1. **Wants to use `<smart-date-edit>` or `<smart-date-range>`** → delegate to the corresponding skill for usage API
+2. **Wants to use `<smart-button>`, `<smart-card>`, or `<smart-accordion>`** → inform them these selectors are in `@smartsoft001-pro/angular`, then delegate to the skill if they want to extend the base class
+3. **Wants to create a custom component** → delegate to the base-only skill for extension patterns and API
 
 ## Skills to Use
 
-When a user asks about a specific component, **always delegate to the per-component skill** for detailed API, usage examples, and options:
+Always delegate to the per-component skill for detailed API, usage examples, and options:
 
-- **Button** → use skill `angular-components-button`
+- **Date Edit** → use skill `angular-components-date-edit`
+- **Date Range** → use skill `angular-components-date-range`
+- **Button** (base only) → use skill `angular-components-button`
+- **Card** (base only) → use skill `angular-components-card`
+- **Accordion** (base only) → use skill `angular-components-accordion`
 
 ## Installation
 
@@ -34,10 +64,28 @@ When a user asks about a specific component, **always delegate to the per-compon
 npm i @smartsoft001/angular
 ```
 
-## Import Pattern
+## Import Patterns
 
 ```typescript
-import { ButtonComponent } from '@smartsoft001/angular';
+// Ready-to-use components
+import {
+  DateEditDefaultComponent,
+  DateRangeDefaultComponent,
+} from '@smartsoft001/angular';
+
+// Base classes for extension
+import {
+  ButtonBaseComponent,
+  CardBaseComponent,
+  AccordionBaseComponent,
+} from '@smartsoft001/angular';
+
+// Base classes for date components (also extensible)
+import {
+  DateEditBaseComponent,
+  DateRangeBaseComponent,
+  DateRangeModalBaseComponent,
+} from '@smartsoft001/angular';
 ```
 
 ## Shared Types
@@ -52,4 +100,4 @@ All components use shared types from `@smartsoft001/angular`:
 
 - Tailwind CSS v4 with `smart:` prefix
 - Dark mode via `dark:smart:` prefix
-- External classes via `class` input
+- External classes via `cssClass` input

@@ -32,90 +32,41 @@ For more details, see our [Contributing Guidelines](../../../CONTRIBUTING.md).
 
 All notable changes to this project will be documented in the [CHANGELOG](../../../CHANGELOG.md).
 
-## Button Component
+## Base Components
 
-The `<smart-button>` component provides a flexible button with three shape variants, three color variants, five sizes, and support for loading, disabled, and confirm states.
+The following components expose only abstract base classes (`@Directive()`) in this package. The concrete, renderable components (with templates and selectors like `<smart-button>`, `<smart-card>`, `<smart-accordion>`) are available in `@smartsoft001-pro/angular`.
 
-### Usage
+### ButtonBaseComponent
 
-```html
-<!-- Standard (default shape) -->
-<smart-button [options]="{ click: onClick, variant: 'primary', size: 'md' }">
-  Save
-</smart-button>
+Abstract base class for button components. Provides variant/color computation, confirm mode logic, and disabled state handling.
 
-<!-- Rounded -->
-<smart-button [options]="{ click: onClick, variant: 'secondary', rounded: true }">
-  Cancel
-</smart-button>
+**Inputs:** `options` (`IButtonOptions`), `disabled` (`boolean`), `cssClass` (`string`)
 
-<!-- Circular with icon -->
-<smart-button [options]="{ click: onClick, variant: 'primary', circular: true }">
-  <svg>...</svg>
-</smart-button>
+### CardBaseComponent
 
-<!-- Loading state (pass a signal) -->
-<smart-button [options]="{ click: onClick, loading: loadingSignal }">
-  Submit
-</smart-button>
+Abstract base class for card components. Provides shared container, header, body, and footer CSS class computation with gray background and divider support.
 
-<!-- Disabled -->
-<smart-button [options]="{ click: onClick }" [disabled]="true">
-  Disabled
-</smart-button>
+**Inputs:** `options` (`ICardOptions`), `hasHeader` (`boolean`), `hasFooter` (`boolean`), `cssClass` (`string`)
 
-<!-- Confirm mode (shows confirmation before executing click) -->
-<smart-button [options]="{ click: onDelete, confirm: true }">
-  Delete
-</smart-button>
-```
+### AccordionBaseComponent
 
-### IButtonOptions
+Abstract base class for accordion components. Provides toggle logic, disabled state, and shared container CSS classes.
 
-| Property   | Type                              | Default     | Description                          |
-| ---------- | --------------------------------- | ----------- | ------------------------------------ |
-| `click`    | `() => void`                      | *required*  | Click handler                        |
-| `variant`  | `'primary' \| 'secondary' \| 'soft'` | `'primary'` | Color variant                        |
-| `size`     | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'`      | Button size                          |
-| `rounded`  | `boolean`                         | `false`     | Rounded pill shape                   |
-| `circular` | `boolean`                         | `false`     | Circular shape (for icon buttons)    |
-| `confirm`  | `boolean`                         | `false`     | Show confirmation before click       |
-| `loading`  | `Signal<boolean>`                 | -           | Show loading spinner when true       |
-| `type`     | `'submit' \| 'button'`           | `'button'`  | HTML button type                     |
-| `expand`   | `'block' \| 'full'`              | -           | Expand button width                  |
-| `color`    | `string`                          | `'primary'` | Legacy color option                  |
+**Inputs:** `show` (`ModelSignal<boolean>`), `options` (`IAccordionOptions`), `cssClass` (`string`)
 
-### Inputs
+## Components
 
-| Input      | Type      | Default | Description          |
-| ---------- | --------- | ------- | -------------------- |
-| `options`  | `IButtonOptions` | *required* | Button configuration |
-| `disabled` | `boolean` | `false` | Disabled state       |
-| `class`    | `string`  | `''`    | External CSS class   |
+The following components include both an abstract base class (`@Directive()`) and a default concrete implementation with templates. The base classes can be extended to create custom implementations.
 
-### Variants
+### Date Range Component
 
-| Variant     | Description                                  |
-| ----------- | -------------------------------------------- |
-| `primary`   | Indigo background with white text            |
-| `secondary` | White background with gray text and border   |
-| `soft`      | Light indigo background with indigo text     |
+The `<smart-date-range>` component provides a date range picker with a trigger button and a modal calendar overlay.
 
-### Sizes
+**Default component:** `DateRangeDefaultComponent` (selector: `smart-date-range`)
+**Base class:** `DateRangeBaseComponent` — provides `ControlValueAccessor` integration, open/close state, calendar data management, clear and apply logic.
+**Modal base class:** `DateRangeModalBaseComponent` — provides calendar rendering, quick filter buttons, date selection logic, and range restriction support.
 
-| Size | Description    |
-| ---- | -------------- |
-| `xs` | Extra small    |
-| `sm` | Small          |
-| `md` | Medium (default) |
-| `lg` | Large          |
-| `xl` | Extra large    |
-
-## Date Range Component
-
-The `<smart-date-range>` component provides a date range picker with a trigger button and a modal calendar overlay. Supports quick filter buttons (Today, Yesterday, Last 7/30 days, This/Last Month), `ControlValueAccessor` for forms, and dark mode.
-
-### Usage
+#### Usage
 
 ```html
 <!-- Basic -->
@@ -125,13 +76,13 @@ The `<smart-date-range>` component provides a date range picker with a trigger b
 <smart-date-range formControlName="period"></smart-date-range>
 ```
 
-### Properties
+#### Properties
 
-| Property    | Type                              | Default     | Description                      |
-| ----------- | --------------------------------- | ----------- | -------------------------------- |
-| `ngModel`   | `ModelSignal<IDateRange \| undefined>` | `undefined` | Date range value (`start`, `end` in `YYYY-MM-DD`) |
+| Property  | Type                                   | Default     | Description                                        |
+| --------- | -------------------------------------- | ----------- | -------------------------------------------------- |
+| `ngModel` | `ModelSignal<IDateRange \| undefined>` | `undefined` | Date range value (`start`, `end` in `YYYY-MM-DD`)  |
 
-### IDateRange (from @smartsoft001/domain-core)
+#### IDateRange (from @smartsoft001/domain-core)
 
 ```typescript
 interface IDateRange {
@@ -140,7 +91,7 @@ interface IDateRange {
 }
 ```
 
-### Features
+#### Features
 
 - Trigger button showing selected range or "select" placeholder
 - Clear button to reset value
@@ -150,11 +101,14 @@ interface IDateRange {
 - `ControlValueAccessor` integration
 - Dark mode support
 
-## Date Edit Component
+### Date Edit Component
 
-The `<smart-date-edit>` component provides a digit-by-digit date input editor (DD-MM-RRRR format). Implements `ControlValueAccessor` for Angular forms integration. Auto-navigates between fields on input.
+The `<smart-date-edit>` component provides a digit-by-digit date input editor (DD-MM-RRRR format).
 
-### Usage
+**Default component:** `DateEditDefaultComponent` (selector: `smart-date-edit`)
+**Base class:** `DateEditBaseComponent` — provides `ControlValueAccessor` integration, digit-by-digit value management, date validation via moment.js, and auto-focus navigation logic.
+
+#### Usage
 
 ```html
 <!-- Basic -->
@@ -167,14 +121,14 @@ The `<smart-date-edit>` component provides a digit-by-digit date input editor (D
 <smart-date-edit [(ngModel)]="dateValue" (validChange)="onValid($event)"></smart-date-edit>
 ```
 
-### Properties
+#### Properties
 
-| Property      | Type                  | Default        | Description                          |
-| ------------- | --------------------- | -------------- | ------------------------------------ |
-| `ngModel`     | `ModelSignal<string>` | `'2001-01-01'` | Date value in `YYYY-MM-DD` format    |
-| `validChange` | `OutputEmitter<boolean>` | -           | Emits when date validity changes     |
+| Property      | Type                     | Default        | Description                      |
+| ------------- | ------------------------ | -------------- | -------------------------------- |
+| `ngModel`     | `ModelSignal<string>`    | `'2001-01-01'` | Date value in `YYYY-MM-DD` format |
+| `validChange` | `OutputEmitter<boolean>` | -              | Emits when date validity changes  |
 
-### Features
+#### Features
 
 - Digit-by-digit editing with auto-focus navigation
 - Date validation via moment.js
@@ -182,123 +136,6 @@ The `<smart-date-edit>` component provides a digit-by-digit date input editor (D
 - Dark mode support
 - `ControlValueAccessor` integration
 
-## Card Component
-
-The `<smart-card>` component provides a flexible card container with multiple variants from Tailwind UI. Supports header/footer sections, gray backgrounds, well styles, and dark mode.
-
-### Usage
-
-```html
-<!-- Basic card -->
-<smart-card>
-  <p>Card body content</p>
-</smart-card>
-
-<!-- With header and title -->
-<smart-card [options]="{ title: 'My Card' }" [hasHeader]="true">
-  <p>Body content</p>
-</smart-card>
-
-<!-- With header, footer, and gray footer -->
-<smart-card [options]="{ grayFooter: true }" [hasHeader]="true" [hasFooter]="true">
-  <div cardHeader>Custom Header</div>
-  <p>Body content</p>
-  <div cardFooter>Footer content</div>
-</smart-card>
-
-<!-- Well variant -->
-<smart-card [options]="{ variant: 'well' }">
-  <p>Well-style card</p>
-</smart-card>
-```
-
-### ICardOptions
-
-| Property     | Type               | Default   | Description                    |
-| ------------ | ------------------ | --------- | ------------------------------ |
-| `title`      | `string`           | -         | Card title (shown in header)   |
-| `variant`    | `SmartCardVariant` | `'basic'` | Card style variant             |
-| `grayFooter` | `boolean`          | `false`   | Gray background on footer      |
-| `grayBody`   | `boolean`          | `false`   | Gray background on body        |
-| `buttons`    | `IIconButtonOptions[]` | -     | Header action buttons          |
-
-### Inputs
-
-| Input       | Type             | Default     | Description              |
-| ----------- | ---------------- | ----------- | ------------------------ |
-| `options`   | `ICardOptions`   | `undefined` | Card configuration       |
-| `hasHeader` | `boolean`        | `false`     | Show header section      |
-| `hasFooter` | `boolean`        | `false`     | Show footer section      |
-
-### Variants
-
-| Variant              | Description                                  |
-| -------------------- | -------------------------------------------- |
-| `basic`              | White card with shadow and rounded corners   |
-| `edge-to-edge`       | No rounded corners on mobile                 |
-| `well`               | Gray background, no shadow                   |
-| `well-on-gray`       | Darker gray background                       |
-| `well-edge-to-edge`  | Gray well, no rounding on mobile             |
-
-### Content Projection
-
-| Selector       | Description        |
-| -------------- | ------------------ |
-| `[cardHeader]` | Header content     |
-| default        | Body content       |
-| `[cardFooter]` | Footer content     |
-
-## Accordion Component
-
-The `<smart-accordion>` component provides a collapsible disclosure panel with a header (toggle button) and body (content area). Supports two-way binding, disabled state, and dark mode.
-
-### Usage
-
-```html
-<!-- Basic -->
-<smart-accordion [(show)]="isOpen">
-  <span accordionHeader>Click to expand</span>
-  <span accordionBody>Hidden content here.</span>
-</smart-accordion>
-
-<!-- Disabled -->
-<smart-accordion [(show)]="isOpen" [options]="{ disabled: true }">
-  <span accordionHeader>Cannot toggle</span>
-  <span accordionBody>This will not show.</span>
-</smart-accordion>
-
-<!-- Multiple FAQ -->
-<smart-accordion [(show)]="q1">
-  <span accordionHeader>Question 1?</span>
-  <span accordionBody>Answer 1.</span>
-</smart-accordion>
-<smart-accordion [(show)]="q2">
-  <span accordionHeader>Question 2?</span>
-  <span accordionBody>Answer 2.</span>
-</smart-accordion>
-```
-
-### IAccordionOptions
-
-| Property   | Type      | Default | Description                       |
-| ---------- | --------- | ------- | --------------------------------- |
-| `open`     | `boolean` | `false` | Initial open state                |
-| `disabled` | `boolean` | `false` | Prevents toggle when true         |
-| `animated` | `boolean` | `true`  | Enable/disable CSS transitions    |
-
-### Inputs
-
-| Input     | Type                | Default     | Description               |
-| --------- | ------------------- | ----------- | ------------------------- |
-| `show`    | `ModelSignal<boolean>` | `false`  | Two-way binding for open state |
-| `options` | `IAccordionOptions` | `undefined` | Accordion configuration   |
-
-### Content Projection
-
-| Selector            | Description                    |
-| ------------------- | ------------------------------ |
-| `[accordionHeader]` | Header content (toggle button) |
-| `[accordionBody]`   | Collapsible body content       |
 
 ## 📜 License
 

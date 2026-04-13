@@ -1,25 +1,36 @@
 ---
 name: angular-components-accordion
-description: Accordion component API, options, and usage patterns for @smartsoft001/angular
+description: Accordion base component API for extending in custom implementations. Concrete <smart-accordion> is in @smartsoft001-pro/angular.
 user-invocable: false
 ---
 
-# Accordion Component
+# AccordionBaseComponent (Base Only)
 
-Collapsible disclosure panel with header (toggle button) and body (content area). Supports two-way binding, disabled state, chevron icon, and dark mode.
+Abstract base directive for accordion components. This package provides **only the base class** — the concrete renderable component (`<smart-accordion>`) is available in `@smartsoft001-pro/angular`.
 
-## API
+## When to Use This Skill
 
-### Selector
+- Developer wants to **create a custom accordion component** by extending the base class
+- Developer needs to understand the base API (inputs, computed properties, methods)
+- Developer asks about `<smart-accordion>` → inform them the concrete component is in `@smartsoft001-pro/angular`
 
-`<smart-accordion>`
+## Base Class API
+
+### Import
+
+```typescript
+import { AccordionBaseComponent } from '@smartsoft001/angular';
+```
 
 ### Inputs
 
-| Input     | Type                   | Default     | Description                    |
-| --------- | ---------------------- | ----------- | ------------------------------ |
-| `show`    | `ModelSignal<boolean>` | `false`     | Two-way binding for open state |
-| `options` | `IAccordionOptions`    | `undefined` | Accordion configuration        |
+| Input       | Type                                          | Default     | Description                    |
+| ----------- | --------------------------------------------- | ----------- | ------------------------------ |
+| `show`      | `ModelSignal<boolean>`                        | `false`     | Two-way binding for open state |
+| `options`   | `InputSignal<IAccordionOptions \| undefined>` | `undefined` | Accordion configuration        |
+| `cssClass`  | `InputSignal<string>`                         | `''`        | External CSS classes           |
+| `headerTpl` | `InputSignal<TemplateRef>`                    | required    | Header template                |
+| `bodyTpl`   | `InputSignal<TemplateRef>`                    | required    | Body template                  |
 
 ### IAccordionOptions
 
@@ -31,38 +42,45 @@ interface IAccordionOptions {
 }
 ```
 
-### Content Projection
+### Computed Properties
 
-| Selector            | Description                    |
-| ------------------- | ------------------------------ |
-| `[accordionHeader]` | Header content (toggle button) |
-| `[accordionBody]`   | Collapsible body content       |
+| Property                 | Type               | Description                                             |
+| ------------------------ | ------------------ | ------------------------------------------------------- |
+| `sharedContainerClasses` | `Signal<string[]>` | Divider, rounded, border classes with dark mode support |
 
-## Usage
+### Methods
 
-```html
-<!-- Basic -->
-<smart-accordion [(show)]="isOpen">
-  <span accordionHeader>Click to expand</span>
-  <span accordionBody>Hidden content here.</span>
-</smart-accordion>
+| Method     | Description                                 |
+| ---------- | ------------------------------------------- |
+| `toggle()` | Toggles `show` signal (no-op if `disabled`) |
 
-<!-- Disabled -->
-<smart-accordion [(show)]="isOpen" [options]="{ disabled: true }">
-  <span accordionHeader>Cannot toggle</span>
-  <span accordionBody>This will not show.</span>
-</smart-accordion>
+## Extending the Base Class
+
+```typescript
+import { Component, ViewEncapsulation } from '@angular/core';
+import { AccordionBaseComponent } from '@smartsoft001/angular';
+
+@Component({
+  selector: 'my-accordion',
+  template: `
+    <div [class]="sharedContainerClasses().join(' ')">
+      <button (click)="toggle()">
+        <ng-container [ngTemplateOutlet]="headerTpl()" />
+      </button>
+      @if (show()) {
+        <div>
+          <ng-container [ngTemplateOutlet]="bodyTpl()" />
+        </div>
+      }
+    </div>
+  `,
+  encapsulation: ViewEncapsulation.None,
+})
+export class MyAccordionComponent extends AccordionBaseComponent {}
 ```
 
 ## File Locations
 
-- Component: `packages/shared/angular/src/lib/components/accordion/accordion.component.ts`
-- Header: `packages/shared/angular/src/lib/components/accordion/header/header.component.ts`
-- Body: `packages/shared/angular/src/lib/components/accordion/body/body.component.ts`
-- Tests: `packages/shared/angular/src/lib/components/accordion/accordion.component.spec.ts`
-- Stories: `packages/shared/angular/src/lib/components/accordion/accordion.component.stories.ts`
+- Base class: `packages/shared/angular/src/lib/components/accordion/base/base.component.ts`
+- Tests: `packages/shared/angular/src/lib/components/accordion/base/base.component.spec.ts`
 - Interface: `packages/shared/angular/src/lib/models/interfaces.ts` (`IAccordionOptions`)
-
-## Tailwind Classes
-
-All classes use `smart:` prefix. Container uses `smart:divide-y smart:rounded-lg smart:border smart:border-gray-200`. Header button uses `smart:flex smart:w-full smart:items-center smart:justify-between`. Dark mode: `dark:smart:*` variants applied.

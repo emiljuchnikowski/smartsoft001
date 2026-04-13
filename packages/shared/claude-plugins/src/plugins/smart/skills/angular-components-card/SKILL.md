@@ -1,26 +1,38 @@
 ---
 name: angular-components-card
-description: Card component API, variants, and usage patterns for @smartsoft001/angular
+description: Card base component API for extending in custom implementations. Concrete <smart-card> is in @smartsoft001-pro/angular.
 user-invocable: false
 ---
 
-# Card Component
+# CardBaseComponent (Base Only)
 
-Flexible card container with multiple Tailwind UI variants. Supports header/footer sections, gray backgrounds, well styles, edge-to-edge on mobile, and dark mode.
+Abstract base directive for card components. This package provides **only the base class** — the concrete renderable component (`<smart-card>`) is available in `@smartsoft001-pro/angular`.
 
-## API
+## When to Use This Skill
 
-### Selector
+- Developer wants to **create a custom card component** by extending the base class
+- Developer needs to understand the base API (inputs, computed properties)
+- Developer asks about `<smart-card>` → inform them the concrete component is in `@smartsoft001-pro/angular`
 
-`<smart-card>`
+## Base Class API
+
+### Import
+
+```typescript
+import { CardBaseComponent } from '@smartsoft001/angular';
+```
 
 ### Inputs
 
-| Input       | Type           | Default     | Description         |
-| ----------- | -------------- | ----------- | ------------------- |
-| `options`   | `ICardOptions` | `undefined` | Card configuration  |
-| `hasHeader` | `boolean`      | `false`     | Show header section |
-| `hasFooter` | `boolean`      | `false`     | Show footer section |
+| Input       | Type                                     | Default     | Description          |
+| ----------- | ---------------------------------------- | ----------- | -------------------- |
+| `options`   | `InputSignal<ICardOptions \| undefined>` | `undefined` | Card configuration   |
+| `hasHeader` | `InputSignal<boolean>`                   | `false`     | Show header section  |
+| `hasFooter` | `InputSignal<boolean>`                   | `false`     | Show footer section  |
+| `cssClass`  | `InputSignal<string>`                    | `''`        | External CSS classes |
+| `headerTpl` | `InputSignal<TemplateRef>`               | -           | Header template      |
+| `bodyTpl`   | `InputSignal<TemplateRef>`               | required    | Body template        |
+| `footerTpl` | `InputSignal<TemplateRef>`               | -           | Footer template      |
 
 ### ICardOptions
 
@@ -41,41 +53,47 @@ interface ICardOptions {
 }
 ```
 
-### Content Projection
+### Computed Properties
 
-| Selector       | Description    |
-| -------------- | -------------- |
-| `[cardHeader]` | Header content |
-| default        | Body content   |
-| `[cardFooter]` | Footer content |
+| Property                 | Type               | Description                                                    |
+| ------------------------ | ------------------ | -------------------------------------------------------------- |
+| `sharedContainerClasses` | `Signal<string[]>` | Overflow, divider classes based on header/footer and gray opts |
+| `headerClasses`          | `Signal<string>`   | Padding classes for header section                             |
+| `bodyClasses`            | `Signal<string>`   | Padding + optional gray background classes for body            |
+| `footerClasses`          | `Signal<string>`   | Padding + optional gray background classes for footer          |
 
-## Usage
+## Extending the Base Class
 
-```html
-<!-- Basic -->
-<smart-card><p>Content</p></smart-card>
+```typescript
+import { Component, ViewEncapsulation } from '@angular/core';
+import { CardBaseComponent } from '@smartsoft001/angular';
 
-<!-- With header and footer -->
-<smart-card
-  [options]="{ title: 'Title', grayFooter: true }"
-  [hasHeader]="true"
-  [hasFooter]="true"
->
-  <p>Body</p>
-  <div cardFooter>Footer</div>
-</smart-card>
-
-<!-- Well variant -->
-<smart-card [options]="{ variant: 'well' }"><p>Well content</p></smart-card>
+@Component({
+  selector: 'my-card',
+  template: `
+    <div [class]="sharedContainerClasses().join(' ')">
+      @if (hasHeader()) {
+        <div [class]="headerClasses()">
+          <ng-container [ngTemplateOutlet]="headerTpl()" />
+        </div>
+      }
+      <div [class]="bodyClasses()">
+        <ng-container [ngTemplateOutlet]="bodyTpl()" />
+      </div>
+      @if (hasFooter()) {
+        <div [class]="footerClasses()">
+          <ng-container [ngTemplateOutlet]="footerTpl()" />
+        </div>
+      }
+    </div>
+  `,
+  encapsulation: ViewEncapsulation.None,
+})
+export class MyCardComponent extends CardBaseComponent {}
 ```
 
 ## File Locations
 
-- Component: `packages/shared/angular/src/lib/components/card/card.component.ts`
-- Tests: `packages/shared/angular/src/lib/components/card/card.component.spec.ts`
-- Stories: `packages/shared/angular/src/lib/components/card/card.component.stories.ts`
+- Base class: `packages/shared/angular/src/lib/components/card/base/base.component.ts`
+- Tests: `packages/shared/angular/src/lib/components/card/base/base.component.spec.ts`
 - Interface: `packages/shared/angular/src/lib/models/interfaces.ts` (`ICardOptions`, `SmartCardVariant`)
-
-## Tailwind Classes
-
-All classes use `smart:` prefix. Container base: `smart:overflow-hidden smart:rounded-lg smart:bg-white smart:shadow-sm`. Dark mode: `dark:smart:bg-gray-800/50 dark:smart:shadow-none dark:smart:outline dark:smart:-outline-offset-1 dark:smart:outline-white/10`.
