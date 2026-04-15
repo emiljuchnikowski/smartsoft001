@@ -34,7 +34,7 @@ All notable changes to this project will be documented in the [CHANGELOG](../../
 
 ## Base Components
 
-The following components expose only abstract base classes (`@Directive()`) in this package. The concrete, renderable components (with templates and selectors like `<smart-button>`, `<smart-card>`, `<smart-accordion>`) are available in `@smartsoft001-pro/angular`.
+The following components expose abstract base classes (`@Directive()`) that can be extended to create custom implementations.
 
 ### ButtonBaseComponent
 

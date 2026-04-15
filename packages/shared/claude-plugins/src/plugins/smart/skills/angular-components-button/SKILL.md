@@ -1,18 +1,18 @@
 ---
 name: angular-components-button
-description: Button base component API for extending in custom implementations. Concrete <smart-button> is in @smartsoft001-pro/angular.
+description: Button base component API for extending in custom implementations.
 user-invocable: false
 ---
 
 # ButtonBaseComponent (Base Only)
 
-Abstract base directive for button components. This package provides **only the base class** — the concrete renderable component (`<smart-button>`) is available in `@smartsoft001-pro/angular`.
+Abstract base directive for button components. This package provides the base class for creating custom button implementations.
 
 ## When to Use This Skill
 
 - Developer wants to **create a custom button component** by extending the base class
 - Developer needs to understand the base API (inputs, computed properties, methods)
-- Developer asks about `<smart-button>` → inform them the concrete component is in `@smartsoft001-pro/angular`
+- Developer asks about `<smart-button>` → explain how to extend the base class
 
 ## Base Class API
 

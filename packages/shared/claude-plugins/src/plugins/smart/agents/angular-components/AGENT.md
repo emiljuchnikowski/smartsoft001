@@ -32,7 +32,7 @@ These have concrete selectors and can be used directly in templates.
 
 ### Base-Only Components (abstract classes for extension)
 
-These provide **only abstract base classes** (`@Directive()`). The concrete renderable components with selectors (`<smart-button>`, `<smart-card>`, `<smart-accordion>`) are available in `@smartsoft001-pro/angular`.
+These provide abstract base classes (`@Directive()`) that can be extended to create custom implementations.
 
 | Component | Skill                          | Base Class               | Description                                                    |
 | --------- | ------------------------------ | ------------------------ | -------------------------------------------------------------- |
@@ -45,7 +45,7 @@ These provide **only abstract base classes** (`@Directive()`). The concrete rend
 When a developer asks about a component:
 
 1. **Wants to use `<smart-date-edit>` or `<smart-date-range>`** → delegate to the corresponding skill for usage API
-2. **Wants to use `<smart-button>`, `<smart-card>`, or `<smart-accordion>`** → inform them these selectors are in `@smartsoft001-pro/angular`, then delegate to the skill if they want to extend the base class
+2. **Wants to use `<smart-button>`, `<smart-card>`, or `<smart-accordion>`** → delegate to the skill to explain how to extend the base class and create a custom implementation
 3. **Wants to create a custom component** → delegate to the base-only skill for extension patterns and API
 
 ## Skills to Use

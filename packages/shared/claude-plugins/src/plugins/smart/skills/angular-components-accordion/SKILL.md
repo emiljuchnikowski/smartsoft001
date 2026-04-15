@@ -1,18 +1,18 @@
 ---
 name: angular-components-accordion
-description: Accordion base component API for extending in custom implementations. Concrete <smart-accordion> is in @smartsoft001-pro/angular.
+description: Accordion base component API for extending in custom implementations.
 user-invocable: false
 ---
 
 # AccordionBaseComponent (Base Only)
 
-Abstract base directive for accordion components. This package provides **only the base class** — the concrete renderable component (`<smart-accordion>`) is available in `@smartsoft001-pro/angular`.
+Abstract base directive for accordion components. This package provides the base class for creating custom accordion implementations.
 
 ## When to Use This Skill
 
 - Developer wants to **create a custom accordion component** by extending the base class
 - Developer needs to understand the base API (inputs, computed properties, methods)
-- Developer asks about `<smart-accordion>` → inform them the concrete component is in `@smartsoft001-pro/angular`
+- Developer asks about `<smart-accordion>` → explain how to extend the base class
 
 ## Base Class API
 

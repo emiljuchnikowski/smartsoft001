@@ -1,18 +1,18 @@
 ---
 name: angular-components-card
-description: Card base component API for extending in custom implementations. Concrete <smart-card> is in @smartsoft001-pro/angular.
+description: Card base component API for extending in custom implementations.
 user-invocable: false
 ---
 
 # CardBaseComponent (Base Only)
 
-Abstract base directive for card components. This package provides **only the base class** — the concrete renderable component (`<smart-card>`) is available in `@smartsoft001-pro/angular`.
+Abstract base directive for card components. This package provides the base class for creating custom card implementations.
 
 ## When to Use This Skill
 
 - Developer wants to **create a custom card component** by extending the base class
 - Developer needs to understand the base API (inputs, computed properties)
-- Developer asks about `<smart-card>` → inform them the concrete component is in `@smartsoft001-pro/angular`
+- Developer asks about `<smart-card>` → explain how to extend the base class
 
 ## Base Class API
 
