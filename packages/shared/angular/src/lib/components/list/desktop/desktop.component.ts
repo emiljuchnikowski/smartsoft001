@@ -1,4 +1,10 @@
-import {CdkCell, CdkHeaderCell, CdkHeaderRow, CdkRow, CdkTable} from "@angular/cdk/table";
+import {
+  CdkCell,
+  CdkHeaderCell,
+  CdkHeaderRow,
+  CdkRow,
+  CdkTable,
+} from '@angular/cdk/table';
 import { NgTemplateOutlet } from '@angular/common';
 import {
   AfterViewInit,
@@ -17,7 +23,8 @@ import { IEntity } from '@smartsoft001/domain-core';
 
 import { IListComponentFactories, IListInternalOptions } from '../../../models';
 import { FileUrlPipe, ListCellPipe, ListHeaderPipe } from '../../../pipes';
-import { PagingComponent } from '../../paging';
+// TODO: PagingComponent moved to @smartsoft001-pro/angular (FRA-122)
+// import { PagingComponent } from '../../paging';
 import { ListBaseComponent } from '../base/base.component';
 
 @Component({
@@ -43,20 +50,21 @@ import { ListBaseComponent } from '../base/base.component';
       }
     `,
   ],
-    imports: [
-        NgTemplateOutlet,
-        ListHeaderPipe,
-        ListCellPipe,
-        LazyLoadImageModule,
-        FileUrlPipe,
-        TranslatePipe,
-        PagingComponent,
-        CdkTable,
-        CdkHeaderCell,
-        CdkCell,
-        CdkHeaderRow,
-        CdkRow,
-    ],
+  imports: [
+    NgTemplateOutlet,
+    ListHeaderPipe,
+    ListCellPipe,
+    LazyLoadImageModule,
+    FileUrlPipe,
+    TranslatePipe,
+    // TODO: PagingComponent moved to @smartsoft001-pro/angular (FRA-122)
+    // PagingComponent,
+    CdkTable,
+    CdkHeaderCell,
+    CdkCell,
+    CdkHeaderRow,
+    CdkRow,
+  ],
 })
 export class ListDesktopComponent<T extends IEntity<string>>
   extends ListBaseComponent<T>

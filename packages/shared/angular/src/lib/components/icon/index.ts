@@ -1,1 +1,2 @@
-export * from './icon.component';
+export * from './base/base.component';
+export * from './default/default.component';

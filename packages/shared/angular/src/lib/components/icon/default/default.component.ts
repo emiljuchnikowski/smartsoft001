@@ -1,19 +1,15 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 
-export type IconName = 'spinner' | 'chevron-down' | 'chevron-up';
+import { IconBaseComponent } from '../base';
 
 @Component({
   selector: 'smart-icon',
-  templateUrl: './icon.component.html',
+  templateUrl: '../icon.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class IconComponent {
-  name = input.required<IconName>();
-  cssClass = input<string>('');
-}
+export class IconDefaultComponent extends IconBaseComponent {}

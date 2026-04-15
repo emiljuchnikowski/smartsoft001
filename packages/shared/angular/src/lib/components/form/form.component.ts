@@ -33,14 +33,17 @@ import { SmartFormGroup } from '../../services';
 import { CreateDynamicComponent } from '../base';
 import { FormBaseComponent } from './base/base.component';
 import { DynamicContentDirective } from '../../directives';
-import { ExportComponent } from '../export';
-import { ImportComponent } from '../import';
+// TODO: ExportComponent moved to @smartsoft001-pro/angular (FRA-113)
+// import { ExportDefaultComponent } from '../export';
+// TODO: ImportComponent moved to @smartsoft001-pro/angular (FRA-116)
+// import { ImportComponent } from '../import';
 import { FormStandardComponent } from './standard/standard.component';
 
 @Component({
   selector: 'smart-form',
   template: `
-    @if (export || import) {
+    <!-- TODO: Export/Import moved to @smartsoft001-pro/angular (FRA-113, FRA-116) -->
+    <!--@if (export || import) {
       <div style="text-align: right">
         @if (export) {
           <smart-export
@@ -55,7 +58,7 @@ import { FormStandardComponent } from './standard/standard.component';
           ></smart-import>
         }
       </div>
-    }
+    }-->
     @if (form) {
       <form
         [formGroup]="form"
@@ -76,12 +79,7 @@ import { FormStandardComponent } from './standard/standard.component';
       </form>
     }
   `,
-  imports: [
-    ExportComponent,
-    ImportComponent,
-    ReactiveFormsModule,
-    FormStandardComponent,
-  ],
+  imports: [ReactiveFormsModule, FormStandardComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormComponent<T>

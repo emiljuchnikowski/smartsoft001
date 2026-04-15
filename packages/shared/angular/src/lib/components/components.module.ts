@@ -49,10 +49,12 @@ import {
 } from './detail';
 import { DetailsComponent, DetailsStandardComponent } from './details';
 import { SharedDirectivesModule } from '../directives';
-import { ExportComponent } from './export';
+// TODO: ExportComponent moved to @smartsoft001-pro/angular (FRA-113)
+// import { ExportDefaultComponent } from './export';
 import { FormComponent, FormStandardComponent } from './form';
-import { ImportComponent } from './import';
-import { InfoComponent, InfoModalComponent } from './info';
+// TODO: ImportComponent moved to @smartsoft001-pro/angular (FRA-116)
+// import { ImportComponent } from './import';
+import { InfoDefaultComponent } from './info';
 import {
   InputComponent,
   InputIntComponent,
@@ -94,7 +96,8 @@ import {
   ListMasonryGridComponent,
 } from './list';
 import { LoaderComponent } from './loader';
-import { PageComponent, PageStandardComponent } from './page';
+// TODO: PageComponent moved to @smartsoft001-pro/angular (FRA-121)
+// import { PageComponent, PageStandardComponent } from './page';
 import { PasswordStrengthComponent } from './password-strength';
 
 // TODO: AccordionComponent moved to @smartsoft001-pro/angular (FRA-101)
@@ -173,9 +176,10 @@ export const LIST_COMPONENTS = [
 
 export const LOADER_COMPONENTS = [LoaderComponent];
 
-export const PAGE_COMPONENTS = [PageStandardComponent, PageComponent];
+// TODO: PageComponent moved to @smartsoft001-pro/angular (FRA-121)
+export const PAGE_COMPONENTS: any[] = [];
 
-export const INFO_COMPONENTS = [InfoComponent, InfoModalComponent];
+export const INFO_COMPONENTS = [InfoDefaultComponent];
 export const DATE_RANGE_COMPONENTS = [
   DateRangeDefaultComponent,
   DateRangeModalDefaultComponent,
@@ -199,8 +203,6 @@ export const COMPONENTS = [
   ...DETAILS_COMPONENTS,
   ...DYNAMIC_COMPONENTS,
   ...INFO_COMPONENTS,
-  ExportComponent,
-  ImportComponent,
   PasswordStrengthComponent,
 ];
 

@@ -12,7 +12,8 @@ import { IEntity } from '@smartsoft001/domain-core';
 
 import { IListComponentFactories, IListInternalOptions } from '../../../models';
 import { FileUrlPipe, ListCellPipe } from '../../../pipes';
-import { PagingComponent } from '../../paging';
+// TODO: PagingComponent moved to @smartsoft001-pro/angular (FRA-122)
+// import { PagingComponent } from '../../paging';
 import { ListBaseComponent } from '../base/base.component';
 
 @Component({
@@ -22,7 +23,7 @@ import { ListBaseComponent } from '../base/base.component';
     TranslatePipe,
     FileUrlPipe,
     LazyLoadImageModule,
-    PagingComponent,
+    // PagingComponent, // TODO: moved to pro (FRA-122)
     ListCellPipe,
   ],
 })

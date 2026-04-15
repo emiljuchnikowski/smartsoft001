@@ -11,7 +11,7 @@ import { FieldType } from '@smartsoft001/models';
 
 import { IDetailOptions } from '../../models';
 import { ModelLabelPipe } from '../../pipes';
-import { InfoComponent } from '../info';
+import { InfoDefaultComponent } from '../info';
 import { DetailAddressComponent } from './address/address.component';
 import { DetailArrayComponent } from './array/array.component';
 import { DetailAttachmentComponent } from './attachment/attachment.component';
@@ -48,7 +48,7 @@ import { DetailVideoComponent } from './video/video.component';
     DetailPhoneNumberPlComponent,
     DetailTextComponent,
     ModelLabelPipe,
-    InfoComponent,
+    InfoDefaultComponent,
     NgTemplateOutlet,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,

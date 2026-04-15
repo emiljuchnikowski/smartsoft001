@@ -24,7 +24,7 @@ import {
 
 import { InputOptions } from '../../models';
 import { StyleService } from '../../services';
-import { InfoComponent } from '../info';
+import { InfoDefaultComponent } from '../info';
 import { LoaderComponent } from '../loader';
 import { InputAddressComponent } from './address/address.component';
 import { InputArrayComponent } from './array/array.component';
@@ -71,7 +71,7 @@ import { InputVideoComponent } from './video/video.component';
     `,
   ],
   imports: [
-    InfoComponent,
+    InfoDefaultComponent,
     LoaderComponent,
     InputCurrencyComponent,
     InputDateComponent,
