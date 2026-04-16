@@ -368,4 +368,6 @@ export const AllVariants: Story = {
 
 Study these existing components as patterns:
 
-- `button/` — simple component with options interface
+- `button/` — wrapper with InjectionToken (`BUTTON_STANDARD_COMPONENT_TOKEN`) for custom implementations, base + standard + wrapper pattern
+- `icon/` — base + default pattern with `cssClass` alias `class`
+- `date-range/` — complex component with `ControlValueAccessor` integration

@@ -40,7 +40,48 @@ The following components expose abstract base classes (`@Directive()`) that can 
 
 Abstract base class for button components. Provides variant/color computation, confirm mode logic, and disabled state handling.
 
-**Inputs:** `options` (`IButtonOptions`), `disabled` (`boolean`), `cssClass` (`string`)
+**Inputs:** `options` (`IButtonOptions`), `disabled` (`boolean`), `class` (`string`)
+
+### Button Component
+
+The `<smart-button>` component renders a default `ButtonStandardComponent`. It supports an InjectionToken (`BUTTON_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `ButtonComponent` (selector: `smart-button`)
+**Default:** `ButtonStandardComponent` (selector: `smart-button-standard`)
+**Token:** `BUTTON_STANDARD_COMPONENT_TOKEN` — provide a `Type<ButtonBaseComponent>` to override the default.
+
+#### Usage
+
+```html
+<smart-button [options]="{ click: onClick, variant: 'primary', size: 'md' }">
+  Save
+</smart-button>
+```
+
+#### IButtonOptions
+
+| Property       | Type                                     | Default     | Description                       |
+| -------------- | ---------------------------------------- | ----------- | --------------------------------- |
+| `click`        | `() => void`                             | *required*  | Click handler                     |
+| `variant`      | `'primary' \| 'secondary' \| 'soft'`    | `'primary'` | Color variant                     |
+| `size`         | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'`      | Button size                       |
+| `color`        | `SmartColor`                             | `'indigo'`  | Tailwind color (22 options)       |
+| `rounded`      | `boolean`                                | `false`     | Rounded pill shape                |
+| `circular`     | `boolean`                                | `false`     | Circular shape (icon buttons)     |
+| `iconPosition` | `'leading' \| 'trailing'`               | -           | Icon placement                    |
+| `confirm`      | `boolean`                                | `false`     | Show confirmation before click    |
+| `loading`      | `Signal<boolean>`                        | -           | Show loading spinner              |
+| `type`         | `'submit' \| 'button'`                  | `'button'`  | HTML button type                  |
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { BUTTON_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  { provide: BUTTON_STANDARD_COMPONENT_TOKEN, useValue: MyButtonComponent },
+]
+```
 
 ### CardBaseComponent
 

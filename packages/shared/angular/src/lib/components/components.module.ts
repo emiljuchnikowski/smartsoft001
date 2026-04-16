@@ -20,8 +20,7 @@ import {
 //   AccordionHeaderComponent,
 //   AccordionBodyComponent,
 // } from './accordion';
-// TODO: ButtonComponent moved to @smartsoft001-pro/angular (FRA-110)
-// import { ButtonComponent, ButtonStandardComponent } from './button';
+import { ButtonComponent, ButtonStandardComponent } from './button';
 // TODO: CardComponent moved to @smartsoft001-pro/angular (FRA-101)
 // import { CardComponent } from './card/card.component';
 import { DateEditDefaultComponent } from './date-edit';
@@ -103,8 +102,7 @@ import { PasswordStrengthComponent } from './password-strength';
 // TODO: AccordionComponent moved to @smartsoft001-pro/angular (FRA-101)
 export const ACCORDION_COMPONENTS: any[] = [];
 
-// TODO: ButtonComponent moved to @smartsoft001-pro/angular (FRA-110)
-export const BUTTON_COMPONENTS: any[] = [];
+export const BUTTON_COMPONENTS = [ButtonComponent, ButtonStandardComponent];
 
 // TODO: CardComponent moved to @smartsoft001-pro/angular (FRA-101)
 export const CARD_COMPONENTS: any[] = [];

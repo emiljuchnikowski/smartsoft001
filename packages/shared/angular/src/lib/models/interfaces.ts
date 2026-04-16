@@ -172,6 +172,7 @@ export interface IButtonOptions {
   color?: SmartColor;
   rounded?: boolean;
   circular?: boolean;
+  iconPosition?: 'leading' | 'trailing';
 }
 
 export interface IDetailOptions<T> {
