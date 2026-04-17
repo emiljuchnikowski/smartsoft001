@@ -6,7 +6,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { IconDefaultComponent } from '../../icon';
+import { IconComponent } from '../../icon';
 
 @Component({
   selector: 'smart-accordion-header',
@@ -27,7 +27,7 @@ import { IconDefaultComponent } from '../../icon';
   `,
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [IconDefaultComponent],
+  imports: [IconComponent],
 })
 export class AccordionHeaderComponent {
   open = input<boolean>(false);

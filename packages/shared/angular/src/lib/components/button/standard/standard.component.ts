@@ -6,14 +6,14 @@ import {
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { IconDefaultComponent } from '../../icon';
+import { IconComponent } from '../../icon';
 import { ButtonBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-button-standard',
   templateUrl: './standard.component.html',
   encapsulation: ViewEncapsulation.None,
-  imports: [TranslatePipe, IconDefaultComponent],
+  imports: [TranslatePipe, IconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonStandardComponent extends ButtonBaseComponent {

@@ -4,6 +4,5 @@ export type IconName = 'spinner' | 'chevron-down' | 'chevron-up';
 
 @Directive()
 export abstract class IconBaseComponent {
-  name = input.required<IconName>();
   cssClass = input<string>('', { alias: 'class' });
 }

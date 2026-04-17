@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { IconDefaultComponent } from './default/default.component';
+import { IconComponent } from './icon.component';
 
 const meta: Meta = {
   title: 'Components/Icon',
   tags: ['autodocs'],
   decorators: [
     moduleMetadata({
-      imports: [IconDefaultComponent],
+      imports: [IconComponent],
     }),
   ],
 };
@@ -68,6 +68,25 @@ export const WithCustomClass: Story = {
         <smart-icon name="chevron-down" class="smart:size-8 smart:text-red-500"></smart-icon>
         <smart-icon name="chevron-up" class="smart:size-8 smart:text-green-500"></smart-icon>
       </div>
+    `,
+  }),
+};
+
+export const CustomTemplate: Story = {
+  name: 'Custom SVG Template',
+  render: () => ({
+    template: `
+      <ng-template #heart>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          class="smart:size-8 smart:text-pink-500"
+        >
+          <path d="M12 21s-7-4.35-9.5-8.5C.5 8.5 3 4 7 4c2 0 3.5 1 5 3 1.5-2 3-3 5-3 4 0 6.5 4.5 4.5 8.5C19 16.65 12 21 12 21z"/>
+        </svg>
+      </ng-template>
+      <smart-icon [template]="heart"></smart-icon>
     `,
   }),
 };

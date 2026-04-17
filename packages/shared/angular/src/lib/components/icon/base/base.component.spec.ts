@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { IconBaseComponent, IconName } from './base.component';
+import { IconBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-icon',
@@ -11,11 +11,10 @@ class TestIconComponent extends IconBaseComponent {}
 
 @Component({
   selector: 'smart-test-host',
-  template: `<smart-test-icon [name]="name" [class]="cssClass" />`,
+  template: `<smart-test-icon [class]="cssClass" />`,
   imports: [TestIconComponent],
 })
 class TestHostComponent {
-  name: IconName = 'spinner';
   cssClass = '';
 }
 
@@ -35,19 +34,6 @@ describe('IconBaseComponent', () => {
 
   it('should create an instance when extended', () => {
     expect(icon).toBeInstanceOf(IconBaseComponent);
-  });
-
-  it('should have name input with required value', () => {
-    expect(icon.name()).toBe('spinner');
-  });
-
-  it('should update name input when host changes value', async () => {
-    fixture.componentInstance.name = 'chevron-down';
-    fixture.changeDetectorRef.markForCheck();
-    fixture.detectChanges();
-    await fixture.whenStable();
-
-    expect(icon.name()).toBe('chevron-down');
   });
 
   it('should default cssClass to empty string', () => {
