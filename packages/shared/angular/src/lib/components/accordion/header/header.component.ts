@@ -6,7 +6,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { IconDefaultComponent } from '@smartsoft001/angular';
+import { IconDefaultComponent } from '../../icon';
 
 @Component({
   selector: 'smart-accordion-header',

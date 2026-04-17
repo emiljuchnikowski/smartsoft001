@@ -87,7 +87,67 @@ providers: [
 
 Abstract base class for card components. Provides shared container, header, body, and footer CSS class computation with gray background and divider support.
 
-**Inputs:** `options` (`ICardOptions`), `hasHeader` (`boolean`), `hasFooter` (`boolean`), `cssClass` (`string`)
+**Inputs:** `options` (`ICardOptions`), `hasHeader` (`boolean`), `hasFooter` (`boolean`), `class` (`string`), `headerTpl`/`bodyTpl`/`footerTpl` (`TemplateRef`)
+
+### Card Component
+
+The `<smart-card>` component renders a default `CardStandardComponent`. It supports an InjectionToken (`CARD_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `CardComponent` (selector: `smart-card`)
+**Default:** `CardStandardComponent` (selector: `smart-card-standard`)
+**Token:** `CARD_STANDARD_COMPONENT_TOKEN` — provide a `Type<CardBaseComponent>` to override the default.
+
+#### Usage
+
+```html
+<!-- Basic -->
+<smart-card>
+  <p>Body content</p>
+</smart-card>
+
+<!-- With header and title -->
+<smart-card [options]="{ title: 'My Card' }" [hasHeader]="true">
+  <p>Body content</p>
+</smart-card>
+
+<!-- With header, footer, and gray footer -->
+<smart-card
+  [options]="{ grayFooter: true }"
+  [hasHeader]="true"
+  [hasFooter]="true"
+>
+  <div cardHeader>Custom Header</div>
+  <p>Body content</p>
+  <div cardFooter>Footer content</div>
+</smart-card>
+```
+
+#### ICardOptions
+
+| Property     | Type                       | Default | Description                   |
+| ------------ | -------------------------- | ------- | ----------------------------- |
+| `title`      | `string`                   | -       | Card title (shown in header)  |
+| `buttons`    | `Array<IIconButtonOptions>`| -       | Optional action icons         |
+| `grayFooter` | `boolean`                  | `false` | Gray background on footer     |
+| `grayBody`   | `boolean`                  | `false` | Gray background on body       |
+
+#### Content Projection
+
+| Selector       | Description    |
+| -------------- | -------------- |
+| `[cardHeader]` | Header content |
+| default        | Body content   |
+| `[cardFooter]` | Footer content |
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { CARD_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  { provide: CARD_STANDARD_COMPONENT_TOKEN, useValue: MyCardComponent },
+]
+```
 
 ### AccordionBaseComponent
 

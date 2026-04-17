@@ -6,8 +6,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { AccordionBaseComponent } from '@smartsoft001/angular';
-
+import { AccordionBaseComponent } from '../base/base.component';
 import { AccordionBodyComponent } from '../body/body.component';
 import { AccordionHeaderComponent } from '../header/header.component';
 

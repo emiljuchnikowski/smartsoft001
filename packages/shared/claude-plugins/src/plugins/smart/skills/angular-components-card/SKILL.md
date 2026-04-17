@@ -1,99 +1,112 @@
 ---
 name: angular-components-card
-description: Card base component API for extending in custom implementations.
+description: Card component API, DI token, and base class for @smartsoft001/angular
 user-invocable: false
 ---
 
-# CardBaseComponent (Base Only)
+# Card Component
 
-Abstract base directive for card components. This package provides the base class for creating custom card implementations.
+Flexible card container with injectable standard rendering. The `<smart-card>` wrapper renders `CardStandardComponent` by default (a neutral Tailwind placeholder with dark mode). Consumers can replace the standard with a custom variant via `CARD_STANDARD_COMPONENT_TOKEN`.
 
 ## When to Use This Skill
 
-- Developer wants to **create a custom card component** by extending the base class
-- Developer needs to understand the base API (inputs, computed properties)
-- Developer asks about `<smart-card>` → explain how to extend the base class
+- Developer wants to render a card container → use `<smart-card>`
+- Developer wants a custom visual variant → extend `CardBaseComponent` and provide via `CARD_STANDARD_COMPONENT_TOKEN`
+- Developer asks about header/footer sections → set `hasHeader`/`hasFooter` + use `[cardHeader]` / `[cardFooter]` content projection
 
-## Base Class API
+## Public API
 
-### Import
+### Wrapper: `smart-card`
 
-```typescript
-import { CardBaseComponent } from '@smartsoft001/angular';
-```
-
-### Inputs
-
-| Input       | Type                                     | Default     | Description          |
-| ----------- | ---------------------------------------- | ----------- | -------------------- |
-| `options`   | `InputSignal<ICardOptions \| undefined>` | `undefined` | Card configuration   |
-| `hasHeader` | `InputSignal<boolean>`                   | `false`     | Show header section  |
-| `hasFooter` | `InputSignal<boolean>`                   | `false`     | Show footer section  |
-| `cssClass`  | `InputSignal<string>`                    | `''`        | External CSS classes |
-| `headerTpl` | `InputSignal<TemplateRef>`               | -           | Header template      |
-| `bodyTpl`   | `InputSignal<TemplateRef>`               | required    | Body template        |
-| `footerTpl` | `InputSignal<TemplateRef>`               | -           | Footer template      |
+| Input       | Type           | Default     | Description           |
+| ----------- | -------------- | ----------- | --------------------- |
+| `options`   | `ICardOptions` | `undefined` | Card configuration    |
+| `hasHeader` | `boolean`      | `false`     | Show header section   |
+| `hasFooter` | `boolean`      | `false`     | Show footer section   |
+| `class`     | `string`       | `''`        | Extra container class |
 
 ### ICardOptions
 
 ```typescript
-type SmartCardVariant =
-  | 'basic'
-  | 'edge-to-edge'
-  | 'well'
-  | 'well-on-gray'
-  | 'well-edge-to-edge';
-
 interface ICardOptions {
   title?: string;
-  variant?: SmartCardVariant;
+  buttons?: Array<IIconButtonOptions>;
   grayFooter?: boolean;
   grayBody?: boolean;
-  buttons?: Array<IIconButtonOptions>;
 }
 ```
 
-### Computed Properties
+### Content Projection
 
-| Property                 | Type               | Description                                                    |
-| ------------------------ | ------------------ | -------------------------------------------------------------- |
-| `sharedContainerClasses` | `Signal<string[]>` | Overflow, divider classes based on header/footer and gray opts |
-| `headerClasses`          | `Signal<string>`   | Padding classes for header section                             |
-| `bodyClasses`            | `Signal<string>`   | Padding + optional gray background classes for body            |
-| `footerClasses`          | `Signal<string>`   | Padding + optional gray background classes for footer          |
+| Selector       | Description    |
+| -------------- | -------------- |
+| `[cardHeader]` | Header content |
+| default        | Body content   |
+| `[cardFooter]` | Footer content |
 
-## Extending the Base Class
+## Usage
+
+```html
+<!-- Basic -->
+<smart-card><p>Content</p></smart-card>
+
+<!-- With title in header -->
+<smart-card [options]="{ title: 'Title' }" [hasHeader]="true">
+  <p>Body</p>
+</smart-card>
+
+<!-- Header + footer + gray footer -->
+<smart-card
+  [options]="{ grayFooter: true }"
+  [hasHeader]="true"
+  [hasFooter]="true"
+>
+  <div cardHeader>Custom Header</div>
+  <p>Body</p>
+  <div cardFooter>Footer</div>
+</smart-card>
+```
+
+## Architecture
+
+Three-layer pattern mirroring `<smart-button>`:
+
+1. **`CardBaseComponent`** (`@Directive()`) — shared signals/inputs (`options`, `hasHeader`, `hasFooter`, `class`, `headerTpl`, `bodyTpl`, `footerTpl`) and computed classes (`sharedContainerClasses`, `headerClasses`, `bodyClasses`, `footerClasses`). Handles divider, gray body/footer, and padding rules.
+2. **`CardStandardComponent`** (selector: `smart-card-standard`) — default concrete implementation extending the base. Neutral Tailwind style with dark mode (`rounded-lg`, `bg-white`, `shadow-sm`, `dark:bg-gray-800/50`, `dark:outline-white/10`).
+3. **`CardComponent`** (selector: `smart-card`) — wrapper. Uses `inject(CARD_STANDARD_COMPONENT_TOKEN, { optional: true })` + `*ngComponentOutlet` to render the injected component, falling back to `<smart-card-standard>`. Content projection (`[cardHeader]`, default, `[cardFooter]`) is wrapped in local `<ng-template>` refs and passed as inputs (`headerTpl`/`bodyTpl`/`footerTpl`) to the active component.
+
+## Overriding with Custom Implementation
 
 ```typescript
-import { Component, ViewEncapsulation } from '@angular/core';
-import { CardBaseComponent } from '@smartsoft001/angular';
+import { Component } from '@angular/core';
+import {
+  CardBaseComponent,
+  CARD_STANDARD_COMPONENT_TOKEN,
+} from '@smartsoft001/angular';
+import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
-  selector: 'my-card',
-  template: `
-    <div [class]="sharedContainerClasses().join(' ')">
-      @if (hasHeader()) {
-        <div [class]="headerClasses()">
-          <ng-container [ngTemplateOutlet]="headerTpl()" />
-        </div>
-      }
-      <div [class]="bodyClasses()">
-        <ng-container [ngTemplateOutlet]="bodyTpl()" />
-      </div>
-      @if (hasFooter()) {
-        <div [class]="footerClasses()">
-          <ng-container [ngTemplateOutlet]="footerTpl()" />
-        </div>
-      }
-    </div>
-  `,
-  encapsulation: ViewEncapsulation.None,
+  selector: 'smart-card-my-variant',
+  imports: [NgTemplateOutlet],
+  template: `...custom template using headerTpl()/bodyTpl()/footerTpl()...`,
 })
-export class MyCardComponent extends CardBaseComponent {}
+export class CardMyVariantComponent extends CardBaseComponent {}
+
+// In app bootstrap:
+providers: [
+  { provide: CARD_STANDARD_COMPONENT_TOKEN, useValue: CardMyVariantComponent },
+];
 ```
 
 ## File Locations
 
-- Base class: `packages/shared/angular/src/lib/components/card/base/base.component.ts`
-- Tests: `packages/shared/angular/src/lib/components/card/base/base.component.spec.ts`
-- Interface: `packages/shared/angular/src/lib/models/interfaces.ts` (`ICardOptions`, `SmartCardVariant`)
+- Wrapper: `packages/shared/angular/src/lib/components/card/card.component.ts`
+- Default: `packages/shared/angular/src/lib/components/card/standard/standard.component.{ts,html}`
+- Base: `packages/shared/angular/src/lib/components/card/base/base.component.ts`
+- Tests: `packages/shared/angular/src/lib/components/card/{card,standard/standard,base/base}.component.spec.ts`
+- Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`CARD_STANDARD_COMPONENT_TOKEN`)
+- Interface: `packages/shared/angular/src/lib/models/interfaces.ts` (`ICardOptions`)
+
+## Tailwind Classes
+
+All classes use `smart:` prefix. `CardStandardComponent` container: `smart:overflow-hidden smart:rounded-lg smart:bg-white smart:shadow-sm`. Dark mode: `dark:smart:bg-gray-800/50 dark:smart:shadow-none dark:smart:outline dark:smart:-outline-offset-1 dark:smart:outline-white/10`. Divider when header/footer present: `smart:divide-y smart:divide-gray-200 dark:smart:divide-white/10`. Gray body/footer: `smart:bg-gray-50 dark:smart:bg-gray-800/50`.

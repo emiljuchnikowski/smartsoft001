@@ -29,17 +29,9 @@ export interface IAppOptions {
   style?: IStyle;
 }
 
-export type SmartCardVariant =
-  | 'basic'
-  | 'edge-to-edge'
-  | 'well'
-  | 'well-on-gray'
-  | 'well-edge-to-edge';
-
 export interface ICardOptions {
   title?: string;
   buttons?: Array<IIconButtonOptions>;
-  variant?: SmartCardVariant;
   grayFooter?: boolean;
   grayBody?: boolean;
 }

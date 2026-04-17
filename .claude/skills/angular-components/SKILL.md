@@ -85,53 +85,73 @@ export class <ComponentName>StandardComponent extends <ComponentName>BaseCompone
 
 ### Layer 3: Wrapper Component (`<component-name>.component.ts`)
 
-Dynamic component wrapper using `CreateDynamicComponent`.
+Wrapper using `inject(<TOKEN>, { optional: true })` + `*ngComponentOutlet` to render an injected `Type<<ComponentName>BaseComponent>` when provided, or fall back to `<ComponentName>StandardComponent`.
+
+Register the DI token in `packages/shared/angular/src/lib/shared.inectors.ts`:
 
 ```typescript
-import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, effect, input, viewChild, viewChildren, ViewContainerRef, ViewEncapsulation } from '@angular/core';
-import { DynamicContentDirective } from '../../directives';
+export const <COMPONENT_NAME>_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<<ComponentName>BaseComponent>
+>('<COMPONENT_NAME>_STANDARD_COMPONENT');
+```
+
+Wrapper:
+
+```typescript
+import { NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+  ViewEncapsulation,
+} from '@angular/core';
+
 import { I<ComponentName>Options } from '../../models';
-import { CreateDynamicComponent } from '../base';
-import { <ComponentName>BaseComponent } from './base/base.component';
+import { <COMPONENT_NAME>_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { <ComponentName>StandardComponent } from './standard/standard.component';
 
 @Component({
-  selector: 'lib-<component-name>',
+  selector: 'smart-<component-name>',
   template: `
-    @if (template() === 'default') {
-      <lib-<component-name>-standard [options]="options()">
-        <ng-container [ngTemplateOutlet]="contentTpl"></ng-container>
-      </lib-<component-name>-standard>
+    @if (componentType()) {
+      <ng-container
+        *ngComponentOutlet="componentType(); inputs: componentInputs()"
+      />
+    } @else {
+      <smart-<component-name>-standard
+        [options]="options()"
+        [class]="cssClass()"
+      >
+        <ng-container [ngTemplateOutlet]="contentRef"></ng-container>
+      </smart-<component-name>-standard>
     }
-    <ng-template #contentTpl>
+    <ng-template #contentRef>
       <ng-content></ng-content>
     </ng-template>
-    <div class="dynamic-content"></div>
   `,
   encapsulation: ViewEncapsulation.None,
-  imports: [<ComponentName>StandardComponent, NgTemplateOutlet],
+  imports: [<ComponentName>StandardComponent, NgComponentOutlet, NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class <ComponentName>Component extends CreateDynamicComponent<<ComponentName>BaseComponent>('<component-name>') {
+export class <ComponentName>Component {
+  private injectedComponent = inject(<COMPONENT_NAME>_STANDARD_COMPONENT_TOKEN, {
+    optional: true,
+  });
+
   options = input.required<I<ComponentName>Options>();
+  cssClass = input<string>('', { alias: 'class' });
 
-  override contentTpl = viewChild<ViewContainerRef>('contentTpl');
-  override dynamicContents = viewChildren<DynamicContentDirective>(DynamicContentDirective);
-
-  constructor() {
-    super();
-    effect(() => {
-      this.options();
-      this.refreshDynamicInstance();
-    });
-  }
-
-  override refreshProperties(): void {
-    this.baseInstance.options = this.options;
-  }
+  componentType = computed(() => this.injectedComponent ?? null);
+  componentInputs = computed(() => ({
+    options: this.options(),
+    cssClass: this.cssClass(),
+  }));
 }
 ```
+
+If the component needs projected content to flow into the injected component, wrap `<ng-content>` in local `<ng-template #headerTpl/#bodyTpl/#footerTpl>`, read them with `viewChild.required<TemplateRef<unknown>>('...')`, and include the refs in `componentInputs()`. See `card/card.component.ts` for that pattern.
 
 ## External `class` Input Pattern
 
@@ -166,17 +186,12 @@ Usage: `<smart-button class="smart:mt-4 custom-class" [options]="opts">Click</sm
 Add the component options interface to `packages/shared/angular/src/lib/models/interfaces.ts`:
 
 ```typescript
-export enum <ComponentName>Variant {
-  // Define variants based on HTML templates
-}
-
 export interface I<ComponentName>Options {
-  variant: <ComponentName>Variant;
-  // Component-specific properties
+  // Component-specific properties only.
+  // Do NOT put a `variant` field here — visual variants are chosen by DI
+  // (via <COMPONENT_NAME>_STANDARD_COMPONENT_TOKEN), not by runtime options.
 }
 ```
-
-Also add the `DynamicComponentType` union member: `'<component-name>'`.
 
 ## MANDATORY: Plugin Sync
 
@@ -369,5 +384,6 @@ export const AllVariants: Story = {
 Study these existing components as patterns:
 
 - `button/` — wrapper with InjectionToken (`BUTTON_STANDARD_COMPONENT_TOKEN`) for custom implementations, base + standard + wrapper pattern
+- `card/` — wrapper with InjectionToken (`CARD_STANDARD_COMPONENT_TOKEN`) and content projection flowing into the injected component via `headerTpl`/`bodyTpl`/`footerTpl` template inputs
 - `icon/` — base + default pattern with `cssClass` alias `class`
 - `date-range/` — complex component with `ControlValueAccessor` integration

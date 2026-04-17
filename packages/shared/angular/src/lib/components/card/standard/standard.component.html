@@ -1,0 +1,25 @@
+<div [class]="containerClasses()">
+  @if (hasHeader()) {
+    <div [class]="headerClasses()">
+      @let title = options()?.title;
+      @if (title) {
+        <h3
+          class="smart:text-base smart:font-semibold smart:text-gray-900 dark:smart:text-white"
+        >
+          {{ title }}
+        </h3>
+      }
+      <ng-container [ngTemplateOutlet]="headerTpl()"></ng-container>
+    </div>
+  }
+
+  <div [class]="bodyClasses()">
+    <ng-container [ngTemplateOutlet]="bodyTpl()"></ng-container>
+  </div>
+
+  @if (hasFooter()) {
+    <div [class]="footerClasses()">
+      <ng-container [ngTemplateOutlet]="footerTpl()"></ng-container>
+    </div>
+  }
+</div>
