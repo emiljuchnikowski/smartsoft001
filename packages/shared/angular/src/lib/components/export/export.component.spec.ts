@@ -16,12 +16,14 @@ describe('ExportComponent (pro)', () => {
   });
 
   it('should create', () => {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     fixture.componentRef.setInput('handler', () => {});
     fixture.detectChanges();
     expect(component).toBeTruthy();
   });
 
   it('should render smart-button', () => {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     fixture.componentRef.setInput('handler', () => {});
     fixture.detectChanges();
     const button = fixture.nativeElement.querySelector('smart-button');
@@ -29,6 +31,7 @@ describe('ExportComponent (pro)', () => {
   });
 
   it('should render download SVG icon', () => {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     fixture.componentRef.setInput('handler', () => {});
     fixture.detectChanges();
     const svg = fixture.nativeElement.querySelector('svg');

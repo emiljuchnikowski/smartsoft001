@@ -7,8 +7,13 @@ import { IAddress } from '@smartsoft001/domain-core';
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
 import { SharedFactoriesModule } from '../../factories';
-import { DETAIL_FIELD_COMPONENTS_TOKEN } from '../../shared.inectors';
+import { FileService } from '../../services';
+import {
+  DETAIL_FIELD_COMPONENTS_TOKEN,
+  DETAILS_COMPONENT_TOKEN,
+} from '../../shared.inectors';
 import { COMPONENTS, IMPORTS } from '../components.module';
+import { DetailsComponent } from '../details';
 import { DetailBaseComponent } from './base/base.component';
 import { DetailComponent } from './detail.component';
 
@@ -22,6 +27,18 @@ const meta: Meta<DetailComponent<any>> = {
         ...COMPONENTS,
         SharedFactoriesModule,
         TranslateModule.forRoot(),
+      ],
+      providers: [
+        {
+          provide: FileService,
+          useValue: {
+            getUrl: (id: string) => `https://picsum.photos/seed/${id}/150/150`,
+            download: (id: string) => console.log('[storybook] download', id),
+            upload: () => undefined,
+            delete: () => Promise.resolve(),
+          },
+        },
+        { provide: DETAILS_COMPONENT_TOKEN, useValue: DetailsComponent },
       ],
     }),
   ],
@@ -321,6 +338,12 @@ export const Image: Story = {
 
 // ─── 11. Logo ───────────────────────────────────────────────────────────────
 
+const LOGO_DATA_URI =
+  'data:image/svg+xml;utf8,' +
+  encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 150 150"><rect width="150" height="150" fill="#6366f1"/><text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" fill="white" font-family="sans-serif" font-size="24" font-weight="bold">LOGO</text></svg>`,
+  );
+
 export const Logo: Story = {
   name: 'Logo',
   render: () => ({
@@ -330,13 +353,13 @@ export const Logo: Story = {
           @Model({})
           class TestModel {
             @Field({ details: true, type: FieldType.logo })
-            logo = 'https://via.placeholder.com/150';
+            logo = LOGO_DATA_URI;
           }
           return TestModel;
         })(),
         options: {
           key: 'logo',
-          item: signal({ logo: 'https://via.placeholder.com/150' }),
+          item: signal({ logo: LOGO_DATA_URI }),
           options: { type: FieldType.logo },
         },
       },
@@ -462,7 +485,10 @@ export const ObjectField: Story = {
           key: 'user',
           item: signal({
             title: 'Employee',
-            user: { firstName: 'Jan', lastName: 'Kowalski' },
+            user: Object.assign(new NestedUserModel(), {
+              firstName: 'Jan',
+              lastName: 'Kowalski',
+            }),
           }),
           options: { type: FieldType.object },
         },
@@ -501,7 +527,10 @@ export const ArrayField: Story = {
         options: {
           key: 'items',
           item: signal({
-            items: [{ name: 'Item A' }, { name: 'Item B' }],
+            items: [
+              Object.assign(new ArrayItemModel(), { name: 'Item A' }),
+              Object.assign(new ArrayItemModel(), { name: 'Item B' }),
+            ],
           }),
           options: {
             type: FieldType.array,
