@@ -14,15 +14,14 @@ import {
   DETAILS_COMPONENT_TOKEN,
   FORM_COMPONENT_TOKEN,
 } from '../shared.inectors';
-// TODO: AccordionComponent moved to @smartsoft001-pro/angular (FRA-101)
-// import {
-//   AccordionComponent,
-//   AccordionHeaderComponent,
-//   AccordionBodyComponent,
-// } from './accordion';
+import {
+  AccordionBodyComponent,
+  AccordionComponent,
+  AccordionDefaultComponent,
+  AccordionHeaderComponent,
+} from './accordion';
 import { ButtonComponent, ButtonStandardComponent } from './button';
-// TODO: CardComponent moved to @smartsoft001-pro/angular (FRA-101)
-// import { CardComponent } from './card/card.component';
+import { CardComponent, CardStandardComponent } from './card';
 import { DateEditDefaultComponent } from './date-edit';
 import {
   DateRangeDefaultComponent,
@@ -48,17 +47,9 @@ import {
 } from './detail';
 import { DetailsComponent, DetailsStandardComponent } from './details';
 import { SharedDirectivesModule } from '../directives';
-// TODO: ExportComponent moved to @smartsoft001-pro/angular (FRA-113)
-// import { ExportDefaultComponent } from './export';
-import {
-  AccordionBodyComponent,
-  AccordionComponent,
-  AccordionDefaultComponent,
-  AccordionHeaderComponent,
-} from './accordion';
+import { ExportComponent } from './export';
 import { FormComponent, FormStandardComponent } from './form';
-// TODO: ImportComponent moved to @smartsoft001-pro/angular (FRA-116)
-// import { ImportComponent } from './import';
+import { ImportComponent } from './import';
 import { InfoDefaultComponent } from './info';
 import {
   InputComponent,
@@ -114,10 +105,13 @@ export const ACCORDION_COMPONENTS: any[] = [
 
 export const BUTTON_COMPONENTS = [ButtonComponent, ButtonStandardComponent];
 
-// TODO: CardComponent moved to @smartsoft001-pro/angular (FRA-101)
-export const CARD_COMPONENTS: any[] = [];
+export const CARD_COMPONENTS = [CardComponent, CardStandardComponent];
 
 export const DETAILS_COMPONENTS = [DetailsComponent, DetailsStandardComponent];
+
+export const EXPORT_COMPONENTS = [ExportComponent];
+
+export const IMPORT_COMPONENTS = [ImportComponent];
 
 export const DETAIL_COMPONENTS = [
   DetailComponent,
@@ -211,6 +205,8 @@ export const COMPONENTS = [
   ...DETAILS_COMPONENTS,
   ...DYNAMIC_COMPONENTS,
   ...INFO_COMPONENTS,
+  ...EXPORT_COMPONENTS,
+  ...IMPORT_COMPONENTS,
   PasswordStrengthComponent,
 ];
 
