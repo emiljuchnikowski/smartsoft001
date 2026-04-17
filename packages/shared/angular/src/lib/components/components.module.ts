@@ -50,6 +50,12 @@ import { DetailsComponent, DetailsStandardComponent } from './details';
 import { SharedDirectivesModule } from '../directives';
 // TODO: ExportComponent moved to @smartsoft001-pro/angular (FRA-113)
 // import { ExportDefaultComponent } from './export';
+import {
+  AccordionBodyComponent,
+  AccordionComponent,
+  AccordionDefaultComponent,
+  AccordionHeaderComponent,
+} from './accordion';
 import { FormComponent, FormStandardComponent } from './form';
 // TODO: ImportComponent moved to @smartsoft001-pro/angular (FRA-116)
 // import { ImportComponent } from './import';
@@ -99,8 +105,12 @@ import { LoaderComponent } from './loader';
 // import { PageComponent, PageStandardComponent } from './page';
 import { PasswordStrengthComponent } from './password-strength';
 
-// TODO: AccordionComponent moved to @smartsoft001-pro/angular (FRA-101)
-export const ACCORDION_COMPONENTS: any[] = [];
+export const ACCORDION_COMPONENTS: any[] = [
+  AccordionComponent,
+  AccordionDefaultComponent,
+  AccordionHeaderComponent,
+  AccordionBodyComponent,
+];
 
 export const BUTTON_COMPONENTS = [ButtonComponent, ButtonStandardComponent];
 

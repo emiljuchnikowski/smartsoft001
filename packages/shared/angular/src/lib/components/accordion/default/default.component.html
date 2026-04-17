@@ -1,0 +1,16 @@
+<div [class]="accordionClasses()">
+  <div (click)="toggle()">
+    <smart-accordion-header
+      [open]="show()"
+      [disabled]="options()?.disabled ?? false"
+    >
+      <ng-container [ngTemplateOutlet]="headerTpl()"></ng-container>
+    </smart-accordion-header>
+  </div>
+
+  @if (show()) {
+    <smart-accordion-body>
+      <ng-container [ngTemplateOutlet]="bodyTpl()"></ng-container>
+    </smart-accordion-body>
+  }
+</div>
