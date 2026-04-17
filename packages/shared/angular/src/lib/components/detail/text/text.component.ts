@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, computed } from '@angular/core';
 
 import { ListCellPipe, TrustHtmlPipe } from '../../../pipes';
 import { DetailBaseComponent } from '../base/base.component';
@@ -10,6 +10,7 @@ import { DetailBaseComponent } from '../base/base.component';
     @let key = options()?.key;
     @if (item && key) {
       <p
+        [class]="textClasses()"
         [innerHTML]="
           (item | smartListCell: key : options()?.cellPipe)?.value
             | smartTrustHtml
@@ -19,4 +20,15 @@ import { DetailBaseComponent } from '../base/base.component';
   `,
   imports: [ListCellPipe, TrustHtmlPipe],
 })
-export class DetailTextComponent<T> extends DetailBaseComponent<T> {}
+export class DetailTextComponent<T> extends DetailBaseComponent<T> {
+  textClasses = computed(() => {
+    const classes = [
+      'smart:text-sm',
+      'smart:text-gray-900',
+      'dark:smart:text-gray-100',
+    ];
+    const extra = this.cssClass();
+    if (extra) classes.push(extra);
+    return classes.join(' ');
+  });
+}

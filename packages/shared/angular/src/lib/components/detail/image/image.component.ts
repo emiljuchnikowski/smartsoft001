@@ -1,4 +1,4 @@
-import { Component, computed, inject, Signal } from '@angular/core';
+import { Component, computed, inject, signal, Signal } from '@angular/core';
 
 import { FileService } from '../../../services';
 import { DetailBaseComponent } from '../base/base.component';
@@ -6,15 +6,10 @@ import { DetailBaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-detail-image',
   template: `
-    <!--    <ion-card>-->
     @let url = imageUrl();
     @if (url) {
-      <!--        <ion-img-->
-      <!--          style="margin: 10px; height: 150px; width: 150px"-->
-      <!--          [src]="url"-->
-      <!--        ></ion-img>-->
+      <img [class]="imageClasses()" [src]="url" alt="" />
     }
-    <!--    </ion-card>-->
   `,
 })
 export class DetailImageComponent<
@@ -22,7 +17,19 @@ export class DetailImageComponent<
 > extends DetailBaseComponent<T> {
   private fileService = inject(FileService);
 
-  imageUrl!: Signal<string | null>;
+  imageUrl: Signal<string | null> = signal(null);
+
+  imageClasses = computed(() => {
+    const classes = [
+      'smart:h-[150px]',
+      'smart:w-[150px]',
+      'smart:rounded-lg',
+      'smart:object-cover',
+    ];
+    const extra = this.cssClass();
+    if (extra) classes.push(extra);
+    return classes.join(' ');
+  });
 
   protected override afterSetOptionsHandler() {
     const item = this.options()?.item?.();

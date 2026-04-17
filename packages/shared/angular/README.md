@@ -155,9 +155,83 @@ Abstract base class for accordion components. Provides toggle logic, disabled st
 
 **Inputs:** `show` (`ModelSignal<boolean>`), `options` (`IAccordionOptions`), `cssClass` (`string`)
 
+### DetailBaseComponent
+
+Abstract base directive for detail field sub-components. Exposes `options: IDetailOptions<T>` input, `cssClass: string` (alias `class`), and an `afterSetOptionsHandler()` hook invoked via effect on options change.
+
+**Inputs:** `options` (`IDetailOptions<T>`), `class` (`string`)
+
 ## Components
 
 The following components include both an abstract base class (`@Directive()`) and a default concrete implementation with templates. The base classes can be extended to create custom implementations.
+
+### Detail Component
+
+The `<smart-detail>` component renders a single model field value by delegating to a sub-component chosen by `FieldType`. Supports 15 default sub-components and allows per-field substitution via `DETAIL_FIELD_COMPONENTS_TOKEN`.
+
+**Wrapper:** `DetailComponent` (selector: `smart-detail`)
+**Base class:** `DetailBaseComponent<T>` — base for all sub-components.
+**Token:** `DETAIL_FIELD_COMPONENTS_TOKEN` — provide a `Partial<Record<FieldType, Type<DetailBaseComponent<any>>>>` to substitute default sub-components for specific field types.
+
+#### Usage
+
+```html
+<smart-detail [options]="detailOptions" [type]="ModelClass"></smart-detail>
+```
+
+#### IDetailOptions
+
+| Property   | Type                          | Default    | Description                            |
+| ---------- | ----------------------------- | ---------- | -------------------------------------- |
+| `key`      | `string`                      | *required* | Model property name                    |
+| `item`     | `Signal<T>`                   | -          | Signal with the model instance         |
+| `options`  | `IFieldOptions`               | *required* | Field metadata (`type`, `info`, ...)   |
+| `cellPipe` | `ICellPipe<T>`                | -          | Optional cell transformation pipe      |
+| `loading`  | `Signal<boolean>`             | -          | Loading indicator                      |
+
+#### Default Sub-Components (selector → FieldType)
+
+| Selector                        | FieldType       |
+| ------------------------------- | --------------- |
+| `smart-detail-text`             | `text` (default)|
+| `smart-detail-email`            | `email`         |
+| `smart-detail-enum`             | `enum`          |
+| `smart-detail-flag`             | `flag`          |
+| `smart-detail-color`            | `color`         |
+| `smart-detail-address`          | `address`       |
+| `smart-detail-object`           | `object`        |
+| `smart-detail-array`            | `array`         |
+| `smart-detail-date-range`       | `dateRange`     |
+| `smart-detail-phone-number-pl`  | `phoneNumberPl` |
+| `smart-detail-image`            | `image`         |
+| `smart-detail-logo`             | `logo`          |
+| `smart-detail-video`            | `video`         |
+| `smart-detail-attachment`       | `attachment`    |
+| `smart-detail-pdf`              | `pdf`           |
+
+#### Overriding Sub-Components
+
+```typescript
+import { DETAIL_FIELD_COMPONENTS_TOKEN } from '@smartsoft001/angular';
+import { FieldType } from '@smartsoft001/models';
+
+providers: [
+  {
+    provide: DETAIL_FIELD_COMPONENTS_TOKEN,
+    useValue: {
+      [FieldType.text]: MyCustomTextComponent,
+    },
+  },
+]
+```
+
+#### Features
+
+- Field-type dispatch via map with `NgComponentOutlet`
+- Per-field substitution through `DETAIL_FIELD_COMPONENTS_TOKEN`
+- Skeleton placeholder while `item()` resolves
+- Label via `ModelLabelPipe`
+- `smart:` Tailwind prefix, dark mode via `dark:smart:`
 
 ### Date Range Component
 

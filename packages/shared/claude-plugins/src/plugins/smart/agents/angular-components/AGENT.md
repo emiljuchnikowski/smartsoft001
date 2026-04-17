@@ -24,11 +24,12 @@ This package contains two categories of components:
 
 These have concrete selectors and can be used directly in templates.
 
-| Component  | Skill                           | Selector             | Description                                             |
-| ---------- | ------------------------------- | -------------------- | ------------------------------------------------------- |
-| Date Edit  | `angular-components-date-edit`  | `<smart-date-edit>`  | Digit-by-digit date input (DD-MM-RRRR) with validation  |
-| Date Range | `angular-components-date-range` | `<smart-date-range>` | Date range picker with modal calendar and quick filters |
-| Icon       | —                               | `<smart-icon>`       | SVG icon component (spinner)                            |
+| Component  | Skill                           | Selector             | Description                                                                    |
+| ---------- | ------------------------------- | -------------------- | ------------------------------------------------------------------------------ |
+| Date Edit  | `angular-components-date-edit`  | `<smart-date-edit>`  | Digit-by-digit date input (DD-MM-RRRR) with validation                         |
+| Date Range | `angular-components-date-range` | `<smart-date-range>` | Date range picker with modal calendar and quick filters                        |
+| Detail     | `angular-components-detail`     | `<smart-detail>`     | Renders a single model field by dispatching to a sub-component per `FieldType` |
+| Icon       | —                               | `<smart-icon>`       | SVG icon component (spinner)                                                   |
 
 ### Base-Only Components (abstract classes for extension)
 
@@ -44,7 +45,7 @@ These provide abstract base classes (`@Directive()`) that can be extended to cre
 
 When a developer asks about a component:
 
-1. **Wants to use `<smart-date-edit>` or `<smart-date-range>`** → delegate to the corresponding skill for usage API
+1. **Wants to use `<smart-date-edit>`, `<smart-date-range>`, or `<smart-detail>`** → delegate to the corresponding skill for usage API
 2. **Wants to use `<smart-button>`, `<smart-card>`, or `<smart-accordion>`** → delegate to the skill to explain how to extend the base class and create a custom implementation
 3. **Wants to create a custom component** → delegate to the base-only skill for extension patterns and API
 
@@ -54,9 +55,10 @@ Always delegate to the per-component skill for detailed API, usage examples, and
 
 - **Date Edit** → use skill `angular-components-date-edit`
 - **Date Range** → use skill `angular-components-date-range`
+- **Accordion** (base only) → use skill `angular-components-accordion`
+- **Detail** → use skill `angular-components-detail`
 - **Button** (base only) → use skill `angular-components-button`
 - **Card** (base only) → use skill `angular-components-card`
-- **Accordion** (base only) → use skill `angular-components-accordion`
 
 ## Installation
 
@@ -71,6 +73,8 @@ npm i @smartsoft001/angular
 import {
   DateEditDefaultComponent,
   DateRangeDefaultComponent,
+  DetailComponent,
+  DETAIL_FIELD_COMPONENTS_TOKEN,
 } from '@smartsoft001/angular';
 
 // Base classes for extension
@@ -78,6 +82,7 @@ import {
   ButtonBaseComponent,
   CardBaseComponent,
   AccordionBaseComponent,
+  DetailBaseComponent,
 } from '@smartsoft001/angular';
 
 // Base classes for date components (also extensible)
