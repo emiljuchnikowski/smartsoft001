@@ -9,16 +9,16 @@ import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DateEditBaseComponent } from '../base/base.component';
 
 @Component({
-  selector: 'smart-date-edit',
-  templateUrl: './default.component.html',
+  selector: 'smart-date-edit-standard',
+  templateUrl: './standard.component.html',
   styles: [
     `
-      smart-date-edit input[type='number']::-webkit-outer-spin-button,
-      smart-date-edit input[type='number']::-webkit-inner-spin-button {
+      smart-date-edit-standard input[type='number']::-webkit-outer-spin-button,
+      smart-date-edit-standard input[type='number']::-webkit-inner-spin-button {
         -webkit-appearance: none;
         margin: 0;
       }
-      smart-date-edit input[type='number'] {
+      smart-date-edit-standard input[type='number'] {
         -moz-appearance: textfield;
         text-align: center;
       }
@@ -30,9 +30,9 @@ import { DateEditBaseComponent } from '../base/base.component';
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => DateEditDefaultComponent),
+      useExisting: forwardRef(() => DateEditStandardComponent),
       multi: true,
     },
   ],
 })
-export class DateEditDefaultComponent extends DateEditBaseComponent {}
+export class DateEditStandardComponent extends DateEditBaseComponent {}

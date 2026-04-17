@@ -2,7 +2,7 @@ import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { ModelLabelPipe } from '../../../pipes';
-import { DateRangeDefaultComponent } from '../../date-range';
+import { DateRangeComponent } from '../../date-range';
 import { InputBaseComponent } from '../base/base.component';
 
 @Component({
@@ -31,6 +31,6 @@ import { InputBaseComponent } from '../base/base.component';
       ></smart-date-range>
     }
   `,
-  imports: [DateRangeDefaultComponent, ModelLabelPipe, AsyncPipe],
+  imports: [DateRangeComponent, ModelLabelPipe, AsyncPipe],
 })
 export class InputDateRangeComponent<T> extends InputBaseComponent<T> {}

@@ -8,6 +8,8 @@ import {
 import { ControlValueAccessor } from '@angular/forms';
 import moment from 'moment';
 
+export type DateEditVariantName = 'standard';
+
 @Directive()
 export abstract class DateEditBaseComponent implements ControlValueAccessor {
   protected cd = inject(ChangeDetectorRef);

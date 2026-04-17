@@ -10,11 +10,11 @@ import { CalendarService } from '../../../services';
 import { DateRangeModalBaseComponent } from '../base/date-range-modal-base.component';
 
 @Component({
-  selector: 'smart-date-range-modal',
-  templateUrl: './date-range-modal-default.component.html',
+  selector: 'smart-date-range-modal-standard',
+  templateUrl: './standard-modal.component.html',
   providers: [CalendarService],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgClass, TranslatePipe],
 })
-export class DateRangeModalDefaultComponent extends DateRangeModalBaseComponent {}
+export class DateRangeModalStandardComponent extends DateRangeModalBaseComponent {}

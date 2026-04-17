@@ -22,10 +22,11 @@ import {
 } from './accordion';
 import { ButtonComponent, ButtonStandardComponent } from './button';
 import { CardComponent, CardStandardComponent } from './card';
-import { DateEditDefaultComponent } from './date-edit';
+import { DateEditComponent, DateEditStandardComponent } from './date-edit';
 import {
-  DateRangeDefaultComponent,
-  DateRangeModalDefaultComponent,
+  DateRangeComponent,
+  DateRangeStandardComponent,
+  DateRangeModalStandardComponent,
 } from './date-range';
 import {
   DetailComponent,
@@ -183,10 +184,14 @@ export const PAGE_COMPONENTS: any[] = [];
 
 export const INFO_COMPONENTS = [InfoDefaultComponent];
 export const DATE_RANGE_COMPONENTS = [
-  DateRangeDefaultComponent,
-  DateRangeModalDefaultComponent,
+  DateRangeComponent,
+  DateRangeStandardComponent,
+  DateRangeModalStandardComponent,
 ];
-export const DATE_EDIT_COMPONENTS = [DateEditDefaultComponent];
+export const DATE_EDIT_COMPONENTS = [
+  DateEditComponent,
+  DateEditStandardComponent,
+];
 
 export const DYNAMIC_COMPONENTS = [DynamicComponent];
 

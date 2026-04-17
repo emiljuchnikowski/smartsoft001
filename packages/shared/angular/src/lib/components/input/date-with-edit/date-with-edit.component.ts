@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 import { ModelLabelPipe } from '../../../pipes';
-import { DateEditDefaultComponent } from '../../date-edit';
+import { DateEditComponent } from '../../date-edit';
 import { InputBaseComponent } from '../base/base.component';
 
 @Component({
@@ -33,12 +33,7 @@ import { InputBaseComponent } from '../base/base.component';
       <!--  </ion-row>-->
     }
   `,
-  imports: [
-    ModelLabelPipe,
-    AsyncPipe,
-    ReactiveFormsModule,
-    DateEditDefaultComponent,
-  ],
+  imports: [ModelLabelPipe, AsyncPipe, ReactiveFormsModule, DateEditComponent],
 })
 export class InputDateWithEditComponent<T>
   extends InputBaseComponent<T>

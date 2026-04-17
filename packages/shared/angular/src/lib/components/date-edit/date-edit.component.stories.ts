@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { DateEditDefaultComponent } from './default/default.component';
+import { DateEditComponent } from './date-edit.component';
 
 const meta: Meta = {
   title: 'Components/DateEdit',
   tags: ['autodocs'],
   decorators: [
     moduleMetadata({
-      imports: [DateEditDefaultComponent],
+      imports: [DateEditComponent],
     }),
   ],
 };

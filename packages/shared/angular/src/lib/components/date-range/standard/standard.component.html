@@ -44,7 +44,7 @@
 </div>
 
 @if (isOpen()) {
-  <smart-date-range-modal
+  <smart-date-range-modal-standard
     [previousState]="calendarData"
     (apply)="onModalApply($event)"
     (dismiss)="onModalDismiss()"

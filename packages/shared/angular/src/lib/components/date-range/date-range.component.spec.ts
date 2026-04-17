@@ -1,9 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DateRangeDefaultComponent } from './default/date-range-default.component';
-import { DateRangeModalDefaultComponent } from './default/date-range-modal-default.component';
 import { StyleService, UIService } from '../../services';
+import { DateRangeModalStandardComponent } from './standard/standard-modal.component';
+import { DateRangeStandardComponent } from './standard/standard.component';
 
 @Pipe({ name: 'translate', standalone: true })
 class MockTranslatePipe implements PipeTransform {
@@ -20,23 +20,23 @@ const mockUIService = {
   showAlertWithDismissCallback: jest.fn(),
 };
 
-describe('DateRangeDefaultComponent', () => {
-  let fixture: ComponentFixture<DateRangeDefaultComponent>;
-  let component: DateRangeDefaultComponent;
+describe('DateRangeStandardComponent', () => {
+  let fixture: ComponentFixture<DateRangeStandardComponent>;
+  let component: DateRangeStandardComponent;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DateRangeDefaultComponent],
+      imports: [DateRangeStandardComponent],
       providers: [
         { provide: StyleService, useValue: mockStyleService },
         { provide: UIService, useValue: mockUIService },
       ],
     })
-      .overrideComponent(DateRangeDefaultComponent, {
+      .overrideComponent(DateRangeStandardComponent, {
         add: { imports: [MockTranslatePipe] },
-        remove: { imports: [DateRangeModalDefaultComponent] },
+        remove: { imports: [DateRangeModalStandardComponent] },
       })
-      .overrideComponent(DateRangeDefaultComponent, {
+      .overrideComponent(DateRangeStandardComponent, {
         set: {
           template: `
             <button class="trigger" (click)="onClick()">
@@ -53,7 +53,7 @@ describe('DateRangeDefaultComponent', () => {
         },
       })
       .compileComponents();
-    fixture = TestBed.createComponent(DateRangeDefaultComponent);
+    fixture = TestBed.createComponent(DateRangeStandardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -85,23 +85,23 @@ describe('DateRangeDefaultComponent', () => {
   });
 });
 
-describe('DateRangeModalDefaultComponent', () => {
-  let fixture: ComponentFixture<DateRangeModalDefaultComponent>;
-  let component: DateRangeModalDefaultComponent;
+describe('DateRangeModalStandardComponent', () => {
+  let fixture: ComponentFixture<DateRangeModalStandardComponent>;
+  let component: DateRangeModalStandardComponent;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DateRangeModalDefaultComponent],
+      imports: [DateRangeModalStandardComponent],
       providers: [
         { provide: StyleService, useValue: mockStyleService },
         { provide: UIService, useValue: mockUIService },
       ],
     })
-      .overrideComponent(DateRangeModalDefaultComponent, {
+      .overrideComponent(DateRangeModalStandardComponent, {
         add: { imports: [MockTranslatePipe] },
       })
       .compileComponents();
-    fixture = TestBed.createComponent(DateRangeModalDefaultComponent);
+    fixture = TestBed.createComponent(DateRangeModalStandardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

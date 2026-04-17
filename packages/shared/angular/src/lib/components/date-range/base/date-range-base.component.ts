@@ -16,6 +16,8 @@ import {
   FilterBtnConstants,
 } from './date-range-modal-base.component';
 
+export type DateRangeVariantName = 'standard';
+
 @Directive()
 export abstract class DateRangeBaseComponent implements ControlValueAccessor {
   protected cd = inject(ChangeDetectorRef);

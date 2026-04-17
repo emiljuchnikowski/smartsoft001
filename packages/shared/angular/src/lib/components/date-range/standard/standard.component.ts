@@ -7,21 +7,21 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { DateRangeModalDefaultComponent } from './date-range-modal-default.component';
+import { DateRangeModalStandardComponent } from './standard-modal.component';
 import { DateRangeBaseComponent } from '../base/date-range-base.component';
 
 @Component({
-  selector: 'smart-date-range',
-  templateUrl: './date-range-default.component.html',
+  selector: 'smart-date-range-standard',
+  templateUrl: './standard.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => DateRangeDefaultComponent),
+      useExisting: forwardRef(() => DateRangeStandardComponent),
       multi: true,
     },
   ],
-  imports: [TranslatePipe, DateRangeModalDefaultComponent],
+  imports: [TranslatePipe, DateRangeModalStandardComponent],
 })
-export class DateRangeDefaultComponent extends DateRangeBaseComponent {}
+export class DateRangeStandardComponent extends DateRangeBaseComponent {}

@@ -3,13 +3,13 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { applicationConfig, moduleMetadata } from '@storybook/angular';
 
-import { DateRangeDefaultComponent } from './default/date-range-default.component';
-import { DateRangeModalDefaultComponent } from './default/date-range-modal-default.component';
+import { DateRangeComponent } from './date-range.component';
 import { StyleService, UIService } from '../../services';
 import {
   TRANSLATE_DATA_ENG,
   TRANSLATE_DATA_PL,
 } from '../../translations-default';
+import { DateRangeModalStandardComponent } from './standard/standard-modal.component';
 
 const meta: Meta = {
   title: 'Components/DateRange',
@@ -32,7 +32,7 @@ const meta: Meta = {
       ],
     }),
     moduleMetadata({
-      imports: [DateRangeDefaultComponent, DateRangeModalDefaultComponent],
+      imports: [DateRangeComponent, DateRangeModalStandardComponent],
       providers: [UIService, StyleService],
     }),
   ],
@@ -101,7 +101,7 @@ export const ModalCalendar: Story = {
   render: () => ({
     template: `
       <div style="position: relative; height: 600px;">
-        <smart-date-range-modal
+        <smart-date-range-modal-standard
           [showFilterBtns]="true"
           (apply)="onApply($event)"
           (dismiss)="onDismiss()"
@@ -120,7 +120,7 @@ export const ModalWithoutFilters: Story = {
   render: () => ({
     template: `
       <div style="position: relative; height: 600px;">
-        <smart-date-range-modal
+        <smart-date-range-modal-standard
           [showFilterBtns]="false"
           (apply)="onApply($event)"
           (dismiss)="onDismiss()"

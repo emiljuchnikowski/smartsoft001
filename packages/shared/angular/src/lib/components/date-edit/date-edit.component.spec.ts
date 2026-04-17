@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DateEditDefaultComponent } from './default/default.component';
+import { DateEditStandardComponent } from './standard/standard.component';
 
-describe('DateEditDefaultComponent', () => {
-  let fixture: ComponentFixture<DateEditDefaultComponent>;
-  let component: DateEditDefaultComponent;
+describe('DateEditStandardComponent', () => {
+  let fixture: ComponentFixture<DateEditStandardComponent>;
+  let component: DateEditStandardComponent;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DateEditDefaultComponent],
+      imports: [DateEditStandardComponent],
     }).compileComponents();
-    fixture = TestBed.createComponent(DateEditDefaultComponent);
+    fixture = TestBed.createComponent(DateEditStandardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
