@@ -1,5 +1,7 @@
 export * from './address/address.component';
 export * from './base/base.component';
+export * from './base/file.component';
+export * from './base/possibilities.component';
 export * from './color/color.component';
 export * from './currency/currency.component';
 export * from './date-with-edit/date-with-edit.component';
