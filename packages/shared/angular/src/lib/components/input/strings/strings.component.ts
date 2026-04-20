@@ -1,5 +1,9 @@
-import { AsyncPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+} from '@angular/core';
 import {
   ReactiveFormsModule,
   UntypedFormBuilder,
@@ -12,13 +16,68 @@ import { InputBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-input-strings',
-  templateUrl: './strings.component.html',
-  imports: [ReactiveFormsModule, TranslatePipe, ModelLabelPipe, AsyncPipe],
+  template: `
+    @if (control) {
+      <label [class]="labelClasses()">
+        {{
+          control?.parent?.value
+            | smartModelLabel
+              : internalOptions.fieldKey
+              : internalOptions?.model?.constructor
+        }}
+        @if (required) {
+          <span class="smart:text-red-500 smart:ml-0.5">*</span>
+        }
+      </label>
+      <div [class]="groupClasses()">
+        @for (item of list; track item) {
+          @let last = $last;
+          <div class="smart:flex smart:items-center smart:gap-x-2">
+            <input
+              type="text"
+              [formControl]="item"
+              [placeholder]="(last ? ('add' | translate) : '') + '...'"
+              (change)="onItemChange()"
+              class="smart:block smart:w-full smart:rounded-md smart:bg-white smart:px-2 smart:py-1 smart:text-sm smart:text-gray-900 smart:outline-1 smart:outline-gray-300 focus:smart:outline-2 focus:smart:outline-indigo-600 dark:smart:bg-white/5 dark:smart:text-white dark:smart:outline-white/10"
+            />
+            @if (!last) {
+              <button
+                type="button"
+                (click)="removeItem(item)"
+                class="smart:rounded-md smart:bg-red-600 smart:px-2 smart:py-1 smart:text-xs smart:font-semibold smart:text-white hover:smart:bg-red-500"
+              >
+                ×
+              </button>
+            }
+          </div>
+        }
+      </div>
+    }
+  `,
+  imports: [ReactiveFormsModule, TranslatePipe, ModelLabelPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputStringsComponent<T> extends InputBaseComponent<T> {
   private fb = inject(UntypedFormBuilder);
 
   list: Array<UntypedFormControl> = [];
+
+  labelClasses = computed(() =>
+    [
+      'smart:block',
+      'smart:text-sm/6',
+      'smart:font-medium',
+      'smart:text-gray-900',
+      'dark:smart:text-white',
+    ].join(' '),
+  );
+
+  groupClasses = computed(() => {
+    const classes = ['smart:mt-2', 'smart:space-y-2'];
+    const extra = this.cssClass();
+    if (extra) classes.push(extra);
+    return classes.join(' ');
+  });
 
   override afterSetOptionsHandler() {
     if (this.control.value) {

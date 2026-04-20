@@ -1,6 +1,11 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { AsyncPipe, NgComponentOutlet } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { NgComponentOutlet } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+} from '@angular/core';
 import { UntypedFormArray } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DynamicIoDirective } from 'ng-dynamic-component';
@@ -18,30 +23,53 @@ import { FormFactory } from '../../../factories';
 import { IButtonOptions, IFormOptions } from '../../../models';
 import { ModelLabelPipe } from '../../../pipes';
 import { FORM_COMPONENT_TOKEN } from '../../../shared.inectors';
-// TODO: AccordionComponent moved to @smartsoft001-pro/angular (FRA-101)
-// import {
-//   AccordionBodyComponent,
-//   AccordionComponent,
-//   AccordionHeaderComponent,
-// } from '../../accordion';
-// TODO: ButtonComponent moved to @smartsoft001-pro/angular (FRA-110)
-// import { ButtonComponent } from '../../button';
 import { InputBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-input-array',
-  templateUrl: './array.component.html',
+  template: `
+    @if (control) {
+      <label [class]="labelClasses()">
+        {{
+          control?.parent?.value
+            | smartModelLabel
+              : internalOptions.fieldKey
+              : internalOptions?.model?.constructor
+        }}
+        @if (required) {
+          <span class="smart:text-red-500 smart:ml-0.5">*</span>
+        }
+      </label>
+      <div [class]="groupClasses()">
+        @for (option of childOptions; track option) {
+          <div
+            class="smart:rounded smart:border smart:border-gray-200 smart:p-2 dark:smart:border-gray-700"
+          >
+            <ng-template
+              [ngComponentOutlet]="formComponent"
+              [ndcDynamicInputs]="{ options: option }"
+            ></ng-template>
+          </div>
+        }
+        @if (!fieldOptions()?.possibilities?.static) {
+          <button
+            type="button"
+            (click)="addButtonOptions.click()"
+            class="smart:rounded-md smart:bg-indigo-600 smart:px-3 smart:py-1.5 smart:text-sm smart:font-semibold smart:text-white hover:smart:bg-indigo-500"
+          >
+            {{ 'add' | translate }}
+          </button>
+        }
+      </div>
+    }
+  `,
   imports: [
     ModelLabelPipe,
-    AsyncPipe,
     TranslatePipe,
     NgComponentOutlet,
     DynamicIoDirective,
-    // TODO: AccordionComponent moved to @smartsoft001-pro/angular (FRA-101)
-    // AccordionComponent,
-    // AccordionHeaderComponent,
-    // AccordionBodyComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputArrayComponent<T, TChild> extends InputBaseComponent<T> {
   childOptions!: Array<IFormOptions<TChild>>;
@@ -78,6 +106,23 @@ export class InputArrayComponent<T, TChild> extends InputBaseComponent<T> {
   };
 
   FieldType = FieldType;
+
+  labelClasses = computed(() =>
+    [
+      'smart:block',
+      'smart:text-sm/6',
+      'smart:font-medium',
+      'smart:text-gray-900',
+      'dark:smart:text-white',
+    ].join(' '),
+  );
+
+  groupClasses = computed(() => {
+    const classes = ['smart:mt-2', 'smart:space-y-2'];
+    const extra = this.cssClass();
+    if (extra) classes.push(extra);
+    return classes.join(' ');
+  });
 
   protected override afterSetOptionsHandler() {
     this.initData();

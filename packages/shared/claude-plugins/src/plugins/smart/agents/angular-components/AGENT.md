@@ -29,6 +29,7 @@ These have concrete selectors and can be used directly in templates.
 | Date Edit  | `angular-components-date-edit`  | `<smart-date-edit>`  | Digit-by-digit date input (DD-MM-RRRR) with validation                         |
 | Date Range | `angular-components-date-range` | `<smart-date-range>` | Date range picker with modal calendar and quick filters                        |
 | Detail     | `angular-components-detail`     | `<smart-detail>`     | Renders a single model field by dispatching to a sub-component per `FieldType` |
+| Input      | `angular-components-input`      | `<smart-input>`      | Renders a form input by dispatching to a sub-component per `FieldType`         |
 | Icon       | —                               | `<smart-icon>`       | SVG icon component (spinner)                                                   |
 
 ### Base-Only Components (abstract classes for extension)
@@ -45,7 +46,7 @@ These provide abstract base classes (`@Directive()`) that can be extended to cre
 
 When a developer asks about a component:
 
-1. **Wants to use `<smart-date-edit>`, `<smart-date-range>`, or `<smart-detail>`** → delegate to the corresponding skill for usage API
+1. **Wants to use `<smart-date-edit>`, `<smart-date-range>`, `<smart-detail>`, or `<smart-input>`** → delegate to the corresponding skill for usage API
 2. **Wants to use `<smart-button>`, `<smart-card>`, or `<smart-accordion>`** → delegate to the skill to explain how to extend the base class and create a custom implementation
 3. **Wants to create a custom component** → delegate to the base-only skill for extension patterns and API
 
@@ -57,6 +58,7 @@ Always delegate to the per-component skill for detailed API, usage examples, and
 - **Date Range** → use skill `angular-components-date-range`
 - **Accordion** (base only) → use skill `angular-components-accordion`
 - **Detail** → use skill `angular-components-detail`
+- **Input** → use skill `angular-components-input`
 - **Button** (base only) → use skill `angular-components-button`
 - **Card** (base only) → use skill `angular-components-card`
 
@@ -74,7 +76,9 @@ import {
   DateEditDefaultComponent,
   DateRangeDefaultComponent,
   DetailComponent,
+  InputComponent,
   DETAIL_FIELD_COMPONENTS_TOKEN,
+  INPUT_FIELD_COMPONENTS_TOKEN,
 } from '@smartsoft001/angular';
 
 // Base classes for extension
@@ -83,6 +87,8 @@ import {
   CardBaseComponent,
   AccordionBaseComponent,
   DetailBaseComponent,
+  InputBaseComponent,
+  InputPossibilitiesBaseComponent,
 } from '@smartsoft001/angular';
 
 // Base classes for date components (also extensible)

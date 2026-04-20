@@ -5,6 +5,7 @@ import { FieldTypeDef } from '@smartsoft001/models';
 import { ButtonBaseComponent } from './components/button/base/base.component';
 import { CardBaseComponent } from './components/card/base/base.component';
 import { DetailBaseComponent } from './components/detail/base/base.component';
+import { InputBaseComponent } from './components/input/base/base.component';
 
 export const FORM_COMPONENT_TOKEN = new InjectionToken<any>('FORM_COMPONENT');
 export const DETAILS_COMPONENT_TOKEN = new InjectionToken<any>(
@@ -19,3 +20,6 @@ export const CARD_STANDARD_COMPONENT_TOKEN = new InjectionToken<
 export const DETAIL_FIELD_COMPONENTS_TOKEN = new InjectionToken<
   Partial<Record<FieldTypeDef, Type<DetailBaseComponent<any>>>>
 >('DETAIL_FIELD_COMPONENTS_TOKEN');
+export const INPUT_FIELD_COMPONENTS_TOKEN = new InjectionToken<
+  Partial<Record<FieldTypeDef, Type<InputBaseComponent<any>>>>
+>('INPUT_FIELD_COMPONENTS_TOKEN');

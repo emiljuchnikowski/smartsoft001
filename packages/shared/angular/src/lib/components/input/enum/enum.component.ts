@@ -1,5 +1,5 @@
-import { AsyncPipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { EnumToListPipe, ModelLabelPipe } from '../../../pipes';
 import { InputBaseComponent } from '../base/base.component';
@@ -7,44 +7,63 @@ import { InputBaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-input-enum',
   template: `
-    <!--<ion-label class="main-label">-->
-    {{
-      control?.parent?.value
-        | smartModelLabel
-          : internalOptions.fieldKey
-          : internalOptions?.model?.constructor
-        | async
-    }}
-    <!--  <ion-text color="danger">-->
-    @if (required) {
-      <span>*</span>
-    }
-    <!--  </ion-text>-->
-    <!--</ion-label>-->
-
-    @for (item of fieldOptions()?.possibilities | smartEnumToList; track item) {
-      <!--  <ion-item lines="none">-->
-      <!--    <ion-label class="checkbox-label">{{ item | translate }}</ion-label>-->
-      @if (checked(item)) {
-        <!--      <ion-checkbox-->
-        <!--        slot="end"-->
-        <!--        [checked]="true"-->
-        <!--        (ionChange)="change(item)"-->
-        <!--      ></ion-checkbox>-->
-      } @else {
-        <!--      <ion-checkbox-->
-        <!--        slot="end"-->
-        <!--        [checked]="false"-->
-        <!--        (ionChange)="change(item)"-->
-        <!--      ></ion-checkbox>-->
-      }
-      <!--  </ion-item>-->
+    @if (control) {
+      <fieldset>
+        <legend [class]="labelClasses()">
+          {{
+            control?.parent?.value
+              | smartModelLabel
+                : internalOptions.fieldKey
+                : internalOptions?.model?.constructor
+          }}
+          @if (required) {
+            <span class="smart:text-red-500 smart:ml-0.5">*</span>
+          }
+        </legend>
+        <div [class]="groupClasses()">
+          @for (
+            item of fieldOptions()?.possibilities | smartEnumToList;
+            track item
+          ) {
+            <label class="smart:flex smart:items-center smart:gap-x-2">
+              <input
+                type="checkbox"
+                [checked]="checked(item)"
+                (change)="change(item)"
+                class="smart:h-4 smart:w-4 smart:rounded smart:border-gray-300 smart:text-indigo-600 focus:smart:ring-indigo-500 dark:smart:border-gray-600"
+              />
+              <span
+                class="smart:text-sm smart:text-gray-900 dark:smart:text-white"
+                >{{ item | translate }}</span
+              >
+            </label>
+          }
+        </div>
+      </fieldset>
     }
   `,
-  imports: [ModelLabelPipe, AsyncPipe, EnumToListPipe],
+  imports: [ModelLabelPipe, EnumToListPipe, TranslatePipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputEnumComponent<T> extends InputBaseComponent<T> {
   value!: Array<string>;
+
+  labelClasses = computed(() =>
+    [
+      'smart:block',
+      'smart:text-sm/6',
+      'smart:font-medium',
+      'smart:text-gray-900',
+      'dark:smart:text-white',
+    ].join(' '),
+  );
+
+  groupClasses = computed(() => {
+    const classes = ['smart:mt-2', 'smart:space-y-2'];
+    const extra = this.cssClass();
+    if (extra) classes.push(extra);
+    return classes.join(' ');
+  });
 
   protected override afterSetOptionsHandler(): void {
     this.value = this.control.value ? [...this.control.value] : [];

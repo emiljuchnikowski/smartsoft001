@@ -10,6 +10,7 @@ export * from './error/error.component';
 export * from './file/file.component';
 export * from './flag/flag.component';
 export * from './input.component';
+export { INPUT_FIELD_COMPONENTS_TOKEN } from '../../shared.inectors';
 export * from './int/int.component';
 export * from './long-text/long-text.component';
 export * from './nip/nip.component';

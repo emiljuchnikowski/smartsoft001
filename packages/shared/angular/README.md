@@ -233,6 +233,113 @@ providers: [
 - Label via `ModelLabelPipe`
 - `smart:` Tailwind prefix, dark mode via `dark:smart:`
 
+### Input Component
+
+The `<smart-input>` component renders a form input for a single model field by dispatching to a sub-component chosen by `FieldType`. Supports 30 default sub-components and allows per-field substitution via `INPUT_FIELD_COMPONENTS_TOKEN`.
+
+**Wrapper:** `InputComponent` (selector: `smart-input`)
+**Base class:** `InputBaseComponent<T>` — base for all sub-components; exposes `control`, `fieldOptions`, `cssClass` (`class` alias), `required`, `afterSetOptionsHandler()` hook.
+**Possibilities base:** `InputPossibilitiesBaseComponent<T>` — extends the base for list-based sub-components (radio/check).
+**Token:** `INPUT_FIELD_COMPONENTS_TOKEN` — provide a `Partial<Record<FieldType, Type<InputBaseComponent<any>>>>` to substitute default sub-components for specific field types.
+
+#### Usage
+
+```html
+<smart-input [options]="inputOptions"></smart-input>
+```
+
+```typescript
+import { UntypedFormControl } from '@angular/forms';
+import { InputOptions } from '@smartsoft001/angular';
+import { Field, FieldType, Model } from '@smartsoft001/models';
+
+@Model({})
+class UserModel {
+  @Field({ type: FieldType.email, required: true })
+  email = '';
+}
+
+const control = new UntypedFormControl('', Validators.required);
+const inputOptions: InputOptions<UserModel> = {
+  control,
+  fieldKey: 'email',
+  model: new UserModel(),
+  treeLevel: 0,
+};
+```
+
+#### InputOptions
+
+| Property        | Type                                                           | Default     | Description                                                      |
+| --------------- | -------------------------------------------------------------- | ----------- | ---------------------------------------------------------------- |
+| `control`       | `UntypedFormControl \| UntypedFormArray`                       | _required_  | Reactive form control                                            |
+| `fieldKey`      | `string`                                                       | _required_  | Model property name (strips trailing `Confirm`)                  |
+| `model`         | `T`                                                            | _required_  | Model instance (used to resolve `@Field()` metadata)             |
+| `treeLevel`     | `number`                                                       | _required_  | Nesting depth in the form tree                                   |
+| `mode`          | `'create' \| 'update' \| string`                               | -           | Merges `@Field({ create: … })` or `{ update: … }` overrides      |
+| `possibilities` | `WritableSignal<{ id; text; checked }[]>`                      | -           | Options for `radio` / `check` sub-components                     |
+| `component`     | `Type<InputBaseComponent<any>>`                                | -           | Per-call inline override (takes precedence over the token)       |
+
+#### Default Sub-Components (selector → FieldType)
+
+| Selector                        | FieldType       |
+| ------------------------------- | --------------- |
+| `smart-input-text`              | `text`          |
+| `smart-input-email`             | `email`         |
+| `smart-input-password`          | `password`      |
+| `smart-input-nip`               | `nip`           |
+| `smart-input-pesel`             | `pesel`         |
+| `smart-input-int`               | `int`           |
+| `smart-input-float`             | `float`         |
+| `smart-input-currency`          | `currency`      |
+| `smart-input-phone-number`      | `phoneNumber`   |
+| `smart-input-phone-number-pl`   | `phoneNumberPl` |
+| `smart-input-long-text`         | `longText`      |
+| `smart-input-date`              | `date`          |
+| `smart-input-date-with-edit`    | `dateWithEdit`  |
+| `smart-input-date-range`        | `dateRange`     |
+| `smart-input-flag`              | `flag`          |
+| `smart-input-radio`             | `radio`         |
+| `smart-input-check`             | `check`         |
+| `smart-input-enum`              | `enum`          |
+| `smart-input-color`             | `color`         |
+| `smart-input-logo`              | `logo`          |
+| `smart-input-address`           | `address`       |
+| `smart-input-object`            | `object`        |
+| `smart-input-array`             | `array`         |
+| `smart-input-ints`              | `ints`          |
+| `smart-input-strings`           | `strings`       |
+| `smart-input-file`              | `file`          |
+| `smart-input-attachment`        | `attachment`    |
+| `smart-input-image`             | `image`         |
+| `smart-input-pdf`               | `pdf`           |
+| `smart-input-video`             | `video`         |
+
+#### Overriding Sub-Components
+
+```typescript
+import { INPUT_FIELD_COMPONENTS_TOKEN } from '@smartsoft001/angular';
+import { FieldType } from '@smartsoft001/models';
+
+providers: [
+  {
+    provide: INPUT_FIELD_COMPONENTS_TOKEN,
+    useValue: {
+      [FieldType.text]: MyCustomTextInputComponent,
+    },
+  },
+]
+```
+
+#### Features
+
+- Field-type dispatch via map with `NgComponentOutlet`
+- Per-field substitution through `INPUT_FIELD_COMPONENTS_TOKEN`
+- Inline error rendering via `<smart-input-error>` (when `touched && errors`)
+- Label via `ModelLabelPipe`
+- Resolves `@Field()` metadata from the model decorator (with `create`/`update` mode merge)
+- `smart:` Tailwind prefix, dark mode via `dark:smart:`
+
 ### Date Range Component
 
 The `<smart-date-range>` component provides a date range picker with a trigger button and a modal calendar overlay.
