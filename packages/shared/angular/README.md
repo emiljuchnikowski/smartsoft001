@@ -161,6 +161,45 @@ Abstract base directive for detail field sub-components. Exposes `options: IDeta
 
 **Inputs:** `options` (`IDetailOptions<T>`), `class` (`string`)
 
+### PagingBaseComponent
+
+Abstract base class for paging components. Provides signal-based paging state, computed helpers for ellipsized page lists and item ranges, and navigation methods.
+
+**Inputs:** `currentPage` (`number`), `totalPages` (`number`), `pageSize` (`number`), `totalItems` (`number`), `variant` (`PagingVariant`), `class` (`string`)
+**Outputs:** `pageChange` (`number`)
+**Computed:** `showingFrom`, `showingTo`, `canGoBack`, `canGoForward`, `pages` (numbers + `'...'`)
+**Methods:** `goToPage(page)`, `nextPage()`, `previousPage()`
+
+### Paging Component
+
+The `<smart-paging>` component renders a default `PagingStandardComponent`. It supports an InjectionToken (`PAGING_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `PagingComponent` (selector: `smart-paging`)
+**Default:** `PagingStandardComponent` (selector: `smart-paging-standard`)
+**Token:** `PAGING_STANDARD_COMPONENT_TOKEN` — provide a `Type<PagingBaseComponent>` to override the default.
+
+#### Usage
+
+```html
+<smart-paging
+  [currentPage]="page()"
+  [totalPages]="totalPages()"
+  [pageSize]="25"
+  [totalItems]="248"
+  (pageChange)="onPageChange($event)"
+></smart-paging>
+```
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { PAGING_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  { provide: PAGING_STANDARD_COMPONENT_TOKEN, useValue: MyPagingComponent },
+];
+```
+
 ## Components
 
 The following components include both an abstract base class (`@Directive()`) and a default concrete implementation with templates. The base classes can be extended to create custom implementations.

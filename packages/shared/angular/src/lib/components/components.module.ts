@@ -95,6 +95,7 @@ import {
 import { LoaderComponent } from './loader';
 // TODO: PageComponent moved to @smartsoft001-pro/angular (FRA-121)
 // import { PageComponent, PageStandardComponent } from './page';
+import { PagingComponent, PagingStandardComponent } from './paging';
 import { PasswordStrengthComponent } from './password-strength';
 
 export const ACCORDION_COMPONENTS: any[] = [
@@ -182,6 +183,8 @@ export const LOADER_COMPONENTS = [LoaderComponent];
 // TODO: PageComponent moved to @smartsoft001-pro/angular (FRA-121)
 export const PAGE_COMPONENTS: any[] = [];
 
+export const PAGING_COMPONENTS = [PagingComponent, PagingStandardComponent];
+
 export const INFO_COMPONENTS = [InfoDefaultComponent];
 export const DATE_RANGE_COMPONENTS = [
   DateRangeComponent,
@@ -206,6 +209,7 @@ export const COMPONENTS = [
   ...CARD_COMPONENTS,
   ...LIST_COMPONENTS,
   ...LOADER_COMPONENTS,
+  ...PAGING_COMPONENTS,
   ...DETAIL_COMPONENTS,
   ...DETAILS_COMPONENTS,
   ...DYNAMIC_COMPONENTS,

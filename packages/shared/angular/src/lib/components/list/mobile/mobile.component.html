@@ -56,12 +56,10 @@
   <!--  </ion-infinite-scroll>-->
 }
 
-<!-- TODO: PagingComponent moved to @smartsoft001-pro/angular (FRA-122) -->
-<!--@if (options()?.pagination?.mode === PaginationMode.singlePage) {
+@if (options()?.pagination?.mode === PaginationMode.singlePage) {
   <smart-paging
-    [page]="page()"
-    [totalPages]="totalPages()"
-    (prevPage)="loadPrevPage?.()"
-    (nextPage)="loadNextPage?.()"
+    [currentPage]="page() ?? 1"
+    [totalPages]="totalPages() ?? 1"
+    (pageChange)="handlePageChange($event)"
   ></smart-paging>
-}-->
+}

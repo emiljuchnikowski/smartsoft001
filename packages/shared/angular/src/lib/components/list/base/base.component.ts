@@ -266,4 +266,13 @@ export abstract class ListBaseComponent<T extends IEntity<string>> {
   protected afterInitOptions() {
     // No base functionality
   }
+
+  handlePageChange(nextPage: number): void {
+    const current = this.page?.() ?? 1;
+    if (nextPage > current) {
+      this.loadNextPage?.();
+    } else if (nextPage < current) {
+      this.loadPrevPage?.();
+    }
+  }
 }

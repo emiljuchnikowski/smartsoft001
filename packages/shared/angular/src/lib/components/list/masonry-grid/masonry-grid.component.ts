@@ -13,14 +13,13 @@ import { FieldType, getModelFieldsWithOptions } from '@smartsoft001/models';
 
 import { IListComponentFactories, IListInternalOptions } from '../../../models';
 import { FileUrlPipe, ListCellPipe } from '../../../pipes';
-// TODO: PagingComponent moved to @smartsoft001-pro/angular (FRA-122)
-// import { PagingComponent } from '../../paging';
+import { PagingComponent } from '../../paging';
 import { ListBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-list-masonry-grid',
   templateUrl: './masonry-grid.component.html',
-  imports: [/* PagingComponent, */ FileUrlPipe, NgOptimizedImage, ListCellPipe],
+  imports: [PagingComponent, FileUrlPipe, NgOptimizedImage, ListCellPipe],
 })
 export class ListMasonryGridComponent<T extends IEntity<string>>
   extends ListBaseComponent<T>
