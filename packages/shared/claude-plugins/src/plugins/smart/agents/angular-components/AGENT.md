@@ -32,6 +32,14 @@ These have concrete selectors and can be used directly in templates.
 | Input      | `angular-components-input`      | `<smart-input>`      | Renders a form input by dispatching to a sub-component per `FieldType`         |
 | Icon       | —                               | `<smart-icon>`       | SVG icon component (spinner)                                                   |
 
+### Ready-to-Use with extension token
+
+These render a default standard implementation and accept a custom implementation via an InjectionToken.
+
+| Component | Skill                        | Selector          | Token                              |
+| --------- | ---------------------------- | ----------------- | ---------------------------------- |
+| Details   | `angular-components-details` | `<smart-details>` | `DETAILS_STANDARD_COMPONENT_TOKEN` |
+
 ### Base-Only Components (abstract classes for extension)
 
 These provide abstract base classes (`@Directive()`) that can be extended to create custom implementations.
@@ -60,6 +68,7 @@ Always delegate to the per-component skill for detailed API, usage examples, and
 - **Date Range** → use skill `angular-components-date-range`
 - **Accordion** (base only) → use skill `angular-components-accordion`
 - **Detail** → use skill `angular-components-detail`
+- **Details** (with extension token) → use skill `angular-components-details`
 - **Input** → use skill `angular-components-input`
 - **Button** (base only) → use skill `angular-components-button`
 - **Card** (base only) → use skill `angular-components-card`
@@ -91,6 +100,8 @@ import {
   CardBaseComponent,
   AccordionBaseComponent,
   DetailBaseComponent,
+  DetailsBaseComponent,
+  DETAILS_STANDARD_COMPONENT_TOKEN,
   InputBaseComponent,
   InputPossibilitiesBaseComponent,
   PageBaseComponent,

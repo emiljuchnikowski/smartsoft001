@@ -83,6 +83,60 @@ providers: [
 ]
 ```
 
+### DetailsBaseComponent
+
+Abstract base class for details components. Computes `fields` from model decorators (`@Field({ details: true })`) with permission/specification filtering, exposes the typed `item` signal, and supports `cellPipe` and `componentFactories`.
+
+**Inputs:** `options` (`IDetailsOptions<T>`), `class` (`string`)
+
+### Details Component
+
+The `<smart-details>` component renders a list of model fields decorated with `@Field({ details: true })`. It is a wrapper that delegates to `DetailsStandardComponent` by default and supports an InjectionToken (`DETAILS_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `DetailsComponent` (selector: `smart-details`)
+**Default:** `DetailsStandardComponent` (selector: `smart-details-standard`)
+**Token:** `DETAILS_STANDARD_COMPONENT_TOKEN` — provide a `Type<DetailsBaseComponent<T>>` to override the default.
+
+#### Usage
+
+```html
+<!-- Basic -->
+<smart-details
+  [options]="{ type: UserModel, item: userSignal }"
+></smart-details>
+
+<!-- With external CSS class -->
+<smart-details
+  class="smart:bg-yellow-50 smart:p-4"
+  [options]="{ type: UserModel, item: userSignal }"
+></smart-details>
+
+<!-- With loading skeleton -->
+<smart-details
+  [options]="{ type: UserModel, item: userSignal, loading: loadingSignal }"
+></smart-details>
+```
+
+#### IDetailsOptions
+
+| Property             | Type                                | Default    | Description                                              |
+| -------------------- | ----------------------------------- | ---------- | -------------------------------------------------------- |
+| `type`               | `Type<T>`                           | *required* | Model class decorated with `@Model`                      |
+| `item`               | `Signal<T \| undefined>`            | *required* | Reactive entity signal                                   |
+| `loading`            | `Signal<boolean>`                   | -          | Show loading skeleton                                    |
+| `cellPipe`           | `ICellPipe<T>`                      | -          | Pipe for transforming each field value                   |
+| `componentFactories` | `IDetailsComponentFactories<T>`     | -          | Top/bottom dynamic component factories                   |
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { DETAILS_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  { provide: DETAILS_STANDARD_COMPONENT_TOKEN, useValue: MyDetailsComponent },
+]
+```
+
 ### CardBaseComponent
 
 Abstract base class for card components. Provides shared container, header, body, and footer CSS class computation with gray background and divider support.

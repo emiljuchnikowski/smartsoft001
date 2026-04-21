@@ -1,64 +1,49 @@
+import { NgComponentOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  effect,
+  computed,
+  inject,
   input,
-  OnDestroy,
-  TemplateRef,
-  viewChild,
-  viewChildren,
+  ViewEncapsulation,
 } from '@angular/core';
 
 import { IEntity } from '@smartsoft001/domain-core';
 
-import { DynamicContentDirective } from '../../directives';
 import { IDetailsOptions } from '../../models';
-import { DetailsService } from '../../services';
-import { CreateDynamicComponent } from '../base';
-import { DetailsBaseComponent } from './base/base.component';
+import { DETAILS_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { DetailsStandardComponent } from './standard/standard.component';
 
 @Component({
   selector: 'smart-details',
   template: `
-    @if (options() && template() === 'default') {
-      <smart-details-standard [options]="options()"></smart-details-standard>
+    @if (componentType()) {
+      <ng-container
+        *ngComponentOutlet="componentType(); inputs: componentInputs()"
+      />
+    } @else {
+      <smart-details-standard
+        [options]="options()"
+        [class]="cssClass()"
+      ></smart-details-standard>
     }
-    <div #customTpl></div>
   `,
+  encapsulation: ViewEncapsulation.None,
+  imports: [DetailsStandardComponent, NgComponentOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DetailsStandardComponent],
 })
-export class DetailsComponent<T extends IEntity<string>>
-  extends CreateDynamicComponent<DetailsBaseComponent<any>>('details')
-  implements OnDestroy
-{
-  item: T | null = null;
+export class DetailsComponent<T extends IEntity<string>> {
+  private injectedComponent = inject(DETAILS_STANDARD_COMPONENT_TOKEN, {
+    optional: true,
+  });
 
   options = input<IDetailsOptions<T> | undefined>(undefined);
+  cssClass = input<string>('', { alias: 'class' });
 
-  override contentTpl = viewChild<TemplateRef<any>>('contentTpl');
+  componentType = computed(() => this.injectedComponent ?? null);
 
-  override dynamicContents = viewChildren<DynamicContentDirective>(
-    DynamicContentDirective,
-  );
-
-  constructor(private detailsService: DetailsService) {
-    super();
-
-    effect(() => {
-      const options = this.options();
-      const item = options?.item();
-      if (item) {
-        this.detailsService.setRoot(item);
-        this.item = item;
-      }
-
-      this.refreshDynamicInstance();
-    });
-  }
-
-  override refreshProperties(): void {
-    this.baseInstance.options = this.options;
-  }
+  componentInputs = computed(() => ({
+    options: this.options(),
+    class: this.cssClass(),
+  }));
 }

@@ -12,6 +12,7 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { SharedPipesModule } from '../pipes/pipes.module';
 import {
   DETAILS_COMPONENT_TOKEN,
+  DETAILS_STANDARD_COMPONENT_TOKEN,
   FORM_COMPONENT_TOKEN,
 } from '../shared.inectors';
 import {
@@ -243,6 +244,10 @@ export const IMPORTS = [
     {
       provide: DETAILS_COMPONENT_TOKEN,
       useValue: DetailsComponent,
+    },
+    {
+      provide: DETAILS_STANDARD_COMPONENT_TOKEN,
+      useValue: DetailsStandardComponent,
     },
   ],
   imports: [...IMPORTS, ...COMPONENTS],
