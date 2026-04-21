@@ -93,8 +93,7 @@ import {
   ListMasonryGridComponent,
 } from './list';
 import { LoaderComponent } from './loader';
-// TODO: PageComponent moved to @smartsoft001-pro/angular (FRA-121)
-// import { PageComponent, PageStandardComponent } from './page';
+import { PageComponent, PageStandardComponent } from './page';
 import { PagingComponent, PagingStandardComponent } from './paging';
 import { PasswordStrengthComponent } from './password-strength';
 
@@ -180,8 +179,7 @@ export const LIST_COMPONENTS = [
 
 export const LOADER_COMPONENTS = [LoaderComponent];
 
-// TODO: PageComponent moved to @smartsoft001-pro/angular (FRA-121)
-export const PAGE_COMPONENTS: any[] = [];
+export const PAGE_COMPONENTS = [PageComponent, PageStandardComponent];
 
 export const PAGING_COMPONENTS = [PagingComponent, PagingStandardComponent];
 

@@ -36,19 +36,20 @@ These have concrete selectors and can be used directly in templates.
 
 These provide abstract base classes (`@Directive()`) that can be extended to create custom implementations.
 
-| Component | Skill                          | Base Class               | Description                                                    |
-| --------- | ------------------------------ | ------------------------ | -------------------------------------------------------------- |
-| Button    | `angular-components-button`    | `ButtonBaseComponent`    | Variant/color computation, confirm mode, disabled state        |
-| Card      | `angular-components-card`      | `CardBaseComponent`      | Container classes, header/body/footer layout, gray backgrounds |
-| Accordion | `angular-components-accordion` | `AccordionBaseComponent` | Toggle logic, disabled state, container classes                |
-| Paging    | `angular-components-paging`    | `PagingBaseComponent`    | Page state, ellipsized page list, `pageChange` output          |
+| Component | Skill                          | Base Class               | Description                                                       |
+| --------- | ------------------------------ | ------------------------ | ----------------------------------------------------------------- |
+| Button    | `angular-components-button`    | `ButtonBaseComponent`    | Variant/color computation, confirm mode, disabled state           |
+| Card      | `angular-components-card`      | `CardBaseComponent`      | Container classes, header/body/footer layout, gray backgrounds    |
+| Accordion | `angular-components-accordion` | `AccordionBaseComponent` | Toggle logic, disabled state, container classes                   |
+| Page      | `angular-components-page`      | `PageBaseComponent`      | Header with title, back button, search, end buttons, content slot |
+| Paging    | `angular-components-paging`    | `PagingBaseComponent`    | Page state, ellipsized page list, `pageChange` output             |
 
 ## Decision Logic
 
 When a developer asks about a component:
 
 1. **Wants to use `<smart-date-edit>`, `<smart-date-range>`, `<smart-detail>`, or `<smart-input>`** → delegate to the corresponding skill for usage API
-2. **Wants to use `<smart-button>`, `<smart-card>`, `<smart-accordion>`, or `<smart-paging>`** → delegate to the skill to explain how to extend the base class and create a custom implementation
+2. **Wants to use `<smart-button>`, `<smart-card>`, `<smart-accordion>`, `<smart-page>`, or `<smart-paging>`** → delegate to the skill to explain how to extend the base class and create a custom implementation
 3. **Wants to create a custom component** → delegate to the base-only skill for extension patterns and API
 
 ## Skills to Use
@@ -62,6 +63,7 @@ Always delegate to the per-component skill for detailed API, usage examples, and
 - **Input** → use skill `angular-components-input`
 - **Button** (base only) → use skill `angular-components-button`
 - **Card** (base only) → use skill `angular-components-card`
+- **Page** (base only) → use skill `angular-components-page`
 - **Paging** (base only) → use skill `angular-components-paging`
 
 ## Installation
@@ -91,6 +93,9 @@ import {
   DetailBaseComponent,
   InputBaseComponent,
   InputPossibilitiesBaseComponent,
+  PageBaseComponent,
+  PAGE_VARIANT_COMPONENTS_TOKEN,
+  SmartPageVariant,
   PagingBaseComponent,
   PAGING_STANDARD_COMPONENT_TOKEN,
 } from '@smartsoft001/angular';

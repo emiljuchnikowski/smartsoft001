@@ -2,6 +2,7 @@ import {
   ComponentFactory,
   PipeTransform,
   Signal,
+  TemplateRef,
   Type,
   WritableSignal,
 } from '@angular/core';
@@ -183,6 +184,8 @@ export interface ICellPipe<T> extends PipeTransform {
   ): string;
 }
 
+export type SmartPageVariant = 'standard' | (string & {});
+
 export interface IPageOptions {
   title: string;
   hideHeader?: boolean;
@@ -190,6 +193,18 @@ export interface IPageOptions {
   showBackButton?: boolean;
   endButtons?: Array<IIconButtonOptions>;
   search?: { text: Signal<string>; set: (txt: string) => void };
+  variant?: SmartPageVariant;
+  bodyTpl?: TemplateRef<unknown>;
+  breadcrumbsTpl?: TemplateRef<unknown>;
+  metaTpl?: TemplateRef<unknown>;
+  avatarTpl?: TemplateRef<unknown>;
+  bannerTpl?: TemplateRef<unknown>;
+  filtersTpl?: TemplateRef<unknown>;
+  logoTpl?: TemplateRef<unknown>;
+  statsTpl?: TemplateRef<unknown>;
+  subtitleTpl?: TemplateRef<unknown>;
+  navTpl?: TemplateRef<unknown>;
+  sidebarTpl?: TemplateRef<unknown>;
 }
 
 export interface IListProvider<T> {

@@ -6,7 +6,9 @@ import { ButtonBaseComponent } from './components/button/base/base.component';
 import { CardBaseComponent } from './components/card/base/base.component';
 import { DetailBaseComponent } from './components/detail/base/base.component';
 import { InputBaseComponent } from './components/input/base/base.component';
+import { PageBaseComponent } from './components/page/base/base.component';
 import { PagingBaseComponent } from './components/paging/base/base.component';
+import { SmartPageVariant } from './models/interfaces';
 
 export const FORM_COMPONENT_TOKEN = new InjectionToken<any>('FORM_COMPONENT');
 export const DETAILS_COMPONENT_TOKEN = new InjectionToken<any>(
@@ -24,6 +26,9 @@ export const DETAIL_FIELD_COMPONENTS_TOKEN = new InjectionToken<
 export const INPUT_FIELD_COMPONENTS_TOKEN = new InjectionToken<
   Partial<Record<FieldTypeDef, Type<InputBaseComponent<any>>>>
 >('INPUT_FIELD_COMPONENTS_TOKEN');
+export const PAGE_VARIANT_COMPONENTS_TOKEN = new InjectionToken<
+  Partial<Record<SmartPageVariant, Type<PageBaseComponent>>>
+>('PAGE_VARIANT_COMPONENTS');
 export const PAGING_STANDARD_COMPONENT_TOKEN = new InjectionToken<
   Type<PagingBaseComponent>
 >('PAGING_STANDARD_COMPONENT');

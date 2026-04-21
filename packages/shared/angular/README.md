@@ -149,6 +149,94 @@ providers: [
 ]
 ```
 
+### PageBaseComponent
+
+Abstract base class for page components. Exposes `options` (`IPageOptions`), `cssClass` (`class` alias), a `back()` method wired to `Location.back()`, an `isMobile` getter via `HardwareService`, and a `contentTpl` view child for variants that need to re-project the body.
+
+**Inputs:** `options` (`IPageOptions`), `class` (`string`)
+
+### Page Component
+
+The `<smart-page>` component uses a map-based variant dispatch. It renders `PageStandardComponent` by default (`options.variant === 'standard'` or omitted) and can be extended with additional variants via `PAGE_VARIANT_COMPONENTS_TOKEN`. Projection uses `TemplateRef` slots declared on `IPageOptions`, plus a default `<ng-content>` fallback for the body.
+
+**Wrapper:** `PageComponent` (selector: `smart-page`)
+**Default:** `PageStandardComponent` (selector: `smart-page-standard`)
+**Variant type:** `SmartPageVariant` — `'standard' | (string & {})`
+**Token:** `PAGE_VARIANT_COMPONENTS_TOKEN` — provide a `Partial<Record<SmartPageVariant, Type<PageBaseComponent>>>` to register additional variants (merged on top of the built-in `{ standard: PageStandardComponent }`).
+
+#### Usage
+
+```html
+<!-- Simple page with <ng-content> body -->
+<smart-page [options]="{ title: 'Dashboard' }">
+  <p>Dashboard content</p>
+</smart-page>
+
+<!-- With back button, search, and end buttons -->
+<smart-page
+  [options]="{
+    title: 'Users',
+    showBackButton: true,
+    search: { text: searchText, set: onSearch },
+    endButtons: [{ icon: 'add', text: 'Add user', handler: onAdd }]
+  }"
+>
+  <users-list />
+</smart-page>
+
+<!-- Advanced: pick a variant and provide named slots -->
+<ng-template #breadcrumbs><nav>Home / Users</nav></ng-template>
+<ng-template #body><user-list /></ng-template>
+
+<smart-page
+  [options]="{
+    title: 'Users',
+    variant: 'analytics',
+    breadcrumbsTpl: breadcrumbs,
+    bodyTpl: body,
+  }"
+/>
+```
+
+#### IPageOptions
+
+| Property         | Type                                                   | Default    | Description                                                      |
+| ---------------- | ------------------------------------------------------ | ---------- | ---------------------------------------------------------------- |
+| `title`          | `string`                                               | *required* | Page title (translated)                                          |
+| `hideHeader`     | `boolean`                                              | `false`    | Hide the entire header block                                     |
+| `hideMenuButton` | `boolean`                                              | `false`    | Reserved for layouts with a menu button                          |
+| `showBackButton` | `boolean`                                              | `false`    | Render a back arrow that calls `Location.back()`                 |
+| `endButtons`     | `Array<IIconButtonOptions>`                            | -          | Action buttons rendered via `<smart-button>`                     |
+| `search`         | `{ text: Signal<string>; set: (txt: string) => void }` | -          | Inline search input                                              |
+| `variant`        | `SmartPageVariant`                                     | `standard` | Selects the variant component from the merged map                |
+| `bodyTpl`        | `TemplateRef<unknown>`                                 | -          | Explicit body template (falls back to `<ng-content>` if omitted) |
+| `breadcrumbsTpl` | `TemplateRef<unknown>`                                 | -          | Breadcrumbs slot                                                 |
+| `metaTpl`        | `TemplateRef<unknown>`                                 | -          | Meta slot (status, timestamps, ...)                              |
+| `avatarTpl`      | `TemplateRef<unknown>`                                 | -          | Avatar slot                                                      |
+| `bannerTpl`      | `TemplateRef<unknown>`                                 | -          | Banner slot                                                      |
+| `filtersTpl`     | `TemplateRef<unknown>`                                 | -          | Filters slot                                                     |
+| `logoTpl`        | `TemplateRef<unknown>`                                 | -          | Logo slot                                                        |
+| `statsTpl`       | `TemplateRef<unknown>`                                 | -          | Stats slot                                                       |
+| `subtitleTpl`    | `TemplateRef<unknown>`                                 | -          | Subtitle slot                                                    |
+| `navTpl`         | `TemplateRef<unknown>`                                 | -          | Navigation slot                                                  |
+| `sidebarTpl`     | `TemplateRef<unknown>`                                 | -          | Sidebar slot                                                     |
+
+#### Registering Additional Variants
+
+```typescript
+import { PAGE_VARIANT_COMPONENTS_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  {
+    provide: PAGE_VARIANT_COMPONENTS_TOKEN,
+    useValue: {
+      'product-detail': MyProductDetailPageComponent,
+      'analytics': MyAnalyticsPageComponent,
+    },
+  },
+]
+```
+
 ### AccordionBaseComponent
 
 Abstract base class for accordion components. Provides toggle logic, disabled state, and shared container CSS classes.
