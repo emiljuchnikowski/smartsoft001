@@ -9,6 +9,7 @@ import {
   computed,
   effect,
   input,
+  InputSignal,
   viewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
@@ -81,6 +82,7 @@ export abstract class ListBaseComponent<T extends IEntity<string>> {
       };
 
   options = input.required<IListInternalOptions<T>>();
+  cssClass: InputSignal<string> = input<string>('', { alias: 'class' });
 
   contentTpl = viewChild<ViewContainerRef>('contentTpl');
 

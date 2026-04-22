@@ -1,71 +1,33 @@
 <div #topTpl></div>
 
-<div class="ion-padding">
-  <div class="gap-3">
-    @for (item of listWithImages(); track item) {
-      <!--      <ion-card class="w-full my-2.5 break-inside-avoid border border-gray-100" (click)="unselect?.()">-->
+<ul role="list" [class]="containerClasses()">
+  @for (item of listWithImages() ?? []; track item.data.id) {
+    <li
+      class="smart:col-span-1 smart:rounded-lg smart:bg-white smart:shadow-sm dark:smart:bg-gray-800/50 smart:overflow-hidden"
+    >
       @if (item.image) {
-        <img [ngSrc]="item.image | smartFileUrl" alt="" fill />
+        <img
+          class="smart:h-48 smart:w-full smart:object-cover"
+          [ngSrc]="item.image | smartFileUrl"
+          width="400"
+          height="192"
+          alt=""
+        />
       }
-
-      <!--        <ion-card-content class="overflow-hidden after:block after:w-full after:bg-gradient-to-r after:from-transparent after:to-white after:absolute after:bottom-0">-->
-      @for (key of keys; track key) {
-        @let cell = item.data | smartListCell: key : cellPipe : type;
-        @if (cell && cell.value != item.image) {
-          @if ($index < 2) {
-            <h3
-              [attr.smart-item-key]="key"
-              class="text-gray-800"
-              [innerHTML]="cell.value"
-            ></h3>
-          } @else {
+      <div class="smart:p-4">
+        @for (key of keys; track key) {
+          @let cell = item.data | smartListCell: key : cellPipe : type;
+          @if (cell && cell.type !== FieldType.image) {
             <p
-              [attr.smart-item-key]="key"
-              class="text-gray-500"
+              class="smart:text-sm smart:text-gray-900 dark:smart:text-white"
               [innerHTML]="cell.value"
             ></p>
           }
         }
-      }
-      <!--        </ion-card-content>-->
-
-      <!--        <ion-row>-->
-      @if (removeHandler) {
-        <!--            <ion-col size="auto">-->
-        @if (!checkRemoveHandler || checkRemoveHandler(item.data)) {
-          <!--                <ion-button (click)="removeHandler?.(item.data)">-->
-          <!--                  <ion-icon slot="icon-only" name="trash"></ion-icon>-->
-          <!--                </ion-button>-->
-        }
-        <!--            </ion-col>-->
-      }
-      <!--          <ion-col></ion-col>-->
-      @if (itemHandler) {
-        <!--            <ion-col size="auto">-->
-        <!--              <ion-button (click)="itemHandler?.(item.data.id)">-->
-        <!--                <ion-icon-->
-        <!--                  slot="icon-only"-->
-        <!--                  name="arrow-forward-outline"-->
-        <!--                ></ion-icon>-->
-        <!--              </ion-button>-->
-        <!--            </ion-col>-->
-      }
-      <!--        </ion-row>-->
-      <!--      </ion-card>-->
-    }
-  </div>
-</div>
-
-@if (
-  loadNextPage &&
-  Object.keys(list() ?? [])?.length &&
-  options().pagination?.mode !== PaginationMode.singlePage
-) {
-  <!--  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadNextPage?.($event)">-->
-  <!--    <ion-infinite-scroll-content loadingSpinner="circles">-->
-  <!--    </ion-infinite-scroll-content>-->
-  <!--  </ion-infinite-scroll>-->
-}
+      </div>
+    </li>
+  }
+</ul>
 
 @if (options()?.pagination?.mode === PaginationMode.singlePage) {
   <smart-paging

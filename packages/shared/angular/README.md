@@ -201,6 +201,90 @@ providers: [
 ]
 ```
 
+### ListBaseComponent
+
+Abstract base class for list components. Computes `fields` and `keys` from model decorators, exposes `list`, `loading`, `page`, `totalPages`, `provider`, `itemHandler`, `removeHandler`, and `cellPipe` from `IListInternalOptions<T>`. Extend it to build a custom list implementation for any `ListMode`.
+
+**Inputs:** `options` (`IListInternalOptions<T>`), `class` (`string`)
+**Methods:** `initKeys()` — populates column keys from `fields`; `handlePageChange(page)` — triggers `provider.getData` with the new page; `initList()` — wires the list signal from the provider; `initLoading()` — wires the loading signal from the provider
+
+### List Component
+
+The `<smart-list>` component renders a collection of entities. It is a wrapper that dispatches to one of three built-in children based on `options.mode` or `HardwareService.isMobile` auto-detection. Each child can be replaced via `LIST_MODE_COMPONENTS_TOKEN`, which provides a partial override map — any mode you specify replaces the built-in default; any mode you omit continues to use the built-in.
+
+**Wrapper:** `ListComponent` (selector: `smart-list`)
+**Default children:**
+- `ListDesktopComponent` (selector: `smart-list-desktop`) — CDK Table with Tailwind styling
+- `ListMobileComponent` (selector: `smart-list-mobile`) — `<ul role="list">` with flex rows
+- `ListMasonryGridComponent` (selector: `smart-list-masonry-grid>`) — grid of cards with images
+**Token:** `LIST_MODE_COMPONENTS_TOKEN` — provide a `Partial<Record<ListMode, Type<ListBaseComponent<T>>>>` to override one or more mode children.
+
+#### Usage
+
+```html
+<!-- Basic (auto mode detection) -->
+<smart-list [options]="listOptions"></smart-list>
+
+<!-- Force desktop mode -->
+<smart-list
+  [options]="{ provider: myProvider, type: UserModel, mode: 'desktop' }"
+></smart-list>
+
+<!-- With external CSS class -->
+<smart-list
+  class="smart:p-4"
+  [options]="{ provider: myProvider, type: UserModel }"
+></smart-list>
+
+<!-- With pagination -->
+<smart-list
+  [options]="{
+    provider: myProvider,
+    type: UserModel,
+    pagination: {
+      limit: 25,
+      page: pageSignal,
+      totalPages: totalPagesSignal,
+      loadNextPage: onLoadNext,
+      loadPrevPage: onLoadPrev
+    }
+  }"
+></smart-list>
+```
+
+#### IListOptions
+
+| Property             | Type                                                                                  | Default    | Description                                                                          |
+| -------------------- | ------------------------------------------------------------------------------------- | ---------- | ------------------------------------------------------------------------------------ |
+| `provider`           | `IListProvider<T>`                                                                    | *required* | Data provider (list signal, loading signal, getData callback)                        |
+| `type`               | `any`                                                                                 | *required* | Model class decorated with `@Model`                                                  |
+| `mode`               | `ListMode`                                                                            | -          | Force a specific mode; omit to auto-detect via `HardwareService.isMobile`            |
+| `pagination`         | `IListPaginationOptions`                                                              | -          | Pagination config (mode, limit, page signal, totalPages signal, load callbacks)      |
+| `cellPipe`           | `ICellPipe<T>`                                                                        | -          | Pipe for transforming each cell value                                                |
+| `componentFactories` | `IListComponentFactories<T>`                                                          | -          | Top dynamic component factory                                                        |
+| `sort`               | `boolean \| { default?: string; defaultDesc?: boolean }`                              | -          | Enable sorting; optionally set a default sort column and direction                   |
+| `details`            | `boolean \| { provider?: IDetailsProvider<T>; componentFactories?: ...; component? }` | -          | Enable detail drill-down; optionally provide a custom details provider or component  |
+| `item`               | `boolean \| { options?: ItemOptions }`                                                | -          | Enable item row action (navigate or custom select)                                   |
+| `remove`             | `boolean \| { provider?: IRemoveProvider<T> }`                                        | -          | Enable row remove action; optionally provide a custom remove provider                |
+| `select`             | `'multi'`                                                                             | -          | Enable multi-select mode                                                             |
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { LIST_MODE_COMPONENTS_TOKEN, ListMode } from '@smartsoft001/angular';
+
+providers: [
+  {
+    provide: LIST_MODE_COMPONENTS_TOKEN,
+    useValue: {
+      [ListMode.desktop]: MyCustomDesktopListComponent,
+      [ListMode.mobile]: MyCustomMobileListComponent,
+      // masonryGrid not specified — falls back to built-in ListMasonryGridComponent
+    },
+  },
+]
+```
+
 ### CardBaseComponent
 
 Abstract base class for card components. Provides shared container, header, body, and footer CSS class computation with gray background and divider support.

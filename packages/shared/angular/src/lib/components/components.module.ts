@@ -9,12 +9,13 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DynamicComponent, DynamicModule } from 'ng-dynamic-component';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 
-import { SharedPipesModule } from '../pipes/pipes.module';
+import { ListMode } from '../models';
 import {
   DETAILS_COMPONENT_TOKEN,
   DETAILS_STANDARD_COMPONENT_TOKEN,
   FORM_COMPONENT_TOKEN,
   FORM_STANDARD_COMPONENT_TOKEN,
+  LIST_MODE_COMPONENTS_TOKEN,
 } from '../shared.inectors';
 import {
   AccordionBodyComponent,
@@ -98,6 +99,7 @@ import { LoaderComponent } from './loader';
 import { PageComponent, PageStandardComponent } from './page';
 import { PagingComponent, PagingStandardComponent } from './paging';
 import { PasswordStrengthComponent } from './password-strength';
+import { SharedPipesModule } from '../pipes/pipes.module';
 
 export const ACCORDION_COMPONENTS: any[] = [
   AccordionComponent,
@@ -253,6 +255,14 @@ export const IMPORTS = [
     {
       provide: FORM_STANDARD_COMPONENT_TOKEN,
       useValue: FormStandardComponent,
+    },
+    {
+      provide: LIST_MODE_COMPONENTS_TOKEN,
+      useValue: {
+        [ListMode.desktop]: ListDesktopComponent,
+        [ListMode.mobile]: ListMobileComponent,
+        [ListMode.masonryGrid]: ListMasonryGridComponent,
+      },
     },
   ],
   imports: [...IMPORTS, ...COMPONENTS],
