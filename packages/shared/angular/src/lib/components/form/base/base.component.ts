@@ -4,6 +4,7 @@ import {
   ChangeDetectorRef,
   ViewContainerRef,
   input,
+  InputSignal,
   effect,
   output,
   viewChild,
@@ -58,6 +59,7 @@ export abstract class FormBaseComponent<T> extends BaseComponent {
 
   form = input.required<UntypedFormGroup>();
   options = input.required<IFormOptions<T>>();
+  cssClass: InputSignal<string> = input<string>('', { alias: 'class' });
 
   invokeSubmit = output<any>();
 

@@ -137,6 +137,70 @@ providers: [
 ]
 ```
 
+### FormBaseComponent
+
+Abstract base class for form components. Holds reactive form logic: computes `fields` from `form.controls`, exposes `model`, `mode`, `possibilities`, `inputComponents`, and a `submit()` method emitting `invokeSubmit`.
+
+**Inputs:** `form` (`UntypedFormGroup`), `options` (`IFormOptions<T>`), `class` (`string`)
+**Outputs:** `invokeSubmit`
+
+### Form Component
+
+The `<smart-form>` component renders a reactive form driven by `@Field()` model decorators. It is a wrapper that delegates to `FormStandardComponent` by default and supports an InjectionToken (`FORM_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `FormComponent` (selector: `smart-form`)
+**Default:** `FormStandardComponent` (selector: `smart-form-standard`)
+**Token:** `FORM_STANDARD_COMPONENT_TOKEN` — provide a `Type<FormBaseComponent<T>>` to override the default.
+
+#### Usage
+
+```html
+<!-- Basic -->
+<smart-form
+  [options]="{ model: userModel, show: true }"
+  (invokeSubmit)="onSubmit($event)"
+></smart-form>
+
+<!-- With external CSS class -->
+<smart-form
+  class="smart:p-4 smart:bg-white"
+  [options]="{ model: userModel, show: true }"
+  (invokeSubmit)="onSubmit($event)"
+></smart-form>
+
+<!-- With pre-built control (skips FormFactory) -->
+<smart-form
+  [options]="{ model: userModel, show: true, control: myFormGroup }"
+  (invokeSubmit)="onSubmit($event)"
+></smart-form>
+```
+
+#### IFormOptions
+
+| Property          | Type                                                                                | Default    | Description                                                  |
+| ----------------- | ----------------------------------------------------------------------------------- | ---------- | ------------------------------------------------------------ |
+| `model`           | `T`                                                                                 | *required* | Model instance decorated with `@Model` / `@Field`            |
+| `show`            | `boolean`                                                                           | *required* | Whether the form is visible                                  |
+| `mode`            | `'create' \| 'update' \| string`                                                   | -          | Merges `@Field({ create: … })` or `{ update: … }` overrides  |
+| `control`         | `AbstractControl`                                                                   | -          | Pre-built form group — skips `FormFactory` when provided     |
+| `loading$`        | `Observable<boolean>`                                                               | -          | Shows loading state while `true`                             |
+| `treeLevel`       | `number`                                                                            | -          | Nesting depth in hierarchical forms                          |
+| `uniqueProvider`  | `(values: Record<keyof T, any>) => Promise<boolean>`                                | -          | Async uniqueness check per field                             |
+| `possibilities`   | `{ [key: string]: WritableSignal<{ id: any; text: string; checked: boolean }[]> }` | -          | Options for `radio`/`check` inputs keyed by field name       |
+| `inputComponents` | `{ [key: string]: InputBaseComponentType<T> }`                                      | -          | Per-field component overrides keyed by field name            |
+| `fieldOptions`    | `IFieldOptions`                                                                     | -          | Additional `@Field()` metadata overrides                     |
+| `modelOptions`    | `IModelOptions`                                                                     | -          | Additional `@Model()` metadata overrides                     |
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { FORM_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  { provide: FORM_STANDARD_COMPONENT_TOKEN, useValue: MyFormComponent },
+]
+```
+
 ### CardBaseComponent
 
 Abstract base class for card components. Provides shared container, header, body, and footer CSS class computation with gray background and divider support.

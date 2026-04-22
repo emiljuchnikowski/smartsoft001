@@ -6,6 +6,7 @@ import { ButtonBaseComponent } from './components/button/base/base.component';
 import { CardBaseComponent } from './components/card/base/base.component';
 import { DetailBaseComponent } from './components/detail/base/base.component';
 import { DetailsBaseComponent } from './components/details/base/base.component';
+import { FormBaseComponent } from './components/form/base/base.component';
 import { InputBaseComponent } from './components/input/base/base.component';
 import { PageBaseComponent } from './components/page/base/base.component';
 import { PagingBaseComponent } from './components/paging/base/base.component';
@@ -27,6 +28,9 @@ export const DETAILS_STANDARD_COMPONENT_TOKEN = new InjectionToken<
 export const DETAIL_FIELD_COMPONENTS_TOKEN = new InjectionToken<
   Partial<Record<FieldTypeDef, Type<DetailBaseComponent<any>>>>
 >('DETAIL_FIELD_COMPONENTS_TOKEN');
+export const FORM_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<FormBaseComponent<any>>
+>('FORM_STANDARD_COMPONENT');
 export const INPUT_FIELD_COMPONENTS_TOKEN = new InjectionToken<
   Partial<Record<FieldTypeDef, Type<InputBaseComponent<any>>>>
 >('INPUT_FIELD_COMPONENTS_TOKEN');

@@ -14,6 +14,7 @@ import {
   DETAILS_COMPONENT_TOKEN,
   DETAILS_STANDARD_COMPONENT_TOKEN,
   FORM_COMPONENT_TOKEN,
+  FORM_STANDARD_COMPONENT_TOKEN,
 } from '../shared.inectors';
 import {
   AccordionBodyComponent,
@@ -248,6 +249,10 @@ export const IMPORTS = [
     {
       provide: DETAILS_STANDARD_COMPONENT_TOKEN,
       useValue: DetailsStandardComponent,
+    },
+    {
+      provide: FORM_STANDARD_COMPONENT_TOKEN,
+      useValue: FormStandardComponent,
     },
   ],
   imports: [...IMPORTS, ...COMPONENTS],
