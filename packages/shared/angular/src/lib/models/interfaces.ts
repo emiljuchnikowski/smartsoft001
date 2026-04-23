@@ -54,6 +54,7 @@ export type DynamicComponentType =
   | 'details'
   | 'info'
   | 'list'
+  | 'loader'
   | 'crud-list-page'
   | 'crud-item-page';
 export interface IDynamicComponentData {

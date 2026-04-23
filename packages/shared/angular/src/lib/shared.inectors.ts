@@ -9,6 +9,7 @@ import {
   DetailsBaseComponent,
   FormBaseComponent,
   InfoBaseComponent,
+  LoaderBaseComponent,
   InputBaseComponent,
   ListBaseComponent,
   PageBaseComponent,
@@ -44,6 +45,9 @@ export const INPUT_FIELD_COMPONENTS_TOKEN = new InjectionToken<
 export const LIST_MODE_COMPONENTS_TOKEN = new InjectionToken<
   Partial<Record<ListMode, Type<ListBaseComponent<any>>>>
 >('LIST_MODE_COMPONENTS');
+export const LOADER_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<LoaderBaseComponent>
+>('LOADER_STANDARD_COMPONENT');
 export const PAGE_VARIANT_COMPONENTS_TOKEN = new InjectionToken<
   Partial<Record<SmartPageVariant, Type<PageBaseComponent>>>
 >('PAGE_VARIANT_COMPONENTS');

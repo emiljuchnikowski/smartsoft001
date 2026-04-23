@@ -95,7 +95,7 @@ import {
   ListDesktopComponent,
   ListMasonryGridComponent,
 } from './list';
-import { LoaderComponent } from './loader';
+import { LoaderComponent, LoaderStandardComponent } from './loader';
 import { PageComponent, PageStandardComponent } from './page';
 import { PagingComponent, PagingStandardComponent } from './paging';
 import { PasswordStrengthComponent } from './password-strength';
@@ -181,7 +181,7 @@ export const LIST_COMPONENTS = [
   ListMasonryGridComponent,
 ];
 
-export const LOADER_COMPONENTS = [LoaderComponent];
+export const LOADER_COMPONENTS = [LoaderComponent, LoaderStandardComponent];
 
 export const PAGE_COMPONENTS = [PageComponent, PageStandardComponent];
 
