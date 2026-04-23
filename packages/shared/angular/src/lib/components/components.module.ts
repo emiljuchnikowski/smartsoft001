@@ -98,7 +98,10 @@ import {
 import { LoaderComponent, LoaderStandardComponent } from './loader';
 import { PageComponent, PageStandardComponent } from './page';
 import { PagingComponent, PagingStandardComponent } from './paging';
-import { PasswordStrengthComponent } from './password-strength';
+import {
+  PasswordStrengthComponent,
+  PasswordStrengthStandardComponent,
+} from './password-strength';
 import { SharedPipesModule } from '../pipes/pipes.module';
 
 export const ACCORDION_COMPONENTS: any[] = [
@@ -187,6 +190,11 @@ export const PAGE_COMPONENTS = [PageComponent, PageStandardComponent];
 
 export const PAGING_COMPONENTS = [PagingComponent, PagingStandardComponent];
 
+export const PASSWORD_STRENGTH_COMPONENTS = [
+  PasswordStrengthComponent,
+  PasswordStrengthStandardComponent,
+];
+
 export const INFO_COMPONENTS = [InfoComponent, InfoStandardComponent];
 export const DATE_RANGE_COMPONENTS = [
   DateRangeComponent,
@@ -218,7 +226,7 @@ export const COMPONENTS = [
   ...INFO_COMPONENTS,
   ...EXPORT_COMPONENTS,
   ...IMPORT_COMPONENTS,
-  PasswordStrengthComponent,
+  ...PASSWORD_STRENGTH_COMPONENTS,
 ];
 
 export const IMPORTS = [

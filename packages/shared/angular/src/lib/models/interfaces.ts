@@ -55,6 +55,7 @@ export type DynamicComponentType =
   | 'info'
   | 'list'
   | 'loader'
+  | 'password-strength'
   | 'crud-list-page'
   | 'crud-item-page';
 export interface IDynamicComponentData {

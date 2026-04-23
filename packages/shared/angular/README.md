@@ -484,6 +484,65 @@ providers: [
 
 When providing a custom implementation, note that the default `InfoStandardComponent` registers a `document:click` listener to close the popover on outside clicks — a custom implementation is responsible for its own close-on-outside-click behavior if needed.
 
+### PasswordStrengthBaseComponent
+
+Abstract base class for password-strength indicator components. Exposes required `passwordToCheck: string` and `showHint: boolean` inputs, `cssClass: string` (alias `class`), a `passwordStrength: boolean` output, and computed signals: `result`, `strength` (0/10/20/30), `strengthIndex` (0..3), `msg` (`'' | 'poor' | 'notGood' | 'good'`), `barClasses` (length-3 string array), `msgClass`, and `containerClasses`. The output `passwordStrength` is emitted automatically via an `effect()` — `true` when `strength === 30`, `false` otherwise.
+
+**Inputs:** `passwordToCheck` (`string`, required), `showHint` (`boolean`, required), `class` (`string`)
+**Outputs:** `passwordStrength` (`boolean`)
+
+### Password Strength Component
+
+The `<smart-password-strength>` component renders a three-bar strength indicator with an optional hint list of unmet requirements. It is a wrapper that delegates to `PasswordStrengthStandardComponent` by default and supports an InjectionToken (`PASSWORD_STRENGTH_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `PasswordStrengthComponent` (selector: `smart-password-strength`)
+**Default:** `PasswordStrengthStandardComponent` (selector: `smart-password-strength-standard`)
+**Token:** `PASSWORD_STRENGTH_STANDARD_COMPONENT_TOKEN` — provide a `Type<PasswordStrengthBaseComponent>` to override the default.
+
+#### Usage
+
+```html
+<!-- Basic -->
+<smart-password-strength
+  [passwordToCheck]="password"
+  [showHint]="false"
+></smart-password-strength>
+
+<!-- With hint list of unmet requirements -->
+<smart-password-strength
+  [passwordToCheck]="password"
+  [showHint]="true"
+></smart-password-strength>
+
+<!-- React to strength changes -->
+<smart-password-strength
+  [passwordToCheck]="password"
+  [showHint]="false"
+  (passwordStrength)="onStrong($event)"
+></smart-password-strength>
+```
+
+#### Translation Keys
+
+- `INPUT.PASSWORD-STRENGTH.{poor|notGood|good}` — strength message
+- `INPUT.ERRORS.invalidMinLength` — shown when password length ≤ 6 (suffixed with ` 7`)
+- `INPUT.ERRORS.{upperLetters|lowerLetters|symbols}` — shown when the matching character class is missing
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { PASSWORD_STRENGTH_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  {
+    provide: PASSWORD_STRENGTH_STANDARD_COMPONENT_TOKEN,
+    useValue: MyPasswordStrengthComponent,
+  },
+];
+```
+
+A custom implementation extending `PasswordStrengthBaseComponent` should declare `cssClass = input<string>('')` without the `class` alias (because `NgComponentOutlet` passes inputs by canonical name) and rely on the base's `barClasses()`, `msgClass()`, and `containerClasses()` for Tailwind classes. Do not re-emit `passwordStrength` — the base class already does that via an `effect()`.
+
 ### AccordionBaseComponent
 
 Abstract base class for accordion components. Provides toggle logic, disabled state, and shared container CSS classes.

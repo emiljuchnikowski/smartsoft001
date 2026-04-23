@@ -14,6 +14,7 @@ import {
   ListBaseComponent,
   PageBaseComponent,
   PagingBaseComponent,
+  PasswordStrengthBaseComponent,
 } from './components';
 import { ListMode, SmartPageVariant } from './models';
 
@@ -54,3 +55,6 @@ export const PAGE_VARIANT_COMPONENTS_TOKEN = new InjectionToken<
 export const PAGING_STANDARD_COMPONENT_TOKEN = new InjectionToken<
   Type<PagingBaseComponent>
 >('PAGING_STANDARD_COMPONENT');
+export const PASSWORD_STRENGTH_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<PasswordStrengthBaseComponent>
+>('PASSWORD_STRENGTH_STANDARD_COMPONENT');
