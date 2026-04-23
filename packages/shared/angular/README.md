@@ -439,6 +439,51 @@ providers: [
 ]
 ```
 
+### InfoBaseComponent
+
+Abstract base class for info popover components. Exposes required `options: IInfoOptions`, `cssClass: string` (alias `class`), an `isOpen: WritableSignal<boolean>` state, and `toggle()`/`open()`/`close()` methods.
+
+**Inputs:** `options` (`IInfoOptions`), `class` (`string`)
+
+### Info Component
+
+The `<smart-info>` component renders a small info icon that toggles a popover with a short tooltip text. It is a wrapper that delegates to `InfoStandardComponent` by default and supports an InjectionToken (`INFO_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `InfoComponent` (selector: `smart-info`)
+**Default:** `InfoStandardComponent` (selector: `smart-info-standard`)
+**Token:** `INFO_STANDARD_COMPONENT_TOKEN` — provide a `Type<InfoBaseComponent>` to override the default.
+
+#### Usage
+
+```html
+<!-- Basic -->
+<smart-info [options]="{ text: 'Helpful description' }"></smart-info>
+
+<!-- With external CSS class -->
+<smart-info
+  class="smart:text-indigo-600"
+  [options]="{ text: 'Helpful description' }"
+></smart-info>
+```
+
+#### IInfoOptions
+
+| Property | Type     | Default    | Description                           |
+| -------- | -------- | ---------- | ------------------------------------- |
+| `text`   | `string` | *required* | Text shown inside the popover (translated via `TranslatePipe`) |
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { INFO_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  { provide: INFO_STANDARD_COMPONENT_TOKEN, useValue: MyInfoComponent },
+]
+```
+
+When providing a custom implementation, note that the default `InfoStandardComponent` registers a `document:click` listener to close the popover on outside clicks — a custom implementation is responsible for its own close-on-outside-click behavior if needed.
+
 ### AccordionBaseComponent
 
 Abstract base class for accordion components. Provides toggle logic, disabled state, and shared container CSS classes.

@@ -14,7 +14,7 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { IEntity } from '@smartsoft001/domain-core';
 
 import { IListComponentFactories, IListInternalOptions } from '../../../models';
-import { FileUrlPipe, ListCellPipe } from '../../../pipes';
+import { ListCellPipe } from '../../../pipes';
 import { PagingComponent } from '../../paging';
 import { ListBaseComponent } from '../base/base.component';
 
@@ -23,12 +23,7 @@ import { ListBaseComponent } from '../base/base.component';
   templateUrl: './mobile.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    TranslatePipe,
-    LazyLoadImageModule,
-    PagingComponent,
-    ListCellPipe,
-  ],
+  imports: [TranslatePipe, LazyLoadImageModule, PagingComponent, ListCellPipe],
 })
 export class ListMobileComponent<T extends IEntity<string>>
   extends ListBaseComponent<T>

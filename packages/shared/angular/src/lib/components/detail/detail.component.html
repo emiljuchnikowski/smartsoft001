@@ -3,7 +3,9 @@
   <div class="smart:relative">
     @if (optionsLocal.options?.info) {
       <div class="smart:absolute smart:right-0 smart:top-0">
-        <smart-info [text]="optionsLocal.options?.info ?? ''"></smart-info>
+        <smart-info
+          [options]="{ text: optionsLocal.options?.info ?? '' }"
+        ></smart-info>
       </div>
     }
     <span

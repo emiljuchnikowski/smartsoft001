@@ -25,7 +25,7 @@ import {
 import { InputOptions } from '../../models';
 import { StyleService } from '../../services';
 import { INPUT_FIELD_COMPONENTS_TOKEN } from '../../shared.inectors';
-import { InfoDefaultComponent } from '../info';
+import { InfoComponent } from '../info';
 import { LoaderComponent } from '../loader';
 import { InputAddressComponent } from './address/address.component';
 import { InputArrayComponent } from './array/array.component';
@@ -100,7 +100,9 @@ const baseMap: Partial<Record<FieldTypeDef, Type<InputBaseComponent<any>>>> = {
       <div class="smart:relative">
         @if (fieldOptions?.info) {
           <div class="smart:absolute smart:right-0 smart:top-0">
-            <smart-info [text]="fieldOptions?.info ?? ''"></smart-info>
+            <smart-info
+              [options]="{ text: fieldOptions?.info ?? '' }"
+            ></smart-info>
           </div>
         }
         <smart-loader [show]="status === 'PENDING'"></smart-loader>
@@ -120,7 +122,7 @@ const baseMap: Partial<Record<FieldTypeDef, Type<InputBaseComponent<any>>>> = {
   `,
   imports: [
     NgComponentOutlet,
-    InfoDefaultComponent,
+    InfoComponent,
     LoaderComponent,
     InputErrorComponent,
   ],

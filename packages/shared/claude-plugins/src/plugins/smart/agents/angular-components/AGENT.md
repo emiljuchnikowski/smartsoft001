@@ -40,6 +40,7 @@ These render a default standard implementation and accept a custom implementatio
 | --------- | ---------------------------- | ----------------- | ---------------------------------- |
 | Details   | `angular-components-details` | `<smart-details>` | `DETAILS_STANDARD_COMPONENT_TOKEN` |
 | Form      | `angular-components-form`    | `<smart-form>`    | `FORM_STANDARD_COMPONENT_TOKEN`    |
+| Info      | `angular-components-info`    | `<smart-info>`    | `INFO_STANDARD_COMPONENT_TOKEN`    |
 | List      | `angular-components-list`    | `<smart-list>`    | `LIST_MODE_COMPONENTS_TOKEN`       |
 
 ### Base-Only Components (abstract classes for extension)
@@ -59,7 +60,7 @@ These provide abstract base classes (`@Directive()`) that can be extended to cre
 When a developer asks about a component:
 
 1. **Wants to use `<smart-date-edit>`, `<smart-date-range>`, `<smart-detail>`, or `<smart-input>`** → delegate to the corresponding skill for usage API
-2. **Wants to use `<smart-details>`, `<smart-form>`, or `<smart-list>`** → delegate to the skill to explain usage, token override pattern, and how to extend the base class with a custom implementation
+2. **Wants to use `<smart-details>`, `<smart-form>`, `<smart-info>`, or `<smart-list>`** → delegate to the skill to explain usage, token override pattern, and how to extend the base class with a custom implementation
 3. **Wants to use `<smart-button>`, `<smart-card>`, `<smart-accordion>`, `<smart-page>`, or `<smart-paging>`** → delegate to the skill to explain how to extend the base class and create a custom implementation
 4. **Wants to create a custom component** → delegate to the base-only skill for extension patterns and API
 
@@ -73,6 +74,7 @@ Always delegate to the per-component skill for detailed API, usage examples, and
 - **Detail** → use skill `angular-components-detail`
 - **Details** (with extension token) → use skill `angular-components-details`
 - **Form** (with extension token) → use skill `angular-components-form`
+- **Info** (with extension token) → use skill `angular-components-info`
 - **Input** → use skill `angular-components-input`
 - **List** (with extension token map) → use skill `angular-components-list`
 - **Button** (base only) → use skill `angular-components-button`
@@ -109,6 +111,8 @@ import {
   DETAILS_STANDARD_COMPONENT_TOKEN,
   FormBaseComponent,
   FORM_STANDARD_COMPONENT_TOKEN,
+  InfoBaseComponent,
+  INFO_STANDARD_COMPONENT_TOKEN,
   InputBaseComponent,
   InputPossibilitiesBaseComponent,
   ListBaseComponent,

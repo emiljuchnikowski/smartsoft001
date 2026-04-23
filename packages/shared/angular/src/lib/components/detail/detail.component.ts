@@ -1,4 +1,4 @@
-import { NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
+import { NgComponentOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -15,7 +15,7 @@ import { FieldType, FieldTypeDef } from '@smartsoft001/models';
 import { IDetailOptions } from '../../models';
 import { ModelLabelPipe } from '../../pipes';
 import { DETAIL_FIELD_COMPONENTS_TOKEN } from '../../shared.inectors';
-import { InfoDefaultComponent } from '../info';
+import { InfoComponent } from '../info';
 import { DetailAddressComponent } from './address/address.component';
 import { DetailArrayComponent } from './array/array.component';
 import { DetailAttachmentComponent } from './attachment/attachment.component';
@@ -54,7 +54,7 @@ const baseMap: Partial<Record<FieldTypeDef, Type<DetailBaseComponent<any>>>> = {
 @Component({
   selector: 'smart-detail',
   templateUrl: './detail.component.html',
-  imports: [ModelLabelPipe, InfoDefaultComponent, NgComponentOutlet],
+  imports: [ModelLabelPipe, InfoComponent, NgComponentOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DetailComponent<T extends IEntity<string> | undefined> {

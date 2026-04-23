@@ -8,6 +8,7 @@ import {
   DetailBaseComponent,
   DetailsBaseComponent,
   FormBaseComponent,
+  InfoBaseComponent,
   InputBaseComponent,
   ListBaseComponent,
   PageBaseComponent,
@@ -34,6 +35,9 @@ export const DETAIL_FIELD_COMPONENTS_TOKEN = new InjectionToken<
 export const FORM_STANDARD_COMPONENT_TOKEN = new InjectionToken<
   Type<FormBaseComponent<any>>
 >('FORM_STANDARD_COMPONENT');
+export const INFO_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<InfoBaseComponent>
+>('INFO_STANDARD_COMPONENT');
 export const INPUT_FIELD_COMPONENTS_TOKEN = new InjectionToken<
   Partial<Record<FieldTypeDef, Type<InputBaseComponent<any>>>>
 >('INPUT_FIELD_COMPONENTS_TOKEN');

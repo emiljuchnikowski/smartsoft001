@@ -1,9 +1,13 @@
-import { Directive, input, signal } from '@angular/core';
+import { Directive, input, InputSignal, signal } from '@angular/core';
+
+import { DynamicComponentType, IInfoOptions } from '../../../models';
 
 @Directive()
 export abstract class InfoBaseComponent {
-  text = input.required<string>();
-  cssClass = input<string>('', { alias: 'class' });
+  static smartType: DynamicComponentType = 'info';
+
+  options: InputSignal<IInfoOptions> = input.required<IInfoOptions>();
+  cssClass: InputSignal<string> = input<string>('', { alias: 'class' });
   isOpen = signal(false);
 
   toggle(): void {

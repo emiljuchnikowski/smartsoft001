@@ -386,4 +386,5 @@ Study these existing components as patterns:
 - `button/` — wrapper with InjectionToken (`BUTTON_STANDARD_COMPONENT_TOKEN`) for custom implementations, base + standard + wrapper pattern
 - `card/` — wrapper with InjectionToken (`CARD_STANDARD_COMPONENT_TOKEN`) and content projection flowing into the injected component via `headerTpl`/`bodyTpl`/`footerTpl` template inputs
 - `icon/` — base + default pattern with `cssClass` alias `class`
+- `info/` — minimal Base + Standard + Wrapper with InjectionToken (`INFO_STANDARD_COMPONENT_TOKEN`) and a single-field `IInfoOptions { text: string }` — good reference for the simplest shape of the pattern
 - `date-range/` — complex component with `ControlValueAccessor` integration

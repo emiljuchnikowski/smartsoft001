@@ -52,6 +52,7 @@ export type DynamicComponentType =
   | 'page'
   | 'button'
   | 'details'
+  | 'info'
   | 'list'
   | 'crud-list-page'
   | 'crud-item-page';
@@ -166,6 +167,10 @@ export interface IButtonOptions {
   rounded?: boolean;
   circular?: boolean;
   iconPosition?: 'leading' | 'trailing';
+}
+
+export interface IInfoOptions {
+  text: string;
 }
 
 export interface IDetailOptions<T> {

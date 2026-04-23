@@ -54,7 +54,7 @@ import { SharedDirectivesModule } from '../directives';
 import { ExportComponent } from './export';
 import { FormComponent, FormStandardComponent } from './form';
 import { ImportComponent } from './import';
-import { InfoDefaultComponent } from './info';
+import { InfoComponent, InfoStandardComponent } from './info';
 import {
   InputComponent,
   InputIntComponent,
@@ -187,7 +187,7 @@ export const PAGE_COMPONENTS = [PageComponent, PageStandardComponent];
 
 export const PAGING_COMPONENTS = [PagingComponent, PagingStandardComponent];
 
-export const INFO_COMPONENTS = [InfoDefaultComponent];
+export const INFO_COMPONENTS = [InfoComponent, InfoStandardComponent];
 export const DATE_RANGE_COMPONENTS = [
   DateRangeComponent,
   DateRangeStandardComponent,

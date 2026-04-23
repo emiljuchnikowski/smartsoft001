@@ -2,7 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { InfoDefaultComponent } from './default.component';
+import { InfoStandardComponent } from './standard.component';
+import { IInfoOptions } from '../../../models';
 
 @Pipe({ name: 'translate' })
 class MockTranslatePipe implements PipeTransform {
@@ -11,22 +12,26 @@ class MockTranslatePipe implements PipeTransform {
   }
 }
 
-describe('InfoDefaultComponent', () => {
-  let fixture: ComponentFixture<InfoDefaultComponent>;
+describe('@smartsoft001/shared-angular: InfoStandardComponent', () => {
+  let fixture: ComponentFixture<InfoStandardComponent>;
+  let component: InfoStandardComponent;
   let element: HTMLElement;
+
+  const defaultOptions: IInfoOptions = { text: 'test info text' };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [InfoDefaultComponent],
+      imports: [InfoStandardComponent],
     })
-      .overrideComponent(InfoDefaultComponent, {
+      .overrideComponent(InfoStandardComponent, {
         remove: { imports: [TranslatePipe] },
         add: { imports: [MockTranslatePipe] },
       })
       .compileComponents();
 
-    fixture = TestBed.createComponent(InfoDefaultComponent);
-    fixture.componentRef.setInput('text', 'test info text');
+    fixture = TestBed.createComponent(InfoStandardComponent);
+    component = fixture.componentInstance;
+    fixture.componentRef.setInput('options', defaultOptions);
     fixture.detectChanges();
     element = fixture.nativeElement;
   });
@@ -85,10 +90,19 @@ describe('InfoDefaultComponent', () => {
     expect(popover).toBeNull();
   });
 
-  it('should have relative inline-block container', () => {
-    const container = element.querySelector('div');
+  it('should apply relative and inline-block container classes', () => {
+    const classes = component.containerClasses();
 
-    expect(container!.classList.contains('smart:relative')).toBe(true);
-    expect(container!.classList.contains('smart:inline-block')).toBe(true);
+    expect(classes).toContain('smart:relative');
+    expect(classes).toContain('smart:inline-block');
+  });
+
+  it('should append external cssClass to container classes', () => {
+    fixture.componentRef.setInput('class', 'my-extra-class');
+    fixture.detectChanges();
+
+    const classes = component.containerClasses();
+
+    expect(classes).toContain('my-extra-class');
   });
 });

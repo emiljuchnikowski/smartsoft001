@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { InfoBaseComponent } from './base.component';
+import { IInfoOptions } from '../../../models';
 
 @Component({
   selector: 'smart-test-info',
@@ -11,15 +12,15 @@ class TestInfoComponent extends InfoBaseComponent {}
 
 @Component({
   selector: 'smart-test-host',
-  template: `<smart-test-info [text]="text" [class]="cssClass" />`,
+  template: `<smart-test-info [options]="options" [class]="cssClass" />`,
   imports: [TestInfoComponent],
 })
 class TestHostComponent {
-  text = 'some info text';
+  options: IInfoOptions = { text: 'some info text' };
   cssClass = '';
 }
 
-describe('InfoBaseComponent', () => {
+describe('@smartsoft001/shared-angular: InfoBaseComponent', () => {
   let fixture: ComponentFixture<TestHostComponent>;
   let info: TestInfoComponent;
 
@@ -37,17 +38,21 @@ describe('InfoBaseComponent', () => {
     expect(info).toBeInstanceOf(InfoBaseComponent);
   });
 
-  it('should have text input with required value', () => {
-    expect(info.text()).toBe('some info text');
+  it('should have smartType static equal to "info"', () => {
+    expect(InfoBaseComponent.smartType).toBe('info');
   });
 
-  it('should update text input when host changes value', async () => {
-    fixture.componentInstance.text = 'updated text';
+  it('should have options input with required value', () => {
+    expect(info.options()).toEqual({ text: 'some info text' });
+  });
+
+  it('should update options input when host changes value', async () => {
+    fixture.componentInstance.options = { text: 'updated text' };
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
-    expect(info.text()).toBe('updated text');
+    expect(info.options().text).toBe('updated text');
   });
 
   it('should default cssClass to empty string', () => {
