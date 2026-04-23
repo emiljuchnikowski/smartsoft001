@@ -56,6 +56,7 @@ export type DynamicComponentType =
   | 'list'
   | 'loader'
   | 'password-strength'
+  | 'searchbar'
   | 'crud-list-page'
   | 'crud-item-page';
 export interface IDynamicComponentData {
@@ -173,6 +174,15 @@ export interface IButtonOptions {
 
 export interface IInfoOptions {
   text: string;
+}
+
+export interface ISearchbarOptions {
+  placeholder?: string;
+  label?: string;
+  debounceTime?: number;
+  showToggleButton?: boolean;
+  size?: SmartSize;
+  color?: SmartColor;
 }
 
 export interface IDetailOptions<T> {

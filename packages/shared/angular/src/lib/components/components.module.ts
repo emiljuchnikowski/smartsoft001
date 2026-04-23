@@ -102,6 +102,7 @@ import {
   PasswordStrengthComponent,
   PasswordStrengthStandardComponent,
 } from './password-strength';
+import { SearchbarComponent, SearchbarStandardComponent } from './searchbar';
 import { SharedPipesModule } from '../pipes/pipes.module';
 
 export const ACCORDION_COMPONENTS: any[] = [
@@ -195,6 +196,11 @@ export const PASSWORD_STRENGTH_COMPONENTS = [
   PasswordStrengthStandardComponent,
 ];
 
+export const SEARCHBAR_COMPONENTS = [
+  SearchbarComponent,
+  SearchbarStandardComponent,
+];
+
 export const INFO_COMPONENTS = [InfoComponent, InfoStandardComponent];
 export const DATE_RANGE_COMPONENTS = [
   DateRangeComponent,
@@ -227,6 +233,7 @@ export const COMPONENTS = [
   ...EXPORT_COMPONENTS,
   ...IMPORT_COMPONENTS,
   ...PASSWORD_STRENGTH_COMPONENTS,
+  ...SEARCHBAR_COMPONENTS,
 ];
 
 export const IMPORTS = [

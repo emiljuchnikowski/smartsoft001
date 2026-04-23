@@ -484,6 +484,65 @@ providers: [
 
 When providing a custom implementation, note that the default `InfoStandardComponent` registers a `document:click` listener to close the popover on outside clicks — a custom implementation is responsible for its own close-on-outside-click behavior if needed.
 
+### SearchbarBaseComponent
+
+Abstract base class for searchbar components. Provides reactive `UntypedFormControl` with debounced text emission, `show`/`text` models, `setShow()`/`tryHide()` methods.
+
+**Inputs:** `options` (`ISearchbarOptions`), `show` (`ModelSignal<boolean>`), `text` (`ModelSignal<string>`), `class` (`string`)
+
+### Searchbar Component
+
+The `<smart-searchbar>` component renders a debounced search input with an optional toggle button. It is a wrapper that delegates to `SearchbarStandardComponent` by default and supports an InjectionToken (`SEARCHBAR_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `SearchbarComponent` (selector: `smart-searchbar`)
+**Default:** `SearchbarStandardComponent` (selector: `smart-searchbar-standard`)
+**Token:** `SEARCHBAR_STANDARD_COMPONENT_TOKEN` — provide a `Type<SearchbarBaseComponent>` to override the default.
+
+#### Usage
+
+```html
+<!-- Basic -->
+<smart-searchbar [(text)]="searchText" />
+
+<!-- With options (custom placeholder + debounce) -->
+<smart-searchbar
+  [(text)]="searchText"
+  [options]="{ placeholder: 'users.search', debounceTime: 300 }"
+/>
+
+<!-- Hidden with toggle button -->
+<smart-searchbar
+  [(show)]="searchShown"
+  [(text)]="searchText"
+  [options]="{ showToggleButton: true }"
+/>
+
+<!-- With external CSS class -->
+<smart-searchbar class="smart:max-w-md" [(text)]="searchText" />
+```
+
+#### ISearchbarOptions
+
+| Property           | Type         | Default    | Description                                                              |
+| ------------------ | ------------ | ---------- | ------------------------------------------------------------------------ |
+| `placeholder`      | `string`     | `'search'` | Placeholder translation key (rendered through `TranslatePipe`)           |
+| `debounceTime`     | `number`     | `1000`     | Debounce (ms) before `text` model emits a new value                      |
+| `showToggleButton` | `boolean`    | `false`    | When `show` is `false`, display a magnifier button that reveals the input |
+| `size`             | `SmartSize`  | -          | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'`                                  |
+| `color`            | `SmartColor` | -          | Tailwind color (22 options)                                              |
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { SEARCHBAR_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  { provide: SEARCHBAR_STANDARD_COMPONENT_TOKEN, useValue: MySearchbarComponent },
+]
+```
+
+A custom implementation extending `SearchbarBaseComponent` should declare `cssClass = input<string>('')` without the `class` alias (because `NgComponentOutlet` passes inputs by canonical name) and rely on the base's `control` signal, `setShow()`, and `tryHide()` methods. The base class already wires `control.valueChanges` through `debounceTime()` and emits into the `text` model — do not re-subscribe.
+
 ### PasswordStrengthBaseComponent
 
 Abstract base class for password-strength indicator components. Exposes required `passwordToCheck: string` and `showHint: boolean` inputs, `cssClass: string` (alias `class`), a `passwordStrength: boolean` output, and computed signals: `result`, `strength` (0/10/20/30), `strengthIndex` (0..3), `msg` (`'' | 'poor' | 'notGood' | 'good'`), `barClasses` (length-3 string array), `msgClass`, and `containerClasses`. The output `passwordStrength` is emitted automatically via an `effect()` — `true` when `strength === 30`, `false` otherwise.

@@ -15,6 +15,7 @@ import {
   PageBaseComponent,
   PagingBaseComponent,
   PasswordStrengthBaseComponent,
+  SearchbarBaseComponent,
 } from './components';
 import { ListMode, SmartPageVariant } from './models';
 
@@ -58,3 +59,6 @@ export const PAGING_STANDARD_COMPONENT_TOKEN = new InjectionToken<
 export const PASSWORD_STRENGTH_STANDARD_COMPONENT_TOKEN = new InjectionToken<
   Type<PasswordStrengthBaseComponent>
 >('PASSWORD_STRENGTH_STANDARD_COMPONENT');
+export const SEARCHBAR_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<SearchbarBaseComponent>
+>('SEARCHBAR_STANDARD_COMPONENT');
