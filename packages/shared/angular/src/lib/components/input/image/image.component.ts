@@ -8,6 +8,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { debounceTime } from 'rxjs/operators';
 
 import { ModelLabelPipe } from '../../../pipes';
+import { ButtonComponent } from '../../button';
 import { InputFileBaseComponent } from '../base/file.component';
 
 @Component({
@@ -26,21 +27,13 @@ import { InputFileBaseComponent } from '../base/file.component';
         }
       </label>
       <div [class]="groupClasses()">
-        <button
-          type="button"
-          (click)="addButtonOptions.click()"
-          class="smart:rounded-md smart:bg-indigo-600 smart:px-3 smart:py-1.5 smart:text-sm smart:font-semibold smart:text-white hover:smart:bg-indigo-500"
-        >
+        <smart-button [options]="addButtonOptions">
           {{ (control.value ? 'change' : 'add') | translate }}
-        </button>
+        </smart-button>
         @if (control.value) {
-          <button
-            type="button"
-            (click)="deleteButtonOptions.click()"
-            class="smart:rounded-md smart:bg-red-600 smart:px-3 smart:py-1.5 smart:text-sm smart:font-semibold smart:text-white hover:smart:bg-red-500"
-          >
+          <smart-button [options]="deleteButtonOptions">
             {{ 'delete' | translate }}
-          </button>
+          </smart-button>
         }
         @if (loading()) {
           <div
@@ -62,7 +55,7 @@ import { InputFileBaseComponent } from '../base/file.component';
       </div>
     }
   `,
-  imports: [ModelLabelPipe, TranslatePipe],
+  imports: [ModelLabelPipe, TranslatePipe, ButtonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputImageComponent<T>
@@ -94,14 +87,27 @@ export class InputImageComponent<T>
     return classes.join(' ');
   });
 
+  private subscribed = false;
+
   override ngOnInit() {
     super.ngOnInit();
+    this.setupImageSubscription();
+  }
+
+  protected override afterSetOptionsHandler(): void {
+    super.afterSetOptionsHandler();
+    this.setupImageSubscription();
+  }
+
+  private setupImageSubscription(): void {
+    if (this.subscribed || !this.control) return;
 
     this.control.valueChanges
       .pipe(debounceTime(1000), this.takeUntilDestroy)
       .subscribe(() => this.initImage());
 
     this.initImage();
+    this.subscribed = true;
   }
 
   private initImage(): void {

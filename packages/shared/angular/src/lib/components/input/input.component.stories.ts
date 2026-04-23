@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import {
   ReactiveFormsModule,
+  UntypedFormArray,
   UntypedFormControl,
   UntypedFormGroup,
   Validators,
@@ -21,10 +22,19 @@ import { SharedFactoriesModule } from '../../factories';
 import { InputOptions } from '../../models';
 import { IModelLabelProvider } from '../../providers';
 import { FileService } from '../../services';
-import { INPUT_FIELD_COMPONENTS_TOKEN } from '../../shared.inectors';
+import {
+  FORM_COMPONENT_TOKEN,
+  INPUT_FIELD_COMPONENTS_TOKEN,
+} from '../../shared.inectors';
 import { COMPONENTS, IMPORTS } from '../components.module';
+import { InputArrayComponent } from './array/array.component';
+import { InputAttachmentComponent } from './attachment/attachment.component';
 import { InputBaseComponent } from './base/base.component';
+import { InputErrorComponent } from './error/error.component';
+import { InputFileComponent } from './file/file.component';
+import { InputImageComponent } from './image/image.component';
 import { InputComponent } from './input.component';
+import { InputPdfComponent } from './pdf/pdf.component';
 
 class MockModelLabelProvider extends IModelLabelProvider {
   private labels: Record<string, string> = {
@@ -51,6 +61,11 @@ class MockModelLabelProvider extends IModelLabelProvider {
     address: 'Adres',
     labels: 'Etykiety',
     ids: 'Identyfikatory',
+    file: 'File upload',
+    image: 'Profile photo',
+    document: 'Document (PDF)',
+    attachment: 'Attachment',
+    items: 'Items',
   };
 
   override get(input: { instance: any; key: string; type?: any }) {
@@ -653,6 +668,223 @@ export const Playground: Story = {
           }
         </div>
       `,
+    };
+  },
+};
+
+// ─── 28. File ───────────────────────────────────────────────────────────────
+
+export const File: Story = {
+  name: 'File',
+  render: () => {
+    @Model({})
+    class FileModel {
+      @Field({ type: FieldType.file, possibilities: '.pdf,.docx' } as any)
+      file: any = null;
+    }
+    const control = new UntypedFormControl(null);
+    new UntypedFormGroup({ file: control });
+    return {
+      props: {
+        options: {
+          control,
+          fieldKey: 'file',
+          model: new FileModel(),
+          treeLevel: 0,
+        } as InputOptions<FileModel>,
+      },
+      template: `
+        <div class="smart:p-4 smart:max-w-lg">
+          <smart-input [options]="options"></smart-input>
+        </div>
+      `,
+      moduleMetadata: {
+        imports: [InputFileComponent],
+      },
+    };
+  },
+};
+
+// ─── 29. Image ──────────────────────────────────────────────────────────────
+
+export const Image: Story = {
+  name: 'Image',
+  render: () => {
+    @Model({})
+    class ImageModel {
+      @Field({ type: FieldType.image }) image: any = null;
+    }
+    const control = new UntypedFormControl({ id: 'demo' });
+    new UntypedFormGroup({ image: control });
+    return {
+      props: {
+        options: {
+          control,
+          fieldKey: 'image',
+          model: new ImageModel(),
+          treeLevel: 0,
+        } as InputOptions<ImageModel>,
+      },
+      template: `
+        <div class="smart:p-4 smart:max-w-lg">
+          <smart-input [options]="options"></smart-input>
+        </div>
+      `,
+      moduleMetadata: {
+        imports: [InputImageComponent],
+      },
+    };
+  },
+};
+
+// ─── 30. Pdf ────────────────────────────────────────────────────────────────
+
+export const Pdf: Story = {
+  name: 'Pdf',
+  render: () => {
+    @Model({})
+    class PdfModel {
+      @Field({ type: FieldType.pdf }) document: any = null;
+    }
+    const control = new UntypedFormControl({
+      id: 'demo',
+      fileName: 'contract.pdf',
+    });
+    new UntypedFormGroup({ document: control });
+    return {
+      props: {
+        options: {
+          control,
+          fieldKey: 'document',
+          model: new PdfModel(),
+          treeLevel: 0,
+        } as InputOptions<PdfModel>,
+      },
+      template: `
+        <div class="smart:p-4 smart:max-w-lg">
+          <smart-input [options]="options"></smart-input>
+        </div>
+      `,
+      moduleMetadata: {
+        imports: [InputPdfComponent],
+      },
+    };
+  },
+};
+
+// ─── 31. Attachment ─────────────────────────────────────────────────────────
+
+export const Attachment: Story = {
+  name: 'Attachment',
+  render: () => {
+    @Model({})
+    class AttachmentModel {
+      @Field({
+        type: FieldType.attachment,
+        possibilities: '.pdf,.doc,.zip',
+      } as any)
+      attachment: any = null;
+    }
+    const control = new UntypedFormControl({
+      id: 'demo',
+      fileName: 'archive.zip',
+    });
+    new UntypedFormGroup({ attachment: control });
+    return {
+      props: {
+        options: {
+          control,
+          fieldKey: 'attachment',
+          model: new AttachmentModel(),
+          treeLevel: 0,
+        } as InputOptions<AttachmentModel>,
+      },
+      template: `
+        <div class="smart:p-4 smart:max-w-lg">
+          <smart-input [options]="options"></smart-input>
+        </div>
+      `,
+      moduleMetadata: {
+        imports: [InputAttachmentComponent],
+      },
+    };
+  },
+};
+
+// ─── 32. Array ──────────────────────────────────────────────────────────────
+
+// Minimal stub form component used only to satisfy FORM_COMPONENT_TOKEN
+@Component({
+  selector: 'story-stub-form',
+  template: `<div class="smart:text-sm smart:text-gray-500">[stub form]</div>`,
+  standalone: true,
+})
+class StubFormComponent {}
+
+export const Array: Story = {
+  name: 'Array',
+  render: () => {
+    @Model({})
+    class ItemModel {
+      @Field({ type: FieldType.text }) name = '';
+    }
+
+    @Model({})
+    class ArrayModel {
+      @Field({ type: FieldType.array, classType: ItemModel } as any)
+      items: ItemModel[] = [];
+    }
+
+    const control = new UntypedFormArray([]);
+    new UntypedFormGroup({ items: control });
+    return {
+      props: {
+        options: {
+          control,
+          fieldKey: 'items',
+          model: new ArrayModel(),
+          treeLevel: 0,
+        } as InputOptions<ArrayModel>,
+      },
+      template: `
+        <div class="smart:p-4 smart:max-w-lg">
+          <smart-input [options]="options"></smart-input>
+        </div>
+      `,
+      moduleMetadata: {
+        imports: [InputArrayComponent, StubFormComponent],
+        providers: [
+          { provide: FORM_COMPONENT_TOKEN, useValue: StubFormComponent },
+        ],
+      },
+    };
+  },
+};
+
+// ─── 33. InputError (standalone component showcase) ─────────────────────────
+
+export const InputError: Story = {
+  name: 'Input Error (component showcase)',
+  render: () => {
+    return {
+      props: {},
+      template: `
+        <div class="smart:space-y-2 smart:p-4">
+          <p class="smart:text-sm smart:font-medium smart:text-gray-700 dark:smart:text-gray-300 smart:mb-4">
+            All error states rendered by <code>smart-input-error</code>:
+          </p>
+          <smart-input-error [errors]="{ required: true }"></smart-input-error>
+          <smart-input-error [errors]="{ email: true }"></smart-input-error>
+          <smart-input-error [errors]="{ minlength: { requiredLength: 5 } }"></smart-input-error>
+          <smart-input-error [errors]="{ maxlength: { requiredLength: 20 } }"></smart-input-error>
+          <smart-input-error [errors]="{ min: { min: 0 } }"></smart-input-error>
+          <smart-input-error [errors]="{ max: { max: 100 } }"></smart-input-error>
+          <smart-input-error [errors]="{ customMessage: 'Własny komunikat błędu' }"></smart-input-error>
+        </div>
+      `,
+      moduleMetadata: {
+        imports: [InputErrorComponent],
+      },
     };
   },
 };

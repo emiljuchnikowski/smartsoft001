@@ -7,6 +7,7 @@ import {
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { ModelLabelPipe } from '../../../pipes';
+import { ButtonComponent } from '../../button';
 import { InputFileBaseComponent } from '../base/file.component';
 
 @Component({
@@ -25,28 +26,16 @@ import { InputFileBaseComponent } from '../base/file.component';
         }
       </label>
       <div [class]="groupClasses()">
-        <button
-          type="button"
-          (click)="addButtonOptions.click()"
-          class="smart:rounded-md smart:bg-indigo-600 smart:px-3 smart:py-1.5 smart:text-sm smart:font-semibold smart:text-white hover:smart:bg-indigo-500"
-        >
+        <smart-button [options]="addButtonOptions">
           {{ (control.value ? 'change' : 'add') | translate }}
-        </button>
+        </smart-button>
         @if (control.value) {
-          <button
-            type="button"
-            (click)="showButtonOptions.click()"
-            class="smart:rounded-md smart:bg-gray-200 smart:px-3 smart:py-1.5 smart:text-sm smart:font-semibold smart:text-gray-900 hover:smart:bg-gray-300 dark:smart:bg-white/10 dark:smart:text-white"
-          >
+          <smart-button [options]="showButtonOptions">
             {{ 'download' | translate }}
-          </button>
-          <button
-            type="button"
-            (click)="deleteButtonOptions.click()"
-            class="smart:rounded-md smart:bg-red-600 smart:px-3 smart:py-1.5 smart:text-sm smart:font-semibold smart:text-white hover:smart:bg-red-500"
-          >
+          </smart-button>
+          <smart-button [options]="deleteButtonOptions">
             {{ 'delete' | translate }}
-          </button>
+          </smart-button>
           <span
             class="smart:text-sm smart:text-gray-700 dark:smart:text-gray-300"
           >
@@ -72,7 +61,7 @@ import { InputFileBaseComponent } from '../base/file.component';
       </div>
     }
   `,
-  imports: [ModelLabelPipe, TranslatePipe],
+  imports: [ModelLabelPipe, TranslatePipe, ButtonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputAttachmentComponent<T>

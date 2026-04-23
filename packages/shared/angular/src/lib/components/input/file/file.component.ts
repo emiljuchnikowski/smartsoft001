@@ -7,7 +7,9 @@ import {
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { IButtonOptions } from '../../../models';
 import { ModelLabelPipe } from '../../../pipes';
+import { ButtonComponent } from '../../button';
 import { InputBaseComponent } from '../base/base.component';
 
 @Component({
@@ -26,13 +28,9 @@ import { InputBaseComponent } from '../base/base.component';
         }
       </label>
       <div [class]="groupClasses()">
-        <button
-          type="button"
-          (click)="addButtonOptions.click()"
-          class="smart:rounded-md smart:bg-indigo-600 smart:px-3 smart:py-1.5 smart:text-sm smart:font-semibold smart:text-white hover:smart:bg-indigo-500"
-        >
+        <smart-button [options]="addButtonOptions">
           {{ (control.value ? 'change' : 'add') | translate }}
-        </button>
+        </smart-button>
         @if (control.value?.name) {
           <span
             class="smart:text-sm smart:text-gray-700 dark:smart:text-gray-300"
@@ -51,7 +49,7 @@ import { InputBaseComponent } from '../base/base.component';
       </div>
     }
   `,
-  imports: [ModelLabelPipe, TranslatePipe],
+  imports: [ModelLabelPipe, TranslatePipe, ButtonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputFileComponent<T> extends InputBaseComponent<T> {
@@ -77,7 +75,8 @@ export class InputFileComponent<T> extends InputBaseComponent<T> {
     return classes.join(' ');
   });
 
-  addButtonOptions = {
+  addButtonOptions: IButtonOptions = {
+    variant: 'primary',
     click: () => {
       this.control.markAsDirty();
       this.control.markAsTouched();

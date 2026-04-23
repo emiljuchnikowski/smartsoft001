@@ -23,6 +23,7 @@ import { FormFactory } from '../../../factories';
 import { IButtonOptions, IFormOptions } from '../../../models';
 import { ModelLabelPipe } from '../../../pipes';
 import { FORM_COMPONENT_TOKEN } from '../../../shared.inectors';
+import { ButtonComponent } from '../../button';
 import { InputBaseComponent } from '../base/base.component';
 
 @Component({
@@ -52,13 +53,9 @@ import { InputBaseComponent } from '../base/base.component';
           </div>
         }
         @if (!fieldOptions()?.possibilities?.static) {
-          <button
-            type="button"
-            (click)="addButtonOptions.click()"
-            class="smart:rounded-md smart:bg-indigo-600 smart:px-3 smart:py-1.5 smart:text-sm smart:font-semibold smart:text-white hover:smart:bg-indigo-500"
-          >
+          <smart-button [options]="addButtonOptions">
             {{ 'add' | translate }}
-          </button>
+          </smart-button>
         }
       </div>
     }
@@ -68,6 +65,7 @@ import { InputBaseComponent } from '../base/base.component';
     TranslatePipe,
     NgComponentOutlet,
     DynamicIoDirective,
+    ButtonComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -77,6 +75,7 @@ export class InputArrayComponent<T, TChild> extends InputBaseComponent<T> {
   private factory = inject(FormFactory);
 
   addButtonOptions: IButtonOptions = {
+    variant: 'primary',
     click: async () => {
       const options = this.getOptions();
       const modelOptions = getModelOptions(options.classType);
