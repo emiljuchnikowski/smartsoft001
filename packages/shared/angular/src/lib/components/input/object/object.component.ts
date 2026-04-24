@@ -1,5 +1,10 @@
-import { AsyncPipe, NgComponentOutlet } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { NgComponentOutlet } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+} from '@angular/core';
 import { DynamicIoDirective } from 'ng-dynamic-component';
 
 import { IFormOptions } from '../../../models';
@@ -11,32 +16,48 @@ import { InputBaseComponent } from '../base/base.component';
   selector: 'smart-input-object',
   template: `
     @if (control) {
-      <!--  <ion-label position="floating">-->
-      {{
-        control?.parent?.value
-          | smartModelLabel
-            : internalOptions.fieldKey
-            : internalOptions?.model?.constructor
-          | async
-      }}
-      <!--    <ion-text color="danger">-->
-      @if (required) {
-        <span>*</span>
-      }
-      <!--    </ion-text>-->
-      <!--  </ion-label>-->
-      <br />
-      <ng-template
-        [ngComponentOutlet]="formComponent"
-        [ndcDynamicInputs]="{ options: childOptions }"
-      ></ng-template>
+      <label [class]="labelClasses()">
+        {{
+          control?.parent?.value
+            | smartModelLabel
+              : internalOptions.fieldKey
+              : internalOptions?.model?.constructor
+        }}
+        @if (required) {
+          <span class="smart:text-red-500 smart:ml-0.5">*</span>
+        }
+      </label>
+      <div [class]="groupClasses()">
+        <ng-template
+          [ngComponentOutlet]="formComponent"
+          [ndcDynamicInputs]="{ options: childOptions }"
+        ></ng-template>
+      </div>
     }
   `,
-  imports: [ModelLabelPipe, AsyncPipe, NgComponentOutlet, DynamicIoDirective],
+  imports: [ModelLabelPipe, NgComponentOutlet, DynamicIoDirective],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputObjectComponent<T, TChild> extends InputBaseComponent<T> {
   public formComponent = inject(FORM_COMPONENT_TOKEN);
   childOptions!: IFormOptions<TChild>;
+
+  labelClasses = computed(() =>
+    [
+      'smart:block',
+      'smart:text-sm/6',
+      'smart:font-medium',
+      'smart:text-gray-900',
+      'smart:dark:text-white',
+    ].join(' '),
+  );
+
+  groupClasses = computed(() => {
+    const classes = ['smart:mt-2'];
+    const extra = this.cssClass();
+    if (extra) classes.push(extra);
+    return classes.join(' ');
+  });
 
   protected override afterSetOptionsHandler() {
     this.childOptions = {

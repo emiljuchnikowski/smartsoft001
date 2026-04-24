@@ -1,0 +1,143 @@
+<div class="smart:inline-flex smart:items-start smart:gap-3">
+  <div class="smart:flex smart:flex-col smart:items-center smart:gap-0.5">
+    <div class="smart:flex smart:items-center smart:gap-0.5">
+      <input
+        type="number"
+        min="0"
+        max="9"
+        maxlength="1"
+        [(ngModel)]="d1"
+        #d1Element
+        (click)="select(d1Element)"
+        (keyup)="moveTo($event, d2Element)"
+        class="smart:w-8 smart:h-10 smart:text-center smart:border smart:border-gray-300 smart:rounded-md smart:text-sm smart:font-medium smart:text-gray-900 focus:smart:ring-2 focus:smart:ring-indigo-500 focus:smart:border-indigo-500 smart:dark:bg-gray-800 smart:dark:border-gray-600 smart:dark:text-white"
+        [class.smart:border-red-500]="!validDate"
+        [class.smart:text-red-600]="!validDate"
+      />
+      <input
+        type="number"
+        min="0"
+        max="9"
+        maxlength="1"
+        [(ngModel)]="d2"
+        #d2Element
+        (click)="select(d2Element)"
+        (keyup)="moveTo($event, m1Element)"
+        class="smart:w-8 smart:h-10 smart:text-center smart:border smart:border-gray-300 smart:rounded-md smart:text-sm smart:font-medium smart:text-gray-900 focus:smart:ring-2 focus:smart:ring-indigo-500 focus:smart:border-indigo-500 smart:dark:bg-gray-800 smart:dark:border-gray-600 smart:dark:text-white"
+        [class.smart:border-red-500]="!validDate"
+        [class.smart:text-red-600]="!validDate"
+      />
+    </div>
+    <span
+      class="smart:text-xs smart:text-gray-400 smart:dark:text-gray-500"
+      [class.smart:text-red-500]="!validDate"
+      >DD</span
+    >
+  </div>
+
+  <span class="smart:text-gray-400 smart:mt-2.5 smart:text-sm smart:font-medium"
+    >-</span
+  >
+
+  <div class="smart:flex smart:flex-col smart:items-center smart:gap-0.5">
+    <div class="smart:flex smart:items-center smart:gap-0.5">
+      <input
+        type="number"
+        min="0"
+        max="9"
+        maxlength="1"
+        [(ngModel)]="m1"
+        #m1Element
+        (click)="select(m1Element)"
+        (keyup)="moveTo($event, m2Element)"
+        class="smart:w-8 smart:h-10 smart:text-center smart:border smart:border-gray-300 smart:rounded-md smart:text-sm smart:font-medium smart:text-gray-900 focus:smart:ring-2 focus:smart:ring-indigo-500 focus:smart:border-indigo-500 smart:dark:bg-gray-800 smart:dark:border-gray-600 smart:dark:text-white"
+        [class.smart:border-red-500]="!validDate"
+        [class.smart:text-red-600]="!validDate"
+      />
+      <input
+        type="number"
+        min="0"
+        max="9"
+        maxlength="1"
+        [(ngModel)]="m2"
+        #m2Element
+        (click)="select(m2Element)"
+        (keyup)="moveTo($event, y1Element)"
+        class="smart:w-8 smart:h-10 smart:text-center smart:border smart:border-gray-300 smart:rounded-md smart:text-sm smart:font-medium smart:text-gray-900 focus:smart:ring-2 focus:smart:ring-indigo-500 focus:smart:border-indigo-500 smart:dark:bg-gray-800 smart:dark:border-gray-600 smart:dark:text-white"
+        [class.smart:border-red-500]="!validDate"
+        [class.smart:text-red-600]="!validDate"
+      />
+    </div>
+    <span
+      class="smart:text-xs smart:text-gray-400 smart:dark:text-gray-500"
+      [class.smart:text-red-500]="!validDate"
+      >MM</span
+    >
+  </div>
+
+  <span class="smart:text-gray-400 smart:mt-2.5 smart:text-sm smart:font-medium"
+    >-</span
+  >
+
+  <div class="smart:flex smart:flex-col smart:items-center smart:gap-0.5">
+    <div class="smart:flex smart:items-center smart:gap-0.5">
+      <input
+        type="number"
+        min="0"
+        max="9"
+        maxlength="1"
+        [(ngModel)]="y1"
+        #y1Element
+        (click)="select(y1Element)"
+        (keyup)="moveTo($event, y2Element)"
+        class="smart:w-8 smart:h-10 smart:text-center smart:border smart:border-gray-300 smart:rounded-md smart:text-sm smart:font-medium smart:text-gray-900 focus:smart:ring-2 focus:smart:ring-indigo-500 focus:smart:border-indigo-500 smart:dark:bg-gray-800 smart:dark:border-gray-600 smart:dark:text-white"
+        [class.smart:border-red-500]="!validDate"
+        [class.smart:text-red-600]="!validDate"
+      />
+      <input
+        type="number"
+        min="0"
+        max="9"
+        maxlength="1"
+        [(ngModel)]="y2"
+        #y2Element
+        (click)="select(y2Element)"
+        (keyup)="moveTo($event, y3Element)"
+        class="smart:w-8 smart:h-10 smart:text-center smart:border smart:border-gray-300 smart:rounded-md smart:text-sm smart:font-medium smart:text-gray-900 focus:smart:ring-2 focus:smart:ring-indigo-500 focus:smart:border-indigo-500 smart:dark:bg-gray-800 smart:dark:border-gray-600 smart:dark:text-white"
+        [class.smart:border-red-500]="!validDate"
+        [class.smart:text-red-600]="!validDate"
+      />
+      <input
+        type="number"
+        min="0"
+        max="9"
+        maxlength="1"
+        [(ngModel)]="y3"
+        #y3Element
+        (click)="select(y3Element)"
+        (keyup)="moveTo($event, y4Element)"
+        class="smart:w-8 smart:h-10 smart:text-center smart:border smart:border-gray-300 smart:rounded-md smart:text-sm smart:font-medium smart:text-gray-900 focus:smart:ring-2 focus:smart:ring-indigo-500 focus:smart:border-indigo-500 smart:dark:bg-gray-800 smart:dark:border-gray-600 smart:dark:text-white"
+        [class.smart:border-red-500]="!validDate"
+        [class.smart:text-red-600]="!validDate"
+      />
+      <input
+        type="number"
+        min="0"
+        max="9"
+        maxlength="1"
+        [(ngModel)]="y4"
+        #y4Element
+        (click)="select(y4Element)"
+        (keyup)="select(y4Element)"
+        class="smart:w-8 smart:h-10 smart:text-center smart:border smart:border-gray-300 smart:rounded-md smart:text-sm smart:font-medium smart:text-gray-900 focus:smart:ring-2 focus:smart:ring-indigo-500 focus:smart:border-indigo-500 smart:dark:bg-gray-800 smart:dark:border-gray-600 smart:dark:text-white"
+        [class.smart:border-red-500]="!validDate"
+        [class.smart:text-red-600]="!validDate"
+      />
+    </div>
+    <span
+      class="smart:text-xs smart:text-gray-400 smart:dark:text-gray-500"
+      [class.smart:text-red-500]="!validDate"
+      >RRRR</span
+    >
+  </div>
+</div>

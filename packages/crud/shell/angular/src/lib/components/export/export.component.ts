@@ -2,7 +2,8 @@ import { Component, ElementRef, inject, OnInit } from '@angular/core';
 
 import {
   BaseComponent,
-  ButtonComponent,
+  // TODO: ButtonComponent moved to @smartsoft001-pro/angular (FRA-110)
+  // ButtonComponent,
   IButtonOptions,
   PopoverService,
   StyleService,
@@ -14,20 +15,31 @@ import { CrudFacade } from '../../+state/crud.facade';
 @Component({
   selector: 'smart-crud-export',
   template: `
+    <!-- TODO: ButtonComponent moved to @smartsoft001-pro/angular (FRA-110)
     <div class="p-5">
       <p class="my-2.5 mx-0">
-        <smart-button [options]="buttonExportCsvOptions" class="w-full block"
-          >CSV</smart-button
-        >
+        <smart-button [options]="buttonExportCsvOptions" class="w-full block">CSV</smart-button>
       </p>
       <p>
-        <smart-button [options]="buttonExportXlsxOptions" class="w-full block"
-          >XLSX</smart-button
-        >
+        <smart-button [options]="buttonExportXlsxOptions" class="w-full block">XLSX</smart-button>
+      </p>
+    </div>
+    -->
+    <div class="p-5">
+      <p class="my-2.5 mx-0">
+        <button (click)="buttonExportCsvOptions.click()" class="w-full block">
+          CSV
+        </button>
+      </p>
+      <p>
+        <button (click)="buttonExportXlsxOptions.click()" class="w-full block">
+          XLSX
+        </button>
       </p>
     </div>
   `,
-  imports: [ButtonComponent],
+  // TODO: ButtonComponent moved to @smartsoft001-pro/angular (FRA-110)
+  imports: [],
 })
 export class ExportComponent<T extends IEntity<string>>
   extends BaseComponent

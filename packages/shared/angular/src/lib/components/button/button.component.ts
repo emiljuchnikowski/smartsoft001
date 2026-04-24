@@ -1,93 +1,55 @@
-import { NgTemplateOutlet } from '@angular/common';
+import { NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  effect,
+  computed,
+  inject,
   input,
-  viewChild,
-  viewChildren,
-  ViewContainerRef,
   ViewEncapsulation,
 } from '@angular/core';
 
-import { DynamicContentDirective } from '../../directives';
 import { IButtonOptions } from '../../models';
-import { CreateDynamicComponent } from '../base';
-import { ButtonBaseComponent } from './base/base.component';
-import { ButtonCircularComponent } from './circular/circular.component';
-import { ButtonRoundedComponent } from './rounded/rounded.component';
+import { BUTTON_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { ButtonStandardComponent } from './standard/standard.component';
 
 @Component({
   selector: 'smart-button',
   template: `
-    @if (template() === 'default') {
-      @if (options().circular) {
-        <smart-button-circular
-          [options]="options()"
-          [disabled]="disabled()"
-          [cssClass]="cssClass()"
-        >
-          <ng-container [ngTemplateOutlet]="contentTpl"></ng-container>
-        </smart-button-circular>
-      } @else if (options().rounded) {
-        <smart-button-rounded
-          [options]="options()"
-          [disabled]="disabled()"
-          [cssClass]="cssClass()"
-        >
-          <ng-container [ngTemplateOutlet]="contentTpl"></ng-container>
-        </smart-button-rounded>
-      } @else {
-        <smart-button-standard
-          [options]="options()"
-          [disabled]="disabled()"
-          [cssClass]="cssClass()"
-        >
-          <ng-container [ngTemplateOutlet]="contentTpl"></ng-container>
-        </smart-button-standard>
-      }
+    @if (componentType()) {
+      <ng-container
+        *ngComponentOutlet="componentType(); inputs: componentInputs()"
+      />
+    } @else {
+      <smart-button-standard
+        [options]="options()"
+        [disabled]="disabled()"
+        [class]="cssClass()"
+      >
+        <ng-container [ngTemplateOutlet]="contentRef"></ng-container>
+      </smart-button-standard>
     }
-    <ng-template #contentTpl>
+    <ng-template #contentRef>
       <ng-content></ng-content>
     </ng-template>
-    <div class="dynamic-content"></div>
   `,
   encapsulation: ViewEncapsulation.None,
-  imports: [
-    ButtonStandardComponent,
-    ButtonRoundedComponent,
-    ButtonCircularComponent,
-    NgTemplateOutlet,
-  ],
+  imports: [ButtonStandardComponent, NgComponentOutlet, NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ButtonComponent extends CreateDynamicComponent<ButtonBaseComponent>(
-  'button',
-) {
+export class ButtonComponent {
+  private injectedComponent = inject(BUTTON_STANDARD_COMPONENT_TOKEN, {
+    optional: true,
+  });
+
   options = input.required<IButtonOptions>();
   disabled = input<boolean>(false);
   cssClass = input<string>('', { alias: 'class' });
 
-  override contentTpl = viewChild<ViewContainerRef>('contentTpl');
+  componentType = computed(() => this.injectedComponent ?? null);
 
-  override dynamicContents = viewChildren<DynamicContentDirective>(
-    DynamicContentDirective,
-  );
-
-  constructor() {
-    super();
-
-    effect(() => {
-      this.options(); //Track changes only
-      this.disabled(); //Track changes only
-      this.refreshDynamicInstance();
-    });
-  }
-
-  override refreshProperties(): void {
-    this.baseInstance.options = this.options;
-    this.baseInstance.disabled = this.disabled;
-    this.baseInstance.cssClass = this.cssClass;
-  }
+  componentInputs = computed(() => ({
+    options: this.options(),
+    disabled: this.disabled(),
+    cssClass: this.cssClass(),
+  }));
 }

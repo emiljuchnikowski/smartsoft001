@@ -9,7 +9,7 @@ import { IModelLabelProvider } from '../../providers';
 })
 export class ModelLabelPipe<T> implements PipeTransform {
   private translateService = inject(TranslateService);
-  private modelLabelProvider = inject(IModelLabelProvider);
+  private modelLabelProvider = inject(IModelLabelProvider, { optional: true });
 
   transform(instance: T, key: string, type?: Type<any> | (() => void)): string {
     if (this.modelLabelProvider) {

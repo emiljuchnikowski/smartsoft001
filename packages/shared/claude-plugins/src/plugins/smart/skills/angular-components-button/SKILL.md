@@ -1,26 +1,41 @@
 ---
 name: angular-components-button
-description: Button component API, variants, and usage patterns for @smartsoft001/angular
+description: Button component API with InjectionToken pattern for custom implementations.
 user-invocable: false
 ---
 
 # Button Component
 
-Standalone Angular button component with multiple shapes, variants, sizes, and color palette support.
+The `<smart-button>` component provides a flexible button wrapper with an InjectionToken-based extension mechanism. It renders a default `ButtonStandardComponent` which can be replaced via `BUTTON_STANDARD_COMPONENT_TOKEN`.
+
+## When to Use This Skill
+
+- Developer wants to use or customize the button component
+- Developer asks about `<smart-button>` or `ButtonComponent`
+
+## Components
+
+### ButtonComponent (`<smart-button>`)
+
+Main wrapper component. Renders `ButtonStandardComponent` by default. When `BUTTON_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`.
+
+### ButtonStandardComponent (`<smart-button-standard>`)
+
+Default concrete implementation. Simple Tailwind-styled button with size-dependent rounding and padding.
+
+### ButtonBaseComponent (abstract)
+
+Abstract base directive for extending custom button implementations.
 
 ## API
 
-### Selector
-
-`<smart-button>` (wrapper) or directly: `<smart-button-standard>`, `<smart-button-rounded>`, `<smart-button-circular>`
-
 ### Inputs
 
-| Input      | Type             | Default  | Description                                 |
-| ---------- | ---------------- | -------- | ------------------------------------------- |
-| `options`  | `IButtonOptions` | required | Button configuration                        |
-| `disabled` | `boolean`        | `false`  | Disabled state                              |
-| `class`    | `string`         | `''`     | External CSS classes (alias for `cssClass`) |
+| Input      | Type                          | Default  | Description                                 |
+| ---------- | ----------------------------- | -------- | ------------------------------------------- |
+| `options`  | `InputSignal<IButtonOptions>` | required | Button configuration                        |
+| `disabled` | `InputSignal<boolean>`        | `false`  | Disabled state                              |
+| `class`    | `InputSignal<string>`         | `''`     | External CSS classes (alias for `cssClass`) |
 
 ### IButtonOptions
 
@@ -33,57 +48,68 @@ interface IButtonOptions {
   variant?: SmartVariant; // 'primary' | 'secondary' | 'soft'
   size?: SmartSize; // 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   color?: SmartColor; // 22 Tailwind colors, default 'indigo'
-  rounded?: boolean; // Use rounded shape
-  circular?: boolean; // Use circular (icon-only) shape
+  rounded?: boolean;
+  circular?: boolean;
+  iconPosition?: 'leading' | 'trailing';
 }
 ```
 
-## Shapes
+### BUTTON_STANDARD_COMPONENT_TOKEN
 
-### Standard (`<smart-button-standard>`)
+```typescript
+import { BUTTON_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+```
 
-- Border radius based on size: `smart:rounded-sm` (xs/sm), `smart:rounded-md` (md/lg/xl)
-- Supports confirm mode (cancel/confirm buttons)
+InjectionToken that allows replacing the default `ButtonStandardComponent` with a custom implementation. Provide a `Type<ButtonBaseComponent>` to override.
 
-### Rounded (`<smart-button-rounded>`)
+```typescript
+// In your app module or component providers:
+providers: [
+  {
+    provide: BUTTON_STANDARD_COMPONENT_TOKEN,
+    useValue: MyCustomButtonComponent,
+  },
+];
+```
 
-- Always `smart:rounded-full`
-- Supports confirm mode
+## Extending the Base Class
 
-### Circular (`<smart-button-circular>`)
+```typescript
+import { Component, computed, ViewEncapsulation } from '@angular/core';
+import { ButtonBaseComponent } from '@smartsoft001/angular';
 
-- Always `smart:rounded-full`, padding only (no px/py)
-- Icon-only — pass SVG as `<ng-content>`
-- No confirm mode
-
-## Variants (via `variant` option)
-
-- **primary** — colored background (`smart:bg-{color}-600`), white text
-- **secondary** — white background, gray border (`smart:inset-ring`), gray text
-- **soft** — light colored background (`smart:bg-{color}-50`), colored text
-
-## Color Palette
-
-Uses `COMPONENT_COLORS` from `models/colors.ts`. All 22 Tailwind colors supported. Default: `indigo`.
+@Component({
+  selector: 'my-custom-button',
+  template: `
+    <button
+      [class]="buttonClasses()"
+      [disabled]="disabled()"
+      (click)="invoke()"
+    >
+      <ng-content />
+    </button>
+  `,
+  encapsulation: ViewEncapsulation.None,
+})
+export class MyCustomButtonComponent extends ButtonBaseComponent {
+  buttonClasses = computed(() => {
+    const classes = [...this.variantClasses(), 'my-custom-class'];
+    const extra = this.cssClass();
+    if (extra) classes.push(extra);
+    return classes.join(' ');
+  });
+}
+```
 
 ## Usage Examples
 
 ```html
-<!-- Standard primary -->
-<smart-button [options]="{ click: onClick, variant: 'primary', size: 'md' }">
-  Click me
-</smart-button>
+<!-- Default button -->
+<smart-button [options]="{ click: onClick }">Save</smart-button>
 
-<!-- Rounded secondary with color -->
-<smart-button
-  [options]="{ click: onClick, variant: 'secondary', size: 'lg', rounded: true, color: 'red' }"
->
-  Delete
-</smart-button>
-
-<!-- Circular with icon -->
-<smart-button [options]="{ click: onClick, circular: true }">
-  <svg>...</svg>
+<!-- With variant and size -->
+<smart-button [options]="{ click: onClick, variant: 'primary', size: 'lg' }">
+  Submit
 </smart-button>
 
 <!-- With loading -->
@@ -92,9 +118,7 @@ Uses `COMPONENT_COLORS` from `models/colors.ts`. All 22 Tailwind colors supporte
 </smart-button>
 
 <!-- With confirm -->
-<smart-button
-  [options]="{ click: onDelete, confirm: true, variant: 'primary', color: 'red' }"
->
+<smart-button [options]="{ click: onDelete, confirm: true, color: 'red' }">
   Delete
 </smart-button>
 
@@ -102,8 +126,11 @@ Uses `COMPONENT_COLORS` from `models/colors.ts`. All 22 Tailwind colors supporte
 <smart-button class="smart:mt-4" [options]="opts">Submit</smart-button>
 ```
 
-## Related
+## File Locations
 
-- Icon component: `packages/shared/angular/src/lib/components/icon/` (spinner SVG)
+- Wrapper: `packages/shared/angular/src/lib/components/button/button.component.ts`
+- Standard: `packages/shared/angular/src/lib/components/button/standard/standard.component.ts`
+- Base class: `packages/shared/angular/src/lib/components/button/base/base.component.ts`
+- Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`BUTTON_STANDARD_COMPONENT_TOKEN`)
+- Interface: `packages/shared/angular/src/lib/models/interfaces.ts` (`IButtonOptions`)
 - Color map: `packages/shared/angular/src/lib/models/colors.ts` (`COMPONENT_COLORS`)
-- Shared types: `SmartVariant`, `SmartSize`, `SmartColor` in `models/interfaces.ts`

@@ -1,6 +1,11 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { AsyncPipe, NgComponentOutlet } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { NgComponentOutlet } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+} from '@angular/core';
 import { UntypedFormArray } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DynamicIoDirective } from 'ng-dynamic-component';
@@ -18,28 +23,51 @@ import { FormFactory } from '../../../factories';
 import { IButtonOptions, IFormOptions } from '../../../models';
 import { ModelLabelPipe } from '../../../pipes';
 import { FORM_COMPONENT_TOKEN } from '../../../shared.inectors';
-import {
-  AccordionBodyComponent,
-  AccordionComponent,
-  AccordionHeaderComponent,
-} from '../../accordion';
 import { ButtonComponent } from '../../button';
 import { InputBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-input-array',
-  templateUrl: './array.component.html',
+  template: `
+    @if (control) {
+      <label [class]="labelClasses()">
+        {{
+          control?.parent?.value
+            | smartModelLabel
+              : internalOptions.fieldKey
+              : internalOptions?.model?.constructor
+        }}
+        @if (required) {
+          <span class="smart:text-red-500 smart:ml-0.5">*</span>
+        }
+      </label>
+      <div [class]="groupClasses()">
+        @for (option of childOptions; track option) {
+          <div
+            class="smart:rounded smart:border smart:border-gray-200 smart:p-2 smart:dark:border-gray-700"
+          >
+            <ng-template
+              [ngComponentOutlet]="formComponent"
+              [ndcDynamicInputs]="{ options: option }"
+            ></ng-template>
+          </div>
+        }
+        @if (!fieldOptions()?.possibilities?.static) {
+          <smart-button [options]="addButtonOptions">
+            {{ 'add' | translate }}
+          </smart-button>
+        }
+      </div>
+    }
+  `,
   imports: [
     ModelLabelPipe,
-    AsyncPipe,
-    ButtonComponent,
     TranslatePipe,
     NgComponentOutlet,
     DynamicIoDirective,
-    AccordionComponent,
-    AccordionHeaderComponent,
-    AccordionBodyComponent,
+    ButtonComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputArrayComponent<T, TChild> extends InputBaseComponent<T> {
   childOptions!: Array<IFormOptions<TChild>>;
@@ -47,6 +75,7 @@ export class InputArrayComponent<T, TChild> extends InputBaseComponent<T> {
   private factory = inject(FormFactory);
 
   addButtonOptions: IButtonOptions = {
+    variant: 'primary',
     click: async () => {
       const options = this.getOptions();
       const modelOptions = getModelOptions(options.classType);
@@ -76,6 +105,23 @@ export class InputArrayComponent<T, TChild> extends InputBaseComponent<T> {
   };
 
   FieldType = FieldType;
+
+  labelClasses = computed(() =>
+    [
+      'smart:block',
+      'smart:text-sm/6',
+      'smart:font-medium',
+      'smart:text-gray-900',
+      'smart:dark:text-white',
+    ].join(' '),
+  );
+
+  groupClasses = computed(() => {
+    const classes = ['smart:mt-2', 'smart:space-y-2'];
+    const extra = this.cssClass();
+    if (extra) classes.push(extra);
+    return classes.join(' ');
+  });
 
   protected override afterSetOptionsHandler() {
     this.initData();

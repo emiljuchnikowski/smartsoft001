@@ -5,7 +5,8 @@ import * as _ from 'lodash';
 import { DynamicIoDirective } from 'ng-dynamic-component';
 
 import {
-  ButtonComponent,
+  // TODO: ButtonComponent moved to @smartsoft001-pro/angular (FRA-110)
+  // ButtonComponent,
   FormComponent,
   IButtonOptions,
   MenuService,
@@ -29,7 +30,8 @@ import { FormOptionsPipe } from '../../pipes';
     DynamicIoDirective,
     FormOptionsPipe,
     FormComponent,
-    ButtonComponent,
+    // TODO: ButtonComponent moved to @smartsoft001-pro/angular (FRA-110)
+    // ButtonComponent,
   ],
 })
 export class MultiselectComponent<T extends IEntity<string>> {

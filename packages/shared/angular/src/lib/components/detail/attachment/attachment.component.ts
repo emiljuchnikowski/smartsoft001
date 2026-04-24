@@ -1,38 +1,55 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { IEntity } from '@smartsoft001/domain-core';
 
-import { IButtonOptions } from '../../../models';
 import { FileService } from '../../../services';
-import { ButtonComponent } from '../../button';
 import { DetailBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-detail-attachment',
   template: `
     @let item = options()?.item?.();
-    @if (item && options()?.key) {
-      <smart-button [options]="getButtonOptions(item)">
+    @let key = options()?.key;
+    @if (item && key) {
+      <button
+        type="button"
+        [class]="buttonClasses()"
+        (click)="download(item, key)"
+      >
         {{ 'download' | translate }}
-      </smart-button>
+      </button>
     }
   `,
-  imports: [ButtonComponent, TranslatePipe],
+  imports: [TranslatePipe],
 })
 export class DetailAttachmentComponent<
   T extends IEntity<string> | undefined,
 > extends DetailBaseComponent<T> {
   private fileService = inject(FileService);
 
-  getButtonOptions(item: T): IButtonOptions {
-    return {
-      click: () => {
-        const key = this.options()?.key;
-        if (key) {
-          this.fileService.download((item as any)[key].id);
-        }
-      },
-    };
+  buttonClasses = computed(() => {
+    const classes = [
+      'smart:inline-flex',
+      'smart:items-center',
+      'smart:rounded-md',
+      'smart:bg-indigo-600',
+      'smart:px-3',
+      'smart:py-2',
+      'smart:text-sm',
+      'smart:font-semibold',
+      'smart:text-white',
+      'smart:shadow-sm',
+      'hover:smart:bg-indigo-500',
+      'smart:dark:bg-indigo-500',
+      'dark:hover:smart:bg-indigo-400',
+    ];
+    const extra = this.cssClass();
+    if (extra) classes.push(extra);
+    return classes.join(' ');
+  });
+
+  download(item: T, key: string): void {
+    this.fileService.download((item as any)[key].id);
   }
 }

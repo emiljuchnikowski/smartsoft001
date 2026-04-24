@@ -1,66 +1,52 @@
 <div #topTpl></div>
 
-@let list = listMobile();
-@if (list) {
-  <!--  <ion-list>-->
-  @for (item of list; track item.id) {
-    <!--      <ion-item-sliding>-->
-    @if (removeHandler && (!checkRemoveHandler || checkRemoveHandler(item))) {
-      <!--          <ion-item-options side="start" (ionSwipe)="removeHandler?.(item)">-->
-      <!--            <ion-item-option-->
-      <!--              color="danger"-->
-      <!--              expandable-->
-      <!--              (click)="removeHandler?.(item)"-->
-      <!--            >-->
-      {{ 'delete' | translate }}
-      <!--            </ion-item-option>-->
-      <!--          </ion-item-options>-->
-    }
-
-    <!--        <ion-item class="pl-5" (click)="itemHandler ? itemHandler(item.id) : unselect()">-->
-    <!--          <ion-label>-->
-    @for (key of keys; track key) {
-      @let cell = item | smartListCell: key : cellPipe : type;
-      @if (cell) {
-        @if (cell.type === FieldType.image) {
-          <img
-            [attr.smart-item-key]="key"
-            height="100"
-            [lazyLoad]="cell.value | smartFileUrl"
-            alt=""
-            src=""
-          />
-        } @else if ($first) {
-          <h2 [attr.smart-item-key]="key" [innerHTML]="cell.value"></h2>
-        } @else {
-          <p [attr.smart-item-key]="key" [innerHTML]="cell.value"></p>
+<ul role="list" [class]="containerClasses()">
+  @let mobileItems = mobileList() ?? [];
+  @for (item of mobileItems; track item.id) {
+    <li class="smart:flex smart:justify-between smart:gap-x-6 smart:py-5">
+      <div class="smart:flex smart:min-w-0 smart:gap-x-4">
+        <div class="smart:min-w-0 smart:flex-auto">
+          @for (key of keys; track key) {
+            @let cell = item | smartListCell: key : cellPipe : type;
+            @if (cell) {
+              <p
+                class="smart:text-sm smart:text-gray-900 smart:dark:text-white"
+                [innerHTML]="cell.value"
+              ></p>
+            }
+          }
+        </div>
+      </div>
+      <div class="smart:flex smart:shrink-0 smart:items-center smart:gap-x-4">
+        @if (
+          removeHandler && (!checkRemoveHandler || checkRemoveHandler(item))
+        ) {
+          <button
+            type="button"
+            class="smart:text-red-600 hover:smart:text-red-900 smart:dark:text-red-400 dark:hover:smart:text-red-300 smart:text-sm"
+            (click)="removeHandler?.(item)"
+          >
+            {{ 'remove' | translate }}
+          </button>
         }
-      }
-    }
-    <!--          </ion-label>-->
-    <!--        </ion-item>-->
-    <!--      </ion-item-sliding>-->
+        @if (itemHandler) {
+          <button
+            type="button"
+            class="smart:text-indigo-600 hover:smart:text-indigo-900 smart:dark:text-indigo-400 dark:hover:smart:text-indigo-300 smart:text-sm"
+            (click)="itemHandler?.(item.id)"
+          >
+            →
+          </button>
+        }
+      </div>
+    </li>
   }
-  <!--  </ion-list>-->
-}
-
-@if (
-  loadNextPage &&
-  list?.length &&
-  options().pagination?.mode !== PaginationMode.singlePage
-) {
-  <!--  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadNextPage?.($event)">-->
-  <!--    <ion-infinite-scroll-content-->
-  <!--      loadingSpinner="circles"-->
-  <!--    ></ion-infinite-scroll-content>-->
-  <!--  </ion-infinite-scroll>-->
-}
+</ul>
 
 @if (options()?.pagination?.mode === PaginationMode.singlePage) {
   <smart-paging
-    [page]="page()"
-    [totalPages]="totalPages()"
-    (prevPage)="loadPrevPage?.()"
-    (nextPage)="loadNextPage?.()"
+    [currentPage]="page() ?? 1"
+    [totalPages]="totalPages() ?? 1"
+    (pageChange)="handlePageChange($event)"
   ></smart-paging>
 }

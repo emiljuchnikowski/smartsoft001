@@ -1,25 +1,31 @@
-import { Component } from '@angular/core';
+import { Component, computed } from '@angular/core';
 
 import { DetailBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-detail-color',
   template: `
-    @let item = options()?.item();
+    @let item = options()?.item?.();
     @let key = options()?.key;
     @if (item && key) {
-      <!--      <ion-row>-->
-      <!--        <ion-col>-->
-      <!--          <ion-card class="mt-1 mb-1 mx-0" [style.background]="item[options().key!]">-->
-      <!--            <ion-card-header class="m-0"> </ion-card-header>-->
-      <!--          </ion-card>-->
-      <!--        </ion-col>-->
-      <!--      </ion-row>-->
+      <div [class]="colorClasses()" [style.background-color]="item[key]"></div>
     }
   `,
-  // TODO: rework styles with tailwind
-  styles: [ ],
 })
 export class DetailColorComponent<
   T extends { [key: string]: any } | undefined,
-> extends DetailBaseComponent<T> {}
+> extends DetailBaseComponent<T> {
+  colorClasses = computed(() => {
+    const classes = [
+      'smart:h-8',
+      'smart:w-full',
+      'smart:rounded',
+      'smart:border',
+      'smart:border-gray-200',
+      'smart:dark:border-white/10',
+    ];
+    const extra = this.cssClass();
+    if (extra) classes.push(extra);
+    return classes.join(' ');
+  });
+}

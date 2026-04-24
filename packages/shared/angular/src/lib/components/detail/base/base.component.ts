@@ -3,6 +3,7 @@ import {
   ChangeDetectorRef,
   inject,
   input,
+  InputSignal,
   effect,
 } from '@angular/core';
 
@@ -13,6 +14,7 @@ export abstract class DetailBaseComponent<T> {
   protected cd = inject(ChangeDetectorRef);
 
   options = input<IDetailOptions<T>>();
+  cssClass: InputSignal<string> = input<string>('', { alias: 'class' });
 
   constructor() {
     effect(() => {

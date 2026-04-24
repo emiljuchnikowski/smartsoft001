@@ -2,6 +2,7 @@ import {
   ComponentFactory,
   PipeTransform,
   Signal,
+  TemplateRef,
   Type,
   WritableSignal,
 } from '@angular/core';
@@ -32,6 +33,8 @@ export interface IAppOptions {
 export interface ICardOptions {
   title?: string;
   buttons?: Array<IIconButtonOptions>;
+  grayFooter?: boolean;
+  grayBody?: boolean;
 }
 
 export interface IIconButtonOptions {
@@ -49,7 +52,11 @@ export type DynamicComponentType =
   | 'page'
   | 'button'
   | 'details'
+  | 'info'
   | 'list'
+  | 'loader'
+  | 'password-strength'
+  | 'searchbar'
   | 'crud-list-page'
   | 'crud-item-page';
 export interface IDynamicComponentData {
@@ -146,6 +153,12 @@ export type SmartColor =
   | 'pink'
   | 'rose';
 
+export interface IAccordionOptions {
+  open?: boolean;
+  disabled?: boolean;
+  animated?: boolean;
+}
+
 export interface IButtonOptions {
   type?: 'submit' | 'button';
   confirm?: boolean;
@@ -156,6 +169,20 @@ export interface IButtonOptions {
   color?: SmartColor;
   rounded?: boolean;
   circular?: boolean;
+  iconPosition?: 'leading' | 'trailing';
+}
+
+export interface IInfoOptions {
+  text: string;
+}
+
+export interface ISearchbarOptions {
+  placeholder?: string;
+  label?: string;
+  debounceTime?: number;
+  showToggleButton?: boolean;
+  size?: SmartSize;
+  color?: SmartColor;
 }
 
 export interface IDetailOptions<T> {
@@ -174,6 +201,8 @@ export interface ICellPipe<T> extends PipeTransform {
   ): string;
 }
 
+export type SmartPageVariant = 'standard' | (string & {});
+
 export interface IPageOptions {
   title: string;
   hideHeader?: boolean;
@@ -181,6 +210,18 @@ export interface IPageOptions {
   showBackButton?: boolean;
   endButtons?: Array<IIconButtonOptions>;
   search?: { text: Signal<string>; set: (txt: string) => void };
+  variant?: SmartPageVariant;
+  bodyTpl?: TemplateRef<unknown>;
+  breadcrumbsTpl?: TemplateRef<unknown>;
+  metaTpl?: TemplateRef<unknown>;
+  avatarTpl?: TemplateRef<unknown>;
+  bannerTpl?: TemplateRef<unknown>;
+  filtersTpl?: TemplateRef<unknown>;
+  logoTpl?: TemplateRef<unknown>;
+  statsTpl?: TemplateRef<unknown>;
+  subtitleTpl?: TemplateRef<unknown>;
+  navTpl?: TemplateRef<unknown>;
+  sidebarTpl?: TemplateRef<unknown>;
 }
 
 export interface IListProvider<T> {

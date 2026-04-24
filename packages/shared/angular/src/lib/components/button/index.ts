@@ -1,5 +1,3 @@
-export * from './button.component';
 export * from './base/base.component';
 export * from './standard/standard.component';
-export * from './rounded/rounded.component';
-export * from './circular/circular.component';
+export * from './button.component';

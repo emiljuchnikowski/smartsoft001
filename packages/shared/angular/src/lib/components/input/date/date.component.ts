@@ -1,36 +1,92 @@
-import { AsyncPipe } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  computed,
+} from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { ModelLabelPipe } from '../../../pipes';
-import { HardwareService } from '../../../services';
 import { InputBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-input-date',
-  templateUrl: './date.component.html',
-  imports: [
-    ModelLabelPipe,
-    ReactiveFormsModule,
-    AsyncPipe,
-  ],
+  template: `
+    @if (control) {
+      <label [class]="labelClasses()">
+        {{
+          control?.parent?.value
+            | smartModelLabel
+              : internalOptions.fieldKey
+              : internalOptions?.model?.constructor
+        }}
+        @if (required) {
+          <span class="smart:text-red-500 smart:ml-0.5">*</span>
+        }
+      </label>
+      <input
+        type="date"
+        [formControl]="formControl"
+        [class]="inputClasses()"
+        [attr.autofocus]="fieldOptions()?.focused ? true : null"
+      />
+    }
+  `,
+  imports: [ModelLabelPipe, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputDateComponent<T>
   extends InputBaseComponent<T>
   implements OnInit
 {
-  private hardwareService = inject(HardwareService);
+  labelClasses = computed(() =>
+    [
+      'smart:block',
+      'smart:text-sm/6',
+      'smart:font-medium',
+      'smart:text-gray-900',
+      'smart:dark:text-white',
+    ].join(' '),
+  );
 
-  get isMobile(): boolean {
-    return this.hardwareService.isMobile || this.hardwareService.isMobileWeb;
-  }
+  inputClasses = computed(() => {
+    const classes = [
+      'smart:mt-2',
+      'smart:block',
+      'smart:w-full',
+      'smart:rounded-md',
+      'smart:bg-white',
+      'smart:px-3',
+      'smart:py-1.5',
+      'smart:text-base',
+      'smart:text-gray-900',
+      'smart:outline-1',
+      '-outline-offset-1',
+      'smart:outline-gray-300',
+      'placeholder:smart:text-gray-400',
+      'focus:smart:outline-2',
+      'focus:smart:outline-offset-2',
+      'focus:smart:outline-indigo-600',
+      'sm:smart:text-sm/6',
+      'smart:dark:bg-white/5',
+      'smart:dark:text-white',
+      'smart:dark:outline-white/10',
+      'dark:placeholder:smart:text-gray-500',
+      'dark:focus:smart:outline-indigo-500',
+    ];
+    const extra = this.cssClass();
+    if (extra) classes.push(extra);
+    return classes.join(' ');
+  });
 
   ngOnInit() {
-    this.control.valueChanges.pipe(this.takeUntilDestroy).subscribe((value) => {
-      if (value && value.length !== 10) {
+    this.control?.valueChanges
+      .pipe(this.takeUntilDestroy)
+      .subscribe((value) => {
+        if (value && value.length !== 10) {
           // TODO: re-enable moment
-       // this.control.setValue(moment(value).format('YYYY-MM-DD'));
-      }
-    });
+          // this.control.setValue(moment(value).format('YYYY-MM-DD'));
+        }
+      });
   }
 }
