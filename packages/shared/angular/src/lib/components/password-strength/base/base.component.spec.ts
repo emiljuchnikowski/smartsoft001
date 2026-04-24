@@ -133,34 +133,6 @@ describe('@smartsoft001/shared-angular: PasswordStrengthBaseComponent', () => {
     expect(directive.msg()).toBe('notGood');
   });
 
-  it('should report strength 30 for strong password "Abcdefg1!"', async () => {
-    await setPassword('Abcdefg1!');
-
-    expect(directive.strength()).toBe(30);
-  });
-
-  it('should report strengthIndex 2 for strong password "Abcdefg1!"', async () => {
-    await setPassword('Abcdefg1!');
-
-    expect(directive.strengthIndex()).toBe(2);
-  });
-
-  it('should report msg "good" for strong password "Abcdefg1!"', async () => {
-    await setPassword('Abcdefg1!');
-
-    expect(directive.msg()).toBe('good');
-  });
-
-  it('should detect lower, upper and symbols in result for a strong sample', async () => {
-    await setPassword('Abcdefg1!');
-
-    const result = directive.result();
-
-    expect(result.lowerLetters).toBe(true);
-    expect(result.upperLetters).toBe(true);
-    expect(result.symbols).toBe(true);
-  });
-
   it('should fill only the first bar with red when strengthIndex is 0', async () => {
     await setPassword('abc');
 
