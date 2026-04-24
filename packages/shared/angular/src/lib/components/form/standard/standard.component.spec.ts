@@ -75,7 +75,7 @@ describe('@smartsoft001/shared-angular: FormStandardComponent', () => {
     const classes = standard.containerClasses();
 
     expect(classes).toContain('smart:divide-y');
-    expect(classes).toContain('dark:smart:divide-white/10');
+    expect(classes).toContain('smart:dark:divide-white/10');
   });
 
   it('should append cssClass input to containerClasses()', async () => {

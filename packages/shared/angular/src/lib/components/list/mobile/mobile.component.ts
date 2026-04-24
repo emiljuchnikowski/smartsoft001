@@ -40,7 +40,7 @@ export class ListMobileComponent<T extends IEntity<string>>
     const classes: string[] = [
       'smart:divide-y',
       'smart:divide-gray-100',
-      'dark:smart:divide-white/10',
+      'smart:dark:divide-white/10',
     ];
     const extra = this.cssClass();
     if (extra) classes.push(extra);

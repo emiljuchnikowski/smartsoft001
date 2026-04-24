@@ -24,7 +24,7 @@ export class AccordionBodyComponent {
       'smart:px-4',
       'smart:py-3',
       'smart:text-gray-600',
-      'dark:smart:text-gray-300',
+      'smart:dark:text-gray-300',
     ];
 
     const extra = this.cssClass();

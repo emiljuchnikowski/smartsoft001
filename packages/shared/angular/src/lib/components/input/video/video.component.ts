@@ -38,7 +38,7 @@ import { InputFileBaseComponent } from '../base/file.component';
           <button
             type="button"
             (click)="playButtonOptions.click()"
-            class="smart:rounded-md smart:bg-gray-200 smart:px-3 smart:py-1.5 smart:text-sm smart:font-semibold smart:text-gray-900 hover:smart:bg-gray-300 dark:smart:bg-white/10 dark:smart:text-white"
+            class="smart:rounded-md smart:bg-gray-200 smart:px-3 smart:py-1.5 smart:text-sm smart:font-semibold smart:text-gray-900 hover:smart:bg-gray-300 smart:dark:bg-white/10 smart:dark:text-white"
           >
             {{ 'play' | translate }}
           </button>
@@ -54,7 +54,7 @@ import { InputFileBaseComponent } from '../base/file.component';
         }
         @if (loading()) {
           <div
-            class="smart:h-1 smart:w-24 smart:overflow-hidden smart:rounded smart:bg-gray-200 dark:smart:bg-gray-700"
+            class="smart:h-1 smart:w-24 smart:overflow-hidden smart:rounded smart:bg-gray-200 smart:dark:bg-gray-700"
           >
             <div
               class="smart:h-full smart:bg-indigo-600"
@@ -93,7 +93,7 @@ export class InputVideoComponent<T>
       'smart:text-sm/6',
       'smart:font-medium',
       'smart:text-gray-900',
-      'dark:smart:text-white',
+      'smart:dark:text-white',
     ].join(' '),
   );
 

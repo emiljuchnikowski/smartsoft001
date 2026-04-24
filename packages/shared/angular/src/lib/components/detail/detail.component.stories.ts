@@ -699,7 +699,7 @@ export const WithCssClass: Story = {
 @Component({
   selector: 'custom-detail-text',
   template: `<p
-    class="smart:rounded smart:bg-indigo-100 smart:px-2 smart:py-1 dark:smart:bg-indigo-900"
+    class="smart:rounded smart:bg-indigo-100 smart:px-2 smart:py-1 smart:dark:bg-indigo-900"
   >
     CUSTOM: {{ options()?.item?.()?.['label'] }}
   </p>`,

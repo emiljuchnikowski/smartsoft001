@@ -25,7 +25,7 @@ Default concrete implementation. Renders:
 
 - a small SVG info icon (button),
 - a popover shown while `isOpen()` is `true`,
-- Tailwind-styled container with `dark:smart:*` dark-mode classes,
+- Tailwind-styled container with `smart:dark:*` dark-mode classes,
 - a `document:click` listener that closes the popover on outside click.
 
 ### InfoBaseComponent (abstract)

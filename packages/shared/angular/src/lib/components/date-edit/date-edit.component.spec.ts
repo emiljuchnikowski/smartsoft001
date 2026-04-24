@@ -47,8 +47,8 @@ describe('DateEditStandardComponent', () => {
 
   it('should have dark mode classes on inputs', () => {
     const input = fixture.nativeElement.querySelector('input');
-    expect(input.classList.contains('dark:smart:bg-gray-800')).toBe(true);
-    expect(input.classList.contains('dark:smart:text-white')).toBe(true);
+    expect(input.classList.contains('smart:dark:bg-gray-800')).toBe(true);
+    expect(input.classList.contains('smart:dark:text-white')).toBe(true);
   });
 
   it('should apply invalid classes when date is invalid', () => {

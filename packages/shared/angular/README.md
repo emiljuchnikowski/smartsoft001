@@ -723,7 +723,7 @@ providers: [
 - Per-field substitution through `DETAIL_FIELD_COMPONENTS_TOKEN`
 - Skeleton placeholder while `item()` resolves
 - Label via `ModelLabelPipe`
-- `smart:` Tailwind prefix, dark mode via `dark:smart:`
+- `smart:` Tailwind prefix, dark mode via `smart:dark:`
 
 ### Input Component
 
@@ -830,7 +830,7 @@ providers: [
 - Inline error rendering via `<smart-input-error>` (when `touched && errors`)
 - Label via `ModelLabelPipe`
 - Resolves `@Field()` metadata from the model decorator (with `create`/`update` mode merge)
-- `smart:` Tailwind prefix, dark mode via `dark:smart:`
+- `smart:` Tailwind prefix, dark mode via `smart:dark:`
 
 ### Date Range Component
 

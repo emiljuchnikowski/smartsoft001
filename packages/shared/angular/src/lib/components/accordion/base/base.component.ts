@@ -27,8 +27,8 @@ export abstract class AccordionBaseComponent {
       'smart:rounded-lg',
       'smart:border',
       'smart:border-gray-200',
-      'dark:smart:divide-white/10',
-      'dark:smart:border-white/10',
+      'smart:dark:divide-white/10',
+      'smart:dark:border-white/10',
     ];
   });
 

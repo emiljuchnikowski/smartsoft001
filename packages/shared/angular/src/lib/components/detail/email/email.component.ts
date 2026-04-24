@@ -22,7 +22,7 @@ export class DetailEmailComponent<
       'smart:text-sm',
       'smart:text-indigo-600',
       'smart:underline',
-      'dark:smart:text-indigo-400',
+      'smart:dark:text-indigo-400',
     ];
     const extra = this.cssClass();
     if (extra) classes.push(extra);

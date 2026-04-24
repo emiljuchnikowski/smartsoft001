@@ -39,7 +39,7 @@ export class InputFlagComponent<T> extends InputBaseComponent<T> {
       'smart:text-sm/6',
       'smart:font-medium',
       'smart:text-gray-900',
-      'dark:smart:text-white',
+      'smart:dark:text-white',
     ].join(' '),
   );
 
@@ -51,8 +51,8 @@ export class InputFlagComponent<T> extends InputBaseComponent<T> {
       'smart:border-gray-300',
       'smart:text-indigo-600',
       'focus:smart:ring-indigo-500',
-      'dark:smart:border-gray-600',
-      'dark:smart:bg-white/5',
+      'smart:dark:border-gray-600',
+      'smart:dark:bg-white/5',
     ];
     const extra = this.cssClass();
     if (extra) classes.push(extra);

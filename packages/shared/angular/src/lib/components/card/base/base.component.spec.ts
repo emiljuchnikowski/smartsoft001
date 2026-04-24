@@ -71,7 +71,7 @@ describe('CardBaseComponent', () => {
     const classes = card.sharedContainerClasses();
     expect(classes).toContain('smart:divide-y');
     expect(classes).toContain('smart:divide-gray-200');
-    expect(classes).toContain('dark:smart:divide-white/10');
+    expect(classes).toContain('smart:dark:divide-white/10');
   });
 
   it('should not include divider classes when grayFooter is set', async () => {

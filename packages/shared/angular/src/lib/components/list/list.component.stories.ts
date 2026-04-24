@@ -169,7 +169,7 @@ export const WithCssClass: Story = {
     },
     template: `
       <smart-list
-        class="smart:rounded-lg smart:bg-yellow-50 smart:p-4 dark:smart:bg-yellow-900/30"
+        class="smart:rounded-lg smart:bg-yellow-50 smart:p-4 smart:dark:bg-yellow-900/30"
         [options]="storyOptions"
       ></smart-list>
     `,
@@ -184,15 +184,15 @@ export const WithCssClass: Story = {
   imports: [],
   template: `
     <div
-      class="smart:rounded-md smart:border smart:border-indigo-300 smart:bg-indigo-50 smart:p-4 dark:smart:border-indigo-700 dark:smart:bg-indigo-900/40"
+      class="smart:rounded-md smart:border smart:border-indigo-300 smart:bg-indigo-50 smart:p-4 smart:dark:border-indigo-700 smart:dark:bg-indigo-900/40"
     >
       <p
-        class="smart:font-semibold smart:text-indigo-900 dark:smart:text-indigo-100"
+        class="smart:font-semibold smart:text-indigo-900 smart:dark:text-indigo-100"
       >
         Custom list implementation injected via LIST_MODE_COMPONENTS_TOKEN
       </p>
       <p
-        class="smart:mt-2 smart:text-sm smart:text-indigo-700 dark:smart:text-indigo-300"
+        class="smart:mt-2 smart:text-sm smart:text-indigo-700 smart:dark:text-indigo-300"
       >
         This custom variant is active and rendered in place of the default
         desktop component.

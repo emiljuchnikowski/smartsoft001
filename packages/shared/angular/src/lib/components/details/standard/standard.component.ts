@@ -24,7 +24,7 @@ export class DetailsStandardComponent<
     const classes: string[] = [
       'smart:border-t',
       'smart:border-gray-100',
-      'dark:smart:border-white/10',
+      'smart:dark:border-white/10',
     ];
     const extra = this.cssClass();
     if (extra) classes.push(extra);

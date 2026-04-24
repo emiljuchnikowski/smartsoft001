@@ -12,17 +12,17 @@ import {
 import { DynamicComponentType } from '../../../models';
 
 const BAR_FILLED_CLASSES: readonly string[] = [
-  'smart:bg-red-600 dark:smart:bg-red-500',
-  'smart:bg-orange-500 dark:smart:bg-orange-400',
-  'smart:bg-yellow-500 dark:smart:bg-yellow-400',
+  'smart:bg-red-600 smart:dark:bg-red-500',
+  'smart:bg-orange-500 smart:dark:bg-orange-400',
+  'smart:bg-yellow-500 smart:dark:bg-yellow-400',
 ];
 
-const BAR_EMPTY_CLASS = 'smart:bg-gray-300 dark:smart:bg-gray-600';
+const BAR_EMPTY_CLASS = 'smart:bg-gray-300 smart:dark:bg-gray-600';
 
 const MSG_COLOR_CLASSES: readonly string[] = [
-  'smart:text-red-600 dark:smart:text-red-400',
-  'smart:text-orange-500 dark:smart:text-orange-400',
-  'smart:text-yellow-600 dark:smart:text-yellow-500',
+  'smart:text-red-600 smart:dark:text-red-400',
+  'smart:text-orange-500 smart:dark:text-orange-400',
+  'smart:text-yellow-600 smart:dark:text-yellow-500',
 ];
 
 const CONTAINER_BASE = 'smart:w-1/3 max-sm:smart:w-full';

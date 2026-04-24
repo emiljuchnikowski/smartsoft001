@@ -47,7 +47,7 @@ export class InputDateWithEditComponent<T>
       'smart:text-sm/6',
       'smart:font-medium',
       'smart:text-gray-900',
-      'dark:smart:text-white',
+      'smart:dark:text-white',
     ].join(' '),
   );
 

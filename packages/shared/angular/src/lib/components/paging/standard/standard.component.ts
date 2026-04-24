@@ -16,7 +16,7 @@ import { PagingBaseComponent } from '../base/base.component';
         type="button"
         [disabled]="!canGoBack()"
         (click)="previousPage()"
-        class="smart:inline-flex smart:items-center smart:rounded-md smart:border smart:border-gray-300 smart:bg-white smart:px-3 smart:py-1.5 smart:text-sm smart:font-medium smart:text-gray-700 hover:smart:bg-gray-50 disabled:smart:opacity-50 disabled:smart:cursor-not-allowed dark:smart:border-white/10 dark:smart:bg-white/5 dark:smart:text-gray-200 dark:hover:smart:bg-white/10"
+        class="smart:inline-flex smart:items-center smart:rounded-md smart:border smart:border-gray-300 smart:bg-white smart:px-3 smart:py-1.5 smart:text-sm smart:font-medium smart:text-gray-700 hover:smart:bg-gray-50 disabled:smart:opacity-50 disabled:smart:cursor-not-allowed smart:dark:border-white/10 smart:dark:bg-white/5 smart:dark:text-gray-200 dark:hover:smart:bg-white/10"
       >
         {{ 'prev' | translate }}
       </button>
@@ -25,7 +25,7 @@ import { PagingBaseComponent } from '../base/base.component';
         @for (page of pages(); track $index) {
           @if (page === '...') {
             <span
-              class="smart:px-2 smart:py-1 smart:text-sm smart:text-gray-500 dark:smart:text-gray-400"
+              class="smart:px-2 smart:py-1 smart:text-sm smart:text-gray-500 smart:dark:text-gray-400"
               >...</span
             >
           } @else {
@@ -35,8 +35,8 @@ import { PagingBaseComponent } from '../base/base.component';
               [attr.aria-current]="page === currentPage() ? 'page' : null"
               [class]="
                 page === currentPage()
-                  ? 'smart:inline-flex smart:items-center smart:rounded-md smart:bg-indigo-600 smart:px-3 smart:py-1.5 smart:text-sm smart:font-semibold smart:text-white dark:smart:bg-indigo-500'
-                  : 'smart:inline-flex smart:items-center smart:rounded-md smart:px-3 smart:py-1.5 smart:text-sm smart:font-medium smart:text-gray-700 hover:smart:bg-gray-50 dark:smart:text-gray-200 dark:hover:smart:bg-white/10'
+                  ? 'smart:inline-flex smart:items-center smart:rounded-md smart:bg-indigo-600 smart:px-3 smart:py-1.5 smart:text-sm smart:font-semibold smart:text-white smart:dark:bg-indigo-500'
+                  : 'smart:inline-flex smart:items-center smart:rounded-md smart:px-3 smart:py-1.5 smart:text-sm smart:font-medium smart:text-gray-700 hover:smart:bg-gray-50 smart:dark:text-gray-200 dark:hover:smart:bg-white/10'
               "
             >
               {{ page }}
@@ -49,7 +49,7 @@ import { PagingBaseComponent } from '../base/base.component';
         type="button"
         [disabled]="!canGoForward()"
         (click)="nextPage()"
-        class="smart:inline-flex smart:items-center smart:rounded-md smart:border smart:border-gray-300 smart:bg-white smart:px-3 smart:py-1.5 smart:text-sm smart:font-medium smart:text-gray-700 hover:smart:bg-gray-50 disabled:smart:opacity-50 disabled:smart:cursor-not-allowed dark:smart:border-white/10 dark:smart:bg-white/5 dark:smart:text-gray-200 dark:hover:smart:bg-white/10"
+        class="smart:inline-flex smart:items-center smart:rounded-md smart:border smart:border-gray-300 smart:bg-white smart:px-3 smart:py-1.5 smart:text-sm smart:font-medium smart:text-gray-700 hover:smart:bg-gray-50 disabled:smart:opacity-50 disabled:smart:cursor-not-allowed smart:dark:border-white/10 smart:dark:bg-white/5 smart:dark:text-gray-200 dark:hover:smart:bg-white/10"
       >
         {{ 'next' | translate }}
       </button>

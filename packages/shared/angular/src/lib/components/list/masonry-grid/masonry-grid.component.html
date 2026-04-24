@@ -3,7 +3,7 @@
 <ul role="list" [class]="containerClasses()">
   @for (item of listWithImages() ?? []; track item.data.id) {
     <li
-      class="smart:col-span-1 smart:rounded-lg smart:bg-white smart:shadow-sm dark:smart:bg-gray-800/50 smart:overflow-hidden"
+      class="smart:col-span-1 smart:rounded-lg smart:bg-white smart:shadow-sm smart:dark:bg-gray-800/50 smart:overflow-hidden"
     >
       @if (item.image) {
         <img
@@ -19,7 +19,7 @@
           @let cell = item.data | smartListCell: key : cellPipe : type;
           @if (cell && cell.type !== FieldType.image) {
             <p
-              class="smart:text-sm smart:text-gray-900 dark:smart:text-white"
+              class="smart:text-sm smart:text-gray-900 smart:dark:text-white"
               [innerHTML]="cell.value"
             ></p>
           }

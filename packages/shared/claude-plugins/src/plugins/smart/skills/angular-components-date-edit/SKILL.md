@@ -104,4 +104,4 @@ export class MyDateEditComponent extends DateEditBaseComponent {}
 
 ## Tailwind Classes
 
-All classes use `smart:` prefix. Inputs: `smart:w-8 smart:h-10 smart:text-center smart:border smart:rounded-md`. Invalid: `smart:border-red-500 smart:text-red-600`. Dark: `dark:smart:bg-gray-800 dark:smart:text-white`.
+All classes use `smart:` prefix. Inputs: `smart:w-8 smart:h-10 smart:text-center smart:border smart:rounded-md`. Invalid: `smart:border-red-500 smart:text-red-600`. Dark: `smart:dark:bg-gray-800 smart:dark:text-white`.

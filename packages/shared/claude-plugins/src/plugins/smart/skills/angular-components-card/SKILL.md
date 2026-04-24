@@ -109,4 +109,4 @@ providers: [
 
 ## Tailwind Classes
 
-All classes use `smart:` prefix. `CardStandardComponent` container: `smart:overflow-hidden smart:rounded-lg smart:bg-white smart:shadow-sm`. Dark mode: `dark:smart:bg-gray-800/50 dark:smart:shadow-none dark:smart:outline dark:smart:-outline-offset-1 dark:smart:outline-white/10`. Divider when header/footer present: `smart:divide-y smart:divide-gray-200 dark:smart:divide-white/10`. Gray body/footer: `smart:bg-gray-50 dark:smart:bg-gray-800/50`.
+All classes use `smart:` prefix. `CardStandardComponent` container: `smart:overflow-hidden smart:rounded-lg smart:bg-white smart:shadow-sm`. Dark mode: `smart:dark:bg-gray-800/50 smart:dark:shadow-none smart:dark:outline smart:dark:-outline-offset-1 smart:dark:outline-white/10`. Divider when header/footer present: `smart:divide-y smart:divide-gray-200 smart:dark:divide-white/10`. Gray body/footer: `smart:bg-gray-50 smart:dark:bg-gray-800/50`.

@@ -77,7 +77,7 @@ export class ListDesktopComponent<T extends IEntity<string>>
       'smart:min-w-full',
       'smart:divide-y',
       'smart:divide-gray-300',
-      'dark:smart:divide-white/10',
+      'smart:dark:divide-white/10',
     ];
     const extra = this.cssClass();
     if (extra) classes.push(extra);

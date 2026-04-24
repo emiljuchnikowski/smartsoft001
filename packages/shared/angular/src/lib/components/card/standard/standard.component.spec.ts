@@ -64,7 +64,7 @@ describe('@smartsoft001/shared-angular: CardStandardComponent', () => {
       'smart-card-standard > div',
     );
 
-    expect(root.className).toContain('dark:smart:bg-gray-800/50');
+    expect(root.className).toContain('smart:dark:bg-gray-800/50');
   });
 
   it('should append cssClass input to container classes', async () => {
@@ -123,7 +123,7 @@ describe('@smartsoft001/shared-angular: CardStandardComponent', () => {
     expect(h3.className).toContain('smart:text-base');
     expect(h3.className).toContain('smart:font-semibold');
     expect(h3.className).toContain('smart:text-gray-900');
-    expect(h3.className).toContain('dark:smart:text-white');
+    expect(h3.className).toContain('smart:dark:text-white');
   });
 
   it('should not render footer section when hasFooter is false', () => {

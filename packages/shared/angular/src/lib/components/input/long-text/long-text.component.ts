@@ -92,7 +92,7 @@ export class InputLongTextComponent<T>
       'smart:text-sm/6',
       'smart:font-medium',
       'smart:text-gray-900',
-      'dark:smart:text-white',
+      'smart:dark:text-white',
     ].join(' '),
   );
 
@@ -107,9 +107,9 @@ export class InputLongTextComponent<T>
       'smart:outline-1',
       '-outline-offset-1',
       'smart:outline-gray-300',
-      'dark:smart:bg-white/5',
-      'dark:smart:text-white',
-      'dark:smart:outline-white/10',
+      'smart:dark:bg-white/5',
+      'smart:dark:text-white',
+      'smart:dark:outline-white/10',
     ];
     const extra = this.cssClass();
     if (extra) classes.push(extra);

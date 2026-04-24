@@ -120,7 +120,7 @@ describe('@smartsoft001/shared-angular: ListMobileComponent', () => {
 
     expect(ul).toBeTruthy();
     expect(ul.className).toContain('smart:divide-y');
-    expect(ul.className).toContain('dark:smart:divide-white/10');
+    expect(ul.className).toContain('smart:dark:divide-white/10');
   });
 
   it('should include base container classes in containerClasses()', async () => {
@@ -130,7 +130,7 @@ describe('@smartsoft001/shared-angular: ListMobileComponent', () => {
 
     expect(classes).toContain('smart:divide-y');
     expect(classes).toContain('smart:divide-gray-100');
-    expect(classes).toContain('dark:smart:divide-white/10');
+    expect(classes).toContain('smart:dark:divide-white/10');
   });
 
   it('should append cssClass to containerClasses when provided', async () => {

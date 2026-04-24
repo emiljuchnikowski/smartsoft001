@@ -25,7 +25,7 @@ const noop = () => undefined;
               <button
                 type="button"
                 (click)="back()"
-                class="smart:inline-flex smart:items-center smart:rounded-md smart:p-1.5 smart:text-gray-400 hover:smart:text-gray-500 dark:smart:text-gray-500 dark:hover:smart:text-gray-400"
+                class="smart:inline-flex smart:items-center smart:rounded-md smart:p-1.5 smart:text-gray-400 hover:smart:text-gray-500 smart:dark:text-gray-500 dark:hover:smart:text-gray-400"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -42,7 +42,7 @@ const noop = () => undefined;
               </button>
             }
             <h2
-              class="smart:text-2xl/7 smart:font-bold smart:text-gray-900 sm:smart:truncate sm:smart:text-3xl sm:smart:tracking-tight dark:smart:text-white"
+              class="smart:text-2xl/7 smart:font-bold smart:text-gray-900 sm:smart:truncate sm:smart:text-3xl sm:smart:tracking-tight smart:dark:text-white"
             >
               {{ options()?.title ?? '' | translate }}
             </h2>
@@ -59,7 +59,7 @@ const noop = () => undefined;
                   [value]="search.text() ?? ''"
                   (input)="search.set($any($event.target).value)"
                   [placeholder]="'search' | translate"
-                  class="smart:block smart:w-full smart:rounded-md smart:border-0 smart:py-1.5 smart:pl-3 smart:pr-10 smart:text-gray-900 smart:ring-1 smart:ring-inset smart:ring-gray-300 placeholder:smart:text-gray-400 focus:smart:ring-2 focus:smart:ring-inset focus:smart:ring-indigo-600 sm:smart:text-sm/6 dark:smart:bg-white/5 dark:smart:text-white dark:smart:ring-white/10 dark:placeholder:smart:text-gray-500"
+                  class="smart:block smart:w-full smart:rounded-md smart:border-0 smart:py-1.5 smart:pl-3 smart:pr-10 smart:text-gray-900 smart:ring-1 smart:ring-inset smart:ring-gray-300 placeholder:smart:text-gray-400 focus:smart:ring-2 focus:smart:ring-inset focus:smart:ring-indigo-600 sm:smart:text-sm/6 smart:dark:bg-white/5 smart:dark:text-white smart:dark:ring-white/10 dark:placeholder:smart:text-gray-500"
                 />
               </div>
             }
@@ -73,7 +73,7 @@ const noop = () => undefined;
                 }
                 @if (btn.number) {
                   <span
-                    class="smart:ml-1 smart:inline-flex smart:items-center smart:rounded-full smart:bg-indigo-100 smart:px-2 smart:py-0.5 smart:text-xs smart:font-medium smart:text-indigo-700 dark:smart:bg-indigo-500/10 dark:smart:text-indigo-400"
+                    class="smart:ml-1 smart:inline-flex smart:items-center smart:rounded-full smart:bg-indigo-100 smart:px-2 smart:py-0.5 smart:text-xs smart:font-medium smart:text-indigo-700 smart:dark:bg-indigo-500/10 smart:dark:text-indigo-400"
                     >{{ btn.number }}</span
                   >
                 }

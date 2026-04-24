@@ -174,7 +174,7 @@ export const WithCssClass: Story = {
     },
     template: `
       <smart-details
-        class="smart:rounded-lg smart:bg-yellow-50 smart:p-4 dark:smart:bg-yellow-900/30"
+        class="smart:rounded-lg smart:bg-yellow-50 smart:p-4 smart:dark:bg-yellow-900/30"
         [options]="{ type: storyOptions.type, item: storyOptions.item }"
       ></smart-details>
     `,
@@ -276,17 +276,17 @@ export const AllFields: Story = {
   selector: 'custom-details-impl',
   template: `
     <div
-      class="smart:rounded-md smart:border smart:border-indigo-300 smart:bg-indigo-50 smart:p-4 dark:smart:border-indigo-700 dark:smart:bg-indigo-900/40"
+      class="smart:rounded-md smart:border smart:border-indigo-300 smart:bg-indigo-50 smart:p-4 smart:dark:border-indigo-700 smart:dark:bg-indigo-900/40"
     >
       <p
-        class="smart:font-semibold smart:text-indigo-900 dark:smart:text-indigo-100"
+        class="smart:font-semibold smart:text-indigo-900 smart:dark:text-indigo-100"
       >
         Custom details implementation injected via
         DETAILS_STANDARD_COMPONENT_TOKEN
       </p>
       @for (field of fields; track field.key) {
         <p
-          class="smart:mt-2 smart:text-sm smart:text-indigo-700 dark:smart:text-indigo-300"
+          class="smart:mt-2 smart:text-sm smart:text-indigo-700 smart:dark:text-indigo-300"
         >
           {{ field.key }}: {{ item?.()?.[field.key] }}
         </p>

@@ -33,7 +33,7 @@ import { InputBaseComponent } from '../base/base.component';
         </smart-button>
         @if (control.value?.name) {
           <span
-            class="smart:text-sm smart:text-gray-700 dark:smart:text-gray-300"
+            class="smart:text-sm smart:text-gray-700 smart:dark:text-gray-300"
           >
             {{ control.value.name }}
           </span>
@@ -59,7 +59,7 @@ export class InputFileComponent<T> extends InputBaseComponent<T> {
       'smart:text-sm/6',
       'smart:font-medium',
       'smart:text-gray-900',
-      'dark:smart:text-white',
+      'smart:dark:text-white',
     ].join(' '),
   );
 

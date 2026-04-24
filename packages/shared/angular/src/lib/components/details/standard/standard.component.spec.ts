@@ -68,7 +68,7 @@ describe('@smartsoft001/shared-angular: DetailsStandardComponent', () => {
 
     expect(dl).toBeTruthy();
     expect(dl.className).toContain('smart:divide-y');
-    expect(dl.className).toContain('dark:smart:divide-white/10');
+    expect(dl.className).toContain('smart:dark:divide-white/10');
   });
 
   it('should apply container border + dark mode classes on the wrapper', () => {
@@ -76,7 +76,7 @@ describe('@smartsoft001/shared-angular: DetailsStandardComponent', () => {
 
     expect(classes).toContain('smart:border-t');
     expect(classes).toContain('smart:border-gray-100');
-    expect(classes).toContain('dark:smart:border-white/10');
+    expect(classes).toContain('smart:dark:border-white/10');
   });
 
   it('should append cssClass to the container', async () => {

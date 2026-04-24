@@ -22,11 +22,11 @@ export class CardStandardComponent extends CardBaseComponent {
       'smart:rounded-lg',
       'smart:bg-white',
       'smart:shadow-sm',
-      'dark:smart:bg-gray-800/50',
-      'dark:smart:shadow-none',
-      'dark:smart:outline',
-      'dark:smart:-outline-offset-1',
-      'dark:smart:outline-white/10',
+      'smart:dark:bg-gray-800/50',
+      'smart:dark:shadow-none',
+      'smart:dark:outline',
+      'smart:dark:-outline-offset-1',
+      'smart:dark:outline-white/10',
     ];
 
     const extra = this.cssClass();

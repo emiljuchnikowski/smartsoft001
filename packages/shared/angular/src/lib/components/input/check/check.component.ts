@@ -36,10 +36,10 @@ import { InputPossibilitiesBaseComponent } from '../base/possibilities.component
                 type="checkbox"
                 [checked]="item.checked"
                 (change)="refresh(item)"
-                class="smart:h-4 smart:w-4 smart:rounded smart:border-gray-300 smart:text-indigo-600 focus:smart:ring-indigo-500 dark:smart:border-gray-600"
+                class="smart:h-4 smart:w-4 smart:rounded smart:border-gray-300 smart:text-indigo-600 focus:smart:ring-indigo-500 smart:dark:border-gray-600"
               />
               <span
-                class="smart:text-sm smart:text-gray-900 dark:smart:text-white"
+                class="smart:text-sm smart:text-gray-900 smart:dark:text-white"
                 [innerHTML]="item.text | translate"
               ></span>
             </label>
@@ -64,7 +64,7 @@ export class InputCheckComponent<T> extends InputPossibilitiesBaseComponent<T> {
       'smart:text-sm/6',
       'smart:font-medium',
       'smart:text-gray-900',
-      'dark:smart:text-white',
+      'smart:dark:text-white',
     ].join(' '),
   );
 

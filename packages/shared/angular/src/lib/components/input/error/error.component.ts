@@ -94,7 +94,7 @@ export class InputErrorComponent {
       'smart:block',
       'smart:text-sm',
       'smart:text-red-600',
-      'dark:smart:text-red-400',
+      'smart:dark:text-red-400',
       'smart:mt-1',
     ].join(' '),
   );

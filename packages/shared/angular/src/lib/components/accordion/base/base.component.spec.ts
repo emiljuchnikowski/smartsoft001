@@ -77,7 +77,7 @@ describe('AccordionBaseComponent', () => {
     expect(classes).toContain('smart:rounded-lg');
     expect(classes).toContain('smart:border');
     expect(classes).toContain('smart:border-gray-200');
-    expect(classes).toContain('dark:smart:divide-white/10');
-    expect(classes).toContain('dark:smart:border-white/10');
+    expect(classes).toContain('smart:dark:divide-white/10');
+    expect(classes).toContain('smart:dark:border-white/10');
   });
 });

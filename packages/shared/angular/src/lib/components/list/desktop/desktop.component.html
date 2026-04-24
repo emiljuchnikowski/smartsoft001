@@ -62,7 +62,7 @@
               @if (!checkRemoveHandler || checkRemoveHandler(element)) {
                 <button
                   type="button"
-                  class="smart:text-red-600 hover:smart:text-red-900 dark:smart:text-red-400 dark:hover:smart:text-red-300"
+                  class="smart:text-red-600 hover:smart:text-red-900 smart:dark:text-red-400 dark:hover:smart:text-red-300"
                   (click)="removeHandler?.(element)"
                 >
                   {{ 'remove' | translate }}
@@ -85,7 +85,7 @@
             >
               <button
                 type="button"
-                class="smart:text-indigo-600 hover:smart:text-indigo-900 dark:smart:text-indigo-400 dark:hover:smart:text-indigo-300"
+                class="smart:text-indigo-600 hover:smart:text-indigo-900 smart:dark:text-indigo-400 dark:hover:smart:text-indigo-300"
                 (click)="itemHandler?.(element.id)"
               >
                 →
@@ -96,7 +96,7 @@
             <th
               cdk-header-cell
               *cdkHeaderCellDef
-              class="smart:px-3 smart:py-3.5 smart:text-left smart:text-sm smart:font-semibold smart:text-gray-900 dark:smart:text-white"
+              class="smart:px-3 smart:py-3.5 smart:text-left smart:text-sm smart:font-semibold smart:text-gray-900 smart:dark:text-white"
             >
               {{ (desktopList() | smartListHeader: key : type)() }}
               <ng-container *ngTemplateOutlet="pagination"></ng-container>
@@ -104,7 +104,7 @@
             <td
               cdk-cell
               *cdkCellDef="let element"
-              class="smart:px-3 smart:py-4 smart:text-sm smart:text-gray-700 dark:smart:text-gray-300"
+              class="smart:px-3 smart:py-4 smart:text-sm smart:text-gray-700 smart:dark:text-gray-300"
               [attr.smart-item-key]="key"
             >
               @let cell = element | smartListCell: key : cellPipe : type;
@@ -130,7 +130,7 @@
     <tr
       cdk-header-row
       *cdkHeaderRowDef="desktopKeys ?? []; sticky: true"
-      class="smart:bg-gray-50 dark:smart:bg-gray-800/50"
+      class="smart:bg-gray-50 smart:dark:bg-gray-800/50"
     ></tr>
     <tr
       cdk-row

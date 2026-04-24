@@ -21,7 +21,7 @@ export class FormStandardComponent<T> extends FormBaseComponent<T> {
       'smart:space-y-4',
       'smart:divide-y',
       'smart:divide-gray-100',
-      'dark:smart:divide-white/10',
+      'smart:dark:divide-white/10',
     ];
     const extra = this.cssClass();
     if (extra) classes.push(extra);

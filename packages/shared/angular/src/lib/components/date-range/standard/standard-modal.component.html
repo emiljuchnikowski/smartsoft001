@@ -3,12 +3,12 @@
   (click)="dismissPage()"
 ></div>
 <div
-  class="smart:fixed smart:inset-x-4 smart:top-16 smart:bottom-4 smart:z-50 smart:rounded-xl smart:bg-white smart:shadow-xl smart:flex smart:flex-col dark:smart:bg-gray-900"
+  class="smart:fixed smart:inset-x-4 smart:top-16 smart:bottom-4 smart:z-50 smart:rounded-xl smart:bg-white smart:shadow-xl smart:flex smart:flex-col smart:dark:bg-gray-900"
 >
   <div
-    class="smart:flex smart:items-center smart:justify-between smart:px-4 smart:py-3 smart:border-b smart:border-gray-200 dark:smart:border-gray-700"
+    class="smart:flex smart:items-center smart:justify-between smart:px-4 smart:py-3 smart:border-b smart:border-gray-200 smart:dark:border-gray-700"
   >
-    <span class="smart:text-sm smart:text-gray-600 dark:smart:text-gray-300">
+    <span class="smart:text-sm smart:text-gray-600 smart:dark:text-gray-300">
       {{
         dateForm.value.dateFrom
           ? dateForm.value.dateFrom + ' - ' + dateForm.value.dateTo
@@ -17,7 +17,7 @@
     </span>
     <button
       type="button"
-      class="smart:text-gray-400 hover:smart:text-gray-600 smart:p-1 smart:rounded dark:smart:text-gray-500 dark:hover:smart:text-gray-300"
+      class="smart:text-gray-400 hover:smart:text-gray-600 smart:p-1 smart:rounded smart:dark:text-gray-500 dark:hover:smart:text-gray-300"
       (click)="dismissPage()"
     >
       <svg
@@ -44,7 +44,7 @@
         [ngClass]="
           selectedButtonName === 'Today'
             ? 'smart:bg-indigo-600 smart:text-white'
-            : 'smart:bg-gray-100 smart:text-gray-700 dark:smart:bg-gray-800 dark:smart:text-gray-300'
+            : 'smart:bg-gray-100 smart:text-gray-700 smart:dark:bg-gray-800 smart:dark:text-gray-300'
         "
       >
         {{ 'CALENDAR.Today' | translate }}
@@ -57,7 +57,7 @@
         [ngClass]="
           selectedButtonName === 'LastSevenDays'
             ? 'smart:bg-indigo-600 smart:text-white'
-            : 'smart:bg-gray-100 smart:text-gray-700 dark:smart:bg-gray-800 dark:smart:text-gray-300'
+            : 'smart:bg-gray-100 smart:text-gray-700 smart:dark:bg-gray-800 smart:dark:text-gray-300'
         "
       >
         {{ 'CALENDAR.LastSevenDays' | translate }}
@@ -70,7 +70,7 @@
         [ngClass]="
           selectedButtonName === 'ThisMonth'
             ? 'smart:bg-indigo-600 smart:text-white'
-            : 'smart:bg-gray-100 smart:text-gray-700 dark:smart:bg-gray-800 dark:smart:text-gray-300'
+            : 'smart:bg-gray-100 smart:text-gray-700 smart:dark:bg-gray-800 smart:dark:text-gray-300'
         "
       >
         {{ 'CALENDAR.ThisMonth' | translate }}
@@ -83,7 +83,7 @@
         [ngClass]="
           selectedButtonName === 'Yesterday'
             ? 'smart:bg-indigo-600 smart:text-white'
-            : 'smart:bg-gray-100 smart:text-gray-700 dark:smart:bg-gray-800 dark:smart:text-gray-300'
+            : 'smart:bg-gray-100 smart:text-gray-700 smart:dark:bg-gray-800 smart:dark:text-gray-300'
         "
       >
         {{ 'CALENDAR.Yesterday' | translate }}
@@ -96,7 +96,7 @@
         [ngClass]="
           selectedButtonName === 'LastThirtyDays'
             ? 'smart:bg-indigo-600 smart:text-white'
-            : 'smart:bg-gray-100 smart:text-gray-700 dark:smart:bg-gray-800 dark:smart:text-gray-300'
+            : 'smart:bg-gray-100 smart:text-gray-700 smart:dark:bg-gray-800 smart:dark:text-gray-300'
         "
       >
         {{ 'CALENDAR.LastThirtyDays' | translate }}
@@ -109,7 +109,7 @@
         [ngClass]="
           selectedButtonName === 'LastMonth'
             ? 'smart:bg-indigo-600 smart:text-white'
-            : 'smart:bg-gray-100 smart:text-gray-700 dark:smart:bg-gray-800 dark:smart:text-gray-300'
+            : 'smart:bg-gray-100 smart:text-gray-700 smart:dark:bg-gray-800 smart:dark:text-gray-300'
         "
       >
         {{ 'CALENDAR.LastMonth' | translate }}
@@ -118,7 +118,7 @@
   }
 
   <div
-    class="smart:grid smart:grid-cols-7 smart:gap-y-2.5 smart:gap-x-px smart:items-center smart:border-b smart:border-gray-200 smart:h-8 smart:text-center smart:text-xs smart:text-gray-500 smart:bg-gray-50 dark:smart:bg-gray-800 dark:smart:border-gray-700 dark:smart:text-gray-400"
+    class="smart:grid smart:grid-cols-7 smart:gap-y-2.5 smart:gap-x-px smart:items-center smart:border-b smart:border-gray-200 smart:h-8 smart:text-center smart:text-xs smart:text-gray-500 smart:bg-gray-50 smart:dark:bg-gray-800 smart:dark:border-gray-700 smart:dark:text-gray-400"
   >
     <div>{{ 'CALENDAR.DAY_OF_WEEK.Sun' | translate }}</div>
     <div>{{ 'CALENDAR.DAY_OF_WEEK.Mon' | translate }}</div>
@@ -132,7 +132,7 @@
   <div class="smart:flex-1 smart:overflow-y-auto">
     @for (month of calendar; track month) {
       <p
-        class="smart:ml-0 smart:px-4 smart:py-3 smart:text-sm smart:font-medium smart:bg-gray-50 smart:border-t smart:border-b smart:border-gray-200 dark:smart:bg-gray-800 dark:smart:border-gray-700 dark:smart:text-gray-300"
+        class="smart:ml-0 smart:px-4 smart:py-3 smart:text-sm smart:font-medium smart:bg-gray-50 smart:border-t smart:border-b smart:border-gray-200 smart:dark:bg-gray-800 smart:dark:border-gray-700 smart:dark:text-gray-300"
       >
         {{ 'CALENDAR.MONTH.' + month.monthName | translate }} {{ month.year }}
       </p>
@@ -141,13 +141,13 @@
       >
         @for (day of month.dates; track day) {
           <div
-            class="smart:h-8 smart:text-center smart:flex smart:flex-col smart:justify-center smart:items-center smart:text-sm smart:text-gray-600 smart:cursor-pointer hover:smart:bg-gray-100 dark:smart:text-gray-400 dark:hover:smart:bg-gray-800"
+            class="smart:h-8 smart:text-center smart:flex smart:flex-col smart:justify-center smart:items-center smart:text-sm smart:text-gray-600 smart:cursor-pointer hover:smart:bg-gray-100 smart:dark:text-gray-400 dark:hover:smart:bg-gray-800"
             [ngClass]="{
               'smart:bg-indigo-600 smart:text-white smart:rounded-l-lg hover:smart:bg-indigo-700':
                 isSelectionStart(day),
               'smart:bg-indigo-600 smart:text-white smart:rounded-r-lg hover:smart:bg-indigo-700':
                 isSelectionEnd(day),
-              'smart:bg-indigo-100 dark:smart:bg-indigo-900/30': isInRange(day),
+              'smart:bg-indigo-100 smart:dark:bg-indigo-900/30': isInRange(day),
               'smart:rounded-lg': isStartAndEndDateSame(),
             }"
             (click)="subject$.next({ date: day, event: $event })"
@@ -160,11 +160,11 @@
   </div>
 
   <div
-    class="smart:border-t smart:border-gray-200 smart:p-4 dark:smart:border-gray-700"
+    class="smart:border-t smart:border-gray-200 smart:p-4 smart:dark:border-gray-700"
   >
     <button
       type="button"
-      class="smart:w-full smart:rounded-md smart:bg-indigo-600 smart:px-3 smart:py-2 smart:text-sm smart:font-semibold smart:text-white smart:shadow-xs hover:smart:bg-indigo-500 focus-visible:smart:outline-2 focus-visible:smart:outline-offset-2 focus-visible:smart:outline-indigo-600 dark:smart:bg-indigo-500 dark:hover:smart:bg-indigo-400"
+      class="smart:w-full smart:rounded-md smart:bg-indigo-600 smart:px-3 smart:py-2 smart:text-sm smart:font-semibold smart:text-white smart:shadow-xs hover:smart:bg-indigo-500 focus-visible:smart:outline-2 focus-visible:smart:outline-offset-2 focus-visible:smart:outline-indigo-600 smart:dark:bg-indigo-500 dark:hover:smart:bg-indigo-400"
       [disabled]="!!restrictSelectionTo() && !isSelectionInRestrictedRange()"
       (click)="applyDates()"
     >

@@ -30,7 +30,7 @@ export class DetailAddressComponent<
     const classes = [
       'smart:text-sm',
       'smart:text-gray-900',
-      'dark:smart:text-gray-100',
+      'smart:dark:text-gray-100',
     ];
     const extra = this.cssClass();
     if (extra) classes.push(extra);

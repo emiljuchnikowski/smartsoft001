@@ -166,9 +166,9 @@ describe('@smartsoft001/shared-angular: PasswordStrengthBaseComponent', () => {
 
     const bars = directive.barClasses();
 
-    expect(bars[0]).toBe('smart:bg-red-600 dark:smart:bg-red-500');
-    expect(bars[1]).toBe('smart:bg-gray-300 dark:smart:bg-gray-600');
-    expect(bars[2]).toBe('smart:bg-gray-300 dark:smart:bg-gray-600');
+    expect(bars[0]).toBe('smart:bg-red-600 smart:dark:bg-red-500');
+    expect(bars[1]).toBe('smart:bg-gray-300 smart:dark:bg-gray-600');
+    expect(bars[2]).toBe('smart:bg-gray-300 smart:dark:bg-gray-600');
   });
 
   it('should fill the first two bars with orange when strengthIndex is 1', async () => {
@@ -176,9 +176,9 @@ describe('@smartsoft001/shared-angular: PasswordStrengthBaseComponent', () => {
 
     const bars = directive.barClasses();
 
-    expect(bars[0]).toBe('smart:bg-orange-500 dark:smart:bg-orange-400');
-    expect(bars[1]).toBe('smart:bg-orange-500 dark:smart:bg-orange-400');
-    expect(bars[2]).toBe('smart:bg-gray-300 dark:smart:bg-gray-600');
+    expect(bars[0]).toBe('smart:bg-orange-500 smart:dark:bg-orange-400');
+    expect(bars[1]).toBe('smart:bg-orange-500 smart:dark:bg-orange-400');
+    expect(bars[2]).toBe('smart:bg-gray-300 smart:dark:bg-gray-600');
   });
 
   it('should fill all three bars with yellow when strengthIndex is 2', async () => {
@@ -186,18 +186,18 @@ describe('@smartsoft001/shared-angular: PasswordStrengthBaseComponent', () => {
 
     const bars = directive.barClasses();
 
-    expect(bars[0]).toBe('smart:bg-yellow-500 dark:smart:bg-yellow-400');
-    expect(bars[1]).toBe('smart:bg-yellow-500 dark:smart:bg-yellow-400');
-    expect(bars[2]).toBe('smart:bg-yellow-500 dark:smart:bg-yellow-400');
+    expect(bars[0]).toBe('smart:bg-yellow-500 smart:dark:bg-yellow-400');
+    expect(bars[1]).toBe('smart:bg-yellow-500 smart:dark:bg-yellow-400');
+    expect(bars[2]).toBe('smart:bg-yellow-500 smart:dark:bg-yellow-400');
   });
 
   it('should leave all three bars gray for empty password', () => {
     const bars = directive.barClasses();
 
     expect(bars).toEqual([
-      'smart:bg-gray-300 dark:smart:bg-gray-600',
-      'smart:bg-gray-300 dark:smart:bg-gray-600',
-      'smart:bg-gray-300 dark:smart:bg-gray-600',
+      'smart:bg-gray-300 smart:dark:bg-gray-600',
+      'smart:bg-gray-300 smart:dark:bg-gray-600',
+      'smart:bg-gray-300 smart:dark:bg-gray-600',
     ]);
   });
 
@@ -209,7 +209,7 @@ describe('@smartsoft001/shared-angular: PasswordStrengthBaseComponent', () => {
     await setPassword('Abcdefg1!');
 
     expect(directive.msgClass()).toBe(
-      'smart:text-yellow-600 dark:smart:text-yellow-500',
+      'smart:text-yellow-600 smart:dark:text-yellow-500',
     );
   });
 

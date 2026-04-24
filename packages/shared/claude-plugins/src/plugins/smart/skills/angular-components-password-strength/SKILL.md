@@ -26,7 +26,7 @@ Default concrete implementation. Renders:
 - three bars whose Tailwind classes come from `barClasses()` (filled-left-to-right by strength index),
 - a message `<p>` with a translation key `INPUT.PASSWORD-STRENGTH.{poor|notGood|good}` when applicable,
 - a hint `<ul>` (shown while `showHint()` is `true`) listing unmet requirements via `INPUT.ERRORS.*` keys,
-- dark-mode variants via `dark:smart:*` classes.
+- dark-mode variants via `smart:dark:*` classes.
 
 ### PasswordStrengthBaseComponent (abstract)
 

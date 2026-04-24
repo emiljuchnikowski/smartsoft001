@@ -24,7 +24,7 @@ import { InputBaseComponent } from '../base/base.component';
         class="smart:mt-2 smart:flex smart:items-center smart:gap-x-2"
       >
         <span
-          class="smart:inline-block smart:h-8 smart:w-8 smart:rounded smart:border smart:border-gray-300 dark:smart:border-gray-600"
+          class="smart:inline-block smart:h-8 smart:w-8 smart:rounded smart:border smart:border-gray-300 smart:dark:border-gray-600"
           [style.background]="color"
         ></span>
         <input
@@ -56,7 +56,7 @@ export class InputColorComponent<T> extends InputBaseComponent<T> {
       'smart:text-sm/6',
       'smart:font-medium',
       'smart:text-gray-900',
-      'dark:smart:text-white',
+      'smart:dark:text-white',
     ].join(' '),
   );
 

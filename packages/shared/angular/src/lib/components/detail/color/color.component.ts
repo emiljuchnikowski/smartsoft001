@@ -22,7 +22,7 @@ export class DetailColorComponent<
       'smart:rounded',
       'smart:border',
       'smart:border-gray-200',
-      'dark:smart:border-white/10',
+      'smart:dark:border-white/10',
     ];
     const extra = this.cssClass();
     if (extra) classes.push(extra);

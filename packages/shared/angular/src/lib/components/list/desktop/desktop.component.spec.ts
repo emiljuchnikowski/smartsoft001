@@ -122,7 +122,7 @@ describe('@smartsoft001/shared-angular: ListDesktopComponent', () => {
 
     expect(table).toBeTruthy();
     expect(table.className).toContain('smart:divide-y');
-    expect(table.className).toContain('dark:smart:divide-white/10');
+    expect(table.className).toContain('smart:dark:divide-white/10');
   });
 
   it('should include base container classes in containerClasses()', () => {
@@ -130,7 +130,7 @@ describe('@smartsoft001/shared-angular: ListDesktopComponent', () => {
 
     expect(classes).toContain('smart:min-w-full');
     expect(classes).toContain('smart:divide-y');
-    expect(classes).toContain('dark:smart:divide-white/10');
+    expect(classes).toContain('smart:dark:divide-white/10');
   });
 
   it('should append cssClass to containerClasses when provided', async () => {

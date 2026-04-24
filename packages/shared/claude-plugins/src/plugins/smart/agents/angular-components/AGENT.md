@@ -152,5 +152,5 @@ All components use shared types from `@smartsoft001/angular`:
 ## Styling
 
 - Tailwind CSS v4 with `smart:` prefix
-- Dark mode via `dark:smart:` prefix
+- Dark mode via `smart:dark:` prefix
 - External classes via `cssClass` input

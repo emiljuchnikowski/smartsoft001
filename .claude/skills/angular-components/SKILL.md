@@ -223,7 +223,7 @@ Execute each step in order. Use `shared-tdd-developer` agent for all code implem
 ## Styling Rules
 
 - **Tailwind CSS v4** with `smart:` prefix for all utility classes (e.g., `smart:bg-white`, `smart:text-gray-900`, `smart:mt-4`)
-- **Dark mode**: use `dark:smart:` prefix (e.g., `dark:smart:bg-gray-900`, `dark:smart:text-white`)
+- **Dark mode**: use `smart:dark:` prefix (e.g., `smart:dark:bg-gray-900`, `smart:dark:text-white`)
 - **Light mode**: default prefixed classes (e.g., `smart:bg-white`, `smart:text-gray-900`)
 - **ViewEncapsulation.None** on all styled components
 - **No inline styles** — use Tailwind utility classes only

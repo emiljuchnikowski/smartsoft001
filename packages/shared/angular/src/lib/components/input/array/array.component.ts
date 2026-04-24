@@ -44,7 +44,7 @@ import { InputBaseComponent } from '../base/base.component';
       <div [class]="groupClasses()">
         @for (option of childOptions; track option) {
           <div
-            class="smart:rounded smart:border smart:border-gray-200 smart:p-2 dark:smart:border-gray-700"
+            class="smart:rounded smart:border smart:border-gray-200 smart:p-2 smart:dark:border-gray-700"
           >
             <ng-template
               [ngComponentOutlet]="formComponent"
@@ -112,7 +112,7 @@ export class InputArrayComponent<T, TChild> extends InputBaseComponent<T> {
       'smart:text-sm/6',
       'smart:font-medium',
       'smart:text-gray-900',
-      'dark:smart:text-white',
+      'smart:dark:text-white',
     ].join(' '),
   );
 

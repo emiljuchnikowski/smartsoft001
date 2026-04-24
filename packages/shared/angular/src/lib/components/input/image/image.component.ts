@@ -37,7 +37,7 @@ import { InputFileBaseComponent } from '../base/file.component';
         }
         @if (loading()) {
           <div
-            class="smart:h-1 smart:w-24 smart:overflow-hidden smart:rounded smart:bg-gray-200 dark:smart:bg-gray-700"
+            class="smart:h-1 smart:w-24 smart:overflow-hidden smart:rounded smart:bg-gray-200 smart:dark:bg-gray-700"
           >
             <div
               class="smart:h-full smart:bg-indigo-600"
@@ -48,7 +48,7 @@ import { InputFileBaseComponent } from '../base/file.component';
         @if (imageUrl) {
           <img
             [src]="imageUrl"
-            class="smart:max-h-96 smart:max-w-full smart:rounded smart:border smart:border-gray-300 dark:smart:border-gray-600"
+            class="smart:max-h-96 smart:max-w-full smart:rounded smart:border smart:border-gray-300 smart:dark:border-gray-600"
           />
         }
         <input type="file" accept=".jpg,.png,.jpeg" [hidden]="true" #inputObj />
@@ -70,7 +70,7 @@ export class InputImageComponent<T>
       'smart:text-sm/6',
       'smart:font-medium',
       'smart:text-gray-900',
-      'dark:smart:text-white',
+      'smart:dark:text-white',
     ].join(' '),
   );
 

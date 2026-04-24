@@ -108,9 +108,9 @@ describe('@smartsoft001/shared-angular: SearchbarStandardComponent', () => {
   it('should include dark variants in inputClasses()', () => {
     const classes = component.inputClasses();
 
-    expect(classes).toContain('dark:smart:bg-white/5');
-    expect(classes).toContain('dark:smart:text-white');
-    expect(classes).toContain('dark:smart:outline-white/10');
+    expect(classes).toContain('smart:dark:bg-white/5');
+    expect(classes).toContain('smart:dark:text-white');
+    expect(classes).toContain('smart:dark:outline-white/10');
   });
 
   it('should include external cssClass in inputClasses() when provided', () => {

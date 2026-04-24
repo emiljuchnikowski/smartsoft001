@@ -26,7 +26,7 @@ import { InputBaseComponent } from '../base/base.component';
           <img
             [src]="control?.value"
             (click)="set(inputFile)"
-            class="smart:h-20 smart:w-20 smart:cursor-pointer smart:rounded smart:border smart:border-gray-300 smart:object-cover dark:smart:border-gray-600"
+            class="smart:h-20 smart:w-20 smart:cursor-pointer smart:rounded smart:border smart:border-gray-300 smart:object-cover smart:dark:border-gray-600"
           />
           <button
             type="button"
@@ -58,7 +58,7 @@ export class InputLogoComponent<T> extends InputBaseComponent<T> {
       'smart:text-sm/6',
       'smart:font-medium',
       'smart:text-gray-900',
-      'dark:smart:text-white',
+      'smart:dark:text-white',
     ].join(' '),
   );
 

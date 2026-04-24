@@ -45,7 +45,7 @@ export class InputDateComponent<T>
       'smart:text-sm/6',
       'smart:font-medium',
       'smart:text-gray-900',
-      'dark:smart:text-white',
+      'smart:dark:text-white',
     ].join(' '),
   );
 
@@ -68,9 +68,9 @@ export class InputDateComponent<T>
       'focus:smart:outline-offset-2',
       'focus:smart:outline-indigo-600',
       'sm:smart:text-sm/6',
-      'dark:smart:bg-white/5',
-      'dark:smart:text-white',
-      'dark:smart:outline-white/10',
+      'smart:dark:bg-white/5',
+      'smart:dark:text-white',
+      'smart:dark:outline-white/10',
       'dark:placeholder:smart:text-gray-500',
       'dark:focus:smart:outline-indigo-500',
     ];

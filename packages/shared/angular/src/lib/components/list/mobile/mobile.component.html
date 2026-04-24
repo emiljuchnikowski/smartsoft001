@@ -10,7 +10,7 @@
             @let cell = item | smartListCell: key : cellPipe : type;
             @if (cell) {
               <p
-                class="smart:text-sm smart:text-gray-900 dark:smart:text-white"
+                class="smart:text-sm smart:text-gray-900 smart:dark:text-white"
                 [innerHTML]="cell.value"
               ></p>
             }
@@ -23,7 +23,7 @@
         ) {
           <button
             type="button"
-            class="smart:text-red-600 hover:smart:text-red-900 dark:smart:text-red-400 dark:hover:smart:text-red-300 smart:text-sm"
+            class="smart:text-red-600 hover:smart:text-red-900 smart:dark:text-red-400 dark:hover:smart:text-red-300 smart:text-sm"
             (click)="removeHandler?.(item)"
           >
             {{ 'remove' | translate }}
@@ -32,7 +32,7 @@
         @if (itemHandler) {
           <button
             type="button"
-            class="smart:text-indigo-600 hover:smart:text-indigo-900 dark:smart:text-indigo-400 dark:hover:smart:text-indigo-300 smart:text-sm"
+            class="smart:text-indigo-600 hover:smart:text-indigo-900 smart:dark:text-indigo-400 dark:hover:smart:text-indigo-300 smart:text-sm"
             (click)="itemHandler?.(item.id)"
           >
             →

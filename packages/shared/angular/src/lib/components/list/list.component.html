@@ -7,7 +7,7 @@
 <smart-loader [show]="loading ?? false"></smart-loader>
 @if (!loading && !internalOptions?.provider?.list?.()?.length) {
   <h2
-    class="smart:mt-4 smart:text-center smart:text-gray-500 dark:smart:text-gray-400"
+    class="smart:mt-4 smart:text-center smart:text-gray-500 smart:dark:text-gray-400"
   >
     {{ 'noResults' | translate }}
   </h2>

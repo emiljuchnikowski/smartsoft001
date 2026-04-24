@@ -28,7 +28,7 @@ export abstract class CardBaseComponent {
       classes.push(
         'smart:divide-y',
         'smart:divide-gray-200',
-        'dark:smart:divide-white/10',
+        'smart:dark:divide-white/10',
       );
     }
 
@@ -44,7 +44,7 @@ export abstract class CardBaseComponent {
     const classes = ['smart:px-4', 'smart:py-5', 'sm:smart:p-6'];
 
     if (opts?.grayBody) {
-      classes.push('smart:bg-gray-50', 'dark:smart:bg-gray-800/50');
+      classes.push('smart:bg-gray-50', 'smart:dark:bg-gray-800/50');
     }
 
     return classes.join(' ');
@@ -55,7 +55,7 @@ export abstract class CardBaseComponent {
     const classes = ['smart:px-4', 'smart:py-4', 'sm:smart:px-6'];
 
     if (opts?.grayFooter) {
-      classes.push('smart:bg-gray-50', 'dark:smart:bg-gray-800/50');
+      classes.push('smart:bg-gray-50', 'smart:dark:bg-gray-800/50');
     }
 
     return classes.join(' ');

@@ -579,12 +579,12 @@ export const WithError: Story = {
   selector: 'custom-input-text',
   template: `
     <div
-      class="smart:rounded smart:border-2 smart:border-indigo-500 smart:bg-indigo-50 smart:p-3 dark:smart:bg-indigo-900/30"
+      class="smart:rounded smart:border-2 smart:border-indigo-500 smart:bg-indigo-50 smart:p-3 smart:dark:bg-indigo-900/30"
     >
-      <strong class="smart:text-indigo-700 dark:smart:text-indigo-300"
+      <strong class="smart:text-indigo-700 smart:dark:text-indigo-300"
         >Custom Text Input:</strong
       >
-      <span class="smart:ml-2 smart:text-gray-900 dark:smart:text-white">{{
+      <span class="smart:ml-2 smart:text-gray-900 smart:dark:text-white">{{
         control?.value
       }}</span>
     </div>
@@ -870,7 +870,7 @@ export const InputError: Story = {
       props: {},
       template: `
         <div class="smart:space-y-2 smart:p-4">
-          <p class="smart:text-sm smart:font-medium smart:text-gray-700 dark:smart:text-gray-300 smart:mb-4">
+          <p class="smart:text-sm smart:font-medium smart:text-gray-700 smart:dark:text-gray-300 smart:mb-4">
             All error states rendered by <code>smart-input-error</code>:
           </p>
           <smart-input-error [errors]="{ required: true }"></smart-input-error>

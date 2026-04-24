@@ -26,7 +26,7 @@ Default concrete implementation. Renders:
 - a Tailwind-styled `<input type="search">` bound to a `UntypedFormControl` with `debounceTime` from options,
 - a magnifier SVG icon inside the input,
 - an optional toggle button (shown when `show()` is `false` and `options.showToggleButton` is `true`) that reveals the input,
-- `dark:smart:*` dark-mode classes.
+- `smart:dark:*` dark-mode classes.
 
 ### SearchbarBaseComponent (abstract)
 

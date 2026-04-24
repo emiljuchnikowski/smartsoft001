@@ -41,7 +41,7 @@ export class DetailAttachmentComponent<
       'smart:text-white',
       'smart:shadow-sm',
       'hover:smart:bg-indigo-500',
-      'dark:smart:bg-indigo-500',
+      'smart:dark:bg-indigo-500',
       'dark:hover:smart:bg-indigo-400',
     ];
     const extra = this.cssClass();

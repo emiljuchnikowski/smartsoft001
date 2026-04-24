@@ -38,7 +38,7 @@ import { InputBaseComponent } from '../base/base.component';
               [formControl]="item"
               [placeholder]="(last ? ('add' | translate) : '') + '...'"
               (change)="onItemChange()"
-              class="smart:block smart:w-full smart:rounded-md smart:bg-white smart:px-2 smart:py-1 smart:text-sm smart:text-gray-900 smart:outline-1 smart:outline-gray-300 focus:smart:outline-2 focus:smart:outline-indigo-600 dark:smart:bg-white/5 dark:smart:text-white dark:smart:outline-white/10"
+              class="smart:block smart:w-full smart:rounded-md smart:bg-white smart:px-2 smart:py-1 smart:text-sm smart:text-gray-900 smart:outline-1 smart:outline-gray-300 focus:smart:outline-2 focus:smart:outline-indigo-600 smart:dark:bg-white/5 smart:dark:text-white smart:dark:outline-white/10"
             />
             @if (!last) {
               <button
@@ -68,7 +68,7 @@ export class InputStringsComponent<T> extends InputBaseComponent<T> {
       'smart:text-sm/6',
       'smart:font-medium',
       'smart:text-gray-900',
-      'dark:smart:text-white',
+      'smart:dark:text-white',
     ].join(' '),
   );
 

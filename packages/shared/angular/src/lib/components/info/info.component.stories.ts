@@ -126,7 +126,7 @@ export const AllVariants: Story = {
             With external class
           </h3>
           <smart-info
-            class="smart:text-indigo-600 dark:smart:text-indigo-400"
+            class="smart:text-indigo-600 smart:dark:text-indigo-400"
             [options]="{ text: 'External class applied via the class alias.' }"
           ></smart-info>
         </section>

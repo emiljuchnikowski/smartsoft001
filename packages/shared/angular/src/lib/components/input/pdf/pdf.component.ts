@@ -37,14 +37,14 @@ import { InputFileBaseComponent } from '../base/file.component';
             {{ 'delete' | translate }}
           </smart-button>
           <span
-            class="smart:text-sm smart:text-gray-700 dark:smart:text-gray-300"
+            class="smart:text-sm smart:text-gray-700 smart:dark:text-gray-300"
           >
             {{ control.value.fileName }}
           </span>
         }
         @if (loading()) {
           <div
-            class="smart:h-1 smart:w-24 smart:overflow-hidden smart:rounded smart:bg-gray-200 dark:smart:bg-gray-700"
+            class="smart:h-1 smart:w-24 smart:overflow-hidden smart:rounded smart:bg-gray-200 smart:dark:bg-gray-700"
           >
             <div
               class="smart:h-full smart:bg-indigo-600"
@@ -69,7 +69,7 @@ export class InputPdfComponent<T>
       'smart:text-sm/6',
       'smart:font-medium',
       'smart:text-gray-900',
-      'dark:smart:text-white',
+      'smart:dark:text-white',
     ].join(' '),
   );
 

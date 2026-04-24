@@ -33,8 +33,8 @@ export class DetailPhoneNumberPlComponent<T> extends DetailBaseComponent<T> {
       'smart:text-sm',
       'smart:font-medium',
       'smart:text-gray-700',
-      'dark:smart:bg-gray-800',
-      'dark:smart:text-gray-200',
+      'smart:dark:bg-gray-800',
+      'smart:dark:text-gray-200',
     ];
     const extra = this.cssClass();
     if (extra) classes.push(extra);
