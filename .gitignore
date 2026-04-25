@@ -49,4 +49,5 @@ Thumbs.db
 
 .angular
 /.claude/settings.local.json
+/.claude/scheduled_tasks.lock
 /packages/shared/claude-plugins/src/plugins/smart/audit_logs
