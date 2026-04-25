@@ -1,3 +1,13 @@
+## 2.119.0 (2026-04-25)
+
+### 🚀 Features
+
+- **shared:** upgrade Revolut Merchant API to 2024-09-01 ([05ea043](https://github.com/emiljuchnikowski/smartsoft001/commit/05ea043))
+
+### ❤️ Thank You
+
+- Emil Juchnikowski
+
 ## 2.118.0 (2026-04-07)
 
 This was a version bump only, there were no code changes.
