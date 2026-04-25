@@ -6,6 +6,8 @@
 
 `npm i @smartsoft001/revolut`
 
+Supported Revolut Merchant API version: **`2024-09-01`**.
+
 ## 🛠️ Services & Methods
 
 ### PaypalService
