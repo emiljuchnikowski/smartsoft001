@@ -67,6 +67,7 @@ export class TransShellNestjsModule {
           : []),
       ],
       imports: [
+        HttpModule,
         CrudShellNestjsModule.forRoot({
           ...config,
           db: {
@@ -141,6 +142,7 @@ export class TransShellNestjsCoreModule {
           : []),
       ],
       imports: [
+        HttpModule,
         CrudShellNestjsModule.forRoot({
           ...config,
           db: {
