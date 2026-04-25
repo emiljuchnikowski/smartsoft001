@@ -7,7 +7,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "./safety_validator.py"
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/safety_validator.py"
           }
         ]
       },
@@ -17,7 +17,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "./sensitive_file_blocker.py"
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/sensitive_file_blocker.py"
           }
         ]
       },
@@ -27,7 +27,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "./audit_logger.py"
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/audit_logger.py"
           }
         ]
       },
@@ -37,7 +37,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "./skill_validator.py"
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/skill_validator.py"
           }
         ]
       }
@@ -49,7 +49,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "./auto_format.sh"
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/auto_format.sh"
           }
         ]
       },
@@ -59,7 +59,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "./audit_logger.py"
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/audit_logger.py"
           }
         ]
       }
@@ -70,7 +70,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "./audit_logger.py"
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/audit_logger.py"
           }
         ]
       }
