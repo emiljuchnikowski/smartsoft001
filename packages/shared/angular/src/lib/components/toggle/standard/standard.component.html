@@ -1,0 +1,8 @@
+<input
+  type="checkbox"
+  [checked]="value()"
+  [disabled]="disabled()"
+  [attr.aria-label]="options()?.ariaLabel ?? null"
+  [class]="cssClass()"
+  (change)="onChange($event)"
+/>

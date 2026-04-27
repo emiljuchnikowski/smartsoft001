@@ -19,3 +19,4 @@ export * from './page';
 export * from './paging';
 export * from './password-strength';
 export * from './searchbar';
+export * from './toggle';

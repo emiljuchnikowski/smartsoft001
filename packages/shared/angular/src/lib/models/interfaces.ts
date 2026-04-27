@@ -57,6 +57,7 @@ export type DynamicComponentType =
   | 'loader'
   | 'password-strength'
   | 'searchbar'
+  | 'toggle'
   | 'crud-list-page'
   | 'crud-item-page';
 export interface IDynamicComponentData {
@@ -183,6 +184,13 @@ export interface ISearchbarOptions {
   showToggleButton?: boolean;
   size?: SmartSize;
   color?: SmartColor;
+}
+
+export interface IToggleOptions {
+  label?: string;
+  description?: string;
+  labelPosition?: 'left' | 'right';
+  ariaLabel?: string;
 }
 
 export interface IDetailOptions<T> {

@@ -16,6 +16,7 @@ import {
   PagingBaseComponent,
   PasswordStrengthBaseComponent,
   SearchbarBaseComponent,
+  ToggleBaseComponent,
 } from './components';
 import { ListMode, SmartPageVariant } from './models';
 
@@ -62,3 +63,6 @@ export const PASSWORD_STRENGTH_STANDARD_COMPONENT_TOKEN = new InjectionToken<
 export const SEARCHBAR_STANDARD_COMPONENT_TOKEN = new InjectionToken<
   Type<SearchbarBaseComponent>
 >('SEARCHBAR_STANDARD_COMPONENT');
+export const TOGGLE_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<ToggleBaseComponent>
+>('TOGGLE_STANDARD_COMPONENT');

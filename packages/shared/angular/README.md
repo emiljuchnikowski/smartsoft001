@@ -543,6 +543,57 @@ providers: [
 
 A custom implementation extending `SearchbarBaseComponent` should declare `cssClass = input<string>('')` without the `class` alias (because `NgComponentOutlet` passes inputs by canonical name) and rely on the base's `control` signal, `setShow()`, and `tryHide()` methods. The base class already wires `control.valueChanges` through `debounceTime()` and emits into the `text` model — do not re-subscribe.
 
+### ToggleBaseComponent
+
+Abstract base class for toggle components. Exposes `value` (two-way `ModelSignal<boolean>`), `disabled`, optional `IToggleOptions`, `cssClass` (alias `class`), and a `toggle()` method that flips `value` while respecting `disabled`.
+
+**Inputs:** `value` (`ModelSignal<boolean>`), `disabled` (`boolean`), `options` (`IToggleOptions`), `class` (`string`)
+
+### Toggle Component
+
+The `<smart-toggle>` component renders a boolean on/off control. It is a wrapper that delegates to `ToggleStandardComponent` by default and supports an InjectionToken (`TOGGLE_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `ToggleComponent` (selector: `smart-toggle`)
+**Default:** `ToggleStandardComponent` (selector: `smart-toggle-standard`)
+**Token:** `TOGGLE_STANDARD_COMPONENT_TOKEN` — provide a `Type<ToggleBaseComponent>` to override the default.
+
+#### Usage
+
+```html
+<!-- Basic -->
+<smart-toggle [(value)]="enabled" />
+
+<!-- With options -->
+<smart-toggle [(value)]="enabled" [options]="{ ariaLabel: 'Use setting' }" />
+
+<!-- Disabled -->
+<smart-toggle [(value)]="enabled" [disabled]="true" />
+
+<!-- With external class -->
+<smart-toggle [(value)]="enabled" class="smart:my-2" />
+```
+
+#### IToggleOptions
+
+| Property        | Type                  | Default | Description                                              |
+| --------------- | --------------------- | ------- | -------------------------------------------------------- |
+| `label`         | `string`              | -       | Optional label                                           |
+| `description`   | `string`              | -       | Optional secondary description                           |
+| `labelPosition` | `'left' \| 'right'`  | -       | Where the label sits relative to the toggle              |
+| `ariaLabel`     | `string`              | -       | Accessible label rendered as `aria-label`                |
+
+The default `ToggleStandardComponent` consumes only `ariaLabel`. `label`, `description`, and `labelPosition` are intended for custom implementations registered via `TOGGLE_STANDARD_COMPONENT_TOKEN`.
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { TOGGLE_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  { provide: TOGGLE_STANDARD_COMPONENT_TOKEN, useValue: MyToggleComponent },
+];
+```
+
 ### PasswordStrengthBaseComponent
 
 Abstract base class for password-strength indicator components. Exposes required `passwordToCheck: string` and `showHint: boolean` inputs, `cssClass: string` (alias `class`), a `passwordStrength: boolean` output, and computed signals: `result`, `strength` (0/10/20/30), `strengthIndex` (0..3), `msg` (`'' | 'poor' | 'notGood' | 'good'`), `barClasses` (length-3 string array), `msgClass`, and `containerClasses`. The output `passwordStrength` is emitted automatically via an `effect()` — `true` when `strength === 30`, `false` otherwise.

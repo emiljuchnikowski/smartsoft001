@@ -44,6 +44,7 @@ These render a default standard implementation and accept a custom implementatio
 | List              | `angular-components-list`              | `<smart-list>`              | `LIST_MODE_COMPONENTS_TOKEN`                 |
 | Password Strength | `angular-components-password-strength` | `<smart-password-strength>` | `PASSWORD_STRENGTH_STANDARD_COMPONENT_TOKEN` |
 | Searchbar         | `angular-components-searchbar`         | `<smart-searchbar>`         | `SEARCHBAR_STANDARD_COMPONENT_TOKEN`         |
+| Toggle            | `angular-components-toggle`            | `<smart-toggle>`            | `TOGGLE_STANDARD_COMPONENT_TOKEN`            |
 
 ### Base-Only Components (abstract classes for extension)
 
@@ -62,7 +63,7 @@ These provide abstract base classes (`@Directive()`) that can be extended to cre
 When a developer asks about a component:
 
 1. **Wants to use `<smart-date-edit>`, `<smart-date-range>`, `<smart-detail>`, or `<smart-input>`** → delegate to the corresponding skill for usage API
-2. **Wants to use `<smart-details>`, `<smart-form>`, `<smart-info>`, `<smart-list>`, `<smart-password-strength>`, or `<smart-searchbar>`** → delegate to the skill to explain usage, token override pattern, and how to extend the base class with a custom implementation
+2. **Wants to use `<smart-details>`, `<smart-form>`, `<smart-info>`, `<smart-list>`, `<smart-password-strength>`, `<smart-searchbar>`, or `<smart-toggle>`** → delegate to the skill to explain usage, token override pattern, and how to extend the base class with a custom implementation
 3. **Wants to use `<smart-button>`, `<smart-card>`, `<smart-accordion>`, `<smart-page>`, or `<smart-paging>`** → delegate to the skill to explain how to extend the base class and create a custom implementation
 4. **Wants to create a custom component** → delegate to the base-only skill for extension patterns and API
 
@@ -81,6 +82,7 @@ Always delegate to the per-component skill for detailed API, usage examples, and
 - **List** (with extension token map) → use skill `angular-components-list`
 - **Password Strength** (with extension token) → use skill `angular-components-password-strength`
 - **Searchbar** (with extension token) → use skill `angular-components-searchbar`
+- **Toggle** (with extension token) → use skill `angular-components-toggle`
 - **Button** (base only) → use skill `angular-components-button`
 - **Card** (base only) → use skill `angular-components-card`
 - **Page** (base only) → use skill `angular-components-page`
@@ -131,6 +133,8 @@ import {
   PAGING_STANDARD_COMPONENT_TOKEN,
   SearchbarBaseComponent,
   SEARCHBAR_STANDARD_COMPONENT_TOKEN,
+  ToggleBaseComponent,
+  TOGGLE_STANDARD_COMPONENT_TOKEN,
 } from '@smartsoft001/angular';
 
 // Base classes for date components (also extensible)
