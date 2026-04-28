@@ -50,13 +50,19 @@ export interface IIconButtonOptions {
 export type DynamicComponentType =
   | 'form'
   | 'page'
+  | 'page-heading'
   | 'button'
+  | 'card-heading'
   | 'details'
   | 'info'
   | 'list'
   | 'loader'
+  | 'multi-column-layout'
   | 'password-strength'
   | 'searchbar'
+  | 'section-heading'
+  | 'sidebar-layout'
+  | 'stacked-layout'
   | 'toggle'
   | 'crud-list-page'
   | 'crud-item-page';
@@ -191,6 +197,74 @@ export interface IToggleOptions {
   description?: string;
   labelPosition?: 'left' | 'right';
   ariaLabel?: string;
+}
+
+export type SmartStackedLayoutContainerWidth =
+  | 'sm'
+  | 'md'
+  | 'lg'
+  | 'xl'
+  | 'full';
+
+export interface IStackedLayoutOptions {
+  title?: string;
+  navTpl?: TemplateRef<unknown>;
+  headerTpl?: TemplateRef<unknown>;
+  containerWidth?: SmartStackedLayoutContainerWidth;
+}
+
+export interface ICardHeadingOptions {
+  title?: string;
+  description?: string;
+  avatarTpl?: TemplateRef<unknown>;
+  actionsTpl?: TemplateRef<unknown>;
+  metaTpl?: TemplateRef<unknown>;
+}
+
+export interface IPageHeadingOptions {
+  title?: string;
+  subtitle?: string;
+  breadcrumbsTpl?: TemplateRef<unknown>;
+  metaTpl?: TemplateRef<unknown>;
+  avatarTpl?: TemplateRef<unknown>;
+  bannerTpl?: TemplateRef<unknown>;
+  actionsTpl?: TemplateRef<unknown>;
+  statsTpl?: TemplateRef<unknown>;
+  logoTpl?: TemplateRef<unknown>;
+  filtersTpl?: TemplateRef<unknown>;
+}
+
+export type SmartMultiColumnLayoutWidth = 'full' | 'constrained';
+export type SmartMultiColumnLayoutSecondaryWidth = 'sm' | 'md' | 'lg';
+
+export interface IMultiColumnLayoutOptions {
+  title?: string;
+  navTpl?: TemplateRef<unknown>;
+  secondaryTpl?: TemplateRef<unknown>;
+  headerTpl?: TemplateRef<unknown>;
+  width?: SmartMultiColumnLayoutWidth;
+  secondaryWidth?: SmartMultiColumnLayoutSecondaryWidth;
+}
+
+export interface ISectionHeadingOptions {
+  title?: string;
+  description?: string;
+  label?: string;
+  actionsTpl?: TemplateRef<unknown>;
+  tabsTpl?: TemplateRef<unknown>;
+  inputGroupTpl?: TemplateRef<unknown>;
+  badgeTpl?: TemplateRef<unknown>;
+}
+
+export type SmartSidebarLayoutMobileBreakpoint = 'sm' | 'md' | 'lg';
+
+export interface ISidebarLayoutOptions {
+  title?: string;
+  sidebarTpl?: TemplateRef<unknown>;
+  headerTpl?: TemplateRef<unknown>;
+  sidebarPosition?: 'left' | 'right';
+  mobileBreakpoint?: SmartSidebarLayoutMobileBreakpoint;
+  condensed?: boolean;
 }
 
 export interface IDetailOptions<T> {

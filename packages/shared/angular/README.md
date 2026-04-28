@@ -594,6 +594,443 @@ providers: [
 ];
 ```
 
+### SectionHeadingBaseComponent
+
+Abstract base class for section heading components. Exposes optional `ISectionHeadingOptions` and `cssClass` (alias `class`).
+
+**Inputs:** `options` (`ISectionHeadingOptions`), `class` (`string`)
+
+### SectionHeading Component
+
+The `<smart-section-heading>` component renders a heading region for sections within a page (positioned between `<smart-page-heading>` and `<smart-card-heading>` in size and scope), with optional slots for label, description, actions, tabs, an input group (search), and a badge. It is a wrapper that delegates to `SectionHeadingStandardComponent` by default and supports an InjectionToken (`SECTION_HEADING_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `SectionHeadingComponent` (selector: `smart-section-heading`)
+**Default:** `SectionHeadingStandardComponent` (selector: `smart-section-heading-standard`)
+**Token:** `SECTION_HEADING_STANDARD_COMPONENT_TOKEN` — provide a `Type<SectionHeadingBaseComponent>` to override the default.
+
+#### Usage
+
+```html
+<!-- Title only -->
+<smart-section-heading [options]="{ title: 'Applicants' }" />
+
+<!-- Title with label -->
+<smart-section-heading
+  [options]="{ title: 'Applicants', label: 'in Engineering' }"
+/>
+
+<!-- With actions -->
+<ng-template #actions>
+  <button>Add</button>
+</ng-template>
+
+<smart-section-heading
+  [options]="{ title: 'Applicants', actionsTpl: actions }"
+/>
+
+<!-- With tabs and search -->
+<ng-template #tabs>
+  <a>All</a>
+</ng-template>
+
+<ng-template #search>
+  <smart-searchbar />
+</ng-template>
+
+<smart-section-heading
+  [options]="{ title: 'Applicants', tabsTpl: tabs, inputGroupTpl: search }"
+/>
+```
+
+#### ISectionHeadingOptions
+
+| Property        | Type                   | Default | Description                                  |
+| --------------- | ---------------------- | ------- | -------------------------------------------- |
+| `title`         | `string`               | -       | Heading title (rendered as `<h3>`)           |
+| `description`   | `string`               | -       | Optional description string                  |
+| `label`         | `string`               | -       | Inline label rendered next to the title      |
+| `actionsTpl`    | `TemplateRef<unknown>` | -       | Actions / buttons template on the right      |
+| `tabsTpl`       | `TemplateRef<unknown>` | -       | Tabs template rendered below the header      |
+| `inputGroupTpl` | `TemplateRef<unknown>` | -       | Input/search group template on the right     |
+| `badgeTpl`      | `TemplateRef<unknown>` | -       | Badge / chip template on the right           |
+
+The default `SectionHeadingStandardComponent` consumes every property; a section is rendered only when its template/string is provided.
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { SECTION_HEADING_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  {
+    provide: SECTION_HEADING_STANDARD_COMPONENT_TOKEN,
+    useValue: MySectionHeadingComponent,
+  },
+];
+```
+
+### CardHeadingBaseComponent
+
+Abstract base class for card heading components. Exposes optional `ICardHeadingOptions` and `cssClass` (alias `class`).
+
+**Inputs:** `options` (`ICardHeadingOptions`), `class` (`string`)
+
+### CardHeading Component
+
+The `<smart-card-heading>` component renders a small composable heading region for cards, with optional slots for avatar, title, description, meta, and actions. It can be used standalone or passed as the `headerTpl` value to `<smart-card>`. It is a wrapper that delegates to `CardHeadingStandardComponent` by default and supports an InjectionToken (`CARD_HEADING_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `CardHeadingComponent` (selector: `smart-card-heading`)
+**Default:** `CardHeadingStandardComponent` (selector: `smart-card-heading-standard`)
+**Token:** `CARD_HEADING_STANDARD_COMPONENT_TOKEN` — provide a `Type<CardHeadingBaseComponent>` to override the default.
+
+#### Usage
+
+```html
+<!-- Title only -->
+<smart-card-heading [options]="{ title: 'Job Postings' }" />
+
+<!-- Title and description -->
+<smart-card-heading
+  [options]="{ title: 'Job Postings', description: 'Currently open' }"
+/>
+
+<!-- With actions -->
+<ng-template #actions>
+  <button>View all</button>
+</ng-template>
+
+<smart-card-heading
+  [options]="{ title: 'Job Postings', actionsTpl: actions }"
+/>
+```
+
+#### ICardHeadingOptions
+
+| Property      | Type                   | Default | Description                                  |
+| ------------- | ---------------------- | ------- | -------------------------------------------- |
+| `title`       | `string`               | -       | Heading title (rendered as `<h3>`)           |
+| `description` | `string`               | -       | Optional description string                  |
+| `avatarTpl`   | `TemplateRef<unknown>` | -       | Avatar template rendered to the left         |
+| `actionsTpl`  | `TemplateRef<unknown>` | -       | Actions / buttons template on the right      |
+| `metaTpl`     | `TemplateRef<unknown>` | -       | Meta info template under the title           |
+
+The default `CardHeadingStandardComponent` consumes every property; a section is rendered only when its template/string is provided.
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { CARD_HEADING_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  {
+    provide: CARD_HEADING_STANDARD_COMPONENT_TOKEN,
+    useValue: MyCardHeadingComponent,
+  },
+];
+```
+
+### PageHeadingBaseComponent
+
+Abstract base class for page heading components. Exposes optional `IPageHeadingOptions` and `cssClass` (alias `class`).
+
+**Inputs:** `options` (`IPageHeadingOptions`), `class` (`string`)
+
+### PageHeading Component
+
+The `<smart-page-heading>` component renders a composable page heading region with optional slots for breadcrumbs, banner image, avatar, logo, title, subtitle, meta, stats, actions, and filters. It is independent of `<smart-page>` and can be used standalone or inside any layout. It is a wrapper that delegates to `PageHeadingStandardComponent` by default and supports an InjectionToken (`PAGE_HEADING_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `PageHeadingComponent` (selector: `smart-page-heading`)
+**Default:** `PageHeadingStandardComponent` (selector: `smart-page-heading-standard`)
+**Token:** `PAGE_HEADING_STANDARD_COMPONENT_TOKEN` — provide a `Type<PageHeadingBaseComponent>` to override the default.
+
+#### Usage
+
+```html
+<!-- Title only -->
+<smart-page-heading [options]="{ title: 'Back End Developer' }" />
+
+<!-- With actions -->
+<ng-template #actions>
+  <button>Edit</button>
+</ng-template>
+
+<smart-page-heading
+  [options]="{ title: 'Back End Developer', actionsTpl: actions }"
+/>
+
+<!-- With breadcrumbs, meta and avatar -->
+<ng-template #crumbs>
+  <a routerLink="/jobs">Jobs</a>
+</ng-template>
+
+<ng-template #meta>
+  <span>Full-time</span>
+</ng-template>
+
+<ng-template #avatar>
+  <img src="avatar.jpg" alt="" />
+</ng-template>
+
+<smart-page-heading
+  [options]="{
+    title: 'Back End Developer',
+    subtitle: 'Engineering',
+    breadcrumbsTpl: crumbs,
+    metaTpl: meta,
+    avatarTpl: avatar,
+  }"
+/>
+```
+
+#### IPageHeadingOptions
+
+| Property         | Type                   | Default | Description                                  |
+| ---------------- | ---------------------- | ------- | -------------------------------------------- |
+| `title`          | `string`               | -       | Heading title (rendered as `<h1>`)           |
+| `subtitle`       | `string`               | -       | Subtitle string                              |
+| `breadcrumbsTpl` | `TemplateRef<unknown>` | -       | Breadcrumb navigation template               |
+| `metaTpl`        | `TemplateRef<unknown>` | -       | Meta tags / labels template                  |
+| `avatarTpl`      | `TemplateRef<unknown>` | -       | User/profile avatar template                 |
+| `bannerTpl`      | `TemplateRef<unknown>` | -       | Banner image template                        |
+| `actionsTpl`     | `TemplateRef<unknown>` | -       | Actions / button group template              |
+| `statsTpl`       | `TemplateRef<unknown>` | -       | Stats list template                          |
+| `logoTpl`        | `TemplateRef<unknown>` | -       | Organization logo template                   |
+| `filtersTpl`     | `TemplateRef<unknown>` | -       | Filters / chips template                     |
+
+The default `PageHeadingStandardComponent` consumes every property and renders a slot only when its corresponding template/string is provided.
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { PAGE_HEADING_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  {
+    provide: PAGE_HEADING_STANDARD_COMPONENT_TOKEN,
+    useValue: MyPageHeadingComponent,
+  },
+];
+```
+
+### MultiColumnLayoutBaseComponent
+
+Abstract base class for multi-column layout components. Exposes optional `IMultiColumnLayoutOptions` and `cssClass` (alias `class`).
+
+**Inputs:** `options` (`IMultiColumnLayoutOptions`), `class` (`string`)
+
+### MultiColumnLayout Component
+
+The `<smart-multi-column-layout>` component renders a three-column application shell — a left navigation `<aside>`, a main content region, and a right secondary `<aside>`, with an optional top header. It is a wrapper that delegates to `MultiColumnLayoutStandardComponent` by default and supports an InjectionToken (`MULTI_COLUMN_LAYOUT_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `MultiColumnLayoutComponent` (selector: `smart-multi-column-layout`)
+**Default:** `MultiColumnLayoutStandardComponent` (selector: `smart-multi-column-layout-standard`)
+**Token:** `MULTI_COLUMN_LAYOUT_STANDARD_COMPONENT_TOKEN` — provide a `Type<MultiColumnLayoutBaseComponent>` to override the default.
+
+#### Usage
+
+```html
+<!-- Basic with main content -->
+<smart-multi-column-layout>
+  <h1>Hello</h1>
+</smart-multi-column-layout>
+
+<!-- With nav and secondary -->
+<ng-template #nav>
+  <a routerLink="/">Inbox</a>
+</ng-template>
+
+<ng-template #secondary>
+  <p>Filters</p>
+</ng-template>
+
+<smart-multi-column-layout
+  [options]="{ navTpl: nav, secondaryTpl: secondary }"
+>
+  <p>Email content</p>
+</smart-multi-column-layout>
+
+<!-- With top header -->
+<ng-template #header>
+  <h1>Inbox</h1>
+</ng-template>
+
+<smart-multi-column-layout
+  [options]="{ navTpl: nav, secondaryTpl: secondary, headerTpl: header }"
+>
+  <p>Email content</p>
+</smart-multi-column-layout>
+```
+
+#### IMultiColumnLayoutOptions
+
+| Property         | Type                          | Default | Description                                                  |
+| ---------------- | ----------------------------- | ------- | ------------------------------------------------------------ |
+| `title`          | `string`                      | -       | Optional layout title                                        |
+| `navTpl`         | `TemplateRef<unknown>`        | -       | Template projected into the left `<aside class="nav">`       |
+| `secondaryTpl`   | `TemplateRef<unknown>`        | -       | Template projected into the right `<aside class="secondary">`|
+| `headerTpl`      | `TemplateRef<unknown>`        | -       | Template projected into a top `<header>` block               |
+| `width`          | `'full' \| 'constrained'`     | -       | Hint for max-width container size used by custom variants    |
+| `secondaryWidth` | `'sm' \| 'md' \| 'lg'`        | -       | Hint for secondary column width used by custom variants      |
+
+The default `MultiColumnLayoutStandardComponent` consumes `navTpl`, `secondaryTpl`, and `headerTpl`. `title`, `width`, and `secondaryWidth` are intended for custom implementations registered via `MULTI_COLUMN_LAYOUT_STANDARD_COMPONENT_TOKEN`.
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { MULTI_COLUMN_LAYOUT_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  {
+    provide: MULTI_COLUMN_LAYOUT_STANDARD_COMPONENT_TOKEN,
+    useValue: MyMultiColumnLayoutComponent,
+  },
+];
+```
+
+### SidebarLayoutBaseComponent
+
+Abstract base class for sidebar layout components. Exposes optional `ISidebarLayoutOptions` and `cssClass` (alias `class`).
+
+**Inputs:** `options` (`ISidebarLayoutOptions`), `class` (`string`)
+
+### SidebarLayout Component
+
+The `<smart-sidebar-layout>` component renders a two-column application shell with a sidebar (left or right) and a main content region, plus an optional top header. It is a wrapper that delegates to `SidebarLayoutStandardComponent` by default and supports an InjectionToken (`SIDEBAR_LAYOUT_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `SidebarLayoutComponent` (selector: `smart-sidebar-layout`)
+**Default:** `SidebarLayoutStandardComponent` (selector: `smart-sidebar-layout-standard`)
+**Token:** `SIDEBAR_LAYOUT_STANDARD_COMPONENT_TOKEN` — provide a `Type<SidebarLayoutBaseComponent>` to override the default.
+
+#### Usage
+
+```html
+<!-- Basic with main content -->
+<smart-sidebar-layout>
+  <h1>Hello</h1>
+</smart-sidebar-layout>
+
+<!-- With sidebar template -->
+<ng-template #sidebar>
+  <a routerLink="/">Dashboard</a>
+</ng-template>
+
+<smart-sidebar-layout [options]="{ sidebarTpl: sidebar }">
+  <p>Main content</p>
+</smart-sidebar-layout>
+
+<!-- Right-positioned sidebar -->
+<smart-sidebar-layout
+  [options]="{ sidebarTpl: sidebar, sidebarPosition: 'right' }"
+>
+  <p>Main content</p>
+</smart-sidebar-layout>
+
+<!-- With top header -->
+<ng-template #header>
+  <h1>Dashboard</h1>
+</ng-template>
+
+<smart-sidebar-layout [options]="{ sidebarTpl: sidebar, headerTpl: header }">
+  <p>Main content</p>
+</smart-sidebar-layout>
+```
+
+#### ISidebarLayoutOptions
+
+| Property           | Type                          | Default  | Description                                                  |
+| ------------------ | ----------------------------- | -------- | ------------------------------------------------------------ |
+| `title`            | `string`                      | -        | Optional layout title                                        |
+| `sidebarTpl`       | `TemplateRef<unknown>`        | -        | Template projected into the `<aside>` region                 |
+| `headerTpl`        | `TemplateRef<unknown>`        | -        | Template projected into a top `<header>` block               |
+| `sidebarPosition`  | `'left' \| 'right'`           | `'left'` | Sidebar position relative to main content                    |
+| `mobileBreakpoint` | `'sm' \| 'md' \| 'lg'`        | -        | Hint for the breakpoint at which sidebar collapses to drawer |
+| `condensed`        | `boolean`                     | -        | Hint for compact (rail) sidebar variant                      |
+
+The default `SidebarLayoutStandardComponent` consumes `sidebarTpl`, `headerTpl`, and `sidebarPosition`. `title`, `mobileBreakpoint`, and `condensed` are intended for custom implementations registered via `SIDEBAR_LAYOUT_STANDARD_COMPONENT_TOKEN`.
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { SIDEBAR_LAYOUT_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  {
+    provide: SIDEBAR_LAYOUT_STANDARD_COMPONENT_TOKEN,
+    useValue: MySidebarLayoutComponent,
+  },
+];
+```
+
+### StackedLayoutBaseComponent
+
+Abstract base class for stacked layout components. Exposes optional `IStackedLayoutOptions` and `cssClass` (alias `class`).
+
+**Inputs:** `options` (`IStackedLayoutOptions`), `class` (`string`)
+
+### StackedLayout Component
+
+The `<smart-stacked-layout>` component renders a top-to-bottom application shell with a top navigation bar, an optional page header section, and a main content region. It is a wrapper that delegates to `StackedLayoutStandardComponent` by default and supports an InjectionToken (`STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `StackedLayoutComponent` (selector: `smart-stacked-layout`)
+**Default:** `StackedLayoutStandardComponent` (selector: `smart-stacked-layout-standard`)
+**Token:** `STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN` — provide a `Type<StackedLayoutBaseComponent>` to override the default.
+
+#### Usage
+
+```html
+<!-- Basic with main content -->
+<smart-stacked-layout>
+  <h1>Hello</h1>
+</smart-stacked-layout>
+
+<!-- With navigation template -->
+<ng-template #nav>
+  <a routerLink="/">Dashboard</a>
+</ng-template>
+
+<smart-stacked-layout [options]="{ navTpl: nav }">
+  <p>Main content</p>
+</smart-stacked-layout>
+
+<!-- With page header -->
+<ng-template #header>
+  <h1>Dashboard</h1>
+</ng-template>
+
+<smart-stacked-layout [options]="{ navTpl: nav, headerTpl: header }">
+  <p>Main content</p>
+</smart-stacked-layout>
+
+<!-- With external class -->
+<smart-stacked-layout class="smart:bg-gray-50">
+  <p>Main content</p>
+</smart-stacked-layout>
+```
+
+#### IStackedLayoutOptions
+
+| Property         | Type                                 | Default | Description                                                   |
+| ---------------- | ------------------------------------ | ------- | ------------------------------------------------------------- |
+| `title`          | `string`                             | -       | Optional layout title                                         |
+| `navTpl`         | `TemplateRef<unknown>`               | -       | Template projected into the top `<nav>`                       |
+| `headerTpl`      | `TemplateRef<unknown>`               | -       | Template projected into a secondary `<header>` block          |
+| `containerWidth` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'full'` | -   | Hint for max-width container size used by custom variants     |
+
+The default `StackedLayoutStandardComponent` consumes `navTpl` and `headerTpl`. `title` and `containerWidth` are intended for custom implementations registered via `STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN`.
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  {
+    provide: STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN,
+    useValue: MyStackedLayoutComponent,
+  },
+];
+```
+
 ### PasswordStrengthBaseComponent
 
 Abstract base class for password-strength indicator components. Exposes required `passwordToCheck: string` and `showHint: boolean` inputs, `cssClass: string` (alias `class`), a `passwordStrength: boolean` output, and computed signals: `result`, `strength` (0/10/20/30), `strengthIndex` (0..3), `msg` (`'' | 'poor' | 'notGood' | 'good'`), `barClasses` (length-3 string array), `msgClass`, and `containerClasses`. The output `passwordStrength` is emitted automatically via an `effect()` — `true` when `strength === 30`, `false` otherwise.

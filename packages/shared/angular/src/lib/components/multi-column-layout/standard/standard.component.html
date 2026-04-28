@@ -1,0 +1,20 @@
+<div [class]="cssClass()">
+  @if (options()?.headerTpl) {
+    <header>
+      <ng-container [ngTemplateOutlet]="options()!.headerTpl!" />
+    </header>
+  }
+  <aside class="nav">
+    @if (options()?.navTpl) {
+      <ng-container [ngTemplateOutlet]="options()!.navTpl!" />
+    }
+  </aside>
+  <main>
+    <ng-content />
+  </main>
+  <aside class="secondary">
+    @if (options()?.secondaryTpl) {
+      <ng-container [ngTemplateOutlet]="options()!.secondaryTpl!" />
+    }
+  </aside>
+</div>

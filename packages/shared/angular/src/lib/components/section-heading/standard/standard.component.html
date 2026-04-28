@@ -1,0 +1,37 @@
+<div [class]="cssClass()">
+  <div class="header">
+    <div class="title-block">
+      @if (options()?.title) {
+        <h3>
+          {{ options()!.title }}
+          @if (options()?.label) {
+            <span class="label">{{ options()!.label }}</span>
+          }
+        </h3>
+      }
+      @if (options()?.description) {
+        <p class="description">{{ options()!.description }}</p>
+      }
+    </div>
+    @if (options()?.badgeTpl) {
+      <div class="badge">
+        <ng-container [ngTemplateOutlet]="options()!.badgeTpl!" />
+      </div>
+    }
+    @if (options()?.inputGroupTpl) {
+      <div class="input-group">
+        <ng-container [ngTemplateOutlet]="options()!.inputGroupTpl!" />
+      </div>
+    }
+    @if (options()?.actionsTpl) {
+      <div class="actions">
+        <ng-container [ngTemplateOutlet]="options()!.actionsTpl!" />
+      </div>
+    }
+  </div>
+  @if (options()?.tabsTpl) {
+    <div class="tabs">
+      <ng-container [ngTemplateOutlet]="options()!.tabsTpl!" />
+    </div>
+  }
+</div>

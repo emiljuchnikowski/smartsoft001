@@ -1,0 +1,26 @@
+<div [class]="cssClass()">
+  @if (options()?.headerTpl) {
+    <header>
+      <ng-container [ngTemplateOutlet]="options()!.headerTpl!" />
+    </header>
+  }
+  @if (isRightSidebar()) {
+    <main>
+      <ng-content />
+    </main>
+    <aside>
+      @if (options()?.sidebarTpl) {
+        <ng-container [ngTemplateOutlet]="options()!.sidebarTpl!" />
+      }
+    </aside>
+  } @else {
+    <aside>
+      @if (options()?.sidebarTpl) {
+        <ng-container [ngTemplateOutlet]="options()!.sidebarTpl!" />
+      }
+    </aside>
+    <main>
+      <ng-content />
+    </main>
+  }
+</div>
