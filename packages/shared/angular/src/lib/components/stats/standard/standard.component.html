@@ -1,0 +1,35 @@
+<div [class]="cssClass()">
+  <div class="stats">
+    @if (options()?.title) {
+      <h3 class="title">{{ options()!.title }}</h3>
+    }
+    <dl>
+      @for (item of options()?.items ?? []; track $index) {
+        <div class="item" [attr.aria-label]="item.ariaLabel ?? null">
+          @if (item.iconTpl) {
+            <div class="icon">
+              <ng-container [ngTemplateOutlet]="item.iconTpl" />
+            </div>
+          }
+          <dt class="label">{{ item.label }}</dt>
+          <dd class="value">{{ item.value }}</dd>
+          @if (
+            item.previousValue !== undefined && item.previousValue !== null
+          ) {
+            <dd class="previous">{{ item.previousValue }}</dd>
+          }
+          @if (item.change) {
+            <dd class="change" [attr.data-trend]="item.trend ?? null">
+              {{ item.change }}
+            </dd>
+          }
+          @if (item.actionTpl) {
+            <div class="action">
+              <ng-container [ngTemplateOutlet]="item.actionTpl" />
+            </div>
+          }
+        </div>
+      }
+    </dl>
+  </div>
+</div>

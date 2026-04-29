@@ -4,8 +4,10 @@ import { FieldTypeDef } from '@smartsoft001/models';
 
 import {
   ButtonBaseComponent,
+  CalendarBaseComponent,
   CardBaseComponent,
   CardHeadingBaseComponent,
+  DescriptionListBaseComponent,
   DetailBaseComponent,
   DetailsBaseComponent,
   FormBaseComponent,
@@ -22,6 +24,7 @@ import {
   SectionHeadingBaseComponent,
   SidebarLayoutBaseComponent,
   StackedLayoutBaseComponent,
+  StatsBaseComponent,
   ToggleBaseComponent,
 } from './components';
 import { ListMode, SmartPageVariant } from './models';
@@ -33,6 +36,9 @@ export const DETAILS_COMPONENT_TOKEN = new InjectionToken<any>(
 export const BUTTON_STANDARD_COMPONENT_TOKEN = new InjectionToken<
   Type<ButtonBaseComponent>
 >('BUTTON_STANDARD_COMPONENT');
+export const CALENDAR_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<CalendarBaseComponent>
+>('CALENDAR_STANDARD_COMPONENT');
 export const CARD_STANDARD_COMPONENT_TOKEN = new InjectionToken<
   Type<CardBaseComponent>
 >('CARD_STANDARD_COMPONENT');
@@ -45,6 +51,9 @@ export const DETAILS_STANDARD_COMPONENT_TOKEN = new InjectionToken<
 export const DETAIL_FIELD_COMPONENTS_TOKEN = new InjectionToken<
   Partial<Record<FieldTypeDef, Type<DetailBaseComponent<any>>>>
 >('DETAIL_FIELD_COMPONENTS_TOKEN');
+export const DESCRIPTION_LIST_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<DescriptionListBaseComponent>
+>('DESCRIPTION_LIST_STANDARD_COMPONENT');
 export const FORM_STANDARD_COMPONENT_TOKEN = new InjectionToken<
   Type<FormBaseComponent<any>>
 >('FORM_STANDARD_COMPONENT');
@@ -87,6 +96,9 @@ export const SIDEBAR_LAYOUT_STANDARD_COMPONENT_TOKEN = new InjectionToken<
 export const STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN = new InjectionToken<
   Type<StackedLayoutBaseComponent>
 >('STACKED_LAYOUT_STANDARD_COMPONENT');
+export const STATS_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<StatsBaseComponent>
+>('STATS_STANDARD_COMPONENT');
 export const TOGGLE_STANDARD_COMPONENT_TOKEN = new InjectionToken<
   Type<ToggleBaseComponent>
 >('TOGGLE_STANDARD_COMPONENT');

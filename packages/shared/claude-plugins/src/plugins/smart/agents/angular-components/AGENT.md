@@ -38,7 +38,9 @@ These render a default standard implementation and accept a custom implementatio
 
 | Component           | Skill                                    | Selector                      | Token                                          |
 | ------------------- | ---------------------------------------- | ----------------------------- | ---------------------------------------------- |
+| Calendar            | `angular-components-calendar`            | `<smart-calendar>`            | `CALENDAR_STANDARD_COMPONENT_TOKEN`            |
 | Card Heading        | `angular-components-card-heading`        | `<smart-card-heading>`        | `CARD_HEADING_STANDARD_COMPONENT_TOKEN`        |
+| Description List    | `angular-components-description-list`    | `<smart-description-list>`    | `DESCRIPTION_LIST_STANDARD_COMPONENT_TOKEN`    |
 | Details             | `angular-components-details`             | `<smart-details>`             | `DETAILS_STANDARD_COMPONENT_TOKEN`             |
 | Form                | `angular-components-form`                | `<smart-form>`                | `FORM_STANDARD_COMPONENT_TOKEN`                |
 | Info                | `angular-components-info`                | `<smart-info>`                | `INFO_STANDARD_COMPONENT_TOKEN`                |
@@ -50,6 +52,7 @@ These render a default standard implementation and accept a custom implementatio
 | Section Heading     | `angular-components-section-heading`     | `<smart-section-heading>`     | `SECTION_HEADING_STANDARD_COMPONENT_TOKEN`     |
 | Sidebar Layout      | `angular-components-sidebar-layout`      | `<smart-sidebar-layout>`      | `SIDEBAR_LAYOUT_STANDARD_COMPONENT_TOKEN`      |
 | Stacked Layout      | `angular-components-stacked-layout`      | `<smart-stacked-layout>`      | `STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN`      |
+| Stats               | `angular-components-stats`               | `<smart-stats>`               | `STATS_STANDARD_COMPONENT_TOKEN`               |
 | Toggle              | `angular-components-toggle`              | `<smart-toggle>`              | `TOGGLE_STANDARD_COMPONENT_TOKEN`              |
 
 ### Base-Only Components (abstract classes for extension)
@@ -69,7 +72,7 @@ These provide abstract base classes (`@Directive()`) that can be extended to cre
 When a developer asks about a component:
 
 1. **Wants to use `<smart-date-edit>`, `<smart-date-range>`, `<smart-detail>`, or `<smart-input>`** → delegate to the corresponding skill for usage API
-2. **Wants to use `<smart-card-heading>`, `<smart-details>`, `<smart-form>`, `<smart-info>`, `<smart-list>`, `<smart-multi-column-layout>`, `<smart-page-heading>`, `<smart-password-strength>`, `<smart-searchbar>`, `<smart-section-heading>`, `<smart-sidebar-layout>`, `<smart-stacked-layout>`, or `<smart-toggle>`** → delegate to the skill to explain usage, token override pattern, and how to extend the base class with a custom implementation
+2. **Wants to use `<smart-calendar>`, `<smart-card-heading>`, `<smart-description-list>`, `<smart-details>`, `<smart-form>`, `<smart-info>`, `<smart-list>`, `<smart-multi-column-layout>`, `<smart-page-heading>`, `<smart-password-strength>`, `<smart-searchbar>`, `<smart-section-heading>`, `<smart-sidebar-layout>`, `<smart-stacked-layout>`, `<smart-stats>`, or `<smart-toggle>`** → delegate to the skill to explain usage, token override pattern, and how to extend the base class with a custom implementation
 3. **Wants to use `<smart-button>`, `<smart-card>`, `<smart-accordion>`, `<smart-page>`, or `<smart-paging>`** → delegate to the skill to explain how to extend the base class and create a custom implementation
 4. **Wants to create a custom component** → delegate to the base-only skill for extension patterns and API
 
@@ -81,7 +84,9 @@ Always delegate to the per-component skill for detailed API, usage examples, and
 - **Date Range** → use skill `angular-components-date-range`
 - **Accordion** (base only) → use skill `angular-components-accordion`
 - **Detail** → use skill `angular-components-detail`
+- **Calendar** (with extension token) → use skill `angular-components-calendar`
 - **Card Heading** (with extension token) → use skill `angular-components-card-heading`
+- **Description List** (with extension token) → use skill `angular-components-description-list`
 - **Details** (with extension token) → use skill `angular-components-details`
 - **Form** (with extension token) → use skill `angular-components-form`
 - **Info** (with extension token) → use skill `angular-components-info`
@@ -94,6 +99,7 @@ Always delegate to the per-component skill for detailed API, usage examples, and
 - **Section Heading** (with extension token) → use skill `angular-components-section-heading`
 - **Sidebar Layout** (with extension token) → use skill `angular-components-sidebar-layout`
 - **Stacked Layout** (with extension token) → use skill `angular-components-stacked-layout`
+- **Stats** (with extension token) → use skill `angular-components-stats`
 - **Toggle** (with extension token) → use skill `angular-components-toggle`
 - **Button** (base only) → use skill `angular-components-button`
 - **Card** (base only) → use skill `angular-components-card`
@@ -122,10 +128,14 @@ import {
 // Base classes for extension
 import {
   ButtonBaseComponent,
+  CalendarBaseComponent,
+  CALENDAR_STANDARD_COMPONENT_TOKEN,
   CardBaseComponent,
   CardHeadingBaseComponent,
   CARD_HEADING_STANDARD_COMPONENT_TOKEN,
   AccordionBaseComponent,
+  DescriptionListBaseComponent,
+  DESCRIPTION_LIST_STANDARD_COMPONENT_TOKEN,
   DetailBaseComponent,
   DetailsBaseComponent,
   DETAILS_STANDARD_COMPONENT_TOKEN,
@@ -157,6 +167,8 @@ import {
   SIDEBAR_LAYOUT_STANDARD_COMPONENT_TOKEN,
   StackedLayoutBaseComponent,
   STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN,
+  StatsBaseComponent,
+  STATS_STANDARD_COMPONENT_TOKEN,
   ToggleBaseComponent,
   TOGGLE_STANDARD_COMPONENT_TOKEN,
 } from '@smartsoft001/angular';

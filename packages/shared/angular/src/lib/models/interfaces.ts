@@ -52,8 +52,10 @@ export type DynamicComponentType =
   | 'page'
   | 'page-heading'
   | 'button'
+  | 'calendar'
   | 'card-heading'
   | 'details'
+  | 'description-list'
   | 'info'
   | 'list'
   | 'loader'
@@ -63,6 +65,7 @@ export type DynamicComponentType =
   | 'section-heading'
   | 'sidebar-layout'
   | 'stacked-layout'
+  | 'stats'
   | 'toggle'
   | 'crud-list-page'
   | 'crud-item-page';
@@ -254,6 +257,67 @@ export interface ISectionHeadingOptions {
   tabsTpl?: TemplateRef<unknown>;
   inputGroupTpl?: TemplateRef<unknown>;
   badgeTpl?: TemplateRef<unknown>;
+}
+
+export interface IDescriptionListItem {
+  label: string;
+  value?: string;
+  valueTpl?: TemplateRef<unknown>;
+  actionTpl?: TemplateRef<unknown>;
+}
+
+export interface IDescriptionListOptions {
+  title?: string;
+  description?: string;
+  items?: IDescriptionListItem[];
+  attachmentsTpl?: TemplateRef<unknown>;
+  footerTpl?: TemplateRef<unknown>;
+}
+
+export interface IStatItem {
+  label: string;
+  value: string | number;
+  previousValue?: string | number;
+  change?: string;
+  trend?: 'up' | 'down' | 'neutral';
+  iconTpl?: TemplateRef<unknown>;
+  actionTpl?: TemplateRef<unknown>;
+  ariaLabel?: string;
+}
+
+export interface IStatsOptions {
+  title?: string;
+  items: IStatItem[];
+  columns?: 1 | 2 | 3 | 4;
+}
+
+export type SmartCalendarView = 'month' | 'week' | 'day' | 'year';
+
+export interface ICalendarEvent {
+  id: string | number;
+  start: Date;
+  end?: Date;
+  title?: string;
+  meta?: Record<string, unknown>;
+}
+
+export interface ICalendarDayCell {
+  date: Date;
+  isCurrentMonth: boolean;
+  isToday: boolean;
+  isSelected: boolean;
+}
+
+export interface ICalendarOptions {
+  view?: SmartCalendarView;
+  monthsCount?: 1 | 2 | 12;
+  weekStart?: 0 | 1;
+  showToolbar?: boolean;
+  toolbarActionsTpl?: TemplateRef<unknown>;
+  eventListTpl?: TemplateRef<unknown>;
+  sidePanelTpl?: TemplateRef<unknown>;
+  dayCellTpl?: TemplateRef<unknown>;
+  eventTpl?: TemplateRef<unknown>;
 }
 
 export type SmartSidebarLayoutMobileBreakpoint = 'sm' | 'md' | 'lg';

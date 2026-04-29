@@ -594,6 +594,90 @@ providers: [
 ];
 ```
 
+### CalendarBaseComponent
+
+Abstract base class for calendar components. Contains shared date logic — month-grid construction, period navigation (prev/next/today), single-day selection, and per-day event filtering. Exposes optional `ICalendarOptions`, two-way `value` model (`Date | null`), optional `referenceDate`, `events` array, and `cssClass` (alias `class`). Computed signals: `view`, `weekStart`, `showToolbar`, `reference`, `monthGrid`. Methods: `selectDay()`, `goToToday()`, `prevPeriod()`, `nextPeriod()`, `eventsForDay()`. Static method `buildMonthGrid()` is a pure function returning a 6×7 grid.
+
+**Inputs:** `options` (`ICalendarOptions`), `value` (`Date | null`, two-way), `referenceDate` (`Date`), `events` (`ICalendarEvent[]`), `class` (`string`)
+
+### Calendar Component
+
+The `<smart-calendar>` component renders a date calendar with shared month-grid logic, navigation toolbar (prev/next/today), and single-day selection. It is a wrapper that delegates to `CalendarStandardComponent` by default and supports an InjectionToken (`CALENDAR_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `CalendarComponent` (selector: `smart-calendar`)
+**Default:** `CalendarStandardComponent` (selector: `smart-calendar-standard`)
+**Token:** `CALENDAR_STANDARD_COMPONENT_TOKEN` — provide a `Type<CalendarBaseComponent>` to override the default.
+
+#### Usage
+
+```html
+<!-- Basic two-way binding -->
+<smart-calendar [(value)]="selected" />
+
+<!-- With reference date and events -->
+<smart-calendar
+  [(value)]="selected"
+  [referenceDate]="january2026"
+  [events]="meetings"
+/>
+
+<!-- Hidden toolbar -->
+<smart-calendar [(value)]="selected" [options]="{ showToolbar: false }" />
+
+<!-- Sunday-first weeks -->
+<smart-calendar [(value)]="selected" [options]="{ weekStart: 0 }" />
+
+<!-- Custom day cell -->
+<ng-template #dayCell let-cell let-events="events">
+  <span>{{ cell.date.getDate() }}</span>
+  @for (event of events; track event.id) {
+    <span class="dot"></span>
+  }
+</ng-template>
+
+<smart-calendar
+  [(value)]="selected"
+  [events]="meetings"
+  [options]="{ dayCellTpl: dayCell }"
+/>
+```
+
+#### ICalendarOptions
+
+| Property            | Type                                 | Default | Description                                                  |
+| ------------------- | ------------------------------------ | ------- | ------------------------------------------------------------ |
+| `view`              | `'month' \| 'week' \| 'day' \| 'year'` | `'month'` | Active view (hint for custom implementations)               |
+| `monthsCount`       | `1 \| 2 \| 12`                       | `1`     | Number of mini-months to render (custom impl hint)           |
+| `weekStart`         | `0 \| 1`                             | `1`     | Week start day (0 = Sunday, 1 = Monday)                       |
+| `showToolbar`       | `boolean`                            | `true`  | Toggle the prev/today/next toolbar                           |
+| `toolbarActionsTpl` | `TemplateRef<unknown>`               | -       | Slot for additional toolbar buttons                          |
+| `eventListTpl`      | `TemplateRef<unknown>`               | -       | Agenda / event list slot (custom impl)                       |
+| `sidePanelTpl`      | `TemplateRef<unknown>`               | -       | Side-panel slot (custom impl)                                |
+| `dayCellTpl`        | `TemplateRef<unknown>`               | -       | Custom day-cell template; receives `$implicit: ICalendarDayCell` and `events: ICalendarEvent[]` |
+| `eventTpl`          | `TemplateRef<unknown>`               | -       | Single-event template (custom impl)                          |
+
+#### ICalendarEvent
+
+| Property | Type                       | Default | Description                                |
+| -------- | -------------------------- | ------- | ------------------------------------------ |
+| `id`     | `string \| number`         | -       | Unique identifier                          |
+| `start`  | `Date`                     | -       | Event start (date is what is matched)      |
+| `end`    | `Date`                     | -       | Optional event end                         |
+| `title`  | `string`                   | -       | Optional title                             |
+| `meta`   | `Record<string, unknown>`  | -       | Free-form metadata for custom impl         |
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { CALENDAR_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  { provide: CALENDAR_STANDARD_COMPONENT_TOKEN, useValue: MyCalendarComponent },
+];
+```
+
+> `NgComponentOutlet` does not propagate output bindings. When a custom component is injected via the token, `value` two-way becomes one-way input. Custom impl should expose dedicated outputs and host wires manually.
+
 ### SectionHeadingBaseComponent
 
 Abstract base class for section heading components. Exposes optional `ISectionHeadingOptions` and `cssClass` (alias `class`).
@@ -665,6 +749,99 @@ providers: [
   {
     provide: SECTION_HEADING_STANDARD_COMPONENT_TOKEN,
     useValue: MySectionHeadingComponent,
+  },
+];
+```
+
+### DescriptionListBaseComponent
+
+Abstract base class for description list components. Exposes optional `IDescriptionListOptions` and `cssClass` (alias `class`).
+
+**Inputs:** `options` (`IDescriptionListOptions`), `class` (`string`)
+
+### DescriptionList Component
+
+The `<smart-description-list>` component renders a list of label/value pairs (a `<dl>` with `<dt>`/`<dd>` rows) with optional title, description, per-item value/action template slots, and bottom attachments/footer slots. It is a wrapper that delegates to `DescriptionListStandardComponent` by default and supports an InjectionToken (`DESCRIPTION_LIST_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `DescriptionListComponent` (selector: `smart-description-list`)
+**Default:** `DescriptionListStandardComponent` (selector: `smart-description-list-standard`)
+**Token:** `DESCRIPTION_LIST_STANDARD_COMPONENT_TOKEN` — provide a `Type<DescriptionListBaseComponent>` to override the default.
+
+#### Usage
+
+```html
+<!-- Title and items only -->
+<smart-description-list
+  [options]="{
+    title: 'Applicant Information',
+    items: [
+      { label: 'Full name', value: 'Margot Foster' },
+      { label: 'Application for', value: 'Backend Developer' },
+    ],
+  }"
+/>
+
+<!-- With description and templated value -->
+<ng-template #salaryValue>
+  <strong>$120,000</strong>
+</ng-template>
+
+<smart-description-list
+  [options]="{
+    title: 'Applicant Information',
+    description: 'Personal details and application.',
+    items: [
+      { label: 'Full name', value: 'Margot Foster' },
+      { label: 'Salary expectation', valueTpl: salaryValue },
+    ],
+  }"
+/>
+
+<!-- With per-item actions -->
+<ng-template #updateAction>
+  <button>Update</button>
+</ng-template>
+
+<smart-description-list
+  [options]="{
+    title: 'Applicant Information',
+    items: [
+      { label: 'Full name', value: 'Margot Foster', actionTpl: updateAction },
+    ],
+  }"
+/>
+```
+
+#### IDescriptionListOptions
+
+| Property         | Type                       | Default | Description                                              |
+| ---------------- | -------------------------- | ------- | -------------------------------------------------------- |
+| `title`          | `string`                   | -       | Heading title (rendered as `<h3>`)                       |
+| `description`    | `string`                   | -       | Optional description string                              |
+| `items`          | `IDescriptionListItem[]`   | -       | List of label/value pairs to render as `<dl>` rows       |
+| `attachmentsTpl` | `TemplateRef<unknown>`     | -       | Bottom attachments slot (e.g. file lists)                |
+| `footerTpl`      | `TemplateRef<unknown>`     | -       | Bottom footer slot (e.g. download link / call to action) |
+
+#### IDescriptionListItem
+
+| Property    | Type                   | Default | Description                                                       |
+| ----------- | ---------------------- | ------- | ----------------------------------------------------------------- |
+| `label`     | `string`               | -       | Term shown in `<dt>` (required)                                   |
+| `value`     | `string`               | -       | Static value shown in `<dd>`. Ignored when `valueTpl` is provided |
+| `valueTpl`  | `TemplateRef<unknown>` | -       | Template used to render the value inside `<dd>` (overrides `value`) |
+| `actionTpl` | `TemplateRef<unknown>` | -       | Inline action template rendered in `<span class="action">`        |
+
+The default `DescriptionListStandardComponent` consumes every property; a section is rendered only when its template/string is provided. Within an item, `valueTpl` takes precedence over `value` when both are set.
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { DESCRIPTION_LIST_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  {
+    provide: DESCRIPTION_LIST_STANDARD_COMPONENT_TOKEN,
+    useValue: MyDescriptionListComponent,
   },
 ];
 ```
@@ -1028,6 +1205,106 @@ providers: [
     provide: STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN,
     useValue: MyStackedLayoutComponent,
   },
+];
+```
+
+### StatsBaseComponent
+
+Abstract base class for stats components. Exposes optional `IStatsOptions` and `cssClass` (alias `class`).
+
+**Inputs:** `options` (`IStatsOptions`), `class` (`string`)
+
+### Stats Component
+
+The `<smart-stats>` component renders a list of statistic cards (label/value pairs with optional previous value, change indicator, trend, icon, and action slot). It is a wrapper that delegates to `StatsStandardComponent` by default and supports an InjectionToken (`STATS_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `StatsComponent` (selector: `smart-stats`)
+**Default:** `StatsStandardComponent` (selector: `smart-stats-standard`)
+**Token:** `STATS_STANDARD_COMPONENT_TOKEN` — provide a `Type<StatsBaseComponent>` to override the default.
+
+#### Usage
+
+```html
+<!-- Simple stats -->
+<smart-stats
+  [options]="{
+    items: [
+      { label: 'Number of deploys', value: 405 },
+      { label: 'Average deploy time', value: '3.65 mins' },
+      { label: 'Success rate', value: '98.5%' },
+    ],
+  }"
+/>
+
+<!-- With title and trending changes -->
+<smart-stats
+  [options]="{
+    title: 'Last 30 days',
+    items: [
+      { label: 'Revenue', value: '$405,091', change: '+4.75%', trend: 'up' },
+      { label: 'Overdue invoices', value: '$12,787', change: '+54.02%', trend: 'down' },
+    ],
+  }"
+/>
+
+<!-- With previous value -->
+<smart-stats
+  [options]="{
+    title: 'Last 30 days',
+    items: [
+      { label: 'Total Subscribers', value: '71,897', previousValue: '70,946', change: '+12%', trend: 'up' },
+    ],
+  }"
+/>
+
+<!-- With icon and action slots -->
+<ng-template #icon>
+  <svg viewBox="0 0 24 24"><!-- ... --></svg>
+</ng-template>
+
+<ng-template #viewAll>
+  <a href="#">View all</a>
+</ng-template>
+
+<smart-stats
+  [options]="{
+    items: [
+      { label: 'Total Subscribers', value: '71,897', iconTpl: icon, actionTpl: viewAll },
+    ],
+  }"
+/>
+```
+
+#### IStatsOptions
+
+| Property  | Type             | Default | Description                                                |
+| --------- | ---------------- | ------- | ---------------------------------------------------------- |
+| `title`   | `string`         | -       | Optional heading rendered above the items                  |
+| `items`   | `IStatItem[]`    | —       | Required array of stat items                               |
+| `columns` | `1 \| 2 \| 3 \| 4` | -     | Layout hint for custom implementations (ignored by default) |
+
+#### IStatItem
+
+| Property        | Type                                | Default | Description                                                              |
+| --------------- | ----------------------------------- | ------- | ------------------------------------------------------------------------ |
+| `label`         | `string`                            | -       | Term shown in `<dt>` (required)                                          |
+| `value`         | `string \| number`                  | -       | Value shown in `<dd class="value">` (required)                           |
+| `previousValue` | `string \| number`                  | -       | Optional previous value shown in `<dd class="previous">`                 |
+| `change`        | `string`                            | -       | Optional change indicator (e.g. `'+4.75%'`)                              |
+| `trend`         | `'up' \| 'down' \| 'neutral'`       | -       | Trend exposed as `data-trend` attribute on `<dd class="change">`         |
+| `iconTpl`       | `TemplateRef<unknown>`              | -       | Icon template rendered in `<div class="icon">`                           |
+| `actionTpl`     | `TemplateRef<unknown>`              | -       | Action template rendered in `<div class="action">`                       |
+| `ariaLabel`     | `string`                            | -       | Accessible label rendered as `aria-label` on the item                    |
+
+The default `StatsStandardComponent` renders a section only when its corresponding template/string is provided.
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { STATS_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  { provide: STATS_STANDARD_COMPONENT_TOKEN, useValue: MyStatsComponent },
 ];
 ```
 
