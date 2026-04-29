@@ -1,0 +1,58 @@
+<div [class]="cssClass()">
+  <div class="grid-list">
+    @if (options()?.title) {
+      <h3 class="title">{{ options()!.title }}</h3>
+    }
+    @if (options()?.description) {
+      <p class="description">{{ options()!.description }}</p>
+    }
+    @if ((options()?.items ?? []).length > 0) {
+      <ul role="list">
+        @for (item of options()!.items!; track item.id ?? $index) {
+          <li class="item" [attr.aria-label]="item.ariaLabel ?? null">
+            @if (item.iconTpl) {
+              <span class="icon">
+                <ng-container [ngTemplateOutlet]="item.iconTpl" />
+              </span>
+            } @else if (item.imageUrl) {
+              <img
+                class="image"
+                [src]="item.imageUrl"
+                [attr.alt]="item.imageAlt ?? ''"
+              />
+            }
+            <div class="body">
+              @if (item.href) {
+                <a class="title" [attr.href]="item.href">{{ item.title }}</a>
+              } @else {
+                <span class="title">{{ item.title }}</span>
+              }
+              @if (item.description) {
+                <span class="description">{{ item.description }}</span>
+              }
+            </div>
+            @if (item.badgeTpl) {
+              <span class="badge">
+                <ng-container [ngTemplateOutlet]="item.badgeTpl" />
+              </span>
+            }
+            @if (item.actionTpl) {
+              <span class="action">
+                <ng-container [ngTemplateOutlet]="item.actionTpl" />
+              </span>
+            }
+          </li>
+        }
+      </ul>
+    } @else if (options()?.emptyTpl) {
+      <div class="empty">
+        <ng-container [ngTemplateOutlet]="options()!.emptyTpl!" />
+      </div>
+    }
+    @if (options()?.footerTpl) {
+      <div class="footer">
+        <ng-container [ngTemplateOutlet]="options()!.footerTpl!" />
+      </div>
+    }
+  </div>
+</div>

@@ -1208,6 +1208,130 @@ providers: [
 ];
 ```
 
+### StackedListBaseComponent
+
+Abstract base class for stacked list components. Exposes optional `IStackedListOptions` and `cssClass` (alias `class`).
+
+**Inputs:** `options` (`IStackedListOptions`), `class` (`string`)
+
+### StackedList Component
+
+The `<smart-stacked-list>` component renders a vertical list of records with optional title, description, per-item icon/avatar, link, badge, action template, and bottom footer slot. It is a wrapper that delegates to `StackedListStandardComponent` by default and supports an InjectionToken (`STACKED_LIST_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `StackedListComponent` (selector: `smart-stacked-list`)
+**Default:** `StackedListStandardComponent` (selector: `smart-stacked-list-standard`)
+**Token:** `STACKED_LIST_STANDARD_COMPONENT_TOKEN` — provide a `Type<StackedListBaseComponent>` to override the default.
+
+#### Usage
+
+```html
+<!-- Title and items only -->
+<smart-stacked-list
+  [options]="{
+    title: 'Team members',
+    items: [
+      { id: '1', title: 'Lindsay Walton', description: 'Front-end Developer' },
+      { id: '2', title: 'Courtney Henry', description: 'Designer' },
+      { id: '3', title: 'Tom Cook', description: 'Director, Product' },
+    ],
+  }"
+/>
+
+<!-- With description and links -->
+<smart-stacked-list
+  [options]="{
+    title: 'Recent files',
+    description: 'Files updated in the last week.',
+    items: [
+      { title: 'Annual report 2025.pdf', href: '/files/annual-report' },
+      { title: 'Brand guidelines.pdf', href: '/files/brand-guidelines' },
+    ],
+  }"
+/>
+
+<!-- With avatars, meta and badge slot -->
+<ng-template #activeBadge>
+  <span class="badge-active">Active</span>
+</ng-template>
+
+<smart-stacked-list
+  [options]="{
+    title: 'Team members',
+    items: [
+      {
+        title: 'Lindsay Walton',
+        description: 'Front-end Developer',
+        meta: 'Joined 2026-01-12',
+        avatarUrl: '/img/lindsay.jpg',
+        badgeTpl: activeBadge,
+      },
+    ],
+  }"
+/>
+
+<!-- With per-item action and footer slot -->
+<ng-template #removeAction>
+  <button>Remove</button>
+</ng-template>
+
+<ng-template #footer>
+  <a href="#">Load more &rarr;</a>
+</ng-template>
+
+<smart-stacked-list
+  [options]="{
+    title: 'Team members',
+    items: [
+      { title: 'Lindsay Walton', actionTpl: removeAction },
+      { title: 'Courtney Henry', actionTpl: removeAction },
+    ],
+    footerTpl: footer,
+  }"
+/>
+```
+
+#### IStackedListOptions
+
+| Property            | Type                       | Default | Description                                                |
+| ------------------- | -------------------------- | ------- | ---------------------------------------------------------- |
+| `title`             | `string`                   | -       | Optional list title rendered as `<h3 class="title">`       |
+| `description`       | `string`                   | -       | Optional description rendered as `<p class="description">` |
+| `items`             | `IStackedListItem[]`       | -       | List entries to render as `<li class="item">`              |
+| `withDividers`      | `boolean`                  | -       | Hint for custom impls: render dividers between items       |
+| `fullWidthOnMobile` | `boolean`                  | -       | Hint for custom impls: stretch the list edge-to-edge       |
+| `emptyTpl`          | `TemplateRef<unknown>`     | -       | Template rendered when items is empty                      |
+| `footerTpl`         | `TemplateRef<unknown>`     | -       | Bottom footer slot                                         |
+
+#### IStackedListItem
+
+| Property      | Type                   | Default | Description                                              |
+| ------------- | ---------------------- | ------- | -------------------------------------------------------- |
+| `id`          | `string`               | -       | Optional stable id used as track key                     |
+| `title`       | `string`               | -       | **Required** title text                                  |
+| `description` | `string`               | -       | Optional secondary line                                  |
+| `meta`        | `string`               | -       | Optional tertiary line (e.g. timestamp)                  |
+| `avatarUrl`   | `string`               | -       | Avatar image URL (rendered as `<img class="avatar">`)    |
+| `iconTpl`     | `TemplateRef<unknown>` | -       | Custom icon template (takes precedence over `avatarUrl`) |
+| `href`        | `string`               | -       | When set, title is rendered as `<a class="title">`       |
+| `badgeTpl`    | `TemplateRef<unknown>` | -       | Badge slot rendered next to the body                     |
+| `actionTpl`   | `TemplateRef<unknown>` | -       | Trailing action slot (e.g. button)                       |
+| `ariaLabel`   | `string`               | -       | Accessible label rendered on the `<li>`                  |
+
+The default `StackedListStandardComponent` consumes every property; a section is rendered only when its template/string is provided. Within an item, `iconTpl` takes precedence over `avatarUrl` when both are set.
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { STACKED_LIST_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  {
+    provide: STACKED_LIST_STANDARD_COMPONENT_TOKEN,
+    useValue: MyStackedListComponent,
+  },
+];
+```
+
 ### StatsBaseComponent
 
 Abstract base class for stats components. Exposes optional `IStatsOptions` and `cssClass` (alias `class`).
@@ -1305,6 +1429,531 @@ import { STATS_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
 
 providers: [
   { provide: STATS_STANDARD_COMPONENT_TOKEN, useValue: MyStatsComponent },
+];
+```
+
+### TableBaseComponent
+
+Abstract base class for table components. Exposes optional `ITableOptions` and `cssClass` (alias `class`).
+
+**Inputs:** `options` (`ITableOptions`), `class` (`string`)
+
+### Table Component
+
+The `<smart-table>` component renders a tabular data view with optional title, description, toolbar slot, columns + rows, optional checkbox column, custom per-cell/per-header templates, an empty state slot, and a bottom footer slot. It is a wrapper that delegates to `TableStandardComponent` by default and supports an InjectionToken (`TABLE_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `TableComponent` (selector: `smart-table`)
+**Default:** `TableStandardComponent` (selector: `smart-table-standard`)
+**Token:** `TABLE_STANDARD_COMPONENT_TOKEN` — provide a `Type<TableBaseComponent>` to override the default.
+
+#### Usage
+
+```html
+<!-- Simple columns + rows -->
+<smart-table
+  [options]="{
+    title: 'Users',
+    columns: [
+      { key: 'name', label: 'Name' },
+      { key: 'role', label: 'Role' },
+      { key: 'email', label: 'Email' },
+    ],
+    rows: [
+      { name: 'Lindsay Walton', role: 'Front-end', email: 'lindsay@x.com' },
+      { name: 'Courtney Henry', role: 'Designer', email: 'courtney@x.com' },
+    ],
+  }"
+/>
+
+<!-- With checkbox column -->
+<smart-table
+  [options]="{
+    columns: [
+      { key: 'name', label: 'Name' },
+      { key: 'role', label: 'Role' },
+    ],
+    rows: [{ name: 'Lindsay Walton', role: 'Front-end' }],
+    withCheckboxes: true,
+  }"
+/>
+
+<!-- With per-cell template -->
+<ng-template #emailCell let-row>
+  <a [attr.href]="'mailto:' + row.email">{{ row.email }}</a>
+</ng-template>
+
+<smart-table
+  [options]="{
+    columns: [
+      { key: 'name', label: 'Name' },
+      { key: 'email', label: 'Email', cellTpl: emailCell },
+    ],
+    rows: [{ name: 'Lindsay Walton', email: 'lindsay@x.com' }],
+  }"
+/>
+
+<!-- With empty state and footer -->
+<ng-template #emptyMsg>
+  <span>Brak wyników</span>
+</ng-template>
+<ng-template #footer>
+  <a href="#">Load more &rarr;</a>
+</ng-template>
+
+<smart-table
+  [options]="{
+    columns: [{ key: 'name', label: 'Name' }],
+    rows: [],
+    emptyTpl: emptyMsg,
+    footerTpl: footer,
+  }"
+/>
+```
+
+#### ITableOptions
+
+| Property         | Type                   | Default | Description                                              |
+| ---------------- | ---------------------- | ------- | -------------------------------------------------------- |
+| `title`          | `string`               | -       | Optional table title rendered as `<h3 class="title">`    |
+| `description`    | `string`               | -       | Optional description rendered as `<p class="description">` |
+| `columns`        | `ITableColumn[]`       | -       | Column definitions (rendered as `<thead><th>`)           |
+| `rows`           | `TableRow[]`           | -       | Row data (each row read via `row[col.key]`)              |
+| `striped`        | `boolean`              | -       | Hint for custom impls: zebra-stripe rows                 |
+| `stickyHeader`   | `boolean`              | -       | Hint for custom impls: sticky `<thead>`                  |
+| `withCheckboxes` | `boolean`              | -       | Render an extra checkbox column                          |
+| `withBorder`     | `boolean`              | -       | Hint for custom impls: bordered table                    |
+| `emptyTpl`       | `TemplateRef<unknown>` | -       | Template rendered when `rows` is empty                   |
+| `footerTpl`      | `TemplateRef<unknown>` | -       | Bottom footer slot                                       |
+| `toolbarTpl`     | `TemplateRef<unknown>` | -       | Top toolbar slot rendered above `<table>`                |
+
+#### ITableColumn
+
+| Property    | Type                              | Default  | Description                                              |
+| ----------- | --------------------------------- | -------- | -------------------------------------------------------- |
+| `key`       | `string`                          | -        | **Required** key used to read `row[key]`                 |
+| `label`     | `string`                          | -        | Header label (falls back to `key` if missing)            |
+| `align`     | `'left' \| 'center' \| 'right'`   | `'left'` | Alignment hint (set on `data-align` attribute)           |
+| `sortable`  | `boolean`                         | -        | Hint for custom impls: column is sortable                |
+| `cellTpl`   | `TemplateRef<unknown>`            | -        | Custom cell template (`{ $implicit: row, column: col }`) |
+| `headerTpl` | `TemplateRef<unknown>`            | -        | Custom header template                                   |
+| `ariaLabel` | `string`                          | -        | Accessible label rendered on `<th>`                      |
+
+The default `TableStandardComponent` consumes every property; a section is rendered only when its template/string is provided. `striped`, `stickyHeader`, `withBorder` and `sortable` are hints for custom implementations registered via `TABLE_STANDARD_COMPONENT_TOKEN`.
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { TABLE_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  { provide: TABLE_STANDARD_COMPONENT_TOKEN, useValue: MyTableComponent },
+];
+```
+
+### TextareaBaseComponent
+
+Abstract base class for textarea components. Exposes `value` (two-way `ModelSignal<string>`), `placeholder`, `disabled`, optional `ITextareaOptions`, `cssClass` (alias `class`), and an `actionClick` output.
+
+**Inputs:** `value` (`ModelSignal<string>`), `placeholder` (`string`), `disabled` (`boolean`), `options` (`ITextareaOptions`), `class` (`string`)
+**Outputs:** `actionClick` (`ITextareaActionClick`)
+
+### Textarea Component
+
+The `<smart-textarea>` component renders a multi-line text input with optional label, action buttons, avatar/toolbar/preview/footer slots. It is a wrapper that delegates to `TextareaStandardComponent` by default and supports an InjectionToken (`TEXTAREA_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `TextareaComponent` (selector: `smart-textarea`)
+**Default:** `TextareaStandardComponent` (selector: `smart-textarea-standard`)
+**Token:** `TEXTAREA_STANDARD_COMPONENT_TOKEN` — provide a `Type<TextareaBaseComponent>` to override the default.
+
+#### Usage
+
+```html
+<smart-textarea [(value)]="comment" placeholder="Add your comment..." />
+
+<smart-textarea [(value)]="bio" [options]="{ label: 'Bio', rows: 6 }" />
+
+<smart-textarea
+  [(value)]="message"
+  [options]="{
+    rows: 4,
+    maxLength: 280,
+    actions: [
+      { id: 'cancel', label: 'Cancel', variant: 'ghost' },
+      { id: 'submit', label: 'Send', variant: 'primary' },
+    ],
+  }"
+  (actionClick)="onAction($event)"
+/>
+
+<smart-textarea [(value)]="readonly" [disabled]="true" />
+```
+
+#### ITextareaOptions
+
+| Property      | Type                       | Default | Description                                              |
+| ------------- | -------------------------- | ------- | -------------------------------------------------------- |
+| `rows`        | `number`                   | `3`     | Number of `<textarea>` rows                              |
+| `maxLength`   | `number`                   | -       | Max characters (`maxlength` attr)                        |
+| `variant`     | `SmartTextareaVariant`     | -       | Hint for custom impls                                    |
+| `label`       | `string`                   | -       | Render `<label>` above textarea                          |
+| `name`        | `string`                   | -       | Form `name` attribute                                    |
+| `required`    | `boolean`                  | -       | Set `required` attribute                                 |
+| `autoFocus`   | `boolean`                  | -       | Hint for custom impls                                    |
+| `ariaLabel`   | `string`                   | -       | Accessible label                                         |
+| `actions`     | `ITextareaAction[]`        | -       | Render action buttons below textarea                     |
+| `avatarTpl`   | `TemplateRef<unknown>`     | -       | Avatar slot                                              |
+| `toolbarTpl`  | `TemplateRef<unknown>`     | -       | Toolbar slot                                             |
+| `previewTpl`  | `TemplateRef<unknown>`     | -       | Preview slot                                             |
+| `footerTpl`   | `TemplateRef<unknown>`     | -       | Footer slot                                              |
+
+#### Outputs
+
+- `actionClick: { actionId, value }` — emitted when an action button is clicked (unless disabled)
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { TEXTAREA_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  { provide: TEXTAREA_STANDARD_COMPONENT_TOKEN, useValue: MyTextareaComponent },
+];
+```
+
+### GridListBaseComponent
+
+Abstract base class for grid list components. Exposes optional `IGridListOptions` and `cssClass` (alias `class`).
+
+**Inputs:** `options` (`IGridListOptions`), `class` (`string`)
+
+### GridList Component
+
+The `<smart-grid-list>` component renders a grid of card-like records with optional title, description, per-item icon/image, link, badge, action template, and bottom footer slot. It is a wrapper that delegates to `GridListStandardComponent` by default and supports an InjectionToken (`GRID_LIST_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `GridListComponent` (selector: `smart-grid-list`)
+**Default:** `GridListStandardComponent` (selector: `smart-grid-list-standard`)
+**Token:** `GRID_LIST_STANDARD_COMPONENT_TOKEN` — provide a `Type<GridListBaseComponent>` to override the default.
+
+#### Usage
+
+```html
+<!-- Simple cards with image and title -->
+<smart-grid-list
+  [options]="{
+    title: 'Team',
+    columns: 3,
+    items: [
+      { id: '1', title: 'Lindsay Walton', imageUrl: '/img/lindsay.jpg', description: 'Front-end' },
+      { id: '2', title: 'Courtney Henry', imageUrl: '/img/courtney.jpg', description: 'Designer' },
+      { id: '3', title: 'Tom Cook', imageUrl: '/img/tom.jpg', description: 'Director' },
+    ],
+  }"
+/>
+
+<!-- Logo cards (links) -->
+<smart-grid-list
+  [options]="{
+    layout: 'logos',
+    columns: 4,
+    items: [
+      { title: 'Acme', href: '/acme', imageUrl: '/logos/acme.svg' },
+      { title: 'Globex', href: '/globex', imageUrl: '/logos/globex.svg' },
+    ],
+  }"
+/>
+
+<!-- With per-item badge and action -->
+<ng-template #activeBadge><span>Active</span></ng-template>
+<ng-template #openAction><button>Open</button></ng-template>
+<smart-grid-list
+  [options]="{
+    items: [
+      { title: 'Project Alpha', description: 'Design system', badgeTpl: activeBadge, actionTpl: openAction },
+    ],
+  }"
+/>
+
+<!-- With empty state and footer -->
+<ng-template #emptyMsg><span>Brak wyników</span></ng-template>
+<ng-template #footer><a href="#">Load more &rarr;</a></ng-template>
+<smart-grid-list [options]="{ items: [], emptyTpl: emptyMsg, footerTpl: footer }" />
+```
+
+#### IGridListOptions
+
+| Property      | Type                                  | Default | Description                                              |
+| ------------- | ------------------------------------- | ------- | -------------------------------------------------------- |
+| `title`       | `string`                              | -       | Optional list title rendered as `<h3 class="title">`     |
+| `description` | `string`                              | -       | Optional description rendered as `<p class="description">` |
+| `items`       | `IGridListItem[]`                     | -       | List entries to render as `<li class="item">`            |
+| `columns`     | `1 \| 2 \| 3 \| 4 \| 5 \| 6`          | -       | Hint for custom impls: number of columns                 |
+| `gap`         | `'sm' \| 'md' \| 'lg'`                | -       | Hint for custom impls: spacing between items             |
+| `layout`      | `'cards' \| 'horizontal' \| 'logos'`  | -       | Hint for custom impls: visual layout family              |
+| `emptyTpl`    | `TemplateRef<unknown>`                | -       | Template rendered when items is empty                    |
+| `footerTpl`   | `TemplateRef<unknown>`                | -       | Bottom footer slot                                       |
+
+#### IGridListItem
+
+| Property      | Type                   | Default | Description                                              |
+| ------------- | ---------------------- | ------- | -------------------------------------------------------- |
+| `id`          | `string`               | -       | Optional stable id used as track key                     |
+| `title`       | `string`               | -       | **Required** title text                                  |
+| `description` | `string`               | -       | Optional secondary line                                  |
+| `imageUrl`    | `string`               | -       | Image URL (rendered as `<img class="image">`)            |
+| `imageAlt`    | `string`               | `''`    | Alt text for `imageUrl`                                  |
+| `iconTpl`     | `TemplateRef<unknown>` | -       | Custom icon template (takes precedence over `imageUrl`)  |
+| `href`        | `string`               | -       | When set, title is rendered as `<a class="title">`       |
+| `badgeTpl`    | `TemplateRef<unknown>` | -       | Badge slot rendered next to the body                     |
+| `actionTpl`   | `TemplateRef<unknown>` | -       | Trailing action slot (e.g. button)                       |
+| `ariaLabel`   | `string`               | -       | Accessible label rendered on the `<li>`                  |
+
+The default `GridListStandardComponent` consumes every property; a section is rendered only when its template/string is provided. Within an item, `iconTpl` takes precedence over `imageUrl` when both are set. `columns`, `gap` and `layout` are hints for custom implementations registered via `GRID_LIST_STANDARD_COMPONENT_TOKEN`.
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { GRID_LIST_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  { provide: GRID_LIST_STANDARD_COMPONENT_TOKEN, useValue: MyGridListComponent },
+];
+```
+
+### FeedBaseComponent
+
+Abstract base class for feed (timeline/activity) components. Exposes optional `IFeedOptions` and `cssClass` (alias `class`).
+
+**Inputs:** `options` (`IFeedOptions`), `class` (`string`)
+
+### Feed Component
+
+The `<smart-feed>` component renders a vertical timeline of activity events with optional title, description, per-event icon/avatar, link, timestamp, description, nested comments, an empty state, an optional comment-submit slot, and a bottom footer slot. It is a wrapper that delegates to `FeedStandardComponent` by default and supports an InjectionToken (`FEED_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `FeedComponent` (selector: `smart-feed`)
+**Default:** `FeedStandardComponent` (selector: `smart-feed-standard`)
+**Token:** `FEED_STANDARD_COMPONENT_TOKEN` — provide a `Type<FeedBaseComponent>` to override the default.
+
+#### Usage
+
+```html
+<!-- Simple timeline with icons -->
+<ng-template #applyIcon><svg class="apply-icon"></svg></ng-template>
+<smart-feed
+  [options]="{
+    title: 'Application activity',
+    events: [
+      { title: 'Applied to Front End Developer', timestamp: 'Sep 20', iconTpl: applyIcon },
+      { title: 'Advanced to phone screening', timestamp: 'Sep 22' },
+    ],
+  }"
+/>
+
+<!-- With comments -->
+<smart-feed
+  [options]="{
+    events: [
+      {
+        title: 'Discussion',
+        timestamp: '3d ago',
+        comments: [
+          { authorName: 'Lindsay', content: 'Looks good to me' },
+          { authorName: 'Tom', authorAvatarUrl: '/img/tom.jpg', content: 'Approved', timestamp: '1d ago' },
+        ],
+      },
+    ],
+  }"
+/>
+
+<!-- With comment-submit slot and footer -->
+<ng-template #commentForm><form><textarea></textarea><button>Comment</button></form></ng-template>
+<ng-template #footer><a href="#">Load more &rarr;</a></ng-template>
+<smart-feed [options]="{
+  events: [{ title: 'Created invoice', timestamp: '7d ago' }],
+  commentSubmitTpl: commentForm,
+  footerTpl: footer,
+}" />
+```
+
+#### IFeedOptions
+
+| Property            | Type                                              | Default | Description                                                  |
+| ------------------- | ------------------------------------------------- | ------- | ------------------------------------------------------------ |
+| `title`             | `string`                                          | -       | Optional title                                               |
+| `description`       | `string`                                          | -       | Optional secondary description                               |
+| `events`            | `IFeedEvent[]`                                    | -       | Timeline entries                                             |
+| `variant`           | `'simple' \| 'with-comments' \| 'multiple-types'` | -       | Hint for custom impls: layout family                         |
+| `commentSubmitTpl`  | `TemplateRef<unknown>`                            | -       | Slot rendered below the timeline (e.g. comment form)         |
+| `emptyTpl`          | `TemplateRef<unknown>`                            | -       | Template rendered when events is empty                       |
+| `footerTpl`         | `TemplateRef<unknown>`                            | -       | Bottom footer slot                                           |
+
+#### IFeedEvent
+
+| Property      | Type                   | Default | Description                                              |
+| ------------- | ---------------------- | ------- | -------------------------------------------------------- |
+| `id`          | `string`               | -       | Optional stable id used as track key                     |
+| `title`       | `string`               | -       | **Required** event title                                 |
+| `description` | `string`               | -       | Optional description rendered under the title            |
+| `timestamp`   | `string`               | -       | Optional `<time>` content                                |
+| `iconTpl`     | `TemplateRef<unknown>` | -       | Custom icon template (takes precedence over `avatarUrl`) |
+| `avatarUrl`   | `string`               | -       | Avatar image URL                                         |
+| `href`        | `string`               | -       | When set, title is rendered as `<a class="title">`       |
+| `type`        | `string`               | -       | Free-form type hint for custom impls                     |
+| `comments`    | `IFeedComment[]`       | -       | Nested list of comments                                  |
+| `ariaLabel`   | `string`               | -       | Accessible label rendered on the `<li>`                  |
+
+#### IFeedComment
+
+| Property            | Type     | Default | Description                  |
+| ------------------- | -------- | ------- | ---------------------------- |
+| `id`                | `string` | -       | Optional stable id           |
+| `authorName`        | `string` | -       | **Required** author name     |
+| `authorAvatarUrl`   | `string` | -       | Optional avatar image URL    |
+| `content`           | `string` | -       | **Required** comment content |
+| `timestamp`         | `string` | -       | Optional `<time>` content    |
+
+The default `FeedStandardComponent` consumes every property; a section is rendered only when its template/string is provided. Within an event, `iconTpl` takes precedence over `avatarUrl` when both are set.
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { FEED_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [{ provide: FEED_STANDARD_COMPONENT_TOKEN, useValue: MyFeedComponent }];
+```
+
+### SelectMenuBaseComponent
+
+Abstract base class for select menu components. Exposes `value` (two-way `ModelSignal<SelectMenuValue>` where `SelectMenuValue = string | number | null`), `disabled`, optional `ISelectMenuOptions`, `cssClass` (alias `class`), and a `select(next)` method that updates `value` while respecting `disabled`.
+
+**Inputs:** `value` (`ModelSignal<SelectMenuValue>`), `disabled` (`boolean`), `options` (`ISelectMenuOptions`), `class` (`string`)
+
+### SelectMenu Component
+
+The `<smart-select-menu>` component renders a single-select menu. It is a wrapper that delegates to `SelectMenuStandardComponent` by default and supports an InjectionToken (`SELECT_MENU_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation. The default uses a native `<select>` element; pro variants will replace it with a custom dropdown UI.
+
+**Wrapper:** `SelectMenuComponent` (selector: `smart-select-menu`)
+**Default:** `SelectMenuStandardComponent` (selector: `smart-select-menu-standard`)
+**Token:** `SELECT_MENU_STANDARD_COMPONENT_TOKEN` — provide a `Type<SelectMenuBaseComponent>` to override the default.
+
+#### Usage
+
+```html
+<smart-select-menu
+  [(value)]="selected"
+  [options]="{
+    placeholder: 'Choose a country',
+    items: [
+      { value: 'pl', label: 'Poland' },
+      { value: 'us', label: 'United States' },
+    ],
+  }"
+/>
+
+<smart-select-menu [(value)]="role" [disabled]="true" [options]="{ items: [{ value: 'admin', label: 'Admin' }] }" />
+```
+
+#### ISelectMenuOptions
+
+| Property      | Type                          | Default | Description                                              |
+| ------------- | ----------------------------- | ------- | -------------------------------------------------------- |
+| `items`       | `ISelectMenuItem[]`           | -       | Available options                                        |
+| `placeholder` | `string`                      | -       | Optional disabled first `<option>`                       |
+| `variant`     | `SmartSelectMenuVariant`      | -       | Hint for custom impls: layout family                     |
+| `emptyTpl`    | `TemplateRef<unknown>`        | -       | Template rendered when items is empty                    |
+| `ariaLabel`   | `string`                      | -       | Accessible label rendered on `<select>`                  |
+
+#### ISelectMenuItem
+
+| Property      | Type                                       | Default | Description                                              |
+| ------------- | ------------------------------------------ | ------- | -------------------------------------------------------- |
+| `value`       | `string \| number`                         | -       | **Required** option value                                |
+| `label`       | `string`                                   | -       | **Required** option label                                |
+| `avatarUrl`   | `string`                                   | -       | Hint for custom impls: avatar image URL                  |
+| `iconTpl`     | `TemplateRef<unknown>`                     | -       | Hint for custom impls: icon template                     |
+| `secondary`   | `string`                                   | -       | Hint for custom impls: secondary line                    |
+| `status`      | `'online' \| 'offline' \| 'busy' \| string`| -       | Hint for custom impls: status indicator                  |
+| `disabled`    | `boolean`                                  | -       | Disable this option                                      |
+| `ariaLabel`   | `string`                                   | -       | Accessible label on `<option>`                           |
+
+The default `SelectMenuStandardComponent` consumes `value`, `disabled`, `placeholder`, `items`, `disabled` per-item, and `emptyTpl`. Other properties are reserved for custom implementations registered via `SELECT_MENU_STANDARD_COMPONENT_TOKEN`.
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { SELECT_MENU_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  { provide: SELECT_MENU_STANDARD_COMPONENT_TOKEN, useValue: MySelectMenuComponent },
+];
+```
+
+### SignInFormBaseComponent
+
+Abstract base class for sign-in / sign-up form components. Exposes `mode` (`'sign-in' | 'sign-up'`), `disabled`, optional `ISignInFormOptions`, `cssClass` (alias `class`), and `submit` / `socialClick` outputs.
+
+**Inputs:** `mode` (`SmartSignInFormMode`), `disabled` (`boolean`), `options` (`ISignInFormOptions`), `class` (`string`)
+**Outputs:** `submit` (`ISignInFormSubmit`), `socialClick` (`ISignInFormSocialClick`)
+
+### SignIn Form Component
+
+The `<smart-sign-in-form>` component renders a form supporting both sign-in and sign-up flows via the `mode` input. It is a wrapper that delegates to `SignInFormStandardComponent` by default and supports an InjectionToken (`SIGN_IN_FORM_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `SignInFormComponent` (selector: `smart-sign-in-form`)
+**Default:** `SignInFormStandardComponent` (selector: `smart-sign-in-form-standard`)
+**Token:** `SIGN_IN_FORM_STANDARD_COMPONENT_TOKEN` — provide a `Type<SignInFormBaseComponent>` to override the default.
+
+#### Usage
+
+```html
+<smart-sign-in-form (submit)="onSignIn($event)" />
+
+<smart-sign-in-form mode="sign-up" (submit)="onSignUp($event)" />
+
+<smart-sign-in-form
+  [options]="{
+    forgotPasswordHref: '/forgot',
+    signUpHref: '/signup',
+    socialProviders: [
+      { id: 'google', label: 'Google' },
+      { id: 'github', label: 'GitHub' },
+    ],
+  }"
+  (submit)="onSignIn($event)"
+  (socialClick)="onSocial($event)"
+/>
+
+<smart-sign-in-form [disabled]="loading()" (submit)="onSignIn($event)" />
+```
+
+#### ISignInFormOptions
+
+| Property              | Type                              | Default | Description                                              |
+| --------------------- | --------------------------------- | ------- | -------------------------------------------------------- |
+| `socialProviders`     | `ISocialProvider[]`               | -       | Social login provider buttons                            |
+| `layout`              | `SmartSignInFormLayout`           | -       | Hint for custom impls                                    |
+| `showLabels`          | `boolean`                         | `true`  | Show `<label>`s above inputs                             |
+| `heroImageUrl`        | `string`                          | -       | Hint for custom impls (split-screen layout)              |
+| `forgotPasswordHref`  | `string`                          | -       | Forgot-password link href (sign-in mode only)            |
+| `signUpHref`          | `string`                          | -       | Alt link to sign-up (sign-in mode)                       |
+| `signInHref`          | `string`                          | -       | Alt link to sign-in (sign-up mode)                       |
+| `submitLabel`         | `string`                          | -       | Override submit button label                             |
+| `emailPlaceholder`    | `string`                          | -       | Email input placeholder                                  |
+| `passwordPlaceholder` | `string`                          | -       | Password input placeholder                               |
+| `extraTpl`            | `TemplateRef<unknown>`            | -       | Slot rendered at the bottom of the form                  |
+| `ariaLabel`           | `string`                          | -       | Accessible label on `<form>`                             |
+
+#### Outputs
+
+- `submit: { email, password, mode }` — emitted on form submit when not disabled
+- `socialClick: { providerId, mode }` — emitted on social provider button click
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { SIGN_IN_FORM_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  { provide: SIGN_IN_FORM_STANDARD_COMPONENT_TOKEN, useValue: MySignInFormComponent },
 ];
 ```
 

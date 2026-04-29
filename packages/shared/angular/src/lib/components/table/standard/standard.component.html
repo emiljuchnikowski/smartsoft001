@@ -1,0 +1,89 @@
+<div [class]="cssClass()">
+  <div class="table-wrapper">
+    @if (options()?.title) {
+      <h3 class="title">{{ options()!.title }}</h3>
+    }
+    @if (options()?.description) {
+      <p class="description">{{ options()!.description }}</p>
+    }
+    @if (options()?.toolbarTpl) {
+      <div class="toolbar">
+        <ng-container [ngTemplateOutlet]="options()!.toolbarTpl!" />
+      </div>
+    }
+    @if ((options()?.columns ?? []).length > 0) {
+      <table>
+        <thead>
+          <tr>
+            @if (options()?.withCheckboxes) {
+              <th
+                scope="col"
+                class="checkbox-col"
+                [attr.aria-label]="'Select rows'"
+              >
+                <input type="checkbox" />
+              </th>
+            }
+            @for (col of options()!.columns!; track col.key) {
+              <th
+                scope="col"
+                [attr.aria-label]="col.ariaLabel ?? null"
+                [attr.data-align]="col.align ?? null"
+              >
+                @if (col.headerTpl) {
+                  <ng-container [ngTemplateOutlet]="col.headerTpl" />
+                } @else {
+                  {{ col.label ?? col.key }}
+                }
+              </th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of options()?.rows ?? []; track $index) {
+            <tr>
+              @if (options()?.withCheckboxes) {
+                <td class="checkbox-cell">
+                  <input type="checkbox" />
+                </td>
+              }
+              @for (col of options()!.columns!; track col.key) {
+                <td [attr.data-align]="col.align ?? null">
+                  @if (col.cellTpl) {
+                    <ng-container
+                      [ngTemplateOutlet]="col.cellTpl"
+                      [ngTemplateOutletContext]="{
+                        $implicit: row,
+                        column: col,
+                      }"
+                    />
+                  } @else {
+                    {{ readCell(row, col.key) }}
+                  }
+                </td>
+              }
+            </tr>
+          } @empty {
+            @if (options()?.emptyTpl) {
+              <tr class="empty-row">
+                <td
+                  [attr.colspan]="
+                    (options()?.withCheckboxes ? 1 : 0) +
+                    options()!.columns!.length
+                  "
+                >
+                  <ng-container [ngTemplateOutlet]="options()!.emptyTpl!" />
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    }
+    @if (options()?.footerTpl) {
+      <div class="footer">
+        <ng-container [ngTemplateOutlet]="options()!.footerTpl!" />
+      </div>
+    }
+  </div>
+</div>

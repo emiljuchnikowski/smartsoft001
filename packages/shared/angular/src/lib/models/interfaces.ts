@@ -56,6 +56,8 @@ export type DynamicComponentType =
   | 'card-heading'
   | 'details'
   | 'description-list'
+  | 'feed'
+  | 'grid-list'
   | 'info'
   | 'list'
   | 'loader'
@@ -63,9 +65,14 @@ export type DynamicComponentType =
   | 'password-strength'
   | 'searchbar'
   | 'section-heading'
+  | 'select-menu'
+  | 'sign-in-form'
   | 'sidebar-layout'
   | 'stacked-layout'
+  | 'stacked-list'
   | 'stats'
+  | 'table'
+  | 'textarea'
   | 'toggle'
   | 'crud-list-page'
   | 'crud-item-page';
@@ -318,6 +325,214 @@ export interface ICalendarOptions {
   sidePanelTpl?: TemplateRef<unknown>;
   dayCellTpl?: TemplateRef<unknown>;
   eventTpl?: TemplateRef<unknown>;
+}
+
+export interface IStackedListItem {
+  id?: string;
+  title: string;
+  description?: string;
+  meta?: string;
+  avatarUrl?: string;
+  iconTpl?: TemplateRef<unknown>;
+  href?: string;
+  badgeTpl?: TemplateRef<unknown>;
+  actionTpl?: TemplateRef<unknown>;
+  ariaLabel?: string;
+}
+
+export interface IStackedListOptions {
+  title?: string;
+  description?: string;
+  items?: IStackedListItem[];
+  withDividers?: boolean;
+  fullWidthOnMobile?: boolean;
+  emptyTpl?: TemplateRef<unknown>;
+  footerTpl?: TemplateRef<unknown>;
+}
+
+export type SmartTextareaVariant =
+  | 'simple'
+  | 'with-avatar-actions'
+  | 'with-underline'
+  | 'with-pill-actions'
+  | 'with-preview';
+
+export interface ITextareaAction {
+  id: string;
+  label?: string;
+  iconTpl?: TemplateRef<unknown>;
+  variant?: 'primary' | 'secondary' | 'ghost';
+}
+
+export interface ITextareaOptions {
+  rows?: number;
+  maxLength?: number;
+  variant?: SmartTextareaVariant;
+  label?: string;
+  name?: string;
+  required?: boolean;
+  autoFocus?: boolean;
+  ariaLabel?: string;
+  actions?: ITextareaAction[];
+  avatarTpl?: TemplateRef<unknown>;
+  toolbarTpl?: TemplateRef<unknown>;
+  previewTpl?: TemplateRef<unknown>;
+  footerTpl?: TemplateRef<unknown>;
+}
+
+export type SmartSignInFormMode = 'sign-in' | 'sign-up';
+
+export type SmartSignInFormLayout =
+  | 'simple'
+  | 'simple-no-labels'
+  | 'split-screen'
+  | 'card';
+
+export interface ISocialProvider {
+  id: string;
+  label: string;
+  iconTpl?: TemplateRef<unknown>;
+  iconUrl?: string;
+}
+
+export interface ISignInFormOptions {
+  socialProviders?: ISocialProvider[];
+  layout?: SmartSignInFormLayout;
+  showLabels?: boolean;
+  heroImageUrl?: string;
+  forgotPasswordHref?: string;
+  signUpHref?: string;
+  signInHref?: string;
+  submitLabel?: string;
+  emailPlaceholder?: string;
+  passwordPlaceholder?: string;
+  extraTpl?: TemplateRef<unknown>;
+  ariaLabel?: string;
+}
+
+export interface ISignInFormSubmit {
+  email: string;
+  password: string;
+  mode: SmartSignInFormMode;
+}
+
+export interface ISignInFormSocialClick {
+  providerId: string;
+  mode: SmartSignInFormMode;
+}
+
+export type SmartSelectMenuVariant =
+  | 'native'
+  | 'custom'
+  | 'with-check'
+  | 'with-status'
+  | 'with-avatar'
+  | 'with-secondary'
+  | 'branded';
+
+export interface ISelectMenuItem {
+  value: string | number;
+  label: string;
+  avatarUrl?: string;
+  iconTpl?: TemplateRef<unknown>;
+  secondary?: string;
+  status?: 'online' | 'offline' | 'busy' | string;
+  disabled?: boolean;
+  ariaLabel?: string;
+}
+
+export interface ISelectMenuOptions {
+  items?: ISelectMenuItem[];
+  placeholder?: string;
+  variant?: SmartSelectMenuVariant;
+  emptyTpl?: TemplateRef<unknown>;
+  ariaLabel?: string;
+}
+
+export type SmartFeedVariant = 'simple' | 'with-comments' | 'multiple-types';
+
+export interface IFeedComment {
+  id?: string;
+  authorName: string;
+  authorAvatarUrl?: string;
+  content: string;
+  timestamp?: string;
+}
+
+export interface IFeedEvent {
+  id?: string;
+  title: string;
+  description?: string;
+  timestamp?: string;
+  iconTpl?: TemplateRef<unknown>;
+  avatarUrl?: string;
+  href?: string;
+  type?: string;
+  comments?: IFeedComment[];
+  ariaLabel?: string;
+}
+
+export interface IFeedOptions {
+  title?: string;
+  description?: string;
+  events?: IFeedEvent[];
+  variant?: SmartFeedVariant;
+  commentSubmitTpl?: TemplateRef<unknown>;
+  emptyTpl?: TemplateRef<unknown>;
+  footerTpl?: TemplateRef<unknown>;
+}
+
+export type SmartGridListLayout = 'cards' | 'horizontal' | 'logos';
+export type SmartGridListColumns = 1 | 2 | 3 | 4 | 5 | 6;
+
+export interface IGridListItem {
+  id?: string;
+  title: string;
+  description?: string;
+  imageUrl?: string;
+  imageAlt?: string;
+  href?: string;
+  iconTpl?: TemplateRef<unknown>;
+  badgeTpl?: TemplateRef<unknown>;
+  actionTpl?: TemplateRef<unknown>;
+  ariaLabel?: string;
+}
+
+export interface IGridListOptions {
+  title?: string;
+  description?: string;
+  items?: IGridListItem[];
+  columns?: SmartGridListColumns;
+  gap?: 'sm' | 'md' | 'lg';
+  layout?: SmartGridListLayout;
+  emptyTpl?: TemplateRef<unknown>;
+  footerTpl?: TemplateRef<unknown>;
+}
+
+export interface ITableColumn {
+  key: string;
+  label?: string;
+  align?: 'left' | 'center' | 'right';
+  sortable?: boolean;
+  cellTpl?: TemplateRef<unknown>;
+  headerTpl?: TemplateRef<unknown>;
+  ariaLabel?: string;
+}
+
+export type TableRow = Record<string, unknown>;
+
+export interface ITableOptions {
+  title?: string;
+  description?: string;
+  columns?: ITableColumn[];
+  rows?: TableRow[];
+  striped?: boolean;
+  stickyHeader?: boolean;
+  withCheckboxes?: boolean;
+  withBorder?: boolean;
+  emptyTpl?: TemplateRef<unknown>;
+  footerTpl?: TemplateRef<unknown>;
+  toolbarTpl?: TemplateRef<unknown>;
 }
 
 export type SmartSidebarLayoutMobileBreakpoint = 'sm' | 'md' | 'lg';

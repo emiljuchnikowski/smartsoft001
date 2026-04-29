@@ -1,0 +1,75 @@
+<div [class]="cssClass()">
+  <div class="feed">
+    @if (options()?.title) {
+      <h3 class="title">{{ options()!.title }}</h3>
+    }
+    @if (options()?.description) {
+      <p class="description">{{ options()!.description }}</p>
+    }
+    @if ((options()?.events ?? []).length > 0) {
+      <ol role="list">
+        @for (event of options()!.events!; track event.id ?? $index) {
+          <li class="event" [attr.aria-label]="event.ariaLabel ?? null">
+            @if (event.iconTpl) {
+              <span class="icon">
+                <ng-container [ngTemplateOutlet]="event.iconTpl" />
+              </span>
+            } @else if (event.avatarUrl) {
+              <img class="avatar" [src]="event.avatarUrl" alt="" />
+            }
+            <div class="body">
+              @if (event.timestamp) {
+                <time class="timestamp">{{ event.timestamp }}</time>
+              }
+              @if (event.href) {
+                <a class="title" [attr.href]="event.href">{{ event.title }}</a>
+              } @else {
+                <span class="title">{{ event.title }}</span>
+              }
+              @if (event.description) {
+                <p class="description">{{ event.description }}</p>
+              }
+              @if ((event.comments ?? []).length > 0) {
+                <ul class="comments" role="list">
+                  @for (
+                    comment of event.comments!;
+                    track comment.id ?? $index
+                  ) {
+                    <li class="comment">
+                      @if (comment.authorAvatarUrl) {
+                        <img
+                          class="avatar"
+                          [src]="comment.authorAvatarUrl"
+                          alt=""
+                        />
+                      }
+                      <span class="author">{{ comment.authorName }}</span>
+                      @if (comment.timestamp) {
+                        <time class="timestamp">{{ comment.timestamp }}</time>
+                      }
+                      <p class="content">{{ comment.content }}</p>
+                    </li>
+                  }
+                </ul>
+              }
+            </div>
+          </li>
+        }
+      </ol>
+    } @else if (options()?.emptyTpl) {
+      <div class="empty">
+        <ng-container [ngTemplateOutlet]="options()!.emptyTpl!" />
+      </div>
+    }
+    @if (options()?.commentSubmitTpl) {
+      <div class="comment-submit">
+        <ng-container [ngTemplateOutlet]="options()!.commentSubmitTpl!" />
+      </div>
+    }
+    @if (options()?.footerTpl) {
+      <div class="footer">
+        <ng-container [ngTemplateOutlet]="options()!.footerTpl!" />
+      </div>
+    }
+  </div>
+</div>

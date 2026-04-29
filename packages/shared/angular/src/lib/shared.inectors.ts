@@ -10,7 +10,9 @@ import {
   DescriptionListBaseComponent,
   DetailBaseComponent,
   DetailsBaseComponent,
+  FeedBaseComponent,
   FormBaseComponent,
+  GridListBaseComponent,
   InfoBaseComponent,
   LoaderBaseComponent,
   InputBaseComponent,
@@ -22,9 +24,14 @@ import {
   PasswordStrengthBaseComponent,
   SearchbarBaseComponent,
   SectionHeadingBaseComponent,
+  SelectMenuBaseComponent,
   SidebarLayoutBaseComponent,
+  SignInFormBaseComponent,
   StackedLayoutBaseComponent,
+  StackedListBaseComponent,
   StatsBaseComponent,
+  TableBaseComponent,
+  TextareaBaseComponent,
   ToggleBaseComponent,
 } from './components';
 import { ListMode, SmartPageVariant } from './models';
@@ -51,12 +58,18 @@ export const DETAILS_STANDARD_COMPONENT_TOKEN = new InjectionToken<
 export const DETAIL_FIELD_COMPONENTS_TOKEN = new InjectionToken<
   Partial<Record<FieldTypeDef, Type<DetailBaseComponent<any>>>>
 >('DETAIL_FIELD_COMPONENTS_TOKEN');
+export const FEED_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<FeedBaseComponent>
+>('FEED_STANDARD_COMPONENT');
 export const DESCRIPTION_LIST_STANDARD_COMPONENT_TOKEN = new InjectionToken<
   Type<DescriptionListBaseComponent>
 >('DESCRIPTION_LIST_STANDARD_COMPONENT');
 export const FORM_STANDARD_COMPONENT_TOKEN = new InjectionToken<
   Type<FormBaseComponent<any>>
 >('FORM_STANDARD_COMPONENT');
+export const GRID_LIST_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<GridListBaseComponent>
+>('GRID_LIST_STANDARD_COMPONENT');
 export const INFO_STANDARD_COMPONENT_TOKEN = new InjectionToken<
   Type<InfoBaseComponent>
 >('INFO_STANDARD_COMPONENT');
@@ -90,15 +103,30 @@ export const SEARCHBAR_STANDARD_COMPONENT_TOKEN = new InjectionToken<
 export const SECTION_HEADING_STANDARD_COMPONENT_TOKEN = new InjectionToken<
   Type<SectionHeadingBaseComponent>
 >('SECTION_HEADING_STANDARD_COMPONENT');
+export const SELECT_MENU_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<SelectMenuBaseComponent>
+>('SELECT_MENU_STANDARD_COMPONENT');
 export const SIDEBAR_LAYOUT_STANDARD_COMPONENT_TOKEN = new InjectionToken<
   Type<SidebarLayoutBaseComponent>
 >('SIDEBAR_LAYOUT_STANDARD_COMPONENT');
+export const SIGN_IN_FORM_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<SignInFormBaseComponent>
+>('SIGN_IN_FORM_STANDARD_COMPONENT');
 export const STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN = new InjectionToken<
   Type<StackedLayoutBaseComponent>
 >('STACKED_LAYOUT_STANDARD_COMPONENT');
+export const STACKED_LIST_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<StackedListBaseComponent>
+>('STACKED_LIST_STANDARD_COMPONENT');
 export const STATS_STANDARD_COMPONENT_TOKEN = new InjectionToken<
   Type<StatsBaseComponent>
 >('STATS_STANDARD_COMPONENT');
+export const TABLE_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<TableBaseComponent>
+>('TABLE_STANDARD_COMPONENT');
+export const TEXTAREA_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<TextareaBaseComponent>
+>('TEXTAREA_STANDARD_COMPONENT');
 export const TOGGLE_STANDARD_COMPONENT_TOKEN = new InjectionToken<
   Type<ToggleBaseComponent>
 >('TOGGLE_STANDARD_COMPONENT');

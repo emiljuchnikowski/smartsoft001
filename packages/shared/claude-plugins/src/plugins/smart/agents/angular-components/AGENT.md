@@ -42,7 +42,9 @@ These render a default standard implementation and accept a custom implementatio
 | Card Heading        | `angular-components-card-heading`        | `<smart-card-heading>`        | `CARD_HEADING_STANDARD_COMPONENT_TOKEN`        |
 | Description List    | `angular-components-description-list`    | `<smart-description-list>`    | `DESCRIPTION_LIST_STANDARD_COMPONENT_TOKEN`    |
 | Details             | `angular-components-details`             | `<smart-details>`             | `DETAILS_STANDARD_COMPONENT_TOKEN`             |
+| Feed                | `angular-components-feed`                | `<smart-feed>`                | `FEED_STANDARD_COMPONENT_TOKEN`                |
 | Form                | `angular-components-form`                | `<smart-form>`                | `FORM_STANDARD_COMPONENT_TOKEN`                |
+| Grid List           | `angular-components-grid-list`           | `<smart-grid-list>`           | `GRID_LIST_STANDARD_COMPONENT_TOKEN`           |
 | Info                | `angular-components-info`                | `<smart-info>`                | `INFO_STANDARD_COMPONENT_TOKEN`                |
 | List                | `angular-components-list`                | `<smart-list>`                | `LIST_MODE_COMPONENTS_TOKEN`                   |
 | Multi-Column Layout | `angular-components-multi-column-layout` | `<smart-multi-column-layout>` | `MULTI_COLUMN_LAYOUT_STANDARD_COMPONENT_TOKEN` |
@@ -50,9 +52,14 @@ These render a default standard implementation and accept a custom implementatio
 | Password Strength   | `angular-components-password-strength`   | `<smart-password-strength>`   | `PASSWORD_STRENGTH_STANDARD_COMPONENT_TOKEN`   |
 | Searchbar           | `angular-components-searchbar`           | `<smart-searchbar>`           | `SEARCHBAR_STANDARD_COMPONENT_TOKEN`           |
 | Section Heading     | `angular-components-section-heading`     | `<smart-section-heading>`     | `SECTION_HEADING_STANDARD_COMPONENT_TOKEN`     |
+| Select Menu         | `angular-components-select-menu`         | `<smart-select-menu>`         | `SELECT_MENU_STANDARD_COMPONENT_TOKEN`         |
 | Sidebar Layout      | `angular-components-sidebar-layout`      | `<smart-sidebar-layout>`      | `SIDEBAR_LAYOUT_STANDARD_COMPONENT_TOKEN`      |
+| Sign-in Form        | `angular-components-sign-in-form`        | `<smart-sign-in-form>`        | `SIGN_IN_FORM_STANDARD_COMPONENT_TOKEN`        |
 | Stacked Layout      | `angular-components-stacked-layout`      | `<smart-stacked-layout>`      | `STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN`      |
+| Stacked List        | `angular-components-stacked-list`        | `<smart-stacked-list>`        | `STACKED_LIST_STANDARD_COMPONENT_TOKEN`        |
 | Stats               | `angular-components-stats`               | `<smart-stats>`               | `STATS_STANDARD_COMPONENT_TOKEN`               |
+| Table               | `angular-components-table`               | `<smart-table>`               | `TABLE_STANDARD_COMPONENT_TOKEN`               |
+| Textarea            | `angular-components-textarea`            | `<smart-textarea>`            | `TEXTAREA_STANDARD_COMPONENT_TOKEN`            |
 | Toggle              | `angular-components-toggle`              | `<smart-toggle>`              | `TOGGLE_STANDARD_COMPONENT_TOKEN`              |
 
 ### Base-Only Components (abstract classes for extension)
@@ -72,7 +79,7 @@ These provide abstract base classes (`@Directive()`) that can be extended to cre
 When a developer asks about a component:
 
 1. **Wants to use `<smart-date-edit>`, `<smart-date-range>`, `<smart-detail>`, or `<smart-input>`** → delegate to the corresponding skill for usage API
-2. **Wants to use `<smart-calendar>`, `<smart-card-heading>`, `<smart-description-list>`, `<smart-details>`, `<smart-form>`, `<smart-info>`, `<smart-list>`, `<smart-multi-column-layout>`, `<smart-page-heading>`, `<smart-password-strength>`, `<smart-searchbar>`, `<smart-section-heading>`, `<smart-sidebar-layout>`, `<smart-stacked-layout>`, `<smart-stats>`, or `<smart-toggle>`** → delegate to the skill to explain usage, token override pattern, and how to extend the base class with a custom implementation
+2. **Wants to use `<smart-calendar>`, `<smart-card-heading>`, `<smart-description-list>`, `<smart-details>`, `<smart-feed>`, `<smart-form>`, `<smart-grid-list>`, `<smart-info>`, `<smart-list>`, `<smart-multi-column-layout>`, `<smart-page-heading>`, `<smart-password-strength>`, `<smart-searchbar>`, `<smart-section-heading>`, `<smart-select-menu>`, `<smart-sidebar-layout>`, `<smart-sign-in-form>`, `<smart-stacked-layout>`, `<smart-stacked-list>`, `<smart-stats>`, `<smart-table>`, `<smart-textarea>`, or `<smart-toggle>`** → delegate to the skill to explain usage, token override pattern, and how to extend the base class with a custom implementation
 3. **Wants to use `<smart-button>`, `<smart-card>`, `<smart-accordion>`, `<smart-page>`, or `<smart-paging>`** → delegate to the skill to explain how to extend the base class and create a custom implementation
 4. **Wants to create a custom component** → delegate to the base-only skill for extension patterns and API
 
@@ -88,7 +95,9 @@ Always delegate to the per-component skill for detailed API, usage examples, and
 - **Card Heading** (with extension token) → use skill `angular-components-card-heading`
 - **Description List** (with extension token) → use skill `angular-components-description-list`
 - **Details** (with extension token) → use skill `angular-components-details`
+- **Feed** (with extension token) → use skill `angular-components-feed`
 - **Form** (with extension token) → use skill `angular-components-form`
+- **Grid List** (with extension token) → use skill `angular-components-grid-list`
 - **Info** (with extension token) → use skill `angular-components-info`
 - **Input** → use skill `angular-components-input`
 - **List** (with extension token map) → use skill `angular-components-list`
@@ -97,9 +106,14 @@ Always delegate to the per-component skill for detailed API, usage examples, and
 - **Password Strength** (with extension token) → use skill `angular-components-password-strength`
 - **Searchbar** (with extension token) → use skill `angular-components-searchbar`
 - **Section Heading** (with extension token) → use skill `angular-components-section-heading`
+- **Select Menu** (with extension token) → use skill `angular-components-select-menu`
 - **Sidebar Layout** (with extension token) → use skill `angular-components-sidebar-layout`
+- **Sign-in Form** (with extension token) → use skill `angular-components-sign-in-form`
 - **Stacked Layout** (with extension token) → use skill `angular-components-stacked-layout`
+- **Stacked List** (with extension token) → use skill `angular-components-stacked-list`
 - **Stats** (with extension token) → use skill `angular-components-stats`
+- **Table** (with extension token) → use skill `angular-components-table`
+- **Textarea** (with extension token) → use skill `angular-components-textarea`
 - **Toggle** (with extension token) → use skill `angular-components-toggle`
 - **Button** (base only) → use skill `angular-components-button`
 - **Card** (base only) → use skill `angular-components-card`
@@ -139,8 +153,12 @@ import {
   DetailBaseComponent,
   DetailsBaseComponent,
   DETAILS_STANDARD_COMPONENT_TOKEN,
+  FeedBaseComponent,
+  FEED_STANDARD_COMPONENT_TOKEN,
   FormBaseComponent,
   FORM_STANDARD_COMPONENT_TOKEN,
+  GridListBaseComponent,
+  GRID_LIST_STANDARD_COMPONENT_TOKEN,
   InfoBaseComponent,
   INFO_STANDARD_COMPONENT_TOKEN,
   InputBaseComponent,
@@ -163,12 +181,22 @@ import {
   SEARCHBAR_STANDARD_COMPONENT_TOKEN,
   SectionHeadingBaseComponent,
   SECTION_HEADING_STANDARD_COMPONENT_TOKEN,
+  SelectMenuBaseComponent,
+  SELECT_MENU_STANDARD_COMPONENT_TOKEN,
   SidebarLayoutBaseComponent,
   SIDEBAR_LAYOUT_STANDARD_COMPONENT_TOKEN,
+  SignInFormBaseComponent,
+  SIGN_IN_FORM_STANDARD_COMPONENT_TOKEN,
   StackedLayoutBaseComponent,
   STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN,
+  StackedListBaseComponent,
+  STACKED_LIST_STANDARD_COMPONENT_TOKEN,
   StatsBaseComponent,
   STATS_STANDARD_COMPONENT_TOKEN,
+  TableBaseComponent,
+  TABLE_STANDARD_COMPONENT_TOKEN,
+  TextareaBaseComponent,
+  TEXTAREA_STANDARD_COMPONENT_TOKEN,
   ToggleBaseComponent,
   TOGGLE_STANDARD_COMPONENT_TOKEN,
 } from '@smartsoft001/angular';
