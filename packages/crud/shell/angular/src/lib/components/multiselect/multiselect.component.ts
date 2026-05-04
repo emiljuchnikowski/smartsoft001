@@ -5,8 +5,7 @@ import * as _ from 'lodash';
 import { DynamicIoDirective } from 'ng-dynamic-component';
 
 import {
-  // TODO: ButtonComponent moved to @smartsoft001-pro/angular (FRA-110)
-  // ButtonComponent,
+  ButtonComponent,
   FormComponent,
   IButtonOptions,
   MenuService,
@@ -17,7 +16,7 @@ import {
   IFieldEditMetadata,
 } from '@smartsoft001/models';
 
-import { CrudFacade } from '../../+state/crud.facade';
+import { CrudFacade } from '../../+state';
 import { CrudFullConfig } from '../../crud.config';
 import { FormOptionsPipe } from '../../pipes';
 
@@ -30,8 +29,7 @@ import { FormOptionsPipe } from '../../pipes';
     DynamicIoDirective,
     FormOptionsPipe,
     FormComponent,
-    // TODO: ButtonComponent moved to @smartsoft001-pro/angular (FRA-110)
-    // ButtonComponent,
+    ButtonComponent,
   ],
 })
 export class MultiselectComponent<T extends IEntity<string>> {
