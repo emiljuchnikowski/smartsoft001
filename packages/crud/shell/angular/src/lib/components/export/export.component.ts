@@ -14,14 +14,18 @@ import { CrudFacade } from '../../+state';
 @Component({
   selector: 'smart-crud-export',
   template: `
-    <div class="p-5">
-      <p class="my-2.5 mx-0">
-        <smart-button [options]="buttonExportCsvOptions" class="w-full block"
+    <div class="smart:p-5">
+      <p class="smart:my-2.5 smart:mx-0">
+        <smart-button
+          [options]="buttonExportCsvOptions"
+          class="smart:w-full smart:block"
           >CSV</smart-button
         >
       </p>
       <p>
-        <smart-button [options]="buttonExportXlsxOptions" class="w-full block"
+        <smart-button
+          [options]="buttonExportXlsxOptions"
+          class="smart:w-full smart:block"
           >XLSX</smart-button
         >
       </p>
