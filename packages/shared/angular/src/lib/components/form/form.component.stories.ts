@@ -1,24 +1,28 @@
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { IAddress } from '@smartsoft001/domain-core';
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { FormComponent } from './form.component';
 import { SharedFactoriesModule } from '../../factories';
 import { IFormOptions } from '../../models';
+import { FORM_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { COMPONENTS, IMPORTS } from '../components.module';
+import { FormBaseComponent } from './base/base.component';
+import { FormComponent } from './form.component';
 
 const meta: Meta<FormComponent<any>> = {
-  title: 'Smart-Form/Inputs',
+  title: 'Smart-Form/Form',
   component: FormComponent,
   decorators: [
     moduleMetadata({
-      imports: [...IMPORTS, SharedFactoriesModule, TranslateModule.forRoot()],
-      declarations: [...COMPONENTS],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      imports: [
+        ...IMPORTS,
+        ...COMPONENTS,
+        SharedFactoriesModule,
+        TranslateModule.forRoot(),
+      ],
     }),
   ],
 };
@@ -26,202 +30,138 @@ const meta: Meta<FormComponent<any>> = {
 export default meta;
 type Story = StoryObj<FormComponent<any>>;
 
-export const Address: Story = {
-  name: 'Adres',
+// ─── 1. Simple ───────────────────────────────────────────────────────────────
+
+export const Simple: Story = {
+  name: 'Simple',
   render: () => ({
     props: {
-      options: {
+      storyOptions: {
         model: (() => {
           @Model({})
           class TestModel {
-            @Field({
-              required: true,
-              type: FieldType.address,
-            })
-            address!: IAddress;
+            @Field({}) firstName = '';
+            @Field({ required: true }) lastName = '';
           }
           return new TestModel();
         })(),
       } as IFormOptions<any>,
     },
+    template: `<smart-form [options]="storyOptions"></smart-form>`,
   }),
 };
 
-export const Nip: Story = {
-  name: 'NIP',
-  render: () => ({
-    props: {
-      options: {
-        model: (() => {
-          @Model({})
-          class TestModel {
-            @Field({
-              required: true,
-              type: FieldType.nip,
-            })
-            nip!: string;
-          }
-          return new TestModel();
-        })(),
-      } as IFormOptions<any>,
-    },
-  }),
-};
-
-export const Strings: Story = {
-  name: 'Tablica stringów',
-  render: () => ({
-    props: {
-      options: {
-        model: (() => {
-          @Model({})
-          class TestModel {
-            @Field({
-              required: true,
-              type: FieldType.strings,
-            })
-            strings = ['test1', 'test2'];
-          }
-          return new TestModel();
-        })(),
-      } as IFormOptions<any>,
-    },
-  }),
-};
-
-export const Description: Story = {
-  name: 'Opis',
-  render: () => ({
-    props: {
-      options: {
-        model: (() => {
-          @Model({})
-          class TestModel {
-            @Field({
-              required: true,
-              type: FieldType.longText,
-            })
-            desc!: string;
-          }
-          return new TestModel();
-        })(),
-      } as IFormOptions<any>,
-    },
-  }),
-};
-
-export const LongText: Story = {
-  name: 'Długi tekst',
-  render: () => ({
-    props: {
-      options: {
-        model: (() => {
-          @Model({})
-          class TestModel {
-            @Field({
-              required: true,
-              type: FieldType.longText,
-            })
-            desc!: string;
-          }
-          return new TestModel();
-        })(),
-      } as IFormOptions<any>,
-    },
-  }),
-};
+// ─── 2. ComplexObject ────────────────────────────────────────────────────────
 
 @Model({})
-class TestUserModel {
+class UserModel {
   @Field({})
-  firstName!: string;
+  firstName = '';
 
-  @Field({
-    required: true,
-  })
-  lastName!: string;
+  @Field({ required: true })
+  lastName = '';
 
-  @Field({
-    type: FieldType.color,
-  })
-  color!: string;
-
-  @Field({
-    type: FieldType.logo,
-  })
-  logo!: string;
-
-  @Field({
-    required: true,
-    type: FieldType.password,
-    confirm: true,
-  })
-  password!: string;
+  @Field({ type: FieldType.email })
+  email = '';
 }
 
 export const ComplexObject: Story = {
-  name: 'Obiekt złożony',
+  name: 'Complex object',
   render: () => ({
     props: {
-      options: {
+      storyOptions: {
         model: (() => {
           @Model({})
           class TestModel {
-            @Field({})
-            test!: string;
+            @Field({}) title = '';
 
-            @Field({
-              required: true,
-              type: FieldType.object,
-              classType: TestUserModel,
-            })
-            user = new TestUserModel();
+            @Field({ type: FieldType.object, classType: UserModel })
+            user = new UserModel();
           }
           return new TestModel();
         })(),
       } as IFormOptions<any>,
     },
+    template: `<smart-form [options]="storyOptions"></smart-form>`,
   }),
 };
 
-export const Color: Story = {
-  name: 'Kolor',
+// ─── 3. WithCssClass ─────────────────────────────────────────────────────────
+
+export const WithCssClass: Story = {
+  name: 'With CSS class',
   render: () => ({
     props: {
-      options: {
+      storyOptions: {
         model: (() => {
           @Model({})
           class TestModel {
-            @Field({
-              type: FieldType.color,
-              required: true,
-            })
-            color = 'red';
+            @Field({}) firstName = '';
+            @Field({ required: true }) lastName = '';
           }
           return new TestModel();
         })(),
       } as IFormOptions<any>,
     },
+    template: `
+      <smart-form
+        class="smart:rounded-lg smart:bg-yellow-50 smart:p-4 smart:dark:bg-yellow-900/30"
+        [options]="storyOptions"
+      ></smart-form>
+    `,
   }),
 };
 
-export const Logo: Story = {
-  name: 'Logo',
+// ─── 4. CustomViaToken ───────────────────────────────────────────────────────
+
+@Component({
+  selector: 'custom-form-impl',
+  template: `
+    <div
+      class="smart:rounded-md smart:border smart:border-indigo-300 smart:bg-indigo-50 smart:p-4 smart:dark:border-indigo-700 smart:dark:bg-indigo-900/40"
+    >
+      <p
+        class="smart:font-semibold smart:text-indigo-900 smart:dark:text-indigo-100"
+      >
+        Custom form implementation injected via FORM_STANDARD_COMPONENT_TOKEN
+      </p>
+      @for (field of fields; track field) {
+        <p
+          class="smart:mt-2 smart:text-sm smart:text-indigo-700 smart:dark:text-indigo-300"
+        >
+          {{ field }}
+        </p>
+      }
+    </div>
+  `,
+  standalone: true,
+  encapsulation: ViewEncapsulation.None,
+})
+class CustomFormImplComponent extends FormBaseComponent<any> {}
+
+export const CustomViaToken: Story = {
+  name: 'Custom via FORM_STANDARD_COMPONENT_TOKEN',
   render: () => ({
     props: {
-      options: {
+      storyOptions: {
         model: (() => {
           @Model({})
           class TestModel {
-            @Field({
-              type: FieldType.logo,
-              required: true,
-            })
-            logo!: string;
+            @Field({}) firstName = '';
+            @Field({ required: true }) lastName = '';
           }
           return new TestModel();
         })(),
       } as IFormOptions<any>,
+    },
+    template: `<smart-form [options]="storyOptions"></smart-form>`,
+    moduleMetadata: {
+      providers: [
+        {
+          provide: FORM_STANDARD_COMPONENT_TOKEN,
+          useValue: CustomFormImplComponent,
+        },
+      ],
     },
   }),
 };

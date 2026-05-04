@@ -1,0 +1,59 @@
+<div [class]="cssClass()">
+  <div class="textarea">
+    @if (options()?.label) {
+      <label>{{ options()!.label }}</label>
+    }
+    @if (options()?.avatarTpl) {
+      <div class="avatar">
+        <ng-container [ngTemplateOutlet]="options()!.avatarTpl!" />
+      </div>
+    }
+    @if (options()?.toolbarTpl) {
+      <div class="toolbar">
+        <ng-container [ngTemplateOutlet]="options()!.toolbarTpl!" />
+      </div>
+    }
+    <textarea
+      [attr.name]="options()?.name ?? null"
+      [attr.placeholder]="placeholder() || null"
+      [attr.aria-label]="options()?.ariaLabel ?? null"
+      [attr.maxlength]="options()?.maxLength ?? null"
+      [rows]="options()?.rows ?? 3"
+      [disabled]="disabled()"
+      [attr.required]="options()?.required ? 'required' : null"
+      [value]="value()"
+      (input)="onInput($event)"
+    ></textarea>
+    @if ((options()?.actions ?? []).length > 0) {
+      <div class="actions">
+        @for (action of options()!.actions!; track action.id) {
+          <button
+            type="button"
+            [class]="'action variant-' + (action.variant ?? 'secondary')"
+            [disabled]="disabled()"
+            (click)="onActionClick(action.id)"
+          >
+            @if (action.iconTpl) {
+              <span class="icon">
+                <ng-container [ngTemplateOutlet]="action.iconTpl" />
+              </span>
+            }
+            @if (action.label) {
+              {{ action.label }}
+            }
+          </button>
+        }
+      </div>
+    }
+    @if (options()?.previewTpl) {
+      <div class="preview">
+        <ng-container [ngTemplateOutlet]="options()!.previewTpl!" />
+      </div>
+    }
+    @if (options()?.footerTpl) {
+      <div class="footer">
+        <ng-container [ngTemplateOutlet]="options()!.footerTpl!" />
+      </div>
+    }
+  </div>
+</div>

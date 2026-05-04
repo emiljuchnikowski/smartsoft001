@@ -9,6 +9,7 @@ import {
   untracked,
   viewChild,
   input,
+  InputSignal,
   effect,
   inject,
 } from '@angular/core';
@@ -65,10 +66,15 @@ export abstract class DetailsBaseComponent<T extends IEntity<string>>
   bottomTpl = viewChild<ViewContainerRef | undefined>('bottomTpl');
 
   options = input<IDetailsOptions<T> | undefined>(undefined);
+  cssClass: InputSignal<string> = input<string>('', { alias: 'class' });
 
   constructor() {
     effect(() => {
       const options = this.options();
+      const rootItem = options?.item();
+      if (rootItem) {
+        this.detailsService.setRoot(rootItem);
+      }
       this._type = options?.type;
 
       const enabledDefinitions: Array<{

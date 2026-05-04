@@ -1,21 +1,29 @@
-import { Component } from '@angular/core';
+import { Component, computed } from '@angular/core';
 
 import { DetailBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-detail-logo',
   template: `
-    <!--    <ion-card>-->
     @let item = options()?.item?.();
-    @if (item && options()?.key) {
-      <!--        <ion-img-->
-      <!--          style="margin: 10px; height: 150px; width: 150px"-->
-      <!--          [src]="item[options.key]"-->
-      <!--        ></ion-img>-->
+    @let key = options()?.key;
+    @if (item && key && item[key]) {
+      <img [class]="logoClasses()" [src]="item[key]" alt="" />
     }
-    <!--    </ion-card>-->
   `,
 })
 export class DetailLogoComponent<
   T extends { [key: string]: any } | undefined,
-> extends DetailBaseComponent<T> {}
+> extends DetailBaseComponent<T> {
+  logoClasses = computed(() => {
+    const classes = [
+      'smart:h-[150px]',
+      'smart:w-[150px]',
+      'smart:rounded-lg',
+      'smart:object-contain',
+    ];
+    const extra = this.cssClass();
+    if (extra) classes.push(extra);
+    return classes.join(' ');
+  });
+}

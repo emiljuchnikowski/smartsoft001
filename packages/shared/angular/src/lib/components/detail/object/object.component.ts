@@ -1,6 +1,9 @@
 import { NgComponentOutlet } from '@angular/common';
 import { Component, computed, inject, signal, Signal } from '@angular/core';
-import { DynamicIoDirective } from 'ng-dynamic-component';
+import {
+  ComponentOutletInjectorDirective,
+  DynamicIoDirective,
+} from 'ng-dynamic-component';
 
 import { IEntity } from '@smartsoft001/domain-core';
 
@@ -11,16 +14,21 @@ import { DetailBaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-detail-object',
   template: `
-    <br />
     @let options = childOptions();
     @if (options) {
-      <ng-template
-        [ngComponentOutlet]="detailsComponent"
-        [ndcDynamicInputs]="{ options }"
-      ></ng-template>
+      <div [class]="objectClasses()">
+        <ng-template
+          [ngComponentOutlet]="detailsComponent"
+          [ndcDynamicInputs]="{ options }"
+        ></ng-template>
+      </div>
     }
   `,
-  imports: [NgComponentOutlet, DynamicIoDirective],
+  imports: [
+    NgComponentOutlet,
+    DynamicIoDirective,
+    ComponentOutletInjectorDirective,
+  ],
 })
 export class DetailObjectComponent<
   T extends (IEntity<string> & { [key: string]: any }) | undefined,
@@ -28,7 +36,14 @@ export class DetailObjectComponent<
 > extends DetailBaseComponent<T> {
   public detailsComponent = inject(DETAILS_COMPONENT_TOKEN);
 
-  childOptions!: Signal<IDetailsOptions<TChild> | null>;
+  childOptions: Signal<IDetailsOptions<TChild> | null> = signal(null);
+
+  objectClasses = computed(() => {
+    const classes = ['smart:mt-2', 'smart:block'];
+    const extra = this.cssClass();
+    if (extra) classes.push(extra);
+    return classes.join(' ');
+  });
 
   protected override afterSetOptionsHandler() {
     const item = this.options()?.item?.();

@@ -4,6 +4,7 @@ import {
   input,
   inject,
   effect,
+  InputSignal,
   WritableSignal,
 } from '@angular/core';
 import {
@@ -35,6 +36,8 @@ export abstract class InputBaseComponent<T> extends BaseComponent {
   fieldOptions = input.required<IFieldOptions | undefined>();
 
   options = input<InputOptions<T> | undefined>(undefined);
+
+  cssClass: InputSignal<string> = input<string>('', { alias: 'class' });
 
   constructor() {
     super();

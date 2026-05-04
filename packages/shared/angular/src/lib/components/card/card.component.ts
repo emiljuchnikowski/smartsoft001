@@ -1,40 +1,75 @@
-import { AsyncPipe } from '@angular/common';
-import { Component, input, InputSignal } from '@angular/core';
+import { NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+  TemplateRef,
+  viewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 
 import { ICardOptions } from '../../models';
+import { CARD_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { CardStandardComponent } from './standard/standard.component';
 
 @Component({
   selector: 'smart-card',
   template: `
-    <!--    <ion-card class="ion-padding">-->
-    @let title = options()?.title;
-    @let buttons = options()?.buttons;
-    @if (title) {
-      <!--        <ion-card-header>-->
-      <!--          <ion-card-title>-->
-      {{ title }}
-      @if (buttons) {
-        <!--              <ion-buttons style="float: right">-->
-        @for (btn of options()!.buttons; track btn.number) {
-          <!--                  <ion-button-->
-          <!--                    (click)="btn?.handler()"-->
-          <!--                    [disabled]="btn.disabled$ | async"-->
-          <!--                  >-->
-          <!--                    <ion-icon slot="icon-only" [name]="btn.icon"></ion-icon>-->
-          <!--                  </ion-button>-->
-        }
-        <!--              </ion-buttons>-->
-      }
-      <!--          </ion-card-title>-->
-      <!--        </ion-card-header>-->
+    <ng-template #headerTpl>
+      <ng-content select="[cardHeader]"></ng-content>
+    </ng-template>
+    <ng-template #bodyTpl>
+      <ng-content></ng-content>
+    </ng-template>
+    <ng-template #footerTpl>
+      <ng-content select="[cardFooter]"></ng-content>
+    </ng-template>
+
+    @if (componentType()) {
+      <ng-container
+        *ngComponentOutlet="componentType(); inputs: componentInputs()"
+      />
+    } @else {
+      <smart-card-standard
+        [options]="options()"
+        [hasHeader]="hasHeader()"
+        [hasFooter]="hasFooter()"
+        [class]="cssClass()"
+        [headerTpl]="headerTplRef()"
+        [bodyTpl]="bodyTplRef()"
+        [footerTpl]="footerTplRef()"
+      />
     }
-    <!--      <ion-card-content>-->
-    <ng-content></ng-content>
-    <!--      </ion-card-content>-->
-    <!--    </ion-card>-->
   `,
+  encapsulation: ViewEncapsulation.None,
+  imports: [CardStandardComponent, NgComponentOutlet, NgTemplateOutlet],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardComponent {
-  readonly options: InputSignal<ICardOptions | undefined> =
-    input<ICardOptions>();
+  private injectedComponent = inject(CARD_STANDARD_COMPONENT_TOKEN, {
+    optional: true,
+  });
+
+  options = input<ICardOptions>();
+  hasHeader = input<boolean>(false);
+  hasFooter = input<boolean>(false);
+  cssClass = input<string>('', { alias: 'class' });
+
+  headerTplRef = viewChild.required<TemplateRef<unknown>>('headerTpl');
+  bodyTplRef = viewChild.required<TemplateRef<unknown>>('bodyTpl');
+  footerTplRef = viewChild.required<TemplateRef<unknown>>('footerTpl');
+
+  componentType = computed(() => this.injectedComponent ?? null);
+
+  componentInputs = computed(() => ({
+    options: this.options(),
+    hasHeader: this.hasHeader(),
+    hasFooter: this.hasFooter(),
+    cssClass: this.cssClass(),
+    headerTpl: this.headerTplRef(),
+    bodyTpl: this.bodyTplRef(),
+    footerTpl: this.footerTplRef(),
+  }));
 }

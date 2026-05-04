@@ -1,153 +1,84 @@
+import { NgComponentOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  OnChanges,
-  SimpleChange,
+  computed,
+  effect,
+  inject,
   input,
   output,
+  viewChild,
+  ViewEncapsulation,
 } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
+
+import { PasswordStrengthBaseComponent } from './base';
+import { PasswordStrengthStandardComponent } from './standard';
+import { PASSWORD_STRENGTH_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-password-strength',
-  templateUrl: './password-strength.component.html',
-  styles: [
-    `
-      .point {
-        width: 32%;
-      }
-
-      p {
-        font-size: var(--default-font-size);
-      }
-    `,
-  ],
+  template: `
+    @if (componentType()) {
+      <ng-container
+        *ngComponentOutlet="componentType(); inputs: componentInputs()"
+      />
+    } @else {
+      <smart-password-strength-standard
+        [passwordToCheck]="passwordToCheck()"
+        [showHint]="showHint()"
+        [class]="cssClass()"
+        (passwordStrength)="passwordStrength.emit($event)"
+      />
+    }
+  `,
+  encapsulation: ViewEncapsulation.None,
+  imports: [PasswordStrengthStandardComponent, NgComponentOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [TranslatePipe],
 })
-export class PasswordStrengthComponent implements OnChanges {
-  private _colors = ['darkred', 'orangered', 'yellowgreen'];
+export class PasswordStrengthComponent {
+  private injectedComponent = inject(
+    PASSWORD_STRENGTH_STANDARD_COMPONENT_TOKEN,
+    { optional: true },
+  );
 
-  bar0!: string;
-  bar1!: string;
-  bar2!: string;
-  msg = '';
-  msgColor!: string;
-
-  result = {
-    lowerLetters: false,
-    upperLetters: false,
-    symbols: false,
-    passLength: false,
-  };
-
-  public passwordToCheck = input.required<string>();
-  public showHint = input.required<boolean>();
+  passwordToCheck = input.required<string>();
+  showHint = input.required<boolean>();
+  cssClass = input<string>('', { alias: 'class' });
 
   passwordStrength = output<boolean>();
 
-  checkStrength(p = '') {
-    // 1
-    let force = 0;
+  componentType = computed(() => this.injectedComponent ?? null);
 
-    // 2
-    const regex = /[$-/:-?{-~!"^_@`[\]]/g;
-    const lowerLetters: boolean = !!p && /[a-z]+/.test(p);
-    const upperLetters = /[A-Z]+/.test(p);
-    const symbols = regex.test(p);
+  componentInputs = computed(() => ({
+    passwordToCheck: this.passwordToCheck(),
+    showHint: this.showHint(),
+    cssClass: this.cssClass(),
+  }));
 
-    // 3
-    const flags = [lowerLetters, upperLetters, symbols];
+  private outlet = viewChild(NgComponentOutlet);
 
-    // 4
-    let passedMatches = 0;
-    for (const flag of flags) {
-      passedMatches += flag ? 1 : 0;
-    }
+  constructor() {
+    let subscription: { unsubscribe(): void } | null = null;
 
-    // 5
-    force += 2 * p?.length + (p?.length >= 8 ? 1 : 0);
-    force += passedMatches * 10;
+    effect((onCleanup) => {
+      const instance = this.outlet()?.componentInstance as
+        | PasswordStrengthBaseComponent
+        | null
+        | undefined;
 
-    // 6
-    const passLength = !(!p || p?.length <= 6);
-    force = !passLength ? Math.min(force, 10) : force;
+      subscription?.unsubscribe();
+      subscription = null;
 
-    // 7
-    force = passedMatches === 1 ? Math.min(force, 10) : force;
-    force = passedMatches === 2 ? Math.min(force, 20) : force;
-    force = passedMatches === 3 ? Math.min(force, 30) : force;
+      if (instance) {
+        subscription = instance.passwordStrength.subscribe((value: boolean) =>
+          this.passwordStrength.emit(value),
+        );
+      }
 
-    this.result = {
-      lowerLetters,
-      upperLetters,
-      symbols,
-      passLength,
-    };
-
-    return force;
-  }
-
-  async ngOnChanges(changes: {
-    [propName: string]: SimpleChange;
-  }): Promise<void> {
-    await new Promise<void>((res) => res());
-
-    if (!changes['passwordToCheck']) return;
-
-    const password = changes['passwordToCheck'].currentValue;
-    this.setBarColors(3, '#DDD');
-
-    this.msg = '';
-
-    if (password) {
-      const c = this.getColor(this.checkStrength(password));
-      this.setBarColors(c.index, c.color);
-    }
-
-    const pwdStrength = this.checkStrength(password);
-    if (pwdStrength === 30) {
-      this.passwordStrength.emit(true);
-    } else {
-      this.passwordStrength.emit(false);
-    }
-
-    switch (pwdStrength) {
-      case 10:
-        this.msg = 'poor';
-        break;
-      case 20:
-        this.msg = 'notGood';
-        break;
-      case 30:
-        this.msg = 'good';
-        break;
-    }
-  }
-
-  private getColor(s: number) {
-    let index = 0;
-    if (s === 10) {
-      index = 0;
-    } else if (s === 20) {
-      index = 1;
-    } else if (s === 30) {
-      index = 2;
-    } else {
-      index = 3;
-    }
-
-    this.msgColor = this._colors[index];
-
-    return {
-      index: index + 1,
-      color: this._colors[index],
-    };
-  }
-
-  private setBarColors(count: number, col: string) {
-    for (let n = 0; n < count; n++) {
-      (this as any)['bar' + n] = col;
-    }
+      onCleanup(() => {
+        subscription?.unsubscribe();
+        subscription = null;
+      });
+    });
   }
 }

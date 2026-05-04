@@ -1,13 +1,27 @@
-import {CdkCell, CdkHeaderCell, CdkHeaderRow, CdkRow, CdkTable} from "@angular/cdk/table";
+import {
+  CdkCell,
+  CdkCellDef,
+  CdkColumnDef,
+  CdkHeaderCell,
+  CdkHeaderCellDef,
+  CdkHeaderRow,
+  CdkHeaderRowDef,
+  CdkRow,
+  CdkRowDef,
+  CdkTable,
+} from '@angular/cdk/table';
 import { NgTemplateOutlet } from '@angular/common';
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
+  computed,
   OnDestroy,
   OnInit,
   Signal,
   viewChild,
   ViewContainerRef,
+  ViewEncapsulation,
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
@@ -23,40 +37,27 @@ import { ListBaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-list-desktop',
   templateUrl: './desktop.component.html',
-  //TODO: research if these classes are used anywhere
-  styles: [
-    `
-      table {
-        .mat-row,
-        .mat-header-row {
-          background: white;
-          min-width: 1200px;
-        }
-      }
-      .wrapper {
-        height: 100%;
-      }
-
-      .mat-row,
-      .mat-header-row {
-        min-width: 1200px;
-      }
-    `,
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    NgTemplateOutlet,
+    ListHeaderPipe,
+    ListCellPipe,
+    LazyLoadImageModule,
+    FileUrlPipe,
+    TranslatePipe,
+    PagingComponent,
+    CdkTable,
+    CdkHeaderCell,
+    CdkCell,
+    CdkHeaderRow,
+    CdkRow,
+    CdkColumnDef,
+    CdkHeaderCellDef,
+    CdkCellDef,
+    CdkHeaderRowDef,
+    CdkRowDef,
   ],
-    imports: [
-        NgTemplateOutlet,
-        ListHeaderPipe,
-        ListCellPipe,
-        LazyLoadImageModule,
-        FileUrlPipe,
-        TranslatePipe,
-        PagingComponent,
-        CdkTable,
-        CdkHeaderCell,
-        CdkCell,
-        CdkHeaderRow,
-        CdkRow,
-    ],
 })
 export class ListDesktopComponent<T extends IEntity<string>>
   extends ListBaseComponent<T>
@@ -65,9 +66,23 @@ export class ListDesktopComponent<T extends IEntity<string>>
   private _subscriptions = new Subscription();
   private _multiSelected: T[] = [];
 
-  desktopList = this.list as Signal<T[]>;
+  get desktopList(): Signal<T[]> {
+    return this.list as Signal<T[]>;
+  }
 
   componentFactories: IListComponentFactories<T> | null = null;
+
+  containerClasses = computed(() => {
+    const classes: string[] = [
+      'smart:min-w-full',
+      'smart:divide-y',
+      'smart:divide-gray-300',
+      'smart:dark:divide-white/10',
+    ];
+    const extra = this.cssClass();
+    if (extra) classes.push(extra);
+    return classes.join(' ');
+  });
 
   get desktopKeys(): Array<string> | null {
     if (this.keys) {
@@ -128,10 +143,7 @@ export class ListDesktopComponent<T extends IEntity<string>>
   }
 
   ngOnInit(): void {
-    const sort = this.sort as {
-      default?: string | undefined;
-      defaultDesc?: boolean | undefined;
-    };
+    // No-op: initialization handled via effect in base constructor
   }
 
   ngOnDestroy(): void {
@@ -149,6 +161,4 @@ export class ListDesktopComponent<T extends IEntity<string>>
       }
     }
   }
-
-  protected readonly Object = Object;
 }

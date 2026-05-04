@@ -24,7 +24,7 @@ export abstract class ButtonBaseComponent {
 
   options: InputSignal<IButtonOptions> = input.required<IButtonOptions>();
   disabled: InputSignal<boolean> = input<boolean>(false);
-  cssClass: InputSignal<string> = input<string>('');
+  cssClass: InputSignal<string> = input<string>('', { alias: 'class' });
 
   contentTpl = viewChild<ViewContainerRef>('contentTpl');
 

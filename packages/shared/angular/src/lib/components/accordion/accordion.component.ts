@@ -1,27 +1,39 @@
-import { Component, model, ModelSignal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  model,
+  ModelSignal,
+  ViewEncapsulation,
+} from '@angular/core';
+
+import { AccordionDefaultComponent } from './default/default.component';
+import { IAccordionOptions } from '../../models';
 
 @Component({
   selector: 'smart-accordion',
   template: `
-    <!--        <ion-item (click)="update()">-->
-    <ng-content select="smart-accordion-header"></ng-content>
-    @if (show()) {
-      <!--      TODO: extend tailwind classes to have mr-6.5 = margin-right: 1.6rem-1.625rem-->
-      <!--        <ion-icon class="mr-6.5" name="caret-up-outline" slot="end"></ion-icon>-->
-    } @else {
-      <!--        <ion-icon class="mr-6.5" name="caret-down-outline" slot="end"></ion-icon>-->
-    }
-    <!--    </ion-item>-->
+    <ng-template #headerTpl>
+      <ng-content select="[accordionHeader]"></ng-content>
+    </ng-template>
+    <ng-template #bodyTpl>
+      <ng-content select="[accordionBody]"></ng-content>
+    </ng-template>
 
-    @if (show()) {
-      <ng-content select="smart-accordion-body"></ng-content>
-    }
+    <smart-accordion-default
+      [(show)]="show"
+      [options]="options()"
+      [cssClass]="cssClass()"
+      [headerTpl]="headerTpl"
+      [bodyTpl]="bodyTpl"
+    />
   `,
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AccordionDefaultComponent],
 })
 export class AccordionComponent {
   show: ModelSignal<boolean> = model<boolean>(false);
-
-  update() {
-    this.show.update((val) => !val);
-  }
+  options = input<IAccordionOptions>();
+  cssClass = input<string>('', { alias: 'class' });
 }

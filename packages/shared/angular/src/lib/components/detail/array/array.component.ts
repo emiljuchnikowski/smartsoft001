@@ -1,6 +1,9 @@
 import { NgComponentOutlet } from '@angular/common';
 import { Component, computed, inject, signal, Signal } from '@angular/core';
-import { DynamicIoDirective } from 'ng-dynamic-component';
+import {
+  ComponentOutletInjectorDirective,
+  DynamicIoDirective,
+} from 'ng-dynamic-component';
 
 import { IEntity } from '@smartsoft001/domain-core';
 
@@ -11,32 +14,42 @@ import { DetailBaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-detail-array',
   template: `
-    <br />
     @let options = childOptions();
-    @if (options) {
-      @for (options of options; track options) {
-        <ng-template
-          [ngComponentOutlet]="detailsComponent"
-          [ndcDynamicInputs]="{ options: options }"
-        ></ng-template>
-      }
+    @if (options && options.length) {
+      <div [class]="arrayClasses()">
+        @for (opt of options; track opt) {
+          <ng-template
+            [ngComponentOutlet]="detailsComponent"
+            [ndcDynamicInputs]="{ options: opt }"
+          ></ng-template>
+        }
+      </div>
     }
   `,
-  styles: [
-    `
-      :host {
-        width: 100%;
-      }
-    `,
+  imports: [
+    NgComponentOutlet,
+    DynamicIoDirective,
+    ComponentOutletInjectorDirective,
   ],
-  imports: [NgComponentOutlet, DynamicIoDirective],
 })
 export class DetailArrayComponent<
   T extends { [key: string]: any } | undefined,
   TChild extends IEntity<string>,
 > extends DetailBaseComponent<T> {
   public detailsComponent = inject(DETAILS_COMPONENT_TOKEN);
-  childOptions!: Signal<IDetailsOptions<TChild>[]>;
+  childOptions: Signal<IDetailsOptions<TChild>[]> = signal([]);
+
+  arrayClasses = computed(() => {
+    const classes = [
+      'smart:mt-2',
+      'smart:block',
+      'smart:space-y-2',
+      'smart:w-full',
+    ];
+    const extra = this.cssClass();
+    if (extra) classes.push(extra);
+    return classes.join(' ');
+  });
 
   protected override afterSetOptionsHandler() {
     const key = this.options()?.key;

@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { IconComponent } from '../../icon/icon.component';
+import { IconComponent } from '../../icon';
 import { ButtonBaseComponent } from '../base/base.component';
 
 @Component({
