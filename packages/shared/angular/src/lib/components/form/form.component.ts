@@ -1,28 +1,23 @@
+import { NgComponentOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  computed,
   effect,
   ElementRef,
   inject,
   input,
   OnDestroy,
   output,
-  Signal,
-  TemplateRef,
   Type,
-  viewChild,
-  viewChildren,
-  ViewContainerRef,
+  ViewEncapsulation,
 } from '@angular/core';
-import { ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import {
-  getModelFieldsWithOptions,
-  getModelOptions,
-} from '@smartsoft001/models';
+import { getModelOptions } from '@smartsoft001/models';
 import { ObjectService } from '@smartsoft001/utils';
 
 import { FormFactory } from '../../factories';
@@ -30,17 +25,18 @@ import { IFormOptions } from '../../models';
 import { MODEL_EXPORT_PROVIDER } from '../../providers';
 import { MODEL_IMPORT_PROVIDER } from '../../providers';
 import { SmartFormGroup } from '../../services';
-import { CreateDynamicComponent } from '../base';
-import { FormBaseComponent } from './base/base.component';
-import { DynamicContentDirective } from '../../directives';
-import { ExportComponent } from '../export';
-import { ImportComponent } from '../import';
+import { FORM_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+// TODO: ExportComponent moved to @smartsoft001-pro/angular (FRA-113)
+// import { ExportDefaultComponent } from '../export';
+// TODO: ImportComponent moved to @smartsoft001-pro/angular (FRA-116)
+// import { ImportComponent } from '../import';
 import { FormStandardComponent } from './standard/standard.component';
 
 @Component({
   selector: 'smart-form',
   template: `
-    @if (export || import) {
+    <!-- TODO: Export/Import moved to @smartsoft001-pro/angular (FRA-113, FRA-116) -->
+    <!--@if (export || import) {
       <div style="text-align: right">
         @if (export) {
           <smart-export
@@ -55,44 +51,40 @@ import { FormStandardComponent } from './standard/standard.component';
           ></smart-import>
         }
       </div>
-    }
+    }-->
     @if (form) {
       <form
         [formGroup]="form"
         (ngSubmit)="invokeSubmit.emit(form.value)"
         (keyup.enter)="invokeSubmit.emit(form.value)"
       >
-        @if (template() === 'default') {
-          @if (options() && type === 'standard') {
-            <smart-form-standard
-              [options]="options()"
-              [form]="form"
-              (invokeSubmit)="invokeSubmit.emit($event)"
-            ></smart-form-standard>
-          }
+        @if (componentType()) {
+          <ng-container
+            *ngComponentOutlet="componentType(); inputs: componentInputs()"
+          />
+        } @else {
+          <smart-form-standard
+            [options]="options()"
+            [form]="form"
+            [class]="cssClass()"
+          ></smart-form-standard>
         }
-
-        <div class="dynamic-content"></div>
       </form>
     }
   `,
-  imports: [
-    ExportComponent,
-    ImportComponent,
-    ReactiveFormsModule,
-    FormStandardComponent,
-  ],
+  imports: [ReactiveFormsModule, FormStandardComponent, NgComponentOutlet],
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormComponent<T>
-  extends CreateDynamicComponent<FormBaseComponent<any>>('form')
-  implements OnDestroy
-{
+export class FormComponent<T> implements OnDestroy {
   public exportProvider = inject(MODEL_EXPORT_PROVIDER, { optional: true });
   public importProvider = inject(MODEL_IMPORT_PROVIDER, { optional: true });
   private formFactory = inject(FormFactory);
   private cd = inject(ChangeDetectorRef);
   private elementRef = inject(ElementRef);
+  private injectedComponent = inject(FORM_STANDARD_COMPONENT_TOKEN, {
+    optional: true,
+  });
 
   private _options!: IFormOptions<T>;
   private _subscription = new Subscription();
@@ -100,27 +92,28 @@ export class FormComponent<T>
   private _uniqueProvider!: (values: Record<keyof T, any>) => Promise<boolean>;
 
   form!: SmartFormGroup;
-  type!: 'standard' | 'custom';
   export!: boolean;
   exportHandler!: (val: any) => void;
   import!: boolean;
   importAccept!: string | undefined;
 
-  customTpl = viewChild<ViewContainerRef | undefined>(ViewContainerRef);
   options = input.required<IFormOptions<T>>();
+  cssClass = input<string>('', { alias: 'class' });
 
   invokeSubmit = output();
   valueChange = output<T>();
   valuePartialChange = output<Partial<T>>();
   validChange = output<boolean>();
 
-  override contentTpl = viewChild<TemplateRef<any>>('contentTpl');
-  override dynamicContents: Signal<readonly DynamicContentDirective[]> =
-    viewChildren<DynamicContentDirective>(DynamicContentDirective);
+  componentType = computed(() => this.injectedComponent ?? null);
+
+  componentInputs = computed(() => ({
+    options: this.options(),
+    form: this.form,
+    class: this.cssClass(),
+  }));
 
   constructor() {
-    super();
-
     effect(() => {
       const options = this.options();
       if (!options) return;
@@ -134,7 +127,6 @@ export class FormComponent<T>
       this._options = options;
 
       this.initLoading();
-      this.initType();
       this.initExportImport();
 
       this._mode = options?.mode ?? 'create';
@@ -160,10 +152,6 @@ export class FormComponent<T>
             this.cd.detectChanges();
           });
       }
-
-      setTimeout(() => {
-        this.refreshDynamicInstance();
-      });
     });
   }
 
@@ -192,18 +180,7 @@ export class FormComponent<T>
       });
   }
 
-  override refreshProperties(): void {
-    this.baseInstance.options = this.options;
-    this.baseComponentRef.setInput('form', this.form as UntypedFormGroup);
-    this._subscription.add(
-      this.baseInstance.invokeSubmit.subscribe((e) =>
-        this.invokeSubmit.emit(e),
-      ),
-    );
-  }
-
-  override ngOnDestroy(): void {
-    super.ngOnDestroy();
+  ngOnDestroy(): void {
     if (this._subscription) {
       this._subscription.unsubscribe();
     }
@@ -245,11 +222,6 @@ export class FormComponent<T>
     );
 
     this.form.updateValueAndValidity();
-  }
-
-  private initType() {
-    const fieldWithOptions = getModelFieldsWithOptions(this._options.model);
-    this.type = 'standard';
   }
 
   private async initExportImport() {

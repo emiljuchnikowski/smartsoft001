@@ -1,0 +1,73 @@
+<div [class]="cssClass()">
+  <div class="tabs">
+    @if (
+      (options()?.showMobileSelect ?? true) &&
+      (options()?.items ?? []).length > 0
+    ) {
+      <div class="tabs-mobile">
+        <select
+          [attr.aria-label]="options()?.ariaLabel ?? 'Select a tab'"
+          (change)="onSelectChange($event)"
+        >
+          @for (item of options()!.items!; track item.id) {
+            <option
+              [value]="item.id"
+              [attr.selected]="isCurrent(item.id) ? '' : null"
+            >
+              {{ item.label ?? item.id }}
+            </option>
+          }
+        </select>
+      </div>
+    }
+    <nav
+      class="tabs-desktop"
+      [attr.aria-label]="options()?.ariaLabel ?? 'Tabs'"
+    >
+      <ul role="list" class="tabs-list">
+        @for (item of options()?.items ?? []; track item.id) {
+          <li class="tab">
+            @if (item.href) {
+              <a
+                [href]="item.href"
+                [class]="'tab-link' + (isCurrent(item.id) ? ' current' : '')"
+                [attr.aria-current]="isCurrent(item.id) ? 'page' : null"
+              >
+                @if (item.iconTpl) {
+                  <span class="tab-icon">
+                    <ng-container [ngTemplateOutlet]="item.iconTpl" />
+                  </span>
+                }
+                @if (item.label) {
+                  {{ item.label }}
+                }
+                @if (item.badge !== undefined && item.badge !== null) {
+                  <span class="tab-badge">{{ item.badge }}</span>
+                }
+              </a>
+            } @else {
+              <button
+                type="button"
+                [class]="'tab-button' + (isCurrent(item.id) ? ' current' : '')"
+                [attr.aria-current]="isCurrent(item.id) ? 'page' : null"
+                (click)="onTabClick(item.id)"
+              >
+                @if (item.iconTpl) {
+                  <span class="tab-icon">
+                    <ng-container [ngTemplateOutlet]="item.iconTpl" />
+                  </span>
+                }
+                @if (item.label) {
+                  {{ item.label }}
+                }
+                @if (item.badge !== undefined && item.badge !== null) {
+                  <span class="tab-badge">{{ item.badge }}</span>
+                }
+              </button>
+            }
+          </li>
+        }
+      </ul>
+    </nav>
+  </div>
+</div>

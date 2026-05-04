@@ -1,0 +1,91 @@
+<div [class]="cssClass()">
+  <div class="sign-in-form">
+    <form
+      (submit)="onSubmit($event)"
+      [attr.aria-label]="options()?.ariaLabel ?? null"
+      novalidate
+    >
+      <div class="field">
+        @if (options()?.showLabels !== false) {
+          <label for="smart-sign-in-form-email">Email</label>
+        }
+        <input
+          id="smart-sign-in-form-email"
+          type="email"
+          name="email"
+          autocomplete="email"
+          [attr.placeholder]="options()?.emailPlaceholder ?? null"
+          [disabled]="disabled()"
+          [value]="email()"
+          (input)="onEmailInput($event)"
+          required
+        />
+      </div>
+      <div class="field">
+        @if (options()?.showLabels !== false) {
+          <label for="smart-sign-in-form-password">Password</label>
+        }
+        <input
+          id="smart-sign-in-form-password"
+          type="password"
+          name="password"
+          [attr.autocomplete]="
+            mode() === 'sign-up' ? 'new-password' : 'current-password'
+          "
+          [attr.placeholder]="options()?.passwordPlaceholder ?? null"
+          [disabled]="disabled()"
+          [value]="password()"
+          (input)="onPasswordInput($event)"
+          required
+        />
+      </div>
+      @if (mode() === 'sign-in' && options()?.forgotPasswordHref) {
+        <a class="forgot-password" [attr.href]="options()!.forgotPasswordHref"
+          >Forgot password?</a
+        >
+      }
+      <button type="submit" class="submit" [disabled]="disabled()">
+        {{
+          options()?.submitLabel ??
+            (mode() === 'sign-up' ? 'Sign up' : 'Sign in')
+        }}
+      </button>
+      @if ((options()?.socialProviders ?? []).length > 0) {
+        <div class="social-providers">
+          @for (provider of options()!.socialProviders!; track provider.id) {
+            <button
+              type="button"
+              class="social"
+              [disabled]="disabled()"
+              (click)="onSocialClick(provider.id)"
+            >
+              @if (provider.iconTpl) {
+                <span class="icon">
+                  <ng-container [ngTemplateOutlet]="provider.iconTpl" />
+                </span>
+              } @else if (provider.iconUrl) {
+                <img class="icon" [src]="provider.iconUrl" alt="" />
+              }
+              {{ provider.label }}
+            </button>
+          }
+        </div>
+      }
+      @if (mode() === 'sign-in' && options()?.signUpHref) {
+        <a class="alt-link" [attr.href]="options()!.signUpHref"
+          >Create an account</a
+        >
+      }
+      @if (mode() === 'sign-up' && options()?.signInHref) {
+        <a class="alt-link" [attr.href]="options()!.signInHref"
+          >Already have an account?</a
+        >
+      }
+      @if (options()?.extraTpl) {
+        <div class="extra">
+          <ng-container [ngTemplateOutlet]="options()!.extraTpl!" />
+        </div>
+      }
+    </form>
+  </div>
+</div>

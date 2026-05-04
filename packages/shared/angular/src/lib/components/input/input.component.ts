@@ -1,22 +1,22 @@
+import { NgComponentOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ComponentFactoryResolver,
+  computed,
   effect,
   ElementRef,
   inject,
   Injector,
   input,
-  model,
   OnInit,
-  viewChild,
-  ViewContainerRef,
+  Type,
 } from '@angular/core';
 import * as _ from 'lodash';
 
 import {
   FieldType,
+  FieldTypeDef,
   getModelFieldOptions,
   getModelFieldsWithOptions,
   IFieldOptions,
@@ -24,6 +24,7 @@ import {
 
 import { InputOptions } from '../../models';
 import { StyleService } from '../../services';
+import { INPUT_FIELD_COMPONENTS_TOKEN } from '../../shared.inectors';
 import { InfoComponent } from '../info';
 import { LoaderComponent } from '../loader';
 import { InputAddressComponent } from './address/address.component';
@@ -59,65 +60,98 @@ import { InputStringsComponent } from './strings/strings.component';
 import { InputTextComponent } from './text/text.component';
 import { InputVideoComponent } from './video/video.component';
 
+const baseMap: Partial<Record<FieldTypeDef, Type<InputBaseComponent<any>>>> = {
+  [FieldType.currency]: InputCurrencyComponent,
+  [FieldType.date]: InputDateComponent,
+  [FieldType.dateWithEdit]: InputDateWithEditComponent,
+  [FieldType.email]: InputEmailComponent,
+  [FieldType.enum]: InputEnumComponent,
+  [FieldType.file]: InputFileComponent,
+  [FieldType.flag]: InputFlagComponent,
+  [FieldType.int]: InputIntComponent,
+  [FieldType.nip]: InputNipComponent,
+  [FieldType.password]: InputPasswordComponent,
+  [FieldType.radio]: InputRadioComponent,
+  [FieldType.text]: InputTextComponent,
+  [FieldType.strings]: InputStringsComponent,
+  [FieldType.longText]: InputLongTextComponent,
+  [FieldType.address]: InputAddressComponent,
+  [FieldType.object]: InputObjectComponent,
+  [FieldType.color]: InputColorComponent,
+  [FieldType.logo]: InputLogoComponent,
+  [FieldType.check]: InputCheckComponent,
+  [FieldType.ints]: InputIntsComponent,
+  [FieldType.phoneNumber]: InputPhoneNumberComponent,
+  [FieldType.phoneNumberPl]: InputPhoneNumberPlComponent,
+  [FieldType.pesel]: InputPeselComponent,
+  [FieldType.array]: InputArrayComponent,
+  [FieldType.pdf]: InputPdfComponent,
+  [FieldType.video]: InputVideoComponent,
+  [FieldType.attachment]: InputAttachmentComponent,
+  [FieldType.dateRange]: InputDateRangeComponent,
+  [FieldType.image]: InputImageComponent,
+  [FieldType.float]: InputFloatComponent,
+};
+
 @Component({
   selector: 'smart-input',
-  templateUrl: './input.component.html',
-  styles: [
-    `
-      .container-right {
-        top: 15%;
-        z-index: 666;
+  template: `
+    @if (!fieldOptions?.hide) {
+      <div class="smart:relative">
+        @if (fieldOptions?.info) {
+          <div class="smart:absolute smart:right-0 smart:top-0">
+            <smart-info
+              [options]="{ text: fieldOptions?.info ?? '' }"
+            ></smart-info>
+          </div>
+        }
+        <smart-loader [show]="status === 'PENDING'"></smart-loader>
+        @let resolved = component();
+        @if (resolved) {
+          <ng-container
+            *ngComponentOutlet="resolved; inputs: componentInputs()"
+          ></ng-container>
+        }
+      </div>
+
+      @let errors = options()?.control?.errors;
+      @if (errors && options()?.control?.touched) {
+        <smart-input-error [errors]="errors"></smart-input-error>
       }
-    `,
-  ],
+    }
+  `,
   imports: [
+    NgComponentOutlet,
     InfoComponent,
     LoaderComponent,
-    InputCurrencyComponent,
-    InputDateComponent,
-    InputDateWithEditComponent,
-    InputEmailComponent,
-    InputEnumComponent,
-    InputFileComponent,
-    InputFlagComponent,
-    InputIntComponent,
-    InputNipComponent,
-    InputPasswordComponent,
-    InputRadioComponent,
-    InputTextComponent,
-    InputStringsComponent,
-    InputLongTextComponent,
-    InputAddressComponent,
-    InputObjectComponent,
-    InputColorComponent,
-    InputLogoComponent,
-    InputCheckComponent,
-    InputIntsComponent,
-    InputPhoneNumberComponent,
-    InputPhoneNumberPlComponent,
-    InputPeselComponent,
-    InputArrayComponent,
-    InputPdfComponent,
-    InputVideoComponent,
-    InputAttachmentComponent,
-    InputDateRangeComponent,
-    InputImageComponent,
-    InputFloatComponent,
     InputErrorComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputComponent<T> implements OnInit {
-  private componentFactoryResolver = inject(ComponentFactoryResolver);
+  private extendMap = inject(INPUT_FIELD_COMPONENTS_TOKEN, { optional: true });
   private injector = inject(Injector);
 
-  status!: any;
+  status: any;
   fieldOptions: IFieldOptions | undefined;
-  FieldType = FieldType;
-
-  componentRef = viewChild<ViewContainerRef | undefined>('componentRef');
 
   options = input<InputOptions<T>>();
+
+  component = computed(() => {
+    const explicit = this.options()?.component as
+      | Type<InputBaseComponent<any>>
+      | undefined;
+    if (explicit) return explicit;
+    const type = this.fieldOptions?.type;
+    if (!type) return null;
+    const map = { ...baseMap, ...(this.extendMap ?? {}) };
+    return map[type] ?? null;
+  });
+
+  componentInputs = computed(() => ({
+    options: this.options(),
+    fieldOptions: this.fieldOptions,
+  }));
 
   constructor() {
     effect(() => {
@@ -160,8 +194,6 @@ export class InputComponent<T> implements OnInit {
 
         this.fieldOptions = fieldOptions;
 
-        this.initCustomComponent();
-
         options.control.statusChanges.subscribe((status) => {
           this.status = status;
           (
@@ -172,47 +204,9 @@ export class InputComponent<T> implements OnInit {
     });
   }
 
-  oSetValue($event: any): void {
-    if (!$event) return;
-
-    this.options()?.control.setValue($event);
-  }
-
   async ngOnInit(): Promise<void> {
-    await this.initStyles();
-  }
-
-  private async initStyles() {
     const styleService = this.injector.get(StyleService);
     const elementRef = this.injector.get(ElementRef);
-
     styleService.init(elementRef);
-  }
-
-  private async initCustomComponent(): Promise<void> {
-    const component = this.options()?.component;
-    if (!component) return;
-
-    await new Promise<void>((res) => res());
-
-    const componentFactory =
-      this.componentFactoryResolver.resolveComponentFactory<
-        InputBaseComponent<any>
-      >(component);
-
-    const viewContainerRef = this.componentRef;
-    const resolvedViewContainerRef = viewContainerRef();
-    resolvedViewContainerRef?.clear();
-
-    if (resolvedViewContainerRef) {
-      const componentRef = resolvedViewContainerRef.createComponent(
-        componentFactory,
-        0,
-        this.injector,
-      );
-
-      componentRef.instance.options = this.options;
-      componentRef.setInput('fieldOptions', this.fieldOptions);
-    }
   }
 }

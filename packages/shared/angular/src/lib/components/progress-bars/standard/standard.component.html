@@ -1,0 +1,95 @@
+@if (isBarLayout) {
+  <div [class]="'progress-bars-bar-wrapper ' + cssClass()">
+    @if (options()?.srOnlyTitle) {
+      <h4 class="sr-only">{{ options()!.srOnlyTitle }}</h4>
+    }
+    @if (options()?.title) {
+      <p class="progress-bars-title">{{ options()!.title }}</p>
+    }
+    <div class="progress-bars-track" aria-hidden="true">
+      <div
+        class="progress-bars-fill"
+        [style.width.%]="clampedValue"
+        role="progressbar"
+        [attr.aria-valuenow]="clampedValue"
+        aria-valuemin="0"
+        aria-valuemax="100"
+      ></div>
+    </div>
+    @if (options()?.columns?.length) {
+      <div
+        class="progress-bars-columns"
+        [style.--progress-columns]="options()!.columns!.length"
+      >
+        @for (col of options()!.columns!; track col.label) {
+          <div [class]="'progress-bars-column' + (col.active ? ' active' : '')">
+            {{ col.label }}
+          </div>
+        }
+      </div>
+    }
+  </div>
+} @else {
+  <nav
+    [class]="'progress-bars ' + cssClass()"
+    [attr.data-layout]="options()?.layout ?? 'simple'"
+    [attr.aria-label]="options()?.ariaLabel ?? 'Progress'"
+  >
+    @if (options()?.title) {
+      <p class="progress-bars-title">{{ options()!.title }}</p>
+    }
+    <ol role="list" class="progress-bars-list">
+      @for (step of options()?.steps ?? []; track step.id; let idx = $index) {
+        <li
+          [class]="'progress-bars-step status-' + (step.status ?? 'upcoming')"
+          [attr.data-status]="step.status ?? 'upcoming'"
+        >
+          @if (step.href) {
+            <a
+              [href]="step.href"
+              [class]="
+                'progress-bars-step-link' +
+                (step.status === 'current' ? ' current' : '')
+              "
+              [attr.aria-current]="step.status === 'current' ? 'step' : null"
+            >
+              <ng-container
+                *ngTemplateOutlet="stepBody; context: { step, idx }"
+              />
+            </a>
+          } @else {
+            <button
+              type="button"
+              [class]="
+                'progress-bars-step-button' +
+                (step.status === 'current' ? ' current' : '')
+              "
+              [attr.aria-current]="step.status === 'current' ? 'step' : null"
+              (click)="onStepClick(step.id)"
+            >
+              <ng-container
+                *ngTemplateOutlet="stepBody; context: { step, idx }"
+              />
+            </button>
+          }
+        </li>
+      }
+    </ol>
+  </nav>
+}
+
+<ng-template #stepBody let-step="step" let-idx="idx">
+  @if (step.iconTpl) {
+    <span class="progress-bars-step-icon">
+      <ng-container [ngTemplateOutlet]="step.iconTpl" />
+    </span>
+  } @else if (step.index) {
+    <span class="progress-bars-step-index">{{ step.index }}</span>
+  }
+  @if (step.name) {
+    <span class="progress-bars-step-name">{{ step.name }}</span>
+  }
+  @if (step.description) {
+    <span class="progress-bars-step-description">{{ step.description }}</span>
+  }
+</ng-template>

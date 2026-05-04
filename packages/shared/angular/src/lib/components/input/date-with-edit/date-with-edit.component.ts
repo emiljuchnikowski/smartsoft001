@@ -1,5 +1,9 @@
-import { AsyncPipe } from '@angular/common';
-import { Component, OnDestroy } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  computed,
+} from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
@@ -11,35 +15,48 @@ import { InputBaseComponent } from '../base/base.component';
   selector: 'smart-input-date-with-edit',
   template: `
     @if (control) {
-      <!--  <ion-row class="p-0">-->
-      <!--    <ion-col class="pl-0 align-middle">-->
-      <!--      <ion-label position="floating">-->
-      {{
-        control?.parent?.value
-          | smartModelLabel
-            : internalOptions.fieldKey
-            : internalOptions?.model?.constructor
-          | async
-      }}
-      <!--        <ion-text color="danger">-->
-      @if (required) {
-        <span>*</span>
-      }
-      <!--        </ion-text>-->
-      <!--      </ion-label>-->
-      <br />
-      <smart-date-edit [formControl]="formControl"></smart-date-edit>
-      <!--    </ion-col>-->
-      <!--  </ion-row>-->
+      <label [class]="labelClasses()">
+        {{
+          control?.parent?.value
+            | smartModelLabel
+              : internalOptions.fieldKey
+              : internalOptions?.model?.constructor
+        }}
+        @if (required) {
+          <span class="smart:text-red-500 smart:ml-0.5">*</span>
+        }
+      </label>
+      <smart-date-edit
+        [class]="widgetClasses()"
+        [formControl]="formControl"
+      ></smart-date-edit>
     }
   `,
-  imports: [ModelLabelPipe, AsyncPipe, ReactiveFormsModule, DateEditComponent],
+  imports: [ModelLabelPipe, ReactiveFormsModule, DateEditComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputDateWithEditComponent<T>
   extends InputBaseComponent<T>
   implements OnDestroy
 {
   private _subscriptions = new Subscription();
+
+  labelClasses = computed(() =>
+    [
+      'smart:block',
+      'smart:text-sm/6',
+      'smart:font-medium',
+      'smart:text-gray-900',
+      'smart:dark:text-white',
+    ].join(' '),
+  );
+
+  widgetClasses = computed(() => {
+    const classes = ['smart:mt-2', 'smart:block', 'smart:w-full'];
+    const extra = this.cssClass();
+    if (extra) classes.push(extra);
+    return classes.join(' ');
+  });
 
   override ngOnDestroy(): void {
     super.ngOnDestroy();

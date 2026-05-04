@@ -15,7 +15,7 @@ import { IModelLabelProvider } from '../../providers';
 })
 export class ListHeaderPipe<T> implements PipeTransform {
   private translateService = inject(TranslateService);
-  private modelLabelProvider = inject(IModelLabelProvider);
+  private modelLabelProvider = inject(IModelLabelProvider, { optional: true });
 
   transform(data: T, key: string, type?: Type<any>): Signal<string> {
     if (key.indexOf('__array') === 0) {

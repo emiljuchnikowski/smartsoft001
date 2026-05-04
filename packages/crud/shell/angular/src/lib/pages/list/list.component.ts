@@ -30,7 +30,6 @@ import {
   IPageOptions,
   ListMode,
   MenuService,
-  PageComponent,
 } from '@smartsoft001/angular';
 import { IEntity } from '@smartsoft001/domain-core';
 import {
@@ -55,22 +54,22 @@ import { CrudSearchService } from '../../services/search/search.service';
 
 @Component({
   selector: 'smart-crud-list-page',
-  imports: [PageComponent, ListStandardComponent, NgTemplateOutlet],
+  imports: [ListStandardComponent, NgTemplateOutlet],
   template: `
     @if (filter() && pageOptions()) {
-      <smart-page [options]="pageOptions()">
-        <div #topTpl></div>
+      <!--      <smart-page [options]="pageOptions()">-->
+      <div #topTpl></div>
 
-        @if (template() === 'default' && listOptions()) {
-          <smart-crud-list-standard-page [listOptions]="listOptions()">
-            <ng-container [ngTemplateOutlet]="contentTpl"></ng-container>
-          </smart-crud-list-standard-page>
-        }
-        <ng-template #contentTpl>
-          <ng-content></ng-content>
-        </ng-template>
-        <div class="dynamic-content"></div>
-      </smart-page>
+      @if (template() === 'default' && listOptions()) {
+        <smart-crud-list-standard-page [listOptions]="listOptions()">
+          <ng-container [ngTemplateOutlet]="contentTpl"></ng-container>
+        </smart-crud-list-standard-page>
+      }
+      <ng-template #contentTpl>
+        <ng-content></ng-content>
+      </ng-template>
+      <div class="dynamic-content"></div>
+      <!--      </smart-page>-->
     }
   `,
 })

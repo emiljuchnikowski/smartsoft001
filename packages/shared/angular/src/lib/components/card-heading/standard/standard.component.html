@@ -1,0 +1,25 @@
+<div [class]="cssClass()">
+  @if (options()?.avatarTpl) {
+    <div class="avatar">
+      <ng-container [ngTemplateOutlet]="options()!.avatarTpl!" />
+    </div>
+  }
+  <div class="content">
+    @if (options()?.title) {
+      <h3>{{ options()!.title }}</h3>
+    }
+    @if (options()?.description) {
+      <p class="description">{{ options()!.description }}</p>
+    }
+    @if (options()?.metaTpl) {
+      <div class="meta">
+        <ng-container [ngTemplateOutlet]="options()!.metaTpl!" />
+      </div>
+    }
+  </div>
+  @if (options()?.actionsTpl) {
+    <div class="actions">
+      <ng-container [ngTemplateOutlet]="options()!.actionsTpl!" />
+    </div>
+  }
+</div>

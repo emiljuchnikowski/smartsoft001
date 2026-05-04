@@ -1,4 +1,5 @@
 export * from './detail.component';
+export { DETAIL_FIELD_COMPONENTS_TOKEN } from '../../shared.inectors';
 export * from './text/text.component';
 export * from './base/base.component';
 export * from './email/email.component';

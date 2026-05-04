@@ -1,0 +1,17 @@
+<div [class]="cssClass()">
+  <header>
+    <nav>
+      @if (options()?.navTpl) {
+        <ng-container [ngTemplateOutlet]="options()!.navTpl!" />
+      }
+    </nav>
+  </header>
+  @if (options()?.headerTpl) {
+    <header>
+      <ng-container [ngTemplateOutlet]="options()!.headerTpl!" />
+    </header>
+  }
+  <main>
+    <ng-content />
+  </main>
+</div>

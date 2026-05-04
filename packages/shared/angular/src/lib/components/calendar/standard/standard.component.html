@@ -1,0 +1,47 @@
+<div [class]="cssClass()">
+  <div class="calendar" [attr.data-view]="view()">
+    @if (showToolbar()) {
+      <div class="toolbar">
+        <button type="button" class="prev" (click)="prevPeriod()">Prev</button>
+        <button type="button" class="today-btn" (click)="goToToday()">
+          Today
+        </button>
+        <button type="button" class="next" (click)="nextPeriod()">Next</button>
+        @if (options()?.toolbarActionsTpl) {
+          <div class="toolbar-actions">
+            <ng-container [ngTemplateOutlet]="options()!.toolbarActionsTpl!" />
+          </div>
+        }
+      </div>
+    }
+    <div class="view-grid">
+      @for (week of monthGrid(); track $index) {
+        <div class="week">
+          @for (cell of week; track cell.date.getTime()) {
+            <button
+              type="button"
+              class="day"
+              [attr.data-current-month]="cell.isCurrentMonth ? 'true' : null"
+              [attr.data-today]="cell.isToday ? 'true' : null"
+              [attr.data-selected]="cell.isSelected ? 'true' : null"
+              [attr.aria-label]="cell.date.toDateString()"
+              (click)="selectDay(cell.date)"
+            >
+              @if (options()?.dayCellTpl) {
+                <ng-container
+                  [ngTemplateOutlet]="options()!.dayCellTpl!"
+                  [ngTemplateOutletContext]="{
+                    $implicit: cell,
+                    events: eventsForDay(cell.date),
+                  }"
+                />
+              } @else {
+                {{ cell.date.getDate() }}
+              }
+            </button>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>

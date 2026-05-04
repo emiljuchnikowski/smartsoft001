@@ -16,7 +16,7 @@ import {
   IFieldEditMetadata,
 } from '@smartsoft001/models';
 
-import { CrudFacade } from '../../+state/crud.facade';
+import { CrudFacade } from '../../+state';
 import { CrudFullConfig } from '../../crud.config';
 import { FormOptionsPipe } from '../../pipes';
 

@@ -1,0 +1,34 @@
+<div [class]="cssClass()">
+  <div class="select-menu">
+    <select
+      [disabled]="disabled()"
+      [attr.aria-label]="options()?.ariaLabel ?? null"
+      (change)="onChange($event)"
+    >
+      @if (options()?.placeholder) {
+        <option
+          value=""
+          disabled
+          [selected]="value() === null || value() === undefined"
+        >
+          {{ options()!.placeholder }}
+        </option>
+      }
+      @for (item of options()?.items ?? []; track item.value) {
+        <option
+          [value]="item.value"
+          [selected]="isSelected(item)"
+          [disabled]="!!item.disabled"
+          [attr.aria-label]="item.ariaLabel ?? null"
+        >
+          {{ item.label }}
+        </option>
+      }
+    </select>
+    @if ((options()?.items ?? []).length === 0 && options()?.emptyTpl) {
+      <div class="empty">
+        <ng-container [ngTemplateOutlet]="options()!.emptyTpl!" />
+      </div>
+    }
+  </div>
+</div>

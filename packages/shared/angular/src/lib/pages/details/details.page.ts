@@ -10,7 +10,8 @@ import {
 
 import { IEntity } from '@smartsoft001/domain-core';
 
-import { DetailsComponent, PageComponent } from '../../components';
+// TODO: PageComponent moved to @smartsoft001-pro/angular (FRA-121)
+import { DetailsComponent } from '../../components';
 import {
   IPageOptions,
   IDetailsOptions,
@@ -20,7 +21,7 @@ import { ModalService, StyleService } from '../../services';
 
 @Component({
   templateUrl: './details.page.html',
-  imports: [PageComponent, DetailsComponent],
+  imports: [/* PageComponent, */ DetailsComponent],
   styleUrls: ['./details.page.scss'],
 })
 export class DetailsPage<T extends IEntity<string>> implements OnInit {

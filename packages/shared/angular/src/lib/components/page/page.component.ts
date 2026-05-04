@@ -1,66 +1,63 @@
-import { NgTemplateOutlet } from '@angular/common';
+import { NgComponentOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  effect,
-  ElementRef,
+  computed,
   inject,
   input,
-  OnInit,
-  Renderer2,
   TemplateRef,
+  Type,
   viewChild,
-  viewChildren,
+  ViewEncapsulation,
 } from '@angular/core';
 
-import { CreateDynamicComponent } from '../base';
+import { IPageOptions, SmartPageVariant } from '../../models';
+import { PAGE_VARIANT_COMPONENTS_TOKEN } from '../../shared.inectors';
 import { PageBaseComponent } from './base/base.component';
-import { DynamicContentDirective } from '../../directives';
-import { IPageOptions } from '../../models';
 import { PageStandardComponent } from './standard/standard.component';
+
+const baseMap: Partial<Record<SmartPageVariant, Type<PageBaseComponent>>> = {
+  standard: PageStandardComponent,
+};
 
 @Component({
   selector: 'smart-page',
   template: `
-    @if (template() === 'default') {
-      <smart-page-standard [options]="options()">
-        <ng-container [ngTemplateOutlet]="contentTpl"></ng-container>
-      </smart-page-standard>
+    @let resolved = component();
+    @if (resolved) {
+      <ng-container
+        *ngComponentOutlet="resolved; inputs: componentInputs()"
+      ></ng-container>
     }
-    <ng-template #contentTpl>
+    <ng-template #defaultBodyRef>
       <ng-content></ng-content>
     </ng-template>
-    <div class="dynamic-content"></div>
   `,
-  imports: [PageStandardComponent, NgTemplateOutlet],
+  encapsulation: ViewEncapsulation.None,
+  imports: [NgComponentOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PageComponent
-  extends CreateDynamicComponent<PageBaseComponent>('page')
-  implements OnInit
-{
-  private el = inject(ElementRef);
-  private renderer = inject(Renderer2);
+export class PageComponent {
+  private extendMap = inject(PAGE_VARIANT_COMPONENTS_TOKEN, { optional: true });
 
   options = input<IPageOptions | null>();
+  cssClass = input<string>('', { alias: 'class' });
 
-  override contentTpl = viewChild<TemplateRef<any>>('contentTpl');
-  override dynamicContents = viewChildren(DynamicContentDirective);
+  defaultBodyRef = viewChild<TemplateRef<unknown>>('defaultBodyRef');
 
-  constructor() {
-    super();
+  component = computed(() => {
+    const variant = this.options()?.variant ?? 'standard';
+    const map = { ...baseMap, ...(this.extendMap ?? {}) };
+    return map[variant] ?? PageStandardComponent;
+  });
 
-    effect(() => {
-      this.options(); // Track changes only
-      this.refreshDynamicInstance();
-    });
-  }
+  mergedOptions = computed<IPageOptions>(() => {
+    const opts = this.options() ?? { title: '' };
+    return { ...opts, bodyTpl: opts.bodyTpl ?? this.defaultBodyRef() };
+  });
 
-  ngOnInit() {
-    this.renderer.setStyle(this.el.nativeElement, 'height', '100%');
-  }
-
-  override refreshProperties(): void {
-    this.baseInstance.options = this.options;
-  }
+  componentInputs = computed(() => ({
+    options: this.mergedOptions(),
+    cssClass: this.cssClass(),
+  }));
 }

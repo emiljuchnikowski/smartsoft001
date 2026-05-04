@@ -1,11 +1,13 @@
 import { NgOptimizedImage } from '@angular/common';
 import {
-  Component,
-  ViewContainerRef,
   AfterViewInit,
-  Signal,
+  ChangeDetectionStrategy,
+  Component,
   computed,
+  Signal,
   viewChild,
+  ViewContainerRef,
+  ViewEncapsulation,
 } from '@angular/core';
 
 import { IEntity } from '@smartsoft001/domain-core';
@@ -19,6 +21,8 @@ import { ListBaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-list-masonry-grid',
   templateUrl: './masonry-grid.component.html',
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [PagingComponent, FileUrlPipe, NgOptimizedImage, ListCellPipe],
 })
 export class ListMasonryGridComponent<T extends IEntity<string>>
@@ -28,6 +32,19 @@ export class ListMasonryGridComponent<T extends IEntity<string>>
   componentFactories: IListComponentFactories<T> | null = null;
 
   listWithImages!: Signal<{ data: T; image: any }[] | null>;
+
+  containerClasses = computed(() => {
+    const classes: string[] = [
+      'smart:grid',
+      'smart:grid-cols-1',
+      'smart:gap-6',
+      'smart:sm:grid-cols-2',
+      'smart:lg:grid-cols-3',
+    ];
+    const extra = this.cssClass();
+    if (extra) classes.push(extra);
+    return classes.join(' ');
+  });
 
   topTpl = viewChild<ViewContainerRef>('topTpl');
 
@@ -71,6 +88,4 @@ export class ListMasonryGridComponent<T extends IEntity<string>>
       }
     }
   }
-
-  protected readonly Object = Object;
 }

@@ -1,0 +1,39 @@
+<div [class]="cssClass()">
+  <div class="list">
+    @if (options()?.title) {
+      <h3 class="title">{{ options()!.title }}</h3>
+    }
+    @if (options()?.description) {
+      <p class="description">{{ options()!.description }}</p>
+    }
+    <dl>
+      @for (item of options()?.items ?? []; track $index) {
+        <div class="item">
+          <dt>{{ item.label }}</dt>
+          <dd>
+            @if (item.valueTpl) {
+              <ng-container [ngTemplateOutlet]="item.valueTpl" />
+            } @else {
+              {{ item.value }}
+            }
+            @if (item.actionTpl) {
+              <span class="action">
+                <ng-container [ngTemplateOutlet]="item.actionTpl" />
+              </span>
+            }
+          </dd>
+        </div>
+      }
+    </dl>
+    @if (options()?.attachmentsTpl) {
+      <div class="attachments">
+        <ng-container [ngTemplateOutlet]="options()!.attachmentsTpl!" />
+      </div>
+    }
+    @if (options()?.footerTpl) {
+      <div class="footer">
+        <ng-container [ngTemplateOutlet]="options()!.footerTpl!" />
+      </div>
+    }
+  </div>
+</div>

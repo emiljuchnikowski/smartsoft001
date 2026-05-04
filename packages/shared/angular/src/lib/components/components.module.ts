@@ -9,20 +9,28 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DynamicComponent, DynamicModule } from 'ng-dynamic-component';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 
-import { SharedPipesModule } from '../pipes/pipes.module';
+import { ListMode } from '../models';
 import {
   DETAILS_COMPONENT_TOKEN,
+  DETAILS_STANDARD_COMPONENT_TOKEN,
   FORM_COMPONENT_TOKEN,
+  FORM_STANDARD_COMPONENT_TOKEN,
+  LIST_MODE_COMPONENTS_TOKEN,
 } from '../shared.inectors';
 import {
-  AccordionComponent,
-  AccordionHeaderComponent,
   AccordionBodyComponent,
+  AccordionComponent,
+  AccordionDefaultComponent,
+  AccordionHeaderComponent,
 } from './accordion';
 import { ButtonComponent, ButtonStandardComponent } from './button';
-import { CardComponent } from './card/card.component';
-import { DateEditComponent } from './date-edit';
-import { DateRangeComponent, DateRangeModalComponent } from './date-range';
+import { CardComponent, CardStandardComponent } from './card';
+import { DateEditComponent, DateEditStandardComponent } from './date-edit';
+import {
+  DateRangeComponent,
+  DateRangeStandardComponent,
+  DateRangeModalStandardComponent,
+} from './date-range';
 import {
   DetailComponent,
   DetailTextComponent,
@@ -44,12 +52,9 @@ import {
 import { DetailsComponent, DetailsStandardComponent } from './details';
 import { SharedDirectivesModule } from '../directives';
 import { ExportComponent } from './export';
-import {
-  FormComponent,
-  FormStandardComponent,
-} from './form';
+import { FormComponent, FormStandardComponent } from './form';
 import { ImportComponent } from './import';
-import { InfoComponent, InfoModalComponent } from './info';
+import { InfoComponent, InfoStandardComponent } from './info';
 import {
   InputComponent,
   InputIntComponent,
@@ -90,21 +95,32 @@ import {
   ListDesktopComponent,
   ListMasonryGridComponent,
 } from './list';
-import { LoaderComponent } from './loader';
+import { LoaderComponent, LoaderStandardComponent } from './loader';
 import { PageComponent, PageStandardComponent } from './page';
-import { PasswordStrengthComponent } from './password-strength';
+import { PagingComponent, PagingStandardComponent } from './paging';
+import {
+  PasswordStrengthComponent,
+  PasswordStrengthStandardComponent,
+} from './password-strength';
+import { SearchbarComponent, SearchbarStandardComponent } from './searchbar';
+import { SharedPipesModule } from '../pipes/pipes.module';
 
-export const ACCORDION_COMPONENTS = [
+export const ACCORDION_COMPONENTS: any[] = [
   AccordionComponent,
+  AccordionDefaultComponent,
   AccordionHeaderComponent,
   AccordionBodyComponent,
 ];
 
 export const BUTTON_COMPONENTS = [ButtonComponent, ButtonStandardComponent];
 
-export const CARD_COMPONENTS = [CardComponent];
+export const CARD_COMPONENTS = [CardComponent, CardStandardComponent];
 
 export const DETAILS_COMPONENTS = [DetailsComponent, DetailsStandardComponent];
+
+export const EXPORT_COMPONENTS = [ExportComponent];
+
+export const IMPORT_COMPONENTS = [ImportComponent];
 
 export const DETAIL_COMPONENTS = [
   DetailComponent,
@@ -125,10 +141,7 @@ export const DETAIL_COMPONENTS = [
   DetailPhoneNumberPlComponent,
 ];
 
-export const FORM_COMPONENTS = [
-  FormStandardComponent,
-  FormComponent,
-];
+export const FORM_COMPONENTS = [FormStandardComponent, FormComponent];
 
 export const INPUT_COMPONENTS = [
   InputComponent,
@@ -172,16 +185,32 @@ export const LIST_COMPONENTS = [
   ListMasonryGridComponent,
 ];
 
-export const LOADER_COMPONENTS = [LoaderComponent];
+export const LOADER_COMPONENTS = [LoaderComponent, LoaderStandardComponent];
 
-export const PAGE_COMPONENTS = [PageStandardComponent, PageComponent];
+export const PAGE_COMPONENTS = [PageComponent, PageStandardComponent];
 
-export const INFO_COMPONENTS = [InfoComponent, InfoModalComponent];
+export const PAGING_COMPONENTS = [PagingComponent, PagingStandardComponent];
+
+export const PASSWORD_STRENGTH_COMPONENTS = [
+  PasswordStrengthComponent,
+  PasswordStrengthStandardComponent,
+];
+
+export const SEARCHBAR_COMPONENTS = [
+  SearchbarComponent,
+  SearchbarStandardComponent,
+];
+
+export const INFO_COMPONENTS = [InfoComponent, InfoStandardComponent];
 export const DATE_RANGE_COMPONENTS = [
   DateRangeComponent,
-  DateRangeModalComponent,
+  DateRangeStandardComponent,
+  DateRangeModalStandardComponent,
 ];
-export const DATE_EDIT_COMPONENTS = [DateEditComponent];
+export const DATE_EDIT_COMPONENTS = [
+  DateEditComponent,
+  DateEditStandardComponent,
+];
 
 export const DYNAMIC_COMPONENTS = [DynamicComponent];
 
@@ -196,13 +225,15 @@ export const COMPONENTS = [
   ...CARD_COMPONENTS,
   ...LIST_COMPONENTS,
   ...LOADER_COMPONENTS,
+  ...PAGING_COMPONENTS,
   ...DETAIL_COMPONENTS,
   ...DETAILS_COMPONENTS,
   ...DYNAMIC_COMPONENTS,
   ...INFO_COMPONENTS,
-  ExportComponent,
-  ImportComponent,
-  PasswordStrengthComponent,
+  ...EXPORT_COMPONENTS,
+  ...IMPORT_COMPONENTS,
+  ...PASSWORD_STRENGTH_COMPONENTS,
+  ...SEARCHBAR_COMPONENTS,
 ];
 
 export const IMPORTS = [
@@ -231,6 +262,22 @@ export const IMPORTS = [
     {
       provide: DETAILS_COMPONENT_TOKEN,
       useValue: DetailsComponent,
+    },
+    {
+      provide: DETAILS_STANDARD_COMPONENT_TOKEN,
+      useValue: DetailsStandardComponent,
+    },
+    {
+      provide: FORM_STANDARD_COMPONENT_TOKEN,
+      useValue: FormStandardComponent,
+    },
+    {
+      provide: LIST_MODE_COMPONENTS_TOKEN,
+      useValue: {
+        [ListMode.desktop]: ListDesktopComponent,
+        [ListMode.mobile]: ListMobileComponent,
+        [ListMode.masonryGrid]: ListMasonryGridComponent,
+      },
     },
   ],
   imports: [...IMPORTS, ...COMPONENTS],

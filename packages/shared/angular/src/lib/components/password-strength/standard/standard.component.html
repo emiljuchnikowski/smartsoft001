@@ -1,0 +1,37 @@
+<div [class]="containerClasses()">
+  <ul class="smart:flex smart:list-none smart:gap-0.5 smart:p-0 smart:mb-2">
+    <li
+      class="smart:h-1 smart:flex-1 smart:rounded-sm"
+      [class]="barClasses()[0]"
+    ></li>
+    <li
+      class="smart:h-1 smart:flex-1 smart:rounded-sm"
+      [class]="barClasses()[1]"
+    ></li>
+    <li
+      class="smart:h-1 smart:flex-1 smart:rounded-sm"
+      [class]="barClasses()[2]"
+    ></li>
+  </ul>
+  @if (msg()) {
+    <p class="smart:font-bold" [class]="msgClass()">
+      {{ 'INPUT.PASSWORD-STRENGTH.' + msg() | translate }}
+    </p>
+  }
+  @if (showHint()) {
+    <ul [class]="msgClass()">
+      @if (!result().passLength) {
+        <li>{{ 'INPUT.ERRORS.invalidMinLength' | translate }} 7</li>
+      }
+      @if (!result().upperLetters) {
+        <li>{{ 'INPUT.ERRORS.upperLetters' | translate }}</li>
+      }
+      @if (!result().lowerLetters) {
+        <li>{{ 'INPUT.ERRORS.lowerLetters' | translate }}</li>
+      }
+      @if (!result().symbols) {
+        <li>{{ 'INPUT.ERRORS.symbols' | translate }}</li>
+      }
+    </ul>
+  }
+</div>

@@ -1,68 +1,53 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
-  Renderer2,
-  AfterViewInit,
-  input,
-  output,
   viewChild,
+  ElementRef,
+  ViewEncapsulation,
 } from '@angular/core';
+
+import { ButtonComponent } from '../button';
+import { ImportBaseComponent } from './base/base.component';
 
 @Component({
   selector: 'smart-import',
   template: `
-    <!--<ion-button title="import" (click)="onClick()" slot="icon-only">-->
-    <!--  <ion-icon name="cloud-upload"></ion-icon>-->
-    <!--</ion-button>-->
+    <smart-button [options]="buttonOptions">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+        class="smart:size-5"
+      >
+        <path
+          d="M9.25 13.25a.75.75 0 0 0 1.5 0V4.636l2.955 3.129a.75.75 0 0 0 1.09-1.03l-4.25-4.5a.75.75 0 0 0-1.09 0l-4.25 4.5a.75.75 0 1 0 1.09 1.03L9.25 4.636v8.614Z"
+        />
+        <path
+          d="M3.5 12.75a.75.75 0 0 0-1.5 0v2.5A2.75 2.75 0 0 0 4.75 18h10.5A2.75 2.75 0 0 0 18 15.25v-2.5a.75.75 0 0 0-1.5 0v2.5c0 .69-.56 1.25-1.25 1.25H4.75c-.69 0-1.25-.56-1.25-1.25v-2.5Z"
+        />
+      </svg>
+    </smart-button>
     <input
       type="file"
-      [accept]="accept() ? accept() : 'application/json'"
+      [accept]="accept() ?? 'application/json'"
       [hidden]="true"
-      #inputObj
+      (change)="onFileSelected($event)"
+      #fileInput
     />
   `,
-  styles: [
-    `
-      :host {
-        cursor: pointer;
-        font-size: 3rem;
-        height: 3rem;
-        margin: 10px;
-      }
-    `,
-  ],
+  imports: [ButtonComponent],
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ImportComponent implements AfterViewInit {
-  accept = input<string | undefined>('application/json');
+export class ImportComponent extends ImportBaseComponent {
+  fileInputRef = viewChild<ElementRef>('fileInput');
 
-  set = output<File>();
-
-  inputElementRef = viewChild<ElementRef>('inputObj');
-
-  constructor(private renderer: Renderer2) {}
-
-  async onClick(): Promise<void> {
-    (this.inputElementRef()?.nativeElement as HTMLInputElement)?.click();
-  }
-
-  ngAfterViewInit(): void {
-    const elementRef = this.inputElementRef();
-    if (elementRef) {
-      this.renderer.listen(elementRef?.nativeElement, 'change', () => {
-        const file: File | null =
-          (elementRef?.nativeElement as HTMLInputElement).files?.[0] ?? null;
-
-        (elementRef?.nativeElement as HTMLInputElement).type = 'text';
-        (elementRef?.nativeElement as HTMLInputElement).type = 'file';
-
-        if (file) {
-          this.set.emit(file);
-        } else {
-          throw Error('ImportComponent: File not found');
-        }
-      });
-    }
-  }
+  buttonOptions = {
+    click: () => {
+      const inputEl = this.fileInputRef()?.nativeElement as HTMLInputElement;
+      if (inputEl) {
+        this.triggerFileInput(inputEl);
+      }
+    },
+  };
 }

@@ -1,0 +1,135 @@
+<div [class]="cssClass()">
+  <div class="empty-state">
+    @if (options()?.iconTpl) {
+      <div class="icon">
+        <ng-container [ngTemplateOutlet]="options()!.iconTpl!" />
+      </div>
+    }
+    @if (options()?.title) {
+      <h3 class="title">{{ options()!.title }}</h3>
+    }
+    @if (options()?.description) {
+      <p class="description">{{ options()!.description }}</p>
+    }
+    @if (options()?.formTpl) {
+      <div class="form">
+        <ng-container [ngTemplateOutlet]="options()!.formTpl!" />
+      </div>
+    }
+    @if ((options()?.actions ?? []).length > 0) {
+      <div class="actions">
+        @for (action of options()!.actions!; track action.id) {
+          @if (action.href) {
+            <a
+              [href]="action.href"
+              [class]="'action variant-' + (action.variant ?? 'link')"
+            >
+              @if (action.iconTpl) {
+                <span class="icon">
+                  <ng-container [ngTemplateOutlet]="action.iconTpl" />
+                </span>
+              }
+              @if (action.label) {
+                {{ action.label }}
+              }
+            </a>
+          } @else {
+            <button
+              type="button"
+              [class]="'action variant-' + (action.variant ?? 'primary')"
+              (click)="onActionClick(action.id)"
+            >
+              @if (action.iconTpl) {
+                <span class="icon">
+                  <ng-container [ngTemplateOutlet]="action.iconTpl" />
+                </span>
+              }
+              @if (action.label) {
+                {{ action.label }}
+              }
+            </button>
+          }
+        }
+      </div>
+    }
+    @if ((options()?.items ?? []).length > 0) {
+      @if (options()?.itemsTitle) {
+        <h4 class="items-title">{{ options()!.itemsTitle }}</h4>
+      }
+      <ul class="items" role="list">
+        @for (item of options()!.items!; track item.id) {
+          <li class="item">
+            @if (item.href) {
+              <a [href]="item.href" class="item-link">
+                @if (item.iconTpl) {
+                  <span class="item-icon">
+                    <ng-container [ngTemplateOutlet]="item.iconTpl" />
+                  </span>
+                }
+                @if (item.imageUrl) {
+                  <img
+                    [src]="item.imageUrl"
+                    [attr.alt]="item.imageAlt ?? ''"
+                    class="item-image"
+                  />
+                }
+                <span class="item-content">
+                  @if (item.title) {
+                    <span class="item-title">{{ item.title }}</span>
+                  }
+                  @if (item.description) {
+                    <span class="item-description">{{ item.description }}</span>
+                  }
+                  @if (item.meta) {
+                    <span class="item-meta">{{ item.meta }}</span>
+                  }
+                </span>
+              </a>
+            } @else {
+              <button
+                type="button"
+                class="item-button"
+                (click)="onItemClick(item.id)"
+              >
+                @if (item.iconTpl) {
+                  <span class="item-icon">
+                    <ng-container [ngTemplateOutlet]="item.iconTpl" />
+                  </span>
+                }
+                @if (item.imageUrl) {
+                  <img
+                    [src]="item.imageUrl"
+                    [attr.alt]="item.imageAlt ?? ''"
+                    class="item-image"
+                  />
+                }
+                <span class="item-content">
+                  @if (item.title) {
+                    <span class="item-title">{{ item.title }}</span>
+                  }
+                  @if (item.description) {
+                    <span class="item-description">{{ item.description }}</span>
+                  }
+                  @if (item.meta) {
+                    <span class="item-meta">{{ item.meta }}</span>
+                  }
+                </span>
+              </button>
+            }
+          </li>
+        }
+      </ul>
+    }
+    @if (options()?.footerLinkLabel) {
+      <div class="footer">
+        @if (options()?.footerLinkHref) {
+          <a [href]="options()!.footerLinkHref" class="footer-link">{{
+            options()!.footerLinkLabel
+          }}</a>
+        } @else {
+          <span class="footer-link">{{ options()!.footerLinkLabel }}</span>
+        }
+      </div>
+    }
+  </div>
+</div>

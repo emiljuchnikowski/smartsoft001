@@ -40,12 +40,15 @@ export abstract class InputFileBaseComponent<T>
       (this.inputElementRef()?.nativeElement as HTMLInputElement).click();
     },
     loading: this.loading,
+    variant: 'primary',
   };
   showButtonOptions: IButtonOptions = {
     click: () => {
       this.fileService.download(this.control.value.id);
     },
     loading: this.loading,
+    variant: 'secondary',
+    color: 'gray',
   };
   deleteButtonOptions: IButtonOptions = {
     click: () => {
@@ -57,61 +60,60 @@ export abstract class InputFileBaseComponent<T>
     },
     loading: this.loading,
     confirm: true,
+    variant: 'primary',
+    color: 'red',
   };
 
   inputElementRef = viewChild<ElementRef | undefined>('inputObj');
 
   ngOnInit(): void {
-    this.renderer.listen(
-      this.inputElementRef()?.nativeElement,
-      'change',
-      () => {
-        this.loading.set(true);
-        this.file =
-          (this.inputElementRef()?.nativeElement as HTMLInputElement)
-            .files?.[0] ?? null;
+    const nativeElement = this.inputElementRef()?.nativeElement;
+    if (!nativeElement) return;
 
-        (this.inputElementRef()?.nativeElement as HTMLInputElement).type =
-          'text';
-        (this.inputElementRef()?.nativeElement as HTMLInputElement).type =
-          'file';
+    this.renderer.listen(nativeElement, 'change', () => {
+      this.loading.set(true);
+      this.file =
+        (this.inputElementRef()?.nativeElement as HTMLInputElement)
+          .files?.[0] ?? null;
 
-        if (
-          (this.inputElementRef()?.nativeElement as HTMLInputElement).accept &&
-          this.file &&
-          this.file.name
-        ) {
-          const acceptTypes = (
-            this.inputElementRef()?.nativeElement as HTMLInputElement
-          ).accept
-            .split(',')
-            .map((type) => type.replace('.', ''));
+      (this.inputElementRef()?.nativeElement as HTMLInputElement).type = 'text';
+      (this.inputElementRef()?.nativeElement as HTMLInputElement).type = 'file';
 
-          const fileType = this.file.name
-            .substr(this.file.name.lastIndexOf('.') + 1)
-            .toLowerCase();
+      if (
+        (this.inputElementRef()?.nativeElement as HTMLInputElement).accept &&
+        this.file &&
+        this.file.name
+      ) {
+        const acceptTypes = (
+          this.inputElementRef()?.nativeElement as HTMLInputElement
+        ).accept
+          .split(',')
+          .map((type) => type.replace('.', ''));
 
-          if (!acceptTypes.some((a) => a === fileType)) {
-            this.toastService.error({
-              duration: 3000,
-              message:
-                this.translateService.instant('INPUT.ERRORS.invalidFileType') +
-                ` (${(this.inputElementRef()?.nativeElement as HTMLInputElement).accept})`,
-            });
+        const fileType = this.file.name
+          .substr(this.file.name.lastIndexOf('.') + 1)
+          .toLowerCase();
+
+        if (!acceptTypes.some((a) => a === fileType)) {
+          this.toastService.error({
+            duration: 3000,
+            message:
+              this.translateService.instant('INPUT.ERRORS.invalidFileType') +
+              ` (${(this.inputElementRef()?.nativeElement as HTMLInputElement).accept})`,
+          });
+          this.loading.set(false);
+          return;
+        }
+      }
+
+      if (this.file) {
+        this.percent = toSignal(
+          this.fileService.upload(this.file, (res: object) => {
+            this.control.setValue(res);
             this.loading.set(false);
-            return;
-          }
-        }
-
-        if (this.file) {
-          this.percent = toSignal(
-            this.fileService.upload(this.file, (res: object) => {
-              this.control.setValue(res);
-              this.loading.set(false);
-            }),
-          );
-        }
-      },
-    );
+          }),
+        );
+      }
+    });
   }
 }

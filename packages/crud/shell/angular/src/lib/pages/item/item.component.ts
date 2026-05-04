@@ -36,7 +36,7 @@ import {
   IDetailsOptions,
   IIconButtonOptions,
   IPageOptions,
-  PageComponent,
+  // PageComponent,
   StyleService,
   ToastService,
 } from '@smartsoft001/angular';
@@ -54,28 +54,28 @@ import { PageService } from '../../services/page/page.service';
 
 @Component({
   selector: 'smart-crud-item-page',
-  imports: [PageComponent, ItemStandardComponent, NgTemplateOutlet],
+  imports: [/*PageComponent,*/ ItemStandardComponent, NgTemplateOutlet],
   template: `
-    <smart-page [options]="pageOptions()">
-      <div #topTpl class="text-xl py-2.5 separator"></div>
-      @if (template() === 'default') {
-        <smart-crud-item-standard-page
-          [detailsOptions]="detailsOptions()"
-          [mode]="mode"
-          [uniqueProvider]="uniqueProvider()"
-          (onPartialChange)="onPartialChange($event)"
-          (onChange)="onChange($event)"
-          (onValidChange)="onValidChange($event)"
-        >
-          <ng-container [ngTemplateOutlet]="contentTpl"></ng-container>
-        </smart-crud-item-standard-page>
-      }
-      <ng-template #contentTpl>
-        <ng-content></ng-content>
-      </ng-template>
-      <div class="dynamic-content"></div>
-      <div #bottomTpl class="text-xl py-2.5 separator"></div>
-    </smart-page>
+    <!--    <smart-page [options]="pageOptions()">-->
+    <div #topTpl class="text-xl py-2.5 separator"></div>
+    @if (template() === 'default') {
+      <smart-crud-item-standard-page
+        [detailsOptions]="detailsOptions()"
+        [mode]="mode"
+        [uniqueProvider]="uniqueProvider()"
+        (onPartialChange)="onPartialChange($event)"
+        (onChange)="onChange($event)"
+        (onValidChange)="onValidChange($event)"
+      >
+        <ng-container [ngTemplateOutlet]="contentTpl"></ng-container>
+      </smart-crud-item-standard-page>
+    }
+    <ng-template #contentTpl>
+      <ng-content></ng-content>
+    </ng-template>
+    <div class="dynamic-content"></div>
+    <div #bottomTpl class="text-xl py-2.5 separator"></div>
+    <!--    </smart-page>-->
   `,
 })
 export class ItemComponent<T extends IEntity<string>>

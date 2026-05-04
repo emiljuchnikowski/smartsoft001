@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 
 import { IEntity } from '@smartsoft001/domain-core';
 
@@ -10,7 +10,7 @@ import { DetailBaseComponent } from '../base/base.component';
   template: `
     @let item = options()?.item?.();
     @if (item && options()?.key) {
-      <video style="width: 100%" controls controlsList="nodownload">
+      <video [class]="videoClasses()" controls controlsList="nodownload">
         <source type="video/mp4" [src]="getUrl(item)" />
         Your browser does not support the video tag.
       </video>
@@ -21,6 +21,13 @@ export class DetailVideoComponent<
   T extends IEntity<string> | undefined,
 > extends DetailBaseComponent<T> {
   private fileService = inject(FileService);
+
+  videoClasses = computed(() => {
+    const classes = ['smart:w-full', 'smart:rounded-lg'];
+    const extra = this.cssClass();
+    if (extra) classes.push(extra);
+    return classes.join(' ');
+  });
 
   getUrl(item: T): string | null {
     const key = this.options()?.key;

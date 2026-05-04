@@ -1,0 +1,50 @@
+<div [class]="cssClass()">
+  @if (options()?.breadcrumbsTpl) {
+    <nav class="breadcrumbs">
+      <ng-container [ngTemplateOutlet]="options()!.breadcrumbsTpl!" />
+    </nav>
+  }
+  @if (options()?.bannerTpl) {
+    <div class="banner">
+      <ng-container [ngTemplateOutlet]="options()!.bannerTpl!" />
+    </div>
+  }
+  <header>
+    @if (options()?.avatarTpl) {
+      <div class="avatar">
+        <ng-container [ngTemplateOutlet]="options()!.avatarTpl!" />
+      </div>
+    }
+    @if (options()?.logoTpl) {
+      <div class="logo">
+        <ng-container [ngTemplateOutlet]="options()!.logoTpl!" />
+      </div>
+    }
+    @if (options()?.title) {
+      <h1>{{ options()!.title }}</h1>
+    }
+    @if (options()?.subtitle) {
+      <p class="subtitle">{{ options()!.subtitle }}</p>
+    }
+    @if (options()?.metaTpl) {
+      <div class="meta">
+        <ng-container [ngTemplateOutlet]="options()!.metaTpl!" />
+      </div>
+    }
+    @if (options()?.statsTpl) {
+      <div class="stats">
+        <ng-container [ngTemplateOutlet]="options()!.statsTpl!" />
+      </div>
+    }
+    @if (options()?.actionsTpl) {
+      <div class="actions">
+        <ng-container [ngTemplateOutlet]="options()!.actionsTpl!" />
+      </div>
+    }
+    @if (options()?.filtersTpl) {
+      <div class="filters">
+        <ng-container [ngTemplateOutlet]="options()!.filtersTpl!" />
+      </div>
+    }
+  </header>
+</div>

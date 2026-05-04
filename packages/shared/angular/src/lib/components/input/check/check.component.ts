@@ -1,5 +1,10 @@
-import { AsyncPipe } from '@angular/common';
-import { Component, effect, signal, WritableSignal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -10,8 +15,41 @@ import { InputPossibilitiesBaseComponent } from '../base/possibilities.component
 
 @Component({
   selector: 'smart-input-check',
-  templateUrl: './check.component.html',
-  imports: [ModelLabelPipe, AsyncPipe, TranslatePipe, ReactiveFormsModule],
+  template: `
+    @if (control) {
+      <fieldset>
+        <legend [class]="labelClasses()">
+          {{
+            control?.parent?.value
+              | smartModelLabel
+                : internalOptions.fieldKey
+                : internalOptions?.model?.constructor
+          }}
+          @if (required) {
+            <span class="smart:text-red-500 smart:ml-0.5">*</span>
+          }
+        </legend>
+        <div [class]="groupClasses()">
+          @for (item of possibilities(); track item.id) {
+            <label class="smart:flex smart:items-center smart:gap-x-2">
+              <input
+                type="checkbox"
+                [checked]="item.checked"
+                (change)="refresh(item)"
+                class="smart:h-4 smart:w-4 smart:rounded smart:border-gray-300 smart:text-indigo-600 focus:smart:ring-indigo-500 smart:dark:border-gray-600"
+              />
+              <span
+                class="smart:text-sm smart:text-gray-900 smart:dark:text-white"
+                [innerHTML]="item.text | translate"
+              ></span>
+            </label>
+          }
+        </div>
+      </fieldset>
+    }
+  `,
+  imports: [ModelLabelPipe, TranslatePipe, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputCheckComponent<T> extends InputPossibilitiesBaseComponent<T> {
   override possibilities: WritableSignal<Array<{
@@ -20,40 +58,62 @@ export class InputCheckComponent<T> extends InputPossibilitiesBaseComponent<T> {
     checked: boolean;
   }> | null> = signal(null);
 
+  labelClasses = computed(() =>
+    [
+      'smart:block',
+      'smart:text-sm/6',
+      'smart:font-medium',
+      'smart:text-gray-900',
+      'smart:dark:text-white',
+    ].join(' '),
+  );
+
+  groupClasses = computed(() => {
+    const classes = ['smart:mt-2', 'smart:space-y-2'];
+    const extra = this.cssClass();
+    if (extra) classes.push(extra);
+    return classes.join(' ');
+  });
+
   protected override afterSetOptionsHandler(): void {
-    if (this.internalOptions && !this.possibilities) {
-      this.possibilities = signal(
-        getModelFieldOptions(
-          this.internalOptions.model,
-          this.internalOptions.fieldKey,
-        ).possibilities,
-      );
+    const current = this.possibilities();
+    if (this.internalOptions && !current) {
+      const fromModel = getModelFieldOptions(
+        this.internalOptions.model,
+        this.internalOptions.fieldKey,
+      )?.possibilities;
+      if (fromModel) {
+        this.possibilities.set(fromModel);
+      }
     }
 
-    effect(() => {
-      const list = this.possibilities();
-      if (list) {
-        const result = list.map((item) => {
-          if (this.control.value && item?.id?.id) {
-            const controlItem = this.control.value.find(
-              (ci: any) => ci?.id === item?.id.id,
-            );
-            if (controlItem) {
-              item.id = controlItem;
-              (item as any)['checked'] = true;
-            }
-          } else {
-            (item as any)['checked'] = item.id === this.control.value;
-          }
+    this.syncCheckedWithControl();
 
-          return item;
-        });
+    this.control.valueChanges
+      .pipe(this.takeUntilDestroy)
+      .subscribe(() => this.syncCheckedWithControl());
+  }
 
-        this.possibilities.set(result);
+  private syncCheckedWithControl(): void {
+    const list = this.possibilities();
+    if (!list) return;
 
-        this.cd.detectChanges();
+    const value = this.control.value;
+    list.forEach((item) => {
+      if (value && Array.isArray(value) && item?.id?.id) {
+        const controlItem = value.find((ci: any) => ci?.id === item.id.id);
+        if (controlItem) {
+          item.id = controlItem;
+          item.checked = true;
+        } else {
+          item.checked = false;
+        }
+      } else {
+        item.checked = item.id === value;
       }
     });
+
+    this.cd.detectChanges();
   }
 
   refresh(item: { id: any; text: string; checked: boolean }): void {
