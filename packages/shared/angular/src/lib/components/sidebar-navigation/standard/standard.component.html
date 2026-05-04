@@ -1,0 +1,191 @@
+<div [class]="'sidebar-navigation-wrapper ' + cssClass()">
+  @if (options()?.logo) {
+    <div class="sidebar-logo">
+      @if (options()?.logo?.tpl) {
+        <ng-container [ngTemplateOutlet]="options()!.logo!.tpl!" />
+      } @else if (options()?.logo?.href) {
+        <a [href]="options()!.logo!.href">
+          @if (options()?.logo?.url) {
+            <img
+              class="sidebar-logo-img"
+              [src]="options()!.logo!.url"
+              [alt]="options()?.logo?.alt ?? ''"
+            />
+          }
+          @if (options()?.logo?.urlDark) {
+            <img
+              class="sidebar-logo-img sidebar-logo-img-dark"
+              [src]="options()!.logo!.urlDark"
+              [alt]="options()?.logo?.alt ?? ''"
+            />
+          }
+        </a>
+      } @else {
+        @if (options()?.logo?.url) {
+          <img
+            class="sidebar-logo-img"
+            [src]="options()!.logo!.url"
+            [alt]="options()?.logo?.alt ?? ''"
+          />
+        }
+        @if (options()?.logo?.urlDark) {
+          <img
+            class="sidebar-logo-img sidebar-logo-img-dark"
+            [src]="options()!.logo!.urlDark"
+            [alt]="options()?.logo?.alt ?? ''"
+          />
+        }
+      }
+    </div>
+  }
+
+  <nav
+    class="sidebar-navigation"
+    [attr.aria-label]="options()?.ariaLabel ?? 'Sidebar'"
+  >
+    <ul role="list" class="groups">
+      @for (group of groups; track group.id ?? $index) {
+        <li class="group">
+          @if (group.title) {
+            <div class="group-title">{{ group.title }}</div>
+          }
+          <ul role="list" class="items">
+            @for (item of group.items; track item.id) {
+              <li class="item">
+                @if (item.expandable) {
+                  <button
+                    type="button"
+                    class="item-toggle"
+                    [attr.aria-expanded]="expanded(item)"
+                    [attr.aria-controls]="'sidebar-sub-' + item.id"
+                    (click)="onToggle(item)"
+                  >
+                    @if (item.iconTpl) {
+                      <span class="item-icon">
+                        <ng-container [ngTemplateOutlet]="item.iconTpl" />
+                      </span>
+                    }
+                    @if (item.label) {
+                      <span class="item-label">{{ item.label }}</span>
+                    }
+                    <span class="item-chevron" aria-hidden="true">›</span>
+                  </button>
+                  @if (expanded(item) && item.children?.length) {
+                    <ul
+                      role="list"
+                      class="children"
+                      [id]="'sidebar-sub-' + item.id"
+                    >
+                      @for (child of item.children; track child.id) {
+                        <li class="child">
+                          @if (child.href) {
+                            <a
+                              [href]="child.href"
+                              [class]="
+                                'child-link' + (child.current ? ' current' : '')
+                              "
+                              [attr.aria-current]="
+                                child.current ? 'page' : null
+                              "
+                            >
+                              @if (child.label) {
+                                <span class="child-label">{{
+                                  child.label
+                                }}</span>
+                              }
+                            </a>
+                          } @else {
+                            <button
+                              type="button"
+                              [class]="
+                                'child-button' +
+                                (child.current ? ' current' : '')
+                              "
+                              [attr.aria-current]="
+                                child.current ? 'page' : null
+                              "
+                              (click)="onItemClick(child.id)"
+                            >
+                              @if (child.label) {
+                                <span class="child-label">{{
+                                  child.label
+                                }}</span>
+                              }
+                            </button>
+                          }
+                        </li>
+                      }
+                    </ul>
+                  }
+                } @else if (item.href) {
+                  <a
+                    [href]="item.href"
+                    [class]="'item-link' + (item.current ? ' current' : '')"
+                    [attr.aria-current]="item.current ? 'page' : null"
+                  >
+                    @if (item.iconTpl) {
+                      <span class="item-icon">
+                        <ng-container [ngTemplateOutlet]="item.iconTpl" />
+                      </span>
+                    } @else if (item.initial) {
+                      <span class="item-initial">{{ item.initial }}</span>
+                    }
+                    @if (item.label) {
+                      <span class="item-label">{{ item.label }}</span>
+                    }
+                    @if (item.badge !== undefined && item.badge !== null) {
+                      <span class="item-badge">{{ item.badge }}</span>
+                    }
+                  </a>
+                } @else {
+                  <button
+                    type="button"
+                    [class]="'item-button' + (item.current ? ' current' : '')"
+                    [attr.aria-current]="item.current ? 'page' : null"
+                    (click)="onItemClick(item.id)"
+                  >
+                    @if (item.iconTpl) {
+                      <span class="item-icon">
+                        <ng-container [ngTemplateOutlet]="item.iconTpl" />
+                      </span>
+                    } @else if (item.initial) {
+                      <span class="item-initial">{{ item.initial }}</span>
+                    }
+                    @if (item.label) {
+                      <span class="item-label">{{ item.label }}</span>
+                    }
+                    @if (item.badge !== undefined && item.badge !== null) {
+                      <span class="item-badge">{{ item.badge }}</span>
+                    }
+                  </button>
+                }
+              </li>
+            }
+          </ul>
+        </li>
+      }
+
+      @if (options()?.profile) {
+        <li class="profile">
+          <a class="profile-link" [href]="options()?.profile?.href ?? '#'">
+            @if (options()?.profile?.avatarUrl) {
+              <img
+                class="profile-avatar"
+                [src]="options()!.profile!.avatarUrl"
+                [alt]="options()?.profile?.avatarAlt ?? ''"
+              />
+            }
+            @if (options()?.profile?.srOnlyText) {
+              <span class="sr-only">{{ options()!.profile!.srOnlyText }}</span>
+            }
+            @if (options()?.profile?.name) {
+              <span class="profile-name" aria-hidden="true">{{
+                options()!.profile!.name
+              }}</span>
+            }
+          </a>
+        </li>
+      }
+    </ul>
+  </nav>
+</div>

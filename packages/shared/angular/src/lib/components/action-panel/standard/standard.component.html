@@ -1,0 +1,55 @@
+<div [class]="cssClass()">
+  <section class="action-panel">
+    @if (options()?.title) {
+      <h3>{{ options()!.title }}</h3>
+    }
+    @if (options()?.descriptionTpl) {
+      <div class="description">
+        <ng-container [ngTemplateOutlet]="options()!.descriptionTpl!" />
+      </div>
+    } @else if (options()?.description) {
+      <p class="description">{{ options()!.description }}</p>
+    }
+    @if (options()?.contentTpl) {
+      <div class="content">
+        <ng-container [ngTemplateOutlet]="options()!.contentTpl!" />
+      </div>
+    }
+    @if ((options()?.actions ?? []).length > 0) {
+      <div class="actions">
+        @for (action of options()!.actions!; track action.id) {
+          @if (action.href) {
+            <a
+              [href]="action.href"
+              [class]="'action variant-' + (action.variant ?? 'link')"
+            >
+              @if (action.iconTpl) {
+                <span class="icon">
+                  <ng-container [ngTemplateOutlet]="action.iconTpl" />
+                </span>
+              }
+              @if (action.label) {
+                {{ action.label }}
+              }
+            </a>
+          } @else {
+            <button
+              type="button"
+              [class]="'action variant-' + (action.variant ?? 'primary')"
+              (click)="onActionClick(action.id)"
+            >
+              @if (action.iconTpl) {
+                <span class="icon">
+                  <ng-container [ngTemplateOutlet]="action.iconTpl" />
+                </span>
+              }
+              @if (action.label) {
+                {{ action.label }}
+              }
+            </button>
+          }
+        }
+      </div>
+    }
+  </section>
+</div>

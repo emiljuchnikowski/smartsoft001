@@ -3,6 +3,8 @@ import { InjectionToken, Type } from '@angular/core';
 import { FieldTypeDef } from '@smartsoft001/models';
 
 import {
+  ActionPanelBaseComponent,
+  BreadcrumbsBaseComponent,
   ButtonBaseComponent,
   CalendarBaseComponent,
   CardBaseComponent,
@@ -10,6 +12,7 @@ import {
   DescriptionListBaseComponent,
   DetailBaseComponent,
   DetailsBaseComponent,
+  EmptyStateBaseComponent,
   FeedBaseComponent,
   FormBaseComponent,
   GridListBaseComponent,
@@ -18,21 +21,26 @@ import {
   InputBaseComponent,
   ListBaseComponent,
   MultiColumnLayoutBaseComponent,
+  NavbarBaseComponent,
   PageBaseComponent,
   PageHeadingBaseComponent,
   PagingBaseComponent,
   PasswordStrengthBaseComponent,
+  ProgressBarsBaseComponent,
   SearchbarBaseComponent,
   SectionHeadingBaseComponent,
   SelectMenuBaseComponent,
   SidebarLayoutBaseComponent,
+  SidebarNavigationBaseComponent,
   SignInFormBaseComponent,
   StackedLayoutBaseComponent,
   StackedListBaseComponent,
   StatsBaseComponent,
   TableBaseComponent,
+  TabsBaseComponent,
   TextareaBaseComponent,
   ToggleBaseComponent,
+  VerticalNavigationBaseComponent,
 } from './components';
 import { ListMode, SmartPageVariant } from './models';
 
@@ -40,6 +48,12 @@ export const FORM_COMPONENT_TOKEN = new InjectionToken<any>('FORM_COMPONENT');
 export const DETAILS_COMPONENT_TOKEN = new InjectionToken<any>(
   'DETAILS_COMPONENT_TOKEN',
 );
+export const ACTION_PANEL_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<ActionPanelBaseComponent>
+>('ACTION_PANEL_STANDARD_COMPONENT');
+export const BREADCRUMBS_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<BreadcrumbsBaseComponent>
+>('BREADCRUMBS_STANDARD_COMPONENT');
 export const BUTTON_STANDARD_COMPONENT_TOKEN = new InjectionToken<
   Type<ButtonBaseComponent>
 >('BUTTON_STANDARD_COMPONENT');
@@ -58,6 +72,9 @@ export const DETAILS_STANDARD_COMPONENT_TOKEN = new InjectionToken<
 export const DETAIL_FIELD_COMPONENTS_TOKEN = new InjectionToken<
   Partial<Record<FieldTypeDef, Type<DetailBaseComponent<any>>>>
 >('DETAIL_FIELD_COMPONENTS_TOKEN');
+export const EMPTY_STATE_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<EmptyStateBaseComponent>
+>('EMPTY_STATE_STANDARD_COMPONENT');
 export const FEED_STANDARD_COMPONENT_TOKEN = new InjectionToken<
   Type<FeedBaseComponent>
 >('FEED_STANDARD_COMPONENT');
@@ -85,6 +102,9 @@ export const LOADER_STANDARD_COMPONENT_TOKEN = new InjectionToken<
 export const MULTI_COLUMN_LAYOUT_STANDARD_COMPONENT_TOKEN = new InjectionToken<
   Type<MultiColumnLayoutBaseComponent>
 >('MULTI_COLUMN_LAYOUT_STANDARD_COMPONENT');
+export const NAVBAR_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<NavbarBaseComponent>
+>('NAVBAR_STANDARD_COMPONENT');
 export const PAGE_VARIANT_COMPONENTS_TOKEN = new InjectionToken<
   Partial<Record<SmartPageVariant, Type<PageBaseComponent>>>
 >('PAGE_VARIANT_COMPONENTS');
@@ -97,6 +117,9 @@ export const PAGING_STANDARD_COMPONENT_TOKEN = new InjectionToken<
 export const PASSWORD_STRENGTH_STANDARD_COMPONENT_TOKEN = new InjectionToken<
   Type<PasswordStrengthBaseComponent>
 >('PASSWORD_STRENGTH_STANDARD_COMPONENT');
+export const PROGRESS_BARS_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<ProgressBarsBaseComponent>
+>('PROGRESS_BARS_STANDARD_COMPONENT');
 export const SEARCHBAR_STANDARD_COMPONENT_TOKEN = new InjectionToken<
   Type<SearchbarBaseComponent>
 >('SEARCHBAR_STANDARD_COMPONENT');
@@ -109,6 +132,9 @@ export const SELECT_MENU_STANDARD_COMPONENT_TOKEN = new InjectionToken<
 export const SIDEBAR_LAYOUT_STANDARD_COMPONENT_TOKEN = new InjectionToken<
   Type<SidebarLayoutBaseComponent>
 >('SIDEBAR_LAYOUT_STANDARD_COMPONENT');
+export const SIDEBAR_NAVIGATION_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<SidebarNavigationBaseComponent>
+>('SIDEBAR_NAVIGATION_STANDARD_COMPONENT');
 export const SIGN_IN_FORM_STANDARD_COMPONENT_TOKEN = new InjectionToken<
   Type<SignInFormBaseComponent>
 >('SIGN_IN_FORM_STANDARD_COMPONENT');
@@ -124,9 +150,15 @@ export const STATS_STANDARD_COMPONENT_TOKEN = new InjectionToken<
 export const TABLE_STANDARD_COMPONENT_TOKEN = new InjectionToken<
   Type<TableBaseComponent>
 >('TABLE_STANDARD_COMPONENT');
+export const TABS_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<TabsBaseComponent>
+>('TABS_STANDARD_COMPONENT');
 export const TEXTAREA_STANDARD_COMPONENT_TOKEN = new InjectionToken<
   Type<TextareaBaseComponent>
 >('TEXTAREA_STANDARD_COMPONENT');
 export const TOGGLE_STANDARD_COMPONENT_TOKEN = new InjectionToken<
   Type<ToggleBaseComponent>
 >('TOGGLE_STANDARD_COMPONENT');
+export const VERTICAL_NAVIGATION_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<VerticalNavigationBaseComponent>
+>('VERTICAL_NAVIGATION_STANDARD_COMPONENT');

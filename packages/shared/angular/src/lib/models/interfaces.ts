@@ -51,6 +51,13 @@ export type DynamicComponentType =
   | 'form'
   | 'page'
   | 'page-heading'
+  | 'action-panel'
+  | 'breadcrumbs'
+  | 'empty-state'
+  | 'navbar'
+  | 'progress-bars'
+  | 'tabs'
+  | 'vertical-navigation'
   | 'button'
   | 'calendar'
   | 'card-heading'
@@ -68,6 +75,7 @@ export type DynamicComponentType =
   | 'select-menu'
   | 'sign-in-form'
   | 'sidebar-layout'
+  | 'sidebar-navigation'
   | 'stacked-layout'
   | 'stacked-list'
   | 'stats'
@@ -174,6 +182,224 @@ export interface IAccordionOptions {
   open?: boolean;
   disabled?: boolean;
   animated?: boolean;
+}
+
+export type SmartActionPanelLayout =
+  | 'simple'
+  | 'with-link'
+  | 'right-button'
+  | 'top-right-button'
+  | 'with-toggle'
+  | 'with-input'
+  | 'well'
+  | 'payment-method';
+
+export interface IActionPanelAction {
+  id: string;
+  label?: string;
+  href?: string;
+  variant?: 'primary' | 'secondary' | 'ghost' | 'link';
+  iconTpl?: TemplateRef<unknown>;
+}
+
+export interface IActionPanelOptions {
+  title?: string;
+  description?: string;
+  layout?: SmartActionPanelLayout;
+  actions?: IActionPanelAction[];
+  descriptionTpl?: TemplateRef<unknown>;
+  contentTpl?: TemplateRef<unknown>;
+}
+
+export type SmartEmptyStateLayout =
+  | 'simple'
+  | 'dashed-border'
+  | 'starting-points'
+  | 'with-recommendations'
+  | 'with-templates'
+  | 'with-recommendations-grid';
+
+export interface IEmptyStateAction {
+  id: string;
+  label?: string;
+  href?: string;
+  variant?: 'primary' | 'secondary' | 'ghost' | 'link';
+  iconTpl?: TemplateRef<unknown>;
+}
+
+export interface IEmptyStateItem {
+  id: string;
+  title?: string;
+  description?: string;
+  href?: string;
+  iconTpl?: TemplateRef<unknown>;
+  imageUrl?: string;
+  imageAlt?: string;
+  meta?: string;
+}
+
+export interface IEmptyStateOptions {
+  title?: string;
+  description?: string;
+  layout?: SmartEmptyStateLayout;
+  iconTpl?: TemplateRef<unknown>;
+  actions?: IEmptyStateAction[];
+  items?: IEmptyStateItem[];
+  itemsTitle?: string;
+  formTpl?: TemplateRef<unknown>;
+  footerLinkLabel?: string;
+  footerLinkHref?: string;
+}
+
+export type SmartNavbarLayout =
+  | 'simple'
+  | 'simple-with-menu-on-left'
+  | 'with-quick-action'
+  | 'with-search'
+  | 'with-centered-search'
+  | 'with-secondary-links'
+  | 'with-column-layout';
+
+export interface INavbarItem {
+  id: string;
+  label?: string;
+  href?: string;
+  current?: boolean;
+  iconTpl?: TemplateRef<unknown>;
+}
+
+export interface INavbarOptions {
+  layout?: SmartNavbarLayout;
+  dark?: boolean;
+  menuButtonOnLeft?: boolean;
+  logoTpl?: TemplateRef<unknown>;
+  logoUrl?: string;
+  logoAlt?: string;
+  logoHref?: string;
+  items?: INavbarItem[];
+  secondaryItems?: INavbarItem[];
+  searchTpl?: TemplateRef<unknown>;
+  actionTpl?: TemplateRef<unknown>;
+  notificationTpl?: TemplateRef<unknown>;
+  userMenuTpl?: TemplateRef<unknown>;
+}
+
+export type SmartTabsLayout =
+  | 'underline'
+  | 'underline-with-icons'
+  | 'underline-with-badges'
+  | 'underline-full-width'
+  | 'pills'
+  | 'pills-on-gray'
+  | 'pills-with-brand-color'
+  | 'bar-with-underline'
+  | 'simple';
+
+export interface ITabItem {
+  id: string;
+  label?: string;
+  href?: string;
+  badge?: string | number;
+  iconTpl?: TemplateRef<unknown>;
+}
+
+export interface ITabsOptions {
+  layout?: SmartTabsLayout;
+  items?: ITabItem[];
+  ariaLabel?: string;
+  showMobileSelect?: boolean;
+}
+
+export type SmartProgressBarsLayout =
+  | 'simple'
+  | 'panels'
+  | 'bullets'
+  | 'panels-with-border'
+  | 'circles'
+  | 'bullets-and-text'
+  | 'circles-with-text'
+  | 'progress-bar';
+
+export type SmartProgressStepStatus = 'complete' | 'current' | 'upcoming';
+
+export interface IProgressStep {
+  id: string;
+  name?: string;
+  description?: string;
+  status?: SmartProgressStepStatus;
+  href?: string;
+  iconTpl?: TemplateRef<unknown>;
+  index?: string;
+}
+
+export interface IProgressBarColumn {
+  label: string;
+  active?: boolean;
+}
+
+export interface IProgressBarsOptions {
+  layout?: SmartProgressBarsLayout;
+  ariaLabel?: string;
+  steps?: IProgressStep[];
+  title?: string;
+  srOnlyTitle?: string;
+  value?: number;
+  columns?: IProgressBarColumn[];
+}
+
+export type SmartBreadcrumbsLayout =
+  | 'contained'
+  | 'full-width-bar'
+  | 'simple-with-chevrons'
+  | 'simple-with-slashes';
+
+export type SmartBreadcrumbsSeparator = 'chevron' | 'slash' | 'arrow';
+
+export interface IBreadcrumbItem {
+  id: string;
+  label?: string;
+  href?: string;
+  iconTpl?: TemplateRef<unknown>;
+  srOnlyLabel?: string;
+  current?: boolean;
+}
+
+export interface IBreadcrumbsOptions {
+  layout?: SmartBreadcrumbsLayout;
+  ariaLabel?: string;
+  separator?: SmartBreadcrumbsSeparator;
+  items: IBreadcrumbItem[];
+}
+
+export type SmartVerticalNavLayout =
+  | 'simple'
+  | 'with-badges'
+  | 'with-icons'
+  | 'with-icons-and-badges'
+  | 'with-secondary-navigation'
+  | 'on-gray';
+
+export interface IVerticalNavItem {
+  id: string;
+  label?: string;
+  href?: string;
+  current?: boolean;
+  badge?: string | number;
+  iconTpl?: TemplateRef<unknown>;
+  initial?: string;
+}
+
+export interface IVerticalNavGroup {
+  id?: string;
+  title?: string;
+  items: IVerticalNavItem[];
+}
+
+export interface IVerticalNavOptions {
+  layout?: SmartVerticalNavLayout;
+  ariaLabel?: string;
+  items?: IVerticalNavItem[];
+  groups?: IVerticalNavGroup[];
 }
 
 export interface IButtonOptions {
@@ -533,6 +759,57 @@ export interface ITableOptions {
   emptyTpl?: TemplateRef<unknown>;
   footerTpl?: TemplateRef<unknown>;
   toolbarTpl?: TemplateRef<unknown>;
+}
+
+export type SmartSidebarNavLayout =
+  | 'light'
+  | 'dark'
+  | 'with-expandable-sections'
+  | 'with-secondary-navigation'
+  | 'brand';
+
+export interface ISidebarNavItem {
+  id: string;
+  label?: string;
+  href?: string;
+  current?: boolean;
+  badge?: string | number;
+  iconTpl?: TemplateRef<unknown>;
+  initial?: string;
+  expandable?: boolean;
+  expanded?: boolean;
+  children?: ISidebarNavItem[];
+}
+
+export interface ISidebarNavGroup {
+  id?: string;
+  title?: string;
+  items: ISidebarNavItem[];
+}
+
+export interface ISidebarNavLogo {
+  url?: string;
+  urlDark?: string;
+  alt?: string;
+  href?: string;
+  tpl?: TemplateRef<unknown>;
+}
+
+export interface ISidebarNavProfile {
+  name?: string;
+  avatarUrl?: string;
+  avatarAlt?: string;
+  href?: string;
+  srOnlyText?: string;
+}
+
+export interface ISidebarNavOptions {
+  layout?: SmartSidebarNavLayout;
+  ariaLabel?: string;
+  logo?: ISidebarNavLogo;
+  items?: ISidebarNavItem[];
+  groups?: ISidebarNavGroup[];
+  profile?: ISidebarNavProfile;
 }
 
 export type SmartSidebarLayoutMobileBreakpoint = 'sm' | 'md' | 'lg';

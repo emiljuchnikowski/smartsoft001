@@ -1,0 +1,144 @@
+<div [class]="cssClass()">
+  <nav class="navbar">
+    <button
+      type="button"
+      class="mobile-menu-toggle"
+      [attr.aria-expanded]="mobileMenuOpen()"
+      (click)="toggleMobileMenu()"
+    >
+      <span class="sr-only">Toggle menu</span>
+    </button>
+    @if (options()?.logoTpl) {
+      <div class="logo">
+        <ng-container [ngTemplateOutlet]="options()!.logoTpl!" />
+      </div>
+    } @else if (options()?.logoUrl) {
+      @if (options()?.logoHref) {
+        <a [href]="options()!.logoHref" class="logo">
+          <img
+            [src]="options()!.logoUrl"
+            [attr.alt]="options()?.logoAlt ?? ''"
+          />
+        </a>
+      } @else {
+        <span class="logo">
+          <img
+            [src]="options()!.logoUrl"
+            [attr.alt]="options()?.logoAlt ?? ''"
+          />
+        </span>
+      }
+    }
+    @if ((options()?.items ?? []).length > 0) {
+      <ul class="items" role="list">
+        @for (item of options()!.items!; track item.id) {
+          <li class="item">
+            @if (item.href) {
+              <a
+                [href]="item.href"
+                [class]="'item-link' + (item.current ? ' current' : '')"
+              >
+                @if (item.iconTpl) {
+                  <span class="item-icon">
+                    <ng-container [ngTemplateOutlet]="item.iconTpl" />
+                  </span>
+                }
+                @if (item.label) {
+                  {{ item.label }}
+                }
+              </a>
+            } @else {
+              <button
+                type="button"
+                [class]="'item-button' + (item.current ? ' current' : '')"
+                (click)="onItemClick(item.id)"
+              >
+                @if (item.iconTpl) {
+                  <span class="item-icon">
+                    <ng-container [ngTemplateOutlet]="item.iconTpl" />
+                  </span>
+                }
+                @if (item.label) {
+                  {{ item.label }}
+                }
+              </button>
+            }
+          </li>
+        }
+      </ul>
+    }
+    @if (options()?.searchTpl) {
+      <div class="search">
+        <ng-container [ngTemplateOutlet]="options()!.searchTpl!" />
+      </div>
+    }
+    @if (options()?.actionTpl) {
+      <div class="action">
+        <ng-container [ngTemplateOutlet]="options()!.actionTpl!" />
+      </div>
+    }
+    @if (options()?.notificationTpl) {
+      <div class="notification">
+        <ng-container [ngTemplateOutlet]="options()!.notificationTpl!" />
+      </div>
+    }
+    @if (options()?.userMenuTpl) {
+      <div class="user-menu">
+        <ng-container [ngTemplateOutlet]="options()!.userMenuTpl!" />
+      </div>
+    }
+  </nav>
+  @if ((options()?.secondaryItems ?? []).length > 0) {
+    <nav class="navbar-secondary">
+      <ul class="items" role="list">
+        @for (item of options()!.secondaryItems!; track item.id) {
+          <li class="item">
+            @if (item.href) {
+              <a
+                [href]="item.href"
+                [class]="'item-link' + (item.current ? ' current' : '')"
+              >
+                @if (item.label) {
+                  {{ item.label }}
+                }
+              </a>
+            } @else {
+              <button
+                type="button"
+                [class]="'item-button' + (item.current ? ' current' : '')"
+                (click)="onItemClick(item.id)"
+              >
+                @if (item.label) {
+                  {{ item.label }}
+                }
+              </button>
+            }
+          </li>
+        }
+      </ul>
+    </nav>
+  }
+  @if (mobileMenuOpen()) {
+    <div class="mobile-menu">
+      <ul role="list">
+        @for (item of options()?.items ?? []; track item.id) {
+          <li>
+            @if (item.href) {
+              <a [href]="item.href" [class]="item.current ? 'current' : null">{{
+                item.label
+              }}</a>
+            } @else {
+              <button
+                type="button"
+                [class]="item.current ? 'current' : null"
+                (click)="onItemClick(item.id)"
+              >
+                {{ item.label }}
+              </button>
+            }
+          </li>
+        }
+      </ul>
+    </div>
+  }
+</div>

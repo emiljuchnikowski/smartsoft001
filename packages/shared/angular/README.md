@@ -1138,6 +1138,79 @@ providers: [
 ];
 ```
 
+### SidebarNavigationBaseComponent
+
+Abstract base class for sidebar navigation components. Exposes optional `ISidebarNavOptions` and `cssClass` (alias `class`).
+
+**Inputs:** `options` (`ISidebarNavOptions`), `class` (`string`)
+**Outputs:** `itemClick` (`ISidebarNavItemClick`), `itemToggle` (`ISidebarNavItemToggle`)
+
+### SidebarNavigation Component
+
+The `<smart-sidebar-navigation>` component renders an application sidebar with optional logo, vertical navigation groups, expandable sub-sections, and a profile footer. It is a wrapper that delegates to `SidebarNavigationStandardComponent` by default and supports an InjectionToken (`SIDEBAR_NAVIGATION_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `SidebarNavigationComponent` (selector: `smart-sidebar-navigation`)
+**Default:** `SidebarNavigationStandardComponent` (selector: `smart-sidebar-navigation-standard`)
+**Token:** `SIDEBAR_NAVIGATION_STANDARD_COMPONENT_TOKEN` — provide a `Type<SidebarNavigationBaseComponent>` to override the default.
+
+#### Usage
+
+```html
+<!-- Flat list with logo and profile -->
+<smart-sidebar-navigation
+  [options]="{
+    logo: { url: '/logo.svg', alt: 'Acme' },
+    items: [
+      { id: 'dashboard', label: 'Dashboard', href: '/', current: true, badge: 5 },
+      { id: 'team', label: 'Team', href: '/team' },
+    ],
+    profile: { name: 'Tom Cook', avatarUrl: '/avatar.jpg', href: '/me' },
+  }"
+/>
+
+<!-- With expandable sections -->
+<smart-sidebar-navigation
+  [options]="{
+    items: [
+      { id: 'dashboard', label: 'Dashboard', href: '/' },
+      {
+        id: 'teams',
+        label: 'Teams',
+        expandable: true,
+        children: [{ id: 'eng', label: 'Engineering', href: '/eng' }],
+      },
+    ],
+  }"
+  (itemToggle)="onToggle($event)"
+/>
+```
+
+#### ISidebarNavOptions
+
+| Property    | Type                                   | Default | Description                                                |
+| ----------- | -------------------------------------- | ------- | ---------------------------------------------------------- |
+| `layout`    | `SmartSidebarNavLayout`                | -       | Visual variant (`light`, `dark`, `brand`, etc.)            |
+| `ariaLabel` | `string`                               | -       | Aria label on `<nav>` (defaults to `"Sidebar"`)            |
+| `logo`      | `ISidebarNavLogo`                      | -       | Optional top logo (image, dark variant, link, or template) |
+| `items`     | `ISidebarNavItem[]`                    | -       | Top-level items (rendered as a leading anonymous group)    |
+| `groups`    | `ISidebarNavGroup[]`                   | -       | Named groups with optional title                           |
+| `profile`   | `ISidebarNavProfile`                   | -       | Optional profile footer (avatar + name + href)             |
+
+`ISidebarNavItem` supports `id`, `label`, `href`, `current`, `badge`, `iconTpl`, `initial` (for team-style entries), `expandable`, `expanded`, and `children`. When `expandable` is `true`, the item renders as a toggle button with collapsible `children`.
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { SIDEBAR_NAVIGATION_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  {
+    provide: SIDEBAR_NAVIGATION_STANDARD_COMPONENT_TOKEN,
+    useValue: MySidebarNavigationComponent,
+  },
+];
+```
+
 ### StackedLayoutBaseComponent
 
 Abstract base class for stacked layout components. Exposes optional `IStackedLayoutOptions` and `cssClass` (alias `class`).
@@ -2015,6 +2088,463 @@ providers: [
 ```
 
 A custom implementation extending `PasswordStrengthBaseComponent` should declare `cssClass = input<string>('')` without the `class` alias (because `NgComponentOutlet` passes inputs by canonical name) and rely on the base's `barClasses()`, `msgClass()`, and `containerClasses()` for Tailwind classes. Do not re-emit `passwordStrength` — the base class already does that via an `effect()`.
+
+### ProgressBarsBaseComponent
+
+Abstract base class for progress indicator components. Exposes optional `IProgressBarsOptions`, `cssClass` (alias `class`), and a `stepClick` output.
+
+**Inputs:** `options` (`IProgressBarsOptions`), `class` (`string`)
+**Outputs:** `stepClick` (`IProgressStepClick`)
+
+### ProgressBars Component
+
+The `<smart-progress-bars>` component renders either a list of progress steps (with statuses `complete`, `current`, `upcoming`) or a percentage-based bar with optional column labels. It is a wrapper that delegates to `ProgressBarsStandardComponent` by default and supports an InjectionToken (`PROGRESS_BARS_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `ProgressBarsComponent` (selector: `smart-progress-bars`)
+**Default:** `ProgressBarsStandardComponent` (selector: `smart-progress-bars-standard`)
+**Token:** `PROGRESS_BARS_STANDARD_COMPONENT_TOKEN` — provide a `Type<ProgressBarsBaseComponent>` to override the default.
+
+#### Usage
+
+```html
+<!-- Step indicator -->
+<smart-progress-bars
+  [options]="{
+    layout: 'simple',
+    steps: [
+      { id: '1', name: 'Job details', status: 'complete', href: '/1' },
+      { id: '2', name: 'Application form', status: 'current', href: '/2' },
+      { id: '3', name: 'Preview', status: 'upcoming', href: '/3' },
+    ],
+  }"
+/>
+
+<!-- Percentage progress bar with column labels -->
+<smart-progress-bars
+  [options]="{
+    layout: 'progress-bar',
+    title: 'Migrating MySQL database...',
+    srOnlyTitle: 'Status',
+    value: 37.5,
+    columns: [
+      { label: 'Copying files', active: true },
+      { label: 'Migrating database', active: true },
+      { label: 'Compiling assets' },
+      { label: 'Deployed' },
+    ],
+  }"
+/>
+```
+
+#### IProgressBarsOptions
+
+| Property      | Type                       | Default      | Description                                                                |
+| ------------- | -------------------------- | ------------ | -------------------------------------------------------------------------- |
+| `layout`      | `SmartProgressBarsLayout`  | `'simple'`   | Visual variant. `'progress-bar'` switches to bar mode                       |
+| `ariaLabel`   | `string`                   | `'Progress'` | Aria label on `<nav>` (step mode)                                          |
+| `steps`       | `IProgressStep[]`          | -            | Step list (step mode)                                                      |
+| `title`       | `string`                   | -            | Optional title (rendered in bar mode and as header for some step layouts)  |
+| `srOnlyTitle` | `string`                   | -            | Screen-reader only title (bar mode)                                        |
+| `value`       | `number`                   | `0`          | Bar fill percentage 0–100 (bar mode; clamped)                              |
+| `columns`     | `IProgressBarColumn[]`     | -            | Optional column labels rendered under the bar (bar mode)                   |
+
+`IProgressStep` supports `id`, `name`, `description`, `status`, `href`, `iconTpl`, and `index` (e.g. `'02'`). When `href` is provided the step renders as an anchor; otherwise as a button emitting `stepClick`.
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { PROGRESS_BARS_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  {
+    provide: PROGRESS_BARS_STANDARD_COMPONENT_TOKEN,
+    useValue: MyCustomProgressBarsComponent,
+  },
+];
+```
+
+### ActionPanelBaseComponent
+
+Abstract base class for action panel components. Exposes optional `IActionPanelOptions`, `cssClass` (alias `class`), and an `actionClick` output. Used to render a contextual settings panel with title, description and one or more action buttons or links.
+
+**Inputs:** `options` (`IActionPanelOptions`), `class` (`string`)
+**Outputs:** `actionClick` (`IActionPanelActionClick`)
+
+### ActionPanel Component
+
+The `<smart-action-panel>` component renders a panel with a heading, description and one or more actions. It is a wrapper that delegates to `ActionPanelStandardComponent` by default and supports an InjectionToken (`ACTION_PANEL_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `ActionPanelComponent` (selector: `smart-action-panel`)
+**Default:** `ActionPanelStandardComponent` (selector: `smart-action-panel-standard`)
+**Token:** `ACTION_PANEL_STANDARD_COMPONENT_TOKEN` — provide a `Type<ActionPanelBaseComponent>` to override the default.
+
+#### Usage
+
+```html
+<smart-action-panel
+  [options]="{
+    title: 'Manage subscription',
+    description: 'Lorem ipsum dolor sit amet.',
+    actions: [{ id: 'change', label: 'Change plan', variant: 'primary' }],
+  }"
+  (actionClick)="onAction($event)"
+/>
+
+<smart-action-panel
+  [options]="{
+    title: 'Continuous Integration',
+    description: 'Learn more about our CI features.',
+    actions: [
+      { id: 'learn', label: 'Learn more', href: '/learn', variant: 'link' },
+    ],
+  }"
+/>
+```
+
+#### IActionPanelOptions
+
+| Property         | Type                    | Default | Description                                                |
+| ---------------- | ----------------------- | ------- | ---------------------------------------------------------- |
+| `title`          | `string`                | -       | Heading rendered as `<h3>`                                 |
+| `description`    | `string`                | -       | Description rendered as `<p class="description">`          |
+| `layout`         | `SmartActionPanelLayout`| -       | Hint for custom impls (Tailwind variants in pro library)   |
+| `actions`        | `IActionPanelAction[]`  | -       | Render buttons (or anchors when `href` provided)           |
+| `descriptionTpl` | `TemplateRef<unknown>`  | -       | Override description rendering with a template             |
+| `contentTpl`     | `TemplateRef<unknown>`  | -       | Render embedded content (toggle, input, payment block, …)  |
+
+#### Outputs
+
+- `actionClick: { actionId }` — emitted when a button-type action is clicked
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { ACTION_PANEL_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  {
+    provide: ACTION_PANEL_STANDARD_COMPONENT_TOKEN,
+    useValue: MyActionPanelComponent,
+  },
+];
+```
+
+### BreadcrumbsBaseComponent
+
+Abstract base class for breadcrumb navigation components. Exposes optional `IBreadcrumbsOptions`, `cssClass` (alias `class`), and the `itemClick` output.
+
+**Inputs:** `options` (`IBreadcrumbsOptions`), `class` (`string`)
+**Outputs:** `itemClick` (`IBreadcrumbsItemClick`)
+
+### Breadcrumbs Component
+
+The `<smart-breadcrumbs>` component renders a list of navigation crumbs separated by chevrons, slashes, or arrow shapes. It is a wrapper that delegates to `BreadcrumbsStandardComponent` by default and supports an InjectionToken (`BREADCRUMBS_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `BreadcrumbsComponent` (selector: `smart-breadcrumbs`)
+**Default:** `BreadcrumbsStandardComponent` (selector: `smart-breadcrumbs-standard`)
+**Token:** `BREADCRUMBS_STANDARD_COMPONENT_TOKEN` — provide a `Type<BreadcrumbsBaseComponent>` to override the default.
+
+#### Usage
+
+```html
+<!-- With chevron separators -->
+<smart-breadcrumbs
+  [options]="{
+    items: [
+      { id: 'home', href: '/', iconTpl: homeIcon, srOnlyLabel: 'Home' },
+      { id: 'projects', label: 'Projects', href: '/projects' },
+      { id: 'nero', label: 'Project Nero', href: '/projects/nero', current: true },
+    ],
+  }"
+/>
+
+<!-- Slash variant -->
+<smart-breadcrumbs
+  [options]="{ separator: 'slash', layout: 'simple-with-slashes', items: items }"
+/>
+```
+
+#### IBreadcrumbsOptions
+
+| Property    | Type                          | Default       | Description                                          |
+| ----------- | ----------------------------- | ------------- | ---------------------------------------------------- |
+| `layout`    | `SmartBreadcrumbsLayout`      | -             | Visual variant (`contained`, `full-width-bar`, etc.) |
+| `ariaLabel` | `string`                      | `'Breadcrumb'` | Aria label on `<nav>`                               |
+| `separator` | `'chevron' \| 'slash' \| 'arrow'` | `'chevron'`   | Visual separator between items (`data-separator`)   |
+| `items`     | `IBreadcrumbItem[]`           | `[]`          | Crumb list                                           |
+
+`IBreadcrumbItem` supports `id`, `label`, `href`, `iconTpl`, `srOnlyLabel`, and `current`. When `href` is provided, the item renders as an anchor; otherwise as a button emitting `itemClick`.
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { BREADCRUMBS_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  {
+    provide: BREADCRUMBS_STANDARD_COMPONENT_TOKEN,
+    useValue: MyCustomBreadcrumbsComponent,
+  },
+];
+```
+
+### EmptyStateBaseComponent
+
+Abstract base class for empty state components. Exposes optional `IEmptyStateOptions`, `cssClass` (alias `class`), and the `actionClick` / `itemClick` outputs. Used to render an empty-state placeholder when a list, page or section has no content yet.
+
+**Inputs:** `options` (`IEmptyStateOptions`), `class` (`string`)
+**Outputs:** `actionClick` (`IEmptyStateActionClick`), `itemClick` (`IEmptyStateItemClick`)
+
+### EmptyState Component
+
+The `<smart-empty-state>` component renders an empty-state placeholder with an optional centered icon, title, description, primary actions and a list of starting-points / templates / recommendations. It is a wrapper that delegates to `EmptyStateStandardComponent` by default and supports an InjectionToken (`EMPTY_STATE_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `EmptyStateComponent` (selector: `smart-empty-state`)
+**Default:** `EmptyStateStandardComponent` (selector: `smart-empty-state-standard`)
+**Token:** `EMPTY_STATE_STANDARD_COMPONENT_TOKEN` — provide a `Type<EmptyStateBaseComponent>` to override the default.
+
+#### Usage
+
+```html
+<smart-empty-state
+  [options]="{
+    title: 'No projects',
+    description: 'Get started by creating a new project.',
+    actions: [{ id: 'create', label: 'New Project', variant: 'primary' }],
+  }"
+  (actionClick)="onAction($event)"
+/>
+
+<smart-empty-state
+  [options]="{
+    title: 'Projects',
+    items: [
+      { id: 'list', title: 'Create a List', href: '/lists/new' },
+      { id: 'calendar', title: 'Create a Calendar', href: '/calendars/new' },
+    ],
+    footerLinkLabel: 'Or start from an empty project',
+    footerLinkHref: '/projects/new',
+  }"
+/>
+```
+
+#### IEmptyStateOptions
+
+| Property          | Type                    | Default | Description                                                  |
+| ----------------- | ----------------------- | ------- | ------------------------------------------------------------ |
+| `title`           | `string`                | -       | Main heading rendered as `<h3>`                              |
+| `description`     | `string`                | -       | Description rendered as `<p>`                                |
+| `layout`          | `SmartEmptyStateLayout` | -       | Hint for custom impls (Tailwind variants in pro library)     |
+| `iconTpl`         | `TemplateRef<unknown>`  | -       | Optional centered icon                                       |
+| `actions`         | `IEmptyStateAction[]`   | -       | Render buttons (or anchors when `href` provided)             |
+| `items`           | `IEmptyStateItem[]`     | -       | Starting points / templates / recommendations list           |
+| `itemsTitle`      | `string`                | -       | Optional heading rendered above the items list               |
+| `formTpl`         | `TemplateRef<unknown>`  | -       | Embedded form (e.g. invite-by-email in recommendations)      |
+| `footerLinkLabel` | `string`                | -       | Optional footer link label                                   |
+| `footerLinkHref`  | `string`                | -       | Optional footer link href (renders `<a>` when both provided) |
+
+#### Outputs
+
+- `actionClick: { actionId }` — emitted when a button-type action is clicked
+- `itemClick: { itemId }` — emitted when an item without `href` is clicked
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { EMPTY_STATE_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  {
+    provide: EMPTY_STATE_STANDARD_COMPONENT_TOKEN,
+    useValue: MyEmptyStateComponent,
+  },
+];
+```
+
+### NavbarBaseComponent
+
+Abstract base class for navbar components. Exposes optional `INavbarOptions`, `cssClass` (alias `class`), `mobileMenuOpen` (two-way `ModelSignal<boolean>`), and an `itemClick` output.
+
+**Inputs:** `options` (`INavbarOptions`), `class` (`string`), `mobileMenuOpen` (`ModelSignal<boolean>`)
+**Outputs:** `itemClick` (`INavbarItemClick`)
+
+### Navbar Component
+
+The `<smart-navbar>` component renders a top navigation bar with logo, primary nav items, optional secondary row, search/action/notification/user-menu slots, and a mobile menu toggle. It is a wrapper that delegates to `NavbarStandardComponent` by default and supports an InjectionToken (`NAVBAR_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `NavbarComponent` (selector: `smart-navbar`)
+**Default:** `NavbarStandardComponent` (selector: `smart-navbar-standard`)
+**Token:** `NAVBAR_STANDARD_COMPONENT_TOKEN` — provide a `Type<NavbarBaseComponent>` to override the default.
+
+#### Usage
+
+```html
+<smart-navbar
+  [options]="{
+    logoUrl: '/logo.svg',
+    logoAlt: 'Acme',
+    logoHref: '/',
+    items: [
+      { id: 'dashboard', label: 'Dashboard', href: '/', current: true },
+      { id: 'team', label: 'Team', href: '/team' },
+    ],
+  }"
+/>
+```
+
+#### INavbarOptions
+
+| Property           | Type                   | Default | Description                                                  |
+| ------------------ | ---------------------- | ------- | ------------------------------------------------------------ |
+| `layout`           | `SmartNavbarLayout`    | -       | Hint for custom impls (Tailwind variants in pro library)     |
+| `dark`             | `boolean`              | -       | Dark mode hint for custom impls                              |
+| `menuButtonOnLeft` | `boolean`              | -       | Position the mobile menu toggle on the left                  |
+| `logoTpl`          | `TemplateRef<unknown>` | -       | Logo template slot (priority over `logoUrl`)                 |
+| `logoUrl`          | `string`               | -       | Logo image URL                                               |
+| `logoAlt`          | `string`               | -       | Logo alt text                                                |
+| `logoHref`         | `string`               | -       | Wraps the logo in `<a>` when provided                        |
+| `items`            | `INavbarItem[]`        | -       | Primary nav items                                            |
+| `secondaryItems`   | `INavbarItem[]`        | -       | Optional secondary row of links                              |
+| `searchTpl`        | `TemplateRef<unknown>` | -       | Search input slot                                            |
+| `actionTpl`        | `TemplateRef<unknown>` | -       | Quick action button slot                                     |
+| `notificationTpl`  | `TemplateRef<unknown>` | -       | Notification (e.g. bell) slot                                |
+| `userMenuTpl`      | `TemplateRef<unknown>` | -       | User avatar / dropdown slot                                  |
+
+#### Outputs
+
+- `itemClick: { itemId }` — emitted when a button-type nav item is clicked
+
+#### Two-way bindings
+
+- `mobileMenuOpen: boolean` — toggled internally by the mobile menu button; bind with `[(mobileMenuOpen)]` to control or observe externally.
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { NAVBAR_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  { provide: NAVBAR_STANDARD_COMPONENT_TOKEN, useValue: MyNavbarComponent },
+];
+```
+
+### TabsBaseComponent
+
+Abstract base class for tabs components. Exposes optional `ITabsOptions`, `cssClass` (alias `class`), `selectedId` (two-way `ModelSignal<string | null>`), and a `tabChange` output.
+
+**Inputs:** `options` (`ITabsOptions`), `class` (`string`), `selectedId` (`ModelSignal<string | null>`)
+**Outputs:** `tabChange` (`ITabChange`)
+
+### Tabs Component
+
+The `<smart-tabs>` component renders a tabbed navigation strip (anchor- or button-based) with a `<select>` fallback for mobile. It is a wrapper that delegates to `TabsStandardComponent` by default and supports an InjectionToken (`TABS_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `TabsComponent` (selector: `smart-tabs`)
+**Default:** `TabsStandardComponent` (selector: `smart-tabs-standard`)
+**Token:** `TABS_STANDARD_COMPONENT_TOKEN` — provide a `Type<TabsBaseComponent>` to override the default.
+
+#### Usage
+
+```html
+<smart-tabs
+  [(selectedId)]="active"
+  [options]="{
+    layout: 'pills',
+    items: [
+      { id: 'overview', label: 'Overview' },
+      { id: 'settings', label: 'Settings' },
+    ],
+  }"
+  (tabChange)="onTab($event)"
+/>
+```
+
+#### ITabsOptions
+
+| Property            | Type              | Default | Description                                              |
+| ------------------- | ----------------- | ------- | -------------------------------------------------------- |
+| `layout`            | `SmartTabsLayout` | -       | Hint for custom impls (Tailwind variants in pro library) |
+| `items`             | `ITabItem[]`      | -       | Tab items                                                |
+| `ariaLabel`         | `string`          | -       | aria-label for `<nav>` and mobile `<select>`             |
+| `showMobileSelect`  | `boolean`         | `true`  | Render mobile `<select>` fallback                        |
+
+#### Outputs
+
+- `tabChange: { tabId }` — emitted when a button-type tab (or mobile select) changes
+
+#### Two-way bindings
+
+- `selectedId: string | null` — currently selected tab id; bind with `[(selectedId)]` to control or observe externally.
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { TABS_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  { provide: TABS_STANDARD_COMPONENT_TOKEN, useValue: MyTabsComponent },
+];
+```
+
+### VerticalNavigationBaseComponent
+
+Abstract base class for vertical navigation (sidebar) components. Exposes optional `IVerticalNavOptions`, `cssClass` (alias `class`), and an `itemClick` output.
+
+**Inputs:** `options` (`IVerticalNavOptions`), `class` (`string`)
+**Outputs:** `itemClick` (`IVerticalNavItemClick`)
+
+### VerticalNavigation Component
+
+The `<smart-vertical-navigation>` component renders a sidebar navigation with one or more groups of items, each with optional icon, badge, and initial. It is a wrapper that delegates to `VerticalNavigationStandardComponent` by default and supports an InjectionToken (`VERTICAL_NAVIGATION_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `VerticalNavigationComponent` (selector: `smart-vertical-navigation`)
+**Default:** `VerticalNavigationStandardComponent` (selector: `smart-vertical-navigation-standard`)
+**Token:** `VERTICAL_NAVIGATION_STANDARD_COMPONENT_TOKEN` — provide a `Type<VerticalNavigationBaseComponent>` to override the default.
+
+#### Usage
+
+```html
+<smart-vertical-navigation
+  [options]="{
+    items: [
+      { id: 'dashboard', label: 'Dashboard', href: '/', current: true },
+      { id: 'team', label: 'Team', href: '/team' },
+      { id: 'projects', label: 'Projects', href: '/projects', badge: 12 },
+    ],
+  }"
+/>
+
+<smart-vertical-navigation
+  [options]="{
+    items: mainItems,
+    groups: [{ title: 'Projects', items: projectItems }],
+  }"
+  (itemClick)="onItem($event)"
+/>
+```
+
+#### IVerticalNavOptions
+
+| Property    | Type                     | Default | Description                                              |
+| ----------- | ------------------------ | ------- | -------------------------------------------------------- |
+| `layout`    | `SmartVerticalNavLayout` | -       | Hint for custom impls (Tailwind variants in pro library) |
+| `ariaLabel` | `string`                 | `'Sidebar'` | aria-label for `<nav>`                               |
+| `items`     | `IVerticalNavItem[]`     | -       | Single-group flat list                                   |
+| `groups`    | `IVerticalNavGroup[]`    | -       | Multi-group structure (each with optional `title`)       |
+
+#### Outputs
+
+- `itemClick: { itemId }` — emitted when a button-type item is clicked
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { VERTICAL_NAVIGATION_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  { provide: VERTICAL_NAVIGATION_STANDARD_COMPONENT_TOKEN, useValue: MyVerticalNavComponent },
+];
+```
 
 ### AccordionBaseComponent
 

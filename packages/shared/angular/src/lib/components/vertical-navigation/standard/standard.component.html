@@ -1,0 +1,64 @@
+<div [class]="cssClass()">
+  <nav
+    class="vertical-navigation"
+    [attr.aria-label]="options()?.ariaLabel ?? 'Sidebar'"
+  >
+    <ul role="list" class="groups">
+      @for (group of groups; track group.id ?? $index) {
+        <li class="group">
+          @if (group.title) {
+            <div class="group-title">{{ group.title }}</div>
+          }
+          <ul role="list" class="items">
+            @for (item of group.items; track item.id) {
+              <li class="item">
+                @if (item.href) {
+                  <a
+                    [href]="item.href"
+                    [class]="'item-link' + (item.current ? ' current' : '')"
+                    [attr.aria-current]="item.current ? 'page' : null"
+                  >
+                    @if (item.iconTpl) {
+                      <span class="item-icon">
+                        <ng-container [ngTemplateOutlet]="item.iconTpl" />
+                      </span>
+                    } @else if (item.initial) {
+                      <span class="item-initial">{{ item.initial }}</span>
+                    }
+                    @if (item.label) {
+                      <span class="item-label">{{ item.label }}</span>
+                    }
+                    @if (item.badge !== undefined && item.badge !== null) {
+                      <span class="item-badge">{{ item.badge }}</span>
+                    }
+                  </a>
+                } @else {
+                  <button
+                    type="button"
+                    [class]="'item-button' + (item.current ? ' current' : '')"
+                    [attr.aria-current]="item.current ? 'page' : null"
+                    (click)="onItemClick(item.id)"
+                  >
+                    @if (item.iconTpl) {
+                      <span class="item-icon">
+                        <ng-container [ngTemplateOutlet]="item.iconTpl" />
+                      </span>
+                    } @else if (item.initial) {
+                      <span class="item-initial">{{ item.initial }}</span>
+                    }
+                    @if (item.label) {
+                      <span class="item-label">{{ item.label }}</span>
+                    }
+                    @if (item.badge !== undefined && item.badge !== null) {
+                      <span class="item-badge">{{ item.badge }}</span>
+                    }
+                  </button>
+                }
+              </li>
+            }
+          </ul>
+        </li>
+      }
+    </ul>
+  </nav>
+</div>

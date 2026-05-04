@@ -1,0 +1,56 @@
+<nav
+  [class]="'breadcrumbs ' + cssClass()"
+  [attr.aria-label]="options()?.ariaLabel ?? 'Breadcrumb'"
+>
+  <ol role="list" class="breadcrumbs-list">
+    @for (item of options()?.items ?? []; track item.id; let idx = $index) {
+      <li class="breadcrumbs-item">
+        @if (idx > 0) {
+          <span
+            class="breadcrumbs-separator"
+            [attr.data-separator]="options()?.separator ?? 'chevron'"
+            aria-hidden="true"
+          ></span>
+        }
+        @if (item.href) {
+          <a
+            [href]="item.href"
+            [class]="'breadcrumbs-link' + (item.current ? ' current' : '')"
+            [attr.aria-current]="item.current ? 'page' : null"
+          >
+            @if (item.iconTpl) {
+              <span class="breadcrumbs-icon">
+                <ng-container [ngTemplateOutlet]="item.iconTpl" />
+              </span>
+            }
+            @if (item.label) {
+              <span class="breadcrumbs-label">{{ item.label }}</span>
+            }
+            @if (item.srOnlyLabel) {
+              <span class="sr-only">{{ item.srOnlyLabel }}</span>
+            }
+          </a>
+        } @else {
+          <button
+            type="button"
+            [class]="'breadcrumbs-button' + (item.current ? ' current' : '')"
+            [attr.aria-current]="item.current ? 'page' : null"
+            (click)="onItemClick(item.id)"
+          >
+            @if (item.iconTpl) {
+              <span class="breadcrumbs-icon">
+                <ng-container [ngTemplateOutlet]="item.iconTpl" />
+              </span>
+            }
+            @if (item.label) {
+              <span class="breadcrumbs-label">{{ item.label }}</span>
+            }
+            @if (item.srOnlyLabel) {
+              <span class="sr-only">{{ item.srOnlyLabel }}</span>
+            }
+          </button>
+        }
+      </li>
+    }
+  </ol>
+</nav>
