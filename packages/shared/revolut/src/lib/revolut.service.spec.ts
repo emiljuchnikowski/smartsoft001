@@ -46,9 +46,9 @@ describe('revolut: RevolutService', () => {
     it('should create a payment and return orderId and responseData', async () => {
       const mockResponse = {
         data: {
-          public_id: 'test-order-id',
+          token: 'test-order-token',
           id: 'test-internal-id',
-          state: 'PENDING',
+          state: 'pending',
         },
       };
 
@@ -64,17 +64,17 @@ describe('revolut: RevolutService', () => {
       });
 
       expect(result).toEqual({
-        orderId: 'test-order-id',
+        orderId: 'test-order-token',
         responseData: mockResponse.data,
       });
     });
 
-    it('should use sandbox URL when test mode is enabled', async () => {
+    it('should use sandbox URL and Revolut-Api-Version header when test mode is enabled', async () => {
       const mockResponse = {
         data: {
-          public_id: 'test-order-id',
+          token: 'test-order-token',
           id: 'test-internal-id',
-          state: 'PENDING',
+          state: 'pending',
         },
       };
 
@@ -90,12 +90,56 @@ describe('revolut: RevolutService', () => {
       });
 
       expect(mockHttpService.post).toHaveBeenCalledWith(
-        'https://sandbox-merchant.revolut.com/api/1.0/orders',
+        'https://sandbox-merchant.revolut.com/api/orders',
         expect.any(Object),
         expect.objectContaining({
           headers: expect.objectContaining({
             Authorization: 'Bearer mock-token',
+            'Revolut-Api-Version': '2024-09-01',
           }),
+        }),
+      );
+    });
+
+    it('should send request body with customer object and correct fields', async () => {
+      const mockResponse = {
+        data: {
+          token: 'test-order-token',
+          id: 'test-internal-id',
+          state: 'pending',
+        },
+      };
+
+      mockHttpService.post.mockReturnValue(of(mockResponse));
+
+      await service.create({
+        id: 'test-id',
+        name: 'test-name',
+        amount: 1000,
+        email: 'test@example.com',
+        firstName: 'Jan',
+        lastName: 'Kowalski',
+        contactPhone: '+48123',
+        clientIp: '127.0.0.1',
+        data: {},
+      });
+
+      const body = mockHttpService.post.mock.calls[0][1];
+
+      expect(body).toEqual(
+        expect.objectContaining({
+          amount: 1000,
+          currency: 'PLN',
+          capture_mode: 'automatic',
+          merchant_order_ext_ref: 'test-id',
+          description: 'test-name',
+        }),
+      );
+      expect(body.customer).toEqual(
+        expect.objectContaining({
+          email: 'test@example.com',
+          full_name: 'Jan Kowalski',
+          phone: '+48123',
         }),
       );
     });
@@ -106,7 +150,7 @@ describe('revolut: RevolutService', () => {
       const mockResponse = {
         data: {
           id: 'test-internal-id',
-          state: 'PROCESSING',
+          state: 'completed',
         },
       };
 
@@ -126,15 +170,25 @@ describe('revolut: RevolutService', () => {
         status: 'completed',
         data: mockResponse.data,
       });
+      expect(mockHttpService.get).toHaveBeenCalledWith(
+        'https://sandbox-merchant.revolut.com/api/orders/test-internal-id',
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            'Revolut-Api-Version': '2024-09-01',
+          }),
+        }),
+      );
     });
 
     it('should map different states to correct statuses', async () => {
       const testCases = [
-        { state: 'PROCESSING', expectedStatus: 'completed' },
-        { state: 'CANCELLED', expectedStatus: 'canceled' },
-        { state: 'FAILED', expectedStatus: 'canceled' },
-        { state: 'PENDING', expectedStatus: 'pending' },
-        { state: 'UNKNOWN', expectedStatus: 'UNKNOWN' },
+        { state: 'pending', expectedStatus: 'pending' },
+        { state: 'processing', expectedStatus: 'pending' },
+        { state: 'authorised', expectedStatus: 'completed' },
+        { state: 'completed', expectedStatus: 'completed' },
+        { state: 'cancelled', expectedStatus: 'canceled' },
+        { state: 'failed', expectedStatus: 'canceled' },
+        { state: 'unknown', expectedStatus: 'unknown' },
       ];
 
       for (const testCase of testCases) {
