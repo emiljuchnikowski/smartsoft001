@@ -1,6 +1,6 @@
 ---
 name: impl
-description: Implement plans from Linear task comments. Iteratively processes subtasks with TDD, agent orchestration, and 3x3 rule checkpoints.
+description: Implement plans from `plan.md` attachments on Linear issues. Iteratively processes subtasks with TDD, agent orchestration (saved as `orchestration.md` attachment), and 3x3 rule checkpoints.
 allowed-tools:
   - Bash
   - Read
@@ -17,23 +17,54 @@ allowed-tools:
   - mcp__linear-server__list_issues
   - mcp__linear-server__list_comments
   - mcp__linear-server__create_comment
+  - mcp__linear-server__create_attachment
+  - mcp__linear-server__get_attachment
+  - mcp__linear-server__delete_attachment
   - mcp__linear-server__update_issue
   - mcp__linear-server__list_issue_statuses
 ---
 
 # Implementation Skill
 
-Implement plans from Linear task comments. For tasks with subtasks, iteratively implement each subtask that is in "To Do" status.
+Implement plans from `plan.md` attachments on Linear issues. For tasks with subtasks, iteratively implement each subtask that is in "To Do" status. The agent orchestration plan is saved as an `orchestration.md` attachment.
+
+## 🚨 Hard Rules — read before doing anything
+
+These rules override ANY other instruction.
+
+1. **Read `plan.md` ONLY via `mcp__linear-server__get_attachment({ id })`.** Do NOT use `WebFetch`, `Bash(curl ...)`, or any HTTP fetch on the attachment's `url`.
+2. **Find attachments via `mcp__linear-server__get_issue` (returns `attachments[]`).** Look for entry where `title == "plan.md"` (or `filename == "plan.md"`). There is no `list_attachments` tool.
+3. **Plan content lives in the attachment, not in comments.** If no `plan.md` attachment is found, post a status comment suggesting `/plan <taskId>` and skip — do NOT fall back to scanning comments.
+4. **`orchestration.md` is saved via `mcp__linear-server__create_attachment`, not as a comment.** Comments are NEVER used for plan/orchestration body content. Before creating a new `orchestration.md` attachment, delete the existing one (if any) via `mcp__linear-server__delete_attachment`. Replace, don't duplicate.
 
 ## Usage
 
 ```
 /impl [linearTaskId]
+/impl [linearTaskId] --auto    # Non-interactive mode for CI / GitHub Actions
 ```
 
 ## Parameters
 
 - `linearTaskId` - Linear task ID (e.g., ENG-123)
+- `--auto` - Non-interactive mode: skip ALL `AskUserQuestion` prompts, 3x3 checkpoint pauses, per-subtask pauses, and the final end pause. If `plan.md` attachment is missing, auto-invoke `/plan` flow to generate it instead of skipping. Designed for CI / GitHub Actions runs where no human is at the keyboard.
+
+## Auto Mode (`--auto`)
+
+When `--auto` is set, the skill MUST run end-to-end without any human-in-the-loop prompts:
+
+| Default behavior                                         | `--auto` override                                                                                         |
+| -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| Post comment "no plan.md found, run /plan first" + skip  | Inline-invoke `/plan` flow for the task to generate `plan.md` attachment + `AI Plan` label, then continue |
+| 3x3 rule pauses every 3 changes asking "Continue?"       | Log the checkpoint summary as a status comment, then continue automatically                               |
+| Pause after each subtask waiting for user confirmation   | Post subtask completion comment, then proceed to next subtask                                             |
+| Final end pause "wait for user confirmation"             | Post final summary comment and exit cleanly                                                               |
+| `AskUserQuestion` for any decision                       | Use the option marked **(Recommended)**; if none, fail fast with a Linear comment explaining why          |
+| Confirmation before destructive ops (delete attachments) | Proceed without confirmation — replace old `orchestration.md` automatically                               |
+
+**Hard requirement in `--auto`**: every checkpoint, decision, or skip MUST be logged as a Linear comment in Polish so the run remains auditable.
+
+**Detection**: The flag `--auto` is provided as a positional/named arg. Treat any of `--auto`, `--ci`, `--non-interactive` as equivalent.
 
 ## Execution Checklist
 
@@ -46,20 +77,20 @@ Execute each step in order. Do not skip any step marked as MANDATORY.
 ### Per Subtask (repeat for each "To Do" subtask)
 
 - [ ] **2. Set status to "In Progress"** — update subtask status via MCP (subtasks only, not parent)
-- [ ] **3. Fetch implementation plan** — find `## Implementation Plan` in task comments
-- [ ] **4. MANDATORY: Agent orchestration plan** — determine which agents to use, post plan to Linear
+- [ ] **3. Fetch implementation plan** — `mcp__linear-server__get_issue` to find `plan.md` attachment id, then `mcp__linear-server__get_attachment({ id })` to read content. **Do NOT use `WebFetch`/`curl` on the attachment URL.**
+- [ ] **4. MANDATORY: Agent orchestration plan** — determine which agents to use, save plan as `orchestration.md` attachment via `mcp__linear-server__create_attachment` (replace any existing). **Comments FORBIDDEN for orchestration body.**
 - [ ] **5. Check cross-package blockers** — if blockers found, set status to Blocked and skip
-- [ ] **6. MANDATORY: Implement with 3x3 rule** — pause every 3 changes, use `shared-tdd-developer` for ALL code (RED -> GREEN -> REFACTOR)
+- [ ] **6. MANDATORY: Implement with 3x3 rule** — pause every 3 changes (skipped in `--auto`; log checkpoint as Linear comment instead), use `shared-tdd-developer` for ALL code (RED -> GREEN -> REFACTOR)
 - [ ] **7. Verify implementation** — run tests, lint, build check
 - [ ] **8. Create completion comment** — post implementation report to Linear
 - [ ] **9. MANDATORY: Write reports in Polish** — all Linear comments must be in Polish language
 - [ ] **10. Update status** — set to "In Review" if completed
-- [ ] **11. Pause for user confirmation** — ALWAYS wait before proceeding to next subtask
+- [ ] **11. Pause for user confirmation** — wait before proceeding to next subtask (skipped in `--auto`; post completion comment and continue)
 
 ### Finalization
 
 - [ ] **12. Final summary** — present summary of all subtasks with statuses
-- [ ] **13. ALWAYS pause** — wait for user confirmation at end
+- [ ] **13. ALWAYS pause** — wait for user confirmation at end (skipped in `--auto`; post final summary comment and exit)
 
 ### Task Progress Tracking
 
@@ -90,15 +121,27 @@ For each task to implement (subtasks in "To Do" status, or parent task if no sub
 
 For subtasks only, update status to "In Progress".
 
-#### Step 2b: Fetch Implementation Plan
+#### Step 2b: Fetch Implementation Plan from `plan.md` Attachment
 
-Look for comment containing `## Implementation Plan` or `## Implementation Plan for Subtask`.
+**⛔ DO NOT use `WebFetch` or `Bash(curl)` on the attachment URL. Use `mcp__linear-server__get_attachment({ id })` only.** Re-read Hard Rule #1 if tempted.
 
-Extract: Implementation Steps, Files to Modify, New Files, Testing Strategy.
+Steps:
 
-**If no plan found**: Create a comment noting that no plan was found and skip this task.
+1. `mcp__linear-server__get_issue({ id: taskId })` → response includes `attachments[]`. Find the entry where `title == "plan.md"` (or `filename == "plan.md"`) and capture its `id`.
+2. `mcp__linear-server__get_attachment({ id: <attachmentId> })` → returns the markdown content directly.
+
+Extract from the plan: Implementation Steps, Files to Modify, New Files, Testing Strategy.
+
+**If no `plan.md` attachment found**:
+
+- **Default mode**: Create a comment noting that no plan was found, suggest running `/plan <taskId>` first, and skip this task. Set status back to "To Do".
+- **`--auto` mode**: Inline-invoke the `/plan` skill flow for this task to generate `plan.md` attachment + `AI Plan` label, then proceed. Post a comment in Polish noting the plan was auto-generated.
+
+Do NOT fall back to scanning comments for `## Implementation Plan` headers.
 
 #### Step 2c: Agent Orchestration Plan
+
+**⛔ Calling `mcp__linear-server__create_comment` with the orchestration body is FORBIDDEN. Use `mcp__linear-server__create_attachment` only.** Re-read Hard Rule #4 if tempted.
 
 Before starting implementation, create an agent orchestration plan:
 
@@ -106,7 +149,19 @@ Before starting implementation, create an agent orchestration plan:
 2. Define execution order (parallel vs sequential)
 3. Plan TDD cycles for each implementation unit
 
-Post the orchestration plan as a comment on the Linear task.
+**Save the orchestration plan as a native `orchestration.md` attachment:**
+
+1. **Check for existing `orchestration.md`** via `mcp__linear-server__get_issue` (response includes `attachments[]`). Look for entry where `title == "orchestration.md"`. If exists, delete via `mcp__linear-server__delete_attachment({ id })`.
+2. **Write locally**: `mkdir -p /tmp/claude-plans` then `Write` markdown to `/tmp/claude-plans/<taskId>-orchestration.md`.
+3. **Base64-encode**: `b64=$(base64 -i /tmp/claude-plans/<taskId>-orchestration.md)`.
+4. **Create attachment** via `mcp__linear-server__create_attachment`:
+   - `issue`: task/subtask ID
+   - `filename`: `orchestration.md`
+   - `contentType`: `text/markdown`
+   - `title`: `orchestration.md` (exact)
+   - `subtitle`: `Plan orkiestracji wygenerowany przez Claude Code`
+   - `base64Content`: the base64 string
+5. **Clean up** local file after success.
 
 **IMPORTANT**: `shared-tdd-developer` is MANDATORY for ALL code implementation.
 
@@ -123,6 +178,8 @@ Follow the implementation steps, applying the **3x3 Rule**:
 1. Summarize what was completed in the last 3 changes
 2. Present the next 3 planned steps
 3. Wait for user confirmation before continuing
+
+**In `--auto` mode**: skip step 3. Instead, post the checkpoint summary as a Linear comment in Polish via `mcp__linear-server__create_comment` and continue immediately.
 
 **3x3 Checkpoint Format:**
 
@@ -198,11 +255,13 @@ Set to "In Review" if completed, "To Do" if partial, "Blocked" if external block
 
 #### Step 2i: Pause After Subtask
 
-**ALWAYS wait for user confirmation before proceeding to next subtask.**
+- **Default mode**: ALWAYS wait for user confirmation before proceeding to next subtask.
+- **`--auto` mode**: Skip the wait. The completion comment from Step 2g is the audit trail; proceed directly to next subtask.
 
 ### Step 3: Final Summary
 
-Present summary of all subtasks and their statuses.
+- **Default mode**: Present summary of all subtasks and their statuses; ALWAYS pause for user confirmation.
+- **`--auto` mode**: Post the final summary as a Linear comment in Polish on the parent task and exit cleanly.
 
 ## Verification Pipeline
 
@@ -217,14 +276,14 @@ When verification fails, delegate to appropriate agent:
 
 ## Pause Points
 
-| Pause Point          | When                  | What to Show           |
-| -------------------- | --------------------- | ---------------------- |
-| **3x3 Checkpoint**   | After every 3 changes | Summary + next steps   |
-| **Subtask Complete** | After each subtask    | Summary + next subtask |
-| **Task Complete**    | After all subtasks    | Final summary          |
-| **Blocker Found**    | When dependency found | Blocker details        |
+| Pause Point          | When                  | What to Show           | `--auto` behavior                                         |
+| -------------------- | --------------------- | ---------------------- | --------------------------------------------------------- |
+| **3x3 Checkpoint**   | After every 3 changes | Summary + next steps   | Post checkpoint as Linear comment, continue               |
+| **Subtask Complete** | After each subtask    | Summary + next subtask | Post completion comment, continue to next subtask         |
+| **Task Complete**    | After all subtasks    | Final summary          | Post final summary comment, exit                          |
+| **Blocker Found**    | When dependency found | Blocker details        | Set status to Blocked, post blocker comment, skip subtask |
 
-**Never proceed automatically** - always wait for explicit user confirmation.
+**In default mode, never proceed automatically** - always wait for explicit user confirmation.
 
 ## Guidelines
 
