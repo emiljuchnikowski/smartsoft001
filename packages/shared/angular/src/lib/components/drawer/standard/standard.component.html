@@ -1,0 +1,22 @@
+@if (open()) {
+  @if (options()?.withOverlay) {
+    <div class="drawer-overlay" (click)="close()"></div>
+  }
+  <aside
+    role="dialog"
+    aria-modal="true"
+    [class]="cssClass()"
+    [attr.data-position]="options()?.position ?? 'right'"
+    [attr.aria-labelledby]="title() ? 'smart-drawer-title' : null"
+  >
+    @if (title()) {
+      <header>
+        <h2 id="smart-drawer-title">{{ title() }}</h2>
+        <button type="button" aria-label="Close" (click)="close()">
+          &times;
+        </button>
+      </header>
+    }
+    <ng-content />
+  </aside>
+}

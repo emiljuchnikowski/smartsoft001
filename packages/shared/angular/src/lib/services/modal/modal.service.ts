@@ -11,7 +11,7 @@ export class ModalService {
   //   return this.navParams?.get(key);
   // }
 
-  async show(options: IModalOptions): Promise<IModal> {
+  async show(options: IModalServiceOptions): Promise<IModal> {
     // const modalOptions = {
     //   component: options.component,
     //   componentProps: options.props,
@@ -34,7 +34,7 @@ export class ModalService {
   }
 }
 
-export interface IModalOptions {
+export interface IModalServiceOptions {
   component: any;
   props?: any;
   mode?: 'default' | 'bottom';

@@ -113,6 +113,7 @@ For the parent task and each subtask:
 For each task/subtask:
 
 **Create a NEW plan if:**
+
 1. No `plan.md` attachment exists.
 2. `plan.md` exists AND at least one comment's `createdAt` is greater than `plan.md.updatedAt` (fall back to `createdAt`).
 

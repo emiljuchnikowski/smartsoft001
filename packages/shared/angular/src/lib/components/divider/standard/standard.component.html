@@ -1,0 +1,24 @@
+<div
+  role="separator"
+  [class]="cssClass()"
+  [attr.data-position]="options()?.position ?? 'center'"
+>
+  @if (title()) {
+    <h3 class="smart-divider-title">{{ title() }}</h3>
+  }
+  @if (label()) {
+    <span class="smart-divider-label">{{ label() }}</span>
+  }
+  @if (!title() && !label() && !actionLabel()) {
+    <hr />
+  }
+  @if (actionLabel()) {
+    <button
+      type="button"
+      class="smart-divider-action"
+      (click)="actionClick.emit()"
+    >
+      {{ actionLabel() }}
+    </button>
+  }
+</div>
