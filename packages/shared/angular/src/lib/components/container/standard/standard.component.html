@@ -1,0 +1,7 @@
+<div
+  [class]="cssClass()"
+  [attr.data-mode]="options()?.mode ?? null"
+  [attr.data-padding]="options()?.padding ?? null"
+>
+  <ng-content />
+</div>

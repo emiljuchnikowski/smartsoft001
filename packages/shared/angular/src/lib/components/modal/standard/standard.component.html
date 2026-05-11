@@ -1,0 +1,40 @@
+<dialog
+  [open]="open()"
+  [class]="cssClass()"
+  role="dialog"
+  aria-modal="true"
+  [attr.aria-labelledby]="title() ? 'smart-modal-title' : null"
+  [attr.aria-label]="!title() ? (options()?.ariaLabel ?? null) : null"
+  (close)="close()"
+>
+  @if (options()?.withDismiss) {
+    <button
+      type="button"
+      class="smart-modal-dismiss"
+      aria-label="Close"
+      (click)="close()"
+    >
+      &times;
+    </button>
+  }
+  @if (title()) {
+    <h2 id="smart-modal-title">{{ title() }}</h2>
+  }
+  @if (description()) {
+    <p>{{ description() }}</p>
+  }
+  <ng-content />
+  @if (actions().length > 0) {
+    <footer>
+      @for (action of actions(); track action.id) {
+        <button
+          type="button"
+          [attr.data-variant]="action.variant ?? 'primary'"
+          (click)="invokeAction(action.id)"
+        >
+          {{ action.label }}
+        </button>
+      }
+    </footer>
+  }
+</dialog>

@@ -39,10 +39,21 @@ These render a default standard implementation and accept a custom implementatio
 | Component           | Skill                                    | Selector                      | Token                                          |
 | ------------------- | ---------------------------------------- | ----------------------------- | ---------------------------------------------- |
 | Action Panel        | `angular-components-action-panel`        | `<smart-action-panel>`        | `ACTION_PANEL_STANDARD_COMPONENT_TOKEN`        |
+| Avatar              | `angular-components-avatar`              | `<smart-avatar>`              | `AVATAR_STANDARD_COMPONENT_TOKEN`              |
+| Badge               | `angular-components-badge`               | `<smart-badge>`               | `BADGE_STANDARD_COMPONENT_TOKEN`               |
 | Breadcrumbs         | `angular-components-breadcrumbs`         | `<smart-breadcrumbs>`         | `BREADCRUMBS_STANDARD_COMPONENT_TOKEN`         |
+| Button Group        | `angular-components-button-group`        | `<smart-button-group>`        | `BUTTON_GROUP_STANDARD_COMPONENT_TOKEN`        |
 | Calendar            | `angular-components-calendar`            | `<smart-calendar>`            | `CALENDAR_STANDARD_COMPONENT_TOKEN`            |
 | Card Heading        | `angular-components-card-heading`        | `<smart-card-heading>`        | `CARD_HEADING_STANDARD_COMPONENT_TOKEN`        |
+| Command Palette     | `angular-components-command-palette`     | `<smart-command-palette>`     | `COMMAND_PALETTE_STANDARD_COMPONENT_TOKEN`     |
+| Container           | `angular-components-container`           | `<smart-container>`           | `CONTAINER_STANDARD_COMPONENT_TOKEN`           |
 | Description List    | `angular-components-description-list`    | `<smart-description-list>`    | `DESCRIPTION_LIST_STANDARD_COMPONENT_TOKEN`    |
+| Divider             | `angular-components-divider`             | `<smart-divider>`             | `DIVIDER_STANDARD_COMPONENT_TOKEN`             |
+| Drawer              | `angular-components-drawer`              | `<smart-drawer>`              | `DRAWER_STANDARD_COMPONENT_TOKEN`              |
+| Dropdown            | `angular-components-dropdown`            | `<smart-dropdown>`            | `DROPDOWN_STANDARD_COMPONENT_TOKEN`            |
+| List Container      | `angular-components-list-container`      | `<smart-list-container>`      | `LIST_CONTAINER_STANDARD_COMPONENT_TOKEN`      |
+| Media Object        | `angular-components-media-object`        | `<smart-media-object>`        | `MEDIA_OBJECT_STANDARD_COMPONENT_TOKEN`        |
+| Notification        | `angular-components-notification`        | `<smart-notification>`        | `NOTIFICATION_STANDARD_COMPONENT_TOKEN`        |
 | Details             | `angular-components-details`             | `<smart-details>`             | `DETAILS_STANDARD_COMPONENT_TOKEN`             |
 | Empty State         | `angular-components-empty-state`         | `<smart-empty-state>`         | `EMPTY_STATE_STANDARD_COMPONENT_TOKEN`         |
 | Feed                | `angular-components-feed`                | `<smart-feed>`                | `FEED_STANDARD_COMPONENT_TOKEN`                |
@@ -50,6 +61,7 @@ These render a default standard implementation and accept a custom implementatio
 | Grid List           | `angular-components-grid-list`           | `<smart-grid-list>`           | `GRID_LIST_STANDARD_COMPONENT_TOKEN`           |
 | Info                | `angular-components-info`                | `<smart-info>`                | `INFO_STANDARD_COMPONENT_TOKEN`                |
 | List                | `angular-components-list`                | `<smart-list>`                | `LIST_MODE_COMPONENTS_TOKEN`                   |
+| Modal               | `angular-components-modal`               | `<smart-modal>`               | `MODAL_STANDARD_COMPONENT_TOKEN`               |
 | Multi-Column Layout | `angular-components-multi-column-layout` | `<smart-multi-column-layout>` | `MULTI_COLUMN_LAYOUT_STANDARD_COMPONENT_TOKEN` |
 | Navbar              | `angular-components-navbar`              | `<smart-navbar>`              | `NAVBAR_STANDARD_COMPONENT_TOKEN`              |
 | Page Heading        | `angular-components-page-heading`        | `<smart-page-heading>`        | `PAGE_HEADING_STANDARD_COMPONENT_TOKEN`        |
@@ -87,7 +99,7 @@ These provide abstract base classes (`@Directive()`) that can be extended to cre
 When a developer asks about a component:
 
 1. **Wants to use `<smart-date-edit>`, `<smart-date-range>`, `<smart-detail>`, or `<smart-input>`** → delegate to the corresponding skill for usage API
-2. **Wants to use `<smart-action-panel>`, `<smart-breadcrumbs>`, `<smart-calendar>`, `<smart-card-heading>`, `<smart-description-list>`, `<smart-details>`, `<smart-empty-state>`, `<smart-feed>`, `<smart-form>`, `<smart-grid-list>`, `<smart-info>`, `<smart-list>`, `<smart-multi-column-layout>`, `<smart-navbar>`, `<smart-page-heading>`, `<smart-password-strength>`, `<smart-progress-bars>`, `<smart-searchbar>`, `<smart-section-heading>`, `<smart-select-menu>`, `<smart-sidebar-layout>`, `<smart-sidebar-navigation>`, `<smart-sign-in-form>`, `<smart-stacked-layout>`, `<smart-stacked-list>`, `<smart-stats>`, `<smart-table>`, `<smart-tabs>`, `<smart-textarea>`, `<smart-toggle>`, or `<smart-vertical-navigation>`** → delegate to the skill to explain usage, token override pattern, and how to extend the base class with a custom implementation
+2. **Wants to use `<smart-action-panel>`, `<smart-avatar>`, `<smart-badge>`, `<smart-breadcrumbs>`, `<smart-button-group>`, `<smart-calendar>`, `<smart-card-heading>`, `<smart-command-palette>`, `<smart-container>`, `<smart-description-list>`, `<smart-details>`, `<smart-divider>`, `<smart-drawer>`, `<smart-dropdown>`, `<smart-empty-state>`, `<smart-feed>`, `<smart-form>`, `<smart-grid-list>`, `<smart-info>`, `<smart-list>`, `<smart-list-container>`, `<smart-media-object>`, `<smart-modal>`, `<smart-multi-column-layout>`, `<smart-navbar>`, `<smart-notification>`, `<smart-page-heading>`, `<smart-password-strength>`, `<smart-progress-bars>`, `<smart-searchbar>`, `<smart-section-heading>`, `<smart-select-menu>`, `<smart-sidebar-layout>`, `<smart-sidebar-navigation>`, `<smart-sign-in-form>`, `<smart-stacked-layout>`, `<smart-stacked-list>`, `<smart-stats>`, `<smart-table>`, `<smart-tabs>`, `<smart-textarea>`, `<smart-toggle>`, or `<smart-vertical-navigation>`** → delegate to the skill to explain usage, token override pattern, and how to extend the base class with a custom implementation
 3. **Wants to use `<smart-button>`, `<smart-card>`, `<smart-accordion>`, `<smart-page>`, or `<smart-paging>`** → delegate to the skill to explain how to extend the base class and create a custom implementation
 4. **Wants to create a custom component** → delegate to the base-only skill for extension patterns and API
 
@@ -99,11 +111,19 @@ Always delegate to the per-component skill for detailed API, usage examples, and
 - **Date Range** → use skill `angular-components-date-range`
 - **Accordion** (base only) → use skill `angular-components-accordion`
 - **Action Panel** (with extension token) → use skill `angular-components-action-panel`
+- **Avatar** (with extension token) → use skill `angular-components-avatar`
+- **Badge** (with extension token) → use skill `angular-components-badge`
 - **Breadcrumbs** (with extension token) → use skill `angular-components-breadcrumbs`
+- **Button Group** (with extension token) → use skill `angular-components-button-group`
 - **Detail** → use skill `angular-components-detail`
 - **Calendar** (with extension token) → use skill `angular-components-calendar`
 - **Card Heading** (with extension token) → use skill `angular-components-card-heading`
+- **Command Palette** (with extension token) → use skill `angular-components-command-palette`
+- **Container** (with extension token) → use skill `angular-components-container`
 - **Description List** (with extension token) → use skill `angular-components-description-list`
+- **Divider** (with extension token) → use skill `angular-components-divider`
+- **Drawer** (with extension token) → use skill `angular-components-drawer`
+- **Dropdown** (with extension token) → use skill `angular-components-dropdown`
 - **Details** (with extension token) → use skill `angular-components-details`
 - **Empty State** (with extension token) → use skill `angular-components-empty-state`
 - **Feed** (with extension token) → use skill `angular-components-feed`
@@ -112,8 +132,12 @@ Always delegate to the per-component skill for detailed API, usage examples, and
 - **Info** (with extension token) → use skill `angular-components-info`
 - **Input** → use skill `angular-components-input`
 - **List** (with extension token map) → use skill `angular-components-list`
+- **List Container** (with extension token) → use skill `angular-components-list-container`
+- **Media Object** (with extension token) → use skill `angular-components-media-object`
+- **Modal** (with extension token) → use skill `angular-components-modal`
 - **Multi-Column Layout** (with extension token) → use skill `angular-components-multi-column-layout`
 - **Navbar** (with extension token) → use skill `angular-components-navbar`
+- **Notification** (with extension token) → use skill `angular-components-notification`
 - **Page Heading** (with extension token) → use skill `angular-components-page-heading`
 - **Password Strength** (with extension token) → use skill `angular-components-password-strength`
 - **Progress Bars** (with extension token) → use skill `angular-components-progress-bars`
@@ -159,17 +183,33 @@ import {
 import {
   ActionPanelBaseComponent,
   ACTION_PANEL_STANDARD_COMPONENT_TOKEN,
+  AvatarBaseComponent,
+  AVATAR_STANDARD_COMPONENT_TOKEN,
+  BadgeBaseComponent,
+  BADGE_STANDARD_COMPONENT_TOKEN,
   BreadcrumbsBaseComponent,
   BREADCRUMBS_STANDARD_COMPONENT_TOKEN,
   ButtonBaseComponent,
+  ButtonGroupBaseComponent,
+  BUTTON_GROUP_STANDARD_COMPONENT_TOKEN,
   CalendarBaseComponent,
   CALENDAR_STANDARD_COMPONENT_TOKEN,
   CardBaseComponent,
   CardHeadingBaseComponent,
   CARD_HEADING_STANDARD_COMPONENT_TOKEN,
+  CommandPaletteBaseComponent,
+  COMMAND_PALETTE_STANDARD_COMPONENT_TOKEN,
+  ContainerBaseComponent,
+  CONTAINER_STANDARD_COMPONENT_TOKEN,
   AccordionBaseComponent,
   DescriptionListBaseComponent,
   DESCRIPTION_LIST_STANDARD_COMPONENT_TOKEN,
+  DividerBaseComponent,
+  DIVIDER_STANDARD_COMPONENT_TOKEN,
+  DrawerBaseComponent,
+  DRAWER_STANDARD_COMPONENT_TOKEN,
+  DropdownBaseComponent,
+  DROPDOWN_STANDARD_COMPONENT_TOKEN,
   DetailBaseComponent,
   DetailsBaseComponent,
   DETAILS_STANDARD_COMPONENT_TOKEN,
@@ -190,10 +230,18 @@ import {
   ListMode,
   IListOptions,
   IListProvider,
+  ListContainerBaseComponent,
+  LIST_CONTAINER_STANDARD_COMPONENT_TOKEN,
+  MediaObjectBaseComponent,
+  MEDIA_OBJECT_STANDARD_COMPONENT_TOKEN,
+  ModalBaseComponent,
+  MODAL_STANDARD_COMPONENT_TOKEN,
   MultiColumnLayoutBaseComponent,
   MULTI_COLUMN_LAYOUT_STANDARD_COMPONENT_TOKEN,
   NavbarBaseComponent,
   NAVBAR_STANDARD_COMPONENT_TOKEN,
+  NotificationBaseComponent,
+  NOTIFICATION_STANDARD_COMPONENT_TOKEN,
   PageBaseComponent,
   PAGE_VARIANT_COMPONENTS_TOKEN,
   SmartPageVariant,

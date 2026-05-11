@@ -1,0 +1,10 @@
+<div
+  [class]="cssClass()"
+  [attr.data-position]="options()?.position ?? 'left'"
+  [attr.data-alignment]="options()?.alignment ?? null"
+>
+  <img [src]="mediaUrl()" [alt]="mediaAlt()" />
+  <div class="smart-media-object-body">
+    <ng-content />
+  </div>
+</div>

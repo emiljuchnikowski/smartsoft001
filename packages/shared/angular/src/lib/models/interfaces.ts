@@ -52,7 +52,19 @@ export type DynamicComponentType =
   | 'page'
   | 'page-heading'
   | 'action-panel'
+  | 'avatar'
+  | 'badge'
   | 'breadcrumbs'
+  | 'button-group'
+  | 'command-palette'
+  | 'container'
+  | 'divider'
+  | 'drawer'
+  | 'dropdown'
+  | 'list-container'
+  | 'media-object'
+  | 'modal'
+  | 'notification'
   | 'empty-state'
   | 'navbar'
   | 'progress-bars'
@@ -433,6 +445,199 @@ export interface IToggleOptions {
   description?: string;
   labelPosition?: 'left' | 'right';
   ariaLabel?: string;
+}
+
+export type SmartCommandPaletteVariant =
+  | 'simple'
+  | 'with-padding'
+  | 'with-preview'
+  | 'with-images'
+  | 'with-icons'
+  | 'semi-transparent'
+  | 'with-groups'
+  | 'with-footer';
+
+export interface ICommand {
+  id: string;
+  label: string;
+  icon?: string;
+  group?: string;
+  href?: string;
+  description?: string;
+  imageUrl?: string;
+}
+
+export interface ICommandPaletteOptions {
+  variant?: SmartCommandPaletteVariant;
+  placeholder?: string;
+  emptyText?: string;
+  ariaLabel?: string;
+}
+
+export type SmartModalVariant =
+  | 'centered'
+  | 'wide'
+  | 'alert'
+  | 'left-aligned-buttons';
+
+export type SmartModalActionVariant = 'primary' | 'secondary' | 'danger';
+
+export type SmartModalFooterStyle = 'default' | 'gray';
+
+export interface IModalAction {
+  id: string;
+  label: string;
+  variant?: SmartModalActionVariant;
+}
+
+export interface IModalOptions {
+  variant?: SmartModalVariant;
+  withDismiss?: boolean;
+  footerStyle?: SmartModalFooterStyle;
+  ariaLabel?: string;
+}
+
+export type SmartDrawerVariant =
+  | 'empty'
+  | 'create-form'
+  | 'user-profile'
+  | 'contact-list'
+  | 'file-details';
+
+export interface IDrawerOptions {
+  position?: 'left' | 'right';
+  wide?: boolean;
+  withOverlay?: boolean;
+  brandedHeader?: boolean;
+  stickyFooter?: boolean;
+  variant?: SmartDrawerVariant;
+}
+
+export type SmartNotificationVariant =
+  | 'simple'
+  | 'condensed'
+  | 'with-actions-below'
+  | 'with-avatar'
+  | 'with-split-buttons'
+  | 'with-buttons-below';
+
+export interface INotificationAction {
+  id: string;
+  label: string;
+  variant?: 'primary' | 'secondary';
+}
+
+export interface INotificationOptions {
+  variant?: SmartNotificationVariant;
+  ariaLive?: 'polite' | 'assertive';
+}
+
+export type SmartAvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+export type SmartAvatarShape = 'circle' | 'rounded';
+
+export interface IAvatarItem {
+  id: string;
+  imageUrl?: string;
+  initials?: string;
+}
+
+export interface IAvatarOptions {
+  placeholderType?: 'icon' | 'initials';
+  stackDirection?: 'top-to-bottom' | 'bottom-to-top';
+}
+
+export type SmartBadgeColor =
+  | 'gray'
+  | 'red'
+  | 'yellow'
+  | 'green'
+  | 'blue'
+  | 'indigo'
+  | 'purple'
+  | 'pink';
+
+export interface IBadgeOptions {
+  variant?: 'border' | 'flat';
+  pill?: boolean;
+  withDot?: boolean;
+  withRemove?: boolean;
+}
+
+export interface IDropdownItem {
+  id: string;
+  label: string;
+  icon?: string;
+  href?: string;
+  disabled?: boolean;
+  divider?: boolean;
+}
+
+export type SmartDropdownVariant =
+  | 'simple'
+  | 'with-dividers'
+  | 'with-icons'
+  | 'minimal'
+  | 'with-header';
+
+export interface IDropdownOptions {
+  variant?: SmartDropdownVariant;
+  headerLabel?: string;
+}
+
+export interface IButtonGroupButton {
+  id: string;
+  label?: string;
+  icon?: string;
+  disabled?: boolean;
+  count?: number;
+}
+
+export type SmartButtonGroupVariant =
+  | 'basic'
+  | 'icon-only'
+  | 'with-stat'
+  | 'with-dropdown'
+  | 'with-checkbox-select';
+
+export interface IButtonGroupOptions {
+  variant?: SmartButtonGroupVariant;
+}
+
+export interface IContainerOptions {
+  mode?: 'full-width' | 'constrained' | 'container';
+  padding?: 'none' | 'mobile' | 'always';
+  narrow?: boolean;
+}
+
+export type SmartListContainerVariant =
+  | 'simple-dividers'
+  | 'card-dividers'
+  | 'separate-cards'
+  | 'flat-card-dividers';
+
+export interface IListContainerOptions {
+  variant?: SmartListContainerVariant;
+  fullWidthOnMobile?: boolean;
+}
+
+export interface IMediaObjectOptions {
+  alignment?: 'top' | 'center' | 'bottom' | 'stretched';
+  position?: 'left' | 'right';
+  responsive?: boolean;
+  nested?: boolean;
+  wide?: boolean;
+}
+
+export type SmartDividerVariant =
+  | 'with-label'
+  | 'with-icon'
+  | 'with-title'
+  | 'with-button'
+  | 'with-toolbar';
+
+export interface IDividerOptions {
+  variant?: SmartDividerVariant;
+  position?: 'left' | 'center' | 'right';
 }
 
 export type SmartStackedLayoutContainerWidth =
