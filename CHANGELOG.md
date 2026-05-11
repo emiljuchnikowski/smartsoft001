@@ -1,3 +1,13 @@
+## 2.123.0 (2026-05-11)
+
+### 🚀 Features
+
+- **shared:** base, main, standard komponenty dla 12 komponentów ([#29](https://github.com/emiljuchnikowski/smartsoft001/pull/29))
+
+### ❤️ Thank You
+
+- cookie_lobster @AndriiBilych
+
 ## 2.122.0 (2026-05-05)
 
 This was a version bump only, there were no code changes.
