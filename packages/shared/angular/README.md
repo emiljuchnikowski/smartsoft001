@@ -678,6 +678,85 @@ providers: [
 
 > `NgComponentOutlet` does not propagate output bindings. When a custom component is injected via the token, `value` two-way becomes one-way input. Custom impl should expose dedicated outputs and host wires manually.
 
+### CommandPaletteBaseComponent
+
+Abstract base class for command palette components. Exposes `commands` (`InputSignal<ICommand[]>`), two-way `open` (`ModelSignal<boolean>`) and `query` (`ModelSignal<string>`), optional `ICommandPaletteOptions`, `cssClass` (alias `class`), a `filteredCommands` computed signal performing case-insensitive substring filtering on `command.label`, plus `selectCommand(commandId)` (emits `runCommand` and sets `open` to `false`) and `close()` methods.
+
+**Inputs:** `commands` (`ICommand[]`), `open` (`ModelSignal<boolean>`), `query` (`ModelSignal<string>`), `options` (`ICommandPaletteOptions`), `class` (`string`)
+**Outputs:** `runCommand` (`{ commandId: string }`)
+
+### CommandPalette Component
+
+The `<smart-command-palette>` component renders a Cmd+K-style overlay that filters a list of commands by a search query. It is a wrapper that delegates to `CommandPaletteStandardComponent` by default and supports an InjectionToken (`COMMAND_PALETTE_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `CommandPaletteComponent` (selector: `smart-command-palette`)
+**Default:** `CommandPaletteStandardComponent` (selector: `smart-command-palette-standard`)
+**Token:** `COMMAND_PALETTE_STANDARD_COMPONENT_TOKEN` — provide a `Type<CommandPaletteBaseComponent>` to override the default.
+
+#### Usage
+
+```html
+<!-- Basic -->
+<smart-command-palette
+  [commands]="commands"
+  [(open)]="open"
+  [(query)]="query"
+  (runCommand)="onRunCommand($event)"
+/>
+
+<!-- With options -->
+<smart-command-palette
+  [commands]="commands"
+  [(open)]="open"
+  [options]="{ placeholder: 'Search commands…', emptyText: 'No results' }"
+/>
+
+<!-- With external class -->
+<smart-command-palette
+  [commands]="commands"
+  [(open)]="open"
+  class="smart:m-4"
+/>
+```
+
+#### ICommand
+
+| Property      | Type     | Default    | Description                            |
+| ------------- | -------- | ---------- | -------------------------------------- |
+| `id`          | `string` | *required* | Identifier emitted via `runCommand`    |
+| `label`       | `string` | *required* | Visible label, also used for filtering |
+| `icon`        | `string` | -          | Optional icon hint (variant-specific)  |
+| `group`       | `string` | -          | Optional group name (variant-specific) |
+| `href`        | `string` | -          | Optional link target                   |
+| `description` | `string` | -          | Optional secondary text                |
+| `imageUrl`    | `string` | -          | Optional image URL                     |
+
+#### ICommandPaletteOptions
+
+| Property      | Type                            | Default | Description                                        |
+| ------------- | ------------------------------- | ------- | -------------------------------------------------- |
+| `variant`     | `SmartCommandPaletteVariant`    | -       | Variant selector (consumed by custom impls)        |
+| `placeholder` | `string`                        | -       | Placeholder text for the search input              |
+| `emptyText`   | `string`                        | -       | Text shown when no command matches the query       |
+| `ariaLabel`   | `string`                        | -       | Accessible label rendered as `aria-label`          |
+
+The default `CommandPaletteStandardComponent` consumes `placeholder`, `emptyText`, and `ariaLabel`. The `variant` selector is reserved for custom implementations registered via `COMMAND_PALETTE_STANDARD_COMPONENT_TOKEN`.
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { COMMAND_PALETTE_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  {
+    provide: COMMAND_PALETTE_STANDARD_COMPONENT_TOKEN,
+    useValue: MyCommandPaletteComponent,
+  },
+];
+```
+
+> Keyboard handling for `Escape` (close) and the global `Cmd+K` shortcut (open) is intentionally deferred to custom implementations — the standard does not bind any keyboard listeners.
+
 ### SectionHeadingBaseComponent
 
 Abstract base class for section heading components. Exposes optional `ISectionHeadingOptions` and `cssClass` (alias `class`).
@@ -988,6 +1067,75 @@ providers: [
   },
 ];
 ```
+
+### ModalBaseComponent
+
+Abstract base class for modal/dialog components. Exposes two-way `open` (`ModelSignal<boolean>`), optional `title` / `description`, `actions` (`InputSignal<IModalAction[]>`), optional `IModalOptions`, `cssClass` (alias `class`), `actionClick` and `closed` outputs, plus `invokeAction(actionId)` (emits `actionClick`) and `close()` (sets `open` to `false` and emits `closed`).
+
+**Inputs:** `open` (`ModelSignal<boolean>`), `title` (`string`), `description` (`string`), `actions` (`IModalAction[]`), `options` (`IModalOptions`), `class` (`string`)
+**Outputs:** `actionClick` (`{ actionId: string }`), `closed` (`void`)
+
+### Modal Component
+
+The `<smart-modal>` component renders a dialog overlay with optional title, description, projected body content, and a list of action buttons. It is a wrapper that delegates to `ModalStandardComponent` by default and supports an InjectionToken (`MODAL_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `ModalComponent` (selector: `smart-modal`)
+**Default:** `ModalStandardComponent` (selector: `smart-modal-standard`)
+**Token:** `MODAL_STANDARD_COMPONENT_TOKEN` — provide a `Type<ModalBaseComponent>` to override the default.
+
+#### Usage
+
+```html
+<!-- Basic with title + actions -->
+<smart-modal
+  [(open)]="confirmOpen"
+  title="Deactivate account"
+  description="This action cannot be undone."
+  [actions]="[
+    { id: 'cancel', label: 'Cancel', variant: 'secondary' },
+    { id: 'confirm', label: 'Deactivate', variant: 'danger' },
+  ]"
+  (actionClick)="onAction($event)"
+/>
+
+<!-- With dismiss button + projected body -->
+<smart-modal [(open)]="open" [options]="{ withDismiss: true }">
+  <form>
+    <!-- custom body -->
+  </form>
+</smart-modal>
+```
+
+#### IModalAction
+
+| Property  | Type                                       | Default     | Description                              |
+| --------- | ------------------------------------------ | ----------- | ---------------------------------------- |
+| `id`      | `string`                                   | *required*  | Identifier emitted via `actionClick`     |
+| `label`   | `string`                                   | *required*  | Visible button label                     |
+| `variant` | `'primary' \| 'secondary' \| 'danger'`     | `'primary'` | Visual variant (consumed by custom impl) |
+
+#### IModalOptions
+
+| Property      | Type                                                          | Default | Description                                                  |
+| ------------- | ------------------------------------------------------------- | ------- | ------------------------------------------------------------ |
+| `variant`     | `'centered' \| 'wide' \| 'alert' \| 'left-aligned-buttons'` | -       | Layout variant (consumed by custom impls)                   |
+| `withDismiss` | `boolean`                                                     | `false` | Show top-right dismiss `×` button                            |
+| `footerStyle` | `'default' \| 'gray'`                                         | -       | Footer styling variant (consumed by custom impls)            |
+| `ariaLabel`   | `string`                                                      | -       | Accessible label rendered as `aria-label` (when no `title`)  |
+
+The default `ModalStandardComponent` consumes `withDismiss` and `ariaLabel`. The `variant` and `footerStyle` selectors are reserved for custom implementations registered via `MODAL_STANDARD_COMPONENT_TOKEN`.
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { MODAL_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  { provide: MODAL_STANDARD_COMPONENT_TOKEN, useValue: MyModalComponent },
+];
+```
+
+> `NgComponentOutlet` does not propagate projected content. When a custom modal is registered via the token, content projected through the wrapper's `<ng-content>` is not forwarded — custom impls should rely on inputs (e.g. structured `data` extension) instead of `<ng-content>`.
 
 ### MultiColumnLayoutBaseComponent
 
@@ -2854,6 +3002,156 @@ The `<smart-date-edit>` component provides a digit-by-digit date input editor (D
 - Dark mode support
 - `ControlValueAccessor` integration
 
+
+### AvatarBaseComponent
+
+Abstract base class for avatar components. Exposes optional `imageUrl`, `initials`, `size` (`'xs' | 'sm' | 'md' | 'lg' | 'xl'`, default `'md'`), `shape` (`'circle' | 'rounded'`, default `'circle'`), `notificationPosition`, `group` (`IAvatarItem[]`), `IAvatarOptions`, `cssClass` (alias `class`), and a computed `isGroup` signal that toggles between single avatar and stacked group rendering.
+
+**Inputs:** `imageUrl` (`string`), `initials` (`string`), `size` (`SmartAvatarSize`), `shape` (`SmartAvatarShape`), `group` (`IAvatarItem[]`), `options` (`IAvatarOptions`), `class` (`string`)
+
+### Avatar Component
+
+The `<smart-avatar>` component renders a single avatar (image, initials, or placeholder) or a stacked group when `group` is non-empty. It is a wrapper that delegates to `AvatarStandardComponent` by default and supports an InjectionToken (`AVATAR_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `AvatarComponent` (selector: `smart-avatar`)
+**Default:** `AvatarStandardComponent` (selector: `smart-avatar-standard`)
+**Token:** `AVATAR_STANDARD_COMPONENT_TOKEN` — provide a `Type<AvatarBaseComponent>` to override the default.
+
+### BadgeBaseComponent
+
+Abstract base class for badge components. Exposes required `text`, optional `color` (`SmartBadgeColor`, default `'gray'`), `size` (`'sm' | 'md'`, default `'md'`), `IBadgeOptions` (`variant`, `pill`, `withDot`, `withRemove`), `cssClass` (alias `class`), `removed` output, and a `remove()` method.
+
+**Inputs:** `text` (`string`, required), `color` (`SmartBadgeColor`), `size` (`'sm' | 'md'`), `options` (`IBadgeOptions`), `class` (`string`)
+**Outputs:** `removed` (`void`)
+
+### Badge Component
+
+The `<smart-badge>` component renders a small status/label chip with an optional dot indicator and optional remove `×` button. It is a wrapper that delegates to `BadgeStandardComponent` by default and supports an InjectionToken (`BADGE_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `BadgeComponent` (selector: `smart-badge`)
+**Default:** `BadgeStandardComponent` (selector: `smart-badge-standard`)
+**Token:** `BADGE_STANDARD_COMPONENT_TOKEN` — provide a `Type<BadgeBaseComponent>` to override the default.
+
+### ButtonGroupBaseComponent
+
+Abstract base class for button-group components. Exposes `buttons` (`InputSignal<IButtonGroupButton[]>`, default `[]`), `IButtonGroupOptions`, two-way `selected` (`ModelSignal<string | undefined>`), `cssClass` (alias `class`), `buttonClick` output, and a `select(id)` method that updates `selected` and emits `buttonClick`.
+
+**Inputs:** `buttons` (`IButtonGroupButton[]`), `options` (`IButtonGroupOptions`), `selected` (`ModelSignal<string | undefined>`), `class` (`string`)
+**Outputs:** `buttonClick` (`{ buttonId: string }`)
+
+### ButtonGroup Component
+
+The `<smart-button-group>` component renders a `role="group"` of toggle buttons with a single active selection. It is a wrapper that delegates to `ButtonGroupStandardComponent` by default and supports an InjectionToken (`BUTTON_GROUP_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `ButtonGroupComponent` (selector: `smart-button-group`)
+**Default:** `ButtonGroupStandardComponent` (selector: `smart-button-group-standard`)
+**Token:** `BUTTON_GROUP_STANDARD_COMPONENT_TOKEN` — provide a `Type<ButtonGroupBaseComponent>` to override the default.
+
+### ContainerBaseComponent
+
+Abstract base class for container layout components. Exposes optional `IContainerOptions` (`mode`, `padding`, `narrow`) and `cssClass` (alias `class`).
+
+**Inputs:** `options` (`IContainerOptions`), `class` (`string`)
+
+### Container Component
+
+The `<smart-container>` component is a pure layout wrapper that constrains width and applies padding based on `options`. It accepts arbitrary content via `<ng-content>`. It is a wrapper that delegates to `ContainerStandardComponent` by default and supports an InjectionToken (`CONTAINER_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `ContainerComponent` (selector: `smart-container`)
+**Default:** `ContainerStandardComponent` (selector: `smart-container-standard`)
+**Token:** `CONTAINER_STANDARD_COMPONENT_TOKEN` — provide a `Type<ContainerBaseComponent>` to override the default.
+
+> `NgComponentOutlet` does not propagate projected content. When a custom container is registered via the token, `<ng-content>` is dropped — custom impls should rely on inputs.
+
+### DividerBaseComponent
+
+Abstract base class for divider/separator components. Exposes optional `label`, `iconName`, `title`, `actionLabel`, `IDividerOptions` (`variant`, `position`), `cssClass` (alias `class`), and `actionClick` output.
+
+**Inputs:** `label` (`string`), `iconName` (`string`), `title` (`string`), `actionLabel` (`string`), `options` (`IDividerOptions`), `class` (`string`)
+**Outputs:** `actionClick` (`void`)
+
+### Divider Component
+
+The `<smart-divider>` component renders a horizontal `role="separator"` with optional label, title, or action button. It is a wrapper that delegates to `DividerStandardComponent` by default and supports an InjectionToken (`DIVIDER_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `DividerComponent` (selector: `smart-divider`)
+**Default:** `DividerStandardComponent` (selector: `smart-divider-standard`)
+**Token:** `DIVIDER_STANDARD_COMPONENT_TOKEN` — provide a `Type<DividerBaseComponent>` to override the default.
+
+### DrawerBaseComponent
+
+Abstract base class for drawer (slide-out side panel) components. Exposes two-way `open` (`ModelSignal<boolean>`), optional `title`, `IDrawerOptions` (`position`, `wide`, `withOverlay`, `brandedHeader`, `stickyFooter`, `variant`), `cssClass` (alias `class`), `closed` output, and a `close()` method that sets `open` to `false` and emits `closed`.
+
+**Inputs:** `open` (`ModelSignal<boolean>`), `title` (`string`), `options` (`IDrawerOptions`), `class` (`string`)
+**Outputs:** `closed` (`void`)
+
+### Drawer Component
+
+The `<smart-drawer>` component renders a slide-out `<aside role="dialog" aria-modal="true">` anchored left or right with an optional overlay. It accepts arbitrary content via `<ng-content>`. It is a wrapper that delegates to `DrawerStandardComponent` by default and supports an InjectionToken (`DRAWER_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `DrawerComponent` (selector: `smart-drawer`)
+**Default:** `DrawerStandardComponent` (selector: `smart-drawer-standard`)
+**Token:** `DRAWER_STANDARD_COMPONENT_TOKEN` — provide a `Type<DrawerBaseComponent>` to override the default.
+
+> Slide animations are deferred to custom implementations. Content projection works in default mode but is dropped when a custom impl is provided via the token.
+
+### DropdownBaseComponent
+
+Abstract base class for dropdown menu components. Exposes `items` (`InputSignal<IDropdownItem[]>`), optional `triggerLabel`, two-way `open` (`ModelSignal<boolean>`), `IDropdownOptions` (`variant`, `headerLabel`), `cssClass` (alias `class`), `selectedItem` output, and `toggle()` / `close()` / `selectItem(id)` methods.
+
+**Inputs:** `items` (`IDropdownItem[]`), `triggerLabel` (`string`), `open` (`ModelSignal<boolean>`), `options` (`IDropdownOptions`), `class` (`string`)
+**Outputs:** `selectedItem` (`{ itemId: string }`)
+
+### Dropdown Component
+
+The `<smart-dropdown>` component renders a button trigger and a `role="menu"` of menu items with optional dividers and an optional header. The trigger label can be replaced via `<ng-content>`. It is a wrapper that delegates to `DropdownStandardComponent` by default and supports an InjectionToken (`DROPDOWN_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `DropdownComponent` (selector: `smart-dropdown`)
+**Default:** `DropdownStandardComponent` (selector: `smart-dropdown-standard`)
+**Token:** `DROPDOWN_STANDARD_COMPONENT_TOKEN` — provide a `Type<DropdownBaseComponent>` to override the default.
+
+### ListContainerBaseComponent
+
+Abstract base class for list-container layout components. Exposes optional `IListContainerOptions` (`variant`, `fullWidthOnMobile`) and `cssClass` (alias `class`).
+
+**Inputs:** `options` (`IListContainerOptions`), `class` (`string`)
+
+### ListContainer Component
+
+The `<smart-list-container>` component is a pure layout wrapper around a list of items, rendering as `<div role="list">` with arbitrary children projected via `<ng-content>`. It is a wrapper that delegates to `ListContainerStandardComponent` by default and supports an InjectionToken (`LIST_CONTAINER_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `ListContainerComponent` (selector: `smart-list-container`)
+**Default:** `ListContainerStandardComponent` (selector: `smart-list-container-standard`)
+**Token:** `LIST_CONTAINER_STANDARD_COMPONENT_TOKEN` — provide a `Type<ListContainerBaseComponent>` to override the default.
+
+### MediaObjectBaseComponent
+
+Abstract base class for media-object layout components. Exposes required `mediaUrl` and `mediaAlt`, optional `IMediaObjectOptions` (`alignment`, `position`, `responsive`, `nested`, `wide`), and `cssClass` (alias `class`). Body content is projected via `<ng-content>`.
+
+**Inputs:** `mediaUrl` (`string`, required), `mediaAlt` (`string`, required), `options` (`IMediaObjectOptions`), `class` (`string`)
+
+### MediaObject Component
+
+The `<smart-media-object>` component renders an `<img>` paired with arbitrary body content (`<ng-content>`), with the image positioned left or right via `options.position`. It is a wrapper that delegates to `MediaObjectStandardComponent` by default and supports an InjectionToken (`MEDIA_OBJECT_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `MediaObjectComponent` (selector: `smart-media-object`)
+**Default:** `MediaObjectStandardComponent` (selector: `smart-media-object-standard`)
+**Token:** `MEDIA_OBJECT_STANDARD_COMPONENT_TOKEN` — provide a `Type<MediaObjectBaseComponent>` to override the default.
+
+### NotificationBaseComponent
+
+Abstract base class for notification (toast/inline) components. Exposes required `title`, optional `description`, `iconName`, `avatarUrl`, `actions` (`INotificationAction[]`), `dismissible` (default `false`), `INotificationOptions` (`variant`, `ariaLive`), `cssClass` (alias `class`), `dismissed` and `actionClick` outputs, and `dismiss()` / `invokeAction(id)` methods.
+
+**Inputs:** `title` (`string`, required), `description` (`string`), `iconName` (`string`), `avatarUrl` (`string`), `actions` (`INotificationAction[]`), `dismissible` (`boolean`), `options` (`INotificationOptions`), `class` (`string`)
+**Outputs:** `dismissed` (`void`), `actionClick` (`{ actionId: string }`)
+
+### Notification Component
+
+The `<smart-notification>` component renders an accessible `role="status"` notification with `aria-live` (default `'polite'`), title, optional description, optional dismiss button, and a list of action buttons. It is a wrapper that delegates to `NotificationStandardComponent` by default and supports an InjectionToken (`NOTIFICATION_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `NotificationComponent` (selector: `smart-notification`)
+**Default:** `NotificationStandardComponent` (selector: `smart-notification-standard`)
+**Token:** `NOTIFICATION_STANDARD_COMPONENT_TOKEN` — provide a `Type<NotificationBaseComponent>` to override the default.
 
 ## 📜 License
 

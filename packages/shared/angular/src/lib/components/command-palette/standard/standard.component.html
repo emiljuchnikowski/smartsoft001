@@ -1,0 +1,20 @@
+<dialog [open]="open()" [class]="cssClass()" (close)="close()">
+  <input
+    type="search"
+    [value]="query()"
+    [attr.placeholder]="options()?.placeholder ?? null"
+    [attr.aria-label]="options()?.ariaLabel ?? null"
+    (input)="onQueryChange($event)"
+  />
+  <ul role="listbox">
+    @for (command of filteredCommands(); track command.id) {
+      <li role="option" (click)="selectCommand(command.id)">
+        {{ command.label }}
+      </li>
+    } @empty {
+      <li class="smart-command-palette-empty">
+        {{ options()?.emptyText ?? 'No results' }}
+      </li>
+    }
+  </ul>
+</dialog>

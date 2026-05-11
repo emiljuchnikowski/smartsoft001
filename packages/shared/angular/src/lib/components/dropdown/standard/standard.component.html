@@ -1,0 +1,34 @@
+<div [class]="cssClass()">
+  <button
+    type="button"
+    class="smart-dropdown-trigger"
+    [attr.aria-expanded]="open()"
+    (click)="toggle()"
+  >
+    <ng-content>{{ triggerLabel() }}</ng-content>
+  </button>
+  @if (open()) {
+    <ul role="menu">
+      @if (options()?.variant === 'with-header' && options()?.headerLabel) {
+        <li role="presentation" class="smart-dropdown-header">
+          {{ options()?.headerLabel }}
+        </li>
+      }
+      @for (item of items(); track item.id) {
+        @if (item.divider) {
+          <li role="separator"></li>
+        } @else {
+          <li role="menuitem">
+            <button
+              type="button"
+              [disabled]="item.disabled"
+              (click)="selectItem(item.id)"
+            >
+              {{ item.label }}
+            </button>
+          </li>
+        }
+      }
+    </ul>
+  }
+</div>

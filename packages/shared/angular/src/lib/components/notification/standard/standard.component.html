@@ -1,0 +1,24 @@
+<div
+  role="status"
+  [attr.aria-live]="options()?.ariaLive ?? 'polite'"
+  [class]="cssClass()"
+>
+  <h3>{{ title() }}</h3>
+  @if (description()) {
+    <p>{{ description() }}</p>
+  }
+  @if (dismissible()) {
+    <button type="button" aria-label="Close" (click)="dismiss()">
+      &times;
+    </button>
+  }
+  @for (action of actions(); track action.id) {
+    <button
+      type="button"
+      [attr.data-variant]="action.variant ?? 'primary'"
+      (click)="invokeAction(action.id)"
+    >
+      {{ action.label }}
+    </button>
+  }
+</div>

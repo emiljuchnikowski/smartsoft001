@@ -4,20 +4,32 @@ import { FieldTypeDef } from '@smartsoft001/models';
 
 import {
   ActionPanelBaseComponent,
+  AvatarBaseComponent,
+  BadgeBaseComponent,
   BreadcrumbsBaseComponent,
   ButtonBaseComponent,
+  ButtonGroupBaseComponent,
   CalendarBaseComponent,
   CardBaseComponent,
   CardHeadingBaseComponent,
+  CommandPaletteBaseComponent,
+  ContainerBaseComponent,
   DescriptionListBaseComponent,
   DetailBaseComponent,
   DetailsBaseComponent,
+  DividerBaseComponent,
+  DrawerBaseComponent,
+  DropdownBaseComponent,
   EmptyStateBaseComponent,
   FeedBaseComponent,
   FormBaseComponent,
   GridListBaseComponent,
   InfoBaseComponent,
+  ListContainerBaseComponent,
   LoaderBaseComponent,
+  MediaObjectBaseComponent,
+  ModalBaseComponent,
+  NotificationBaseComponent,
   InputBaseComponent,
   ListBaseComponent,
   MultiColumnLayoutBaseComponent,
@@ -66,6 +78,9 @@ export const CARD_STANDARD_COMPONENT_TOKEN = new InjectionToken<
 export const CARD_HEADING_STANDARD_COMPONENT_TOKEN = new InjectionToken<
   Type<CardHeadingBaseComponent>
 >('CARD_HEADING_STANDARD_COMPONENT');
+export const COMMAND_PALETTE_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<CommandPaletteBaseComponent>
+>('COMMAND_PALETTE_STANDARD_COMPONENT');
 export const DETAILS_STANDARD_COMPONENT_TOKEN = new InjectionToken<
   Type<DetailsBaseComponent<any>>
 >('DETAILS_STANDARD_COMPONENT');
@@ -99,6 +114,39 @@ export const LIST_MODE_COMPONENTS_TOKEN = new InjectionToken<
 export const LOADER_STANDARD_COMPONENT_TOKEN = new InjectionToken<
   Type<LoaderBaseComponent>
 >('LOADER_STANDARD_COMPONENT');
+export const MODAL_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<ModalBaseComponent>
+>('MODAL_STANDARD_COMPONENT');
+export const AVATAR_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<AvatarBaseComponent>
+>('AVATAR_STANDARD_COMPONENT');
+export const BADGE_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<BadgeBaseComponent>
+>('BADGE_STANDARD_COMPONENT');
+export const BUTTON_GROUP_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<ButtonGroupBaseComponent>
+>('BUTTON_GROUP_STANDARD_COMPONENT');
+export const CONTAINER_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<ContainerBaseComponent>
+>('CONTAINER_STANDARD_COMPONENT');
+export const DIVIDER_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<DividerBaseComponent>
+>('DIVIDER_STANDARD_COMPONENT');
+export const DRAWER_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<DrawerBaseComponent>
+>('DRAWER_STANDARD_COMPONENT');
+export const DROPDOWN_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<DropdownBaseComponent>
+>('DROPDOWN_STANDARD_COMPONENT');
+export const LIST_CONTAINER_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<ListContainerBaseComponent>
+>('LIST_CONTAINER_STANDARD_COMPONENT');
+export const MEDIA_OBJECT_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<MediaObjectBaseComponent>
+>('MEDIA_OBJECT_STANDARD_COMPONENT');
+export const NOTIFICATION_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<NotificationBaseComponent>
+>('NOTIFICATION_STANDARD_COMPONENT');
 export const MULTI_COLUMN_LAYOUT_STANDARD_COMPONENT_TOKEN = new InjectionToken<
   Type<MultiColumnLayoutBaseComponent>
 >('MULTI_COLUMN_LAYOUT_STANDARD_COMPONENT');

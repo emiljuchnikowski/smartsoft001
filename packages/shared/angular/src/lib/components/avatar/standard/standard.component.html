@@ -1,0 +1,25 @@
+<span
+  [class]="cssClass()"
+  [attr.data-size]="size()"
+  [attr.data-shape]="shape()"
+>
+  @if (isGroup()) {
+    @for (item of group(); track item.id) {
+      <span class="smart-avatar-group-item">
+        @if (item.imageUrl) {
+          <img [src]="item.imageUrl" alt="" />
+        } @else {
+          <span class="smart-avatar-initials">{{ item.initials }}</span>
+        }
+      </span>
+    }
+  } @else {
+    @if (imageUrl()) {
+      <img [src]="imageUrl()" alt="" />
+    } @else if (initials()) {
+      <span class="smart-avatar-initials">{{ initials() }}</span>
+    } @else {
+      <span aria-hidden="true" class="smart-avatar-placeholder">·</span>
+    }
+  }
+</span>

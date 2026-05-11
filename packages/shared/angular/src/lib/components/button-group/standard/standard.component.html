@@ -1,0 +1,17 @@
+<div role="group" [class]="cssClass()">
+  @for (btn of buttons(); track btn.id) {
+    <button
+      type="button"
+      [disabled]="btn.disabled"
+      [attr.aria-pressed]="selected() === btn.id"
+      (click)="select(btn.id)"
+    >
+      @if (btn.label) {
+        <span class="smart-button-group-label">{{ btn.label }}</span>
+      }
+      @if (btn.count != null) {
+        <span class="smart-button-group-count">{{ btn.count }}</span>
+      }
+    </button>
+  }
+</div>
