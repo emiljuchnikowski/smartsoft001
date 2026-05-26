@@ -11,3 +11,5 @@ README.md
 packages/shared/utils/README.md
 
 .angular
+
+.nx/self-healing
