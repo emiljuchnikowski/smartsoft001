@@ -1,3 +1,7 @@
+## 2.124.0 (2026-05-26)
+
+This was a version bump only, there were no code changes.
+
 ## 2.123.0 (2026-05-11)
 
 ### 🚀 Features
