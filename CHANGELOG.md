@@ -1,3 +1,14 @@
+## 2.125.0 (2026-05-26)
+
+### 🚀 Features
+
+- **shared:** add scaffold-nx-workspace skill to smart plugin ([#31](https://github.com/emiljuchnikowski/smartsoft001/pull/31))
+
+### ❤️ Thank You
+
+- Claude Opus 4.7 (1M context)
+- cookie_lobster @AndriiBilych
+
 ## 2.124.0 (2026-05-26)
 
 This was a version bump only, there were no code changes.
