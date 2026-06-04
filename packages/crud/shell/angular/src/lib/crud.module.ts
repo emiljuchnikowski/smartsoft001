@@ -21,6 +21,10 @@ import { CrudPipesModule } from './pipes';
 import { CrudService } from './services/crud/crud.service';
 import { CrudListGroupService } from './services/list-group/list-group.service';
 import { PageService } from './services/page/page.service';
+import {
+  NotSocketService,
+  SocketService,
+} from './services/socket/socket.service';
 
 @NgModule({
   imports: [
@@ -37,6 +41,7 @@ import { PageService } from './services/page/page.service';
     CrudEffects,
     PageService,
     CrudFacade,
+    SocketService,
     CrudListPaginationFactory,
   ],
 })
@@ -77,6 +82,9 @@ export class CrudModule<T extends IEntity<string>> {
           provide: FILE_SERVICE_CONFIG,
           useValue: { apiUrl: options.config.apiUrl } as IFileServiceConfig,
         },
+        ...(options.socket
+          ? [SocketService]
+          : [{ provide: SocketService, useClass: NotSocketService }]),
       ],
     };
   }
