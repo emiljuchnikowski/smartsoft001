@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import {
   FILE_SERVICE_CONFIG,
   IFileServiceConfig,
+  IModelLabelProvider,
   NgrxStoreService,
   SharedModule,
 } from '@smartsoft001/angular';
@@ -18,6 +19,7 @@ import { CrudFullModule } from './crud-full.module';
 import { CrudConfig, CrudFullConfig } from './crud.config';
 import { CrudListPaginationFactory } from './factories/list-pagination/list-pagination.factory';
 import { CrudPipesModule } from './pipes';
+import { CrudModelLabelProvider } from './providers/model-label/model-label.provider';
 import { CrudService } from './services/crud/crud.service';
 import { CrudListGroupService } from './services/list-group/list-group.service';
 import { PageService } from './services/page/page.service';
@@ -43,6 +45,7 @@ import {
     CrudFacade,
     SocketService,
     CrudListPaginationFactory,
+    { provide: IModelLabelProvider, useClass: CrudModelLabelProvider },
   ],
 })
 export class CrudCoreModule<T extends IEntity<string>> {

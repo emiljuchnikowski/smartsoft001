@@ -6,49 +6,37 @@ import { IEntity } from '@smartsoft001/domain-core';
 
 import { BaseComponent } from '../base/base.component';
 
+// TODO(FRA-293 GAP-19 / Tor A): OnPush once value getters become computed signals
 @Component({
   selector: 'smart-crud-filter-flag',
+  host: { class: 'smart:block smart:w-full' },
   template: `
-    <!--    <ion-row>-->
-    <!--      <ion-col>-->
-    <div
-      class="flag-container w-full flex flex-row flex-nowrap justify-between pr-5"
+    <span
+      class="smart:flex smart:w-full smart:flex-row smart:flex-nowrap smart:items-center smart:justify-between smart:gap-2"
     >
-      <!--          <ion-label class="align-middle my-6" position="static">-->
-      {{ item()?.label || '' | translate }}
-      <!--          </ion-label>-->
-      <!--          <ion-checkbox [(ngModel)]="value" slot="end"></ion-checkbox>-->
-    </div>
-    <!--      </ion-col>-->
-    @if (typeof value === 'boolean') {
-      <!--        <ion-col size="auto">-->
-      <!--          <ion-button-->
-      <!--            color="danger"-->
-      <!--            (click)="refresh(null)"-->
-      <!--            class="square-button m-3"-->
-      <!--          >-->
-      <!--            <ion-icon slot="icon-only" name="close-outline"></ion-icon>-->
-      <!--          </ion-button>-->
-      <!--        </ion-col>-->
-    }
-    <!--    </ion-row>-->
+      <label class="smart:flex smart:items-center smart:gap-2">
+        <input
+          type="checkbox"
+          [(ngModel)]="value"
+          class="smart:h-4 smart:w-4 smart:rounded smart:border-gray-300"
+        />
+        <span class="smart:text-sm smart:font-medium">{{
+          item()?.label || '' | translate
+        }}</span>
+      </label>
+      @if (value === true || value === false) {
+        <button
+          type="button"
+          (click)="refresh(null)"
+          aria-label="clear"
+          class="smart:shrink-0 smart:rounded smart:px-2 smart:py-2 smart:text-red-600 hover:smart:bg-red-50"
+        >
+          ×
+        </button>
+      }
+    </span>
   `,
   imports: [TranslatePipe, FormsModule],
-  styles: [
-    `
-      :host {
-        width: 100%;
-        .flag-container {
-          ion-label {
-            /*--color: var(--smart-color-dark);*/
-          }
-        }
-        .square-button {
-          height: var(--smart-button-height) !important;
-        }
-      }
-    `,
-  ],
 })
 export class FilterFlagComponent<
   T extends IEntity<string>,

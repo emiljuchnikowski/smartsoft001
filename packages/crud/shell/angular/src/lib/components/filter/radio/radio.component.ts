@@ -6,68 +6,43 @@ import { IEntity } from '@smartsoft001/domain-core';
 
 import { BaseComponent } from '../base/base.component';
 
+// TODO(FRA-293 GAP-19 / Tor A): OnPush once value getters become computed signals
 @Component({
   selector: 'smart-crud-filter-radio',
+  host: { class: 'smart:mb-5 smart:block smart:w-full' },
   template: `
-    <!--    <ion-row>-->
-    <!--      <ion-col>-->
-    <!--        <ion-radio-group [(ngModel)]="value">-->
-    <!--          <ion-item-divider class="font-light text-xl">-->
-    <!--            <ion-icon class="mr-6 text-2xl" slot="start" name="filter-outline"></ion-icon>-->
-    <!--            <ion-label>-->
-    {{ item()?.label || '' | translate }}
-    <!--            </ion-label>-->
-    @if (value || value === false) {
-      <!--              <ion-button-->
-      <!--                slot="end"-->
-      <!--                color="danger"-->
-      <!--                (click)="refresh(null)"-->
-      <!--                class="square-button m-0 text-lg h-9 w-9 p-0"-->
-      <!--              >-->
-      <!--                <ion-icon class="mr-6 text-2xl m-0 p-0" slot="icon-only" name="close-outline"></ion-icon>-->
-      <!--              </ion-button>-->
-    }
-    <!--          </ion-item-divider>-->
+    <div
+      class="smart:mb-2 smart:flex smart:items-center smart:justify-between smart:gap-2 smart:border-b smart:border-gray-200 smart:pb-1"
+    >
+      <span class="smart:text-lg smart:font-light">{{
+        item()?.label || '' | translate
+      }}</span>
+      @if (value || value === false) {
+        <button
+          type="button"
+          (click)="refresh(null)"
+          aria-label="clear"
+          class="smart:shrink-0 smart:rounded smart:px-2 smart:py-1 smart:text-red-600 hover:smart:bg-red-50"
+        >
+          ×
+        </button>
+      }
+    </div>
 
-    @for (item of possibilities(); track item) {
-      <!--            <ion-item>-->
-      <!--              <ion-label>{{ item.text | translate }}</ion-label>-->
-      <!--              <ion-radio class="mr-10" [value]="item.id"></ion-radio>-->
-      <!--            </ion-item>-->
+    @for (entry of possibilities(); track entry.id) {
+      <label class="smart:flex smart:items-center smart:gap-2 smart:py-1">
+        <input
+          type="radio"
+          [name]="item()?.key || 'radio'"
+          [value]="entry.id"
+          [(ngModel)]="value"
+          class="smart:h-4 smart:w-4 smart:border-gray-300"
+        />
+        <span class="smart:text-sm">{{ entry.text | translate }}</span>
+      </label>
     }
-    <!--        </ion-radio-group>-->
-    <!--      </ion-col>-->
-    <!--    </ion-row>-->
   `,
   imports: [TranslatePipe, FormsModule],
-  styles: [
-    `
-      :host {
-        width: 100%;
-        margin-bottom: 1.2rem;
-        ion-item-divider {
-          //--padding-end: 0.8rem;
-          //--ion-background-color: linear-gradient(
-          //  90deg,
-          //  transparent,
-          //  var(--ion-color-light)
-          //);
-          ion-icon {
-            //--color: var(--ion-color-primary);
-          }
-          ion-label {
-            //--padding: var(--smart-button-padding-left) / 2
-            //  var(--smart-button-padding-top) / 2 var(--smart-button-padding-right) /
-            //  2 var(--smart-button-padding-bottom) / 2;
-          }
-          .square-button {
-            //--padding-start: 0.2em;
-            //--padding-end: 0.2em;
-          }
-        }
-      }
-    `,
-  ],
 })
 export class FilterRadioComponent<
   T extends IEntity<string>,
