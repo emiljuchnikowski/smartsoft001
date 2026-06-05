@@ -7,7 +7,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { moduleMetadata } from '@storybook/angular';
 import type { Meta, StoryObj } from '@storybook/angular';
 
-import { SharedModule } from '@smartsoft001/angular';
+import { PaginationMode, SharedModule } from '@smartsoft001/angular';
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
 import { ListComponent } from './list.component';
@@ -181,6 +181,66 @@ export class StylingStorybookModule {}
 })
 export class SortSearchStorybookModule {}
 
+// ---- CRUD actions variant --------------------------------------------------
+// Enables add / edit / remove so the list renders the add end-button and the
+// per-row edit (→) and remove affordances. The e2e suite asserts these render
+// and that `remove` is wired; the deeper add/edit form submit and the delete
+// confirm are documented as deferred (no item route in Storybook; AlertService
+// is a no-op stub, so the delete confirm never fires DELETE).
+
+@NgModule({
+  imports: [
+    CommonModule,
+    StoreModule.forRoot({}),
+    EffectsModule.forRoot([]),
+    SharedModule,
+    TranslateModule.forRoot(),
+    RouterTestingModule,
+    CrudModule.forFeature({
+      routing: true,
+      config: {
+        type: Note,
+        title: 'Notes (with actions)',
+        entity: 'action-notes',
+        pagination: { limit: 25 },
+        apiUrl: 'http://207.180.210.142:1201/api/action-notes',
+        add: true,
+        edit: true,
+        remove: true,
+      },
+    }),
+  ],
+})
+export class ActionsStorybookModule {}
+
+// ---- Single-page pagination variant ---------------------------------------
+// `paginationMode: singlePage` makes the desktop list render the
+// `<smart-paging-standard>` control (prev / numbered / next buttons), which the
+// e2e suite drives to assert that next/prev advance the offset query param.
+
+@NgModule({
+  imports: [
+    CommonModule,
+    StoreModule.forRoot({}),
+    EffectsModule.forRoot([]),
+    SharedModule,
+    TranslateModule.forRoot(),
+    RouterTestingModule,
+    CrudModule.forFeature({
+      routing: true,
+      config: {
+        type: Note,
+        title: 'Notes (paged)',
+        entity: 'paged-notes',
+        pagination: { limit: 25 },
+        apiUrl: 'http://207.180.210.142:1201/api/paged-notes',
+        list: { paginationMode: PaginationMode.singlePage },
+      },
+    }),
+  ],
+})
+export class PaginationStorybookModule {}
+
 const meta: Meta<ListComponent<Note>> = {
   title: 'Smart-Crud/List Page Variants',
   component: ListComponent,
@@ -216,5 +276,17 @@ export const WithStyling: Story = {
 export const WithSortAndSearch: Story = {
   name: 'With sort + search',
   decorators: [moduleMetadata({ imports: [SortSearchStorybookModule] })],
+  render: () => ({ template: listTemplate }),
+};
+
+export const WithPagination: Story = {
+  name: 'With single-page pagination',
+  decorators: [moduleMetadata({ imports: [PaginationStorybookModule] })],
+  render: () => ({ template: listTemplate }),
+};
+
+export const WithActions: Story = {
+  name: 'With add / edit / remove',
+  decorators: [moduleMetadata({ imports: [ActionsStorybookModule] })],
   render: () => ({ template: listTemplate }),
 };
