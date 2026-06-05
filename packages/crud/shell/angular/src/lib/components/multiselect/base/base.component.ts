@@ -11,7 +11,6 @@ import {
 import { CrudFacade } from '../../../+state';
 import { CrudFullConfig } from '../../../crud.config';
 
-// TODO(FRA-293 Tor A / Phase 3): author OnPush-safe when the template is rebuilt.
 @Directive()
 export class MultiselectBaseComponent<T extends IEntity<string>> {
   private facade = inject(CrudFacade<T>);

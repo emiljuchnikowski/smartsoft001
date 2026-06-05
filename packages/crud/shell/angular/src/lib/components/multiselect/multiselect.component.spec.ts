@@ -72,4 +72,66 @@ describe('crud-shell-angular: MultiselectComponent (characterization)', () => {
 
     expect(fixture.componentInstance.lock).toBe(false);
   });
+
+  describe('header (GAP-25)', () => {
+    function setupWithItems(): {
+      fixture: ComponentFixture<MultiselectComponent<any>>;
+      menuMock: { closeEnd: jest.Mock };
+    } {
+      const facadeMock = {
+        multiSelected: signal([{ id: '1' }, { id: '2' }]),
+        updatePartialMany: jest.fn(),
+      };
+      const menuMock = { closeEnd: jest.fn().mockResolvedValue(undefined) };
+      const translateMock = {
+        currentLang: 'en',
+        get: jest.fn((k: string) => ({
+          subscribe: (fn: (v: string) => void) => {
+            fn(k);
+            return { unsubscribe: jest.fn() };
+          },
+        })),
+        instant: jest.fn((k: string) => k),
+        onLangChange: { subscribe: jest.fn() },
+        onTranslationChange: { subscribe: jest.fn() },
+        onDefaultLangChange: { subscribe: jest.fn() },
+      };
+
+      TestBed.configureTestingModule({
+        imports: [MultiselectComponent],
+        providers: [
+          { provide: CrudFacade, useValue: facadeMock },
+          { provide: CrudFullConfig, useValue: { type: SomeModel } },
+          { provide: MenuService, useValue: menuMock },
+          { provide: TranslateService, useValue: translateMock },
+        ],
+      });
+
+      const fixture = TestBed.createComponent(MultiselectComponent<any>);
+      fixture.detectChanges();
+
+      return { fixture, menuMock };
+    }
+
+    it('should render a header with the translated selected title and count', () => {
+      const { fixture } = setupWithItems();
+
+      const header: HTMLElement | null =
+        fixture.nativeElement.querySelector('header');
+
+      expect(header).toBeTruthy();
+      expect(header?.textContent).toContain('selected');
+      expect(header?.textContent).toContain('2');
+    });
+
+    it('should render a close button that calls menuService.closeEnd on click', () => {
+      const { fixture, menuMock } = setupWithItems();
+
+      const closeButton: HTMLButtonElement | null =
+        fixture.nativeElement.querySelector('header button');
+      closeButton?.click();
+
+      expect(menuMock.closeEnd).toHaveBeenCalled();
+    });
+  });
 });
