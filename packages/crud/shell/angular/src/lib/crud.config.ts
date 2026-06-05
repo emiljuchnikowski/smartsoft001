@@ -6,6 +6,7 @@ import {
   InputBaseComponent,
   ListMode,
   PaginationMode,
+  SmartPageVariant,
 } from '@smartsoft001/angular';
 
 import { ICrudFilterQueryItem, ICrudListGroup } from './models';
@@ -75,4 +76,9 @@ export class CrudFullConfig<T> extends CrudConfig<T> {
   inputComponents?: {
     [key: string]: Type<InputBaseComponent<T>>;
   };
+
+  // Declarative tier-2 styling surface (FRA-293 Faza 2).
+  // Deep threading into IListOptions/IPageOptions lands in Phase 3.
+  cssClass?: string;
+  variant?: SmartPageVariant;
 }

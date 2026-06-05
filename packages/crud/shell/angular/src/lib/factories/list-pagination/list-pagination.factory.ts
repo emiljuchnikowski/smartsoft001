@@ -1,4 +1,6 @@
-import { computed, inject, Injectable } from '@angular/core';
+import { computed, inject, Injectable, Injector } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { filter, take } from 'rxjs/operators';
 
 import { IListPaginationOptions, PaginationMode } from '@smartsoft001/angular';
 import { IEntity } from '@smartsoft001/domain-core';
@@ -9,6 +11,7 @@ import { ICrudFilter } from '../../models';
 @Injectable()
 export class CrudListPaginationFactory<T extends IEntity<string>> {
   private readonly facade = inject(CrudFacade<T>);
+  private readonly injector = inject(Injector);
 
   async create(options: {
     mode?: PaginationMode;
@@ -26,18 +29,24 @@ export class CrudListPaginationFactory<T extends IEntity<string>> {
           return Promise.resolve(false);
 
         return new Promise((res) => {
-          if (this.facade.loaded()) {
-            setTimeout(() => {
-              res(
-                options.provider.getLinks() && options.provider.getLinks().next,
-              );
+          toObservable(this.facade.loaded, { injector: this.injector })
+            .pipe(
+              filter((l) => !!l),
+              take(1),
+            )
+            .subscribe(() => {
+              setTimeout(() => {
+                res(
+                  options.provider.getLinks() &&
+                    options.provider.getLinks().next,
+                );
+              });
             });
-          }
 
-          const filter = options.provider.getFilter();
+          const currentFilter = options.provider.getFilter();
           this.facade.read({
-            ...filter,
-            offset: (filter.offset || 0) + (filter.limit || 0),
+            ...currentFilter,
+            offset: (currentFilter.offset || 0) + (currentFilter.limit || 0),
           });
         });
       },
@@ -46,19 +55,24 @@ export class CrudListPaginationFactory<T extends IEntity<string>> {
           return Promise.resolve(false);
 
         return new Promise((res) => {
-          const loaded = this.facade.loaded();
-          if (loaded) {
-            setTimeout(() => {
-              res(
-                options.provider.getLinks() && options.provider.getLinks().prev,
-              );
+          toObservable(this.facade.loaded, { injector: this.injector })
+            .pipe(
+              filter((l) => !!l),
+              take(1),
+            )
+            .subscribe(() => {
+              setTimeout(() => {
+                res(
+                  options.provider.getLinks() &&
+                    options.provider.getLinks().prev,
+                );
+              });
             });
-          }
 
-          const filter = options.provider.getFilter();
+          const currentFilter = options.provider.getFilter();
           this.facade.read({
-            ...filter,
-            offset: (filter.offset || 0) - (filter.limit || 0),
+            ...currentFilter,
+            offset: (currentFilter.offset || 0) - (currentFilter.limit || 0),
           });
         });
       },

@@ -1,11 +1,13 @@
 import {
   Directive,
   inject,
+  Injector,
   input,
   InputSignal,
   OnInit,
   Signal,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { Debounce } from 'lodash-decorators';
 
@@ -13,12 +15,20 @@ import { IEntity } from '@smartsoft001/domain-core';
 import { FieldType, IModelFilter } from '@smartsoft001/models';
 
 import { CrudFacade } from '../../../+state/crud.facade';
+import { CrudConfig } from '../../../crud.config';
 import { ICrudFilter } from '../../../models';
+import { CRUD_MODEL_POSSIBILITIES_PROVIDER } from '../../../providers/model-possibilities/model-possibilities.provider';
 
 @Directive()
 export class BaseComponent<T extends IEntity<string>> implements OnInit {
   protected facade = inject(CrudFacade<T>);
   protected translateService = inject(TranslateService);
+  protected config = inject(CrudConfig<T>);
+  protected modelPossibilitiesProvider = inject(
+    CRUD_MODEL_POSSIBILITIES_PROVIDER,
+    { optional: true },
+  );
+  protected injector = inject(Injector);
 
   possibilities!: Signal<{ id: any; text: string }[]>;
 
@@ -156,9 +166,23 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
 
   private initPossibilities(): void {
     const item = this.item();
-    if (item?.possibilities) {
-      this.possibilities = item.possibilities;
+    if (!item) return;
+
+    let possibilities = item.possibilities;
+
+    if (this.modelPossibilitiesProvider) {
+      const fromProvider = this.modelPossibilitiesProvider.get(
+        this.config.type,
+      );
+      if (fromProvider && fromProvider[item.key]) {
+        possibilities = toSignal(fromProvider[item.key], {
+          initialValue: [] as { id: any; text: string }[],
+          injector: this.injector,
+        });
+      }
     }
+
+    if (possibilities) this.possibilities = possibilities;
   }
 
   private isArrayType(): boolean {

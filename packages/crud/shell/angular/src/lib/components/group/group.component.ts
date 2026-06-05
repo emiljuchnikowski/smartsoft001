@@ -1,13 +1,5 @@
 import { NgClass } from '@angular/common';
-import {
-  Component,
-  ElementRef,
-  inject,
-  input,
-  InputSignal,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { Component } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import {
@@ -15,15 +7,11 @@ import {
   // AccordionBodyComponent,
   // AccordionComponent,
   // AccordionHeaderComponent,
-  BaseComponent,
-  IListOptions,
   ListComponent,
-  StyleService,
 } from '@smartsoft001/angular';
 import { IEntity } from '@smartsoft001/domain-core';
 
-import { ICrudListGroup } from '../../models';
-import { CrudListGroupService } from '../../services/list-group/list-group.service';
+import { GroupBaseComponent } from './base/base.component';
 
 @Component({
   selector: 'smart-crud-group',
@@ -82,43 +70,6 @@ import { CrudListGroupService } from '../../services/list-group/list-group.servi
     TranslatePipe,
   ],
 })
-export class GroupComponent<T extends IEntity<string>>
-  extends BaseComponent
-  implements OnInit, OnDestroy
-{
-  private styleService = inject(StyleService);
-  private elementRef = inject(ElementRef);
-  private groupService = inject(CrudListGroupService<T>);
-
-  readonly groups: InputSignal<Array<ICrudListGroup> | null> =
-    input<Array<ICrudListGroup> | null>(null);
-  readonly listOptions: InputSignal<IListOptions<T> | null> =
-    input<IListOptions<T> | null>(null);
-
-  change(val: boolean, item: ICrudListGroup, force = false): void {
-    const groups = this.groups();
-    if (groups) {
-      groups
-        .filter((i) => i.value !== item.value || i.key !== item.key)
-        .forEach((i) => {
-          i.show = false;
-        });
-    }
-
-    this.groupService.change(val, item, force);
-
-    item.show = val;
-  }
-
-  ngOnInit(): void {
-    this.styleService.init(this.elementRef);
-  }
-
-  override ngOnDestroy(): void {
-    const groups = this.groups();
-    if (groups) {
-      this.groupService.destroy(groups);
-    }
-    super.ngOnDestroy();
-  }
-}
+export class GroupComponent<
+  T extends IEntity<string>,
+> extends GroupBaseComponent<T> {}

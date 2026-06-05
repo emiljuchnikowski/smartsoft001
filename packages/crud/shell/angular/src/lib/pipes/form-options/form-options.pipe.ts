@@ -13,6 +13,7 @@ export class FormOptionsPipe<T extends IEntity<string>>
 {
   private modelPossibilitiesProvider = inject(
     CRUD_MODEL_POSSIBILITIES_PROVIDER,
+    { optional: true },
   );
 
   transform(
