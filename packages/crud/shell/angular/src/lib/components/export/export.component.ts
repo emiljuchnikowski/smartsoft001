@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { ButtonComponent } from '@smartsoft001/angular';
 import { IEntity } from '@smartsoft001/domain-core';
@@ -26,6 +26,7 @@ import { ExportBaseComponent } from './base/base.component';
     </div>
   `,
   imports: [ButtonComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExportComponent<
   T extends IEntity<string>,

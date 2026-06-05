@@ -1,4 +1,6 @@
-import { Directive, ElementRef, inject, OnInit } from '@angular/core';
+import { Directive, ElementRef, inject, Injector, OnInit } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { filter, take } from 'rxjs/operators';
 
 import {
   BaseComponent,
@@ -10,7 +12,6 @@ import { IEntity } from '@smartsoft001/domain-core';
 
 import { CrudFacade } from '../../../+state';
 
-// TODO(FRA-293 Tor A / Phase 3): author OnPush-safe when the template is rebuilt.
 @Directive()
 export class ExportBaseComponent<T extends IEntity<string>>
   extends BaseComponent
@@ -20,6 +21,7 @@ export class ExportBaseComponent<T extends IEntity<string>>
   private popoverService = inject(PopoverService);
   private styleService = inject(StyleService);
   private elementRef = inject(ElementRef);
+  private injector = inject(Injector);
 
   buttonExportCsvOptions: IButtonOptions = this.initButtonExportOptions('csv');
   buttonExportXlsxOptions: IButtonOptions =
@@ -41,9 +43,12 @@ export class ExportBaseComponent<T extends IEntity<string>>
           format,
         );
 
-        const loading = this.facade.loading();
-        if (loading) return;
-        this.popoverService.close().then();
+        toObservable(this.facade.loaded, { injector: this.injector })
+          .pipe(
+            filter((l) => !!l),
+            take(1),
+          )
+          .subscribe(() => this.popoverService.close().then());
       },
       loading: this.facade.loading,
     };
