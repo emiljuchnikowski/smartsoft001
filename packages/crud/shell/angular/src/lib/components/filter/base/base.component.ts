@@ -7,6 +7,7 @@ import {
   input,
   InputSignal,
   OnInit,
+  signal,
   Signal,
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
@@ -61,6 +62,20 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
     const val = query.value;
     return val !== null && val !== undefined && val !== '';
   });
+
+  /**
+   * OnPush-safe replacement for `@if (minValue)` in templates (partial
+   * GAP-19). True when filter().query has a matching `>=` entry (range "from")
+   * with a non-empty value.
+   */
+  readonly hasMinValue = computed<boolean>(() => this.hasQueryValue('>='));
+
+  /**
+   * OnPush-safe replacement for `@if (maxValue)` in templates (partial
+   * GAP-19). True when filter().query has a matching `<=` entry (range "to")
+   * with a non-empty value.
+   */
+  readonly hasMaxValue = computed<boolean>(() => this.hasQueryValue('<='));
 
   /** Lazily-built model instance used to derive field options/labels. */
   protected get model(): T {
@@ -184,32 +199,62 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
 
   /**
    * Builds the `InputOptions` consumed by shared `smart-input-*` components for
-   * a single reactive control. Omits possibilities (text filters do not need
-   * them).
+   * a single reactive control. When `withPossibilities` is true (radio/select
+   * style filters) the base `possibilities` signal is mapped into the
+   * `{ id, text, checked }` shape the shared inputs expect; otherwise it is
+   * omitted (text/flag filters do not need possibilities).
    */
-  protected buildInputOptions(control: UntypedFormControl): InputOptions<any> {
-    return {
+  protected buildInputOptions(
+    control: UntypedFormControl,
+    withPossibilities = false,
+  ): InputOptions<any> {
+    const options: InputOptions<any> = {
       treeLevel: 0,
       control,
       model: this.model,
       fieldKey: this.item()?.key ?? '',
     };
+
+    if (withPossibilities) {
+      const source = this.possibilities ? this.possibilities() : [];
+      options.possibilities = signal(
+        source.map(({ id, text }) => ({ id, text, checked: false })),
+      );
+    }
+
+    return options;
   }
 
   /**
-   * Creates a reactive control bridged to the legacy filter state: seeded from
-   * the current `value` getter, and wired so every change re-runs the
-   * (debounced) `refresh`.
+   * Creates a reactive control bridged to the legacy filter state for a given
+   * query slot: seeded from the current query value for that slot (`null` ->
+   * `value` / `item.type`, `'>='` -> `minValue`, `'<='` -> `maxValue`), and
+   * wired so every change re-runs the (debounced) `refresh` for that slot.
    */
-  protected bindValueControl(): UntypedFormControl {
-    const control = new UntypedFormControl(this.value);
+  protected bindControl(type: string | null = null): UntypedFormControl {
+    const seed =
+      type === '>='
+        ? this.minValue
+        : type === '<='
+          ? this.maxValue
+          : this.value;
+
+    const control = new UntypedFormControl(seed);
 
     control.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((v) => this.refresh(v));
+      .subscribe((v) => this.refresh(v, type));
 
     // TODO(GAP-19): re-sync control when filter() changes externally
     return control;
+  }
+
+  /**
+   * Creates a reactive control bridged to the default (`value` / `item.type`)
+   * query slot.
+   */
+  protected bindValueControl(): UntypedFormControl {
+    return this.bindControl(null);
   }
 
   clear(): void {
@@ -245,6 +290,21 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
     }
 
     if (possibilities) this.possibilities = possibilities;
+  }
+
+  private hasQueryValue(type: string): boolean {
+    const filter = this.filter();
+    const item = this.item();
+    if (!filter || !item || !filter.query) return false;
+
+    const query = filter.query.find(
+      (q) => q.key === item.key && q.type === type,
+    );
+
+    if (!query) return false;
+
+    const val = query.value;
+    return val !== null && val !== undefined && val !== '';
   }
 
   private isArrayType(): boolean {

@@ -1,6 +1,9 @@
+import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { UntypedFormControl } from '@angular/forms';
 import { provideTranslateService } from '@ngx-translate/core';
 
+import { InputOptions, IModelLabelProvider } from '@smartsoft001/angular';
 import { IModelFilter } from '@smartsoft001/models';
 
 import { FilterFlagComponent } from './flag.component';
@@ -8,7 +11,19 @@ import { CrudFacade } from '../../../+state/crud.facade';
 import { CrudConfig } from '../../../crud.config';
 import { ICrudFilter } from '../../../models';
 
-class SomeModel {}
+class SomeModel {
+  active?: boolean;
+}
+
+// smart-input-flag renders its label via ModelLabelPipe, whose fallback path
+// (`toSignal(translateService.instant(...))`) throws NG0602 inside the OnPush
+// reactive context. Registering an IModelLabelProvider short-circuits before
+// that fallback, which is how the shared component is meant to be consumed.
+class MockModelLabelProvider extends IModelLabelProvider {
+  override get() {
+    return signal('Mock Label');
+  }
+}
 
 describe('crud-shell-angular: FilterFlagComponent', () => {
   function setup() {
@@ -20,6 +35,7 @@ describe('crud-shell-angular: FilterFlagComponent', () => {
         { provide: CrudFacade, useValue: facadeMock },
         provideTranslateService(),
         { provide: CrudConfig, useValue: { type: SomeModel } },
+        { provide: IModelLabelProvider, useClass: MockModelLabelProvider },
       ],
     });
 
@@ -28,7 +44,7 @@ describe('crud-shell-angular: FilterFlagComponent', () => {
     return fixture;
   }
 
-  it('should render the translated label', () => {
+  it('should render a smart-input-flag element', () => {
     // Arrange
     const fixture = setup();
     const item = {
@@ -42,21 +58,29 @@ describe('crud-shell-angular: FilterFlagComponent', () => {
     fixture.detectChanges();
 
     // Assert
-    expect(fixture.nativeElement.textContent).toContain('active.label');
+    const input = fixture.nativeElement.querySelector('smart-input-flag');
+    expect(input).toBeTruthy();
   });
 
-  it('should render a native checkbox input', () => {
+  it('should pass input options carrying the built control with the item key and a model instance', () => {
     // Arrange
     const fixture = setup();
+    const item = {
+      key: 'active',
+      type: '=',
+      label: 'active.label',
+    } as unknown as IModelFilter;
+    fixture.componentRef.setInput('item', item);
 
     // Act
     fixture.detectChanges();
 
     // Assert
-    const checkbox = fixture.nativeElement.querySelector(
-      'input[type="checkbox"]',
-    );
-    expect(checkbox).toBeTruthy();
+    const options =
+      fixture.componentInstance.inputOptions() as InputOptions<any>;
+    expect(options.fieldKey).toBe('active');
+    expect(options.model).toBeInstanceOf(SomeModel);
+    expect(options.control).toBeInstanceOf(UntypedFormControl);
   });
 
   it('should show the clear button when the query value is boolean', () => {

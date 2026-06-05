@@ -144,10 +144,11 @@ Resolve every row, then this register is closed and FRA-293 functional parity is
 - [x] GAP-04 socket conditional provider · [x] GAP-05 SocketService wiring · [x] GAP-06 reconcile `socket?` flag ✅ Phase 1
 - [~] GAP-07 Store/Ngrx module removal — compiles after Phase 1; mechanism `NgrxStoreService.addReducer` preserved. Provisionally accepted as intentional consolidation; **confirm reducer registration at runtime in a consuming app** before closing.
 - [~] GAP-10..17 filter field templates — **architecture (decided 2026-06-05): reuse shared `smart-input-*` components, computed-signal reads, OnPush** (see `project_crud_filter_architecture` memory).
-  - [x] GAP-10 text — migrated to `smart-input-text` (proof) ✅
-  - [~] GAP-13 radio · [~] GAP-14 flag — done as native inputs in batch-1; **to be reworked onto `smart-input` per decision**
-  - [ ] GAP-11 int · [ ] GAP-12 check · [ ] GAP-15 date · [ ] GAP-16 date-time · [ ] GAP-17 date-with-edit
-  - **GAP-19 (partial):** base gained `hasValue` computed signal + `bindValueControl()`/`buildInputOptions()` bridge; legacy `value`/`min`/`max` getters retained until all widgets migrate, then removed.
+  - [x] GAP-10 text → `smart-input-text` ✅ · [x] GAP-14 flag → `smart-input-flag` ✅ · [x] GAP-13 radio → `smart-input-radio` (+ possibilities bridge) ✅ (all OnPush)
+  - [x] GAP-11 int → `smart-input-int` (primary value) + native Tailwind from/to range inputs for advanced min/max (smart-input always renders the _model_ label, so range uses native "from"/"to") ✅
+  - [ ] GAP-12 check (array/possibilities `checked`) · [ ] GAP-15 date · [ ] GAP-16 date-time · [ ] GAP-17 date-with-edit (via shared `smart-date-edit`/`smart-date-range`)
+  - **GAP-19 (partial):** base bridge generalized — `bindControl(type)` (value/`>=`/`<=` slots) + `hasValue`/`hasMinValue`/`hasMaxValue` computed signals + `buildInputOptions(control, withPossibilities)`; legacy `value`/`min`/`max` getters retained until all widgets migrate, then removed.
+  - ✅ **Shared fix (made radio/check robust):** `InputPossibilitiesBaseComponent` now injects `MODEL_POSSIBILITIES_PROVIDER` with `{ optional: true }` (it already tolerates a null provider internally) — `smart-input-radio`/`-check` no longer NullInjectorError when no app provides the token; filters supply possibilities via `options.possibilities`. (Same class of fix as the `ModelLabelPipe` NG0602 fix.)
   - ✅ **RISK RESOLVED (both fixes, decided 2026-06-05):** (a) shared `ModelLabelPipe` fixed — `transform` returns `translateService.instant('MODEL.'+key)` directly (no `toSignal` in reactive context → NG0602 gone); (b) CRUD ships `CrudModelLabelProvider` (delegates to an app-level `IModelLabelProvider` via `skipSelf`, else translates `MODEL.<key>`), registered in `CrudCoreModule` + `CrudComponentsModule`. Shared `angular` suite 1719 ✅, crud 84 ✅.
 - [ ] GAP-18 possibilities-provider override · [ ] GAP-19 check `filter()` dep · [ ] GAP-20 datetime picker wiring
 - [ ] GAP-21 filters panel · [ ] GAP-22 filters-config chips + remove · [ ] GAP-23 group accordion · [ ] GAP-24 group CD deferral
