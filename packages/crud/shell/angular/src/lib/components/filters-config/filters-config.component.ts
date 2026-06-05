@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   computed,
   ElementRef,
@@ -17,31 +18,29 @@ import { ICrudFilterQueryItem } from '../../models';
   selector: 'smart-crud-filters-config',
   template: `
     @let query = this.query();
-    @if (query && query?.length) {
-      <!--  <ion-toolbar>-->
-      @for (item of query; track item) {
-        <!--      <ion-chip (click)="onRemoveQuery(item)" color="medium" outline="true">-->
-        <!--        <ion-icon name="filter-circle-outline" color="primary"></ion-icon>-->
-        <!--        <ion-label>-->
-        {{ 'MODEL.' + item.key | translate }} {{ item.type }}
-        {{ item.value | translate }}
-        <!--        </ion-label>-->
-        <!--        <ion-icon name="close" color="danger"></ion-icon>-->
-        <!--      </ion-chip>-->
-      }
-      <!--  </ion-toolbar>-->
+    @if (query && query.length) {
+      <div class="smart:flex smart:flex-wrap smart:gap-2 smart:px-4 smart:py-2">
+        @for (item of query; track item) {
+          <button
+            type="button"
+            (click)="onRemoveQuery(item)"
+            class="smart:inline-flex smart:items-center smart:gap-1 smart:rounded-full smart:border smart:border-gray-300 smart:bg-gray-50 smart:px-3 smart:py-1 smart:text-sm smart:text-gray-700 hover:smart:bg-gray-100"
+            [attr.aria-label]="
+              ('remove' | translate) + ' ' + ('MODEL.' + item.key | translate)
+            "
+          >
+            <span
+              >{{ 'MODEL.' + item.key | translate }} {{ item.type }}
+              {{ item.value | translate }}</span
+            >
+            <span aria-hidden="true" class="smart:text-red-600">✕</span>
+          </button>
+        }
+      </div>
     }
   `,
   imports: [TranslatePipe],
-  styles: [
-    `
-      :host {
-        ion-label {
-          font-size: var(--small-font-size);
-        }
-      }
-    `,
-  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FiltersConfigComponent implements OnInit {
   private readonly facade = inject(CrudFacade<any>);
