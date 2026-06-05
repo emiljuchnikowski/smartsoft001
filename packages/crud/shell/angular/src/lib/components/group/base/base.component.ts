@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Directive,
   ElementRef,
   inject,
@@ -18,7 +19,6 @@ import { IEntity } from '@smartsoft001/domain-core';
 import { ICrudListGroup } from '../../../models';
 import { CrudListGroupService } from '../../../services/list-group/list-group.service';
 
-// TODO(FRA-293 Tor A / Phase 3): author OnPush-safe when the template is rebuilt.
 @Directive()
 export class GroupBaseComponent<T extends IEntity<string>>
   extends BaseComponent
@@ -27,6 +27,7 @@ export class GroupBaseComponent<T extends IEntity<string>>
   private styleService = inject(StyleService);
   private elementRef = inject(ElementRef);
   private groupService = inject(CrudListGroupService<T>);
+  private cd = inject(ChangeDetectorRef);
 
   readonly groups: InputSignal<Array<ICrudListGroup> | null> =
     input<Array<ICrudListGroup> | null>(null);
@@ -45,7 +46,15 @@ export class GroupBaseComponent<T extends IEntity<string>>
 
     this.groupService.change(val, item, force);
 
-    item.show = val;
+    if (val) {
+      setTimeout(() => {
+        item.show = val;
+        this.cd.detectChanges();
+      });
+    } else {
+      item.show = val;
+      this.cd.detectChanges();
+    }
   }
 
   ngOnInit(): void {
