@@ -1,8 +1,8 @@
 import '@angular/compiler';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withFetch } from '@angular/common/http';
 import {
   HttpTestingController,
-  HttpClientTestingModule,
+  provideHttpClientTesting,
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
@@ -33,8 +33,12 @@ describe('crud-shell-angular: CrudService', () => {
     config.apiUrl = 'http://api.test/entities';
 
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
       providers: [
+        // Angular 22 readiness: exercise the Fetch-configured HttpClient
+        // provider surface (withFetch is the default backend in v22) while
+        // still using the testing backend so HttpTestingController intercepts.
+        provideHttpClient(withFetch()),
+        provideHttpClientTesting(),
         {
           provide: CrudConfig,
           useValue: config,
@@ -284,6 +288,60 @@ describe('crud-shell-angular: CrudService', () => {
       expect(mockCreateObjectURL).toHaveBeenCalled();
       expect(mockLink.download).toBe('data.xlsx');
       expect(mockLink.click).toHaveBeenCalled();
+    });
+
+    // Fetch backend smoke test (Angular 22 default).
+    //
+    // The only HttpClient option deprecated under withFetch() is
+    // `reportProgress` (upload/download progress events are unavailable on the
+    // Fetch backend). exportList does not rely on progress events — the xlsx
+    // path explicitly passes `reportProgress: false` — so no behavior change is
+    // needed. This test documents that the Fetch-sensitive request shape
+    // (`observe: 'response'` + `responseType: 'blob'` for xlsx, and the
+    // `responseType: 'text'` path for csv) works under the withFetch() provider.
+    it('should issue Fetch-compatible export requests for both formats', async () => {
+      const mockLink = {
+        href: '',
+        download: '',
+        click: jest.fn(),
+      };
+      jest.spyOn(document, 'createElement').mockReturnValue(mockLink as any);
+      jest.spyOn(document.body, 'appendChild').mockImplementation();
+      jest.spyOn(document.body, 'removeChild').mockImplementation();
+
+      // csv: GET, text/csv content type, text responseType, blob download.
+      const csvPromise = service.exportList(null, 'csv');
+
+      const csvReq = httpMock.expectOne(config.apiUrl);
+      expect(csvReq.request.method).toBe('GET');
+      expect(csvReq.request.headers.get('Content-Type')).toBe('text/csv');
+      expect(csvReq.request.responseType).toBe('text');
+
+      csvReq.flush('id,name\n1,Test');
+      await csvPromise;
+
+      expect(mockCreateObjectURL).toHaveBeenCalledTimes(1);
+      expect(mockLink.download).toBe('data.csv');
+      expect(mockLink.click).toHaveBeenCalledTimes(1);
+
+      // xlsx: GET, observe: 'response' + responseType: 'blob' (Fetch-sensitive
+      // surface), spreadsheet content type, blob body turned into a download.
+      const xlsxPromise = service.exportList(null, 'xlsx');
+
+      const xlsxReq = httpMock.expectOne(config.apiUrl);
+      expect(xlsxReq.request.method).toBe('GET');
+      expect(xlsxReq.request.headers.get('Content-Type')).toBe(
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      );
+      expect(xlsxReq.request.responseType).toBe('blob');
+      expect(xlsxReq.request.reportProgress).toBe(false);
+
+      xlsxReq.flush(new Blob(['fake xlsx data']));
+      await xlsxPromise;
+
+      expect(mockCreateObjectURL).toHaveBeenCalledTimes(2);
+      expect(mockLink.download).toBe('data.xlsx');
+      expect(mockLink.click).toHaveBeenCalledTimes(2);
     });
   });
 });
