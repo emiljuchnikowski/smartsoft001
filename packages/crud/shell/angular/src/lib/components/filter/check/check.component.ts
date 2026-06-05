@@ -1,58 +1,75 @@
-import { AfterContentInit, Component, computed, Signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  OnInit,
+  Signal,
+} from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { IEntity } from '@smartsoft001/domain-core';
 
 import { BaseComponent } from '../base/base.component';
 
+// TODO(FRA-293 GAP-19): re-sync rendered checked state when filter() changes
+// externally (the `value` getter already reads the reactive filter() signal,
+// so the `list` computed stays OnPush-safe).
 @Component({
   selector: 'smart-crud-filter-check',
+  host: { class: 'smart:block smart:w-full' },
   template: `
-    <!--    <ion-row>-->
-    <!--      <ion-col>-->
-    <!--        <ion-item-divider class="text-xl font-light">-->
-    <!--          <ion-icon class="mr-6 text-2xl" slot="start" name="filter-outline"></ion-icon>-->
-    <!--          <ion-label>-->
-    {{ item()?.label || '' | translate }}
-    <!--          </ion-label>-->
-    @if (value?.length) {
-      <!--            <ion-button-->
-      <!--              slot="end"-->
-      <!--              color="danger"-->
-      <!--              (click)="refresh([])"-->
-      <!--              class="square-button m-0 p-0 text-lg h-9 w-9"-->
-      <!--            >-->
-      <!--              <ion-icon class="text-2xl m-0 p-0" slot="icon-only" name="close-outline"></ion-icon>-->
-      <!--            </ion-button>-->
-    }
-    <!--        </ion-item-divider>-->
-
-    @for (entry of list(); track entry) {
-      <!--          <ion-item>-->
-      <!--<ion-label>-->{{ entry.value.text | translate
-      }}<!--</ion-label>-->
-      <!--            <ion-checkbox-->
-      <!--              slot="end"-->
-      <!--              [checked]="entry.isCheck"-->
-      <!--              (ionChange)="onCheckChange($event.detail.checked, entry)"-->
-      <!--            ></ion-checkbox>-->
-      <!--          </ion-item>-->
-    }
-    <!--      </ion-col>-->
-    <!--    </ion-row>-->
+    <fieldset class="smart:w-full">
+      <legend
+        class="smart:flex smart:items-center smart:justify-between smart:text-sm smart:font-medium smart:text-gray-900"
+      >
+        <span>{{ item()?.label || '' | translate }}</span>
+        @if (hasCheckedValues()) {
+          <button
+            type="button"
+            (click)="refresh([])"
+            aria-label="clear"
+            class="smart:rounded smart:px-2 smart:py-1 smart:text-red-600 hover:smart:bg-red-50"
+          >
+            ×
+          </button>
+        }
+      </legend>
+      <div class="smart:mt-2 smart:space-y-2">
+        @for (entry of list(); track entry.value.id) {
+          <label class="smart:flex smart:items-center smart:gap-x-2">
+            <input
+              type="checkbox"
+              [checked]="entry.isCheck"
+              (change)="onCheckChange($any($event.target).checked, entry)"
+              class="smart:h-4 smart:w-4 smart:rounded smart:border-gray-300 smart:text-indigo-600 focus:smart:ring-indigo-500"
+            />
+            <span class="smart:text-sm smart:text-gray-900">{{
+              entry.value.text | translate
+            }}</span>
+          </label>
+        }
+      </div>
+    </fieldset>
   `,
   imports: [TranslatePipe],
-  styleUrls: ['./check.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FilterCheckComponent<T extends IEntity<string>>
   extends BaseComponent<T>
-  implements AfterContentInit
+  implements OnInit
 {
   list!: Signal<{ value: any; isCheck: boolean }[]>;
 
-  ngAfterContentInit(): void {
+  readonly hasCheckedValues = computed<boolean>(() => {
+    const v = this.value;
+    return Array.isArray(v) && v.length > 0;
+  });
+
+  override ngOnInit(): void {
+    super.ngOnInit();
+
     this.list = computed(() => {
-      const possibilities = this.possibilities();
+      const possibilities = this.possibilities ? this.possibilities() : [];
       return possibilities.map((pos) => ({
         value: pos,
         isCheck: this.value.some((r: any) => r === pos.id),
