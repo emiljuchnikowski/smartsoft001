@@ -24,7 +24,8 @@ import { CrudFacade } from '../../../+state/crud.facade';
 import { CrudConfig } from '../../../crud.config';
 import { ICrudFilter } from '../../../models';
 
-// TODO(FRA-293 Tor A / Phase 3): author OnPush-safe when the template is rebuilt.
+// Rendered by an OnPush concrete (FiltersComponent). The base exposes signals
+// (`list()`, `filter()`) and is therefore OnPush-compatible.
 @Directive()
 export class FiltersBaseComponent<T extends IEntity<string>> implements OnInit {
   private menuService = inject(MenuService);

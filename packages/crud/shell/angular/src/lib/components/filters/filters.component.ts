@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { IEntity } from '@smartsoft001/domain-core';
 
@@ -62,27 +63,39 @@ import { FiltersBaseComponent } from './base/base.component';
  */
 @Component({
   selector: 'smart-crud-filters',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <!--<ion-header [hidden]="hideMenu()">-->
-    <!--  <ion-toolbar>-->
-    <!--    <ion-buttons slot="end">-->
-    <!--      <ion-button (click)="onClose()">-->
-    <!--        <ion-icon slot="icon-only" name="close"> </ion-icon>-->
-    <!--      </ion-button>-->
-    <!--    </ion-buttons>-->
-    <!--    <ion-title>{{ 'filters' | translate }}</ion-title>-->
-    <!--  </ion-toolbar>-->
-    <!--</ion-header>-->
-    <!--<ion-content style="height: 100vh">-->
-    <!--  <ion-list>-->
-    @for (item of list(); track item) {
-      <smart-crud-filter [item]="item" [filter]="filter()"></smart-crud-filter>
-    }
-    <!--  </ion-list>-->
-    <div class="h-20">&nbsp;</div>
-    <!--</ion-content>-->
+    <div class="smart:flex smart:h-full smart:flex-col">
+      @if (!hideMenu()) {
+        <header
+          class="smart:flex smart:items-center smart:justify-between smart:border-b smart:border-gray-200 smart:px-4 smart:py-3"
+        >
+          <h2 class="smart:text-lg smart:font-semibold smart:text-gray-900">
+            {{ 'filters' | translate }}
+          </h2>
+          <button
+            type="button"
+            (click)="onClose()"
+            aria-label="close"
+            class="smart:rounded smart:p-1 smart:text-gray-500 hover:smart:bg-gray-100"
+          >
+            ✕
+          </button>
+        </header>
+      }
+      <div
+        class="smart:flex-1 smart:space-y-4 smart:overflow-y-auto smart:px-4 smart:py-3"
+      >
+        @for (item of list(); track item.key) {
+          <smart-crud-filter
+            [item]="item"
+            [filter]="filter()"
+          ></smart-crud-filter>
+        }
+      </div>
+    </div>
   `,
-  imports: [FilterComponent],
+  imports: [FilterComponent, TranslatePipe],
 })
 export class FiltersComponent<
   T extends IEntity<string>,
