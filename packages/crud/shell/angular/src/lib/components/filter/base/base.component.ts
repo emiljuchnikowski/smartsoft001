@@ -38,10 +38,35 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
 
   private _model: T | undefined;
 
+  /**
+   * Local, mutation-free working copy of the last filter this component pushed
+   * to `facade.read(...)`. The store-bound `filter()` input is frozen under
+   * NgRx `strictStateImmutability`, so refresh/clear operate on a clone; the
+   * read getters (`value`, `minValue`, `maxValue`, `hasValue`, …) prefer this
+   * pending copy until the real store update flows back through the input.
+   */
+  private _pendingFilter = signal<ICrudFilter | undefined>(undefined);
+
+  /** Snapshot of `filter()` that `_pendingFilter` was derived from. */
+  private _pendingFilterSource: ICrudFilter | undefined;
+
   possibilities!: Signal<{ id: any; text: string }[]>;
 
   readonly item: InputSignal<IModelFilter | undefined> = input<IModelFilter>();
   readonly filter: InputSignal<ICrudFilter | undefined> = input<ICrudFilter>();
+
+  /**
+   * The filter the component should read from: the pending working copy when it
+   * is still in sync with the current input, otherwise the raw input. Once the
+   * store update arrives (a new `filter()` reference), the pending copy is
+   * considered stale and the fresh input wins.
+   */
+  protected readonly effectiveFilter = computed<ICrudFilter | undefined>(() => {
+    const source = this.filter();
+    const pending = this._pendingFilter();
+    if (pending && source === this._pendingFilterSource) return pending;
+    return source;
+  });
 
   /**
    * OnPush-safe replacement for `@if (value)` in templates (partial GAP-19).
@@ -49,7 +74,7 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
    * non-empty value.
    */
   readonly hasValue = computed<boolean>(() => {
-    const filter = this.filter();
+    const filter = this.effectiveFilter();
     const item = this.item();
     if (!filter || !item || !filter.query) return false;
 
@@ -83,7 +108,7 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
   }
 
   get value(): any {
-    const filter = this.filter();
+    const filter = this.effectiveFilter();
     const item = this.item();
     if (!filter || !item || !filter.query) return null;
 
@@ -104,7 +129,7 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
   }
 
   get minValue(): any {
-    const filter = this.filter();
+    const filter = this.effectiveFilter();
     const item = this.item();
     if (!filter || !item || !filter.query) return null;
 
@@ -125,7 +150,7 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
   }
 
   get maxValue(): any {
-    const filter = this.filter();
+    const filter = this.effectiveFilter();
     const item = this.item();
     if (!filter || !item || !filter.query) return null;
 
@@ -149,9 +174,53 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
     return this.translateService.currentLang;
   }
 
+  /**
+   * Returns a filter object safe to mutate. The store-bound `filter()` input is
+   * frozen under NgRx `strictStateImmutability`, so when (any part of) the
+   * source is frozen we hand back a deep-enough clone — object + query array +
+   * query entries — leaving the store untouched. When the source is a plain,
+   * extensible object (no immutability checks active) we keep operating on it in
+   * place so consumers that hold the same reference still observe the change.
+   */
+  private cloneFilter(): ICrudFilter | undefined {
+    const source = this.effectiveFilter();
+    if (!source) return undefined;
+
+    if (!this.isMutationSafe(source)) {
+      return {
+        ...source,
+        query: source.query ? source.query.map((q) => ({ ...q })) : [],
+      };
+    }
+
+    return source;
+  }
+
+  /**
+   * True when `filter` (and its query array + entries) can be mutated directly,
+   * i.e. nothing is frozen.
+   */
+  private isMutationSafe(filter: ICrudFilter): boolean {
+    if (Object.isFrozen(filter)) return false;
+    const query = filter.query;
+    if (!query) return true;
+    if (Object.isFrozen(query)) return false;
+    return query.every((q) => !Object.isFrozen(q));
+  }
+
+  /**
+   * Records the mutated clone as the pending working copy (so read getters
+   * reflect it immediately) and dispatches it through the facade.
+   */
+  private commitFilter(filter: ICrudFilter): void {
+    this._pendingFilterSource = this.filter();
+    this._pendingFilter.set(filter);
+    this.facade.read(filter);
+  }
+
   @Debounce(500)
   refresh(val: any, type: string | null = null): void {
-    const filter = this.filter();
+    const filter = this.cloneFilter();
     const item = this.item();
     if (!filter || !item) return;
 
@@ -161,7 +230,7 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
     filter.offset = 0;
 
     if (this.isArrayType()) {
-      this.refreshForArray(val as [], type);
+      this.refreshForArray(filter, val as [], type);
       return;
     }
 
@@ -177,7 +246,7 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
         }
       }
 
-      this.facade.read(filter);
+      this.commitFilter(filter);
       return;
     }
 
@@ -194,7 +263,7 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
     query.value = val;
     query.label = item.label;
 
-    this.facade.read(filter);
+    this.commitFilter(filter);
   }
 
   /**
@@ -258,13 +327,13 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
   }
 
   clear(): void {
-    const filter = this.filter();
+    const filter = this.cloneFilter();
     const item = this.item();
     if (!filter || !item || !filter.query) return;
 
     filter.query = filter.query?.filter((q) => q.key !== item.key);
     filter.offset = 0;
-    this.facade.read(filter);
+    this.commitFilter(filter);
   }
 
   ngOnInit(): void {
@@ -293,7 +362,7 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
   }
 
   private hasQueryValue(type: string): boolean {
-    const filter = this.filter();
+    const filter = this.effectiveFilter();
     const item = this.item();
     if (!filter || !item || !filter.query) return false;
 
@@ -312,8 +381,7 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
     return item?.fieldType === FieldType.check;
   }
 
-  private refreshForArray(vals: [], type: string): void {
-    const filter = this.filter();
+  private refreshForArray(filter: ICrudFilter, vals: [], type: string): void {
     const item = this.item();
     if (!filter || !item) return;
     if (!filter.query) filter.query = [];
@@ -329,7 +397,7 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
     });
 
     if (vals === null || vals === undefined || !vals.length) {
-      this.facade.read(filter);
+      this.commitFilter(filter);
       return;
     }
 
@@ -343,6 +411,6 @@ export class BaseComponent<T extends IEntity<string>> implements OnInit {
       filter.query!.push(query);
     });
 
-    this.facade.read(filter);
+    this.commitFilter(filter);
   }
 }

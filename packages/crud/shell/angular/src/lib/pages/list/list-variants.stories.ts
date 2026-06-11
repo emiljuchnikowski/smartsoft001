@@ -1,13 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { NgModule, signal } from '@angular/core';
-import { RouterTestingModule } from '@angular/router/testing';
+import { importProvidersFrom, NgModule, signal } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
-import { moduleMetadata } from '@storybook/angular';
+import { applicationConfig, moduleMetadata } from '@storybook/angular';
 import type { Meta, StoryObj } from '@storybook/angular';
 
-import { PaginationMode, SharedModule } from '@smartsoft001/angular';
+import {
+  NgrxSharedModule,
+  PaginationMode,
+  SharedModule,
+} from '@smartsoft001/angular';
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
 import { ListComponent } from './list.component';
@@ -84,11 +88,7 @@ const SAMPLE_GROUPS: Array<ICrudListGroup> = [
 @NgModule({
   imports: [
     CommonModule,
-    StoreModule.forRoot({}),
-    EffectsModule.forRoot([]),
     SharedModule,
-    TranslateModule.forRoot(),
-    RouterTestingModule,
     CrudModule.forFeature({
       routing: true,
       config: {
@@ -108,11 +108,7 @@ export class FiltersStorybookModule {}
 @NgModule({
   imports: [
     CommonModule,
-    StoreModule.forRoot({}),
-    EffectsModule.forRoot([]),
     SharedModule,
-    TranslateModule.forRoot(),
-    RouterTestingModule,
     CrudModule.forFeature({
       routing: true,
       config: {
@@ -133,11 +129,7 @@ export class GroupsStorybookModule {}
 @NgModule({
   imports: [
     CommonModule,
-    StoreModule.forRoot({}),
-    EffectsModule.forRoot([]),
     SharedModule,
-    TranslateModule.forRoot(),
-    RouterTestingModule,
     CrudModule.forFeature({
       routing: true,
       config: {
@@ -160,11 +152,7 @@ export class StylingStorybookModule {}
 @NgModule({
   imports: [
     CommonModule,
-    StoreModule.forRoot({}),
-    EffectsModule.forRoot([]),
     SharedModule,
-    TranslateModule.forRoot(),
-    RouterTestingModule,
     CrudModule.forFeature({
       routing: true,
       config: {
@@ -191,11 +179,7 @@ export class SortSearchStorybookModule {}
 @NgModule({
   imports: [
     CommonModule,
-    StoreModule.forRoot({}),
-    EffectsModule.forRoot([]),
     SharedModule,
-    TranslateModule.forRoot(),
-    RouterTestingModule,
     CrudModule.forFeature({
       routing: true,
       config: {
@@ -221,11 +205,7 @@ export class ActionsStorybookModule {}
 @NgModule({
   imports: [
     CommonModule,
-    StoreModule.forRoot({}),
-    EffectsModule.forRoot([]),
     SharedModule,
-    TranslateModule.forRoot(),
-    RouterTestingModule,
     CrudModule.forFeature({
       routing: true,
       config: {
@@ -241,9 +221,37 @@ export class ActionsStorybookModule {}
 })
 export class PaginationStorybookModule {}
 
+/**
+ * Root-level providers for the story application. NgRx must live at the
+ * APPLICATION injector (not in `moduleMetadata` imports): `Actions`,
+ * `EffectSources` and `EffectsRunner` are `providedIn: 'root'`, so they are
+ * created in the root injector and must find `Store` there. `NgrxSharedModule`
+ * connects the static `NgrxStoreService.store` that `CrudModule.forFeature`
+ * uses to register the entity reducer. The real router replaces
+ * `RouterTestingModule` (the `@angular/router/testing` entrypoint is not
+ * bundleable in the Storybook preview); hash routing keeps `router.navigate`
+ * from touching the iframe URL's story params.
+ */
+const storyAppConfig = applicationConfig({
+  providers: [
+    importProvidersFrom(
+      StoreModule.forRoot({}),
+      EffectsModule.forRoot([]),
+      NgrxSharedModule,
+      TranslateModule.forRoot(),
+      // The catch-all route accepts the add/edit navigations the list page
+      // issues (`router.navigate([…, 'add'])`). CrudFullModule's child routes
+      // live in the story's child injector, which the root router cannot see,
+      // so without it those navigations reject with NG04002.
+      RouterModule.forRoot([{ path: '**', children: [] }], { useHash: true }),
+    ),
+  ],
+});
+
 const meta: Meta<ListComponent<Note>> = {
   title: 'Smart-Crud/List Page Variants',
   component: ListComponent,
+  decorators: [storyAppConfig],
 };
 
 export default meta;

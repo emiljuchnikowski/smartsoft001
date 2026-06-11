@@ -1,16 +1,24 @@
 import { CommonModule } from '@angular/common';
-import { NgModule, signal } from '@angular/core';
-import { RouterTestingModule } from '@angular/router/testing';
+import {
+  Component,
+  importProvidersFrom,
+  inject,
+  NgModule,
+  OnInit,
+  signal,
+} from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
-import { StoreModule } from '@ngrx/store';
+import { Store, StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
-import { moduleMetadata } from '@storybook/angular';
+import { applicationConfig, moduleMetadata } from '@storybook/angular';
 import type { Meta, StoryObj } from '@storybook/angular';
 
-import { SharedModule } from '@smartsoft001/angular';
+import { NgrxSharedModule, SharedModule } from '@smartsoft001/angular';
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
 import { FiltersComponent } from './filters.component';
+import { read } from '../../+state/crud.actions';
 import { CrudModule } from '../../crud.module';
 
 /**
@@ -72,11 +80,7 @@ export class FilterableArticle {
 @NgModule({
   imports: [
     CommonModule,
-    StoreModule.forRoot({}),
-    EffectsModule.forRoot([]),
     SharedModule,
-    TranslateModule.forRoot(),
-    RouterTestingModule,
     CrudModule.forFeature({
       routing: true,
       config: {
@@ -91,12 +95,61 @@ export class FilterableArticle {
 })
 export class StorybookTestModule {}
 
+/**
+ * Root-level providers for the story application. NgRx must live at the
+ * APPLICATION injector (not in `moduleMetadata` imports): `Actions`,
+ * `EffectSources` and `EffectsRunner` are `providedIn: 'root'`, so they are
+ * created in the root injector and must find `Store` there. `NgrxSharedModule`
+ * connects the static `NgrxStoreService.store` that `CrudModule.forFeature`
+ * uses to register the entity reducer. The real router replaces
+ * `RouterTestingModule` (the `@angular/router/testing` entrypoint is not
+ * bundleable in the Storybook preview); hash routing keeps `router.navigate`
+ * from touching the iframe URL's story params.
+ */
+const storyAppConfig = applicationConfig({
+  providers: [
+    importProvidersFrom(
+      StoreModule.forRoot({}),
+      EffectsModule.forRoot([]),
+      NgrxSharedModule,
+      TranslateModule.forRoot(),
+      RouterModule.forRoot([], { useHash: true }),
+    ),
+  ],
+});
+
+/**
+ * Story host. The filter widgets early-return from `refresh()` while
+ * `facade.filter()` is undefined, and only a `[articles] Read` dispatch seeds
+ * that state — in a real app the list page issues it on init. The host
+ * replays that initial read (its HTTP GET is stubbed by the e2e intercepts,
+ * exactly like the list-page stories) so typing into a widget re-reads with
+ * the new query param.
+ */
+@Component({
+  selector: 'smart-story-filters-host',
+  template: `
+    <div style="height: 600px; width: 360px; border: 1px solid #e5e7eb">
+      <smart-crud-filters></smart-crud-filters>
+    </div>
+  `,
+  imports: [FiltersComponent],
+})
+export class FiltersStoryHostComponent implements OnInit {
+  private readonly store = inject(Store);
+
+  ngOnInit(): void {
+    this.store.dispatch(read('articles', { limit: 25, offset: 0, query: [] }));
+  }
+}
+
 const meta: Meta<FiltersComponent<FilterableArticle>> = {
   title: 'Smart-Crud/Filters',
   component: FiltersComponent,
   decorators: [
+    storyAppConfig,
     moduleMetadata({
-      imports: [StorybookTestModule],
+      imports: [StorybookTestModule, FiltersStoryHostComponent],
     }),
   ],
 };
@@ -111,10 +164,6 @@ type Story = StoryObj<FiltersComponent<FilterableArticle>>;
 export const Default: Story = {
   name: 'Composed filter widgets',
   render: () => ({
-    template: `
-      <div style="height: 600px; width: 360px; border: 1px solid #e5e7eb">
-          <smart-crud-filters></smart-crud-filters>
-      </div>
-    `,
+    template: `<smart-story-filters-host></smart-story-filters-host>`,
   }),
 };

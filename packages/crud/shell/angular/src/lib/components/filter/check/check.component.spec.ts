@@ -140,6 +140,41 @@ describe('crud-shell-angular: FilterCheckComponent', () => {
     expect(labels.length).toBe(0);
   });
 
+  it('should not throw and mark all entries unchecked when value is null on init', () => {
+    // Arrange
+    const fixture = setup();
+    fixture.componentRef.setInput('item', buildItem());
+    fixture.componentRef.setInput('filter', {} as unknown as ICrudFilter);
+
+    // Act
+    fixture.detectChanges();
+
+    // Assert
+    const entries = fixture.componentInstance.list();
+    expect(entries.length).toBe(2);
+    expect(entries.every((e) => e.isCheck === false)).toBe(true);
+  });
+
+  it('should set value to [entry.value.id] when toggled on from a null value', () => {
+    // Arrange
+    jest.useFakeTimers();
+    const fixture = setup();
+    fixture.componentRef.setInput('item', buildItem());
+    fixture.componentRef.setInput('filter', {
+      query: [],
+    } as unknown as ICrudFilter);
+    fixture.detectChanges();
+    const firstEntry = fixture.componentInstance.list()[0];
+
+    // Act
+    fixture.componentInstance.onCheckChange(true, firstEntry);
+    jest.advanceTimersByTime(500);
+
+    // Assert
+    expect(fixture.componentInstance.value).toEqual([firstEntry.value.id]);
+    jest.useRealTimers();
+  });
+
   it('should trigger facade.read when a checkbox is toggled on', () => {
     // Arrange
     jest.useFakeTimers();

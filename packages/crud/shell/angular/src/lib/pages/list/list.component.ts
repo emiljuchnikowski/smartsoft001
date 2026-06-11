@@ -122,7 +122,7 @@ export class ListComponent<T extends IEntity<string>>
     if (this.config.list?.resetQuery === 'beforeInit') {
       newFilter = {
         query: this.config.baseQuery ? [...this.config.baseQuery] : [],
-        paginationMode: this.config.list!.paginationMode,
+        paginationMode: this.config.list?.paginationMode,
         limit: this.config.pagination
           ? this.config.pagination.limit
           : undefined,
@@ -139,7 +139,7 @@ export class ListComponent<T extends IEntity<string>>
       newFilter = this.filter();
     } else {
       newFilter = {
-        paginationMode: this.config.list!.paginationMode,
+        paginationMode: this.config.list?.paginationMode,
         limit: this.searchService.filter?.limit
           ? this.searchService.filter.limit
           : this.config.pagination
@@ -302,8 +302,8 @@ export class ListComponent<T extends IEntity<string>>
           }
         : undefined,
       pagination: await this.paginationFacade.create({
-        mode: this.config.list!.paginationMode,
-        limit: this.config.pagination!.limit,
+        mode: this.config.list?.paginationMode,
+        limit: this.config.pagination?.limit ?? 0,
         provider: {
           getFilter: () => {
             return this.filter() || ({} as ICrudFilter);

@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { NgModule } from '@angular/core';
-import { RouterTestingModule } from '@angular/router/testing';
+import { importProvidersFrom, NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
-import { moduleMetadata } from '@storybook/angular';
+import { applicationConfig, moduleMetadata } from '@storybook/angular';
 import type { Meta, StoryObj } from '@storybook/angular';
 
-import { SharedModule } from '@smartsoft001/angular';
+import { NgrxSharedModule, SharedModule } from '@smartsoft001/angular';
 import { Field, Model } from '@smartsoft001/models';
 
 import { ListComponent } from './list.component';
@@ -35,11 +35,7 @@ export class Note {
 @NgModule({
   imports: [
     CommonModule,
-    StoreModule.forRoot({}),
-    EffectsModule.forRoot([]),
     SharedModule,
-    TranslateModule.forRoot(),
-    RouterTestingModule,
     CrudModule.forFeature({
       routing: true,
       config: {
@@ -55,10 +51,34 @@ export class Note {
 })
 export class StorybookTestModule {}
 
+/**
+ * Root-level providers for the story application. NgRx must live at the
+ * APPLICATION injector (not in `moduleMetadata` imports): `Actions`,
+ * `EffectSources` and `EffectsRunner` are `providedIn: 'root'`, so they are
+ * created in the root injector and must find `Store` there. `NgrxSharedModule`
+ * connects the static `NgrxStoreService.store` that `CrudModule.forFeature`
+ * uses to register the entity reducer. The real router replaces
+ * `RouterTestingModule` (the `@angular/router/testing` entrypoint is not
+ * bundleable in the Storybook preview); hash routing keeps `router.navigate`
+ * from touching the iframe URL's story params.
+ */
+const storyAppConfig = applicationConfig({
+  providers: [
+    importProvidersFrom(
+      StoreModule.forRoot({}),
+      EffectsModule.forRoot([]),
+      NgrxSharedModule,
+      TranslateModule.forRoot(),
+      RouterModule.forRoot([], { useHash: true }),
+    ),
+  ],
+});
+
 const meta: Meta<ListComponent<Note>> = {
   title: 'Smart-Crud/List Page',
   component: ListComponent,
   decorators: [
+    storyAppConfig,
     moduleMetadata({
       imports: [StorybookTestModule],
     }),

@@ -56,8 +56,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "npx tailwind -c packages/shared/angular/tailwind.config.js -i packages/shared/angular/src/lib/styles.css -o dist/packages/shared/angular/styles.css",
-          "npx tailwind -c packages/crud/shell/angular/tailwind.config.js -i packages/crud/shell//angular/src/lib/styles.css -o dist/packages/crud/shell//angular/styles.css"
+          "npx @tailwindcss/cli -i packages/crud/shell/angular/src/lib/styles.css -o dist/packages/crud/shell/angular/styles.css"
         ]
       }
     },

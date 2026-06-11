@@ -70,19 +70,20 @@ export class FilterCheckComponent<T extends IEntity<string>>
 
     this.list = computed(() => {
       const possibilities = this.possibilities ? this.possibilities() : [];
+      const v = this.value ?? [];
       return possibilities.map((pos) => ({
         value: pos,
-        isCheck: this.value.some((r: any) => r === pos.id),
+        isCheck: v.some((r: any) => r === pos.id),
       }));
     });
   }
 
   onCheckChange(checked: boolean, entry: { value: any; isCheck: boolean }) {
-    if (checked && !this.value.some((r: any) => r === entry.value.id)) {
-      this.value = [...this.value, entry.value.id];
+    if (checked && !(this.value ?? []).some((r: any) => r === entry.value.id)) {
+      this.value = [...(this.value ?? []), entry.value.id];
     }
 
-    if (!checked && this.value.some((r: any) => r === entry.value.id)) {
+    if (!checked && (this.value ?? []).some((r: any) => r === entry.value.id)) {
       this.value = this.value?.filter((r: any) => r !== entry.value.id);
     }
   }

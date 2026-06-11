@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, NgModule } from '@angular/core';
-import { RouterTestingModule } from '@angular/router/testing';
+import { Component, importProvidersFrom, NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
-import { moduleMetadata } from '@storybook/angular';
+import { applicationConfig, moduleMetadata } from '@storybook/angular';
 import type { Meta, StoryObj } from '@storybook/angular';
 
-import { SharedModule } from '@smartsoft001/angular';
+import { NgrxSharedModule, SharedModule } from '@smartsoft001/angular';
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
 import { ItemComponent } from './item.component';
@@ -41,20 +41,14 @@ export class Article {
 }
 
 // Dedicated Storybook module mirroring the list story's `StorybookTestModule`.
-// `RouterTestingModule.withRoutes` provides an `/add` route so the item page can
+// `storyAppConfig` provides an `/add` route so the item page can
 // resolve its "create" mode from `router.routerState.snapshot.url` (it checks
 // for a URL ending in `/add`). The placeholder apiUrl renders chrome without a
 // live backend.
 @NgModule({
   imports: [
     CommonModule,
-    StoreModule.forRoot({}),
-    EffectsModule.forRoot([]),
     SharedModule,
-    TranslateModule.forRoot(),
-    RouterTestingModule.withRoutes([
-      { path: 'articles/add', component: ItemComponent },
-    ]),
     CrudModule.forFeature({
       routing: true,
       config: {
@@ -72,10 +66,37 @@ export class Article {
 })
 export class StorybookTestModule {}
 
+/**
+ * Root-level providers for the story application. NgRx must live at the
+ * APPLICATION injector (not in `moduleMetadata` imports): `Actions`,
+ * `EffectSources` and `EffectsRunner` are `providedIn: 'root'`, so they are
+ * created in the root injector and must find `Store` there. `NgrxSharedModule`
+ * connects the static `NgrxStoreService.store` that `CrudModule.forFeature`
+ * uses to register the entity reducer. The real router replaces
+ * `RouterTestingModule` (the `@angular/router/testing` entrypoint is not
+ * bundleable in the Storybook preview); hash routing keeps `router.navigate`
+ * from touching the iframe URL's story params.
+ */
+const storyAppConfig = applicationConfig({
+  providers: [
+    importProvidersFrom(
+      StoreModule.forRoot({}),
+      EffectsModule.forRoot([]),
+      NgrxSharedModule,
+      TranslateModule.forRoot(),
+      RouterModule.forRoot(
+        [{ path: 'articles/add', component: ItemComponent }],
+        { useHash: true },
+      ),
+    ),
+  ],
+});
+
 const meta: Meta<ItemComponent<Article>> = {
   title: 'Smart-Crud/Item Page',
   component: ItemComponent,
   decorators: [
+    storyAppConfig,
     moduleMetadata({
       imports: [StorybookTestModule],
     }),
@@ -87,7 +108,7 @@ type Story = StoryObj<ItemComponent<Article>>;
 
 /**
  * "Add" mode — the create form. The item page enters create mode when the route
- * URL ends in `/add`, which `RouterTestingModule.withRoutes` above provides.
+ * URL ends in `/add`, which `storyAppConfig` provides.
  */
 export const Add: Story = {
   name: 'Add (create form)',

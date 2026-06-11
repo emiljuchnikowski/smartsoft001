@@ -32,9 +32,13 @@ class SomeModel {
  * resolving the heavy async tail.
  */
 describe('crud-shell-angular: ListComponent (GAP-27 styling surface)', () => {
-  function setup(config: Partial<CrudFullConfig<any>> = {}): {
+  function setup(
+    config: Partial<CrudFullConfig<any>> = {},
+    { omitDefaultList = false }: { omitDefaultList?: boolean } = {},
+  ): {
     fixture: ComponentFixture<ListComponent<any>>;
     ngOnInit: () => void;
+    facadeMock: { read: jest.Mock };
   } {
     const facadeMock = {
       links: signal<any>(null),
@@ -59,7 +63,7 @@ describe('crud-shell-angular: ListComponent (GAP-27 styling surface)', () => {
           provide: CrudFullConfig,
           useValue: {
             type: SomeModel,
-            list: { paginationMode: undefined },
+            ...(omitDefaultList ? {} : { list: { paginationMode: undefined } }),
             ...config,
           },
         },
@@ -93,6 +97,7 @@ describe('crud-shell-angular: ListComponent (GAP-27 styling surface)', () => {
     // is exercised by the build + full suite, so swallow its rejection here.
     return {
       fixture,
+      facadeMock,
       ngOnInit: () => {
         fixture.componentInstance.ngOnInit().catch(() => undefined);
       },
@@ -130,5 +135,37 @@ describe('crud-shell-angular: ListComponent (GAP-27 styling surface)', () => {
     ngOnInit();
 
     expect(fixture.componentInstance.pageOptions()?.title).toBe('My List');
+  });
+
+  // Regression: CrudFullConfig.list and .pagination are OPTIONAL. A consumer
+  // config that omits `list` must not crash ngOnInit on `list!.paginationMode`.
+  it('should not throw on init when config has no list property', () => {
+    const { ngOnInit } = setup(
+      { title: 'No List', export: true, pagination: { limit: 25 } },
+      { omitDefaultList: true },
+    );
+
+    expect(() => ngOnInit()).not.toThrow();
+  });
+
+  it('should read with paginationMode undefined when config has no list', () => {
+    const { ngOnInit, facadeMock } = setup(
+      { title: 'No List', export: true, pagination: { limit: 25 } },
+      { omitDefaultList: true },
+    );
+
+    ngOnInit();
+
+    expect(facadeMock.read).toHaveBeenCalledTimes(1);
+    expect(facadeMock.read.mock.calls[0][0].paginationMode).toBeUndefined();
+  });
+
+  it('should not throw on init when config has no pagination property', () => {
+    const { ngOnInit } = setup(
+      { title: 'No Pagination', export: true },
+      { omitDefaultList: true },
+    );
+
+    expect(() => ngOnInit()).not.toThrow();
   });
 });
