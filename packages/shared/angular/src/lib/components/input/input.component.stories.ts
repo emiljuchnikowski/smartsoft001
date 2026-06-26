@@ -35,6 +35,7 @@ import { InputFileComponent } from './file/file.component';
 import { InputImageComponent } from './image/image.component';
 import { InputComponent } from './input.component';
 import { InputPdfComponent } from './pdf/pdf.component';
+import { INPUT_PRESET_FIELD_COMPONENTS } from './preset-fields';
 
 class MockModelLabelProvider extends IModelLabelProvider {
   private labels: Record<string, string> = {
@@ -884,6 +885,57 @@ export const InputError: Story = {
       `,
       moduleMetadata: {
         imports: [InputErrorComponent],
+      },
+    };
+  },
+};
+
+// ─── Preset (Preline) — mixed grid ───────────────────────────────────────────
+
+export const PresetFields: Story = {
+  name: 'Preset fields (Preline)',
+  render: () => {
+    @Model({})
+    class PresetModel {
+      @Field({ type: FieldType.text }) name = '';
+      @Field({ type: FieldType.email }) email = '';
+      @Field({ type: FieldType.password }) password = '';
+      @Field({ type: FieldType.int }) age = 0;
+      @Field({ type: FieldType.float }) amount = 0;
+      @Field({ type: FieldType.longText }) bio = '';
+      @Field({ type: FieldType.check }) accept = false;
+      @Field({ type: FieldType.date }) startDate = '';
+    }
+    const model = new PresetModel();
+    const rows = [
+      { fieldKey: 'name', control: new UntypedFormControl('Jan Kowalski') },
+      { fieldKey: 'email', control: new UntypedFormControl('jan@example.com') },
+      { fieldKey: 'password', control: new UntypedFormControl('secret123') },
+      { fieldKey: 'age', control: new UntypedFormControl(30) },
+      { fieldKey: 'amount', control: new UntypedFormControl(99.95) },
+      { fieldKey: 'bio', control: new UntypedFormControl('Lorem ipsum') },
+      { fieldKey: 'accept', control: new UntypedFormControl(true) },
+      { fieldKey: 'startDate', control: new UntypedFormControl('2026-04-20') },
+    ].map((r) => ({
+      ...r,
+      options: buildOptions(model, r.fieldKey, r.control),
+    }));
+    return {
+      props: { rows },
+      template: `
+        <div class="smart:grid smart:grid-cols-1 md:smart:grid-cols-2 smart:gap-6 smart:p-4">
+          @for (row of rows; track row.fieldKey) {
+            <smart-input [options]="row.options"></smart-input>
+          }
+        </div>
+      `,
+      moduleMetadata: {
+        providers: [
+          {
+            provide: INPUT_FIELD_COMPONENTS_TOKEN,
+            useValue: INPUT_PRESET_FIELD_COMPONENTS,
+          },
+        ],
       },
     };
   },

@@ -34,3 +34,31 @@ export * from './date-range/date-range.component';
 export * from './image/image.component';
 export * from './float/float.component';
 export * from './phone-number-pl/phone-number-pl.component';
+
+// Preline-styled field-type presets (FRA-226). Register via
+// INPUT_FIELD_COMPONENTS_TOKEN keyed by FieldType to apply the Preline look.
+export * from './attachment/preset/preset.component';
+export * from './check/preset/preset.component';
+export * from './currency/preset/preset.component';
+export * from './date/preset/preset.component';
+export * from './date-range/preset/preset.component';
+export * from './date-with-edit/preset/preset.component';
+export * from './email/preset/preset.component';
+export * from './enum/preset/preset.component';
+export * from './error/preset/preset.component';
+export * from './file/preset/preset.component';
+export * from './float/preset/preset.component';
+export * from './image/preset/preset.component';
+export * from './int/preset/preset.component';
+export * from './ints/preset/preset.component';
+export * from './logo/preset/preset.component';
+export * from './long-text/preset/preset.component';
+export * from './nip/preset/preset.component';
+export * from './password/preset/preset.component';
+export * from './pesel/preset/preset.component';
+export * from './phone-number/preset/preset.component';
+export * from './phone-number-pl/preset/preset.component';
+export * from './radio/preset/preset.component';
+export * from './strings/preset/preset.component';
+export * from './text/preset/preset.component';
+export * from './preset-fields';

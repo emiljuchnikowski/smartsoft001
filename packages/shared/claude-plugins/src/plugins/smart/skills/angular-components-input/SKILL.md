@@ -126,6 +126,38 @@ providers: [
 
 Maps are merged (`{ ...baseMap, ...extendMap }`), so only selected types need to be overridden.
 
+## Preline field presets
+
+Each field type ships a Preline-styled **preset** (`Input<Field>PresetComponent`, selector
+`smart-input-<field>-preset`) alongside the default Tailwind-UI-styled field component. The
+presets live in `<field>/preset/` and all translate the Preline look to `smart:`-prefixed vanilla
+Tailwind with explicit `dark:` variants. Apply them by providing the ready-made map
+`INPUT_PRESET_FIELD_COMPONENTS` for the token (it covers all field types except the standalone
+validation-message preset):
+
+```typescript
+import {
+  INPUT_FIELD_COMPONENTS_TOKEN,
+  INPUT_PRESET_FIELD_COMPONENTS,
+} from '@smartsoft001/angular';
+
+providers: [
+  {
+    provide: INPUT_FIELD_COMPONENTS_TOKEN,
+    useValue: INPUT_PRESET_FIELD_COMPONENTS,
+  },
+  // or override only some: { ...INPUT_PRESET_FIELD_COMPONENTS, [FieldType.text]: MyText }
+];
+```
+
+Notes:
+
+- Interactive Preline widgets (enum select, password strength meter, date pickers, file
+  drop-zone) are driven by Angular signals — the Preline JS plugins are **not** required.
+- `InputErrorPresetComponent` (`smart-input-error-preset`) is a Preline-styled validation-message
+  variant. Because `InputComponent` hard-codes `<smart-input-error>` (no token for it), use this
+  preset via its selector directly — it is not part of `INPUT_PRESET_FIELD_COMPONENTS`.
+
 ## Extending the Base Class
 
 ```typescript
