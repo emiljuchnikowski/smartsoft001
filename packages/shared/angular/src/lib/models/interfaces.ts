@@ -557,7 +557,14 @@ export type SmartBadgeColor =
   | 'pink';
 
 export interface IBadgeOptions {
-  variant?: 'border' | 'flat';
+  /**
+   * Visual style variant (consumed by `BadgePresetComponent`):
+   * - `solid` — filled background with inverse text
+   * - `soft` — tinted background with same-hue text
+   * - `outline` — transparent background with colored border + text
+   */
+  variant?: 'solid' | 'soft' | 'outline';
+  /** Fully rounded pill shape (default `true`); `false` renders `rounded-md` corners. */
   pill?: boolean;
   withDot?: boolean;
   withRemove?: boolean;
