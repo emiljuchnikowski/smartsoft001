@@ -1,15 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { AccordionComponent } from './accordion.component';
+import { AccordionPresetComponent } from './preset/preset.component';
 import { IAccordionOptions } from '../../models';
 
+// The accordion has NO standard-component token, so the preset is rendered
+// directly via its <smart-accordion-preset> selector (not DI-swappable). The
+// required headerTpl / bodyTpl inputs are supplied as <ng-template> refs.
 const meta: Meta = {
   title: 'Components/Accordion',
   tags: ['autodocs'],
   decorators: [
     moduleMetadata({
-      imports: [AccordionComponent],
+      imports: [AccordionPresetComponent],
     }),
   ],
   argTypes: {
@@ -45,100 +48,81 @@ export const Playground: Story = {
       cssClass: args.cssClass,
     },
     template: `
-      <smart-accordion [(show)]="isOpen" [options]="options" [class]="cssClass">
-        <span accordionHeader>What is the best thing about Switzerland?</span>
-        <span accordionBody>I don't know, but the flag is a big plus.</span>
-      </smart-accordion>
-    `,
-  }),
-};
-
-export const DefaultClosed: Story = {
-  name: 'Default Closed',
-  render: () => ({
-    props: { isOpen: false },
-    template: `
-      <smart-accordion [(show)]="isOpen">
-        <span accordionHeader>Click to expand</span>
-        <span accordionBody>This content is hidden by default.</span>
-      </smart-accordion>
-    `,
-  }),
-};
-
-export const DefaultOpen: Story = {
-  name: 'Default Open',
-  render: () => ({
-    props: { isOpen: true },
-    template: `
-      <smart-accordion [(show)]="isOpen">
-        <span accordionHeader>This accordion starts open</span>
-        <span accordionBody>This content is visible by default.</span>
-      </smart-accordion>
-    `,
-  }),
-};
-
-export const Disabled: Story = {
-  name: 'Disabled',
-  render: () => ({
-    props: {
-      isOpen: false,
-      options: { disabled: true } as IAccordionOptions,
-    },
-    template: `
-      <smart-accordion [(show)]="isOpen" [options]="options">
-        <span accordionHeader>This accordion is disabled</span>
-        <span accordionBody>You should not see this.</span>
-      </smart-accordion>
-    `,
-  }),
-};
-
-export const MultipleFAQ: Story = {
-  name: 'Multiple (FAQ)',
-  render: () => ({
-    props: {
-      q1Open: false,
-      q2Open: false,
-      q3Open: false,
-    },
-    template: `
-      <div style="display: flex; flex-direction: column; gap: 8px;">
-        <smart-accordion [(show)]="q1Open">
-          <span accordionHeader>What payment methods do you accept?</span>
-          <span accordionBody>We accept Visa, Mastercard, PayPal, and bank transfers.</span>
-        </smart-accordion>
-        <smart-accordion [(show)]="q2Open">
-          <span accordionHeader>How long does shipping take?</span>
-          <span accordionBody>Standard shipping takes 3-5 business days. Express shipping is available for 1-2 day delivery.</span>
-        </smart-accordion>
-        <smart-accordion [(show)]="q3Open">
-          <span accordionHeader>Can I return my order?</span>
-          <span accordionBody>Yes, you can return any item within 30 days of purchase for a full refund.</span>
-        </smart-accordion>
+      <div style="padding: 24px; max-width: 480px;">
+        <ng-template #headerTpl>What is the best thing about Switzerland?</ng-template>
+        <ng-template #bodyTpl>I don't know, but the flag is a big plus.</ng-template>
+        <smart-accordion-preset
+          [headerTpl]="headerTpl"
+          [bodyTpl]="bodyTpl"
+          [(show)]="isOpen"
+          [options]="options"
+          [cssClass]="cssClass"
+        />
       </div>
     `,
   }),
 };
 
-export const NestedContent: Story = {
-  name: 'Nested Content',
+export const AllVariants: Story = {
+  name: 'All variants',
+  parameters: { controls: { disable: true } },
   render: () => ({
-    props: { isOpen: true },
+    props: {
+      closedOpen: false,
+      openOpen: true,
+      disabledOpen: false,
+      disabledOptions: { disabled: true } as IAccordionOptions,
+      faq1: false,
+      faq2: true,
+      faq3: false,
+    },
     template: `
-      <smart-accordion [(show)]="isOpen">
-        <span accordionHeader>Accordion with rich content</span>
-        <div accordionBody>
-          <h4 style="font-weight: 600; margin-bottom: 8px;">Section Title</h4>
-          <p style="margin-bottom: 8px;">This accordion contains structured content with multiple elements.</p>
-          <ul style="list-style: disc; padding-left: 20px;">
-            <li>Item one</li>
-            <li>Item two</li>
-            <li>Item three</li>
-          </ul>
-        </div>
-      </smart-accordion>
+      <div style="display: flex; flex-direction: column; gap: 32px; padding: 24px; max-width: 560px;">
+
+        <section>
+          <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">Closed</h3>
+          <ng-template #h1>Click to expand</ng-template>
+          <ng-template #b1>This content is hidden by default.</ng-template>
+          <smart-accordion-preset [headerTpl]="h1" [bodyTpl]="b1" [(show)]="closedOpen" />
+        </section>
+
+        <section>
+          <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">Open</h3>
+          <ng-template #h2>This accordion starts open</ng-template>
+          <ng-template #b2>This content is visible by default.</ng-template>
+          <smart-accordion-preset [headerTpl]="h2" [bodyTpl]="b2" [(show)]="openOpen" />
+        </section>
+
+        <section>
+          <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">Disabled</h3>
+          <ng-template #h3>This accordion is disabled</ng-template>
+          <ng-template #b3>You should not see this.</ng-template>
+          <smart-accordion-preset
+            [headerTpl]="h3"
+            [bodyTpl]="b3"
+            [(show)]="disabledOpen"
+            [options]="disabledOptions"
+          />
+        </section>
+
+        <section>
+          <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">Multiple (FAQ)</h3>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <ng-template #fh1>What payment methods do you accept?</ng-template>
+            <ng-template #fb1>We accept Visa, Mastercard, PayPal, and bank transfers.</ng-template>
+            <smart-accordion-preset [headerTpl]="fh1" [bodyTpl]="fb1" [(show)]="faq1" />
+
+            <ng-template #fh2>How long does shipping take?</ng-template>
+            <ng-template #fb2>Standard shipping takes 3-5 business days.</ng-template>
+            <smart-accordion-preset [headerTpl]="fh2" [bodyTpl]="fb2" [(show)]="faq2" />
+
+            <ng-template #fh3>Can I return my order?</ng-template>
+            <ng-template #fb3>Yes, you can return any item within 30 days for a full refund.</ng-template>
+            <smart-accordion-preset [headerTpl]="fh3" [bodyTpl]="fb3" [(show)]="faq3" />
+          </div>
+        </section>
+
+      </div>
     `,
   }),
 };

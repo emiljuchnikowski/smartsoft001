@@ -41,6 +41,17 @@ export const WithPresetValue: Story = {
   }),
 };
 
+export const Preset: Story = {
+  name: 'Preset (calendar)',
+  render: () => ({
+    props: { value: '2023-07-20' },
+    template: `<div style="padding: 40px; min-height: 480px;">
+      <smart-date-edit variant="preset" [(ngModel)]="value"></smart-date-edit>
+      <p style="margin-top: 12px; font-size: 14px; color: #6b7280;">Value: {{ value }}</p>
+    </div>`,
+  }),
+};
+
 export const MultipleInstances: Story = {
   name: 'Multiple Instances',
   render: () => ({

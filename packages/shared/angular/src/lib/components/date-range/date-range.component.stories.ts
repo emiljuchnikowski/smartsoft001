@@ -9,6 +9,7 @@ import {
   TRANSLATE_DATA_ENG,
   TRANSLATE_DATA_PL,
 } from '../../translations-default';
+import { DateRangePresetComponent } from './preset/preset.component';
 import { DateRangeModalStandardComponent } from './standard/standard-modal.component';
 
 const meta: Meta = {
@@ -32,7 +33,11 @@ const meta: Meta = {
       ],
     }),
     moduleMetadata({
-      imports: [DateRangeComponent, DateRangeModalStandardComponent],
+      imports: [
+        DateRangeComponent,
+        DateRangeModalStandardComponent,
+        DateRangePresetComponent,
+      ],
       providers: [UIService, StyleService],
     }),
   ],
@@ -131,5 +136,40 @@ export const ModalWithoutFilters: Story = {
       onApply: (data: any) => console.log('Applied:', data),
       onDismiss: () => console.log('Dismissed'),
     },
+  }),
+};
+
+// Preline "single calendar range" styling (FRA-219). Click the trigger to open
+// the signal-driven range calendar; pick a start and end day to highlight the
+// range, then Apply.
+export const Preset: Story = {
+  name: 'Preset (Preline range calendar)',
+  parameters: { controls: { disable: true } },
+  render: () => ({
+    props: { value: undefined },
+    template: `
+      <div style="padding: 40px; min-height: 520px;">
+        <smart-date-range variant="preset" [(ngModel)]="value"></smart-date-range>
+        <p style="margin-top: 12px; font-size: 14px; color: #6b7280;">
+          Value: {{ value ? value.start + ' - ' + value.end : 'none' }}
+        </p>
+      </div>
+    `,
+  }),
+};
+
+export const PresetWithValue: Story = {
+  name: 'Preset (with preset range)',
+  parameters: { controls: { disable: true } },
+  render: () => ({
+    props: { value: { start: '2026-04-01', end: '2026-04-07' } },
+    template: `
+      <div style="padding: 40px; min-height: 520px;">
+        <smart-date-range variant="preset" [(ngModel)]="value"></smart-date-range>
+        <p style="margin-top: 12px; font-size: 14px; color: #6b7280;">
+          {{ value.start }} - {{ value.end }}
+        </p>
+      </div>
+    `,
   }),
 };

@@ -1,0 +1,151 @@
+<div [class]="triggerWrapperClass">
+  <!-- Trigger -->
+  <span [class]="triggerIconClass">
+    <svg
+      class="smart:shrink-0 smart:size-4"
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M8 2v4" />
+      <path d="M16 2v4" />
+      <rect width="18" height="18" x="3" y="4" rx="2" />
+      <path d="M3 10h18" />
+    </svg>
+  </span>
+  <input
+    type="text"
+    readonly
+    [value]="displayValue()"
+    [class]="triggerInputClass()"
+    (click)="toggleOpen()"
+    aria-label="Open date picker"
+    [attr.aria-expanded]="open()"
+  />
+
+  <!-- Calendar popover -->
+  @if (open()) {
+    <div [class]="popoverClass" role="dialog" aria-label="Choose date">
+      <div class="smart:p-3 smart:space-y-0.5">
+        <!-- Months -->
+        <div
+          class="smart:grid smart:grid-cols-5 smart:items-center smart:gap-x-3 smart:mx-1.5 smart:pb-3"
+        >
+          <!-- Prev Button -->
+          <div class="smart:col-span-1">
+            <button
+              type="button"
+              [class]="navButtonClass"
+              aria-label="Previous"
+              (click)="prevMonth()"
+            >
+              <svg
+                class="smart:shrink-0 smart:size-4"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="m15 18-6-6 6-6" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Month / Year -->
+          <div
+            class="smart:col-span-3 smart:flex smart:justify-center smart:items-center smart:gap-x-1"
+          >
+            <select
+              #monthEl
+              [class]="selectClass"
+              aria-label="Select month"
+              (change)="onMonthChange(monthEl.value)"
+            >
+              @for (month of months; track $index) {
+                <option [value]="$index" [selected]="$index === viewMonth()">
+                  {{ month }}
+                </option>
+              }
+            </select>
+
+            <span class="smart:text-gray-900 smart:dark:text-white">/</span>
+
+            <select
+              #yearEl
+              [class]="selectClass"
+              aria-label="Select year"
+              (change)="onYearChange(yearEl.value)"
+            >
+              @for (year of years(); track year) {
+                <option [value]="year" [selected]="year === viewYear()">
+                  {{ year }}
+                </option>
+              }
+            </select>
+          </div>
+
+          <!-- Next Button -->
+          <div class="smart:col-span-1 smart:flex smart:justify-end">
+            <button
+              type="button"
+              [class]="navButtonClass"
+              aria-label="Next"
+              (click)="nextMonth()"
+            >
+              <svg
+                class="smart:shrink-0 smart:size-4"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="m9 18 6-6-6-6" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Weekdays -->
+        <div class="smart:flex smart:pb-1.5">
+          @for (weekday of weekdays; track weekday) {
+            <span [class]="weekdayClass">{{ weekday }}</span>
+          }
+        </div>
+
+        <!-- Days -->
+        @for (week of weeks(); track $index) {
+          <div class="smart:flex">
+            @for (day of week; track day.date) {
+              <div>
+                <button
+                  type="button"
+                  data-role="day"
+                  [class]="dayClasses(day)"
+                  [attr.aria-pressed]="day.selected"
+                  (click)="selectDay(day)"
+                >
+                  {{ day.day }}
+                </button>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

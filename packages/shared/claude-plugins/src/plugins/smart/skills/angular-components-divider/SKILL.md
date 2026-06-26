@@ -23,6 +23,28 @@ Main wrapper component. Renders `DividerStandardComponent` by default. When `DIV
 
 Default concrete implementation. Renders a `<div role="separator">` host with optional title, label, action button, or a plain `<hr />` when none of these are provided.
 
+### DividerPresetComponent (`<smart-divider-preset>`)
+
+Styled variation that extends `DividerBaseComponent` and is a drop-in replacement for `DividerStandardComponent`. Register it via `DIVIDER_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-divider>`, or use the `<smart-divider-preset>` selector directly. It translates Preline's divider patterns to `smart:`-prefixed Tailwind (with explicit `dark:` variants): a plain `<hr>`, an inline `label`/`iconName`/`title` divider with connecting line(s) drawn left/center/right via `options.position` (default `center`), a centered `actionLabel` button, and a `with-toolbar` row (label + line + action). The visual is chosen by `options.variant`; when omitted it is **inferred** from the provided inputs (`actionLabel` → `with-button`, `title` → `with-title`, `iconName` → `with-icon`, `label` → `with-label`, otherwise plain `<hr>`). The `with-title` variant uses Preline's uppercase/muted "Or" treatment. Class recipes live in `preset/preset-classes.util.ts` (`getContainerClasses`, `getActionClasses`, `getIconClasses`, `getPlainClasses`, `getToolbarClasses`, `getToolbarLineClasses`).
+
+> Because `DividerComponent` renders injected components via `NgComponentOutlet` (which passes inputs by canonical name), `DividerPresetComponent` overrides `cssClass` as `input<string>('')` **without** the `class` alias. Bind it as `[cssClass]` when using the `<smart-divider-preset>` selector directly, or just pass `class` on `<smart-divider>` (the wrapper forwards it).
+>
+> Note: `iconName` has no icon-font dependency here — it is rendered as the text content of a `size-4` icon slot, so consumers wiring an icon font (e.g. Material Icons) get the correct sizing.
+
+```typescript
+import {
+  DIVIDER_STANDARD_COMPONENT_TOKEN,
+  DividerPresetComponent,
+} from '@smartsoft001/angular';
+
+providers: [
+  {
+    provide: DIVIDER_STANDARD_COMPONENT_TOKEN,
+    useValue: DividerPresetComponent,
+  },
+];
+```
+
 ### DividerBaseComponent (abstract)
 
 Abstract base directive for extending custom divider implementations.
@@ -126,6 +148,7 @@ export class MyCustomDividerComponent extends DividerBaseComponent {}
 
 - Wrapper: `packages/shared/angular/src/lib/components/divider/divider.component.ts`
 - Standard: `packages/shared/angular/src/lib/components/divider/standard/standard.component.ts`
+- Preset: `packages/shared/angular/src/lib/components/divider/preset/preset.component.ts` (classes: `preset/preset-classes.util.ts`)
 - Base class: `packages/shared/angular/src/lib/components/divider/base/base.component.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`DIVIDER_STANDARD_COMPONENT_TOKEN`)
 - Interface: `packages/shared/angular/src/lib/models/interfaces.ts` (`IDividerOptions`, `SmartDividerVariant`)

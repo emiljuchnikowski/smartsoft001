@@ -1,0 +1,54 @@
+<div [class]="containerClasses() + ' ' + cssClass()">
+  @for (group of groups(); track group.id ?? $index) {
+    @if (group.title) {
+      <div [class]="groupTitleClasses">{{ group.title }}</div>
+    }
+    <nav
+      [class]="navClasses()"
+      [attr.aria-label]="options()?.ariaLabel ?? 'Sidebar'"
+    >
+      @for (item of group.items; track item.id) {
+        @if (item.href) {
+          <a
+            [href]="item.href"
+            [class]="itemClasses(item.current)"
+            [attr.aria-current]="item.current ? 'page' : null"
+          >
+            <ng-container
+              [ngTemplateOutlet]="itemContent"
+              [ngTemplateOutletContext]="{ $implicit: item }"
+            />
+          </a>
+        } @else {
+          <button
+            type="button"
+            [class]="itemClasses(item.current)"
+            [attr.aria-current]="item.current ? 'page' : null"
+            (click)="onItemClick(item.id)"
+          >
+            <ng-container
+              [ngTemplateOutlet]="itemContent"
+              [ngTemplateOutletContext]="{ $implicit: item }"
+            />
+          </button>
+        }
+      }
+    </nav>
+  }
+</div>
+
+<ng-template #itemContent let-item>
+  @if (item.iconTpl) {
+    <span [class]="iconClasses">
+      <ng-container [ngTemplateOutlet]="item.iconTpl" />
+    </span>
+  } @else if (item.initial) {
+    <span [class]="initialClasses">{{ item.initial }}</span>
+  }
+  @if (item.label) {
+    <span>{{ item.label }}</span>
+  }
+  @if (item.badge !== undefined && item.badge !== null) {
+    <span [class]="badgeClasses">{{ item.badge }}</span>
+  }
+</ng-template>

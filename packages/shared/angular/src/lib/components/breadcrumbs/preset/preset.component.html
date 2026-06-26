@@ -1,0 +1,105 @@
+<nav [class]="navClasses() + ' ' + cssClass()" [attr.aria-label]="ariaLabel()">
+  <ol role="list" [class]="listClasses()">
+    @for (item of items(); track item.id; let idx = $index) {
+      <li [class]="itemClasses()">
+        @if (idx > 0) {
+          @switch (separator()) {
+            @case ('slash') {
+              <svg
+                [class]="separatorClasses()"
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <path
+                  d="M6 13L10 3"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                />
+              </svg>
+            }
+            @case ('arrow') {
+              <svg
+                [class]="separatorClasses()"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M5 12h14" />
+                <path d="m12 5 7 7-7 7" />
+              </svg>
+            }
+            @default {
+              <svg
+                [class]="separatorClasses()"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="m9 18 6-6-6-6" />
+              </svg>
+            }
+          }
+        }
+        @if (item.current) {
+          <span [class]="linkClasses(true)" aria-current="page">
+            @if (item.iconTpl) {
+              <ng-container [ngTemplateOutlet]="item.iconTpl" />
+            }
+            @if (item.label) {
+              {{ item.label }}
+            }
+            @if (item.srOnlyLabel) {
+              <span class="smart:sr-only">{{ item.srOnlyLabel }}</span>
+            }
+          </span>
+        } @else if (item.href) {
+          <a [href]="item.href" [class]="linkClasses(false)">
+            @if (item.iconTpl) {
+              <ng-container [ngTemplateOutlet]="item.iconTpl" />
+            }
+            @if (item.label) {
+              {{ item.label }}
+            }
+            @if (item.srOnlyLabel) {
+              <span class="smart:sr-only">{{ item.srOnlyLabel }}</span>
+            }
+          </a>
+        } @else {
+          <button
+            type="button"
+            [class]="linkClasses(false)"
+            (click)="onItemClick(item.id)"
+          >
+            @if (item.iconTpl) {
+              <ng-container [ngTemplateOutlet]="item.iconTpl" />
+            }
+            @if (item.label) {
+              {{ item.label }}
+            }
+            @if (item.srOnlyLabel) {
+              <span class="smart:sr-only">{{ item.srOnlyLabel }}</span>
+            }
+          </button>
+        }
+      </li>
+    }
+  </ol>
+</nav>

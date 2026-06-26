@@ -1,0 +1,113 @@
+@if (isBarLayout()) {
+  <div [class]="wrapperClasses + ' ' + cssClass()">
+    @if (srOnlyTitle()) {
+      <h4 class="smart:sr-only">{{ srOnlyTitle() }}</h4>
+    }
+    @if (title()) {
+      <div [class]="headerClasses">
+        <h3 [class]="barTitleClasses">{{ title() }}</h3>
+        <span [class]="valueLabelClasses">{{ clampedValue() }}%</span>
+      </div>
+    }
+    <div
+      [class]="trackClasses"
+      role="progressbar"
+      [attr.aria-valuenow]="clampedValue()"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      [attr.aria-label]="ariaLabel()"
+    >
+      <div [class]="fillClasses" [style.width.%]="clampedValue()"></div>
+    </div>
+    @if (columns().length) {
+      <div
+        [class]="columnsClasses"
+        [style.grid-template-columns]="columnsStyle()"
+      >
+        @for (col of columns(); track col.label) {
+          <div [class]="columnClasses(col.active)">{{ col.label }}</div>
+        }
+      </div>
+    }
+  </div>
+} @else {
+  <nav [class]="navClasses + ' ' + cssClass()" [attr.aria-label]="ariaLabel()">
+    @if (title()) {
+      <p [class]="stepperTitleClasses">{{ title() }}</p>
+    }
+    <ol role="list" [class]="listClasses()">
+      @for (
+        step of steps();
+        track step.id;
+        let idx = $index;
+        let last = $last
+      ) {
+        <li [class]="stepClasses(step.status)">
+          @if (step.href) {
+            <a
+              [href]="step.href"
+              [class]="stepLinkClasses"
+              [attr.aria-current]="step.status === 'current' ? 'step' : null"
+            >
+              <ng-container
+                *ngTemplateOutlet="stepBody; context: { step: step, idx: idx }"
+              />
+            </a>
+          } @else {
+            <button
+              type="button"
+              [class]="stepButtonClasses"
+              [attr.aria-current]="step.status === 'current' ? 'step' : null"
+              (click)="onStepClick(step.id)"
+            >
+              <ng-container
+                *ngTemplateOutlet="stepBody; context: { step: step, idx: idx }"
+              />
+            </button>
+          }
+        </li>
+        @if (hasConnectors() && !last) {
+          <li aria-hidden="true" [class]="connectorClasses(step.status)"></li>
+        }
+      }
+    </ol>
+  </nav>
+}
+
+<ng-template #stepBody let-step="step" let-idx="idx">
+  @if (showMarker()) {
+    <span [class]="markerClasses(step.status)">
+      @if (step.iconTpl) {
+        <ng-container [ngTemplateOutlet]="step.iconTpl" />
+      } @else if (isCircle() && step.status === 'complete') {
+        <svg
+          [class]="checkIconClasses"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <polyline points="20 6 9 17 4 12" />
+        </svg>
+      } @else if (isCircle()) {
+        <span [class]="indexClasses">{{ step.index ?? idx + 1 }}</span>
+      }
+    </span>
+  }
+  @if (step.name || step.description) {
+    <span class="smart:flex smart:flex-col">
+      @if (step.name) {
+        <span [class]="nameClasses(step.status)">{{ step.name }}</span>
+      }
+      @if (step.description) {
+        <span [class]="descriptionClasses">{{ step.description }}</span>
+      }
+    </span>
+  }
+</ng-template>

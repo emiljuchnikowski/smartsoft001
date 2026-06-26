@@ -98,10 +98,30 @@ providers: [
 ];
 ```
 
+## CardPresetComponent (`smart-card-preset`)
+
+Fully-styled, drop-in concrete implementation extending `CardBaseComponent` — a faithful translation of Preline's card (`rounded-xl` surface, `shadow-2xs`, bordered surface header/footer) into `smart:`-prefixed vanilla Tailwind with explicit `dark:` variants. Honours `options.title`, `options.grayBody`, and `options.grayFooter`, and renders the same `headerTpl` / `bodyTpl` / `footerTpl` slots as the base.
+
+Use it directly via `<smart-card-preset>`, or register it through `CARD_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-card>`:
+
+```typescript
+import {
+  CardPresetComponent,
+  CARD_STANDARD_COMPONENT_TOKEN,
+} from '@smartsoft001/angular';
+
+providers: [
+  { provide: CARD_STANDARD_COMPONENT_TOKEN, useValue: CardPresetComponent },
+];
+```
+
+Note: when rendered through the token, `CardComponent` uses `*ngComponentOutlet`, which passes inputs by **canonical name**. The preset therefore overrides the inherited `cssClass` to drop the `class` alias (`override cssClass = input<string>('')`) so extra classes bind correctly. Class recipes live in `preset/preset-classes.util.ts` (`getCardContainerClasses`, `getCardHeaderClasses`, `getCardBodyClasses`, `getCardFooterClasses`).
+
 ## File Locations
 
 - Wrapper: `packages/shared/angular/src/lib/components/card/card.component.ts`
 - Default: `packages/shared/angular/src/lib/components/card/standard/standard.component.{ts,html}`
+- Preset: `packages/shared/angular/src/lib/components/card/preset/preset.component.{ts,html}` + `preset/preset-classes.util.ts`
 - Base: `packages/shared/angular/src/lib/components/card/base/base.component.ts`
 - Tests: `packages/shared/angular/src/lib/components/card/{card,standard/standard,base/base}.component.spec.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`CARD_STANDARD_COMPONENT_TOKEN`)

@@ -1,0 +1,75 @@
+@if (open()) {
+  <div
+    [class]="backdropClasses"
+    role="presentation"
+    (click)="onBackdropClick($event)"
+  >
+    <div [class]="wrapperClasses() + ' ' + cssClass()">
+      <div
+        [class]="panelClasses()"
+        role="dialog"
+        aria-modal="true"
+        tabindex="-1"
+        [attr.aria-labelledby]="title() ? 'smart-modal-preset-title' : null"
+        [attr.aria-label]="!title() ? (options()?.ariaLabel ?? null) : null"
+      >
+        @if (title() || withDismiss()) {
+          <div [class]="headerClasses">
+            @if (title()) {
+              <h3 id="smart-modal-preset-title" [class]="titleClasses">
+                {{ title() }}
+              </h3>
+            }
+            @if (withDismiss()) {
+              <button
+                type="button"
+                [class]="dismissClasses"
+                aria-label="Close"
+                (click)="close()"
+              >
+                <span class="smart:sr-only">Close</span>
+                <svg
+                  class="smart:shrink-0 smart:size-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+              </button>
+            }
+          </div>
+        }
+
+        <div [class]="bodyClasses">
+          @if (description()) {
+            <p [class]="descriptionClasses">{{ description() }}</p>
+          }
+          <ng-content />
+        </div>
+
+        @if (actions().length > 0) {
+          <div [class]="footerClasses()">
+            @for (action of actions(); track action.id) {
+              <button
+                type="button"
+                [class]="actionClasses(action.variant)"
+                (click)="invokeAction(action.id)"
+              >
+                {{ action.label }}
+              </button>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}
