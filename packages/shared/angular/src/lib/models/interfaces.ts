@@ -1162,6 +1162,14 @@ export interface IListOptions<T> {
       };
 
   select?: 'multi';
+
+  // Consumed only by the desktop preset (ListDesktopPresetComponent) to pick
+  // Preline table styling variations.
+  presentation?: {
+    variant?: 'default' | 'striped' | 'bordered' | 'borderless';
+    hoverable?: boolean;
+    header?: 'default' | 'muted' | 'none';
+  };
 }
 
 export interface IRemoveProvider<T> {

@@ -14,6 +14,7 @@ import { FileService } from '../../services';
 import { LIST_MODE_COMPONENTS_TOKEN } from '../../shared.inectors';
 import { COMPONENTS, IMPORTS } from '../components.module';
 import { ListBaseComponent } from './base/base.component';
+import { LIST_PRESET_MODE_COMPONENTS } from './preset-modes';
 
 // ─── Shared test data ────────────────────────────────────────────────────────
 
@@ -176,7 +177,46 @@ export const WithCssClass: Story = {
   }),
 };
 
-// ─── 5. CustomViaToken ────────────────────────────────────────────────────────
+// ─── 5. Preset (Preline) ─────────────────────────────────────────────────────
+
+export const Preset: Story = {
+  name: 'Preset (Preline)',
+  render: () => ({
+    props: {
+      desktopOptions: {
+        ...buildOptions(ListMode.desktop),
+        presentation: { variant: 'striped', hoverable: true },
+      } as IListOptions<UserListModel>,
+      mobileOptions: {
+        provider: buildMasonryProvider(),
+        type: PhotoListModel,
+        mode: ListMode.mobile,
+      } as IListOptions<PhotoListModel>,
+    },
+    template: `
+      <div style="display: grid; gap: 32px;">
+        <section>
+          <p style="font-weight: 600; margin-bottom: 8px;">Desktop — striped + hoverable table</p>
+          <smart-list [options]="desktopOptions"></smart-list>
+        </section>
+        <section>
+          <p style="font-weight: 600; margin-bottom: 8px;">Mobile — card grid</p>
+          <smart-list [options]="mobileOptions"></smart-list>
+        </section>
+      </div>
+    `,
+    moduleMetadata: {
+      providers: [
+        {
+          provide: LIST_MODE_COMPONENTS_TOKEN,
+          useValue: LIST_PRESET_MODE_COMPONENTS,
+        },
+      ],
+    },
+  }),
+};
+
+// ─── 6. CustomViaToken ────────────────────────────────────────────────────────
 
 @Component({
   selector: 'custom-list-impl',

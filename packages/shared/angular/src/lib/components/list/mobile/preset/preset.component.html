@@ -1,0 +1,73 @@
+<div #topTpl></div>
+
+<ul role="list" [class]="gridClasses()">
+  @let presetItems = mobileList() ?? [];
+  @for (item of presetItems; track item.id) {
+    <li data-role="card" [class]="cardContainerClasses">
+      @for (key of keys; track key) {
+        @let cell = item | smartListCell: key : cellPipe : type;
+        @if (cell && cell.type === FieldType.image) {
+          <img
+            data-role="card-image"
+            class="smart:w-full smart:h-auto smart:rounded-t-xl"
+            [lazyLoad]="cell.value | smartFileUrl"
+            alt=""
+            src=""
+          />
+        }
+      }
+      <div class="smart:p-4">
+        @for (key of keys; track key) {
+          @let cell = item | smartListCell: key : cellPipe : type;
+          @if (cell && cell.type !== FieldType.image) {
+            @if (key === titleKey) {
+              <h3
+                data-role="card-title"
+                class="smart:font-semibold smart:text-gray-900 smart:dark:text-white"
+                [innerHTML]="cell.value"
+              ></h3>
+            } @else {
+              <p
+                data-role="card-text"
+                class="smart:mt-1 smart:text-gray-500 smart:dark:text-gray-400"
+                [innerHTML]="cell.value"
+              ></p>
+            }
+          }
+        }
+        <div class="smart:flex smart:items-center smart:gap-x-4">
+          @if (itemHandler) {
+            <button
+              type="button"
+              data-role="item"
+              class="smart:mt-2 smart:py-2 smart:px-3 smart:inline-flex smart:justify-center smart:items-center smart:gap-x-2 smart:text-sm smart:font-medium smart:rounded-lg smart:bg-blue-600 smart:dark:bg-blue-500 smart:text-white smart:hover:bg-blue-700 smart:dark:hover:bg-blue-600 smart:focus:outline-hidden"
+              (click)="itemHandler?.(item.id)"
+            >
+              {{ 'details' | translate }}
+            </button>
+          }
+          @if (
+            removeHandler && (!checkRemoveHandler || checkRemoveHandler(item))
+          ) {
+            <button
+              type="button"
+              data-role="remove"
+              class="smart:mt-2 smart:text-red-600 hover:smart:text-red-900 smart:dark:text-red-400 dark:hover:smart:text-red-300 smart:text-sm"
+              (click)="removeHandler?.(item)"
+            >
+              {{ 'remove' | translate }}
+            </button>
+          }
+        </div>
+      </div>
+    </li>
+  }
+</ul>
+
+@if (options()?.pagination?.mode === PaginationMode.singlePage) {
+  <smart-paging
+    [currentPage]="page() ?? 1"
+    [totalPages]="totalPages() ?? 1"
+    (pageChange)="handlePageChange($event)"
+  ></smart-paging>
+}

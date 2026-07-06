@@ -16,3 +16,10 @@ export * from './attachment/attachment.component';
 export * from './date-range/date-range.component';
 export * from './image/image.component';
 export * from './phone-number-pl/phone-number-pl.component';
+
+// Preline-styled field presets (FRA-238). Register via
+// DETAIL_FIELD_COMPONENTS_TOKEN keyed by FieldType to apply the Preline look.
+export * from './attachment/preset/preset.component';
+export * from './enum/preset/preset.component';
+export * from './image/preset/preset.component';
+export * from './preset-fields';

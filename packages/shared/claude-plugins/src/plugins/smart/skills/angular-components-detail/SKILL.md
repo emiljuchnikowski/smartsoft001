@@ -95,6 +95,39 @@ providers: [
 
 Maps are merged (`{ ...baseMap, ...extendMap }`), so only selected types need to be overridden.
 
+## Preline field presets
+
+Three field types ship a Preline-styled **preset** (`Detail<Field>PresetComponent`, selector
+`smart-detail-<field>-preset`) alongside the default sub-component, living in `<field>/preset/`:
+
+| FieldType    | Preset                            | Look                                                     |
+| ------------ | --------------------------------- | -------------------------------------------------------- |
+| `enum`       | `DetailEnumPresetComponent`       | Values as soft blue badges (reuses badge preset recipes) |
+| `image`      | `DetailImagePresetComponent`      | 150×150 preview, `rounded-xl`, border + `shadow-2xs`     |
+| `attachment` | `DetailAttachmentPresetComponent` | File chip: icon, file name (`fileName`/`name`), download |
+
+Apply them via the ready-made partial map:
+
+```typescript
+import {
+  DETAIL_FIELD_COMPONENTS_TOKEN,
+  DETAIL_PRESET_FIELD_COMPONENTS,
+} from '@smartsoft001/angular';
+
+providers: [
+  {
+    provide: DETAIL_FIELD_COMPONENTS_TOKEN,
+    useValue: DETAIL_PRESET_FIELD_COMPONENTS,
+  },
+];
+```
+
+Notes:
+
+- The map is partial — all other field types keep their standard components (maps merge over `baseMap`).
+- The presets have a fixed look; `IDetailOptions` carries no per-field style channel (deliberate,
+  matches the fidelity-gap deferral from the Preline group).
+
 ## Extending the Base Class
 
 ```typescript

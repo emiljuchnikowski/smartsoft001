@@ -16,6 +16,7 @@ import { COMPONENTS, IMPORTS } from '../components.module';
 import { DetailsComponent } from '../details';
 import { DetailBaseComponent } from './base/base.component';
 import { DetailComponent } from './detail.component';
+import { DETAIL_PRESET_FIELD_COMPONENTS } from './preset-fields';
 
 const meta: Meta<DetailComponent<any>> = {
   title: 'Smart-Detail/Detail',
@@ -706,6 +707,64 @@ export const WithCssClass: Story = {
   standalone: true,
 })
 class CustomDetailTextComponent extends DetailBaseComponent<any> {}
+
+export const PresetFields: Story = {
+  name: 'Preset fields (Preline)',
+  render: () => ({
+    props: {
+      storyOptions: {
+        type: (() => {
+          @Model({})
+          class TestModel {
+            @Field({ details: true, type: FieldType.enum })
+            status = ['active', 'pending'];
+
+            @Field({ details: true, type: FieldType.image })
+            photo: any = { id: 'preset' };
+
+            @Field({ details: true, type: FieldType.attachment })
+            file: any = { id: 'doc', fileName: 'report.pdf' };
+          }
+          return TestModel;
+        })(),
+        rows: [
+          {
+            key: 'status',
+            item: signal({ status: ['active', 'pending'] }),
+            options: { type: FieldType.enum },
+          },
+          {
+            key: 'photo',
+            item: signal({ photo: { id: 'preset' } }),
+            options: { type: FieldType.image },
+          },
+          {
+            key: 'file',
+            item: signal({ file: { id: 'doc', fileName: 'report.pdf' } }),
+            options: { type: FieldType.attachment },
+          },
+        ],
+      },
+    },
+    template: `
+      <div class="smart:grid smart:gap-6 smart:p-4">
+        @for (row of storyOptions.rows; track row.key) {
+          <div>
+            <smart-detail [options]="row" [type]="storyOptions.type"></smart-detail>
+          </div>
+        }
+      </div>
+    `,
+    moduleMetadata: {
+      providers: [
+        {
+          provide: DETAIL_FIELD_COMPONENTS_TOKEN,
+          useValue: DETAIL_PRESET_FIELD_COMPONENTS,
+        },
+      ],
+    },
+  }),
+};
 
 export const CustomViaToken: Story = {
   name: 'Custom via Token',
