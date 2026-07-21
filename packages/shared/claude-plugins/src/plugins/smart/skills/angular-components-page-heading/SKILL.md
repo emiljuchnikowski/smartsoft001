@@ -174,9 +174,87 @@ export class MyCustomPageHeadingComponent extends PageHeadingBaseComponent {
 />
 ```
 
+## HyperUI preset
+
+`PageHeadingPresetComponent` (`smart-page-heading-preset`) is a HyperUI-styled
+variation. Unlike the standard page-heading (a page title block), this preset
+**intentionally renders a NAVBAR look**: a sticky-ready `<header>` bar with a
+logo/brand zone, a responsive desktop nav zone, a CTA/actions zone (or a user
+avatar zone), and a mobile hamburger that toggles a collapsible panel. The
+collapse is driven by a local `menuOpened` signal — no external JS runtime.
+
+Register it through `PAGE_HEADING_STANDARD_COMPONENT_TOKEN` to restyle every
+`<smart-page-heading>`, or use `<smart-page-heading-preset>` directly.
+
+### Layouts (`presentation.layout`)
+
+| Layout         | Arrangement                                                   |
+| -------------- | ------------------------------------------------------------- |
+| `links-left`   | Logo, then nav directly after it, CTAs pushed right (default) |
+| `links-center` | Logo left, nav centered, CTAs right                           |
+| `links-right`  | Logo left (flex-1), nav + CTAs grouped on the right           |
+| `user`         | Like `links-right`, but an `avatarTpl` zone instead of CTAs   |
+
+### New `IPageHeadingOptions` fields
+
+- `navTpl?: TemplateRef<unknown>` — desktop nav content (hidden below `md`,
+  repeated inside the mobile panel when open). Preset-only.
+- `presentation?: { layout?: 'links-left' | 'links-center' | 'links-right' | 'user' }`
+  — selects the navbar arrangement (default `links-left`). Preset-only.
+
+Existing `logoTpl` (with a `title` string fallback), `actionsTpl`, and
+`avatarTpl` (used by the `user` layout) are reused for the brand, CTA, and user
+zones respectively.
+
+### Token registration
+
+```ts
+import { PageHeadingPresetComponent } from '@smartsoft001/angular';
+import { PAGE_HEADING_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  {
+    provide: PAGE_HEADING_STANDARD_COMPONENT_TOKEN,
+    useValue: PageHeadingPresetComponent,
+  },
+];
+```
+
+### Example nav recipe
+
+The preset renders only the nav **zone** wrapper; supply the list via `navTpl`:
+
+```html
+<ng-template #nav>
+  <ul class="smart:flex smart:items-center smart:gap-6 smart:text-sm">
+    <li>
+      <a
+        class="smart:text-gray-500 smart:transition smart:hover:text-gray-500/75 smart:dark:text-white smart:dark:hover:text-white/75"
+        href="#"
+        >About</a
+      >
+    </li>
+    <li>
+      <a
+        class="smart:text-gray-500 smart:transition smart:hover:text-gray-500/75 smart:dark:text-white smart:dark:hover:text-white/75"
+        href="#"
+        >Careers</a
+      >
+    </li>
+  </ul>
+</ng-template>
+```
+
+Accents stay teal-600 (light) / teal-300 (dark) per the source template.
+
+**Out of scope:** avatar dropdown open/close logic — the user supplies the full
+interactive avatar/menu markup via `avatarTpl`; the preset only renders the zone
+(`hidden md:relative md:block`).
+
 ## File Locations
 
 - Wrapper: `packages/shared/angular/src/lib/components/page-heading/page-heading.component.ts`
+- Preset: `packages/shared/angular/src/lib/components/page-heading/preset/preset.component.ts`
 - Standard: `packages/shared/angular/src/lib/components/page-heading/standard/standard.component.ts`
 - Base class: `packages/shared/angular/src/lib/components/page-heading/base/base.component.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`PAGE_HEADING_STANDARD_COMPONENT_TOKEN`)

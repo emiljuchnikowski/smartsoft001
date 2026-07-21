@@ -1,0 +1,181 @@
+<div [class]="pageClasses()" data-role="page">
+  @if (options()?.bannerTpl; as bannerTpl) {
+    <div data-role="banner" class="smart:w-full">
+      <ng-container [ngTemplateOutlet]="bannerTpl"></ng-container>
+    </div>
+  }
+
+  @if (!options()?.hideHeader) {
+    <header [class]="headerClasses" data-role="header">
+      <div [class]="containerClasses">
+        @if (options()?.breadcrumbsTpl; as breadcrumbsTpl) {
+          <div
+            data-role="breadcrumbs"
+            class="smart:pt-4 smart:text-sm smart:text-gray-500 smart:dark:text-gray-400"
+          >
+            <ng-container [ngTemplateOutlet]="breadcrumbsTpl"></ng-container>
+          </div>
+        }
+
+        <div
+          class="smart:flex smart:items-center smart:justify-between smart:gap-x-4 smart:py-5"
+        >
+          <div
+            class="smart:flex smart:min-w-0 smart:items-center smart:gap-x-3"
+          >
+            @if (!options()?.hideMenuButton) {
+              <button
+                type="button"
+                data-role="menu-button"
+                [class]="iconButtonClasses"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  class="smart:size-5"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M2 4.75A.75.75 0 0 1 2.75 4h14.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 4.75Zm0 5A.75.75 0 0 1 2.75 9h14.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 9.75Zm0 5a.75.75 0 0 1 .75-.75h14.5a.75.75 0 0 1 0 1.5H2.75a.75.75 0 0 1-.75-.75Z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            }
+
+            @if (options()?.showBackButton) {
+              <button
+                type="button"
+                data-role="back"
+                (click)="back()"
+                [class]="iconButtonClasses"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  class="smart:size-5"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M17 10a.75.75 0 0 1-.75.75H5.612l4.158 3.96a.75.75 0 1 1-1.04 1.08l-5.5-5.25a.75.75 0 0 1 0-1.08l5.5-5.25a.75.75 0 1 1 1.04 1.08L5.612 9.25H16.25A.75.75 0 0 1 17 10Z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            }
+
+            @if (options()?.avatarTpl; as avatarTpl) {
+              <div data-role="avatar" class="smart:shrink-0">
+                <ng-container [ngTemplateOutlet]="avatarTpl"></ng-container>
+              </div>
+            }
+            @if (options()?.logoTpl; as logoTpl) {
+              <div data-role="logo" class="smart:shrink-0">
+                <ng-container [ngTemplateOutlet]="logoTpl"></ng-container>
+              </div>
+            }
+
+            <div class="smart:min-w-0">
+              <h1 data-role="title" [class]="titleClasses">
+                {{ options()?.title ?? '' | translate }}
+              </h1>
+              @if (options()?.subtitleTpl; as subtitleTpl) {
+                <div
+                  data-role="subtitle"
+                  class="smart:mt-1 smart:text-sm smart:text-gray-500 smart:dark:text-gray-400"
+                >
+                  <ng-container [ngTemplateOutlet]="subtitleTpl"></ng-container>
+                </div>
+              }
+            </div>
+          </div>
+
+          @if (options()?.search || options()?.endButtons?.length) {
+            <div
+              data-role="actions"
+              class="smart:flex smart:shrink-0 smart:items-center smart:gap-x-2"
+            >
+              @if (options()?.search; as search) {
+                <div class="smart:relative smart:rounded-md smart:shadow-xs">
+                  <input
+                    type="text"
+                    [value]="search.text() ?? ''"
+                    (input)="search.set($any($event.target).value)"
+                    [placeholder]="'search' | translate"
+                    class="smart:block smart:w-full smart:rounded-md smart:border-0 smart:py-1.5 smart:pl-3 smart:pr-10 smart:text-gray-900 smart:ring-1 smart:ring-inset smart:ring-gray-300 smart:placeholder:text-gray-400 smart:focus:ring-2 smart:focus:ring-inset smart:focus:ring-indigo-600 smart:sm:text-sm/6 smart:dark:bg-white/5 smart:dark:text-white smart:dark:ring-white/10 smart:dark:placeholder:text-gray-500"
+                  />
+                </div>
+              }
+              @for (btn of options()?.endButtons ?? []; track btn.icon) {
+                <smart-button
+                  [options]="getButtonOptions(btn)"
+                  [disabled]="!!(btn.disabled$ | async)"
+                >
+                  @if (btn.text) {
+                    {{ btn.text | translate }}
+                  }
+                  @if (btn.number) {
+                    <span
+                      class="smart:ml-1 smart:inline-flex smart:items-center smart:rounded-full smart:bg-indigo-100 smart:px-2 smart:py-0.5 smart:text-xs smart:font-medium smart:text-indigo-700 smart:dark:bg-indigo-500/10 smart:dark:text-indigo-400"
+                      >{{ btn.number }}</span
+                    >
+                  }
+                </smart-button>
+              }
+            </div>
+          }
+        </div>
+
+        @if (options()?.metaTpl || options()?.statsTpl) {
+          <div
+            data-role="meta"
+            class="smart:flex smart:flex-wrap smart:items-center smart:gap-x-6 smart:gap-y-2 smart:pb-5 smart:text-sm smart:text-gray-500 smart:dark:text-gray-400"
+          >
+            @if (options()?.metaTpl; as metaTpl) {
+              <ng-container [ngTemplateOutlet]="metaTpl"></ng-container>
+            }
+            @if (options()?.statsTpl; as statsTpl) {
+              <ng-container [ngTemplateOutlet]="statsTpl"></ng-container>
+            }
+          </div>
+        }
+      </div>
+    </header>
+
+    @if (options()?.filtersTpl; as filtersTpl) {
+      <div
+        data-role="filters"
+        class="smart:border-b smart:border-gray-200 smart:bg-white smart:dark:border-gray-700 smart:dark:bg-gray-800"
+      >
+        <div [class]="containerClasses">
+          <div class="smart:py-3">
+            <ng-container [ngTemplateOutlet]="filtersTpl"></ng-container>
+          </div>
+        </div>
+      </div>
+    }
+  }
+
+  <div [class]="containerClasses">
+    <div class="smart:flex smart:gap-x-8 smart:py-8">
+      @if (options()?.sidebarTpl; as sidebarTpl) {
+        <aside
+          data-role="sidebar"
+          class="smart:hidden smart:w-64 smart:shrink-0 smart:lg:block"
+        >
+          <ng-container [ngTemplateOutlet]="sidebarTpl"></ng-container>
+        </aside>
+      }
+
+      <div data-role="body" class="smart:min-w-0 smart:flex-1">
+        @if (options()?.bodyTpl; as bodyTpl) {
+          <div [class]="bodyCardClasses">
+            <ng-container [ngTemplateOutlet]="bodyTpl"></ng-container>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

@@ -2,13 +2,14 @@ import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
 import { IconComponent } from './icon.component';
+import { IconPresetComponent } from './preset/preset.component';
 
 const meta: Meta = {
   title: 'Components/Icon',
   tags: ['autodocs'],
   decorators: [
     moduleMetadata({
-      imports: [IconComponent],
+      imports: [IconComponent, IconPresetComponent],
     }),
   ],
 };
@@ -87,6 +88,27 @@ export const CustomTemplate: Story = {
         </svg>
       </ng-template>
       <smart-icon [template]="heart"></smart-icon>
+    `,
+  }),
+};
+
+export const Preset: Story = {
+  name: 'Preset',
+  render: () => ({
+    template: `
+      <div style="display: grid; grid-template-columns: repeat(3, auto); gap: 24px; align-items: center; justify-items: center;">
+        <smart-icon-preset variant="plain" name="spinner" size="md"></smart-icon-preset>
+        <smart-icon-preset variant="plain" name="chevron-down" size="md"></smart-icon-preset>
+        <smart-icon-preset variant="plain" name="chevron-up" size="md"></smart-icon-preset>
+
+        <smart-icon-preset variant="contained" name="spinner" size="md"></smart-icon-preset>
+        <smart-icon-preset variant="contained" name="chevron-down" size="md"></smart-icon-preset>
+        <smart-icon-preset variant="contained" name="chevron-up" size="md"></smart-icon-preset>
+
+        <smart-icon-preset variant="soft" name="spinner" size="md"></smart-icon-preset>
+        <smart-icon-preset variant="soft" name="chevron-down" size="md"></smart-icon-preset>
+        <smart-icon-preset variant="soft" name="chevron-up" size="md"></smart-icon-preset>
+      </div>
     `,
   }),
 };

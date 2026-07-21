@@ -97,14 +97,24 @@ Maps are merged (`{ ...baseMap, ...extendMap }`), so only selected types need to
 
 ## Preline field presets
 
-Three field types ship a Preline-styled **preset** (`Detail<Field>PresetComponent`, selector
-`smart-detail-<field>-preset`) alongside the default sub-component, living in `<field>/preset/`:
+Twelve field types ship a Preline-styled **preset** (`Detail<Field>PresetComponent`, selector
+`smart-detail-<field>-preset`) alongside the default sub-component, living in `<field>/preset/`.
+`text`, `object` and `array` intentionally keep their standard components (no preset):
 
-| FieldType    | Preset                            | Look                                                     |
-| ------------ | --------------------------------- | -------------------------------------------------------- |
-| `enum`       | `DetailEnumPresetComponent`       | Values as soft blue badges (reuses badge preset recipes) |
-| `image`      | `DetailImagePresetComponent`      | 150×150 preview, `rounded-xl`, border + `shadow-2xs`     |
-| `attachment` | `DetailAttachmentPresetComponent` | File chip: icon, file name (`fileName`/`name`), download |
+| FieldType       | Preset                               | Look                                                         |
+| --------------- | ------------------------------------ | ------------------------------------------------------------ |
+| `email`         | `DetailEmailPresetComponent`         | `mailto:` link, blue + `hover:underline`, envelope icon      |
+| `enum`          | `DetailEnumPresetComponent`          | Values as soft blue badges (reuses badge preset recipes)     |
+| `flag`          | `DetailFlagPresetComponent`          | Soft badge — green ✓ / red ✗ (reuses badge preset recipes)   |
+| `color`         | `DetailColorPresetComponent`         | `size-6` rounded swatch + monospace hex code                 |
+| `address`       | `DetailAddressPresetComponent`       | Multi-line `text-sm` block with pin icon                     |
+| `dateRange`     | `DetailDateRangePresetComponent`     | `start – end` as two soft gray chips                         |
+| `phoneNumberPl` | `DetailPhoneNumberPlPresetComponent` | `tel:` link styled as a soft blue badge                      |
+| `logo`          | `DetailLogoPresetComponent`          | `<img>` `max-h-10 object-contain`                            |
+| `image`         | `DetailImagePresetComponent`         | 150×150 preview, `rounded-xl`, border + `shadow-2xs`         |
+| `video`         | `DetailVideoPresetComponent`         | `<video controls>` framed `rounded-xl` border + `shadow-2xs` |
+| `attachment`    | `DetailAttachmentPresetComponent`    | File chip: icon, file name (`fileName`/`name`), download     |
+| `pdf`           | `DetailPdfPresetComponent`           | File chip: red PDF icon, file name, show button              |
 
 Apply them via the ready-made partial map:
 

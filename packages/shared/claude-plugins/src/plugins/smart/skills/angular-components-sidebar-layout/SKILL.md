@@ -174,3 +174,48 @@ When extending the base directly, remember to:
 - Base class: `packages/shared/angular/src/lib/components/sidebar-layout/base/base.component.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`SIDEBAR_LAYOUT_STANDARD_COMPONENT_TOKEN`)
 - Interface: `packages/shared/angular/src/lib/models/interfaces.ts` (`ISidebarLayoutOptions`)
+
+## Preset
+
+`SidebarLayoutPresetComponent` (`smart-sidebar-layout-preset`) is a styled,
+drop-in replacement for `SidebarLayoutStandardComponent`. It extends the
+standard component (reusing `isRightSidebar`) and applies a Tailwind shell where
+every utility is `smart:`-prefixed with explicit `smart:dark:*` variants.
+
+Structure:
+
+- Root: full-height gray page (`smart:min-h-full smart:bg-gray-50
+smart:dark:bg-gray-900`); `cssClass` is merged onto it.
+- Optional header zone (`data-role="header"`): rendered only when
+  `options.headerTpl` or `options.title` is set. Styled like the stacked-layout
+  preset header (white bg, `smart:border-b`, dark `gray-800`). Falls back to an
+  `<h1>` (`data-role="title"`) when only `title` is given.
+- Row (`data-role="row"`): a flex container. `sidebarPosition: 'right'` adds
+  `smart:flex-row-reverse`.
+- Sidebar `<aside>` (`data-role="sidebar"`): white, `smart:shrink-0`,
+  `smart:w-64` (or `smart:w-16` when `options.condensed`). Border is
+  `smart:border-e` (left sidebar) or `smart:border-s` (right sidebar).
+- Content `<main>` (`data-role="content"`): gray page surface with padding;
+  projects `<ng-content>`.
+
+No new `ISidebarLayoutOptions` fields — the preset consumes the existing
+`title`, `headerTpl`, `sidebarTpl`, `sidebarPosition`, and `condensed`.
+
+Because the wrapper forwards inputs canonically through `NgComponentOutlet`, the
+preset does `override cssClass = input<string>('')` (drops the inherited `class`
+alias).
+
+Class recipes live in `preset/preset-classes.util.ts`
+(`getSidebarLayout*Classes`); it is intentionally NOT barrel-exported.
+
+Register it to restyle every `<smart-sidebar-layout>`:
+
+```typescript
+{
+  provide: SIDEBAR_LAYOUT_STANDARD_COMPONENT_TOKEN,
+  useValue: SidebarLayoutPresetComponent,
+}
+```
+
+Documented gap: `options.mobileBreakpoint` is not consumed — the standard
+component the preset extends does not act on it either.

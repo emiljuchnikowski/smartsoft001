@@ -716,22 +716,98 @@ export const PresetFields: Story = {
         type: (() => {
           @Model({})
           class TestModel {
+            @Field({ details: true, type: FieldType.email })
+            email = 'user@example.com';
+
             @Field({ details: true, type: FieldType.enum })
             status = ['active', 'pending'];
+
+            @Field({ details: true, type: FieldType.flag })
+            isActive = true;
+
+            @Field({ details: true, type: FieldType.color })
+            color = '#4f46e5';
+
+            @Field({ details: true, type: FieldType.address })
+            address: IAddress = {
+              city: 'Warszawa',
+              street: 'Marszałkowska',
+              zipCode: '00-001',
+              flatNumber: '5',
+              buildingNumber: '3B',
+            };
+
+            @Field({ details: true, type: FieldType.dateRange })
+            range = { start: '2026-01-01', end: '2026-01-31' };
+
+            @Field({ details: true, type: FieldType.phoneNumberPl })
+            phone = '600700800';
+
+            @Field({ details: true, type: FieldType.logo })
+            logo = LOGO_DATA_URI;
 
             @Field({ details: true, type: FieldType.image })
             photo: any = { id: 'preset' };
 
+            @Field({ details: true, type: FieldType.video })
+            clip: any = { id: 'sample' };
+
             @Field({ details: true, type: FieldType.attachment })
             file: any = { id: 'doc', fileName: 'report.pdf' };
+
+            @Field({ details: true, type: FieldType.pdf })
+            brochure: any = { id: 'brochure', fileName: 'brochure.pdf' };
           }
           return TestModel;
         })(),
         rows: [
           {
+            key: 'email',
+            item: signal({ email: 'user@example.com' }),
+            options: { type: FieldType.email },
+          },
+          {
             key: 'status',
             item: signal({ status: ['active', 'pending'] }),
             options: { type: FieldType.enum },
+          },
+          {
+            key: 'isActive',
+            item: signal({ isActive: true }),
+            options: { type: FieldType.flag },
+          },
+          {
+            key: 'color',
+            item: signal({ color: '#4f46e5' }),
+            options: { type: FieldType.color },
+          },
+          {
+            key: 'address',
+            item: signal({
+              address: {
+                city: 'Warszawa',
+                street: 'Marszałkowska',
+                zipCode: '00-001',
+                flatNumber: '5',
+                buildingNumber: '3B',
+              },
+            }),
+            options: { type: FieldType.address },
+          },
+          {
+            key: 'range',
+            item: signal({ range: { start: '2026-01-01', end: '2026-01-31' } }),
+            options: { type: FieldType.dateRange },
+          },
+          {
+            key: 'phone',
+            item: signal({ phone: '600700800' }),
+            options: { type: FieldType.phoneNumberPl },
+          },
+          {
+            key: 'logo',
+            item: signal({ logo: LOGO_DATA_URI }),
+            options: { type: FieldType.logo },
           },
           {
             key: 'photo',
@@ -739,9 +815,21 @@ export const PresetFields: Story = {
             options: { type: FieldType.image },
           },
           {
+            key: 'clip',
+            item: signal({ clip: { id: 'sample' } }),
+            options: { type: FieldType.video },
+          },
+          {
             key: 'file',
             item: signal({ file: { id: 'doc', fileName: 'report.pdf' } }),
             options: { type: FieldType.attachment },
+          },
+          {
+            key: 'brochure',
+            item: signal({
+              brochure: { id: 'brochure', fileName: 'brochure.pdf' },
+            }),
+            options: { type: FieldType.pdf },
           },
         ],
       },

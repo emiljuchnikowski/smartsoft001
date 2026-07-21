@@ -896,6 +896,11 @@ export const PresetFields: Story = {
   name: 'Preset fields (Preline)',
   render: () => {
     @Model({})
+    class PresetChildModel {
+      @Field({ type: FieldType.text }) label = '';
+    }
+
+    @Model({})
     class PresetModel {
       @Field({ type: FieldType.text }) name = '';
       @Field({ type: FieldType.email }) email = '';
@@ -905,21 +910,61 @@ export const PresetFields: Story = {
       @Field({ type: FieldType.longText }) bio = '';
       @Field({ type: FieldType.check }) accept = false;
       @Field({ type: FieldType.date }) startDate = '';
+      @Field({ type: FieldType.color }) color = '#4f46e5';
+      @Field({ type: FieldType.flag }) active = true;
+      @Field({ type: FieldType.pdf }) document: any = null;
+      @Field({ type: FieldType.video }) clip: any = null;
+      @Field({ type: FieldType.address }) address!: IAddress;
+      @Field({ type: FieldType.object }) profile: PresetChildModel =
+        new PresetChildModel();
     }
     const model = new PresetModel();
-    const rows = [
+    const rows: Array<{
+      fieldKey: string;
+      options: InputOptions<PresetModel>;
+    }> = [
       { fieldKey: 'name', control: new UntypedFormControl('Jan Kowalski') },
-      { fieldKey: 'email', control: new UntypedFormControl('jan@example.com') },
+      {
+        fieldKey: 'email',
+        control: new UntypedFormControl('jan@example.com'),
+      },
       { fieldKey: 'password', control: new UntypedFormControl('secret123') },
       { fieldKey: 'age', control: new UntypedFormControl(30) },
       { fieldKey: 'amount', control: new UntypedFormControl(99.95) },
       { fieldKey: 'bio', control: new UntypedFormControl('Lorem ipsum') },
       { fieldKey: 'accept', control: new UntypedFormControl(true) },
       { fieldKey: 'startDate', control: new UntypedFormControl('2026-04-20') },
+      { fieldKey: 'color', control: new UntypedFormControl('#4f46e5') },
+      { fieldKey: 'active', control: new UntypedFormControl(true) },
+      {
+        fieldKey: 'document',
+        control: new UntypedFormControl({ id: 'd1', fileName: 'report.pdf' }),
+      },
+      { fieldKey: 'clip', control: new UntypedFormControl(null) },
+      { fieldKey: 'profile', control: new UntypedFormControl(null) },
     ].map((r) => ({
-      ...r,
+      fieldKey: r.fieldKey,
       options: buildOptions(model, r.fieldKey, r.control),
     }));
+
+    // Address renders a FormGroup of sub-fields, so build its options inline.
+    const addressControl = new UntypedFormGroup({
+      city: new UntypedFormControl('Warszawa'),
+      zipCode: new UntypedFormControl('00-001'),
+      street: new UntypedFormControl('Marszałkowska'),
+      buildingNumber: new UntypedFormControl('10'),
+      flatNumber: new UntypedFormControl('5'),
+    });
+    rows.push({
+      fieldKey: 'address',
+      options: {
+        control: addressControl as any,
+        fieldKey: 'address',
+        model,
+        treeLevel: 0,
+      },
+    });
+
     return {
       props: { rows },
       template: `
@@ -930,11 +975,13 @@ export const PresetFields: Story = {
         </div>
       `,
       moduleMetadata: {
+        imports: [StubFormComponent],
         providers: [
           {
             provide: INPUT_FIELD_COMPONENTS_TOKEN,
             useValue: INPUT_PRESET_FIELD_COMPONENTS,
           },
+          { provide: FORM_COMPONENT_TOKEN, useValue: StubFormComponent },
         ],
       },
     };

@@ -667,6 +667,10 @@ export interface ICardHeadingOptions {
   avatarTpl?: TemplateRef<unknown>;
   actionsTpl?: TemplateRef<unknown>;
   metaTpl?: TemplateRef<unknown>;
+  // Consumed only by CardHeadingPresetComponent; standard component ignores it.
+  presentation?: {
+    variant?: 'author' | 'stacked' | 'overlay' | 'outline';
+  };
 }
 
 export interface IPageHeadingOptions {
@@ -680,6 +684,11 @@ export interface IPageHeadingOptions {
   statsTpl?: TemplateRef<unknown>;
   logoTpl?: TemplateRef<unknown>;
   filtersTpl?: TemplateRef<unknown>;
+  navTpl?: TemplateRef<unknown>;
+  // Consumed only by PageHeadingPresetComponent; standard component ignores it.
+  presentation?: {
+    layout?: 'links-left' | 'links-center' | 'links-right' | 'user';
+  };
 }
 
 export type SmartMultiColumnLayoutWidth = 'full' | 'constrained';
@@ -702,6 +711,11 @@ export interface ISectionHeadingOptions {
   tabsTpl?: TemplateRef<unknown>;
   inputGroupTpl?: TemplateRef<unknown>;
   badgeTpl?: TemplateRef<unknown>;
+  imageTpl?: TemplateRef<unknown>;
+  // Consumed only by SectionHeadingPresetComponent; standard component ignores it.
+  presentation?: {
+    layout?: 'half' | 'narrow' | 'wide' | 'vertical';
+  };
 }
 
 export interface IDescriptionListItem {

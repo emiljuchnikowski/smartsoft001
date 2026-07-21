@@ -150,13 +150,32 @@ providers: [
 ];
 ```
 
+`INPUT_PRESET_FIELD_COMPONENTS` now maps **every** `FieldType`. The field-type presets and their
+selectors mirror the default components in the table above (`smart-input-<field>-preset`), including
+the most recently added ones:
+
+| FieldType | Preset component              | Selector                     | Look                                                            |
+| --------- | ----------------------------- | ---------------------------- | --------------------------------------------------------------- |
+| `color`   | `InputColorPresetComponent`   | `smart-input-color-preset`   | Native color input in a rounded frame + swatch + hex            |
+| `object`  | `InputObjectPresetComponent`  | `smart-input-object-preset`  | Styled card frame around the nested form (unchanged nesting)    |
+| `address` | `InputAddressPresetComponent` | `smart-input-address-preset` | Responsive grid of Preline text sub-inputs (street/no/zip/city) |
+| `flag`    | `InputFlagPresetComponent`    | `smart-input-flag-preset`    | Preline checkbox (blue checked state) + inline label            |
+| `pdf`     | `InputPdfPresetComponent`     | `smart-input-pdf-preset`     | Dashed drop-zone (accept `.pdf`) + show/delete preview          |
+| `video`   | `InputVideoPresetComponent`   | `smart-input-video-preset`   | Dashed drop-zone (accept `.mp4`) + play/delete + `<video>`      |
+
 Notes:
 
 - Interactive Preline widgets (enum select, password strength meter, date pickers, file
   drop-zone) are driven by Angular signals — the Preline JS plugins are **not** required.
+- File-based presets (`pdf`, `video`, plus `file`/`image`/`attachment`) keep the hidden
+  `#inputObj` file input and reuse `InputFileBaseComponent`'s upload/button wiring; the drop-zone
+  and drag-and-drop are added on top.
+- `object` reuses `FORM_COMPONENT_TOKEN` and the `NgComponentOutlet`/`DynamicIoDirective` nesting of
+  the default component — only the surrounding frame is styled, the nested rendering is untouched.
 - `InputErrorPresetComponent` (`smart-input-error-preset`) is a Preline-styled validation-message
   variant. Because `InputComponent` hard-codes `<smart-input-error>` (no token for it), use this
-  preset via its selector directly — it is not part of `INPUT_PRESET_FIELD_COMPONENTS`.
+  preset via its selector directly — it is not part of `INPUT_PRESET_FIELD_COMPONENTS`, and wiring
+  it into the wrapper is out of scope.
 
 ## Extending the Base Class
 

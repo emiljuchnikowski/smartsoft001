@@ -193,3 +193,52 @@ export class MyCustomActionPanelComponent extends ActionPanelBaseComponent {
 - Base class: `packages/shared/angular/src/lib/components/action-panel/base/base.component.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`ACTION_PANEL_STANDARD_COMPONENT_TOKEN`)
 - Interfaces: `packages/shared/angular/src/lib/models/interfaces.ts` (`IActionPanelOptions`, `IActionPanelAction`, `SmartActionPanelLayout`)
+
+## Preset
+
+`ActionPanelPresetComponent` (`smart-action-panel-preset`,
+`action-panel/preset/`) extends `ActionPanelStandardComponent` and restyles the
+panel as a bordered card
+(`rounded-xl border bg-white p-4 shadow-2xs sm:p-6` + dark twin). Title uses
+`text-base font-semibold text-gray-900`, description `text-sm text-gray-500`;
+`descriptionTpl` overrides the description text. Class recipes live in
+`preset-classes.util.ts` (`getActionPanel*Classes`, not barrel-exported).
+
+All eight `SmartActionPanelLayout` values are realized through a `@switch`
+(default `simple`):
+
+- `simple` / `with-input` / `payment-method` — title, description, content
+  slot, then actions stacked below.
+- `with-link` — actions rendered as `text-blue-600 hover:underline` links.
+- `right-button` — flex row, content left, actions right, vertically centered.
+- `top-right-button` — actions in the title row, right-aligned.
+- `with-toggle` — content slot placed beside the text (flex row), actions below.
+- `well` — content and actions wrapped in an inset
+  `bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4` panel.
+
+Actions map by `variant`: `primary` → solid `bg-blue-600 text-white`, others →
+outline `border-gray-200 bg-white text-gray-800` + dark. `href` actions render
+as `<a>`, the rest as `<button>` calling the inherited `onActionClick(id)`
+(emits `actionClick` with the action id). DOM hooks: `data-role` of
+`panel`/`title`/`description`/`content`/`actions`/`well`, plus per-action
+`data-role="action"` with `data-action-id`; the panel also carries
+`data-layout`.
+
+Unlike the standard component, the preset drops the `class` input alias
+(`override cssClass = input<string>('')`) so the wrapper's canonical
+`componentInputs` binding reaches it via `NgComponentOutlet`.
+
+Register through the token to restyle every `<smart-action-panel>`:
+
+```ts
+providers: [
+  {
+    provide: ACTION_PANEL_STANDARD_COMPONENT_TOKEN,
+    useValue: ActionPanelPresetComponent,
+  },
+],
+```
+
+Gaps: `with-toggle` / `with-input` / `payment-method` only position the content
+slot — the interactive control (toggle switch, input, card list) is supplied by
+the caller via `contentTpl`.

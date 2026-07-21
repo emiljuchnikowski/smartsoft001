@@ -1,0 +1,25 @@
+<div [class]="rootClasses()" data-role="root">
+  <header [class]="headerZoneClasses()">
+    <div [class]="containerClasses() + ' smart:py-4'" data-role="header">
+      @if (options()?.navTpl) {
+        <nav data-role="nav">
+          <ng-container [ngTemplateOutlet]="options()!.navTpl!" />
+        </nav>
+      }
+      @if (options()?.headerTpl) {
+        <ng-container [ngTemplateOutlet]="options()!.headerTpl!" />
+      } @else if (options()?.title) {
+        <h1 [class]="titleClasses()" data-role="title">
+          {{ options()?.title }}
+        </h1>
+      }
+    </div>
+  </header>
+  <main>
+    <div [class]="containerClasses() + ' smart:py-8'" data-role="content">
+      <div [class]="contentCardClasses()">
+        <ng-content />
+      </div>
+    </div>
+  </main>
+</div>

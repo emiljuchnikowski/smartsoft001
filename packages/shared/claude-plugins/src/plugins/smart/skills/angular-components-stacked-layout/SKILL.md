@@ -167,3 +167,44 @@ When extending the base directly, remember to:
 - Base class: `packages/shared/angular/src/lib/components/stacked-layout/base/base.component.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN`)
 - Interface: `packages/shared/angular/src/lib/models/interfaces.ts` (`IStackedLayoutOptions`)
+
+## HyperUI preset
+
+`StackedLayoutPresetComponent` (`<smart-stacked-layout-preset>`) is the HyperUI-styled drop-in for `StackedLayoutStandardComponent`. It uses the same `IStackedLayoutOptions` API — no interface changes, no new options fields — and delivers the page scaffold in the HyperUI container rhythm:
+
+- **Page root** (`data-role="root"`): full-height gray surface — `smart:min-h-full smart:bg-gray-50 smart:dark:bg-gray-900`. The external `cssClass` is merged here.
+- **Header zone**: white bar (`smart:bg-white smart:shadow-sm smart:dark:bg-gray-800 smart:dark:border-b smart:dark:border-gray-700`) whose inner container (`data-role="header"`, `smart:py-4`) renders `navTpl` (`data-role="nav"`), then `headerTpl` if present, else `title` as an `<h1 data-role="title">` fallback.
+- **Main content** (`data-role="content"`, `smart:py-8`): the container wraps a bordered content card (`smart:rounded-lg smart:border smart:bg-white smart:p-4 smart:shadow-sm smart:sm:p-6 smart:dark:bg-gray-800`) that projects `<ng-content>` — identical projection semantics to the standard component.
+
+### containerWidth mapping
+
+Both the header and content containers share the base `smart:mx-auto smart:px-4 smart:sm:px-6 smart:lg:px-8` plus a max-width from `options.containerWidth`:
+
+| containerWidth       | max-width class    |
+| -------------------- | ------------------ |
+| `sm`                 | `smart:max-w-3xl`  |
+| `md`                 | `smart:max-w-5xl`  |
+| `lg`                 | `smart:max-w-6xl`  |
+| `xl` (default/unset) | `smart:max-w-7xl`  |
+| `full`               | `smart:max-w-none` |
+
+### Token registration
+
+```typescript
+import { STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+import { StackedLayoutPresetComponent } from '@smartsoft001/angular';
+
+providers: [
+  {
+    provide: STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN,
+    useValue: StackedLayoutPresetComponent,
+  },
+];
+```
+
+### Documented gaps
+
+The preset delivers the PAGE SCAFFOLD only. The grid "content + image" section variants from the shared FRA-206 task description are provided by the section-heading preset — use both together (section-heading blocks projected into the stacked-layout content region).
+
+- Preset: `packages/shared/angular/src/lib/components/stacked-layout/preset/preset.component.ts`
+- Class recipes: `packages/shared/angular/src/lib/components/stacked-layout/preset/preset-classes.util.ts`

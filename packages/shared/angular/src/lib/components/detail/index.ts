@@ -19,7 +19,16 @@ export * from './phone-number-pl/phone-number-pl.component';
 
 // Preline-styled field presets (FRA-238). Register via
 // DETAIL_FIELD_COMPONENTS_TOKEN keyed by FieldType to apply the Preline look.
+export * from './address/preset/preset.component';
 export * from './attachment/preset/preset.component';
+export * from './color/preset/preset.component';
+export * from './date-range/preset/preset.component';
+export * from './email/preset/preset.component';
 export * from './enum/preset/preset.component';
+export * from './flag/preset/preset.component';
 export * from './image/preset/preset.component';
+export * from './logo/preset/preset.component';
+export * from './pdf/preset/preset.component';
+export * from './phone-number-pl/preset/preset.component';
+export * from './video/preset/preset.component';
 export * from './preset-fields';

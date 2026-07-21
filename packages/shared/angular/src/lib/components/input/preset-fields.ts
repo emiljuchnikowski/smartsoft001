@@ -2,9 +2,11 @@ import { Type } from '@angular/core';
 
 import { FieldType, FieldTypeDef } from '@smartsoft001/models';
 
+import { InputAddressPresetComponent } from './address/preset/preset.component';
 import { InputAttachmentPresetComponent } from './attachment/preset/preset.component';
 import { InputBaseComponent } from './base/base.component';
 import { InputCheckPresetComponent } from './check/preset/preset.component';
+import { InputColorPresetComponent } from './color/preset/preset.component';
 import { InputCurrencyPresetComponent } from './currency/preset/preset.component';
 import { InputDatePresetComponent } from './date/preset/preset.component';
 import { InputDateRangePresetComponent } from './date-range/preset/preset.component';
@@ -12,6 +14,7 @@ import { InputDateWithEditPresetComponent } from './date-with-edit/preset/preset
 import { InputEmailPresetComponent } from './email/preset/preset.component';
 import { InputEnumPresetComponent } from './enum/preset/preset.component';
 import { InputFilePresetComponent } from './file/preset/preset.component';
+import { InputFlagPresetComponent } from './flag/preset/preset.component';
 import { InputFloatPresetComponent } from './float/preset/preset.component';
 import { InputImagePresetComponent } from './image/preset/preset.component';
 import { InputIntPresetComponent } from './int/preset/preset.component';
@@ -19,13 +22,16 @@ import { InputIntsPresetComponent } from './ints/preset/preset.component';
 import { InputLogoPresetComponent } from './logo/preset/preset.component';
 import { InputLongTextPresetComponent } from './long-text/preset/preset.component';
 import { InputNipPresetComponent } from './nip/preset/preset.component';
+import { InputObjectPresetComponent } from './object/preset/preset.component';
 import { InputPasswordPresetComponent } from './password/preset/preset.component';
+import { InputPdfPresetComponent } from './pdf/preset/preset.component';
 import { InputPeselPresetComponent } from './pesel/preset/preset.component';
 import { InputPhoneNumberPresetComponent } from './phone-number/preset/preset.component';
 import { InputPhoneNumberPlPresetComponent } from './phone-number-pl/preset/preset.component';
 import { InputRadioPresetComponent } from './radio/preset/preset.component';
 import { InputStringsPresetComponent } from './strings/preset/preset.component';
 import { InputTextPresetComponent } from './text/preset/preset.component';
+import { InputVideoPresetComponent } from './video/preset/preset.component';
 
 /**
  * Complete map of the Preline-styled input field presets (FRA-226), keyed by
@@ -70,4 +76,10 @@ export const INPUT_PRESET_FIELD_COMPONENTS: Partial<
   [FieldType.attachment]: InputAttachmentPresetComponent,
   [FieldType.image]: InputImagePresetComponent,
   [FieldType.logo]: InputLogoPresetComponent,
+  [FieldType.color]: InputColorPresetComponent,
+  [FieldType.object]: InputObjectPresetComponent,
+  [FieldType.address]: InputAddressPresetComponent,
+  [FieldType.flag]: InputFlagPresetComponent,
+  [FieldType.pdf]: InputPdfPresetComponent,
+  [FieldType.video]: InputVideoPresetComponent,
 };

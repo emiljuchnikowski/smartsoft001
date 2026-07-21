@@ -9,8 +9,13 @@ import { SharedFactoriesModule } from '../../factories';
 import { IFormOptions } from '../../models';
 import { FORM_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { COMPONENTS, IMPORTS } from '../components.module';
+import {
+  INPUT_FIELD_COMPONENTS_TOKEN,
+  INPUT_PRESET_FIELD_COMPONENTS,
+} from '../input';
 import { FormBaseComponent } from './base/base.component';
 import { FormComponent } from './form.component';
+import { FormPresetComponent } from './preset/preset.component';
 
 const meta: Meta<FormComponent<any>> = {
   title: 'Smart-Form/Form',
@@ -160,6 +165,46 @@ export const CustomViaToken: Story = {
         {
           provide: FORM_STANDARD_COMPONENT_TOKEN,
           useValue: CustomFormImplComponent,
+        },
+      ],
+    },
+  }),
+};
+
+// ─── 5. Preset ───────────────────────────────────────────────────────────────
+
+export const Preset: Story = {
+  render: () => ({
+    props: {
+      storyOptions: {
+        model: (() => {
+          @Model({})
+          class TestModel {
+            @Field({}) firstName = '';
+            @Field({ required: true }) lastName = '';
+            @Field({ type: FieldType.email }) email = '';
+          }
+          return new TestModel();
+        })(),
+      } as IFormOptions<any>,
+    },
+    // The recommended duet: FormPresetComponent restyles the form shell, while
+    // INPUT_PRESET_FIELD_COMPONENTS restyle the field internals via
+    // INPUT_FIELD_COMPONENTS_TOKEN.
+    template: `
+      <div style="max-width: 28rem; margin: 0 auto; padding: 1.5rem;">
+        <smart-form [options]="storyOptions"></smart-form>
+      </div>
+    `,
+    moduleMetadata: {
+      providers: [
+        {
+          provide: FORM_STANDARD_COMPONENT_TOKEN,
+          useValue: FormPresetComponent,
+        },
+        {
+          provide: INPUT_FIELD_COMPONENTS_TOKEN,
+          useValue: INPUT_PRESET_FIELD_COMPONENTS,
         },
       ],
     },
