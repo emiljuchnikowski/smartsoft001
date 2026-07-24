@@ -1,55 +1,59 @@
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { TranslatePipe } from '@ngx-translate/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 
+import { InputFlagComponent, InputOptions } from '@smartsoft001/angular';
 import { IEntity } from '@smartsoft001/domain-core';
+import { IFieldOptions } from '@smartsoft001/models';
 
 import { BaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-crud-filter-flag',
+  host: { class: 'smart:block smart:w-full' },
   template: `
-    <!--    <ion-row>-->
-    <!--      <ion-col>-->
-    <div
-      class="flag-container w-full flex flex-row flex-nowrap justify-between pr-5"
-    >
-      <!--          <ion-label class="align-middle my-6" position="static">-->
-      {{ item()?.label || '' | translate }}
-      <!--          </ion-label>-->
-      <!--          <ion-checkbox [(ngModel)]="value" slot="end"></ion-checkbox>-->
-    </div>
-    <!--      </ion-col>-->
-    @if (typeof value === 'boolean') {
-      <!--        <ion-col size="auto">-->
-      <!--          <ion-button-->
-      <!--            color="danger"-->
-      <!--            (click)="refresh(null)"-->
-      <!--            class="square-button m-3"-->
-      <!--          >-->
-      <!--            <ion-icon slot="icon-only" name="close-outline"></ion-icon>-->
-      <!--          </ion-button>-->
-      <!--        </ion-col>-->
+    @if (inputOptions()) {
+      <div class="smart:flex smart:w-full smart:items-center smart:gap-2">
+        <smart-input-flag
+          class="smart:flex-1"
+          [options]="inputOptions()!"
+          [fieldOptions]="fieldOptions()"
+        ></smart-input-flag>
+        @if (value === true || value === false) {
+          <button
+            type="button"
+            (click)="refresh(null)"
+            aria-label="clear"
+            class="smart:shrink-0 smart:rounded smart:px-2 smart:py-2 smart:text-red-600 hover:smart:bg-red-50"
+          >
+            ×
+          </button>
+        }
+      </div>
     }
-    <!--    </ion-row>-->
   `,
-  imports: [TranslatePipe, FormsModule],
-  styles: [
-    `
-      :host {
-        width: 100%;
-        .flag-container {
-          ion-label {
-            /*--color: var(--smart-color-dark);*/
-          }
-        }
-        .square-button {
-          height: var(--smart-button-height) !important;
-        }
-      }
-    `,
-  ],
+  imports: [InputFlagComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FilterFlagComponent<
-  T extends IEntity<string>,
-> extends BaseComponent<T> {}
+export class FilterFlagComponent<T extends IEntity<string>>
+  extends BaseComponent<T>
+  implements OnInit
+{
+  readonly inputOptions: WritableSignal<InputOptions<any> | undefined> = signal<
+    InputOptions<any> | undefined
+  >(undefined);
+  readonly fieldOptions: WritableSignal<IFieldOptions | undefined> = signal<
+    IFieldOptions | undefined
+  >(undefined);
+
+  override ngOnInit(): void {
+    super.ngOnInit();
+
+    const control = this.bindValueControl();
+    this.inputOptions.set(this.buildInputOptions(control));
+  }
+}

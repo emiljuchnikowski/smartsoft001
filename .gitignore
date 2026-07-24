@@ -55,3 +55,9 @@ Thumbs.db
 .claude/worktrees
 .nx/polygraph
 .nx/self-healing
+
+# Cypress run artifacts
+packages/**/cypress/downloads
+packages/**/cypress/screenshots
+packages/**/cypress/videos
+.playwright-mcp

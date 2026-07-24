@@ -1,5 +1,4 @@
 import { inject, Pipe, PipeTransform, Type } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 
 import { IModelLabelProvider } from '../../providers';
@@ -22,6 +21,6 @@ export class ModelLabelPipe<T> implements PipeTransform {
       if (result()) return result() as string;
     }
 
-    return toSignal(this.translateService.instant('MODEL.' + key))() as string;
+    return this.translateService.instant('MODEL.' + key) as string;
   }
 }
