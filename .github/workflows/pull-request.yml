@@ -4,13 +4,17 @@ on:
     branches:
       - main
 
+# Untrusted stage: runs the contributor's code (lint/test/build) and so must
+# never have access to secrets or a write-scoped token. GitHub already enforces
+# a read-only GITHUB_TOKEN and withholds secrets for fork PRs; we mirror that
+# with least-privilege permissions here. The Claude review itself runs in the
+# trusted "Claude PR Review" workflow (claude-review.yml), triggered via
+# workflow_run after this one completes.
 jobs:
   main:
     runs-on: ubuntu-24.04
     permissions:
       contents: read
-      pull-requests: write
-      issues: write
     steps:
       - uses: actions/checkout@v4.2.2
         with:
@@ -31,27 +35,18 @@ jobs:
           export NODE_OPTIONS="--max-old-space-size=8192"
           npx nx run-many -t test --max-parallel=4
       - run: npx nx run-many -t build --max-parallel=4
-      - name: Install Claude Code SDK
-        run: npm install -g @anthropic-ai/claude-code
-
-      - name: Comment PR with Claude Code Review
-        uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          header: claude-code-review
-          message: 🔎 Code Review in progress...
-
-      - name: Run Claude Code Review
+      # Produce the diff for the review. We deliberately do NOT run Claude or
+      # post comments here (no secrets / read-only token on fork PRs). Only the
+      # diff text is handed off; the PR number is re-derived from the trusted
+      # head SHA in the review workflow, so nothing here can target another PR.
+      - name: Prepare review payload
         run: |
-          PR_DIFF=$(git diff origin/main...HEAD)
-          CLAUDE_CR_PROMPT=$(cat tools/specs/CODE_REVIEW.md)
-          claude --append-system-prompt "$CLAUDE_CR_PROMPT" \
-            --print "Do Code Review:\n\n $PR_DIFF" \
-            > claude-review.md
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          mkdir -p review-payload
+          git diff origin/${{ github.event.pull_request.base.ref }}...HEAD > review-payload/pr.diff
 
-      - name: Comment PR with Claude Code Review
-        uses: marocchino/sticky-pull-request-comment@v2
+      - name: Upload review payload
+        uses: actions/upload-artifact@v4
         with:
-          header: claude-code-review
-          path: claude-review.md
+          name: review-payload
+          path: review-payload/
+          retention-days: 1
