@@ -1,0 +1,20 @@
+{
+  "data": [
+    {
+      "id": "p1-1",
+      "title": "Page 1 item A",
+      "body": "first page row a",
+      "priority": 1
+    },
+    {
+      "id": "p1-2",
+      "title": "Page 1 item B",
+      "body": "first page row b",
+      "priority": 2
+    }
+  ],
+  "totalCount": 30,
+  "links": {
+    "next": "?limit=25&offset=25"
+  }
+}

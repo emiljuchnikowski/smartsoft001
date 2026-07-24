@@ -15,7 +15,9 @@ import { MODEL_POSSIBILITIES_PROVIDER } from '../../../providers';
 export abstract class InputPossibilitiesBaseComponent<
   T,
 > extends InputBaseComponent<T> {
-  private modelPossibilitiesProvider = inject(MODEL_POSSIBILITIES_PROVIDER);
+  private modelPossibilitiesProvider = inject(MODEL_POSSIBILITIES_PROVIDER, {
+    optional: true,
+  });
 
   protected override afterSetOptionsHandler() {
     const refreshPossibilities = () => {

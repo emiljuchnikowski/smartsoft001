@@ -7,11 +7,18 @@ import { IEntity } from '@smartsoft001/domain-core';
 
 import { CrudConfig } from '../../crud.config';
 import { ICrudCreateManyOptions, ICrudFilter } from '../../models';
+import { SocketService } from '../socket/socket.service';
 
 @Injectable()
 export class CrudService<T extends IEntity<string>> {
   protected config = inject(CrudConfig<T>);
   protected http = inject(HttpClient);
+  protected socket = inject(SocketService<T>, { optional: true });
+
+  // changes(criteria: { id?: string } = {}): Observable<ItemChangedData> {
+  //   this.socket.emit('changes', criteria);
+  //   return this.socket.fromEvent('changes');
+  // }
 
   protected _formatMap = {
     csv: 'text/csv',

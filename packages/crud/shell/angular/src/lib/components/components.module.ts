@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DynamicIoModule } from 'ng-dynamic-component';
 
-import { SharedModule } from '@smartsoft001/angular';
+import { IModelLabelProvider, SharedModule } from '@smartsoft001/angular';
 
 import { ExportComponent } from './export/export.component';
 import {
@@ -24,7 +24,9 @@ import { MultiselectComponent } from './multiselect/multiselect.component';
 import { CrudFacade } from '../+state/crud.facade';
 import { GroupComponent } from './group/group.component';
 import { CrudListPaginationFactory } from '../factories/list-pagination/list-pagination.factory';
+import { CrudModelLabelProvider } from '../providers/model-label/model-label.provider';
 import { CrudService } from '../services/crud/crud.service';
+import { SocketService } from '../services/socket/socket.service';
 
 const COMPONENTS = [
   ExportComponent,
@@ -53,6 +55,12 @@ const COMPONENTS = [
     DynamicIoModule,
   ],
   exports: [CrudPipesModule, ...COMPONENTS],
-  providers: [CrudService, CrudFacade, CrudListPaginationFactory],
+  providers: [
+    CrudService,
+    CrudFacade,
+    SocketService,
+    CrudListPaginationFactory,
+    { provide: IModelLabelProvider, useClass: CrudModelLabelProvider },
+  ],
 })
 export class CrudComponentsModule {}

@@ -158,3 +158,41 @@ describe('@smartsoft001/shared-angular: InputRadioComponent', () => {
     expect(control.value).toBe(2);
   });
 });
+
+describe('@smartsoft001/shared-angular: InputRadioComponent (no possibilities provider)', () => {
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        TestHostComponent,
+        ReactiveFormsModule,
+        TranslateModule.forRoot(),
+      ],
+      providers: [
+        { provide: IModelLabelProvider, useClass: MockModelLabelProvider },
+        // NOTE: MODEL_POSSIBILITIES_PROVIDER intentionally NOT provided.
+      ],
+    }).compileComponents();
+  });
+
+  it('should create without MODEL_POSSIBILITIES_PROVIDER provided', () => {
+    const fixture = TestBed.createComponent(TestHostComponent);
+    const control = new UntypedFormControl(1);
+    fixture.componentInstance.options = buildOptions(control);
+
+    expect(() => fixture.detectChanges()).not.toThrow();
+  });
+
+  it('should expose getPossibilitiesFromProvider() returning a null signal', () => {
+    const fixture = TestBed.createComponent(TestHostComponent);
+    const control = new UntypedFormControl(1);
+    fixture.componentInstance.options = buildOptions(control);
+    fixture.detectChanges();
+
+    const radio = fixture.debugElement.children[0]
+      .componentInstance as InputRadioComponent<any> & {
+      getPossibilitiesFromProvider: () => { (): unknown };
+    };
+
+    expect(radio.getPossibilitiesFromProvider()()).toBeNull();
+  });
+});
