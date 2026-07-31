@@ -5,12 +5,12 @@ import { moduleMetadata } from '@storybook/angular';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
+import { FormComponent } from './form.component';
 import { SharedFactoriesModule } from '../../factories';
 import { IFormOptions } from '../../models';
 import { FORM_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { COMPONENTS, IMPORTS } from '../components.module';
 import { FormBaseComponent } from './base/base.component';
-import { FormComponent } from './form.component';
 
 const meta: Meta<FormComponent<any>> = {
   title: 'Smart-Form/Form',

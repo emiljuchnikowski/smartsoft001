@@ -14,12 +14,12 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
+import { InputComponent } from './input.component';
 import { InputOptions } from '../../models';
 import { IModelLabelProvider } from '../../providers';
 import { StyleService } from '../../services';
 import { INPUT_FIELD_COMPONENTS_TOKEN } from '../../shared.inectors';
 import { InputBaseComponent } from './base/base.component';
-import { InputComponent } from './input.component';
 
 @Component({
   selector: 'smart-test-input-injected',

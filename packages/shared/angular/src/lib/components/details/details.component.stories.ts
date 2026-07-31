@@ -6,6 +6,7 @@ import { moduleMetadata } from '@storybook/angular';
 import { IAddress } from '@smartsoft001/domain-core';
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
+import { DetailsComponent } from './details.component';
 import { SharedFactoriesModule } from '../../factories';
 import { FileService } from '../../services';
 import {
@@ -14,7 +15,6 @@ import {
 } from '../../shared.inectors';
 import { COMPONENTS, IMPORTS } from '../components.module';
 import { DetailsBaseComponent } from './base/base.component';
-import { DetailsComponent } from './details.component';
 
 const meta: Meta<DetailsComponent<any>> = {
   title: 'Smart-Details/Details',

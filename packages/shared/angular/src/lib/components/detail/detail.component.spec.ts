@@ -9,11 +9,11 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { FieldType } from '@smartsoft001/models';
 
+import { DetailComponent } from './detail.component';
 import { IDetailOptions } from '../../models';
 import { IModelLabelProvider } from '../../providers';
 import { DETAIL_FIELD_COMPONENTS_TOKEN } from '../../shared.inectors';
 import { DetailBaseComponent } from './base/base.component';
-import { DetailComponent } from './detail.component';
 
 @Component({
   selector: 'smart-test-detail-injected',

@@ -1,10 +1,10 @@
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { ButtonComponent } from './button.component';
 import { IButtonOptions } from '../../models';
 import { BUTTON_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { ButtonBaseComponent } from './base/base.component';
-import { ButtonComponent } from './button.component';
 
 @Component({
   selector: 'smart-test-injected',

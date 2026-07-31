@@ -1,10 +1,10 @@
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { CardComponent } from './card.component';
 import { ICardOptions } from '../../models';
 import { CARD_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { CardBaseComponent } from './base/base.component';
-import { CardComponent } from './card.component';
 
 @Component({
   selector: 'smart-test-injected-card',
