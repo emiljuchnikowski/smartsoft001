@@ -1,4 +1,9 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  TemplateRef,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PageHeadingStandardComponent } from './standard.component';
@@ -89,6 +94,7 @@ describe('@smartsoft001/shared-angular: PageHeadingStandardComponent', () => {
 
   describe('with templates', () => {
     @Component({
+      changeDetection: ChangeDetectionStrategy.Eager,
       selector: 'smart-test-host',
       template: `
         <ng-template #breadcrumbs>

@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ICardOptions } from '../../models';
@@ -8,6 +8,7 @@ import { CardComponent } from './card.component';
 
 @Component({
   selector: 'smart-test-injected-card',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="injected-card">injected</div>',
 })
 class MockInjectedComponent extends CardBaseComponent {
@@ -29,6 +30,7 @@ class MockInjectedComponent extends CardBaseComponent {
       <div cardFooter class="projected-footer">FOOTER</div>
     </smart-card>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [CardComponent],
 })
 class TestHostComponent {

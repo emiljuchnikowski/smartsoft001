@@ -1,4 +1,9 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  TemplateRef,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StackedListStandardComponent } from './standard.component';
@@ -96,6 +101,7 @@ describe('@smartsoft001/shared-angular: StackedListStandardComponent', () => {
 
   describe('with items and templates', () => {
     @Component({
+      changeDetection: ChangeDetectionStrategy.Eager,
       selector: 'smart-test-host',
       template: `
         <ng-template #iconTpl>

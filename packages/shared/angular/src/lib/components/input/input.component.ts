@@ -114,7 +114,7 @@ const baseMap: Partial<Record<FieldTypeDef, Type<InputBaseComponent<any>>>> = {
         }
       </div>
 
-      @let errors = options()?.control?.errors;
+      @let errors = $safeNavigationMigration(options()?.control?.errors);
       @if (errors && options()?.control?.touched) {
         <smart-input-error [errors]="errors"></smart-input-error>
       }

@@ -1,7 +1,7 @@
 <div [class]="containerClasses()">
   @if (hasHeader()) {
     <div [class]="headerClasses()">
-      @let title = options()?.title;
+      @let title = $safeNavigationMigration(options()?.title);
       @if (title) {
         <h3
           class="smart:text-base smart:font-semibold smart:text-gray-900 smart:dark:text-white"

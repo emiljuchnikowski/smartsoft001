@@ -6,7 +6,8 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "types": ["cypress", "node"],
-    "sourceMap": false
+    "sourceMap": false,
+    "ignoreDeprecations": "6.0"
   },
   "include": [],
   "references": [

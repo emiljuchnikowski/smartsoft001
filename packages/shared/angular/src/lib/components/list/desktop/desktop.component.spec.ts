@@ -1,4 +1,10 @@
-import { Component, Pipe, PipeTransform, signal } from '@angular/core';
+import {
+  Component,
+  Pipe,
+  PipeTransform,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -51,6 +57,7 @@ function createProvider(): IListProvider<TestItemModel> {
 
 @Component({
   selector: 'smart-paging',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class MockPagingComponent {
@@ -64,6 +71,7 @@ class MockPagingComponent {
     [options]="options"
     [class]="cssClass"
   ></smart-list-desktop>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ListDesktopComponent],
 })
 class TestHostComponent {

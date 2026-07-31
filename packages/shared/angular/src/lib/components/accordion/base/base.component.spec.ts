@@ -1,10 +1,16 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  TemplateRef,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AccordionBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-accordion',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <ng-template #headerTpl>Header</ng-template>
     <ng-template #bodyTpl>Body</ng-template>
@@ -24,6 +30,7 @@ class TestAccordionComponent extends AccordionBaseComponent {
     [options]="options"
     #accordion
   />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestAccordionComponent],
 })
 class TestHostComponent {

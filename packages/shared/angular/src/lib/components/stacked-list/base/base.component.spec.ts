@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StackedListBaseComponent } from './base.component';
@@ -6,6 +6,7 @@ import { IStackedListOptions } from '../../../models';
 
 @Component({
   selector: 'smart-test-stacked-list',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestStackedListComponent extends StackedListBaseComponent {}
@@ -16,6 +17,7 @@ class TestStackedListComponent extends StackedListBaseComponent {}
     [options]="options"
     [class]="cssClass"
   />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestStackedListComponent],
 })
 class TestHostComponent {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SidebarLayoutBaseComponent } from './base.component';
@@ -6,6 +6,7 @@ import { ISidebarLayoutOptions } from '../../../models';
 
 @Component({
   selector: 'smart-test-sidebar-layout',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestSidebarLayoutComponent extends SidebarLayoutBaseComponent {}
@@ -16,6 +17,7 @@ class TestSidebarLayoutComponent extends SidebarLayoutBaseComponent {}
     [options]="options"
     [class]="cssClass"
   />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestSidebarLayoutComponent],
 })
 class TestHostComponent {

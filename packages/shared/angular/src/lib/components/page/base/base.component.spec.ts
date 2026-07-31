@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PageBaseComponent } from './base.component';
@@ -8,6 +8,7 @@ import { AppService, HardwareService } from '../../../services';
 
 @Component({
   selector: 'smart-test-page',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestPageComponent extends PageBaseComponent {}
@@ -15,6 +16,7 @@ class TestPageComponent extends PageBaseComponent {}
 @Component({
   selector: 'smart-test-host',
   template: `<smart-test-page [options]="options" [class]="cssClass" />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestPageComponent],
 })
 class TestHostComponent {

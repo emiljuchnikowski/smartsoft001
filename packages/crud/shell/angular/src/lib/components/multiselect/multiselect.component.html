@@ -19,7 +19,9 @@
   @if (config?.list?.components?.multi) {
     <div>
       <ng-template
-        [ngComponentOutlet]="config?.list?.components?.multi"
+        [ngComponentOutlet]="
+          $safeNavigationMigration(config?.list?.components?.multi)
+        "
         [ndcDynamicInputs]="{ items: list }"
       ></ng-template>
     </div>

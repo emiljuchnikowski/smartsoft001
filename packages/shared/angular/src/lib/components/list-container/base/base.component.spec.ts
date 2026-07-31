@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ListContainerBaseComponent } from './base.component';
@@ -6,6 +6,7 @@ import { IListContainerOptions } from '../../../models';
 
 @Component({
   selector: 'smart-test-list-container',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestListContainerComponent extends ListContainerBaseComponent {}
@@ -16,6 +17,7 @@ class TestListContainerComponent extends ListContainerBaseComponent {}
     [options]="options"
     [class]="cssClass"
   />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestListContainerComponent],
 })
 class TestHostComponent {

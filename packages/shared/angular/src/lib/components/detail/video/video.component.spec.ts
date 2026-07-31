@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FieldType } from '@smartsoft001/models';
@@ -15,6 +15,7 @@ import { FileService } from '../../../services';
       [class]="cssClass"
     ></smart-detail-video>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [DetailVideoComponent],
 })
 class TestHostComponent {

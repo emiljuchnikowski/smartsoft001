@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { IconBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-icon',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestIconComponent extends IconBaseComponent {}
@@ -12,6 +13,7 @@ class TestIconComponent extends IconBaseComponent {}
 @Component({
   selector: 'smart-test-host',
   template: `<smart-test-icon [class]="cssClass" />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestIconComponent],
 })
 class TestHostComponent {

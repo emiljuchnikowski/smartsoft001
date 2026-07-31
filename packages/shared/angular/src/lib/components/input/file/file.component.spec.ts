@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   ReactiveFormsModule,
@@ -36,6 +36,7 @@ class MockModelLabelProvider extends IModelLabelProvider {
       [class]="cssClass"
     ></smart-input-file>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [InputFileComponent],
 })
 class TestHostComponent {

@@ -1,4 +1,9 @@
-import { Component, input, signal } from '@angular/core';
+import {
+  Component,
+  input,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   ReactiveFormsModule,
@@ -18,6 +23,7 @@ import { InputComponent } from './input.component';
 
 @Component({
   selector: 'smart-test-input-injected',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="injected-input">injected</div>',
 })
 class MockInjectedComponent extends InputBaseComponent<any> {

@@ -1,4 +1,9 @@
-import { Component, input, signal } from '@angular/core';
+import {
+  Component,
+  input,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { IEntity } from '@smartsoft001/domain-core';
@@ -13,6 +18,7 @@ import { DETAILS_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-detail',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<span class="mock-detail">mock</span>',
 })
 class MockDetailComponent {
@@ -30,6 +36,7 @@ class TestItemModel implements IEntity<string> {
 
 @Component({
   selector: 'smart-test-custom-details',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="custom-details">custom</div>',
 })
 class TestCustomDetailsComponent extends DetailsBaseComponent<TestItemModel> {

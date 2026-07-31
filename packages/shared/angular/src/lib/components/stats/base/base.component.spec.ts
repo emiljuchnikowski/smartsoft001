@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StatsBaseComponent } from './base.component';
@@ -6,6 +6,7 @@ import { IStatsOptions } from '../../../models';
 
 @Component({
   selector: 'smart-test-stats',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestStatsComponent extends StatsBaseComponent {}
@@ -13,6 +14,7 @@ class TestStatsComponent extends StatsBaseComponent {}
 @Component({
   selector: 'smart-test-host',
   template: `<smart-test-stats [options]="options" [class]="cssClass" />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestStatsComponent],
 })
 class TestHostComponent {

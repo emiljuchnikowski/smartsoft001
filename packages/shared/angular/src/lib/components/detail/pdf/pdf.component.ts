@@ -1,4 +1,9 @@
-import { Component, computed, inject } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { IEntity } from '@smartsoft001/domain-core';
@@ -9,14 +14,15 @@ import { DetailBaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-detail-pdf',
   template: `
-    @let item = options()?.item?.();
-    @let key = options()?.key;
+    @let item = $safeNavigationMigration(options()?.item?.());
+    @let key = $safeNavigationMigration(options()?.key);
     @if (item && key) {
       <button type="button" [class]="buttonClasses()" (click)="show(item, key)">
         {{ 'show' | translate }}
       </button>
     }
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TranslatePipe],
 })
 export class DetailPdfComponent<

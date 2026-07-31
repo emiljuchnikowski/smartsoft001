@@ -74,7 +74,11 @@
         "node_modules/@angular/router/types/testing.d.ts"
       ],
       "@angular/cdk/*": ["node_modules/@angular/cdk/types/*.d.ts"]
-    }
+    },
+    "strict": false,
+    "noUncheckedSideEffectImports": false,
+    "types": ["*"],
+    "ignoreDeprecations": "6.0"
   },
   "exclude": ["node_modules", "tmp"]
 }

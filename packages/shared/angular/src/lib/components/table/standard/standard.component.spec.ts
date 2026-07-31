@@ -1,4 +1,9 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  TemplateRef,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TableStandardComponent } from './standard.component';
@@ -165,6 +170,7 @@ describe('@smartsoft001/shared-angular: TableStandardComponent', () => {
 
   describe('with templates and empty state', () => {
     @Component({
+      changeDetection: ChangeDetectionStrategy.Eager,
       selector: 'smart-test-host',
       template: `
         <ng-template #cellTpl let-row>

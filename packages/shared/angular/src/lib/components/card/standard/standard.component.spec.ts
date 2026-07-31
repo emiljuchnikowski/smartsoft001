@@ -1,4 +1,9 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  TemplateRef,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CardStandardComponent } from './standard.component';
@@ -20,6 +25,7 @@ import { ICardOptions } from '../../../models';
       [cssClass]="cssClass"
     />
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [CardStandardComponent],
 })
 class TestHostComponent {

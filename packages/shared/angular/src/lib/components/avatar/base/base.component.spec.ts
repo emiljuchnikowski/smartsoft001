@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AvatarBaseComponent } from './base.component';
@@ -11,6 +11,7 @@ import {
 
 @Component({
   selector: 'smart-test-avatar',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestAvatarComponent extends AvatarBaseComponent {}
@@ -27,6 +28,7 @@ class TestAvatarComponent extends AvatarBaseComponent {}
     [options]="options"
     [class]="cssClass"
   />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestAvatarComponent],
 })
 class TestHostComponent {

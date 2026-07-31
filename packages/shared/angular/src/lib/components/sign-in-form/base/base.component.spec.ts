@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SignInFormBaseComponent } from './base.component';
@@ -6,6 +6,7 @@ import { ISignInFormOptions, SmartSignInFormMode } from '../../../models';
 
 @Component({
   selector: 'smart-test-sign-in-form',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestSignInFormComponent extends SignInFormBaseComponent {}
@@ -18,6 +19,7 @@ class TestSignInFormComponent extends SignInFormBaseComponent {}
     [options]="options"
     [class]="cssClass"
   />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestSignInFormComponent],
 })
 class TestHostComponent {

@@ -1,4 +1,10 @@
-import { Component, computed, signal, Signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  signal,
+  Signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { IAddress } from '@smartsoft001/domain-core';
 
@@ -6,6 +12,7 @@ import { DetailBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-detail-address',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     @let address = thisAddress();
     @if (address) {

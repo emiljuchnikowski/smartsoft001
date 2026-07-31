@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 
 import { FieldType, IModelFilter } from '@smartsoft001/models';
 
@@ -15,6 +15,7 @@ import { FilterTextComponent } from './text/text.component';
 @Component({
   selector: 'smart-crud-filter',
   templateUrl: './filter.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     FilterTextComponent,
     FilterIntComponent,

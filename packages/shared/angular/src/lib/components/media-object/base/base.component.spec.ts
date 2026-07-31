@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MediaObjectBaseComponent } from './base.component';
@@ -6,6 +6,7 @@ import { IMediaObjectOptions } from '../../../models';
 
 @Component({
   selector: 'smart-test-media-object',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestMediaObjectComponent extends MediaObjectBaseComponent {}
@@ -18,6 +19,7 @@ class TestMediaObjectComponent extends MediaObjectBaseComponent {}
     [options]="options"
     [class]="cssClass"
   />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestMediaObjectComponent],
 })
 class TestHostComponent {

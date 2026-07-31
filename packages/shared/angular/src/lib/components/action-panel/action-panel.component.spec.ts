@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ActionPanelComponent } from './action-panel.component';
@@ -7,6 +7,7 @@ import { ACTION_PANEL_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-action-panel-injected',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="injected-action-panel">injected</div>',
 })
 class MockInjectedComponent extends ActionPanelBaseComponent {

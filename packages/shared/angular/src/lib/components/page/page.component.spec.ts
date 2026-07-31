@@ -6,6 +6,7 @@ import {
   PipeTransform,
   TemplateRef,
   viewChild,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -26,6 +27,7 @@ class MockTranslatePipe implements PipeTransform {
 
 @Component({
   selector: 'smart-test-injected-page',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<section class="injected">injected</section>',
 })
 class MockInjectedPageComponent extends PageBaseComponent {
@@ -40,6 +42,7 @@ class MockInjectedPageComponent extends PageBaseComponent {
       <p id="projected">projected body</p>
     </smart-page>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [PageComponent],
 })
 class HostComponent {
@@ -57,6 +60,7 @@ class HostComponent {
       <p id="explicit">explicit body</p>
     </ng-template>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [PageComponent],
 })
 class TplHostComponent {

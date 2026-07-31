@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CardHeadingBaseComponent } from './base.component';
@@ -6,6 +6,7 @@ import { ICardHeadingOptions } from '../../../models';
 
 @Component({
   selector: 'smart-test-card-heading',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestCardHeadingComponent extends CardHeadingBaseComponent {}
@@ -16,6 +17,7 @@ class TestCardHeadingComponent extends CardHeadingBaseComponent {}
     [options]="options"
     [class]="cssClass"
   />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestCardHeadingComponent],
 })
 class TestHostComponent {

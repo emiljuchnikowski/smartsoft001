@@ -1,4 +1,9 @@
-import { Component, input, signal } from '@angular/core';
+import {
+  Component,
+  input,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FieldType } from '@smartsoft001/models';
@@ -10,6 +15,7 @@ import { DETAILS_COMPONENT_TOKEN } from '../../../shared.inectors';
 @Component({
   selector: 'mock-details',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="mock-details">mock</div>',
 })
 class MockDetailsComponent {
@@ -24,6 +30,7 @@ class MockDetailsComponent {
       [class]="cssClass"
     ></smart-detail-object>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [DetailObjectComponent],
 })
 class TestHostComponent {

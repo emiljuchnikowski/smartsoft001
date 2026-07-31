@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { BadgeBaseComponent } from './base.component';
@@ -6,6 +6,7 @@ import { IBadgeOptions, SmartBadgeColor } from '../../../models';
 
 @Component({
   selector: 'smart-test-badge',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestBadgeComponent extends BadgeBaseComponent {}
@@ -20,6 +21,7 @@ class TestBadgeComponent extends BadgeBaseComponent {}
     [class]="cssClass"
     (removed)="onRemoved()"
   />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestBadgeComponent],
 })
 class TestHostComponent {

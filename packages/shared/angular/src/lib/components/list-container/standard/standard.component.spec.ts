@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ListContainerStandardComponent } from './standard.component';
@@ -13,6 +13,7 @@ import { IListContainerOptions } from '../../../models';
     <div class="child-1">child 1</div>
     <div class="child-2">child 2</div>
   </smart-list-container-standard>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ListContainerStandardComponent],
 })
 class TestHostComponent {

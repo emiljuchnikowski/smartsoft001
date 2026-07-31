@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProgressBarsBaseComponent } from './base.component';
@@ -6,6 +6,7 @@ import { IProgressBarsOptions } from '../../../models';
 
 @Component({
   selector: 'smart-test-progress-bars',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestProgressBarsComponent extends ProgressBarsBaseComponent {}
@@ -16,6 +17,7 @@ class TestProgressBarsComponent extends ProgressBarsBaseComponent {}
     [options]="options"
     [class]="cssClass"
   />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestProgressBarsComponent],
 })
 class TestHostComponent {

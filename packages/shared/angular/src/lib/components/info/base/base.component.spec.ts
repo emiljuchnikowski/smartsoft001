@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { InfoBaseComponent } from './base.component';
@@ -6,6 +6,7 @@ import { IInfoOptions } from '../../../models';
 
 @Component({
   selector: 'smart-test-info',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestInfoComponent extends InfoBaseComponent {}
@@ -13,6 +14,7 @@ class TestInfoComponent extends InfoBaseComponent {}
 @Component({
   selector: 'smart-test-host',
   template: `<smart-test-info [options]="options" [class]="cssClass" />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestInfoComponent],
 })
 class TestHostComponent {

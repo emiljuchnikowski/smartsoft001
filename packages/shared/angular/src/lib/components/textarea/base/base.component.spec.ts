@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TextareaBaseComponent } from './base.component';
@@ -6,6 +6,7 @@ import { ITextareaOptions } from '../../../models';
 
 @Component({
   selector: 'smart-test-textarea',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestTextareaComponent extends TextareaBaseComponent {}
@@ -19,6 +20,7 @@ class TestTextareaComponent extends TextareaBaseComponent {}
     [options]="options"
     [class]="cssClass"
   />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestTextareaComponent],
 })
 class TestHostComponent {

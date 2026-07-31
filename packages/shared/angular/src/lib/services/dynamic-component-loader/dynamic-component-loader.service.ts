@@ -1,14 +1,7 @@
-import {
-  ComponentFactory,
-  ComponentFactoryResolver,
-  inject,
-  Injectable,
-} from '@angular/core';
+import { Injectable, Type } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class DynamicComponentLoader<T> {
-  private resolver = inject(ComponentFactoryResolver);
-
   // Generic T is unused in original
   static declaredComponents: any[] = [];
 
@@ -18,7 +11,7 @@ export class DynamicComponentLoader<T> {
   }): Promise<
     {
       component: any;
-      factory: ComponentFactory<any>;
+      factory: Type<any>;
     }[]
   > {
     let components: Array<any> = [];
@@ -32,13 +25,9 @@ export class DynamicComponentLoader<T> {
       ) || [];
 
     const result = options.components.map((c) => {
-      let factory: ComponentFactory<any> | undefined = undefined;
-      try {
-        factory = this.resolver.resolveComponentFactory(c);
-      } catch (e) {
-        // Ignore error if component is not found in entryComponents
-        // It might be in declaredComponents if dynamically compiled
-      }
+      // Since Angular 13 (Ivy) a component type is created directly through
+      // ViewContainerRef.createComponent, so the type itself is the "factory".
+      let factory: Type<any> | undefined = c;
 
       if (!factory) {
         const declared: any = DynamicComponentLoader.declaredComponents.find(
@@ -54,7 +43,7 @@ export class DynamicComponentLoader<T> {
         // or have been processed by this service before.
         // Consider logging a warning or throwing a more specific error.
         console.warn(
-          `Component factory not found for component: ${c.name || c}`,
+          `Component factory not found for component: ${c?.name || c}`,
         );
         // Returning a structure that indicates failure or an empty factory
         return {

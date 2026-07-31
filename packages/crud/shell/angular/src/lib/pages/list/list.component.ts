@@ -2,7 +2,6 @@ import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
-  ComponentFactory,
   computed,
   inject,
   Injector,
@@ -12,10 +11,12 @@ import {
   signal,
   Signal,
   TemplateRef,
+  Type,
   viewChild,
   viewChildren,
   ViewContainerRef,
   WritableSignal,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -56,6 +57,7 @@ import { CrudSearchService } from '../../services/search/search.service';
 @Component({
   selector: 'smart-crud-list-page',
   imports: [PageComponent, ListStandardComponent, NgTemplateOutlet],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     @if (filter() && pageOptions()) {
       <smart-page [options]="pageOptions()" [class]="config.cssClass || ''">
@@ -425,7 +427,7 @@ export class ListComponent<T extends IEntity<string>>
   private initTopComponent(
     compiledComponents: {
       component: any;
-      factory: ComponentFactory<any>;
+      factory: Type<any>;
     }[],
   ) {
     const factory =

@@ -1,4 +1,4 @@
-import { Component, computed } from '@angular/core';
+import { Component, computed, ChangeDetectionStrategy } from '@angular/core';
 
 import { ListCellPipe } from '../../../pipes';
 import { DetailBaseComponent } from '../base/base.component';
@@ -6,10 +6,17 @@ import { DetailBaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-detail-phone-number-pl',
   template: `
-    @let item = options()?.item?.();
+    @let item = $safeNavigationMigration(options()?.item?.());
     @if (item) {
       @let value =
-        (item | smartListCell: options()?.key : options()?.cellPipe)?.value;
+        $safeNavigationMigration(
+          (
+            item
+            | smartListCell
+              : $safeNavigationMigration(options()?.key)
+              : $safeNavigationMigration(options()?.cellPipe)
+          )?.value
+        );
       @if (value) {
         <a
           [class]="phoneClasses()"
@@ -19,6 +26,7 @@ import { DetailBaseComponent } from '../base/base.component';
       }
     }
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ListCellPipe],
 })
 export class DetailPhoneNumberPlComponent<T> extends DetailBaseComponent<T> {

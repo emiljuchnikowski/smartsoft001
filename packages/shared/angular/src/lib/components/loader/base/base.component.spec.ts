@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LoaderBaseComponent } from './base.component';
@@ -6,6 +6,7 @@ import { SmartColor, SmartSize } from '../../../models';
 
 @Component({
   selector: 'smart-test-loader',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestLoaderComponent extends LoaderBaseComponent {}
@@ -18,6 +19,7 @@ class TestLoaderComponent extends LoaderBaseComponent {}
     [color]="color"
     [class]="cssClass"
   />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestLoaderComponent],
 })
 class TestHostComponent {

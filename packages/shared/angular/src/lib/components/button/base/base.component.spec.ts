@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ButtonBaseComponent } from './base.component';
@@ -6,6 +6,7 @@ import { IButtonOptions } from '../../../models';
 
 @Component({
   selector: 'smart-test-button',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestButtonComponent extends ButtonBaseComponent {}
@@ -17,6 +18,7 @@ class TestButtonComponent extends ButtonBaseComponent {}
     [disabled]="disabled"
     [class]="cssClass"
   />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestButtonComponent],
 })
 class TestHostComponent {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ActionPanelBaseComponent } from './base.component';
@@ -6,6 +6,7 @@ import { IActionPanelOptions } from '../../../models';
 
 @Component({
   selector: 'smart-test-action-panel',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestActionPanelComponent extends ActionPanelBaseComponent {}
@@ -16,6 +17,7 @@ class TestActionPanelComponent extends ActionPanelBaseComponent {}
     [options]="options"
     [class]="cssClass"
   />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestActionPanelComponent],
 })
 class TestHostComponent {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CommandPaletteBaseComponent } from './base.component';
@@ -6,6 +6,7 @@ import { ICommand, ICommandPaletteOptions } from '../../../models';
 
 @Component({
   selector: 'smart-test-command-palette',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestCommandPaletteComponent extends CommandPaletteBaseComponent {}
@@ -19,6 +20,7 @@ class TestCommandPaletteComponent extends CommandPaletteBaseComponent {}
     [options]="options"
     [class]="cssClass"
   />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestCommandPaletteComponent],
 })
 class TestHostComponent {

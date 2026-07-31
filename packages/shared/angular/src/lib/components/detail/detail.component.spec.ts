@@ -1,4 +1,9 @@
-import { Component, input, signal } from '@angular/core';
+import {
+  Component,
+  input,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -12,6 +17,7 @@ import { DetailComponent } from './detail.component';
 
 @Component({
   selector: 'smart-test-detail-injected',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="injected-detail">injected</div>',
 })
 class MockInjectedComponent extends DetailBaseComponent<any> {

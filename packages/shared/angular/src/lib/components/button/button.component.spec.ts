@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { IButtonOptions } from '../../models';
@@ -8,6 +8,7 @@ import { ButtonComponent } from './button.component';
 
 @Component({
   selector: 'smart-test-injected',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<button class="injected">injected</button>',
 })
 class MockInjectedComponent extends ButtonBaseComponent {

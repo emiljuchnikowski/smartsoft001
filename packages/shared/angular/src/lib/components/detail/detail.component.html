@@ -11,9 +11,12 @@
     <span
       class="smart:block smart:text-sm smart:font-medium smart:text-gray-500 smart:dark:text-gray-400"
     >
-      {{ optionsLocal?.item?.() | smartModelLabel: optionsLocal.key : type() }}
+      {{
+        $safeNavigationMigration(optionsLocal?.item?.())
+          | smartModelLabel: optionsLocal.key : type()
+      }}
     </span>
-    @let item = optionsLocal?.item?.();
+    @let item = $safeNavigationMigration(optionsLocal?.item?.());
     @if (item) {
       <ng-container
         *ngComponentOutlet="component(); inputs: componentInputs()"

@@ -2,7 +2,6 @@ import { Location, NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
-  ComponentFactory,
   effect,
   ElementRef,
   inject,
@@ -12,10 +11,12 @@ import {
   Signal,
   signal,
   TemplateRef,
+  Type,
   viewChild,
   viewChildren,
   ViewContainerRef,
   WritableSignal,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -55,6 +56,7 @@ import { PageService } from '../../services/page/page.service';
 @Component({
   selector: 'smart-crud-item-page',
   imports: [PageComponent, ItemStandardComponent, NgTemplateOutlet],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <smart-page [options]="pageOptions()" [class]="config.cssClass || ''">
       <div #topTpl class="text-xl py-2.5 separator"></div>
@@ -233,7 +235,7 @@ export class ItemComponent<T extends IEntity<string>>
     if (this.config.details) {
       const compiledComponents: {
         component: any;
-        factory: ComponentFactory<any>;
+        factory: Type<any>;
       }[] = await this.dynamicComponentLoader.getComponentsWithFactories({
         components: [
           ...(this.config.details &&

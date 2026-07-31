@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DrawerStandardComponent } from './standard.component';
@@ -8,6 +8,7 @@ import { DrawerStandardComponent } from './standard.component';
   template: `<smart-drawer-standard [open]="true">
     <span class="projected">x</span>
   </smart-drawer-standard>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [DrawerStandardComponent],
 })
 class TestHostComponent {}
