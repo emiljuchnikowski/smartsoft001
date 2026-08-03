@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AvatarBaseComponent } from './base.component';
@@ -78,7 +78,7 @@ describe('@smartsoft001/shared-angular: AvatarBaseComponent', () => {
 
   it('should accept cssClass via class alias', async () => {
     host.cssClass = 'my-class';
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -87,7 +87,7 @@ describe('@smartsoft001/shared-angular: AvatarBaseComponent', () => {
 
   it('should accept IAvatarOptions via options input', async () => {
     host.options = { placeholderType: 'initials' };
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -96,7 +96,7 @@ describe('@smartsoft001/shared-angular: AvatarBaseComponent', () => {
 
   it('should compute isGroup() as true when group has items', async () => {
     host.group = [{ id: '1', initials: 'AB' }];
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -109,7 +109,7 @@ describe('@smartsoft001/shared-angular: AvatarBaseComponent', () => {
 
   it('should compute isGroup() as false when group is empty array', async () => {
     host.group = [];
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 

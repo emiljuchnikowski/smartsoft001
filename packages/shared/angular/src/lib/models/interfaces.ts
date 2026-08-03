@@ -1,5 +1,4 @@
 import {
-  ComponentFactory,
   PipeTransform,
   Signal,
   TemplateRef,
@@ -138,8 +137,8 @@ export interface IInputFromFieldOptions<T> {
 }
 
 export interface IDetailsComponentFactories<T> {
-  top?: ComponentFactory<any>;
-  bottom?: ComponentFactory<any>;
+  top?: Type<any>;
+  bottom?: Type<any>;
 }
 
 export interface IDetailsOptions<T extends IEntity<string>> {
@@ -1129,7 +1128,7 @@ export interface IItemOptionsForCustom {
 export type ItemOptions = IItemOptionsForPage | IItemOptionsForCustom;
 
 export interface IListComponentFactories<T> {
-  top?: ComponentFactory<any>;
+  top?: Type<any>;
 }
 
 export interface IDetailsProvider<T> {

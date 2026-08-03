@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SearchbarBaseComponent } from './base.component';
@@ -53,7 +53,7 @@ describe('@smartsoft001/shared-angular: SearchbarBaseComponent', () => {
 
   it('should accept ISearchbarOptions via options input', async () => {
     host.options = { placeholder: 'search-placeholder' };
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -74,7 +74,7 @@ describe('@smartsoft001/shared-angular: SearchbarBaseComponent', () => {
 
   it('should accept cssClass via class alias', async () => {
     host.cssClass = 'my-custom-class';
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -112,7 +112,7 @@ describe('@smartsoft001/shared-angular: SearchbarBaseComponent', () => {
 
   it('should sync control value when text input changes to non-empty value', async () => {
     host.text = 'hello';
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 

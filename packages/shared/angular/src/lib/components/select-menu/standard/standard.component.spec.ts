@@ -1,4 +1,9 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SelectMenuStandardComponent } from './standard.component';
@@ -212,7 +217,7 @@ describe('@smartsoft001/shared-angular: SelectMenuStandardComponent', () => {
 
     it('should render emptyTpl when items is empty and emptyTpl provided', async () => {
       host.options = { items: [], emptyTpl: host.emptyTpl };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 

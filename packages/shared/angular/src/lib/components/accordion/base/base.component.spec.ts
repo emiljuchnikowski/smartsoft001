@@ -1,4 +1,9 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AccordionBaseComponent } from './base.component';
@@ -64,7 +69,7 @@ describe('AccordionBaseComponent', () => {
 
   it('should not toggle when disabled', async () => {
     fixture.componentInstance.options = { disabled: true };
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
     accordion.toggle();

@@ -1,4 +1,10 @@
-import { Component, Pipe, PipeTransform, signal } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Pipe,
+  PipeTransform,
+  signal,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -135,7 +141,7 @@ describe('@smartsoft001/shared-angular: ListDesktopComponent', () => {
 
   it('should append cssClass to containerClasses when provided', async () => {
     fixture.componentInstance.cssClass = 'my-extra-class';
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 

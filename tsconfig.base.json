@@ -2,6 +2,10 @@
   "compileOnSave": false,
   "compilerOptions": {
     "rootDir": ".",
+    // TypeScript 6 turned `strict` on by default and deprecated `baseUrl`.
+    // Packages that are strict-clean opt in via their own tsconfig.json.
+    "strict": false,
+    "ignoreDeprecations": "6.0",
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "bundler",

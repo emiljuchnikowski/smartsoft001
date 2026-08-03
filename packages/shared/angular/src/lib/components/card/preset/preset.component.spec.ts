@@ -1,4 +1,9 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CardPresetComponent } from './preset.component';
@@ -81,7 +86,7 @@ describe('@smartsoft001/shared-angular: CardPresetComponent', () => {
 
   it('should render header section when hasHeader is true', async () => {
     fixture.componentInstance.hasHeader = true;
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -91,7 +96,7 @@ describe('@smartsoft001/shared-angular: CardPresetComponent', () => {
   it('should render h3 with title from options when hasHeader is true', async () => {
     fixture.componentInstance.hasHeader = true;
     fixture.componentInstance.options = { title: 'My Card Title' };
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -106,7 +111,7 @@ describe('@smartsoft001/shared-angular: CardPresetComponent', () => {
 
   it('should apply the Preline header surface classes', async () => {
     fixture.componentInstance.hasHeader = true;
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -122,7 +127,7 @@ describe('@smartsoft001/shared-angular: CardPresetComponent', () => {
 
   it('should render footer section when hasFooter is true', async () => {
     fixture.componentInstance.hasFooter = true;
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -131,7 +136,7 @@ describe('@smartsoft001/shared-angular: CardPresetComponent', () => {
 
   it('should apply gray body class when options.grayBody is true', async () => {
     fixture.componentInstance.options = { grayBody: true };
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -143,7 +148,7 @@ describe('@smartsoft001/shared-angular: CardPresetComponent', () => {
   it('should apply gray footer class when options.grayFooter is true', async () => {
     fixture.componentInstance.hasFooter = true;
     fixture.componentInstance.options = { grayFooter: true };
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -156,7 +161,7 @@ describe('@smartsoft001/shared-angular: CardPresetComponent', () => {
 
   it('should apply cssClass on the container (canonical name for NgComponentOutlet)', async () => {
     fixture.componentInstance.cssClass = 'my-extra-class';
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 

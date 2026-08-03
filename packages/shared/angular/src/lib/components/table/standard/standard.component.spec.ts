@@ -1,4 +1,9 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TableStandardComponent } from './standard.component';
@@ -217,7 +222,7 @@ describe('@smartsoft001/shared-angular: TableStandardComponent', () => {
         columns: [{ key: 'name', label: 'Name', cellTpl: host.cellTpl }],
         rows: [{ name: 'Lindsay Walton' }],
       };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -233,7 +238,7 @@ describe('@smartsoft001/shared-angular: TableStandardComponent', () => {
       host.options = {
         columns: [{ key: 'name', headerTpl: host.headerTpl }],
       };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -250,7 +255,7 @@ describe('@smartsoft001/shared-angular: TableStandardComponent', () => {
         rows: [],
         emptyTpl: host.emptyTpl,
       };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -263,7 +268,7 @@ describe('@smartsoft001/shared-angular: TableStandardComponent', () => {
 
     it('should render toolbarTpl inside <.toolbar>', async () => {
       host.options = { toolbarTpl: host.toolbarTpl };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -276,7 +281,7 @@ describe('@smartsoft001/shared-angular: TableStandardComponent', () => {
 
     it('should render footerTpl inside <.footer>', async () => {
       host.options = { footerTpl: host.footerTpl };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 

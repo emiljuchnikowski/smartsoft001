@@ -1,4 +1,9 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DescriptionListPresetComponent } from './preset.component';
@@ -131,7 +136,7 @@ describe('@smartsoft001/shared-angular: DescriptionListPresetComponent', () => {
 
     function setOptions(options: IDescriptionListOptions): void {
       host.options = options;
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
     }
 

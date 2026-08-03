@@ -1,4 +1,9 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CardBaseComponent } from './base.component';
@@ -65,7 +70,7 @@ describe('CardBaseComponent', () => {
 
   it('should include divider classes when hasHeader is true', async () => {
     fixture.componentInstance.hasHeader = true;
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
     const classes = card.sharedContainerClasses();
@@ -77,7 +82,7 @@ describe('CardBaseComponent', () => {
   it('should not include divider classes when grayFooter is set', async () => {
     fixture.componentInstance.hasFooter = true;
     fixture.componentInstance.options = { grayFooter: true };
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
     const classes = card.sharedContainerClasses();
@@ -96,7 +101,7 @@ describe('CardBaseComponent', () => {
 
   it('should include gray body classes when grayBody is set', async () => {
     fixture.componentInstance.options = { grayBody: true };
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
     expect(card.bodyClasses()).toContain('smart:bg-gray-50');
@@ -110,7 +115,7 @@ describe('CardBaseComponent', () => {
 
   it('should include gray footer classes when grayFooter is set', async () => {
     fixture.componentInstance.options = { grayFooter: true };
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
     expect(card.footerClasses()).toContain('smart:bg-gray-50');

@@ -2,7 +2,6 @@ import { Location, NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
-  ComponentFactory,
   effect,
   ElementRef,
   inject,
@@ -12,6 +11,7 @@ import {
   Signal,
   signal,
   TemplateRef,
+  Type,
   viewChild,
   viewChildren,
   ViewContainerRef,
@@ -233,7 +233,7 @@ export class ItemComponent<T extends IEntity<string>>
     if (this.config.details) {
       const compiledComponents: {
         component: any;
-        factory: ComponentFactory<any>;
+        factory: Type<any>;
       }[] = await this.dynamicComponentLoader.getComponentsWithFactories({
         components: [
           ...(this.config.details &&

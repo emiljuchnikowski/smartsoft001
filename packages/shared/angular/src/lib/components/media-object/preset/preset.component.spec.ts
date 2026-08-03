@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import {
@@ -199,7 +199,7 @@ describe('@smartsoft001/shared-angular: MediaObjectPresetComponent', () => {
 
     it('should merge the external cssClass onto the root element', async () => {
       host.cssClass = 'my-extra-class';
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -209,7 +209,7 @@ describe('@smartsoft001/shared-angular: MediaObjectPresetComponent', () => {
 
     it('should reflect options.position on the root via data-position', async () => {
       host.options = { position: 'right' };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -219,7 +219,7 @@ describe('@smartsoft001/shared-angular: MediaObjectPresetComponent', () => {
 
     it('should reflect options.alignment on the root via data-alignment', async () => {
       host.options = { alignment: 'center' };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -229,7 +229,7 @@ describe('@smartsoft001/shared-angular: MediaObjectPresetComponent', () => {
 
     it('should widen the media element when options.wide is set', async () => {
       host.options = { wide: true };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -238,7 +238,7 @@ describe('@smartsoft001/shared-angular: MediaObjectPresetComponent', () => {
 
     it('should fold the root to responsive column layout when options.responsive is set', async () => {
       host.options = { responsive: true };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 

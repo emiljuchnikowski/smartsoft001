@@ -2,7 +2,6 @@ import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
-  ComponentFactory,
   computed,
   inject,
   Injector,
@@ -12,6 +11,7 @@ import {
   signal,
   Signal,
   TemplateRef,
+  Type,
   viewChild,
   viewChildren,
   ViewContainerRef,
@@ -425,7 +425,7 @@ export class ListComponent<T extends IEntity<string>>
   private initTopComponent(
     compiledComponents: {
       component: any;
-      factory: ComponentFactory<any>;
+      factory: Type<any>;
     }[],
   ) {
     const factory =

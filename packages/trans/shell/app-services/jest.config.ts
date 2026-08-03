@@ -5,7 +5,7 @@ export default {
     '^.+\\.[tj]sx?$': [
       'ts-jest',
       {
-        tsConfig: '<rootDir>/tsconfig.spec.json',
+        tsconfig: '<rootDir>/tsconfig.spec.json',
       },
     ],
   },
