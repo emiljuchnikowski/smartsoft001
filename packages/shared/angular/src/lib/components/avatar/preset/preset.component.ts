@@ -9,14 +9,14 @@ import {
 
 import { AvatarBaseComponent } from '../base';
 import {
-  getGroupContainerClasses,
-  getGroupItemImageClasses,
-  getGroupItemInitialsClasses,
-  getIconWrapperClasses,
-  getImageClasses,
-  getInitialsClasses,
-  getStatusClasses,
-  STATUS_WRAPPER,
+  getAvatarGroupContainerClasses,
+  getAvatarGroupItemImageClasses,
+  getAvatarGroupItemInitialsClasses,
+  getAvatarIconWrapperClasses,
+  getAvatarImageClasses,
+  getAvatarInitialsClasses,
+  getAvatarStatusClasses,
+  AVATAR_STATUS_WRAPPER,
 } from './preset-classes.util';
 
 type AvatarMode = 'image' | 'initials' | 'icon';
@@ -56,27 +56,27 @@ export class AvatarPresetComponent extends AvatarBaseComponent {
   });
 
   protected imageClasses = computed(() =>
-    getImageClasses(this.size(), this.shape()),
+    getAvatarImageClasses(this.size(), this.shape()),
   );
   protected initialsClasses = computed(() =>
-    getInitialsClasses(this.size(), this.shape()),
+    getAvatarInitialsClasses(this.size(), this.shape()),
   );
   protected iconWrapperClasses = computed(() =>
-    getIconWrapperClasses(this.size(), this.shape()),
+    getAvatarIconWrapperClasses(this.size(), this.shape()),
   );
 
-  protected statusWrapper = STATUS_WRAPPER;
+  protected statusWrapper = AVATAR_STATUS_WRAPPER;
   protected statusClasses = computed(() =>
-    getStatusClasses(this.size(), this.notificationPosition() ?? 'top'),
+    getAvatarStatusClasses(this.size(), this.notificationPosition() ?? 'top'),
   );
 
   protected groupContainerClasses = computed(() =>
-    getGroupContainerClasses(this.options()?.stackDirection),
+    getAvatarGroupContainerClasses(this.options()?.stackDirection),
   );
   protected groupItemImageClasses = computed(() =>
-    getGroupItemImageClasses(this.size(), this.shape()),
+    getAvatarGroupItemImageClasses(this.size(), this.shape()),
   );
   protected groupItemInitialsClasses = computed(() =>
-    getGroupItemInitialsClasses(this.size(), this.shape()),
+    getAvatarGroupItemInitialsClasses(this.size(), this.shape()),
   );
 }

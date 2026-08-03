@@ -8,12 +8,12 @@ import {
 
 import { DividerBaseComponent } from '../base';
 import {
-  getActionClasses,
-  getContainerClasses,
-  getIconClasses,
-  getPlainClasses,
-  getToolbarClasses,
-  getToolbarLineClasses,
+  getDividerActionClasses,
+  getDividerContainerClasses,
+  getDividerIconClasses,
+  getDividerPlainClasses,
+  getDividerToolbarClasses,
+  getDividerToolbarLineClasses,
   SmartDividerPresetPosition,
   SmartDividerPresetVariant,
 } from './preset-classes.util';
@@ -83,14 +83,14 @@ export class DividerPresetComponent extends DividerBaseComponent {
 
   protected containerClasses = computed(() => {
     const variant = this.variant();
-    return getContainerClasses(
+    return getDividerContainerClasses(
       variant === 'plain' ? 'with-label' : variant,
       this.position(),
     );
   });
-  protected plainClasses = computed(() => getPlainClasses());
-  protected iconClasses = computed(() => getIconClasses());
-  protected actionClasses = computed(() => getActionClasses());
-  protected toolbarClasses = computed(() => getToolbarClasses());
-  protected toolbarLineClasses = computed(() => getToolbarLineClasses());
+  protected plainClasses = computed(() => getDividerPlainClasses());
+  protected iconClasses = computed(() => getDividerIconClasses());
+  protected actionClasses = computed(() => getDividerActionClasses());
+  protected toolbarClasses = computed(() => getDividerToolbarClasses());
+  protected toolbarLineClasses = computed(() => getDividerToolbarLineClasses());
 }

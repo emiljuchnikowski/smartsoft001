@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  ViewEncapsulation,
+} from '@angular/core';
 import { ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -54,6 +59,7 @@ import { InputBaseComponent } from '../../base/base.component';
   `,
   imports: [ReactiveFormsModule, TranslatePipe, ModelLabelPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class InputStringsPresetComponent<T> extends InputBaseComponent<T> {
   values: string[] = [];

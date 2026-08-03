@@ -78,27 +78,29 @@ const LAYOUT_CLASSES: Record<SmartBreadcrumbsLayout, string> = {
   'simple-with-slashes': '',
 };
 
-export function getNavClasses(layout?: SmartBreadcrumbsLayout): string {
+export function getBreadcrumbsNavClasses(
+  layout?: SmartBreadcrumbsLayout,
+): string {
   return layout ? LAYOUT_CLASSES[layout] : '';
 }
 
-export function getListClasses(): string {
+export function getBreadcrumbsListClasses(): string {
   return LIST_BASE;
 }
 
-export function getItemClasses(): string {
+export function getBreadcrumbsItemClasses(): string {
   return ITEM_BASE;
 }
 
-export function getLinkClasses(current: boolean): string {
+export function getBreadcrumbsLinkClasses(current: boolean): string {
   return current ? CURRENT_BASE : LINK_BASE;
 }
 
-export function getCurrentClasses(): string {
+export function getBreadcrumbsCurrentClasses(): string {
   return CURRENT_BASE;
 }
 
-export function getSeparatorClasses(
+export function getBreadcrumbsSeparatorClasses(
   separator: SmartBreadcrumbsSeparator,
 ): string {
   return `${SEPARATOR_BASE} ${SEPARATOR_SIZE[separator]}`;
@@ -108,7 +110,7 @@ export function getSeparatorClasses(
  * Layouts that imply a separator glyph let the explicit `separator` option win
  * when both are provided.
  */
-export function resolveSeparator(
+export function resolveBreadcrumbsSeparator(
   separator?: SmartBreadcrumbsSeparator,
   layout?: SmartBreadcrumbsLayout,
 ): SmartBreadcrumbsSeparator {

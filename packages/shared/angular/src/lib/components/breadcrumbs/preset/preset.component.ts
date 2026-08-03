@@ -9,12 +9,12 @@ import {
 
 import { BreadcrumbsBaseComponent } from '../base';
 import {
-  getItemClasses,
-  getLinkClasses,
-  getListClasses,
-  getNavClasses,
-  getSeparatorClasses,
-  resolveSeparator,
+  getBreadcrumbsItemClasses,
+  getBreadcrumbsLinkClasses,
+  getBreadcrumbsListClasses,
+  getBreadcrumbsNavClasses,
+  getBreadcrumbsSeparatorClasses,
+  resolveBreadcrumbsSeparator,
 } from './preset-classes.util';
 
 /**
@@ -50,18 +50,23 @@ export class BreadcrumbsPresetComponent extends BreadcrumbsBaseComponent {
   );
 
   protected separator = computed(() =>
-    resolveSeparator(this.options()?.separator, this.options()?.layout),
+    resolveBreadcrumbsSeparator(
+      this.options()?.separator,
+      this.options()?.layout,
+    ),
   );
 
-  protected navClasses = computed(() => getNavClasses(this.options()?.layout));
-  protected listClasses = computed(() => getListClasses());
-  protected itemClasses = computed(() => getItemClasses());
+  protected navClasses = computed(() =>
+    getBreadcrumbsNavClasses(this.options()?.layout),
+  );
+  protected listClasses = computed(() => getBreadcrumbsListClasses());
+  protected itemClasses = computed(() => getBreadcrumbsItemClasses());
   protected separatorClasses = computed(() =>
-    getSeparatorClasses(this.separator()),
+    getBreadcrumbsSeparatorClasses(this.separator()),
   );
 
   protected linkClasses(current: boolean): string {
-    return getLinkClasses(current);
+    return getBreadcrumbsLinkClasses(current);
   }
 
   protected onItemClick(itemId: string): void {

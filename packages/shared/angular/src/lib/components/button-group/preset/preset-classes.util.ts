@@ -6,7 +6,7 @@ export type ButtonGroupPresetSize = 'sm' | 'md' | 'lg';
  * Outer wrapper of the segmented group.
  * Preline: `inline-flex rounded-lg shadow-2xs`.
  */
-export const GROUP_CONTAINER = [
+export const BUTTON_GROUP_CONTAINER = [
   'smart:inline-flex',
   'smart:rounded-lg',
   'smart:shadow-2xs',
@@ -77,11 +77,11 @@ const COUNT_STAT =
 
 const ICON = 'smart:shrink-0 smart:size-4';
 
-export function getGroupClasses(): string {
-  return GROUP_CONTAINER;
+export function getButtonGroupClasses(): string {
+  return BUTTON_GROUP_CONTAINER;
 }
 
-export function getButtonClasses(
+export function getButtonGroupButtonClasses(
   size: ButtonGroupPresetSize,
   active: boolean,
 ): string {
@@ -90,10 +90,12 @@ export function getButtonClasses(
     .trim();
 }
 
-export function getCountClasses(variant: SmartButtonGroupVariant): string {
+export function getButtonGroupCountClasses(
+  variant: SmartButtonGroupVariant,
+): string {
   return `${COUNT_BASE} ${variant === 'with-stat' ? COUNT_STAT : COUNT_DEFAULT}`;
 }
 
-export function getIconClasses(): string {
+export function getButtonGroupIconClasses(): string {
   return ICON;
 }

@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  ViewEncapsulation,
+} from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { ModelLabelPipe } from '../../../../pipes';
@@ -30,6 +35,7 @@ import { InputBaseComponent } from '../../base/base.component';
   `,
   imports: [ReactiveFormsModule, ModelLabelPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class InputIntPresetComponent<T> extends InputBaseComponent<T> {
   labelClasses = computed(() =>

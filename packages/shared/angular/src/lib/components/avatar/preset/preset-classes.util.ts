@@ -40,7 +40,7 @@ const RING = [
 ].join(' ');
 
 /** Image avatar (`<img>`). */
-export function getImageClasses(
+export function getAvatarImageClasses(
   size: SmartAvatarSize,
   shape: SmartAvatarShape,
 ): string {
@@ -53,7 +53,7 @@ export function getImageClasses(
 }
 
 /** Initials placeholder (solid surface + inverse text). */
-export function getInitialsClasses(
+export function getAvatarInitialsClasses(
   size: SmartAvatarSize,
   shape: SmartAvatarShape,
 ): string {
@@ -73,7 +73,7 @@ export function getInitialsClasses(
 }
 
 /** Icon placeholder wrapper (tinted surface, clips the glyph). */
-export function getIconWrapperClasses(
+export function getAvatarIconWrapperClasses(
   size: SmartAvatarSize,
   shape: SmartAvatarShape,
 ): string {
@@ -88,7 +88,7 @@ export function getIconWrapperClasses(
 }
 
 /** Status indicator dot, anchored to the requested corner. */
-export function getStatusClasses(
+export function getAvatarStatusClasses(
   size: SmartAvatarSize,
   position: 'top' | 'bottom',
 ): string {
@@ -105,10 +105,10 @@ export function getStatusClasses(
 }
 
 /** Wrapper that positions the status dot relative to the avatar. */
-export const STATUS_WRAPPER = 'smart:relative smart:inline-block';
+export const AVATAR_STATUS_WRAPPER = 'smart:relative smart:inline-block';
 
 /** Stacked-group container; overlaps members and reverses on demand. */
-export function getGroupContainerClasses(
+export function getAvatarGroupContainerClasses(
   stackDirection: 'top-to-bottom' | 'bottom-to-top' | undefined,
 ): string {
   return [
@@ -124,17 +124,19 @@ export function getGroupContainerClasses(
 }
 
 /** Image member of a stacked group (rings separate overlapping avatars). */
-export function getGroupItemImageClasses(
+export function getAvatarGroupItemImageClasses(
   size: SmartAvatarSize,
   shape: SmartAvatarShape,
 ): string {
-  return ['smart:relative', getImageClasses(size, shape), RING].join(' ');
+  return ['smart:relative', getAvatarImageClasses(size, shape), RING].join(' ');
 }
 
 /** Initials member of a stacked group. */
-export function getGroupItemInitialsClasses(
+export function getAvatarGroupItemInitialsClasses(
   size: SmartAvatarSize,
   shape: SmartAvatarShape,
 ): string {
-  return ['smart:relative', getInitialsClasses(size, shape), RING].join(' ');
+  return ['smart:relative', getAvatarInitialsClasses(size, shape), RING].join(
+    ' ',
+  );
 }

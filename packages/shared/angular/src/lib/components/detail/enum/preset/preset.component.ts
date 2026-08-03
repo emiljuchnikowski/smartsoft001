@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  ViewEncapsulation,
+} from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { getBadgeClasses } from '../../../badge/preset/preset-classes.util';
@@ -21,6 +26,7 @@ import { DetailEnumComponent } from '../enum.component';
   `,
   imports: [TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class DetailEnumPresetComponent<
   T extends { [key: string]: any } | undefined,

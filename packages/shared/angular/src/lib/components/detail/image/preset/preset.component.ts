@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  ViewEncapsulation,
+} from '@angular/core';
 
 import { DetailImageComponent } from '../image.component';
 
@@ -11,6 +16,7 @@ import { DetailImageComponent } from '../image.component';
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class DetailImagePresetComponent<
   T extends { [key: string]: any } | undefined,

@@ -9,10 +9,10 @@ import {
 import { SmartButtonGroupVariant } from '../../../models';
 import { ButtonGroupBaseComponent } from '../base';
 import {
-  getButtonClasses,
-  getCountClasses,
-  getGroupClasses,
-  getIconClasses,
+  getButtonGroupButtonClasses,
+  getButtonGroupCountClasses,
+  getButtonGroupClasses,
+  getButtonGroupIconClasses,
 } from './preset-classes.util';
 
 /**
@@ -45,13 +45,15 @@ export class ButtonGroupPresetComponent extends ButtonGroupBaseComponent {
 
   protected iconOnly = computed(() => this.variant() === 'icon-only');
 
-  protected groupClasses = computed(() => getGroupClasses());
-  protected countClasses = computed(() => getCountClasses(this.variant()));
-  protected iconClasses = computed(() => getIconClasses());
+  protected groupClasses = computed(() => getButtonGroupClasses());
+  protected countClasses = computed(() =>
+    getButtonGroupCountClasses(this.variant()),
+  );
+  protected iconClasses = computed(() => getButtonGroupIconClasses());
 
   protected buttonClasses(active: boolean): string {
     // No size field exists on IButtonGroupOptions, so the medium Preline size is
     // used for every segment (see preset-classes.util for the sm/lg recipes).
-    return getButtonClasses('md', active);
+    return getButtonGroupButtonClasses('md', active);
   }
 }

@@ -1,4 +1,9 @@
-import { Component, computed } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  ViewEncapsulation,
+} from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { IEntity } from '@smartsoft001/domain-core';
@@ -7,6 +12,8 @@ import { DetailAttachmentComponent } from '../attachment.component';
 
 @Component({
   selector: 'smart-detail-attachment-preset',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
   template: `
     @let item = options()?.item?.();
     @let key = options()?.key;

@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  ViewEncapsulation,
+} from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import * as _ from 'lodash';
@@ -37,6 +42,7 @@ import { InputPossibilitiesBaseComponent } from '../../base/possibilities.compon
   `,
   imports: [ReactiveFormsModule, ModelLabelPipe, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class InputEnumPresetComponent<
   T,

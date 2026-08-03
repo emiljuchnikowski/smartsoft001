@@ -4,7 +4,7 @@ export type SmartDividerPresetVariant = SmartDividerVariant;
 export type SmartDividerPresetPosition = 'left' | 'center' | 'right';
 
 // Plain horizontal rule (Preline "Example" / "Height" dividers).
-export const PLAIN_HR = [
+export const DIVIDER_PLAIN_HR = [
   'smart:my-0',
   'smart:border-t',
   'smart:border-gray-200',
@@ -56,7 +56,7 @@ const POSITION_LINES: Record<SmartDividerPresetPosition, string> = {
 };
 
 // Standalone line filler used by the toolbar layout (between content + action).
-export const TOOLBAR_LINE = [
+export const DIVIDER_TOOLBAR_LINE = [
   'smart:flex-1',
   'smart:border-t',
   'smart:border-gray-200',
@@ -64,7 +64,7 @@ export const TOOLBAR_LINE = [
 ].join(' ');
 
 // Container for the toolbar variant: content + line + action button in a row.
-export const TOOLBAR_CONTAINER = [
+export const DIVIDER_TOOLBAR_CONTAINER = [
   'smart:py-3',
   'smart:flex',
   'smart:items-center',
@@ -72,10 +72,10 @@ export const TOOLBAR_CONTAINER = [
 ].join(' ');
 
 // Icon slot (Preline shrink-0 size-4 icon sizing).
-export const ICON_CLASSES = 'smart:shrink-0 smart:size-4';
+export const DIVIDER_ICON_CLASSES = 'smart:shrink-0 smart:size-4';
 
 // Action button styled after Preline's outline button.
-export const ACTION_BUTTON = [
+export const DIVIDER_ACTION_BUTTON = [
   'smart:py-1.5',
   'smart:px-3',
   'smart:inline-flex',
@@ -109,7 +109,7 @@ function getTextClasses(variant: SmartDividerPresetVariant): string {
  * Classes for the flex container that wraps centered divider content and draws
  * the connecting line(s) on the side(s) dictated by `position`.
  */
-export function getContainerClasses(
+export function getDividerContainerClasses(
   variant: SmartDividerPresetVariant,
   position: SmartDividerPresetPosition,
 ): string {
@@ -118,22 +118,22 @@ export function getContainerClasses(
   );
 }
 
-export function getIconClasses(): string {
-  return ICON_CLASSES;
+export function getDividerIconClasses(): string {
+  return DIVIDER_ICON_CLASSES;
 }
 
-export function getActionClasses(): string {
-  return ACTION_BUTTON;
+export function getDividerActionClasses(): string {
+  return DIVIDER_ACTION_BUTTON;
 }
 
-export function getToolbarClasses(): string {
-  return TOOLBAR_CONTAINER;
+export function getDividerToolbarClasses(): string {
+  return DIVIDER_TOOLBAR_CONTAINER;
 }
 
-export function getToolbarLineClasses(): string {
-  return TOOLBAR_LINE;
+export function getDividerToolbarLineClasses(): string {
+  return DIVIDER_TOOLBAR_LINE;
 }
 
-export function getPlainClasses(): string {
-  return PLAIN_HR;
+export function getDividerPlainClasses(): string {
+  return DIVIDER_PLAIN_HR;
 }
