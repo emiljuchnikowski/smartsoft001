@@ -1,7 +1,13 @@
-import { Component, signal, TemplateRef, viewChild } from '@angular/core';
+import {
+  Component,
+  importProvidersFrom,
+  signal,
+  TemplateRef,
+  viewChild,
+} from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import type { Meta, StoryObj } from '@storybook/angular';
-import { moduleMetadata } from '@storybook/angular';
+import { applicationConfig, moduleMetadata } from '@storybook/angular';
 
 import { PageComponent } from './page.component';
 import { PAGE_PRESET_VARIANT_COMPONENTS } from './preset-variants';
@@ -72,12 +78,18 @@ const meta: Meta<PresetStoryComponent> = {
   title: 'Smart-Page/Page',
   component: PresetStoryComponent,
   decorators: [
+    // The meta component is a standalone wrapper, so ModuleWithProviders in
+    // moduleMetadata.imports would not register TranslateStore — root
+    // providers must come through applicationConfig instead.
+    applicationConfig({
+      providers: [importProvidersFrom(TranslateModule.forRoot())],
+    }),
     moduleMetadata({
       imports: [
         PresetStoryComponent,
         ...IMPORTS,
         ...COMPONENTS,
-        TranslateModule.forRoot(),
+        TranslateModule,
       ],
       providers: [
         {

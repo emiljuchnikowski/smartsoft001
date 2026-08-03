@@ -13,14 +13,18 @@ import {
 } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import type { Meta, StoryObj } from '@storybook/angular';
-import { moduleMetadata } from '@storybook/angular';
+import { applicationConfig, moduleMetadata } from '@storybook/angular';
 
 import { IAddress } from '@smartsoft001/domain-core';
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
 import { SharedFactoriesModule } from '../../factories';
 import { InputOptions } from '../../models';
-import { IModelLabelProvider } from '../../providers';
+import {
+  IModelLabelProvider,
+  IModelValidatorsOptions,
+  MODEL_VALIDATORS_PROVIDER,
+} from '../../providers';
 import { FileService } from '../../services';
 import {
   FORM_COMPONENT_TOKEN,
@@ -78,14 +82,29 @@ const meta: Meta<InputComponent<any>> = {
   title: 'Smart-Input/Input',
   component: InputComponent,
   decorators: [
+    // The object/array fields render nested forms through FORM_COMPONENT_TOKEN
+    // -> FormFactory, which injects MODEL_VALIDATORS_PROVIDER (no library-side
+    // default). Must be root-level: moduleMetadata providers don't reach the
+    // standalone story wrapper's environment injector.
+    applicationConfig({
+      providers: [
+        {
+          provide: MODEL_VALIDATORS_PROVIDER,
+          useValue: {
+            get: (options: IModelValidatorsOptions) =>
+              Promise.resolve(options.base ?? {}),
+          },
+        },
+      ],
+    }),
     moduleMetadata({
       imports: [
         ...IMPORTS,
+        ...COMPONENTS,
         ReactiveFormsModule,
         SharedFactoriesModule,
         TranslateModule.forRoot(),
       ],
-      declarations: [...COMPONENTS],
       providers: [
         { provide: IModelLabelProvider, useClass: MockModelLabelProvider },
         {

@@ -1,13 +1,20 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import type { Meta, StoryObj } from '@storybook/angular';
-import { moduleMetadata } from '@storybook/angular';
+import { applicationConfig, moduleMetadata } from '@storybook/angular';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
 import { SharedFactoriesModule } from '../../factories';
 import { IFormOptions } from '../../models';
-import { FORM_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import {
+  IModelValidatorsOptions,
+  MODEL_VALIDATORS_PROVIDER,
+} from '../../providers';
+import {
+  FORM_COMPONENT_TOKEN,
+  FORM_STANDARD_COMPONENT_TOKEN,
+} from '../../shared.inectors';
 import { COMPONENTS, IMPORTS } from '../components.module';
 import {
   INPUT_FIELD_COMPONENTS_TOKEN,
@@ -21,6 +28,25 @@ const meta: Meta<FormComponent<any>> = {
   title: 'Smart-Form/Form',
   component: FormComponent,
   decorators: [
+    // FormFactory injects MODEL_VALIDATORS_PROVIDER with no library-side
+    // default (apps provide it). The provider must be root-level
+    // (applicationConfig) — moduleMetadata providers don't reach the
+    // standalone story wrapper's environment injector.
+    applicationConfig({
+      providers: [
+        {
+          provide: MODEL_VALIDATORS_PROVIDER,
+          useValue: {
+            get: (options: IModelValidatorsOptions) =>
+              Promise.resolve(options.base ?? {}),
+          },
+        },
+        // Nested object fields render their sub-form through this token; in
+        // apps ComponentsModule provides it, but the stories import bare
+        // COMPONENTS so the module providers never load.
+        { provide: FORM_COMPONENT_TOKEN, useValue: FormComponent },
+      ],
+    }),
     moduleMetadata({
       imports: [
         ...IMPORTS,
@@ -45,8 +71,8 @@ export const Simple: Story = {
         model: (() => {
           @Model({})
           class TestModel {
-            @Field({}) firstName = '';
-            @Field({ required: true }) lastName = '';
+            @Field({ create: true }) firstName = '';
+            @Field({ create: true, required: true }) lastName = '';
           }
           return new TestModel();
         })(),
@@ -60,13 +86,13 @@ export const Simple: Story = {
 
 @Model({})
 class UserModel {
-  @Field({})
+  @Field({ create: true })
   firstName = '';
 
-  @Field({ required: true })
+  @Field({ create: true, required: true })
   lastName = '';
 
-  @Field({ type: FieldType.email })
+  @Field({ create: true, type: FieldType.email })
   email = '';
 }
 
@@ -78,9 +104,13 @@ export const ComplexObject: Story = {
         model: (() => {
           @Model({})
           class TestModel {
-            @Field({}) title = '';
+            @Field({ create: true }) title = '';
 
-            @Field({ type: FieldType.object, classType: UserModel })
+            @Field({
+              create: true,
+              type: FieldType.object,
+              classType: UserModel,
+            })
             user = new UserModel();
           }
           return new TestModel();
@@ -101,8 +131,8 @@ export const WithCssClass: Story = {
         model: (() => {
           @Model({})
           class TestModel {
-            @Field({}) firstName = '';
-            @Field({ required: true }) lastName = '';
+            @Field({ create: true }) firstName = '';
+            @Field({ create: true, required: true }) lastName = '';
           }
           return new TestModel();
         })(),
@@ -152,8 +182,8 @@ export const CustomViaToken: Story = {
         model: (() => {
           @Model({})
           class TestModel {
-            @Field({}) firstName = '';
-            @Field({ required: true }) lastName = '';
+            @Field({ create: true }) firstName = '';
+            @Field({ create: true, required: true }) lastName = '';
           }
           return new TestModel();
         })(),
@@ -180,9 +210,9 @@ export const Preset: Story = {
         model: (() => {
           @Model({})
           class TestModel {
-            @Field({}) firstName = '';
-            @Field({ required: true }) lastName = '';
-            @Field({ type: FieldType.email }) email = '';
+            @Field({ create: true }) firstName = '';
+            @Field({ create: true, required: true }) lastName = '';
+            @Field({ create: true, type: FieldType.email }) email = '';
           }
           return new TestModel();
         })(),

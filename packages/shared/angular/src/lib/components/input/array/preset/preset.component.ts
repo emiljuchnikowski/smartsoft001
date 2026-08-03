@@ -6,7 +6,10 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { DynamicIoDirective } from 'ng-dynamic-component';
+import {
+  ComponentOutletInjectorDirective,
+  DynamicIoDirective,
+} from 'ng-dynamic-component';
 
 import { ModelLabelPipe } from '../../../../pipes';
 import { InputArrayComponent } from '../array.component';
@@ -84,6 +87,7 @@ import { InputArrayComponent } from '../array.component';
     TranslatePipe,
     NgComponentOutlet,
     DynamicIoDirective,
+    ComponentOutletInjectorDirective,
   ],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -10,9 +10,11 @@ const meta: Meta<ContainerComponent> = {
   tags: ['autodocs'],
   decorators: [
     moduleMetadata({
-      imports: [ContainerComponent],
-      // Register the preset variation as the replacement for the standard
-      // container, so every <smart-container> renders the preset.
+      // ContainerPresetComponent must be imported because the story template
+      // uses the <smart-container-preset> selector directly.
+      imports: [ContainerComponent, ContainerPresetComponent],
+      // The token registration below additionally swaps the preset in for
+      // any <smart-container> usage rendered through the standard wrapper.
       providers: [
         {
           provide: CONTAINER_STANDARD_COMPONENT_TOKEN,
