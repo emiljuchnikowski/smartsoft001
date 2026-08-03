@@ -1,11 +1,12 @@
 import { Component, signal } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import type { Meta, StoryObj } from '@storybook/angular';
-import { moduleMetadata } from '@storybook/angular';
+import { applicationConfig, moduleMetadata } from '@storybook/angular';
 
 import { IAddress } from '@smartsoft001/domain-core';
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
+import { provideStorybookTranslations } from '../../../../.storybook/storybook-translations';
 import { SharedFactoriesModule } from '../../factories';
 import { FileService } from '../../services';
 import {
@@ -22,12 +23,15 @@ const meta: Meta<DetailComponent<any>> = {
   title: 'Smart-Detail/Detail',
   component: DetailComponent,
   decorators: [
+    applicationConfig({
+      providers: [...provideStorybookTranslations()],
+    }),
     moduleMetadata({
       imports: [
         ...IMPORTS,
         ...COMPONENTS,
         SharedFactoriesModule,
-        TranslateModule.forRoot(),
+        TranslateModule,
       ],
       providers: [
         {

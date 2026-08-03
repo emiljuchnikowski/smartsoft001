@@ -1,36 +1,18 @@
-import { APP_INITIALIZER, importProvidersFrom } from '@angular/core';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { applicationConfig, moduleMetadata } from '@storybook/angular';
 
 import { DateRangeComponent } from './date-range.component';
 import { StyleService, UIService } from '../../services';
-import {
-  TRANSLATE_DATA_ENG,
-  TRANSLATE_DATA_PL,
-} from '../../translations-default';
 import { DateRangePresetComponent } from './preset/preset.component';
 import { DateRangeModalStandardComponent } from './standard/standard-modal.component';
+import { provideStorybookTranslations } from '../../../../.storybook/storybook-translations';
 
 const meta: Meta = {
   title: 'Components/DateRange',
   tags: ['autodocs'],
   decorators: [
     applicationConfig({
-      providers: [
-        importProvidersFrom(TranslateModule.forRoot()),
-        {
-          provide: APP_INITIALIZER,
-          useFactory: (translate: TranslateService) => () => {
-            translate.setTranslation('en', TRANSLATE_DATA_ENG);
-            translate.setTranslation('pl', TRANSLATE_DATA_PL);
-            translate.setDefaultLang('en');
-            translate.use('en');
-          },
-          deps: [TranslateService],
-          multi: true,
-        },
-      ],
+      providers: [...provideStorybookTranslations()],
     }),
     moduleMetadata({
       imports: [

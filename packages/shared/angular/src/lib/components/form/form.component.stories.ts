@@ -5,6 +5,7 @@ import { applicationConfig, moduleMetadata } from '@storybook/angular';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
+import { provideStorybookTranslations } from '../../../../.storybook/storybook-translations';
 import { SharedFactoriesModule } from '../../factories';
 import { IFormOptions } from '../../models';
 import {
@@ -34,6 +35,7 @@ const meta: Meta<FormComponent<any>> = {
     // standalone story wrapper's environment injector.
     applicationConfig({
       providers: [
+        ...provideStorybookTranslations(),
         {
           provide: MODEL_VALIDATORS_PROVIDER,
           useValue: {
@@ -52,7 +54,7 @@ const meta: Meta<FormComponent<any>> = {
         ...IMPORTS,
         ...COMPONENTS,
         SharedFactoriesModule,
-        TranslateModule.forRoot(),
+        TranslateModule,
       ],
     }),
   ],

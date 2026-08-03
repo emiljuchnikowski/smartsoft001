@@ -2,12 +2,13 @@ import { JsonPipe } from '@angular/common';
 import { Component, signal } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import type { Meta, StoryObj } from '@storybook/angular';
-import { moduleMetadata } from '@storybook/angular';
+import { applicationConfig, moduleMetadata } from '@storybook/angular';
 
 import { IEntity } from '@smartsoft001/domain-core';
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
 import { ListComponent } from './list.component';
+import { provideStorybookTranslations } from '../../../../.storybook/storybook-translations';
 import { SharedFactoriesModule } from '../../factories';
 import { IListOptions, IListProvider, ListMode } from '../../models';
 import { FileService } from '../../services';
@@ -95,12 +96,15 @@ const meta: Meta<ListComponent<any>> = {
   title: 'Smart-List/List',
   component: ListComponent,
   decorators: [
+    applicationConfig({
+      providers: [...provideStorybookTranslations()],
+    }),
     moduleMetadata({
       imports: [
         ...IMPORTS,
         ...COMPONENTS,
         SharedFactoriesModule,
-        TranslateModule.forRoot(),
+        TranslateModule,
       ],
       providers: [
         {

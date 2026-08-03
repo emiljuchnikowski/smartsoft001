@@ -1,16 +1,11 @@
-import {
-  Component,
-  importProvidersFrom,
-  signal,
-  TemplateRef,
-  viewChild,
-} from '@angular/core';
+import { Component, signal, TemplateRef, viewChild } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { applicationConfig, moduleMetadata } from '@storybook/angular';
 
 import { PageComponent } from './page.component';
 import { PAGE_PRESET_VARIANT_COMPONENTS } from './preset-variants';
+import { provideStorybookTranslations } from '../../../../.storybook/storybook-translations';
 import { IPageOptions } from '../../models';
 import { PAGE_VARIANT_COMPONENTS_TOKEN } from '../../shared.inectors';
 import { COMPONENTS, IMPORTS } from '../components.module';
@@ -82,7 +77,7 @@ const meta: Meta<PresetStoryComponent> = {
     // moduleMetadata.imports would not register TranslateStore — root
     // providers must come through applicationConfig instead.
     applicationConfig({
-      providers: [importProvidersFrom(TranslateModule.forRoot())],
+      providers: [...provideStorybookTranslations()],
     }),
     moduleMetadata({
       imports: [

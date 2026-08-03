@@ -1,10 +1,9 @@
-import { importProvidersFrom } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { applicationConfig, moduleMetadata } from '@storybook/angular';
 
 import { PasswordStrengthComponent } from './password-strength.component';
 import { PasswordStrengthStandardComponent } from './standard/standard.component';
+import { provideStorybookTranslations } from '../../../../.storybook/storybook-translations';
 
 const meta: Meta<PasswordStrengthComponent> = {
   title: 'Components/Password Strength',
@@ -12,7 +11,7 @@ const meta: Meta<PasswordStrengthComponent> = {
   tags: ['autodocs'],
   decorators: [
     applicationConfig({
-      providers: [importProvidersFrom(TranslateModule.forRoot())],
+      providers: [...provideStorybookTranslations()],
     }),
     moduleMetadata({
       imports: [PasswordStrengthComponent, PasswordStrengthStandardComponent],

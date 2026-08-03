@@ -1,10 +1,9 @@
-import { importProvidersFrom } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { applicationConfig, moduleMetadata } from '@storybook/angular';
 
 import { SearchbarComponent } from './searchbar.component';
 import { SearchbarStandardComponent } from './standard/standard.component';
+import { provideStorybookTranslations } from '../../../../.storybook/storybook-translations';
 import { ISearchbarOptions } from '../../models';
 
 const meta: Meta = {
@@ -12,7 +11,7 @@ const meta: Meta = {
   tags: ['autodocs'],
   decorators: [
     applicationConfig({
-      providers: [importProvidersFrom(TranslateModule.forRoot())],
+      providers: [...provideStorybookTranslations()],
     }),
     moduleMetadata({
       imports: [SearchbarComponent, SearchbarStandardComponent],
