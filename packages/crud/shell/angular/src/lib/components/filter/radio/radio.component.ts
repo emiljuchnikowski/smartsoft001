@@ -1,74 +1,59 @@
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { TranslatePipe } from '@ngx-translate/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 
+import { InputOptions, InputRadioComponent } from '@smartsoft001/angular';
 import { IEntity } from '@smartsoft001/domain-core';
+import { IFieldOptions } from '@smartsoft001/models';
 
 import { BaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-crud-filter-radio',
+  host: { class: 'smart:mb-5 smart:block smart:w-full' },
   template: `
-    <!--    <ion-row>-->
-    <!--      <ion-col>-->
-    <!--        <ion-radio-group [(ngModel)]="value">-->
-    <!--          <ion-item-divider class="font-light text-xl">-->
-    <!--            <ion-icon class="mr-6 text-2xl" slot="start" name="filter-outline"></ion-icon>-->
-    <!--            <ion-label>-->
-    {{ item()?.label || '' | translate }}
-    <!--            </ion-label>-->
-    @if (value || value === false) {
-      <!--              <ion-button-->
-      <!--                slot="end"-->
-      <!--                color="danger"-->
-      <!--                (click)="refresh(null)"-->
-      <!--                class="square-button m-0 text-lg h-9 w-9 p-0"-->
-      <!--              >-->
-      <!--                <ion-icon class="mr-6 text-2xl m-0 p-0" slot="icon-only" name="close-outline"></ion-icon>-->
-      <!--              </ion-button>-->
-    }
-    <!--          </ion-item-divider>-->
-
-    @for (item of possibilities(); track item) {
-      <!--            <ion-item>-->
-      <!--              <ion-label>{{ item.text | translate }}</ion-label>-->
-      <!--              <ion-radio class="mr-10" [value]="item.id"></ion-radio>-->
-      <!--            </ion-item>-->
-    }
-    <!--        </ion-radio-group>-->
-    <!--      </ion-col>-->
-    <!--    </ion-row>-->
-  `,
-  imports: [TranslatePipe, FormsModule],
-  styles: [
-    `
-      :host {
-        width: 100%;
-        margin-bottom: 1.2rem;
-        ion-item-divider {
-          //--padding-end: 0.8rem;
-          //--ion-background-color: linear-gradient(
-          //  90deg,
-          //  transparent,
-          //  var(--ion-color-light)
-          //);
-          ion-icon {
-            //--color: var(--ion-color-primary);
-          }
-          ion-label {
-            //--padding: var(--smart-button-padding-left) / 2
-            //  var(--smart-button-padding-top) / 2 var(--smart-button-padding-right) /
-            //  2 var(--smart-button-padding-bottom) / 2;
-          }
-          .square-button {
-            //--padding-start: 0.2em;
-            //--padding-end: 0.2em;
-          }
+    @if (inputOptions()) {
+      <div class="smart:flex smart:w-full smart:items-start smart:gap-2">
+        <smart-input-radio
+          class="smart:flex-1"
+          [options]="inputOptions()!"
+          [fieldOptions]="fieldOptions()"
+        ></smart-input-radio>
+        @if (value || value === false) {
+          <button
+            type="button"
+            (click)="refresh(null)"
+            aria-label="clear"
+            class="smart:shrink-0 smart:rounded smart:px-2 smart:py-1 smart:text-red-600 hover:smart:bg-red-50"
+          >
+            ×
+          </button>
         }
-      }
-    `,
-  ],
+      </div>
+    }
+  `,
+  imports: [InputRadioComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FilterRadioComponent<
-  T extends IEntity<string>,
-> extends BaseComponent<T> {}
+export class FilterRadioComponent<T extends IEntity<string>>
+  extends BaseComponent<T>
+  implements OnInit
+{
+  readonly inputOptions: WritableSignal<InputOptions<any> | undefined> = signal<
+    InputOptions<any> | undefined
+  >(undefined);
+  readonly fieldOptions: WritableSignal<IFieldOptions | undefined> = signal<
+    IFieldOptions | undefined
+  >(undefined);
+
+  override ngOnInit(): void {
+    super.ngOnInit();
+
+    const control = this.bindControl(null);
+    this.inputOptions.set(this.buildInputOptions(control, true));
+  }
+}

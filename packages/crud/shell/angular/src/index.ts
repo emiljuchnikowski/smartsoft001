@@ -11,3 +11,4 @@ export * from './lib/+state';
 export * from './lib/models';
 export * from './lib/pages';
 export * from './lib/providers/model-possibilities/model-possibilities.provider';
+export * from './lib/providers/model-label/model-label.provider';

@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import {
   FILE_SERVICE_CONFIG,
   IFileServiceConfig,
+  IModelLabelProvider,
   NgrxStoreService,
   SharedModule,
 } from '@smartsoft001/angular';
@@ -18,9 +19,14 @@ import { CrudFullModule } from './crud-full.module';
 import { CrudConfig, CrudFullConfig } from './crud.config';
 import { CrudListPaginationFactory } from './factories/list-pagination/list-pagination.factory';
 import { CrudPipesModule } from './pipes';
+import { CrudModelLabelProvider } from './providers/model-label/model-label.provider';
 import { CrudService } from './services/crud/crud.service';
 import { CrudListGroupService } from './services/list-group/list-group.service';
 import { PageService } from './services/page/page.service';
+import {
+  NotSocketService,
+  SocketService,
+} from './services/socket/socket.service';
 
 @NgModule({
   imports: [
@@ -37,7 +43,9 @@ import { PageService } from './services/page/page.service';
     CrudEffects,
     PageService,
     CrudFacade,
+    SocketService,
     CrudListPaginationFactory,
+    { provide: IModelLabelProvider, useClass: CrudModelLabelProvider },
   ],
 })
 export class CrudCoreModule<T extends IEntity<string>> {
@@ -77,6 +85,9 @@ export class CrudModule<T extends IEntity<string>> {
           provide: FILE_SERVICE_CONFIG,
           useValue: { apiUrl: options.config.apiUrl } as IFileServiceConfig,
         },
+        ...(options.socket
+          ? [SocketService]
+          : [{ provide: SocketService, useClass: NotSocketService }]),
       ],
     };
   }

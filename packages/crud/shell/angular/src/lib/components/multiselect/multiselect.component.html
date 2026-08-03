@@ -1,16 +1,20 @@
 @let list = this.list();
 @if (list) {
-  <!--  <ion-header>-->
-  <!--    <ion-toolbar>-->
-  <!--      <ion-buttons slot="end">-->
-  <!--        <ion-button (click)="onClose()">-->
-  <!--          <ion-icon slot="icon-only" name="close"> </ion-icon>-->
-  <!--        </ion-button>-->
-  <!--      </ion-buttons>-->
-  <!--<ion-title>-->{{ 'selected' | translate }}: {{ list?.length
-  }}<!--</ion-title>-->
-  <!--    </ion-toolbar>-->
-  <!--  </ion-header>-->
+  <header
+    class="smart:flex smart:items-center smart:justify-between smart:border-b smart:border-gray-200 smart:px-4 smart:py-3"
+  >
+    <h2 class="smart:text-lg smart:font-semibold smart:text-gray-900">
+      {{ 'selected' | translate }}: {{ list.length }}
+    </h2>
+    <button
+      type="button"
+      (click)="onClose()"
+      aria-label="close"
+      class="smart:rounded smart:p-1 smart:text-gray-500 hover:smart:bg-gray-100"
+    >
+      ✕
+    </button>
+  </header>
 
   @if (config?.list?.components?.multi) {
     <div>

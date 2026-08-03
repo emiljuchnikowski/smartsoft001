@@ -30,6 +30,7 @@ import {
   IPageOptions,
   ListMode,
   MenuService,
+  PageComponent,
 } from '@smartsoft001/angular';
 import { IEntity } from '@smartsoft001/domain-core';
 import {
@@ -54,22 +55,22 @@ import { CrudSearchService } from '../../services/search/search.service';
 
 @Component({
   selector: 'smart-crud-list-page',
-  imports: [ListStandardComponent, NgTemplateOutlet],
+  imports: [PageComponent, ListStandardComponent, NgTemplateOutlet],
   template: `
     @if (filter() && pageOptions()) {
-      <!--      <smart-page [options]="pageOptions()">-->
-      <div #topTpl></div>
+      <smart-page [options]="pageOptions()" [class]="config.cssClass || ''">
+        <div #topTpl></div>
 
-      @if (template() === 'default' && listOptions()) {
-        <smart-crud-list-standard-page [listOptions]="listOptions()">
-          <ng-container [ngTemplateOutlet]="contentTpl"></ng-container>
-        </smart-crud-list-standard-page>
-      }
-      <ng-template #contentTpl>
-        <ng-content></ng-content>
-      </ng-template>
-      <div class="dynamic-content"></div>
-      <!--      </smart-page>-->
+        @if (template() === 'default' && listOptions()) {
+          <smart-crud-list-standard-page [listOptions]="listOptions()">
+            <ng-container [ngTemplateOutlet]="contentTpl"></ng-container>
+          </smart-crud-list-standard-page>
+        }
+        <ng-template #contentTpl>
+          <ng-content></ng-content>
+        </ng-template>
+        <div class="dynamic-content"></div>
+      </smart-page>
     }
   `,
 })
@@ -121,7 +122,7 @@ export class ListComponent<T extends IEntity<string>>
     if (this.config.list?.resetQuery === 'beforeInit') {
       newFilter = {
         query: this.config.baseQuery ? [...this.config.baseQuery] : [],
-        paginationMode: this.config.list!.paginationMode,
+        paginationMode: this.config.list?.paginationMode,
         limit: this.config.pagination
           ? this.config.pagination.limit
           : undefined,
@@ -138,7 +139,7 @@ export class ListComponent<T extends IEntity<string>>
       newFilter = this.filter();
     } else {
       newFilter = {
-        paginationMode: this.config.list!.paginationMode,
+        paginationMode: this.config.list?.paginationMode,
         limit: this.searchService.filter?.limit
           ? this.searchService.filter.limit
           : this.config.pagination
@@ -172,6 +173,7 @@ export class ListComponent<T extends IEntity<string>>
 
     this.pageOptions.set({
       title: this.config.title || '',
+      variant: this.config.variant,
       search: this.config.search
         ? {
             text: computed(() => this.filter()?.searchText ?? ''),
@@ -300,8 +302,8 @@ export class ListComponent<T extends IEntity<string>>
           }
         : undefined,
       pagination: await this.paginationFacade.create({
-        mode: this.config.list!.paginationMode,
-        limit: this.config.pagination!.limit,
+        mode: this.config.list?.paginationMode,
+        limit: this.config.pagination?.limit ?? 0,
         provider: {
           getFilter: () => {
             return this.filter() || ({} as ICrudFilter);
