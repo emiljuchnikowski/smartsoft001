@@ -178,14 +178,15 @@ providers: [
 
 ## Preline mode presets
 
-Two modes ship a Preline-styled **preset** alongside the default child:
+Every mode ships a Preline-styled **preset** alongside the default child:
 
-| ListMode  | Preset                       | Look                                                                    |
-| --------- | ---------------------------- | ----------------------------------------------------------------------- |
-| `desktop` | `ListDesktopPresetComponent` | Preline table (`smart-list-desktop-preset`), styling via `presentation` |
-| `mobile`  | `ListMobilePresetComponent`  | Responsive card grid (`smart-list-mobile-preset`), image → card image   |
+| ListMode      | Preset                           | Look                                                                    |
+| ------------- | -------------------------------- | ----------------------------------------------------------------------- |
+| `desktop`     | `ListDesktopPresetComponent`     | Preline table (`smart-list-desktop-preset`), styling via `presentation` |
+| `mobile`      | `ListMobilePresetComponent`      | Responsive card grid (`smart-list-mobile-preset`), image → card image   |
+| `masonryGrid` | `ListMasonryGridPresetComponent` | Masonry card columns (`smart-list-masonry-grid-preset`), image → card   |
 
-Apply them via the ready-made partial map (masonryGrid stays standard):
+Apply them via the ready-made map (covers all three modes):
 
 ```typescript
 import {
@@ -217,6 +218,9 @@ Notes:
 - The mobile preset maps fields onto card anatomy: `FieldType.image`/`logo` → card image, first
   non-image field → title, remaining fields → body text; the item action renders as the card's
   primary button (label i18n key: `details`).
+- The masonryGrid preset keeps the base masonry column algorithm and image mechanism
+  (`NgOptimizedImage` from the model's image field) and restyles items with the same card recipe as
+  the mobile preset; it has no item action buttons (matching the standard masonry child).
 - Preline "Table with search" / "with pagination" / "selectable rows" variants are covered by the
   existing `searchbar` feature, `smart-paging` (`PaginationMode.singlePage`), and `select: 'multi'`
   respectively — not by `presentation`. Table caption/footer variants are not supported (no API

@@ -192,6 +192,11 @@ export const Preset: Story = {
         type: PhotoListModel,
         mode: ListMode.mobile,
       } as IListOptions<PhotoListModel>,
+      masonryOptions: {
+        provider: buildMasonryProvider(),
+        type: PhotoListModel,
+        mode: ListMode.masonryGrid,
+      } as IListOptions<PhotoListModel>,
     },
     template: `
       <div style="display: grid; gap: 32px;">
@@ -202,6 +207,10 @@ export const Preset: Story = {
         <section>
           <p style="font-weight: 600; margin-bottom: 8px;">Mobile — card grid</p>
           <smart-list [options]="mobileOptions"></smart-list>
+        </section>
+        <section>
+          <p style="font-weight: 600; margin-bottom: 8px;">Masonry grid — card columns</p>
+          <smart-list [options]="masonryOptions"></smart-list>
         </section>
       </div>
     `,

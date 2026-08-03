@@ -757,6 +757,15 @@ export const PresetFields: Story = {
 
             @Field({ details: true, type: FieldType.pdf })
             brochure: any = { id: 'brochure', fileName: 'brochure.pdf' };
+
+            @Field({ details: true, type: FieldType.text })
+            note = 'Plain text value';
+
+            @Field({ details: true, type: FieldType.object })
+            user = new NestedUserModel();
+
+            @Field({ details: true, type: FieldType.array })
+            items: ArrayItemModel[] = [];
           }
           return TestModel;
         })(),
@@ -830,6 +839,31 @@ export const PresetFields: Story = {
               brochure: { id: 'brochure', fileName: 'brochure.pdf' },
             }),
             options: { type: FieldType.pdf },
+          },
+          {
+            key: 'note',
+            item: signal({ note: 'Plain text value' }),
+            options: { type: FieldType.text },
+          },
+          {
+            key: 'user',
+            item: signal({
+              user: Object.assign(new NestedUserModel(), {
+                firstName: 'Jan',
+                lastName: 'Kowalski',
+              }),
+            }),
+            options: { type: FieldType.object },
+          },
+          {
+            key: 'items',
+            item: signal({
+              items: [
+                Object.assign(new ArrayItemModel(), { name: 'Item A' }),
+                Object.assign(new ArrayItemModel(), { name: 'Item B' }),
+              ],
+            }),
+            options: { type: FieldType.array, arrayType: ArrayItemModel },
           },
         ],
       },

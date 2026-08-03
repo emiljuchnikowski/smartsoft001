@@ -917,6 +917,8 @@ export const PresetFields: Story = {
       @Field({ type: FieldType.address }) address!: IAddress;
       @Field({ type: FieldType.object }) profile: PresetChildModel =
         new PresetChildModel();
+      @Field({ type: FieldType.array, classType: PresetChildModel } as any)
+      entries: PresetChildModel[] = [];
     }
     const model = new PresetModel();
     const rows: Array<{
@@ -960,6 +962,18 @@ export const PresetFields: Story = {
       options: {
         control: addressControl as any,
         fieldKey: 'address',
+        model,
+        treeLevel: 0,
+      },
+    });
+
+    // Array renders a FormArray of nested models, so build its options inline.
+    const entriesControl = new UntypedFormArray([]);
+    rows.push({
+      fieldKey: 'entries',
+      options: {
+        control: entriesControl as any,
+        fieldKey: 'entries',
         model,
         treeLevel: 0,
       },

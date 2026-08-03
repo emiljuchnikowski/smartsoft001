@@ -3,6 +3,7 @@ import { Type } from '@angular/core';
 import { ListMode } from '../../models';
 import { ListBaseComponent } from './base/base.component';
 import { ListDesktopPresetComponent } from './desktop/preset/preset.component';
+import { ListMasonryGridPresetComponent } from './masonry-grid/preset/preset.component';
 import { ListMobilePresetComponent } from './mobile/preset/preset.component';
 
 /**
@@ -15,14 +16,14 @@ import { ListMobilePresetComponent } from './mobile/preset/preset.component';
  * ];
  * ```
  *
- * The map is partial on purpose — only `desktop` (Preline table, styling
- * driven by `IListOptions.presentation`) and `mobile` (card grid) ship a
- * preset; `masonryGrid` keeps the standard component via the `baseMap`
- * merge in `ListComponent`.
+ * The map covers every `ListMode`: `desktop` (Preline table, styling driven
+ * by `IListOptions.presentation`), `mobile` (card grid) and `masonryGrid`
+ * (masonry card columns).
  */
 export const LIST_PRESET_MODE_COMPONENTS: Partial<
   Record<ListMode, Type<ListBaseComponent<any>>>
 > = {
   [ListMode.desktop]: ListDesktopPresetComponent,
   [ListMode.mobile]: ListMobilePresetComponent,
+  [ListMode.masonryGrid]: ListMasonryGridPresetComponent,
 };

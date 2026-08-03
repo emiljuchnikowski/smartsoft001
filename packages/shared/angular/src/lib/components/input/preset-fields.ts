@@ -3,6 +3,7 @@ import { Type } from '@angular/core';
 import { FieldType, FieldTypeDef } from '@smartsoft001/models';
 
 import { InputAddressPresetComponent } from './address/preset/preset.component';
+import { InputArrayPresetComponent } from './array/preset/preset.component';
 import { InputAttachmentPresetComponent } from './attachment/preset/preset.component';
 import { InputBaseComponent } from './base/base.component';
 import { InputCheckPresetComponent } from './check/preset/preset.component';
@@ -82,4 +83,5 @@ export const INPUT_PRESET_FIELD_COMPONENTS: Partial<
   [FieldType.flag]: InputFlagPresetComponent,
   [FieldType.pdf]: InputPdfPresetComponent,
   [FieldType.video]: InputVideoPresetComponent,
+  [FieldType.array]: InputArrayPresetComponent,
 };

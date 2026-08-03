@@ -150,7 +150,8 @@ providers: [
 ];
 ```
 
-`INPUT_PRESET_FIELD_COMPONENTS` now maps **every** `FieldType`. The field-type presets and their
+`INPUT_PRESET_FIELD_COMPONENTS` maps **every** `FieldType` that ships an input component
+(`dateTime` has no input component, so it has no map entry). The field-type presets and their
 selectors mirror the default components in the table above (`smart-input-<field>-preset`), including
 the most recently added ones:
 
@@ -162,6 +163,7 @@ the most recently added ones:
 | `flag`    | `InputFlagPresetComponent`    | `smart-input-flag-preset`    | Preline checkbox (blue checked state) + inline label            |
 | `pdf`     | `InputPdfPresetComponent`     | `smart-input-pdf-preset`     | Dashed drop-zone (accept `.pdf`) + show/delete preview          |
 | `video`   | `InputVideoPresetComponent`   | `smart-input-video-preset`   | Dashed drop-zone (accept `.mp4`) + play/delete + `<video>`      |
+| `array`   | `InputArrayPresetComponent`   | `smart-input-array-preset`   | Item cards (`space-y-2`), outline add / ghost-red remove        |
 
 Notes:
 
@@ -172,6 +174,9 @@ Notes:
   and drag-and-drop are added on top.
 - `object` reuses `FORM_COMPONENT_TOKEN` and the `NgComponentOutlet`/`DynamicIoDirective` nesting of
   the default component — only the surrounding frame is styled, the nested rendering is untouched.
+- `array` extends the concrete `InputArrayComponent` (add/remove/CVA logic untouched); each item is
+  a card, the empty state renders an em dash, and both add and remove buttons hide when
+  `fieldOptions().possibilities.static` is true.
 - `InputErrorPresetComponent` (`smart-input-error-preset`) is a Preline-styled validation-message
   variant. Because `InputComponent` hard-codes `<smart-input-error>` (no token for it), use this
   preset via its selector directly — it is not part of `INPUT_PRESET_FIELD_COMPONENTS`, and wiring

@@ -97,9 +97,8 @@ Maps are merged (`{ ...baseMap, ...extendMap }`), so only selected types need to
 
 ## Preline field presets
 
-Twelve field types ship a Preline-styled **preset** (`Detail<Field>PresetComponent`, selector
-`smart-detail-<field>-preset`) alongside the default sub-component, living in `<field>/preset/`.
-`text`, `object` and `array` intentionally keep their standard components (no preset):
+Fifteen field types ship a Preline-styled **preset** (`Detail<Field>PresetComponent`, selector
+`smart-detail-<field>-preset`) alongside the default sub-component, living in `<field>/preset/`:
 
 | FieldType       | Preset                               | Look                                                         |
 | --------------- | ------------------------------------ | ------------------------------------------------------------ |
@@ -115,6 +114,9 @@ Twelve field types ship a Preline-styled **preset** (`Detail<Field>PresetCompone
 | `video`         | `DetailVideoPresetComponent`         | `<video controls>` framed `rounded-xl` border + `shadow-2xs` |
 | `attachment`    | `DetailAttachmentPresetComponent`    | File chip: icon, file name (`fileName`/`name`), download     |
 | `pdf`           | `DetailPdfPresetComponent`           | File chip: red PDF icon, file name, show button              |
+| `text`          | `DetailTextPresetComponent`          | `text-sm` typography, `text-pretty`; em-dash when empty      |
+| `object`        | `DetailObjectPresetComponent`        | Card envelope around the untouched nested details            |
+| `array`         | `DetailArrayPresetComponent`         | `space-y-2` stack of item cards; em-dash when empty          |
 
 Apply them via the ready-made partial map:
 
@@ -135,6 +137,10 @@ providers: [
 Notes:
 
 - The map is partial — all other field types keep their standard components (maps merge over `baseMap`).
+  Registering `text` in the map does NOT change the fallback for unmapped/unknown types — the map is
+  keyed per `FieldType`, so those still fall back to the standard `DetailTextComponent`.
+- Unlike their standard components, the `text` and `array` presets render an em-dash placeholder when
+  the value is empty (the standard components collapse to nothing).
 - The presets have a fixed look; `IDetailOptions` carries no per-field style channel (deliberate,
   matches the fidelity-gap deferral from the Preline group).
 
