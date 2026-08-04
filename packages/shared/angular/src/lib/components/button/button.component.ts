@@ -34,6 +34,7 @@ import { ButtonStandardComponent } from './standard/standard.component';
   `,
   encapsulation: ViewEncapsulation.None,
   imports: [ButtonStandardComponent, NgComponentOutlet, NgTemplateOutlet],
+  host: { class: 'smart:contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonComponent {

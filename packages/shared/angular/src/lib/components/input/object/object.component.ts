@@ -44,6 +44,7 @@ import { InputBaseComponent } from '../base/base.component';
     DynamicIoDirective,
     ComponentOutletInjectorDirective,
   ],
+  host: { class: 'smart:contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputObjectComponent<T, TChild> extends InputBaseComponent<T> {

@@ -71,6 +71,7 @@ import { InputBaseComponent } from '../base/base.component';
     ComponentOutletInjectorDirective,
     ButtonComponent,
   ],
+  host: { class: 'smart:contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputArrayComponent<T, TChild> extends InputBaseComponent<T> {

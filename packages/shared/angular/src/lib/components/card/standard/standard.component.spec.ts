@@ -22,7 +22,7 @@ import { ICardOptions } from '../../../models';
       [options]="options"
       [hasHeader]="hasHeader"
       [hasFooter]="hasFooter"
-      [cssClass]="cssClass"
+      [class]="cssClass"
     />
   `,
   imports: [CardStandardComponent],

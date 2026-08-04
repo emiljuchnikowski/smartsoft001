@@ -30,6 +30,7 @@ import { DetailsStandardComponent } from './standard/standard.component';
   `,
   encapsulation: ViewEncapsulation.None,
   imports: [DetailsStandardComponent, NgComponentOutlet],
+  host: { class: 'smart:contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DetailsComponent<T extends IEntity<string>> {

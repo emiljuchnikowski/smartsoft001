@@ -38,6 +38,7 @@ import { DetailArrayComponent } from '../array.component';
     DynamicIoDirective,
     ComponentOutletInjectorDirective,
   ],
+  host: { class: 'smart:contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })

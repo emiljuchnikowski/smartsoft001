@@ -34,6 +34,7 @@ import { DetailObjectComponent } from '../object.component';
     DynamicIoDirective,
     ComponentOutletInjectorDirective,
   ],
+  host: { class: 'smart:contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })

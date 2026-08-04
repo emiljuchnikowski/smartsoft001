@@ -27,6 +27,7 @@ import { LIST_CONTAINER_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
   `,
   encapsulation: ViewEncapsulation.None,
   imports: [ListContainerStandardComponent, NgComponentOutlet],
+  host: { class: 'smart:contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListContainerComponent {

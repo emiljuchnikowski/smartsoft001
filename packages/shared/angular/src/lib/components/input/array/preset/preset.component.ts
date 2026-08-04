@@ -90,6 +90,7 @@ import { InputArrayComponent } from '../array.component';
     ComponentOutletInjectorDirective,
   ],
   encapsulation: ViewEncapsulation.None,
+  host: { class: 'smart:contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputArrayPresetComponent<T, TChild> extends InputArrayComponent<

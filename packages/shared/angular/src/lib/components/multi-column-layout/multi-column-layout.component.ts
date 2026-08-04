@@ -30,6 +30,7 @@ import { MULTI_COLUMN_LAYOUT_STANDARD_COMPONENT_TOKEN } from '../../shared.inect
   `,
   encapsulation: ViewEncapsulation.None,
   imports: [MultiColumnLayoutStandardComponent, NgComponentOutlet],
+  host: { class: 'smart:contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MultiColumnLayoutComponent {

@@ -46,6 +46,7 @@ import { InputBaseComponent } from '../../base/base.component';
     ComponentOutletInjectorDirective,
   ],
   encapsulation: ViewEncapsulation.None,
+  host: { class: 'smart:contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputObjectPresetComponent<

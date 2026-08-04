@@ -55,6 +55,7 @@ const baseMap: Partial<Record<FieldTypeDef, Type<DetailBaseComponent<any>>>> = {
   selector: 'smart-detail',
   templateUrl: './detail.component.html',
   imports: [ModelLabelPipe, InfoComponent, NgComponentOutlet],
+  host: { class: 'smart:contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DetailComponent<T extends IEntity<string> | undefined> {
@@ -64,6 +65,9 @@ export class DetailComponent<T extends IEntity<string> | undefined> {
     IDetailOptions<T> | undefined
   >();
   readonly type: InputSignal<any> = input.required<any>();
+  readonly cssClass: InputSignal<string> = input<string>('', {
+    alias: 'class',
+  });
 
   component = computed(() => {
     const type = this.options()?.options?.type ?? FieldType.text;
@@ -71,7 +75,11 @@ export class DetailComponent<T extends IEntity<string> | undefined> {
     return map[type] ?? DetailTextComponent;
   });
 
+  // The host is `display: contents`, so an external class has to be forwarded
+  // to the field component to have any effect. DetailBaseComponent aliases it
+  // back to `class`, so the key here is `class`, matching ListComponent.
   componentInputs = computed(() => ({
     options: this.options(),
+    class: this.cssClass(),
   }));
 }

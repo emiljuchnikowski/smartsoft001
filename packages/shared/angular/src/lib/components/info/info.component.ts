@@ -25,6 +25,7 @@ import { InfoStandardComponent } from './standard/standard.component';
   `,
   encapsulation: ViewEncapsulation.None,
   imports: [InfoStandardComponent, NgComponentOutlet],
+  host: { class: 'smart:contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InfoComponent {
