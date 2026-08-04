@@ -36,12 +36,12 @@ export abstract class CardBaseComponent {
   });
 
   headerClasses = computed(() => {
-    return 'smart:px-4 smart:py-5 sm:smart:px-6';
+    return 'smart:px-4 smart:py-5 smart:sm:px-6';
   });
 
   bodyClasses = computed(() => {
     const opts = this.options();
-    const classes = ['smart:px-4', 'smart:py-5', 'sm:smart:p-6'];
+    const classes = ['smart:px-4', 'smart:py-5', 'smart:sm:p-6'];
 
     if (opts?.grayBody) {
       classes.push('smart:bg-gray-50', 'smart:dark:bg-gray-800/50');
@@ -52,7 +52,7 @@ export abstract class CardBaseComponent {
 
   footerClasses = computed(() => {
     const opts = this.options();
-    const classes = ['smart:px-4', 'smart:py-4', 'sm:smart:px-6'];
+    const classes = ['smart:px-4', 'smart:py-4', 'smart:sm:px-6'];
 
     if (opts?.grayFooter) {
       classes.push('smart:bg-gray-50', 'smart:dark:bg-gray-800/50');

@@ -36,7 +36,7 @@ import { BaseComponent } from '../base/base.component';
             (click)="toggleAdvanced()"
             [disabled]="hasMinValue() || hasMaxValue()"
             aria-label="settings"
-            class="smart:shrink-0 smart:rounded smart:px-2 smart:py-2 smart:text-gray-600 hover:smart:bg-gray-100 disabled:smart:opacity-40"
+            class="smart:shrink-0 smart:rounded smart:px-2 smart:py-2 smart:text-gray-600 smart:hover:bg-gray-100 smart:disabled:opacity-40"
           >
             ⚙
           </button>
@@ -47,7 +47,7 @@ import { BaseComponent } from '../base/base.component';
             type="button"
             (click)="clear()"
             aria-label="clear"
-            class="smart:shrink-0 smart:rounded smart:px-2 smart:py-2 smart:text-red-600 hover:smart:bg-red-50"
+            class="smart:shrink-0 smart:rounded smart:px-2 smart:py-2 smart:text-red-600 smart:hover:bg-red-50"
           >
             ×
           </button>
@@ -68,7 +68,7 @@ import { BaseComponent } from '../base/base.component';
               type="number"
               step="1"
               [formControl]="minControl"
-              class="smart:mt-2 smart:block smart:w-full smart:rounded-md smart:bg-white smart:px-3 smart:py-1.5 smart:text-base smart:text-gray-900 smart:outline-1 -outline-offset-1 smart:outline-gray-300 focus:smart:outline-2 focus:smart:outline-offset-2 focus:smart:outline-indigo-600 smart:dark:bg-white/5 smart:dark:text-white smart:dark:outline-white/10"
+              class="smart:mt-2 smart:block smart:w-full smart:rounded-md smart:bg-white smart:px-3 smart:py-1.5 smart:text-base smart:text-gray-900 smart:outline-1 -outline-offset-1 smart:outline-gray-300 smart:focus:outline-2 smart:focus:outline-offset-2 smart:focus:outline-indigo-600 smart:dark:bg-white/5 smart:dark:text-white smart:dark:outline-white/10"
             />
           </div>
           @if (hasMinValue()) {
@@ -76,7 +76,7 @@ import { BaseComponent } from '../base/base.component';
               type="button"
               (click)="refresh(null, '>=')"
               aria-label="clear-from"
-              class="smart:shrink-0 smart:rounded smart:px-2 smart:py-2 smart:text-red-600 hover:smart:bg-red-50"
+              class="smart:shrink-0 smart:rounded smart:px-2 smart:py-2 smart:text-red-600 smart:hover:bg-red-50"
             >
               ×
             </button>
@@ -92,7 +92,7 @@ import { BaseComponent } from '../base/base.component';
               type="number"
               step="1"
               [formControl]="maxControl"
-              class="smart:mt-2 smart:block smart:w-full smart:rounded-md smart:bg-white smart:px-3 smart:py-1.5 smart:text-base smart:text-gray-900 smart:outline-1 -outline-offset-1 smart:outline-gray-300 focus:smart:outline-2 focus:smart:outline-offset-2 focus:smart:outline-indigo-600 smart:dark:bg-white/5 smart:dark:text-white smart:dark:outline-white/10"
+              class="smart:mt-2 smart:block smart:w-full smart:rounded-md smart:bg-white smart:px-3 smart:py-1.5 smart:text-base smart:text-gray-900 smart:outline-1 -outline-offset-1 smart:outline-gray-300 smart:focus:outline-2 smart:focus:outline-offset-2 smart:focus:outline-indigo-600 smart:dark:bg-white/5 smart:dark:text-white smart:dark:outline-white/10"
             />
           </div>
           @if (hasMaxValue()) {
@@ -100,7 +100,7 @@ import { BaseComponent } from '../base/base.component';
               type="button"
               (click)="refresh(null, '<=')"
               aria-label="clear-to"
-              class="smart:shrink-0 smart:rounded smart:px-2 smart:py-2 smart:text-red-600 hover:smart:bg-red-50"
+              class="smart:shrink-0 smart:rounded smart:px-2 smart:py-2 smart:text-red-600 smart:hover:bg-red-50"
             >
               ×
             </button>

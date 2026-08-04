@@ -23,8 +23,10 @@ const GROUP_TITLE = [
   'smart:font-semibold',
   'smart:uppercase',
   'smart:tracking-wide',
-  'smart:text-gray-400',
-  'smart:dark:text-gray-500',
+  // gray-600/gray-400 rather than gray-400/gray-500: at this size the lighter
+  // pair is 2.6:1 on a white surface and fails WCAG AA.
+  'smart:text-gray-600',
+  'smart:dark:text-gray-400',
 ].join(' ');
 
 // Shared base shared by both the active and inactive tab (translated 1:1 from

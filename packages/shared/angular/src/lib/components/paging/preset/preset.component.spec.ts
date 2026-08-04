@@ -40,7 +40,7 @@ describe('@smartsoft001/shared-angular: PagingPresetComponent', () => {
     const active = pageButtons()[0];
 
     expect(active.getAttribute('aria-current')).toBe('page');
-    expect(active.className).toContain('smart:bg-gray-100');
+    expect(active.className).toContain('smart:bg-blue-600');
     expect(active.className).toContain('smart:font-semibold');
   });
 

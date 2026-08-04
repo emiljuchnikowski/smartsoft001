@@ -24,12 +24,14 @@ const TEXT_DEFAULT =
   'smart:text-sm smart:text-gray-800 smart:dark:text-neutral-200';
 
 // Preline "Or" treatment for title dividers: uppercase, muted, smaller.
+// gray-600 rather than Preline's gray-400: at this size the lighter shade is
+// 2.6:1 on a white surface and fails WCAG AA.
 const TEXT_TITLE = [
   'smart:text-xs',
   'smart:uppercase',
   'smart:font-medium',
-  'smart:text-gray-400',
-  'smart:dark:text-neutral-500',
+  'smart:text-gray-600',
+  'smart:dark:text-neutral-400',
 ].join(' ');
 
 // before/after pseudo-element rules drawn through the divider content.

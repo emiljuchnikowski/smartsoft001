@@ -90,7 +90,7 @@ describe('CardBaseComponent', () => {
   });
 
   it('should return header classes', () => {
-    expect(card.headerClasses()).toBe('smart:px-4 smart:py-5 sm:smart:px-6');
+    expect(card.headerClasses()).toBe('smart:px-4 smart:py-5 smart:sm:px-6');
   });
 
   it('should return body classes without gray', () => {

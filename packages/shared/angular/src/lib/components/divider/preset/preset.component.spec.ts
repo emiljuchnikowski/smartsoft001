@@ -81,7 +81,7 @@ describe('@smartsoft001/shared-angular: DividerPresetComponent', () => {
 
     expect(host().textContent?.trim()).toContain('Or');
     expect(cls).toContain('smart:uppercase');
-    expect(cls).toContain('smart:text-gray-400');
+    expect(cls).toContain('smart:text-gray-600');
   });
 
   it('should render an icon slot for the icon variant', () => {

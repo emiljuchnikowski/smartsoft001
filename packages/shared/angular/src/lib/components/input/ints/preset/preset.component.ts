@@ -51,7 +51,7 @@ import { InputBaseComponent } from '../../base/base.component';
                     "
                     aria-roledescription="Number field"
                     style="-moz-appearance: textfield;"
-                    class="smart:w-full smart:p-0 smart:bg-transparent smart:border-0 smart:text-gray-900 smart:dark:text-white placeholder:smart:text-gray-500 dark:placeholder:smart:text-gray-400 smart:focus:ring-0 smart:[&::-webkit-inner-spin-button]:appearance-none smart:[&::-webkit-outer-spin-button]:appearance-none"
+                    class="smart:w-full smart:p-0 smart:bg-transparent smart:border-0 smart:text-gray-900 smart:dark:text-white smart:placeholder:text-gray-500 smart:dark:placeholder:text-gray-400 smart:focus:ring-0 smart:[&::-webkit-inner-spin-button]:appearance-none smart:[&::-webkit-outer-spin-button]:appearance-none"
                   />
                 </div>
                 <div

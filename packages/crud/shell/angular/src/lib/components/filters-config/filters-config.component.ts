@@ -24,7 +24,7 @@ import { ICrudFilterQueryItem } from '../../models';
           <button
             type="button"
             (click)="onRemoveQuery(item)"
-            class="smart:inline-flex smart:items-center smart:gap-1 smart:rounded-full smart:border smart:border-gray-300 smart:bg-gray-50 smart:px-3 smart:py-1 smart:text-sm smart:text-gray-700 hover:smart:bg-gray-100"
+            class="smart:inline-flex smart:items-center smart:gap-1 smart:rounded-full smart:border smart:border-gray-300 smart:bg-gray-50 smart:px-3 smart:py-1 smart:text-sm smart:text-gray-700 smart:hover:bg-gray-100"
             [attr.aria-label]="
               ('remove' | translate) + ' ' + ('MODEL.' + item.key | translate)
             "

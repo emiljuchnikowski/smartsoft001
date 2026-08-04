@@ -21,7 +21,10 @@ const LINK_BASE = [
   'smart:flex',
   'smart:items-center',
   'smart:text-sm',
-  'smart:text-gray-500',
+  // gray-600 rather than Preline's gray-500: the `contained` and
+  // `full-width-bar` layouts sit on a gray-100 surface, where gray-500 is
+  // 4.39:1 and misses WCAG AA.
+  'smart:text-gray-600',
   'smart:dark:text-gray-400',
   'smart:hover:text-blue-600',
   'smart:dark:hover:text-blue-400',

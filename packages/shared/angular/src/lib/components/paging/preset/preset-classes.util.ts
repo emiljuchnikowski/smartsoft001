@@ -60,10 +60,15 @@ const PAGE_BASE = [
   'smart:disabled:pointer-events-none',
 ].join(' ');
 
+// A solid accent fill rather than Preline's gray-100 chip. The inactive state
+// below uses gray-100 for hover/focus, so a gray-100 active chip was
+// indistinguishable from simply hovering any other page — and on a white
+// surface it was barely visible at all (1.06:1). This matches how
+// progress-bars and vertical-navigation already signal "current".
 const PAGE_ACTIVE = [
-  'smart:bg-gray-100',
-  'smart:dark:bg-gray-800',
-  'smart:text-gray-900',
+  'smart:bg-blue-600',
+  'smart:dark:bg-blue-500',
+  'smart:text-white',
   'smart:dark:text-white',
   'smart:font-semibold',
 ].join(' ');
