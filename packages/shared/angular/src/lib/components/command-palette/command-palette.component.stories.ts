@@ -52,7 +52,15 @@ const VARIANTS: SmartCommandPaletteVariant[] = [
   'with-preview',
 ];
 
-const meta: Meta<CommandPaletteComponent> = {
+interface CommandPaletteArgs {
+  variant: SmartCommandPaletteVariant;
+  placeholder: string;
+  emptyText: string;
+  open: boolean;
+  query: string;
+}
+
+const meta: Meta<CommandPaletteArgs> = {
   title: 'Components/Command Palette',
   tags: ['autodocs'],
   decorators: [
@@ -68,10 +76,54 @@ const meta: Meta<CommandPaletteComponent> = {
       ],
     }),
   ],
+  argTypes: {
+    variant: { control: 'select', options: VARIANTS },
+    placeholder: { control: 'text' },
+    emptyText: { control: 'text' },
+    open: { control: 'boolean' },
+    query: {
+      control: 'text',
+      description:
+        'Filters the command list — set a non-matching value to see the empty state.',
+    },
+  },
+  args: {
+    variant: 'simple',
+    placeholder: 'Search commands…',
+    emptyText: 'No results',
+    open: true,
+    query: '',
+  },
 };
 
 export default meta;
-type Story = StoryObj<CommandPaletteComponent>;
+type Story = StoryObj<CommandPaletteArgs>;
+
+export const Playground: Story = {
+  name: 'Playground',
+  render: (args) => ({
+    props: {
+      commands: COMMANDS,
+      open: args.open,
+      query: args.query,
+      options: {
+        variant: args.variant,
+        placeholder: args.placeholder,
+        emptyText: args.emptyText,
+      },
+    },
+    template: `
+      <div style="padding: 40px;">
+        <smart-command-palette
+          [commands]="commands"
+          [open]="open"
+          [query]="query"
+          [options]="options"
+        ></smart-command-palette>
+      </div>
+    `,
+  }),
+};
 
 const block = (variant: SmartCommandPaletteVariant) => `
   <section>
@@ -88,13 +140,28 @@ const block = (variant: SmartCommandPaletteVariant) => `
   </section>
 `;
 
-export const Preset: Story = {
+export const AllVariants: Story = {
+  name: 'All variants',
   parameters: { controls: { disable: true } },
   render: () => ({
     props: { commands: COMMANDS },
     template: `
       <div style="display: flex; flex-direction: column; gap: 32px; padding: 24px;">
         ${VARIANTS.map((variant) => block(variant)).join('\n        ')}
+
+        <section>
+          <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">Empty (no match)</h3>
+          <smart-command-palette
+            [commands]="commands"
+            [open]="true"
+            query="zzzzz"
+            [options]="{
+              variant: 'simple',
+              placeholder: 'Search commands…',
+              emptyText: 'No results'
+            }"
+          ></smart-command-palette>
+        </section>
       </div>
     `,
   }),

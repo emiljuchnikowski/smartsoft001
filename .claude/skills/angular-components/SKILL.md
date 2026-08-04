@@ -214,7 +214,7 @@ Execute each step in order. Use `shared-tdd-developer` agent for all code implem
 - [ ] **6. Register exports** — barrel exports in `index.ts` files
 - [ ] **7. Update components module** — add to `components.module.ts` declarations/exports
 - [ ] **8. Update components index** — add `export * from './<component-name>'` to `components/index.ts`
-- [ ] **9. Create Storybook stories** — one story per variant with interactive controls
+- [ ] **9. Create Storybook stories** — exactly 2 stories: `Playground` (interactive Controls) and `AllVariants` (static showcase). See [Storybook Requirements](#storybook-requirements)
 - [ ] **10. Update README** — add component section to `packages/shared/angular/README.md`
 - [ ] **11. Create per-component plugin skill** — `packages/shared/claude-plugins/src/plugins/smart/skills/angular-components-<component-name>/SKILL.md` with component API, variants, usage examples (for **using** the component)
 - [ ] **12. Update plugin agent** — add component to "Available Components" table in `packages/shared/claude-plugins/src/plugins/smart/agents/angular-components/AGENT.md`
@@ -256,10 +256,12 @@ Every component MUST have exactly **2 stories**: `Playground` and `AllVariants`.
 
 ### Critical configuration rules
 
-1. **Use sub-components directly** (e.g., `ButtonStandardComponent`) — NOT the wrapper component (`ButtonComponent`) which extends `CreateDynamicComponent`. The wrapper uses `toObservable` from `@angular/core/rxjs-interop` which is not compatible with Storybook webpack.
-2. **Provide `TranslateModule.forRoot()` via `applicationConfig`** (not `moduleMetadata`) — using `moduleMetadata` with `ModuleWithProviders` causes `ngModule` errors on navigation between stories.
-3. **Import sub-components via `moduleMetadata`** — standalone components go in `moduleMetadata({ imports: [...] })`.
-4. **AllVariants must disable all Controls** — use `argTypes: { propName: { table: { disable: true } } }` for each arg.
+1. **Never render a wrapper that extends `CreateDynamicComponent`** — it uses `toObservable` from `@angular/core/rxjs-interop`, which is not compatible with Storybook webpack. Render its sub-component directly instead (e.g., `ButtonStandardComponent`, or the preset). This applies **only** to `CreateDynamicComponent` descendants — the DI-dispatch wrappers (`<smart-detail>`, `<smart-details>`, `<smart-form>`, `<smart-input>`, `<smart-list>`, `<smart-page>`) use `computed()` + `*ngComponentOutlet` and are safe to render directly. See [DI-dispatch components](#di-dispatch-components).
+2. **Provide `TranslateModule.forRoot()` via `applicationConfig`** (not `moduleMetadata`) — using `moduleMetadata` with `ModuleWithProviders` causes `ngModule` errors on navigation between stories. In `packages/shared/angular` use the shared helper `provideStorybookTranslations()` from `.storybook/storybook-translations.ts`; `moduleMetadata.imports` must then use the bare `TranslateModule`.
+3. **Import sub-components via `moduleMetadata`** — standalone components go in `moduleMetadata({ imports: [...] })`. Preset components are **not** part of the `COMPONENTS` array in `components.module.ts`, so they must be imported by class.
+4. **AllVariants must disable all Controls** — use `parameters: { controls: { disable: true } }` on the story. (Per-arg `argTypes: { propName: { table: { disable: true } } }` also works but has to be repeated for every arg.)
+5. **Register the preset on the token in `meta`** — see [Showing the preset skin](#showing-the-preset-skin).
+6. **A wrapper that dispatches through `NgComponentOutlet` drops projected content.** If the component takes `<ng-content>` (container, media-object, multi-column-layout, sidebar-layout, stacked-layout), render the preset through its own selector (`<smart-container-preset>`) rather than the wrapper, or the body silently disappears.
 
 ### Meta configuration template
 
@@ -330,19 +332,15 @@ export const Playground: Story = {
 ### Story 2: `AllVariants`
 
 - Static showcase of **ALL** combinations in one HTML template
-- **All Controls disabled** via `argTypes: { propName: { table: { disable: true } } }`
+- **All Controls disabled** via `parameters: { controls: { disable: true } }`
 - Organized into `<section>` blocks with `<h3>` headings
 - Sections: each shape × each variant, each shape × all sizes, icons, states
 - Layout: `display: flex; flex-direction: column; gap: 32px` for sections, `display: flex; align-items: center; gap: 12px` for items
 
 ```typescript
 export const AllVariants: Story = {
-  name: 'All Variants',
-  argTypes: {
-    variant: { table: { disable: true } },
-    size: { table: { disable: true } },
-    // ... disable ALL args
-  },
+  name: 'All variants',
+  parameters: { controls: { disable: true } },
   render: () => ({
     props: {
       /* all option objects as separate props */
@@ -364,11 +362,51 @@ export const AllVariants: Story = {
 };
 ```
 
+### Showing the preset skin
+
+Stories showcase the **preset** skin, not the standard one. Register the preset on the component's DI token once, in `meta`, so every usage in both stories picks it up:
+
+```typescript
+moduleMetadata({
+  imports: [ButtonComponent, ButtonPresetComponent],
+  providers: [
+    {
+      provide: BUTTON_STANDARD_COMPONENT_TOKEN,
+      useValue: ButtonPresetComponent,
+    },
+  ],
+});
+```
+
+Components with a **map-based** token take the whole preset map instead of a single class:
+
+| Token                           | Preset value                     |
+| ------------------------------- | -------------------------------- |
+| `DETAIL_FIELD_COMPONENTS_TOKEN` | `DETAIL_PRESET_FIELD_COMPONENTS` |
+| `INPUT_FIELD_COMPONENTS_TOKEN`  | `INPUT_PRESET_FIELD_COMPONENTS`  |
+| `LIST_MODE_COMPONENTS_TOKEN`    | `LIST_PRESET_MODE_COMPONENTS`    |
+| `PAGE_VARIANT_COMPONENTS_TOKEN` | `PAGE_PRESET_VARIANT_COMPONENTS` |
+
+Do **not** add a separate `Preset` or `CustomViaToken` story — that breaks the 2-story rule. DI substitution is covered by the `.spec.ts` files and by the per-component skills in `packages/shared/claude-plugins`.
+
+### DI-dispatch components
+
+`detail`, `details`, `form`, `input`, `list` and `page` resolve their child component from a DI token map rather than from a fixed variant name. Their stories need extra setup:
+
+- Render through the wrapper (`<smart-detail>`, `<smart-input>`, …) so the label / info / loader / error chrome is preserved and `IFieldOptions` is derived from the model decorators for you.
+- `moduleMetadata.imports` must spread `...IMPORTS, ...COMPONENTS` from `components.module.ts` — `IMPORTS` is the only source of `AlertService`, `HardwareService`, `ToastService`, `StyleService` and `FileService`.
+- `form` and `input` need a root-level `MODEL_VALIDATORS_PROVIDER` stub (`FormFactory` injects it eagerly and there is no library-side default) plus `FORM_COMPONENT_TOKEN` for nested object/array sub-forms.
+- `detail` needs `DETAILS_COMPONENT_TOKEN` for its `object`/`array` fields; anything rendering media needs a `FileService` stub.
+- Drive the two stories from **one variant table** plus a `buildOptions()` factory. Per-field-type `render` blocks are what grew the old `input` stories to 1024 lines.
+- Give every rendered instance its own options object and `FormControl` — the base classes mutate them and subscribe per instance.
+
 ### General rules
 
 - File: `<component-name>.component.stories.ts`
+- Exactly two exports: `Playground` and `AllVariants` — no more, no less
 - All Tailwind classes with `smart:` prefix in templates (Tailwind v4 syntax)
-- Reference: `button/button.component.stories.ts` as the canonical example
+- Angular template expressions have **no object spread** — build option objects in `props`, or pass a factory function that takes the `TemplateRef`s
+- Reference: `button/button.component.stories.ts` as the canonical example, `input/input.component.stories.ts` for a DI-dispatch component
 
 ## Agent Delegation
 

@@ -1,10 +1,6 @@
+import { CUSTOM_ELEMENTS_SCHEMA, signal } from '@angular/core';
 import {
-  Component,
-  CUSTOM_ELEMENTS_SCHEMA,
-  input,
-  signal,
-} from '@angular/core';
-import {
+  AbstractControl,
   ReactiveFormsModule,
   UntypedFormArray,
   UntypedFormControl,
@@ -16,7 +12,7 @@ import type { Meta, StoryObj } from '@storybook/angular';
 import { applicationConfig, moduleMetadata } from '@storybook/angular';
 
 import { IAddress } from '@smartsoft001/domain-core';
-import { Field, FieldType, Model } from '@smartsoft001/models';
+import { Field, FieldType, FieldTypeDef, Model } from '@smartsoft001/models';
 
 import { provideStorybookTranslations } from '../../../../.storybook/storybook-translations';
 import { SharedFactoriesModule } from '../../factories';
@@ -32,46 +28,125 @@ import {
   INPUT_FIELD_COMPONENTS_TOKEN,
 } from '../../shared.inectors';
 import { COMPONENTS, IMPORTS } from '../components.module';
-import { InputArrayComponent } from './array/array.component';
-import { InputAttachmentComponent } from './attachment/attachment.component';
-import { InputBaseComponent } from './base/base.component';
-import { InputErrorComponent } from './error/error.component';
-import { InputFileComponent } from './file/file.component';
-import { InputImageComponent } from './image/image.component';
-import { InputComponent } from './input.component';
-import { InputPdfComponent } from './pdf/pdf.component';
+import { FormComponent } from '../form';
+import { InputErrorPresetComponent } from './error/preset/preset.component';
 import { INPUT_PRESET_FIELD_COMPONENTS } from './preset-fields';
+
+// ─── Fixtures ────────────────────────────────────────────────────────────────
+
+enum CategoryEnum {
+  News = 'News',
+  Tutorial = 'Tutorial',
+  Guide = 'Guide',
+}
+
+@Model({})
+class ItemModel {
+  @Field({ type: FieldType.text }) name = '';
+}
+
+@Model({})
+class ProfileModel {
+  @Field({ type: FieldType.text }) nickname = '';
+  @Field({ type: FieldType.email }) contact = '';
+}
+
+// A single model carrying one field per FieldType. <smart-input> derives each
+// field's IFieldOptions from this model via getModelFieldOptions(model, key),
+// so the decorator metadata here is what drives labels, `required` markers,
+// enum possibilities and file `accept` filters.
+@Model({})
+class AllFieldsModel {
+  @Field({ type: FieldType.text }) name = '';
+  @Field({ type: FieldType.longText }) description = '';
+  @Field({ type: FieldType.email }) email = '';
+  @Field({ type: FieldType.password, required: true }) password = '';
+
+  @Field({ type: FieldType.int }) age = 0;
+  @Field({ type: FieldType.float }) price = 0;
+  @Field({ type: FieldType.currency }) amount = 0;
+  @Field({ type: FieldType.ints }) ids: number[] = [];
+
+  @Field({ type: FieldType.nip }) nip = '';
+  @Field({ type: FieldType.pesel }) pesel = '';
+  @Field({ type: FieldType.phoneNumber }) phone = '';
+  @Field({ type: FieldType.phoneNumberPl }) phonePl = '';
+
+  @Field({ type: FieldType.enum, possibilities: CategoryEnum })
+  categories: CategoryEnum[] = [];
+
+  // InputRadioComponent reads options.possibilities; the decorator record is
+  // what the label/validation layer uses.
+  @Field({
+    type: FieldType.radio,
+    possibilities: { Aktywny: 1, Nieaktywny: 2, Oczekujący: 3 },
+  })
+  status = 1;
+
+  @Field({ type: FieldType.check }) tags: string[] = [];
+  @Field({ type: FieldType.strings }) labels: string[] = [];
+  @Field({ type: FieldType.flag }) active = true;
+
+  @Field({ type: FieldType.date }) startDate = '';
+  @Field({ type: FieldType.dateWithEdit }) dateEdit = '';
+  @Field({ type: FieldType.dateRange }) range: any = null;
+
+  @Field({ type: FieldType.file, possibilities: '.pdf,.docx' } as any)
+  file: any = null;
+
+  @Field({ type: FieldType.image }) image: any = null;
+  @Field({ type: FieldType.pdf }) document: any = null;
+
+  @Field({ type: FieldType.attachment, possibilities: '.pdf,.doc,.zip' } as any)
+  attachment: any = null;
+
+  @Field({ type: FieldType.video }) clip: any = null;
+  @Field({ type: FieldType.logo }) logo = '';
+  @Field({ type: FieldType.color }) color = '#4f46e5';
+
+  @Field({ type: FieldType.address }) address!: IAddress;
+
+  @Field({ type: FieldType.object, classType: ProfileModel } as any)
+  profile = new ProfileModel();
+
+  @Field({ type: FieldType.array, classType: ItemModel } as any)
+  items: ItemModel[] = [];
+}
 
 class MockModelLabelProvider extends IModelLabelProvider {
   private labels: Record<string, string> = {
     name: 'Nazwa',
+    description: 'Opis',
     email: 'Email',
     password: 'Hasło',
-    nip: 'NIP',
-    pesel: 'PESEL',
     age: 'Wiek',
     price: 'Cena',
     amount: 'Kwota',
+    ids: 'Identyfikatory',
+    nip: 'NIP',
+    pesel: 'PESEL',
     phone: 'Telefon',
     phonePl: 'Telefon PL',
-    description: 'Opis',
+    categories: 'Kategorie',
+    status: 'Status',
+    tags: 'Tagi',
+    labels: 'Etykiety',
+    active: 'Aktywny',
     startDate: 'Data rozpoczęcia',
     dateEdit: 'Data (ręczna edycja)',
     range: 'Zakres dat',
-    active: 'Aktywny',
-    status: 'Status',
-    tags: 'Tagi',
-    categories: 'Kategorie',
-    color: 'Kolor',
-    logo: 'Logo',
-    address: 'Adres',
-    labels: 'Etykiety',
-    ids: 'Identyfikatory',
     file: 'File upload',
     image: 'Profile photo',
     document: 'Document (PDF)',
     attachment: 'Attachment',
+    clip: 'Video',
+    logo: 'Logo',
+    color: 'Kolor',
+    address: 'Adres',
+    profile: 'Profil',
     items: 'Items',
+    nickname: 'Pseudonim',
+    contact: 'Kontakt',
   };
 
   override get(input: { instance: any; key: string; type?: any }) {
@@ -79,9 +154,213 @@ class MockModelLabelProvider extends IModelLabelProvider {
   }
 }
 
-const meta: Meta<InputComponent<any>> = {
+// ─── Variant table ───────────────────────────────────────────────────────────
+
+type PossibilitiesFactory = () => InputOptions<any>['possibilities'];
+
+interface InputVariant {
+  key: string;
+  type: FieldTypeDef;
+  control: () => AbstractControl;
+  possibilities?: PossibilitiesFactory;
+}
+
+const ctrl = (value: unknown) => () => new UntypedFormControl(value);
+
+const VARIANTS: InputVariant[] = [
+  { key: 'name', type: FieldType.text, control: ctrl('Przykładowy tekst') },
+  {
+    key: 'description',
+    type: FieldType.longText,
+    control: ctrl('<p>Sformatowany opis</p>'),
+  },
+  { key: 'email', type: FieldType.email, control: ctrl('user@example.com') },
+  {
+    key: 'password',
+    type: FieldType.password,
+    control: () => new UntypedFormControl('', Validators.required),
+  },
+
+  { key: 'age', type: FieldType.int, control: ctrl(25) },
+  { key: 'price', type: FieldType.float, control: ctrl(19.99) },
+  { key: 'amount', type: FieldType.currency, control: ctrl(100.5) },
+  { key: 'ids', type: FieldType.ints, control: ctrl([1, 2, 3]) },
+
+  { key: 'nip', type: FieldType.nip, control: ctrl('1234567890') },
+  { key: 'pesel', type: FieldType.pesel, control: ctrl('') },
+  {
+    key: 'phone',
+    type: FieldType.phoneNumber,
+    control: ctrl('+48123456789'),
+  },
+  { key: 'phonePl', type: FieldType.phoneNumberPl, control: ctrl('600700800') },
+
+  {
+    key: 'categories',
+    type: FieldType.enum,
+    control: ctrl([CategoryEnum.News]),
+    // InputEnumPresetComponent extends InputPossibilitiesBaseComponent and
+    // calls possibilities() in its template; without MODEL_POSSIBILITIES_PROVIDER
+    // the signal is never assigned, so the story supplies it directly.
+    possibilities: () =>
+      signal(
+        Object.values(CategoryEnum).map((value) => ({
+          id: value,
+          text: value,
+          checked: false,
+        })),
+      ),
+  },
+  {
+    key: 'status',
+    type: FieldType.radio,
+    control: ctrl(1),
+    // InputRadioComponent calls this.possibilities() unconditionally — without
+    // it the component throws.
+    possibilities: () =>
+      signal([
+        { id: 1, text: 'Aktywny', checked: true },
+        { id: 2, text: 'Nieaktywny', checked: false },
+        { id: 3, text: 'Oczekujący', checked: false },
+      ]),
+  },
+  {
+    key: 'tags',
+    type: FieldType.check,
+    control: ctrl([]),
+    possibilities: () =>
+      signal([
+        { id: 'alpha', text: 'Alpha', checked: false },
+        { id: 'beta', text: 'Beta', checked: false },
+        { id: 'gamma', text: 'Gamma', checked: false },
+      ]),
+  },
+  {
+    key: 'labels',
+    type: FieldType.strings,
+    control: ctrl(['alpha', 'beta']),
+  },
+  { key: 'active', type: FieldType.flag, control: ctrl(true) },
+
+  { key: 'startDate', type: FieldType.date, control: ctrl('2026-04-20') },
+  {
+    key: 'dateEdit',
+    type: FieldType.dateWithEdit,
+    control: ctrl('2026-04-20'),
+  },
+  {
+    key: 'range',
+    type: FieldType.dateRange,
+    control: ctrl({ start: '2026-04-01', end: '2026-04-30' }),
+  },
+
+  { key: 'file', type: FieldType.file, control: ctrl(null) },
+  { key: 'image', type: FieldType.image, control: ctrl({ id: 'demo' }) },
+  {
+    key: 'document',
+    type: FieldType.pdf,
+    control: ctrl({ id: 'demo', fileName: 'contract.pdf' }),
+  },
+  {
+    key: 'attachment',
+    type: FieldType.attachment,
+    control: ctrl({ id: 'demo', fileName: 'archive.zip' }),
+  },
+  { key: 'clip', type: FieldType.video, control: ctrl({ id: 'sample' }) },
+  { key: 'logo', type: FieldType.logo, control: ctrl('') },
+  { key: 'color', type: FieldType.color, control: ctrl('#4f46e5') },
+
+  {
+    key: 'address',
+    type: FieldType.address,
+    control: () =>
+      new UntypedFormGroup({
+        city: new UntypedFormControl('Warszawa'),
+        zipCode: new UntypedFormControl('00-001'),
+        street: new UntypedFormControl('Marszałkowska'),
+        buildingNumber: new UntypedFormControl('10'),
+        flatNumber: new UntypedFormControl('5'),
+      }),
+  },
+  {
+    key: 'profile',
+    type: FieldType.object,
+    control: () =>
+      new UntypedFormGroup({
+        nickname: new UntypedFormControl('jan'),
+        contact: new UntypedFormControl('jan@example.com'),
+      }),
+  },
+  {
+    key: 'items',
+    type: FieldType.array,
+    control: () => new UntypedFormArray([]),
+  },
+];
+
+const SECTIONS: Array<{ title: string; keys: string[] }> = [
+  { title: 'Text', keys: ['name', 'description', 'email', 'password'] },
+  { title: 'Numeric', keys: ['age', 'price', 'amount', 'ids'] },
+  { title: 'Identity', keys: ['nip', 'pesel', 'phone', 'phonePl'] },
+  {
+    title: 'Choice',
+    keys: ['categories', 'status', 'tags', 'labels', 'active'],
+  },
+  // `dateEdit` is deliberately absent: InputDateWithEditPresetComponent renders
+  // <smart-date-edit variant="preset">, whose [ngModel] binding + CVA writeValue
+  // feed each other and throw NG0103 ("endless change notifications"), which
+  // destabilises the whole showcase page. The field is still reachable from the
+  // Playground so the bug can be reproduced in isolation.
+  { title: 'Date', keys: ['startDate', 'range'] },
+  {
+    title: 'Media',
+    keys: ['file', 'image', 'document', 'attachment', 'clip', 'logo', 'color'],
+  },
+  { title: 'Composite', keys: ['address', 'profile', 'items'] },
+];
+
+interface BuildExtra {
+  required?: boolean;
+  touched?: boolean;
+}
+
+// Every rendered field owns its FormControl — sharing one would mirror typing
+// between cells. The parent FormGroup is required because each field's label
+// reads `control.parent.value`.
+function buildOptions(
+  key: string,
+  { required, touched }: BuildExtra = {},
+): InputOptions<any> {
+  const variant = VARIANTS.find((x) => x.key === key)!;
+  const control = variant.control();
+  if (required) control.setValidators(Validators.required);
+  new UntypedFormGroup({ [key]: control });
+  if (touched) control.markAsTouched();
+  control.updateValueAndValidity();
+
+  return {
+    control: control as any,
+    fieldKey: key,
+    model: new AllFieldsModel(),
+    treeLevel: 0,
+    ...(variant.possibilities
+      ? { possibilities: variant.possibilities() }
+      : {}),
+  } as InputOptions<any>;
+}
+
+// ─── Meta ────────────────────────────────────────────────────────────────────
+
+interface InputArgs {
+  field: string;
+  required: boolean;
+  touched: boolean;
+  cssClass: string;
+}
+
+const meta: Meta<InputArgs> = {
   title: 'Smart-Input/Input',
-  component: InputComponent,
+  tags: ['autodocs'],
   decorators: [
     // The object/array fields render nested forms through FORM_COMPONENT_TOKEN
     // -> FormFactory, which injects MODEL_VALIDATORS_PROVIDER (no library-side
@@ -97,6 +376,7 @@ const meta: Meta<InputComponent<any>> = {
               Promise.resolve(options.base ?? {}),
           },
         },
+        { provide: FORM_COMPONENT_TOKEN, useValue: FormComponent },
       ],
     }),
     moduleMetadata({
@@ -106,6 +386,9 @@ const meta: Meta<InputComponent<any>> = {
         ReactiveFormsModule,
         SharedFactoriesModule,
         TranslateModule,
+        // Presets are not part of COMPONENTS, so the error preset used in the
+        // showcase must be imported by class.
+        InputErrorPresetComponent,
       ],
       providers: [
         { provide: IModelLabelProvider, useClass: MockModelLabelProvider },
@@ -118,907 +401,126 @@ const meta: Meta<InputComponent<any>> = {
             delete: () => Promise.resolve(),
           },
         },
+        {
+          provide: INPUT_FIELD_COMPONENTS_TOKEN,
+          useValue: INPUT_PRESET_FIELD_COMPONENTS,
+        },
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }),
   ],
+  argTypes: {
+    field: {
+      control: 'select',
+      options: VARIANTS.map((x) => x.key),
+      description:
+        'Field of the fixture model to render. Its FieldType selects which component <smart-input> dispatches to.',
+    },
+    required: {
+      control: 'boolean',
+      description: 'Adds Validators.required to the control.',
+    },
+    touched: {
+      control: 'boolean',
+      description:
+        'Marks the control touched — combined with `required`, this reveals the <smart-input-error> message.',
+    },
+    cssClass: { control: 'text', description: 'Passed through as `class`.' },
+  },
+  args: { field: 'name', required: false, touched: false, cssClass: '' },
 };
 
 export default meta;
-type Story = StoryObj<InputComponent<any>>;
-
-function buildOptions<T>(
-  model: T,
-  fieldKey: string,
-  control: UntypedFormControl,
-): InputOptions<T> {
-  new UntypedFormGroup({ [fieldKey]: control });
-  return {
-    control,
-    fieldKey,
-    model,
-    treeLevel: 0,
-  };
-}
-
-function storyWrapper(props: Record<string, unknown>, extraTemplate = '') {
-  return {
-    props,
-    template: `
-      <div class="smart:p-4 smart:max-w-lg">
-        <smart-input [options]="options"></smart-input>
-        ${extraTemplate}
-      </div>
-    `,
-  };
-}
-
-// ─── 1. Text ────────────────────────────────────────────────────────────────
-
-export const Text: Story = {
-  name: 'Text',
-  render: () => {
-    @Model({})
-    class TextModel {
-      @Field({ type: FieldType.text }) name = '';
-    }
-    const control = new UntypedFormControl('Przykładowy tekst');
-    return storyWrapper({
-      options: buildOptions(new TextModel(), 'name', control),
-    });
-  },
-};
-
-// ─── 2. Email ───────────────────────────────────────────────────────────────
-
-export const Email: Story = {
-  name: 'Email',
-  render: () => {
-    @Model({})
-    class EmailModel {
-      @Field({ type: FieldType.email }) email = '';
-    }
-    const control = new UntypedFormControl('user@example.com');
-    return storyWrapper({
-      options: buildOptions(new EmailModel(), 'email', control),
-    });
-  },
-};
-
-// ─── 3. Password ────────────────────────────────────────────────────────────
-
-export const Password: Story = {
-  name: 'Password',
-  render: () => {
-    @Model({})
-    class PasswordModel {
-      @Field({ type: FieldType.password, required: true }) password = '';
-    }
-    const control = new UntypedFormControl('', Validators.required);
-    return storyWrapper({
-      options: buildOptions(new PasswordModel(), 'password', control),
-    });
-  },
-};
-
-// ─── 4. NIP ─────────────────────────────────────────────────────────────────
-
-export const Nip: Story = {
-  name: 'NIP',
-  render: () => {
-    @Model({})
-    class NipModel {
-      @Field({ type: FieldType.nip }) nip = '';
-    }
-    const control = new UntypedFormControl('1234567890');
-    return storyWrapper({
-      options: buildOptions(new NipModel(), 'nip', control),
-    });
-  },
-};
-
-// ─── 5. PESEL ───────────────────────────────────────────────────────────────
-
-export const Pesel: Story = {
-  name: 'PESEL',
-  render: () => {
-    @Model({})
-    class PeselModel {
-      @Field({ type: FieldType.pesel }) pesel = '';
-    }
-    const control = new UntypedFormControl('');
-    return storyWrapper({
-      options: buildOptions(new PeselModel(), 'pesel', control),
-    });
-  },
-};
-
-// ─── 6. Int ─────────────────────────────────────────────────────────────────
-
-export const Int: Story = {
-  name: 'Int',
-  render: () => {
-    @Model({})
-    class IntModel {
-      @Field({ type: FieldType.int }) age = 0;
-    }
-    const control = new UntypedFormControl(25);
-    return storyWrapper({
-      options: buildOptions(new IntModel(), 'age', control),
-    });
-  },
-};
-
-// ─── 7. Float ───────────────────────────────────────────────────────────────
-
-export const Float: Story = {
-  name: 'Float',
-  render: () => {
-    @Model({})
-    class FloatModel {
-      @Field({ type: FieldType.float }) price = 0;
-    }
-    const control = new UntypedFormControl(19.99);
-    return storyWrapper({
-      options: buildOptions(new FloatModel(), 'price', control),
-    });
-  },
-};
-
-// ─── 8. Currency ────────────────────────────────────────────────────────────
-
-export const Currency: Story = {
-  name: 'Currency',
-  render: () => {
-    @Model({})
-    class CurrencyModel {
-      @Field({ type: FieldType.currency }) amount = 0;
-    }
-    const control = new UntypedFormControl(100.5);
-    return storyWrapper({
-      options: buildOptions(new CurrencyModel(), 'amount', control),
-    });
-  },
-};
-
-// ─── 9. Phone Number ────────────────────────────────────────────────────────
-
-export const PhoneNumber: Story = {
-  name: 'Phone Number',
-  render: () => {
-    @Model({})
-    class PhoneModel {
-      @Field({ type: FieldType.phoneNumber }) phone = '';
-    }
-    const control = new UntypedFormControl('+48123456789');
-    return storyWrapper({
-      options: buildOptions(new PhoneModel(), 'phone', control),
-    });
-  },
-};
-
-// ─── 10. Phone Number PL ────────────────────────────────────────────────────
-
-export const PhoneNumberPl: Story = {
-  name: 'Phone Number PL',
-  render: () => {
-    @Model({})
-    class PhonePlModel {
-      @Field({ type: FieldType.phoneNumberPl }) phonePl = '';
-    }
-    const control = new UntypedFormControl('600700800');
-    return storyWrapper({
-      options: buildOptions(new PhonePlModel(), 'phonePl', control),
-    });
-  },
-};
-
-// ─── 11. Long Text ──────────────────────────────────────────────────────────
-
-export const LongText: Story = {
-  name: 'Long Text',
-  render: () => {
-    @Model({})
-    class LongTextModel {
-      @Field({ type: FieldType.longText }) description = '';
-    }
-    const control = new UntypedFormControl(
-      '<p>Przykładowy <b>tekst</b> sformatowany.</p>',
-    );
-    return storyWrapper({
-      options: buildOptions(new LongTextModel(), 'description', control),
-    });
-  },
-};
-
-// ─── 12. Date ───────────────────────────────────────────────────────────────
-
-export const Date: Story = {
-  name: 'Date',
-  render: () => {
-    @Model({})
-    class DateModel {
-      @Field({ type: FieldType.date }) startDate = '';
-    }
-    const control = new UntypedFormControl('2026-04-20');
-    return storyWrapper({
-      options: buildOptions(new DateModel(), 'startDate', control),
-    });
-  },
-};
-
-// ─── 13. Date With Edit ─────────────────────────────────────────────────────
-
-export const DateWithEdit: Story = {
-  name: 'Date With Edit',
-  render: () => {
-    @Model({})
-    class DateEditModel {
-      @Field({ type: FieldType.dateWithEdit }) dateEdit = '';
-    }
-    const control = new UntypedFormControl('2026-04-20');
-    return storyWrapper({
-      options: buildOptions(new DateEditModel(), 'dateEdit', control),
-    });
-  },
-};
-
-// ─── 14. Date Range ─────────────────────────────────────────────────────────
-
-export const DateRange: Story = {
-  name: 'Date Range',
-  render: () => {
-    @Model({})
-    class DateRangeModel {
-      @Field({ type: FieldType.dateRange }) range: any = null;
-    }
-    const control = new UntypedFormControl({
-      start: '2026-04-01',
-      end: '2026-04-30',
-    });
-    return storyWrapper({
-      options: buildOptions(new DateRangeModel(), 'range', control),
-    });
-  },
-};
-
-// ─── 15. Flag ───────────────────────────────────────────────────────────────
-
-export const Flag: Story = {
-  name: 'Flag (checkbox)',
-  render: () => {
-    @Model({})
-    class FlagModel {
-      @Field({ type: FieldType.flag }) active = true;
-    }
-    const control = new UntypedFormControl(true);
-    return storyWrapper({
-      options: buildOptions(new FlagModel(), 'active', control),
-    });
-  },
-};
-
-// ─── 16. Radio ──────────────────────────────────────────────────────────────
-
-export const Radio: Story = {
-  name: 'Radio',
-  render: () => {
-    @Model({})
-    class RadioModel {
-      @Field({
-        type: FieldType.radio,
-        possibilities: { Aktywny: 1, Nieaktywny: 2, Oczekujący: 3 },
-      })
-      status = 1;
-    }
-    const control = new UntypedFormControl(1);
-    return storyWrapper({
-      options: {
-        ...buildOptions(new RadioModel(), 'status', control),
-        possibilities: signal([
-          { id: 1, text: 'Aktywny', checked: true },
-          { id: 2, text: 'Nieaktywny', checked: false },
-          { id: 3, text: 'Oczekujący', checked: false },
-        ]),
-      },
-    });
-  },
-};
-
-// ─── 17. Check ──────────────────────────────────────────────────────────────
-
-export const Check: Story = {
-  name: 'Check (multi)',
-  render: () => {
-    @Model({})
-    class CheckModel {
-      @Field({ type: FieldType.check })
-      tags: string[] = [];
-    }
-    const control = new UntypedFormControl([]);
-    return storyWrapper({
-      options: {
-        ...buildOptions(new CheckModel(), 'tags', control),
-        possibilities: signal([
-          { id: 'alpha', text: 'Alpha', checked: false },
-          { id: 'beta', text: 'Beta', checked: false },
-          { id: 'gamma', text: 'Gamma', checked: false },
-        ]),
-      },
-    });
-  },
-};
-
-// ─── 18. Enum ───────────────────────────────────────────────────────────────
-
-export const Enum: Story = {
-  name: 'Enum',
-  render: () => {
-    enum CategoryEnum {
-      News = 'News',
-      Tutorial = 'Tutorial',
-      Guide = 'Guide',
-    }
-    @Model({})
-    class EnumModel {
-      @Field({ type: FieldType.enum, possibilities: CategoryEnum })
-      categories: CategoryEnum[] = [];
-    }
-    const control = new UntypedFormControl([CategoryEnum.News]);
-    return storyWrapper({
-      options: buildOptions(new EnumModel(), 'categories', control),
-    });
-  },
-};
-
-// ─── 19. Color ──────────────────────────────────────────────────────────────
-
-export const Color: Story = {
-  name: 'Color',
-  render: () => {
-    @Model({})
-    class ColorModel {
-      @Field({ type: FieldType.color }) color = '#4f46e5';
-    }
-    const control = new UntypedFormControl('#4f46e5');
-    return storyWrapper({
-      options: buildOptions(new ColorModel(), 'color', control),
-    });
-  },
-};
-
-// ─── 20. Logo ───────────────────────────────────────────────────────────────
-
-export const Logo: Story = {
-  name: 'Logo',
-  render: () => {
-    @Model({})
-    class LogoModel {
-      @Field({ type: FieldType.logo }) logo = '';
-    }
-    const control = new UntypedFormControl('');
-    return storyWrapper({
-      options: buildOptions(new LogoModel(), 'logo', control),
-    });
-  },
-};
-
-// ─── 21. Address ────────────────────────────────────────────────────────────
-
-export const Address: Story = {
-  name: 'Address',
-  render: () => {
-    @Model({})
-    class AddressModel {
-      @Field({ type: FieldType.address }) address!: IAddress;
-    }
-    const control = new UntypedFormGroup({
-      city: new UntypedFormControl('Warszawa'),
-      zipCode: new UntypedFormControl('00-001'),
-      street: new UntypedFormControl('Marszałkowska'),
-      buildingNumber: new UntypedFormControl('10'),
-      flatNumber: new UntypedFormControl('5'),
-    });
-    return storyWrapper({
-      options: {
-        control: control as any,
-        fieldKey: 'address',
-        model: new AddressModel(),
-        treeLevel: 0,
-      },
-    });
-  },
-};
-
-// ─── 22. Ints ───────────────────────────────────────────────────────────────
-
-export const Ints: Story = {
-  name: 'Ints (dynamic list)',
-  render: () => {
-    @Model({})
-    class IntsModel {
-      @Field({ type: FieldType.ints }) ids: number[] = [];
-    }
-    const control = new UntypedFormControl([1, 2, 3]);
-    return storyWrapper({
-      options: buildOptions(new IntsModel(), 'ids', control),
-    });
-  },
-};
-
-// ─── 23. Strings ────────────────────────────────────────────────────────────
-
-export const Strings: Story = {
-  name: 'Strings (dynamic list)',
-  render: () => {
-    @Model({})
-    class StringsModel {
-      @Field({ type: FieldType.strings }) labels: string[] = [];
-    }
-    const control = new UntypedFormControl(['alpha', 'beta']);
-    return storyWrapper({
-      options: buildOptions(new StringsModel(), 'labels', control),
-    });
-  },
-};
-
-// ─── 24. With CSS Class ─────────────────────────────────────────────────────
-
-export const WithCssClass: Story = {
-  name: 'With CSS Class',
-  render: () => {
-    @Model({})
-    class TextModel {
-      @Field({ type: FieldType.text }) name = '';
-    }
-    const control = new UntypedFormControl('Pole z dodatkową klasą');
-    return storyWrapper({
-      options: buildOptions(new TextModel(), 'name', control),
-    });
-  },
-};
-
-// ─── 25. With Error ─────────────────────────────────────────────────────────
-
-export const WithError: Story = {
-  name: 'With Error',
-  render: () => {
-    @Model({})
-    class TextModel {
-      @Field({ type: FieldType.text, required: true }) name = '';
-    }
-    const control = new UntypedFormControl('', Validators.required);
-    control.markAsTouched();
-    return storyWrapper({
-      options: buildOptions(new TextModel(), 'name', control),
-    });
-  },
-};
-
-// ─── 26. Custom via Token ───────────────────────────────────────────────────
-
-@Component({
-  selector: 'custom-input-text',
-  template: `
-    <div
-      class="smart:rounded smart:border-2 smart:border-indigo-500 smart:bg-indigo-50 smart:p-3 smart:dark:bg-indigo-900/30"
-    >
-      <strong class="smart:text-indigo-700 smart:dark:text-indigo-300"
-        >Custom Text Input:</strong
-      >
-      <span class="smart:ml-2 smart:text-gray-900 smart:dark:text-white">{{
-        control?.value
-      }}</span>
-    </div>
-  `,
-  standalone: true,
-})
-class CustomInputTextComponent extends InputBaseComponent<any> {
-  override cssClass = input<string>('');
-}
-
-export const CustomViaToken: Story = {
-  name: 'Custom via Token',
-  render: () => {
-    @Model({})
-    class TextModel {
-      @Field({ type: FieldType.text }) name = '';
-    }
-    const control = new UntypedFormControl('Zastąpione przez custom komponent');
-    return {
-      props: {
-        options: buildOptions(new TextModel(), 'name', control),
-      },
-      template: `
-        <div class="smart:p-4 smart:max-w-lg">
-          <smart-input [options]="options"></smart-input>
-        </div>
-      `,
-      moduleMetadata: {
-        providers: [
-          {
-            provide: INPUT_FIELD_COMPONENTS_TOKEN,
-            useValue: { [FieldType.text]: CustomInputTextComponent },
-          },
-        ],
-      },
-    };
-  },
-};
-
-// ─── 27. Playground ─────────────────────────────────────────────────────────
+type Story = StoryObj<InputArgs>;
 
 export const Playground: Story = {
-  name: 'Playground (mixed grid)',
-  render: () => {
-    @Model({})
-    class MixedModel {
-      @Field({ type: FieldType.text }) name = '';
-      @Field({ type: FieldType.email }) email = '';
-      @Field({ type: FieldType.int }) age = 0;
-      @Field({ type: FieldType.flag }) active = false;
-      @Field({ type: FieldType.color }) color = '';
-      @Field({ type: FieldType.date }) startDate = '';
-    }
-    const model = new MixedModel();
-    const rows = [
-      {
-        fieldKey: 'name',
-        control: new UntypedFormControl('Jan Kowalski'),
-      },
-      {
-        fieldKey: 'email',
-        control: new UntypedFormControl('jan@example.com'),
-      },
-      { fieldKey: 'age', control: new UntypedFormControl(30) },
-      { fieldKey: 'active', control: new UntypedFormControl(true) },
-      { fieldKey: 'color', control: new UntypedFormControl('#10b981') },
-      {
-        fieldKey: 'startDate',
-        control: new UntypedFormControl('2026-04-20'),
-      },
-    ].map((r) => ({
-      ...r,
-      options: buildOptions(model, r.fieldKey, r.control),
-    }));
-    return {
-      props: { rows },
-      template: `
-        <div class="smart:grid smart:grid-cols-1 md:smart:grid-cols-2 smart:gap-6 smart:p-4">
-          @for (row of rows; track row.fieldKey) {
-            <smart-input [options]="row.options"></smart-input>
-          }
-        </div>
-      `,
-    };
-  },
+  name: 'Playground',
+  render: (args) => ({
+    props: {
+      options: buildOptions(args.field, {
+        required: args.required,
+        touched: args.touched,
+      }),
+      cssClass: args.cssClass,
+    },
+    template: `
+      <form onsubmit="return false" style="padding: 40px; max-width: 32rem;">
+        <smart-input [options]="options" [class]="cssClass"></smart-input>
+      </form>
+    `,
+  }),
 };
 
-// ─── 28. File ───────────────────────────────────────────────────────────────
+// Radio inputs bind [name]="fieldKey"; without an enclosing <form> per cell,
+// same-key groups across sections would merge into one DOM radio group.
+const cell = (key: string) => `
+  <div>
+    <code style="display: block; font-size: 12px; opacity: .6; margin-bottom: 4px;">${key}</code>
+    <form onsubmit="return false">
+      <smart-input [options]="opt_${key}"></smart-input>
+    </form>
+  </div>
+`;
 
-export const File: Story = {
-  name: 'File',
-  render: () => {
-    @Model({})
-    class FileModel {
-      @Field({ type: FieldType.file, possibilities: '.pdf,.docx' } as any)
-      file: any = null;
-    }
-    const control = new UntypedFormControl(null);
-    new UntypedFormGroup({ file: control });
-    return {
-      props: {
-        options: {
-          control,
-          fieldKey: 'file',
-          model: new FileModel(),
-          treeLevel: 0,
-        } as InputOptions<FileModel>,
-      },
-      template: `
-        <div class="smart:p-4 smart:max-w-lg">
-          <smart-input [options]="options"></smart-input>
-        </div>
-      `,
-      moduleMetadata: {
-        imports: [InputFileComponent],
-      },
-    };
-  },
-};
+export const AllVariants: Story = {
+  name: 'All variants',
+  parameters: { controls: { disable: true } },
+  render: () => ({
+    props: {
+      ...Object.fromEntries(
+        VARIANTS.map((variant) => [
+          `opt_${variant.key}`,
+          buildOptions(variant.key),
+        ]),
+      ),
+      opt_error: buildOptions('name', { required: true, touched: true }),
+      opt_styled: buildOptions('name'),
+    },
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 32px; padding: 24px;">
 
-// ─── 29. Image ──────────────────────────────────────────────────────────────
+        ${SECTIONS.map(
+          (section) => `
+          <section>
+            <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">${section.title}</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px;">
+              ${section.keys.map(cell).join('\n')}
+            </div>
+          </section>`,
+        ).join('\n')}
 
-export const Image: Story = {
-  name: 'Image',
-  render: () => {
-    @Model({})
-    class ImageModel {
-      @Field({ type: FieldType.image }) image: any = null;
-    }
-    const control = new UntypedFormControl({ id: 'demo' });
-    new UntypedFormGroup({ image: control });
-    return {
-      props: {
-        options: {
-          control,
-          fieldKey: 'image',
-          model: new ImageModel(),
-          treeLevel: 0,
-        } as InputOptions<ImageModel>,
-      },
-      template: `
-        <div class="smart:p-4 smart:max-w-lg">
-          <smart-input [options]="options"></smart-input>
-        </div>
-      `,
-      moduleMetadata: {
-        imports: [InputImageComponent],
-      },
-    };
-  },
-};
+        <section>
+          <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">States</h3>
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px;">
+            <div>
+              <code style="display: block; font-size: 12px; opacity: .6; margin-bottom: 4px;">required + touched</code>
+              <form onsubmit="return false">
+                <smart-input [options]="opt_error"></smart-input>
+              </form>
+            </div>
+            <div>
+              <code style="display: block; font-size: 12px; opacity: .6; margin-bottom: 4px;">external class</code>
+              <form onsubmit="return false">
+                <smart-input
+                  class="smart:rounded-lg smart:bg-yellow-50 smart:p-4 smart:dark:bg-yellow-900/30"
+                  [options]="opt_styled"
+                ></smart-input>
+              </form>
+            </div>
+          </div>
+        </section>
 
-// ─── 30. Pdf ────────────────────────────────────────────────────────────────
+        <section>
+          <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">Validation messages (smart-input-error-preset)</h3>
+          <div style="display: grid; gap: 8px;">
+            <smart-input-error-preset [errors]="{ required: true }"></smart-input-error-preset>
+            <smart-input-error-preset [errors]="{ email: true }"></smart-input-error-preset>
+            <smart-input-error-preset [errors]="{ minlength: { requiredLength: 5 } }"></smart-input-error-preset>
+            <smart-input-error-preset [errors]="{ maxlength: { requiredLength: 20 } }"></smart-input-error-preset>
+          </div>
+        </section>
 
-export const Pdf: Story = {
-  name: 'Pdf',
-  render: () => {
-    @Model({})
-    class PdfModel {
-      @Field({ type: FieldType.pdf }) document: any = null;
-    }
-    const control = new UntypedFormControl({
-      id: 'demo',
-      fileName: 'contract.pdf',
-    });
-    new UntypedFormGroup({ document: control });
-    return {
-      props: {
-        options: {
-          control,
-          fieldKey: 'document',
-          model: new PdfModel(),
-          treeLevel: 0,
-        } as InputOptions<PdfModel>,
-      },
-      template: `
-        <div class="smart:p-4 smart:max-w-lg">
-          <smart-input [options]="options"></smart-input>
-        </div>
-      `,
-      moduleMetadata: {
-        imports: [InputPdfComponent],
-      },
-    };
-  },
-};
-
-// ─── 31. Attachment ─────────────────────────────────────────────────────────
-
-export const Attachment: Story = {
-  name: 'Attachment',
-  render: () => {
-    @Model({})
-    class AttachmentModel {
-      @Field({
-        type: FieldType.attachment,
-        possibilities: '.pdf,.doc,.zip',
-      } as any)
-      attachment: any = null;
-    }
-    const control = new UntypedFormControl({
-      id: 'demo',
-      fileName: 'archive.zip',
-    });
-    new UntypedFormGroup({ attachment: control });
-    return {
-      props: {
-        options: {
-          control,
-          fieldKey: 'attachment',
-          model: new AttachmentModel(),
-          treeLevel: 0,
-        } as InputOptions<AttachmentModel>,
-      },
-      template: `
-        <div class="smart:p-4 smart:max-w-lg">
-          <smart-input [options]="options"></smart-input>
-        </div>
-      `,
-      moduleMetadata: {
-        imports: [InputAttachmentComponent],
-      },
-    };
-  },
-};
-
-// ─── 32. Array ──────────────────────────────────────────────────────────────
-
-// Minimal stub form component used only to satisfy FORM_COMPONENT_TOKEN
-@Component({
-  selector: 'story-stub-form',
-  template: `<div class="smart:text-sm smart:text-gray-500">[stub form]</div>`,
-  standalone: true,
-})
-class StubFormComponent {}
-
-export const Array: Story = {
-  name: 'Array',
-  render: () => {
-    @Model({})
-    class ItemModel {
-      @Field({ type: FieldType.text }) name = '';
-    }
-
-    @Model({})
-    class ArrayModel {
-      @Field({ type: FieldType.array, classType: ItemModel } as any)
-      items: ItemModel[] = [];
-    }
-
-    const control = new UntypedFormArray([]);
-    new UntypedFormGroup({ items: control });
-    return {
-      props: {
-        options: {
-          control,
-          fieldKey: 'items',
-          model: new ArrayModel(),
-          treeLevel: 0,
-        } as InputOptions<ArrayModel>,
-      },
-      template: `
-        <div class="smart:p-4 smart:max-w-lg">
-          <smart-input [options]="options"></smart-input>
-        </div>
-      `,
-      moduleMetadata: {
-        imports: [InputArrayComponent, StubFormComponent],
-        providers: [
-          { provide: FORM_COMPONENT_TOKEN, useValue: StubFormComponent },
-        ],
-      },
-    };
-  },
-};
-
-// ─── 33. InputError (standalone component showcase) ─────────────────────────
-
-export const InputError: Story = {
-  name: 'Input Error (component showcase)',
-  render: () => {
-    return {
-      props: {},
-      template: `
-        <div class="smart:space-y-2 smart:p-4">
-          <p class="smart:text-sm smart:font-medium smart:text-gray-700 smart:dark:text-gray-300 smart:mb-4">
-            All error states rendered by <code>smart-input-error</code>:
-          </p>
-          <smart-input-error [errors]="{ required: true }"></smart-input-error>
-          <smart-input-error [errors]="{ email: true }"></smart-input-error>
-          <smart-input-error [errors]="{ minlength: { requiredLength: 5 } }"></smart-input-error>
-          <smart-input-error [errors]="{ maxlength: { requiredLength: 20 } }"></smart-input-error>
-          <smart-input-error [errors]="{ min: { min: 0 } }"></smart-input-error>
-          <smart-input-error [errors]="{ max: { max: 100 } }"></smart-input-error>
-          <smart-input-error [errors]="{ customMessage: 'Własny komunikat błędu' }"></smart-input-error>
-        </div>
-      `,
-      moduleMetadata: {
-        imports: [InputErrorComponent],
-      },
-    };
-  },
-};
-
-// ─── Preset (Preline) — mixed grid ───────────────────────────────────────────
-
-export const PresetFields: Story = {
-  name: 'Preset fields (Preline)',
-  render: () => {
-    @Model({})
-    class PresetChildModel {
-      @Field({ type: FieldType.text }) label = '';
-    }
-
-    @Model({})
-    class PresetModel {
-      @Field({ type: FieldType.text }) name = '';
-      @Field({ type: FieldType.email }) email = '';
-      @Field({ type: FieldType.password }) password = '';
-      @Field({ type: FieldType.int }) age = 0;
-      @Field({ type: FieldType.float }) amount = 0;
-      @Field({ type: FieldType.longText }) bio = '';
-      @Field({ type: FieldType.check }) accept = false;
-      @Field({ type: FieldType.date }) startDate = '';
-      @Field({ type: FieldType.color }) color = '#4f46e5';
-      @Field({ type: FieldType.flag }) active = true;
-      @Field({ type: FieldType.pdf }) document: any = null;
-      @Field({ type: FieldType.video }) clip: any = null;
-      @Field({ type: FieldType.address }) address!: IAddress;
-      @Field({ type: FieldType.object }) profile: PresetChildModel =
-        new PresetChildModel();
-      @Field({ type: FieldType.array, classType: PresetChildModel } as any)
-      entries: PresetChildModel[] = [];
-    }
-    const model = new PresetModel();
-    const rows: Array<{
-      fieldKey: string;
-      options: InputOptions<PresetModel>;
-    }> = [
-      { fieldKey: 'name', control: new UntypedFormControl('Jan Kowalski') },
-      {
-        fieldKey: 'email',
-        control: new UntypedFormControl('jan@example.com'),
-      },
-      { fieldKey: 'password', control: new UntypedFormControl('secret123') },
-      { fieldKey: 'age', control: new UntypedFormControl(30) },
-      { fieldKey: 'amount', control: new UntypedFormControl(99.95) },
-      { fieldKey: 'bio', control: new UntypedFormControl('Lorem ipsum') },
-      { fieldKey: 'accept', control: new UntypedFormControl(true) },
-      { fieldKey: 'startDate', control: new UntypedFormControl('2026-04-20') },
-      { fieldKey: 'color', control: new UntypedFormControl('#4f46e5') },
-      { fieldKey: 'active', control: new UntypedFormControl(true) },
-      {
-        fieldKey: 'document',
-        control: new UntypedFormControl({ id: 'd1', fileName: 'report.pdf' }),
-      },
-      { fieldKey: 'clip', control: new UntypedFormControl(null) },
-      { fieldKey: 'profile', control: new UntypedFormControl(null) },
-    ].map((r) => ({
-      fieldKey: r.fieldKey,
-      options: buildOptions(model, r.fieldKey, r.control),
-    }));
-
-    // Address renders a FormGroup of sub-fields, so build its options inline.
-    const addressControl = new UntypedFormGroup({
-      city: new UntypedFormControl('Warszawa'),
-      zipCode: new UntypedFormControl('00-001'),
-      street: new UntypedFormControl('Marszałkowska'),
-      buildingNumber: new UntypedFormControl('10'),
-      flatNumber: new UntypedFormControl('5'),
-    });
-    rows.push({
-      fieldKey: 'address',
-      options: {
-        control: addressControl as any,
-        fieldKey: 'address',
-        model,
-        treeLevel: 0,
-      },
-    });
-
-    // Array renders a FormArray of nested models, so build its options inline.
-    const entriesControl = new UntypedFormArray([]);
-    rows.push({
-      fieldKey: 'entries',
-      options: {
-        control: entriesControl as any,
-        fieldKey: 'entries',
-        model,
-        treeLevel: 0,
-      },
-    });
-
-    return {
-      props: { rows },
-      template: `
-        <div class="smart:grid smart:grid-cols-1 md:smart:grid-cols-2 smart:gap-6 smart:p-4">
-          @for (row of rows; track row.fieldKey) {
-            <smart-input [options]="row.options"></smart-input>
-          }
-        </div>
-      `,
-      moduleMetadata: {
-        imports: [StubFormComponent],
-        providers: [
-          {
-            provide: INPUT_FIELD_COMPONENTS_TOKEN,
-            useValue: INPUT_PRESET_FIELD_COMPONENTS,
-          },
-          { provide: FORM_COMPONENT_TOKEN, useValue: StubFormComponent },
-        ],
-      },
-    };
-  },
+      </div>
+    `,
+  }),
 };

@@ -6,7 +6,15 @@ import { SearchbarStandardComponent } from './standard/standard.component';
 import { provideStorybookTranslations } from '../../../../.storybook/storybook-translations';
 import { ISearchbarOptions } from '../../models';
 
-const meta: Meta = {
+interface SearchbarArgs {
+  placeholder: string;
+  debounceTime: number;
+  showToggleButton: boolean;
+  show: boolean;
+  cssClass: string;
+}
+
+const meta: Meta<SearchbarArgs> = {
   title: 'Components/Searchbar',
   tags: ['autodocs'],
   decorators: [
@@ -25,12 +33,13 @@ const meta: Meta = {
     },
     debounceTime: {
       control: 'number',
-      description: 'Debounce time (ms) before `text` model emits a new value',
+      description:
+        'Debounce time (ms) before `text` emits. The 1000 ms default means typing takes a full second to propagate.',
     },
     showToggleButton: {
       control: 'boolean',
       description:
-        'When `show` is false, display a magnifier button that toggles the input on',
+        'When `show` is false, display a magnifier button that toggles the input on. With `show` false and this false, the component renders nothing.',
     },
     show: {
       control: 'boolean',
@@ -52,11 +61,11 @@ const meta: Meta = {
 };
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<SearchbarArgs>;
 
 export const Playground: Story = {
   name: 'Playground',
-  render: (args: any) => ({
+  render: (args) => ({
     props: {
       isShown: args.show,
       textModel: '',
@@ -68,7 +77,7 @@ export const Playground: Story = {
       cssClass: args.cssClass,
     },
     template: `
-      <div style="padding: 24px; max-width: 480px;">
+      <div style="padding: 40px; max-width: 480px;">
         <smart-searchbar
           [(show)]="isShown"
           [(text)]="textModel"
@@ -80,143 +89,85 @@ export const Playground: Story = {
   }),
 };
 
-export const Default: Story = {
-  name: 'Default (shown, empty)',
-  parameters: {
-    controls: { disable: true },
-  },
+// `text` is model.required — every instance must bind it or Angular throws
+// NG0950. Showcase cells use a short debounce so typing feels responsive.
+const section = (title: string, body: string, note?: string) => `
+  <section>
+    <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">${title}</h3>
+    ${note ? `<p style="font-size: 13px; opacity: .7; margin-bottom: 8px;">${note}</p>` : ''}
+    <div style="max-width: 480px;">${body}</div>
+  </section>
+`;
+
+export const AllVariants: Story = {
+  name: 'All variants',
+  parameters: { controls: { disable: true } },
   render: () => ({
     props: {
-      isShown: true,
-      textModel: '',
+      shownEmpty: '',
+      shownFilled: 'invoice',
+      hiddenWithToggle: '',
+      hiddenNoToggle: '',
+      customPlaceholder: '',
+      styled: '',
+      shown: true,
+      hidden: false,
+      base: { debounceTime: 300 } as ISearchbarOptions,
+      withToggle: {
+        debounceTime: 300,
+        showToggleButton: true,
+      } as ISearchbarOptions,
+      noToggle: {
+        debounceTime: 300,
+        showToggleButton: false,
+      } as ISearchbarOptions,
+      customPlaceholderOptions: {
+        debounceTime: 300,
+        placeholder: 'searchByName',
+      } as ISearchbarOptions,
     },
     template: `
-      <div style="padding: 24px; max-width: 480px;">
-        <smart-searchbar [(show)]="isShown" [(text)]="textModel" />
-      </div>
-    `,
-  }),
-};
+      <div style="display: flex; flex-direction: column; gap: 32px; padding: 24px;">
 
-export const WithInitialText: Story = {
-  name: 'With initial text',
-  parameters: {
-    controls: { disable: true },
-  },
-  render: () => ({
-    props: {
-      isShown: true,
-      textModel: 'hello world',
-    },
-    template: `
-      <div style="padding: 24px; max-width: 480px;">
-        <smart-searchbar [(show)]="isShown" [(text)]="textModel" />
-      </div>
-    `,
-  }),
-};
+        ${section(
+          'Shown, empty',
+          `<smart-searchbar [(show)]="shown" [(text)]="shownEmpty" [options]="base" />`,
+        )}
 
-export const HiddenWithToggleButton: Story = {
-  name: 'Hidden with toggle button',
-  parameters: {
-    controls: { disable: true },
-  },
-  render: () => ({
-    props: {
-      isShown: false,
-      textModel: '',
-      options: { showToggleButton: true } as ISearchbarOptions,
-    },
-    template: `
-      <div style="padding: 24px; max-width: 480px;">
-        <p style="margin-bottom: 12px; font-size: 14px; color: #4b5563;">
-          Click the magnifier button to reveal the input.
-        </p>
-        <smart-searchbar
-          [(show)]="isShown"
-          [(text)]="textModel"
-          [options]="options"
-        />
-      </div>
-    `,
-  }),
-};
+        ${section(
+          'Shown, pre-filled',
+          `<smart-searchbar [(show)]="shown" [(text)]="shownFilled" [options]="base" />`,
+        )}
 
-export const WithCustomPlaceholder: Story = {
-  name: 'With custom placeholder',
-  parameters: {
-    controls: { disable: true },
-  },
-  render: () => ({
-    props: {
-      isShown: true,
-      textModel: '',
-      options: { placeholder: 'custom-search-key' } as ISearchbarOptions,
-    },
-    template: `
-      <div style="padding: 24px; max-width: 480px;">
-        <smart-searchbar
-          [(show)]="isShown"
-          [(text)]="textModel"
-          [options]="options"
-        />
-      </div>
-    `,
-  }),
-};
+        ${section(
+          'Hidden, with toggle button',
+          `<smart-searchbar [(show)]="hidden" [(text)]="hiddenWithToggle" [options]="withToggle" />`,
+          'Collapsed to a magnifier button that expands the input on click.',
+        )}
 
-export const WithCssClass: Story = {
-  name: 'With external CSS class',
-  parameters: {
-    controls: { disable: true },
-  },
-  render: () => ({
-    props: {
-      isShown: true,
-      textModel: '',
-    },
-    template: `
-      <div style="padding: 24px;">
-        <smart-searchbar
-          class="smart:max-w-md smart:p-4"
-          [(show)]="isShown"
-          [(text)]="textModel"
-        />
-      </div>
-    `,
-  }),
-};
+        ${section(
+          'Hidden, without toggle button',
+          `<div style="min-height: 24px; border: 1px dashed rgba(127,127,127,.4); border-radius: 6px;">
+             <smart-searchbar [(show)]="hidden" [(text)]="hiddenNoToggle" [options]="noToggle" />
+           </div>`,
+          'Renders nothing at all — the dashed box marks where the component sits.',
+        )}
 
-export const LightAndDarkMode: Story = {
-  name: 'Light and dark mode',
-  parameters: {
-    controls: { disable: true },
-  },
-  // Storybook's built-in theme toggle (if configured) can also flip this automatically
-  // by adding the `dark` class to the root — the second panel below hard-codes it for comparison.
-  render: () => ({
-    props: {
-      lightShown: true,
-      lightText: '',
-      darkShown: true,
-      darkText: '',
-    },
-    template: `
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0; min-height: 200px;">
+        ${section(
+          'Custom placeholder key',
+          `<smart-searchbar [(show)]="shown" [(text)]="customPlaceholder" [options]="customPlaceholderOptions" />`,
+          'An untranslated key falls back to the raw key string.',
+        )}
 
-        <div class="smart:bg-white smart:p-4" style="color: #111827;">
-          <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">
-            Light mode
-          </h3>
-          <smart-searchbar [(show)]="lightShown" [(text)]="lightText" />
-        </div>
-
-        <div class="dark smart:bg-gray-900 smart:p-4" style="color: #f9fafb;">
-          <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">
-            Dark mode
-          </h3>
-          <smart-searchbar [(show)]="darkShown" [(text)]="darkText" />
-        </div>
+        ${section(
+          'External class',
+          `<smart-searchbar
+             class="smart:rounded-lg smart:bg-yellow-50 smart:p-2 smart:dark:bg-yellow-900/30"
+             [(show)]="shown"
+             [(text)]="styled"
+             [options]="base"
+           />`,
+        )}
 
       </div>
     `,

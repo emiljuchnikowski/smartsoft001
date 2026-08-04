@@ -5,13 +5,23 @@ import { ContainerComponent } from './container.component';
 import { ContainerPresetComponent } from './preset/preset.component';
 import { CONTAINER_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
-const meta: Meta<ContainerComponent> = {
+const MODES = ['full-width', 'constrained', 'container'] as const;
+const PADDINGS = ['none', 'mobile', 'always'] as const;
+
+interface ContainerArgs {
+  mode: (typeof MODES)[number];
+  padding: (typeof PADDINGS)[number];
+  narrow: boolean;
+}
+
+const meta: Meta<ContainerArgs> = {
   title: 'Components/Container',
   tags: ['autodocs'],
   decorators: [
     moduleMetadata({
-      // ContainerPresetComponent must be imported because the story template
-      // uses the <smart-container-preset> selector directly.
+      // ContainerPresetComponent must be imported because the story templates
+      // use the <smart-container-preset> selector directly — <smart-container>
+      // dispatches through NgComponentOutlet, which drops projected content.
       imports: [ContainerComponent, ContainerPresetComponent],
       // The token registration below additionally swaps the preset in for
       // any <smart-container> usage rendered through the standard wrapper.
@@ -23,40 +33,81 @@ const meta: Meta<ContainerComponent> = {
       ],
     }),
   ],
+  argTypes: {
+    mode: { control: 'inline-radio', options: MODES },
+    padding: { control: 'inline-radio', options: PADDINGS },
+    narrow: {
+      control: 'boolean',
+      description: 'Forces max-w-3xl — wins over `mode`.',
+    },
+  },
+  args: { mode: 'container', padding: 'always', narrow: false },
 };
 
 export default meta;
-type Story = StoryObj<ContainerComponent>;
+type Story = StoryObj<ContainerArgs>;
 
-export const Preset: Story = {
+const BOX_STYLE =
+  'background: #fff; border: 1px solid #d1d5db; border-radius: 8px; padding: 16px;';
+
+export const Playground: Story = {
+  name: 'Playground',
+  render: (args) => ({
+    props: { options: { ...args } },
+    template: `
+      <div style="padding: 40px 0; background: #f3f4f6;">
+        <smart-container-preset [options]="options">
+          <div style="${BOX_STYLE}">
+            mode: {{ options.mode }} &middot; padding: {{ options.padding }}
+            @if (options.narrow) { &middot; narrow }
+          </div>
+        </smart-container-preset>
+      </div>
+    `,
+  }),
+};
+
+const box = (label: string, options: string) => `
+  <smart-container-preset [options]="${options}">
+    <div style="${BOX_STYLE}">${label}</div>
+  </smart-container-preset>
+`;
+
+export const AllVariants: Story = {
+  name: 'All variants',
   parameters: { controls: { disable: true } },
   render: () => ({
     template: `
-      <div style="display: flex; flex-direction: column; gap: 24px; padding: 24px; background: #f3f4f6;">
+      <div style="display: flex; flex-direction: column; gap: 32px; padding: 24px 0; background: #f3f4f6;">
 
-        <smart-container-preset [options]="{ mode: 'container', padding: 'always' }">
-          <div style="background: #fff; border: 1px solid #d1d5db; border-radius: 8px; padding: 16px;">
-            mode: container &middot; padding: always (max-w-7xl, centered)
-          </div>
-        </smart-container-preset>
+        ${MODES.map(
+          (mode) => `
+          <section>
+            <h3 style="font-size: 16px; font-weight: 600; margin: 0 24px 12px;">mode: ${mode}</h3>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              ${PADDINGS.map((padding) =>
+                box(
+                  `padding: ${padding}`,
+                  `{ mode: '${mode}', padding: '${padding}' }`,
+                ),
+              ).join('\n')}
+            </div>
+          </section>`,
+        ).join('\n')}
 
-        <smart-container-preset [options]="{ mode: 'constrained', padding: 'always' }">
-          <div style="background: #fff; border: 1px solid #d1d5db; border-radius: 8px; padding: 16px;">
-            mode: constrained &middot; padding: always (max-w-5xl, centered)
+        <section>
+          <h3 style="font-size: 16px; font-weight: 600; margin: 0 24px 12px;">narrow (max-w-3xl, wins over mode)</h3>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            ${box(
+              'mode: container &middot; narrow &middot; padding: always',
+              `{ mode: 'container', narrow: true, padding: 'always' }`,
+            )}
+            ${box(
+              'mode: full-width &middot; narrow &middot; padding: mobile',
+              `{ mode: 'full-width', narrow: true, padding: 'mobile' }`,
+            )}
           </div>
-        </smart-container-preset>
-
-        <smart-container-preset [options]="{ mode: 'constrained', narrow: true, padding: 'mobile' }">
-          <div style="background: #fff; border: 1px solid #d1d5db; border-radius: 8px; padding: 16px;">
-            mode: constrained &middot; narrow &middot; padding: mobile (max-w-3xl, centered)
-          </div>
-        </smart-container-preset>
-
-        <smart-container-preset [options]="{ mode: 'full-width', padding: 'none' }">
-          <div style="background: #fff; border: 1px solid #d1d5db; border-radius: 8px; padding: 16px;">
-            mode: full-width &middot; padding: none (w-full, edge to edge)
-          </div>
-        </smart-container-preset>
+        </section>
 
       </div>
     `,

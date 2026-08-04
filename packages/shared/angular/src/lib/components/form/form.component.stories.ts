@@ -1,4 +1,3 @@
-import { Component, ViewEncapsulation } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { applicationConfig, moduleMetadata } from '@storybook/angular';
@@ -21,13 +20,83 @@ import {
   INPUT_FIELD_COMPONENTS_TOKEN,
   INPUT_PRESET_FIELD_COMPONENTS,
 } from '../input';
-import { FormBaseComponent } from './base/base.component';
 import { FormComponent } from './form.component';
 import { FormPresetComponent } from './preset/preset.component';
 
-const meta: Meta<FormComponent<any>> = {
+// ─── Fixtures ────────────────────────────────────────────────────────────────
+
+@Model({})
+class UserModel {
+  @Field({ create: true })
+  firstName = '';
+
+  @Field({ create: true, required: true })
+  lastName = '';
+
+  @Field({ create: true, type: FieldType.email })
+  email = '';
+}
+
+@Model({})
+class SimpleModel {
+  @Field({ create: true })
+  firstName = '';
+
+  @Field({ create: true, required: true })
+  lastName = '';
+
+  @Field({ create: true, type: FieldType.email })
+  email = '';
+}
+
+@Model({})
+class NestedModel {
+  @Field({ create: true })
+  title = '';
+
+  @Field({ create: true, type: FieldType.object, classType: UserModel })
+  user = new UserModel();
+}
+
+@Model({})
+class MixedModel {
+  @Field({ create: true, required: true })
+  name = '';
+
+  @Field({ create: true, type: FieldType.email })
+  email = '';
+
+  @Field({ create: true, type: FieldType.int })
+  age = 0;
+
+  @Field({ create: true, type: FieldType.flag })
+  active = true;
+}
+
+type FormModelKey = 'simple' | 'nested' | 'mixed';
+
+const MODELS: Record<FormModelKey, () => object> = {
+  simple: () => new SimpleModel(),
+  nested: () => new NestedModel(),
+  mixed: () => new MixedModel(),
+};
+
+// Each rendered form owns its FormGroup, so every cell needs a fresh options
+// object built from a fresh model instance.
+const buildOptions = (
+  model: FormModelKey,
+  mode: 'create' | 'update' = 'create',
+): IFormOptions<any> => ({ model: MODELS[model](), mode }) as IFormOptions<any>;
+
+interface FormArgs {
+  model: FormModelKey;
+  mode: 'create' | 'update';
+  cssClass: string;
+}
+
+const meta: Meta<FormArgs> = {
   title: 'Smart-Form/Form',
-  component: FormComponent,
+  tags: ['autodocs'],
   decorators: [
     // FormFactory injects MODEL_VALIDATORS_PROVIDER with no library-side
     // default (apps provide it). The provider must be root-level
@@ -56,179 +125,9 @@ const meta: Meta<FormComponent<any>> = {
         SharedFactoriesModule,
         TranslateModule,
       ],
-    }),
-  ],
-};
-
-export default meta;
-type Story = StoryObj<FormComponent<any>>;
-
-// ─── 1. Simple ───────────────────────────────────────────────────────────────
-
-export const Simple: Story = {
-  name: 'Simple',
-  render: () => ({
-    props: {
-      storyOptions: {
-        model: (() => {
-          @Model({})
-          class TestModel {
-            @Field({ create: true }) firstName = '';
-            @Field({ create: true, required: true }) lastName = '';
-          }
-          return new TestModel();
-        })(),
-      } as IFormOptions<any>,
-    },
-    template: `<smart-form [options]="storyOptions"></smart-form>`,
-  }),
-};
-
-// ─── 2. ComplexObject ────────────────────────────────────────────────────────
-
-@Model({})
-class UserModel {
-  @Field({ create: true })
-  firstName = '';
-
-  @Field({ create: true, required: true })
-  lastName = '';
-
-  @Field({ create: true, type: FieldType.email })
-  email = '';
-}
-
-export const ComplexObject: Story = {
-  name: 'Complex object',
-  render: () => ({
-    props: {
-      storyOptions: {
-        model: (() => {
-          @Model({})
-          class TestModel {
-            @Field({ create: true }) title = '';
-
-            @Field({
-              create: true,
-              type: FieldType.object,
-              classType: UserModel,
-            })
-            user = new UserModel();
-          }
-          return new TestModel();
-        })(),
-      } as IFormOptions<any>,
-    },
-    template: `<smart-form [options]="storyOptions"></smart-form>`,
-  }),
-};
-
-// ─── 3. WithCssClass ─────────────────────────────────────────────────────────
-
-export const WithCssClass: Story = {
-  name: 'With CSS class',
-  render: () => ({
-    props: {
-      storyOptions: {
-        model: (() => {
-          @Model({})
-          class TestModel {
-            @Field({ create: true }) firstName = '';
-            @Field({ create: true, required: true }) lastName = '';
-          }
-          return new TestModel();
-        })(),
-      } as IFormOptions<any>,
-    },
-    template: `
-      <smart-form
-        class="smart:rounded-lg smart:bg-yellow-50 smart:p-4 smart:dark:bg-yellow-900/30"
-        [options]="storyOptions"
-      ></smart-form>
-    `,
-  }),
-};
-
-// ─── 4. CustomViaToken ───────────────────────────────────────────────────────
-
-@Component({
-  selector: 'custom-form-impl',
-  template: `
-    <div
-      class="smart:rounded-md smart:border smart:border-indigo-300 smart:bg-indigo-50 smart:p-4 smart:dark:border-indigo-700 smart:dark:bg-indigo-900/40"
-    >
-      <p
-        class="smart:font-semibold smart:text-indigo-900 smart:dark:text-indigo-100"
-      >
-        Custom form implementation injected via FORM_STANDARD_COMPONENT_TOKEN
-      </p>
-      @for (field of fields; track field) {
-        <p
-          class="smart:mt-2 smart:text-sm smart:text-indigo-700 smart:dark:text-indigo-300"
-        >
-          {{ field }}
-        </p>
-      }
-    </div>
-  `,
-  standalone: true,
-  encapsulation: ViewEncapsulation.None,
-})
-class CustomFormImplComponent extends FormBaseComponent<any> {}
-
-export const CustomViaToken: Story = {
-  name: 'Custom via FORM_STANDARD_COMPONENT_TOKEN',
-  render: () => ({
-    props: {
-      storyOptions: {
-        model: (() => {
-          @Model({})
-          class TestModel {
-            @Field({ create: true }) firstName = '';
-            @Field({ create: true, required: true }) lastName = '';
-          }
-          return new TestModel();
-        })(),
-      } as IFormOptions<any>,
-    },
-    template: `<smart-form [options]="storyOptions"></smart-form>`,
-    moduleMetadata: {
-      providers: [
-        {
-          provide: FORM_STANDARD_COMPONENT_TOKEN,
-          useValue: CustomFormImplComponent,
-        },
-      ],
-    },
-  }),
-};
-
-// ─── 5. Preset ───────────────────────────────────────────────────────────────
-
-export const Preset: Story = {
-  render: () => ({
-    props: {
-      storyOptions: {
-        model: (() => {
-          @Model({})
-          class TestModel {
-            @Field({ create: true }) firstName = '';
-            @Field({ create: true, required: true }) lastName = '';
-            @Field({ create: true, type: FieldType.email }) email = '';
-          }
-          return new TestModel();
-        })(),
-      } as IFormOptions<any>,
-    },
-    // The recommended duet: FormPresetComponent restyles the form shell, while
-    // INPUT_PRESET_FIELD_COMPONENTS restyle the field internals via
-    // INPUT_FIELD_COMPONENTS_TOKEN.
-    template: `
-      <div style="max-width: 28rem; margin: 0 auto; padding: 1.5rem;">
-        <smart-form [options]="storyOptions"></smart-form>
-      </div>
-    `,
-    moduleMetadata: {
+      // The recommended duet: FormPresetComponent restyles the form shell,
+      // while INPUT_PRESET_FIELD_COMPONENTS restyle the field internals via
+      // INPUT_FIELD_COMPONENTS_TOKEN.
       providers: [
         {
           provide: FORM_STANDARD_COMPONENT_TOKEN,
@@ -239,6 +138,95 @@ export const Preset: Story = {
           useValue: INPUT_PRESET_FIELD_COMPONENTS,
         },
       ],
+    }),
+  ],
+  argTypes: {
+    model: {
+      control: 'radio',
+      options: ['simple', 'nested', 'mixed'],
+      description:
+        'Which decorated @Model drives the generated fields (simple flat model, nested object field, mixed field types).',
     },
+    mode: { control: 'inline-radio', options: ['create', 'update'] },
+    cssClass: { control: 'text', description: 'Passed through as `class`.' },
+  },
+  args: { model: 'simple', mode: 'create', cssClass: '' },
+};
+
+export default meta;
+type Story = StoryObj<FormArgs>;
+
+export const Playground: Story = {
+  name: 'Playground',
+  render: (args) => ({
+    props: {
+      options: buildOptions(args.model, args.mode),
+      cssClass: args.cssClass,
+    },
+    template: `
+      <div style="padding: 40px; max-width: 28rem;">
+        <smart-form [options]="options" [class]="cssClass"></smart-form>
+      </div>
+    `,
+  }),
+};
+
+const section = (title: string, body: string) => `
+  <section>
+    <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">${title}</h3>
+    <div style="max-width: 28rem;">${body}</div>
+  </section>
+`;
+
+export const AllVariants: Story = {
+  name: 'All variants',
+  parameters: { controls: { disable: true } },
+  render: () => ({
+    props: {
+      simple: buildOptions('simple'),
+      mixed: buildOptions('mixed'),
+      nested: buildOptions('nested'),
+      createMode: buildOptions('simple', 'create'),
+      updateMode: buildOptions('simple', 'update'),
+      styled: buildOptions('simple'),
+    },
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 32px; padding: 24px;">
+
+        ${section(
+          'Simple model',
+          `<smart-form [options]="simple"></smart-form>`,
+        )}
+
+        ${section(
+          'Mixed field types (text, email, int, flag)',
+          `<smart-form [options]="mixed"></smart-form>`,
+        )}
+
+        ${section(
+          'Nested object field',
+          `<smart-form [options]="nested"></smart-form>`,
+        )}
+
+        ${section(
+          'Mode: create',
+          `<smart-form [options]="createMode"></smart-form>`,
+        )}
+
+        ${section(
+          'Mode: update',
+          `<smart-form [options]="updateMode"></smart-form>`,
+        )}
+
+        ${section(
+          'External class',
+          `<smart-form
+             class="smart:rounded-lg smart:bg-yellow-50 smart:p-4 smart:dark:bg-yellow-900/30"
+             [options]="styled"
+           ></smart-form>`,
+        )}
+
+      </div>
+    `,
   }),
 };

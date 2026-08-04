@@ -8,14 +8,28 @@ import { MEDIA_OBJECT_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 const IMAGE =
   'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80';
 
-const meta: Meta<MediaObjectComponent> = {
+const ALIGNMENTS = ['top', 'center', 'bottom', 'stretched'] as const;
+const POSITIONS = ['left', 'right'] as const;
+
+interface MediaObjectArgs {
+  heading: string;
+  body: string;
+  alignment: (typeof ALIGNMENTS)[number];
+  position: (typeof POSITIONS)[number];
+  wide: boolean;
+  responsive: boolean;
+  nested: boolean;
+}
+
+const meta: Meta<MediaObjectArgs> = {
   title: 'Components/MediaObject',
   tags: ['autodocs'],
   decorators: [
     moduleMetadata({
-      imports: [MediaObjectComponent],
-      // Register the preset variation as the replacement for the standard
-      // media object, so every <smart-media-object> renders the preset.
+      // MediaObjectPresetComponent is used through its own selector because
+      // <smart-media-object> dispatches through NgComponentOutlet once the
+      // token is registered, which drops the projected body.
+      imports: [MediaObjectComponent, MediaObjectPresetComponent],
       providers: [
         {
           provide: MEDIA_OBJECT_STANDARD_COMPONENT_TOKEN,
@@ -24,61 +38,128 @@ const meta: Meta<MediaObjectComponent> = {
       ],
     }),
   ],
+  argTypes: {
+    heading: { control: 'text' },
+    body: { control: 'text' },
+    alignment: { control: 'select', options: ALIGNMENTS },
+    position: { control: 'inline-radio', options: POSITIONS },
+    wide: { control: 'boolean' },
+    responsive: { control: 'boolean' },
+    nested: { control: 'boolean' },
+  },
+  args: {
+    heading: 'Media object',
+    body: 'Rounded thumbnail beside the projected body.',
+    alignment: 'center',
+    position: 'left',
+    wide: false,
+    responsive: false,
+    nested: false,
+  },
 };
 
 export default meta;
-type Story = StoryObj<MediaObjectComponent>;
+type Story = StoryObj<MediaObjectArgs>;
 
-export const Preset: Story = {
-  name: 'Preset',
+export const Playground: Story = {
+  name: 'Playground',
+  render: (args) => ({
+    props: {
+      image: IMAGE,
+      heading: args.heading,
+      body: args.body,
+      options: {
+        alignment: args.alignment,
+        position: args.position,
+        wide: args.wide,
+        responsive: args.responsive,
+        nested: args.nested,
+      },
+    },
+    template: `
+      <div style="padding: 40px; max-width: 640px;">
+        <smart-media-object-preset
+          [mediaUrl]="image"
+          mediaAlt="Portrait"
+          [options]="options"
+        >
+          <h3 class="smart:font-semibold smart:text-gray-900 smart:dark:text-white">{{ heading }}</h3>
+          <p>{{ body }}</p>
+        </smart-media-object-preset>
+      </div>
+    `,
+  }),
+};
+
+const item = (heading: string, body: string, options: string) => `
+  <smart-media-object-preset
+    [mediaUrl]="image"
+    mediaAlt="Portrait"
+    [options]="${options}"
+  >
+    <h3 class="smart:font-semibold smart:text-gray-900 smart:dark:text-white">${heading}</h3>
+    <p>${body}</p>
+  </smart-media-object-preset>
+`;
+
+const section = (title: string, body: string) => `
+  <section>
+    <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">${title}</h3>
+    <div style="display: flex; flex-direction: column; gap: 24px;">${body}</div>
+  </section>
+`;
+
+export const AllVariants: Story = {
+  name: 'All variants',
+  parameters: { controls: { disable: true } },
   render: () => ({
     props: { image: IMAGE },
     template: `
-      <div style="display: flex; flex-direction: column; gap: 32px; padding: 40px; max-width: 640px;">
-        <smart-media-object
-          [mediaUrl]="image"
-          mediaAlt="Portrait"
-          [options]="{ alignment: 'center' }"
-        >
-          <h3 class="smart:font-semibold smart:text-gray-900 smart:dark:text-white">Default (media left)</h3>
-          <p>Rounded thumbnail beside the projected body, centered on the cross axis.</p>
-        </smart-media-object>
+      <div style="display: flex; flex-direction: column; gap: 32px; padding: 24px; max-width: 640px;">
 
-        <smart-media-object
-          [mediaUrl]="image"
-          mediaAlt="Portrait"
-          [options]="{ position: 'right', alignment: 'top' }"
-        >
-          <h3 class="smart:font-semibold smart:text-gray-900 smart:dark:text-white">Media right, top aligned</h3>
-          <p>The row reverses so the media sits on the trailing edge.</p>
-        </smart-media-object>
+        ${section(
+          'Alignments',
+          ALIGNMENTS.map((alignment) =>
+            item(
+              `alignment: ${alignment}`,
+              'Two lines of body copy so the cross-axis alignment is visible against the thumbnail.',
+              `{ alignment: '${alignment}' }`,
+            ),
+          ).join('\n'),
+        )}
 
-        <smart-media-object
-          [mediaUrl]="image"
-          mediaAlt="Portrait"
-          [options]="{ wide: true }"
-        >
-          <h3 class="smart:font-semibold smart:text-gray-900 smart:dark:text-white">Wide media</h3>
-          <p>A wider thumbnail footprint for landscape imagery.</p>
-        </smart-media-object>
+        ${section(
+          'Positions',
+          POSITIONS.map((position) =>
+            item(
+              `position: ${position}`,
+              'The row reverses so the media sits on the trailing edge.',
+              `{ position: '${position}', alignment: 'center' }`,
+            ),
+          ).join('\n'),
+        )}
 
-        <smart-media-object
-          [mediaUrl]="image"
-          mediaAlt="Portrait"
-          [options]="{ responsive: true }"
-        >
-          <h3 class="smart:font-semibold smart:text-gray-900 smart:dark:text-white">Responsive</h3>
-          <p>Stacks into a column on mobile, then rows out from the sm breakpoint.</p>
-        </smart-media-object>
+        ${section(
+          'Modifiers',
+          [
+            item(
+              'wide',
+              'A wider thumbnail footprint for landscape imagery.',
+              `{ wide: true }`,
+            ),
+            item(
+              'responsive',
+              'Stacks into a column on mobile, then rows out from the sm breakpoint.',
+              `{ responsive: true }`,
+            ),
+            item(
+              'nested',
+              'Indented with a tighter gap, for replies and threaded content.',
+              `{ nested: true }`,
+            ),
+          ].join('\n'),
+        )}
 
-        <smart-media-object
-          [mediaUrl]="image"
-          mediaAlt="Portrait"
-          [options]="{ alignment: 'stretched' }"
-        >
-          <h3 class="smart:font-semibold smart:text-gray-900 smart:dark:text-white">Stretched</h3>
-          <p>The media fills the full height of the row.</p>
-        </smart-media-object>
       </div>
     `,
   }),
