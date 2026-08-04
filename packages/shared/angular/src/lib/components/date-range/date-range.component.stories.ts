@@ -136,7 +136,7 @@ export const AllVariants: Story = {
         ${section(
           'Modal, with quick filters',
           'The standard modal rendered inline, with the six quick-filter buttons.',
-          `<div style="position: relative; height: 600px;">
+          `<div style="position: relative; transform: translateZ(0); overflow: hidden; height: 600px;">
              <smart-date-range-modal-standard
                [showFilterBtns]="true"
                (apply)="onApply($event)"
@@ -148,7 +148,7 @@ export const AllVariants: Story = {
         ${section(
           'Modal, without quick filters',
           'Same modal with showFilterBtns false — the quick-filter row is hidden.',
-          `<div style="position: relative; height: 600px;">
+          `<div style="position: relative; transform: translateZ(0); overflow: hidden; height: 600px;">
              <smart-date-range-modal-standard
                [showFilterBtns]="false"
                (apply)="onApply($event)"

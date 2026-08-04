@@ -9,9 +9,15 @@
     made gray-100 selected states, gray-50 surfaces and hairline borders
     disappear against the canvas.
 
-    Plain CSS rather than Tailwind utilities because `.storybook/` is outside
-    the Tailwind content globs (see packages/shared/angular/tailwind.config.js),
-    so `smart:` classes referenced here would never be generated.
+    Plain CSS rather than Tailwind utilities because this file is injected
+    straight into <head>, outside the Angular/PostCSS pipeline that processes
+    styles.css.
+
+    (Note: `packages/shared/angular/tailwind.config.js` excludes *.stories.ts
+    from its content globs, but that file is unreferenced dead config — the
+    `@config` in styles.css points at the ROOT tailwind.config.js, which has no
+    `content` key, so Tailwind v4 automatic source detection is active and does
+    scan story files. `smart:` classes used only in stories DO compile.)
   */
   html,
   body {

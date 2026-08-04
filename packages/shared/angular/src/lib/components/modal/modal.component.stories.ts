@@ -84,7 +84,7 @@ export const Playground: Story = {
       },
     },
     template: `
-      <div style="position: relative; min-height: 420px;">
+      <div style="position: relative; transform: translateZ(0); overflow: hidden; min-height: 420px;">
         <smart-modal
           [open]="open"
           [title]="title"
@@ -97,10 +97,17 @@ export const Playground: Story = {
   }),
 };
 
+// The modal's ROOT is the full-screen backdrop (`smart:fixed smart:inset-0`),
+// so `position: relative` alone does nothing — a fixed element only resolves
+// against an ancestor that creates a containing block. `transform` does that
+// (and gives each variant its own stacking context, isolating the equal
+// z-[80] values); `overflow: hidden` clips the backdrop to the preview card.
+// Without this, all variants stack on the viewport, their translucent
+// backdrops compose to near-black, and only the topmost is clickable.
 const modalBlock = (variant: SmartModalVariant) => `
   <section>
     <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">${variant}</h3>
-    <div style="position: relative; min-height: 360px;">
+    <div style="position: relative; transform: translateZ(0); overflow: hidden; min-height: 360px;">
       <smart-modal
         [open]="true"
         title="Modal title"

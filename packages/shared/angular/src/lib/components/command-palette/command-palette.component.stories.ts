@@ -125,10 +125,27 @@ export const Playground: Story = {
   }),
 };
 
+// The palette's root is a <dialog>, which the UA stylesheet positions
+// `absolute` — no Tailwind class does it, so it is easy to miss. Being out of
+// flow it contributes no height, so without a sized containing block every
+// variant collapses onto its neighbours. `position: relative` re-anchors it and
+// the reserved height is what actually separates the variants; the transform
+// keeps this identical to the modal/drawer wrappers, which need it for `fixed`.
+const wrap = (body: string, minHeight: number) => `
+  <div style="position: relative; transform: translateZ(0); overflow: hidden; min-height: ${minHeight}px;">
+    ${body}
+  </div>
+`;
+
+// `with-preview` and `with-footer` render taller panels than the rest.
+const heightFor = (variant: SmartCommandPaletteVariant) =>
+  variant === 'with-preview' || variant === 'with-footer' ? 560 : 480;
+
 const block = (variant: SmartCommandPaletteVariant) => `
   <section>
     <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">${variant}</h3>
-    <smart-command-palette
+    ${wrap(
+      `<smart-command-palette
       [commands]="commands"
       [open]="true"
       [options]="{
@@ -136,7 +153,9 @@ const block = (variant: SmartCommandPaletteVariant) => `
         placeholder: 'Search commands…',
         emptyText: 'No results'
       }"
-    ></smart-command-palette>
+    ></smart-command-palette>`,
+      heightFor(variant),
+    )}
   </section>
 `;
 
@@ -151,7 +170,8 @@ export const AllVariants: Story = {
 
         <section>
           <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">Empty (no match)</h3>
-          <smart-command-palette
+          ${wrap(
+            `<smart-command-palette
             [commands]="commands"
             [open]="true"
             query="zzzzz"
@@ -160,7 +180,9 @@ export const AllVariants: Story = {
               placeholder: 'Search commands…',
               emptyText: 'No results'
             }"
-          ></smart-command-palette>
+          ></smart-command-palette>`,
+            260,
+          )}
         </section>
       </div>
     `,

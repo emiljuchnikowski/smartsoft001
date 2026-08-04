@@ -65,7 +65,7 @@ export const Playground: Story = {
       },
     },
     template: `
-      <div style="position: relative; min-height: 360px;">
+      <div style="position: relative; transform: translateZ(0); overflow: hidden; min-height: 360px;">
         <smart-drawer [open]="open" [title]="title" [options]="options">
           <p class="smart:text-gray-900 smart:dark:text-white">
             Some text as placeholder. In real life you can have the elements you
@@ -86,7 +86,7 @@ export const AllVariants: Story = {
 
         <section>
           <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">Right (default)</h3>
-          <div style="position: relative; min-height: 240px; border: 1px dashed #cbd5e1;">
+          <div style="position: relative; transform: translateZ(0); overflow: hidden; min-height: 240px; border: 1px dashed #cbd5e1;">
             <smart-drawer [open]="true" title="Offcanvas title" [options]="{ position: 'right' }">
               <p class="smart:text-gray-900 smart:dark:text-white">Right placement.</p>
             </smart-drawer>
@@ -95,7 +95,7 @@ export const AllVariants: Story = {
 
         <section>
           <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">Left</h3>
-          <div style="position: relative; min-height: 240px; border: 1px dashed #cbd5e1;">
+          <div style="position: relative; transform: translateZ(0); overflow: hidden; min-height: 240px; border: 1px dashed #cbd5e1;">
             <smart-drawer [open]="true" title="Offcanvas title" [options]="{ position: 'left' }">
               <p class="smart:text-gray-900 smart:dark:text-white">Left placement.</p>
             </smart-drawer>
@@ -104,7 +104,7 @@ export const AllVariants: Story = {
 
         <section>
           <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">Wide + branded header</h3>
-          <div style="position: relative; min-height: 240px; border: 1px dashed #cbd5e1;">
+          <div style="position: relative; transform: translateZ(0); overflow: hidden; min-height: 240px; border: 1px dashed #cbd5e1;">
             <smart-drawer [open]="true" title="Wide drawer" [options]="{ position: 'right', wide: true, brandedHeader: true }">
               <p class="smart:text-gray-900 smart:dark:text-white">Wider panel with a branded header.</p>
             </smart-drawer>
@@ -113,7 +113,7 @@ export const AllVariants: Story = {
 
         <section>
           <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">With overlay (backdrop)</h3>
-          <div style="position: relative; min-height: 240px; border: 1px dashed #cbd5e1;">
+          <div style="position: relative; transform: translateZ(0); overflow: hidden; min-height: 240px; border: 1px dashed #cbd5e1;">
             <smart-drawer [open]="true" title="Offcanvas title" [options]="{ position: 'right', withOverlay: true }">
               <p class="smart:text-gray-900 smart:dark:text-white">Dimmed backdrop behind the panel.</p>
             </smart-drawer>

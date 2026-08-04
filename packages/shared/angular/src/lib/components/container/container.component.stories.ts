@@ -47,17 +47,32 @@ const meta: Meta<ContainerArgs> = {
 export default meta;
 type Story = StoryObj<ContainerArgs>;
 
-const BOX_STYLE =
-  'background: #fff; border: 1px solid #d1d5db; border-radius: 8px; padding: 16px;';
+// The container itself is a neutral layout primitive with no colours of its own,
+// so the demo surfaces below supply them. They must be theme-aware Tailwind
+// classes, not hardcoded hex: story text inherits its colour from <body>, which
+// preview-head.html flips to near-white in dark mode — a hardcoded white box
+// would render invisible text.
+const PAGE_CLASS = 'smart:bg-gray-100 smart:dark:bg-gray-800';
+const BOX_CLASS = [
+  'smart:rounded-lg',
+  'smart:border',
+  'smart:border-gray-300',
+  'smart:dark:border-gray-600',
+  'smart:bg-white',
+  'smart:dark:bg-gray-900',
+  'smart:p-4',
+  'smart:text-gray-900',
+  'smart:dark:text-white',
+].join(' ');
 
 export const Playground: Story = {
   name: 'Playground',
   render: (args) => ({
     props: { options: { ...args } },
     template: `
-      <div style="padding: 40px 0; background: #f3f4f6;">
+      <div class="${PAGE_CLASS}" style="padding: 40px 0;">
         <smart-container-preset [options]="options">
-          <div style="${BOX_STYLE}">
+          <div class="${BOX_CLASS}">
             mode: {{ options.mode }} &middot; padding: {{ options.padding }}
             @if (options.narrow) { &middot; narrow }
           </div>
@@ -69,7 +84,7 @@ export const Playground: Story = {
 
 const box = (label: string, options: string) => `
   <smart-container-preset [options]="${options}">
-    <div style="${BOX_STYLE}">${label}</div>
+    <div class="${BOX_CLASS}">${label}</div>
   </smart-container-preset>
 `;
 
@@ -78,7 +93,7 @@ export const AllVariants: Story = {
   parameters: { controls: { disable: true } },
   render: () => ({
     template: `
-      <div style="display: flex; flex-direction: column; gap: 32px; padding: 24px 0; background: #f3f4f6;">
+      <div class="${PAGE_CLASS}" style="display: flex; flex-direction: column; gap: 32px; padding: 24px 0;">
 
         ${MODES.map(
           (mode) => `

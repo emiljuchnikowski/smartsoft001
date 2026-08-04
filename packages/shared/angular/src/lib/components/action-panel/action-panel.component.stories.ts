@@ -68,6 +68,11 @@ const meta: Meta<ActionPanelArgs> = {
 export default meta;
 type Story = StoryObj<ActionPanelArgs>;
 
+// Theme-aware page surface. Story text inherits its colour from <body>, which
+// preview-head.html flips to near-white in dark mode, so a hardcoded light
+// background here would render invisible text.
+const PAGE_CLASS = 'smart:bg-gray-100 smart:dark:bg-gray-800';
+
 const SLOTS = `
   <ng-template #toggle>
     <button type="button" class="smart:relative smart:h-6 smart:w-11 smart:rounded-full smart:bg-blue-600">
@@ -108,7 +113,7 @@ export const Playground: Story = {
     },
     template: `
       ${SLOTS}
-      <div style="padding: 40px; background: #f3f4f6;">
+      <div class="${PAGE_CLASS}" style="padding: 40px;">
         <smart-action-panel [options]="build(card)"></smart-action-panel>
       </div>
     `,
@@ -129,7 +134,7 @@ export const AllVariants: Story = {
     template: `
       ${SLOTS}
 
-      <div style="display: flex; flex-direction: column; gap: 32px; padding: 24px; background: #f3f4f6;">
+      <div class="${PAGE_CLASS}" style="display: flex; flex-direction: column; gap: 32px; padding: 24px;">
 
         <section>
           <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">Layouts</h3>

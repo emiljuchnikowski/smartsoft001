@@ -84,8 +84,14 @@ export const Playground: Story = {
   }),
 };
 
+// The menu is already correctly scoped — DROPDOWN_CONTAINER is
+// `smart:relative smart:inline-flex` and the menu is `smart:absolute` inside it,
+// so no containing-block trick is needed here. The variants collided purely
+// because each section was only as wide as its trigger (~110px) while every
+// menu is `smart:min-w-60` (240px), so each open menu ran over its neighbour.
+// Reserving 280px of width and 320px of height per section keeps them apart.
 const variantColumn = (variant: SmartDropdownVariant) => `
-  <section style="display: flex; flex-direction: column; gap: 8px;">
+  <section style="display: flex; flex-direction: column; gap: 8px; width: 280px; min-height: 320px;">
     <h3 style="font-size: 14px; font-weight: 600; text-transform: capitalize;">${variant}</h3>
     <smart-dropdown
       [items]="items"
