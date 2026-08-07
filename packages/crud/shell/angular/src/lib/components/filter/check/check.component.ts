@@ -28,7 +28,7 @@ import { BaseComponent } from '../base/base.component';
             type="button"
             (click)="refresh([])"
             aria-label="clear"
-            class="smart:rounded smart:px-2 smart:py-1 smart:text-red-600 hover:smart:bg-red-50"
+            class="smart:rounded smart:px-2 smart:py-1 smart:text-red-600 smart:hover:bg-red-50"
           >
             ×
           </button>
@@ -41,7 +41,7 @@ import { BaseComponent } from '../base/base.component';
               type="checkbox"
               [checked]="entry.isCheck"
               (change)="onCheckChange($any($event.target).checked, entry)"
-              class="smart:h-4 smart:w-4 smart:rounded smart:border-gray-300 smart:text-indigo-600 focus:smart:ring-indigo-500"
+              class="smart:h-4 smart:w-4 smart:rounded smart:border-gray-300 smart:text-indigo-600 smart:focus:ring-indigo-500"
             />
             <span class="smart:text-sm smart:text-gray-900">{{
               entry.value.text | translate

@@ -118,7 +118,8 @@ export abstract class DetailsBaseComponent<T extends IEntity<string>>
 
           const type = options?.type;
           if (type && item instanceof type) result = item;
-          else result = ObjectService.createByType(item, options);
+          else if (type) result = ObjectService.createByType(item, type);
+          else result = item;
 
           const removeFields = enabledDefinitions
             .filter((def) => {

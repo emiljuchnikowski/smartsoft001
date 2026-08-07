@@ -1,2 +1,30 @@
 @import 'tailwindcss' prefix(smart);
 @config "../../../../../tailwind.config.js";
+
+/* Tailwind v4's default `dark:` variant is `@media (prefers-color-scheme: dark)`,
+   which cannot be driven by an app or by Storybook's theme toggle. Redefine it as
+   class-based so `.dark` on <html> (or any ancestor) switches the theme. Without
+   this line every `smart:dark:*` utility in the library follows the OS only. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ngx-editor (used by smart-input-long-text) ships ViewEncapsulation.None
+   styles whose backgrounds are driven by CSS custom properties declared under
+   `:root` with light-mode values. Those styles are injected at runtime when the
+   component first renders, so they land in <head> *after* this stylesheet. With
+   equal specificity (`:root` == `.dark` == 0,1,0) the later rule wins, which
+   meant a plain `.dark { … }` override never took effect. Use `:root.dark` so
+   specificity (0,2,0) beats `:root` regardless of injection order. */
+:root.dark {
+  --ngx-editor-background-color: transparent;
+  --ngx-editor-text-color: #fff;
+  --ngx-editor-placeholder-color: #9ca3af;
+  --ngx-editor-border-color: rgb(255 255 255 / 0.1);
+  --ngx-editor-wrapper-border-color: rgb(255 255 255 / 0.1);
+  --ngx-editor-menubar-bg-color: transparent;
+  --ngx-editor-popup-bg-color: #1f2937;
+  --ngx-editor-menu-item-hover-bg-color: rgb(255 255 255 / 0.1);
+  --ngx-editor-menu-item-active-bg-color: rgb(255 255 255 / 0.15);
+  --ngx-editor-menu-item-active-color: #93c5fd;
+  --ngx-editor-seperator-color: rgb(255 255 255 / 0.15);
+  --ngx-editor-blockquote-color: rgb(255 255 255 / 0.2);
+}

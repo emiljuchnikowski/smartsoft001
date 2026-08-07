@@ -1,4 +1,9 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StackedLayoutStandardComponent } from './standard.component';
@@ -91,7 +96,7 @@ describe('@smartsoft001/shared-angular: StackedLayoutStandardComponent', () => {
 
     it('should render options.navTpl inside the <nav>', async () => {
       host.options = { navTpl: host.navContent };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -102,7 +107,7 @@ describe('@smartsoft001/shared-angular: StackedLayoutStandardComponent', () => {
 
     it('should render options.headerTpl as a second <header>', async () => {
       host.options = { headerTpl: host.headerContent };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProgressBarsBaseComponent } from './base.component';
@@ -54,7 +54,7 @@ describe('@smartsoft001/shared-angular: ProgressBarsBaseComponent', () => {
 
   it('should accept options', async () => {
     host.options = { steps: [{ id: 's1', name: 'Step 1' }] };
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 

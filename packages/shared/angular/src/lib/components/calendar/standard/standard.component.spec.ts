@@ -1,4 +1,9 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CalendarStandardComponent } from './standard.component';
@@ -233,7 +238,7 @@ describe('@smartsoft001/shared-angular: CalendarStandardComponent', () => {
 
     it('should render dayCellTpl content inside .day cells when provided', async () => {
       host.options = { dayCellTpl: host.dayCellTpl };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -245,7 +250,7 @@ describe('@smartsoft001/shared-angular: CalendarStandardComponent', () => {
 
     it('should render toolbarActionsTpl inside .toolbar-actions', async () => {
       host.options = { toolbarActionsTpl: host.toolbarActionsTpl };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 

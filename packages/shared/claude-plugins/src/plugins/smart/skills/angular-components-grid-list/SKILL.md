@@ -213,3 +213,36 @@ export class MyCustomGridListComponent extends GridListBaseComponent {
 - Base class: `packages/shared/angular/src/lib/components/grid-list/base/base.component.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`GRID_LIST_STANDARD_COMPONENT_TOKEN`)
 - Interfaces: `packages/shared/angular/src/lib/models/interfaces.ts` (`IGridListOptions`, `IGridListItem`, `SmartGridListLayout`, `SmartGridListColumns`)
+
+## Preset
+
+`GridListPresetComponent` (`<smart-grid-list-preset>`) is a styled drop-in replacement for the barebones standard component, built entirely with vanilla Tailwind utilities (every class carries the `smart:` prefix) and explicit `smart:dark:*` twins in the same template. It extends `GridListStandardComponent` and reads the same `IGridListOptions` — no new options fields are introduced.
+
+Layout:
+
+- Optional `title` / `description` render as a header block above the grid.
+- The grid is `smart:grid smart:grid-cols-1`, widened responsively from `columns` (`smart:sm:grid-cols-2` from `sm`, then `smart:lg:grid-cols-<n>` from `lg`; `1`/unset stays single-column) and spaced from `gap` (`sm`→`smart:gap-3`, `md`/default→`smart:gap-4`, `lg`→`smart:gap-6`).
+- Each item is a bordered rounded card. `layout` drives the interior arrangement: `cards` (default) stacks media on top of the body, `horizontal` places media inline to the left of the body, `logos` centers a contained logo above a centered caption.
+- Per item: `iconTpl` (wins over `imageUrl`) or `imageUrl` render as the media slot; the title renders as a link with a `smart:hover:text-blue-600` accent when `href` is set, otherwise plain text; `badgeTpl` sits beside the title; `description` renders under it; `actionTpl` renders in a bordered tile footer.
+- Empty items render `emptyTpl` or a centered default message; `footerTpl` renders below the grid.
+
+Every zone is addressable via `data-role` hooks: `header`, `grid`, `item`, `media`, `title`, `description`, `badge`, `action`, `empty`, `footer`.
+
+Register it through the token to restyle every `<smart-grid-list>`:
+
+```typescript
+providers: [
+  {
+    provide: GRID_LIST_STANDARD_COMPONENT_TOKEN,
+    useValue: GridListPresetComponent,
+  },
+];
+```
+
+Because `GridListComponent` forwards inputs canonically through `NgComponentOutlet`, the preset overrides `cssClass` to drop the inherited `class` alias (`override cssClass = input<string>('')`); the value is merged onto the root wrapper.
+
+Class recipes live in `preset/preset-classes.util.ts` (`getGridListColumnsClasses`, `getGridListGapClasses`, `getGridListGridClasses`, `getGridListTileClasses`, `getGridListMediaClasses`) and are intentionally not re-exported from the barrel to avoid `export *` collisions.
+
+Documented gaps: `layout` only affects the tile interior arrangement (not per-item overrides); there is no built-in pagination or selection state.
+
+- Preset: `packages/shared/angular/src/lib/components/grid-list/preset/preset.component.ts`

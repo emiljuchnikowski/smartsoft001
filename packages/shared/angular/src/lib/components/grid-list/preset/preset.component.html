@@ -1,0 +1,86 @@
+<div [class]="rootClasses()">
+  @if (title() || description()) {
+    <div [class]="headerClasses" data-role="header">
+      @if (title()) {
+        <h3 [class]="headerTitleClasses">{{ title() }}</h3>
+      }
+      @if (description()) {
+        <p [class]="headerDescriptionClasses">{{ description() }}</p>
+      }
+    </div>
+  }
+
+  @if (items().length > 0) {
+    <div [class]="gridClasses()" data-role="grid" role="list">
+      @for (item of items(); track item.id ?? $index) {
+        <div
+          [class]="tileClasses()"
+          data-role="item"
+          role="listitem"
+          [attr.aria-label]="item.ariaLabel ?? null"
+        >
+          @if (item.iconTpl) {
+            <span [class]="iconClasses" data-role="media">
+              <ng-container [ngTemplateOutlet]="item.iconTpl" />
+            </span>
+          } @else if (item.imageUrl) {
+            <span data-role="media">
+              <img
+                [class]="mediaImageClasses()"
+                [src]="item.imageUrl"
+                [attr.alt]="item.imageAlt ?? ''"
+              />
+            </span>
+          }
+
+          <div [class]="bodyClasses">
+            <div [class]="titleRowClasses">
+              @if (item.href) {
+                <a
+                  [class]="titleLinkClasses"
+                  [attr.href]="item.href"
+                  data-role="title"
+                  >{{ item.title }}</a
+                >
+              } @else {
+                <span [class]="titleClasses" data-role="title">{{
+                  item.title
+                }}</span>
+              }
+              @if (item.badgeTpl) {
+                <span [class]="badgeClasses" data-role="badge">
+                  <ng-container [ngTemplateOutlet]="item.badgeTpl" />
+                </span>
+              }
+            </div>
+            @if (item.description) {
+              <p [class]="descriptionClasses" data-role="description">
+                {{ item.description }}
+              </p>
+            }
+          </div>
+
+          @if (item.actionTpl) {
+            <div [class]="actionClasses" data-role="action">
+              <ng-container [ngTemplateOutlet]="item.actionTpl" />
+            </div>
+          }
+        </div>
+      }
+    </div>
+  } @else {
+    <div [class]="emptyClasses" data-role="empty">
+      @if (emptyTpl()) {
+        <ng-container [ngTemplateOutlet]="emptyTpl()!" />
+      } @else {
+        No items to display.
+      }
+    </div>
+  }
+
+  @if (footerTpl()) {
+    <div [class]="footerClasses" data-role="footer">
+      <ng-container [ngTemplateOutlet]="footerTpl()!" />
+    </div>
+  }
+</div>

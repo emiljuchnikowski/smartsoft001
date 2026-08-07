@@ -1,4 +1,9 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StatsStandardComponent } from './standard.component';
@@ -202,7 +207,7 @@ describe('@smartsoft001/shared-angular: StatsStandardComponent', () => {
       host.options = {
         items: [{ label: 'Revenue', value: '$405,091', iconTpl: host.iconTpl }],
       };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -223,7 +228,7 @@ describe('@smartsoft001/shared-angular: StatsStandardComponent', () => {
           },
         ],
       };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -244,7 +249,7 @@ describe('@smartsoft001/shared-angular: StatsStandardComponent', () => {
           },
         ],
       };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -257,7 +262,7 @@ describe('@smartsoft001/shared-angular: StatsStandardComponent', () => {
       host.options = {
         items: [{ label: 'Revenue', value: '$405,091' }],
       };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 

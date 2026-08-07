@@ -38,6 +38,7 @@ import { SIGN_IN_FORM_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
   `,
   encapsulation: ViewEncapsulation.None,
   imports: [SignInFormStandardComponent, NgComponentOutlet],
+  host: { class: 'smart:contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SignInFormComponent {

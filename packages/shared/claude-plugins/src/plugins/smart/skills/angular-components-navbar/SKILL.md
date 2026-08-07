@@ -23,6 +23,26 @@ Main wrapper. Delegates to `NavbarStandardComponent` by default. When `NAVBAR_ST
 
 Barebones placeholder using native HTML. Renders an outer wrapper with `cssClass`, a `<nav class="navbar">` containing a mobile menu toggle button, optional logo (`logoTpl` or `<img>` from `logoUrl`/`logoAlt`, wrapped in `<a>` when `logoHref` provided), a primary `<ul>` of items (each rendered as `<a class="item-link">` when `href` is provided, otherwise `<button class="item-button">` emitting `itemClick`; gets `current` class when `item.current === true`), and template-ref slots `searchTpl` / `actionTpl` / `notificationTpl` / `userMenuTpl`. Optionally renders a `<nav class="navbar-secondary">` row when `options.secondaryItems` is non-empty, and a `.mobile-menu` panel when `mobileMenuOpen()` is `true`.
 
+### NavbarPresetComponent (`<smart-navbar-preset>`)
+
+Fully-styled, drop-in concrete implementation extending `NavbarBaseComponent`, translating the Preline collapsible navbar look to `smart:`-prefixed Tailwind classes with explicit `dark:` variants. Renders a `<header>` with a brand/logo slot (`logoTpl`, or `<img>` from `logoUrl`/`logoAlt`, wrapped in `<a>` when `logoHref` is set), a responsive primary link row (anchors for items with `href`, otherwise buttons emitting `itemClick`; `current` items get the active/`aria-current="page"` styling), the `searchTpl` / `actionTpl` / `notificationTpl` / `userMenuTpl` slots, an optional secondary link row from `secondaryItems`, and a mobile menu toggle. The mobile collapse is driven entirely by the two-way `mobileMenuOpen` signal (`@if` + `(click)`), so no Preline JS runtime is needed. `options.dark` switches to the solid dark color variant and `options.menuButtonOnLeft` moves the toggle ahead of the brand.
+
+Register it via `NAVBAR_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-navbar>`, or use the `<smart-navbar-preset>` selector directly. Because `NavbarComponent` projects inputs through `NgComponentOutlet`, the preset overrides `cssClass` as a plain `input<string>('')` (canonical name, no `class` alias) so external classes bind correctly.
+
+```typescript
+import {
+  NavbarPresetComponent,
+  NAVBAR_STANDARD_COMPONENT_TOKEN,
+} from '@smartsoft001/angular';
+
+providers: [
+  {
+    provide: NAVBAR_STANDARD_COMPONENT_TOKEN,
+    useValue: NavbarPresetComponent,
+  },
+];
+```
+
 ### NavbarBaseComponent (abstract)
 
 Abstract base directive. Exposes:
@@ -187,6 +207,7 @@ export class MyCustomNavbarComponent extends NavbarBaseComponent {
 
 - Wrapper: `packages/shared/angular/src/lib/components/navbar/navbar.component.ts`
 - Standard: `packages/shared/angular/src/lib/components/navbar/standard/standard.component.ts`
+- Preset: `packages/shared/angular/src/lib/components/navbar/preset/preset.component.ts`
 - Base class: `packages/shared/angular/src/lib/components/navbar/base/base.component.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`NAVBAR_STANDARD_COMPONENT_TOKEN`)
 - Interfaces: `packages/shared/angular/src/lib/models/interfaces.ts` (`INavbarOptions`, `INavbarItem`, `SmartNavbarLayout`)

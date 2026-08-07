@@ -2,7 +2,8 @@ import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
 import { LoaderComponent } from './loader.component';
-import { LoaderStandardComponent } from './standard/standard.component';
+import { LoaderPresetComponent } from './preset/preset.component';
+import { LOADER_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 const meta: Meta<LoaderComponent> = {
   title: 'Components/Loader',
@@ -10,7 +11,15 @@ const meta: Meta<LoaderComponent> = {
   tags: ['autodocs'],
   decorators: [
     moduleMetadata({
-      imports: [LoaderComponent, LoaderStandardComponent],
+      imports: [LoaderComponent],
+      // Register the preset variation as the replacement for the standard
+      // loader, so every <smart-loader> renders LoaderPresetComponent.
+      providers: [
+        {
+          provide: LOADER_STANDARD_COMPONENT_TOKEN,
+          useValue: LoaderPresetComponent,
+        },
+      ],
     }),
   ],
   argTypes: {
@@ -151,42 +160,6 @@ export const AllVariants: Story = {
             class="smart:text-fuchsia-500"
           ></smart-loader>
         </section>
-
-      </div>
-    `,
-  }),
-};
-
-export const LightAndDarkMode: Story = {
-  name: 'Light and dark mode',
-  parameters: {
-    controls: { disable: true },
-  },
-  render: () => ({
-    template: `
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0; min-height: 240px;">
-
-        <div style="padding: 24px; background: #f9fafb; color: #111827;">
-          <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">
-            Light mode
-          </h3>
-          <div style="display: flex; align-items: center; gap: 16px;">
-            <smart-loader [show]="true" size="md" color="indigo"></smart-loader>
-            <smart-loader [show]="true" size="md" color="emerald"></smart-loader>
-            <smart-loader [show]="true" size="md" color="rose"></smart-loader>
-          </div>
-        </div>
-
-        <div class="dark" style="padding: 24px; background: #111827; color: #f9fafb;">
-          <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">
-            Dark mode
-          </h3>
-          <div style="display: flex; align-items: center; gap: 16px;">
-            <smart-loader [show]="true" size="md" color="indigo"></smart-loader>
-            <smart-loader [show]="true" size="md" color="emerald"></smart-loader>
-            <smart-loader [show]="true" size="md" color="rose"></smart-loader>
-          </div>
-        </div>
 
       </div>
     `,

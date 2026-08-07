@@ -45,6 +45,7 @@ import { CardStandardComponent } from './standard/standard.component';
   `,
   encapsulation: ViewEncapsulation.None,
   imports: [CardStandardComponent, NgComponentOutlet, NgTemplateOutlet],
+  host: { class: 'smart:contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardComponent {

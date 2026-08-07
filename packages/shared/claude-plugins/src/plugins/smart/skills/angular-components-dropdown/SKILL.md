@@ -23,6 +23,12 @@ Main wrapper component. Renders `DropdownStandardComponent` by default. When `DR
 
 Default concrete implementation. Renders a trigger button and a menu list using modern Angular control flow.
 
+### DropdownPresetComponent (`<smart-dropdown-preset>`)
+
+Fully styled variation that extends `DropdownBaseComponent` and is a drop-in replacement for `DropdownStandardComponent`. Register it via `DROPDOWN_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-dropdown>`, or use the `<smart-dropdown-preset>` selector directly. Renders a trigger button (with a rotating chevron) and a menu, dispatched through `options.variant` (default `'simple'`): `simple`, `with-dividers` (items split into divider-separated groups), `with-icons` (renders each `item.icon` string), `with-header` (a header block from `options.headerLabel`, items shown with icons), and `minimal` (borderless ghost trigger). All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants. Open/close is driven by the inherited `open` signal + a `(click)` toggle and `@if` — Preline's JS plugin is NOT used, but its visual classes and ARIA (`aria-haspopup="menu"`, `aria-expanded`) are preserved. The class recipes live in `preset/preset-classes.util.ts` (`getDropdownTriggerClasses`, `getDropdownMenuClasses`, `getDropdownChevronClasses`).
+
+> Because `DropdownComponent` renders injected components via `NgComponentOutlet` (which passes inputs by canonical name), `DropdownPresetComponent` overrides `cssClass` as `input<string>('')` **without** the `class` alias. Bind it as `[cssClass]` when using the `<smart-dropdown-preset>` selector directly, or just pass `class` on `<smart-dropdown>` (the wrapper forwards it).
+
 ### DropdownBaseComponent (abstract)
 
 Abstract base directive for extending custom dropdown implementations.
@@ -165,6 +171,8 @@ export class MyCustomDropdownComponent extends DropdownBaseComponent {}
 
 - Wrapper: `packages/shared/angular/src/lib/components/dropdown/dropdown.component.ts`
 - Standard: `packages/shared/angular/src/lib/components/dropdown/standard/standard.component.ts`
+- Preset: `packages/shared/angular/src/lib/components/dropdown/preset/preset.component.ts` (recipes in `preset/preset-classes.util.ts`)
+- Stories: `packages/shared/angular/src/lib/components/dropdown/dropdown.component.stories.ts`
 - Base class: `packages/shared/angular/src/lib/components/dropdown/base/base.component.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`DROPDOWN_STANDARD_COMPONENT_TOKEN`)
 - Interfaces: `packages/shared/angular/src/lib/models/interfaces.ts` (`IDropdownItem`, `IDropdownOptions`, `SmartDropdownVariant`)

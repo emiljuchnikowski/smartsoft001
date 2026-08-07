@@ -1,0 +1,78 @@
+<div [class]="containerClasses()">
+  @if (showResults()) {
+    <p [class]="resultsClasses()">
+      Showing {{ showingFrom() }} to {{ showingTo() }} of {{ totalItems() }}
+      results
+    </p>
+  }
+
+  <nav aria-label="Pagination" [class]="navClasses()">
+    <button
+      type="button"
+      aria-label="Previous"
+      [class]="navButtonClasses"
+      [disabled]="!canGoBack()"
+      (click)="previousPage()"
+    >
+      <svg
+        class="smart:shrink-0 smart:size-3.5"
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="m15 18-6-6 6-6" />
+      </svg>
+      <span>Previous</span>
+    </button>
+
+    <div [class]="pageListClasses">
+      @for (page of pages(); track $index) {
+        @if (page === '...') {
+          <span [class]="ellipsisClasses">...</span>
+        } @else {
+          <button
+            type="button"
+            data-role="page"
+            [class]="pageClasses(+page)"
+            [attr.aria-current]="page === currentPage() ? 'page' : null"
+            (click)="goToPage(+page)"
+          >
+            {{ page }}
+          </button>
+        }
+      }
+    </div>
+
+    <button
+      type="button"
+      aria-label="Next"
+      [class]="navButtonClasses"
+      [disabled]="!canGoForward()"
+      (click)="nextPage()"
+    >
+      <span>Next</span>
+      <svg
+        class="smart:shrink-0 smart:size-3.5"
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="m9 18 6-6-6-6" />
+      </svg>
+    </button>
+  </nav>
+</div>

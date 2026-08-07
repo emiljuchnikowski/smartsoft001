@@ -1,0 +1,129 @@
+<ng-template #titleZone>
+  @if (options()?.title) {
+    <h3 [class]="titleClasses" data-role="title">{{ options()!.title }}</h3>
+  }
+</ng-template>
+
+<ng-template #descriptionZone>
+  @if (options()?.descriptionTpl) {
+    <div [class]="descriptionClasses" data-role="description">
+      <ng-container [ngTemplateOutlet]="options()!.descriptionTpl!" />
+    </div>
+  } @else if (options()?.description) {
+    <p [class]="descriptionClasses" data-role="description">
+      {{ options()!.description }}
+    </p>
+  }
+</ng-template>
+
+<ng-template #contentZone>
+  @if (options()?.contentTpl) {
+    <div class="smart:mt-3" data-role="content">
+      <ng-container [ngTemplateOutlet]="options()!.contentTpl!" />
+    </div>
+  }
+</ng-template>
+
+<ng-template #actionsZone>
+  @if ((options()?.actions ?? []).length > 0) {
+    <div [class]="actionsContainerClasses()" data-role="actions">
+      @for (action of options()!.actions!; track action.id) {
+        @if (action.href) {
+          <a
+            [href]="action.href"
+            [class]="actionClasses(action.variant)"
+            data-role="action"
+            [attr.data-action-id]="action.id"
+          >
+            @if (action.iconTpl) {
+              <ng-container [ngTemplateOutlet]="action.iconTpl" />
+            }
+            @if (action.label) {
+              {{ action.label }}
+            }
+          </a>
+        } @else {
+          <button
+            type="button"
+            [class]="actionClasses(action.variant)"
+            data-role="action"
+            [attr.data-action-id]="action.id"
+            (click)="onActionClick(action.id)"
+          >
+            @if (action.iconTpl) {
+              <ng-container [ngTemplateOutlet]="action.iconTpl" />
+            }
+            @if (action.label) {
+              {{ action.label }}
+            }
+          </button>
+        }
+      }
+    </div>
+  }
+</ng-template>
+
+<div [class]="panelClasses()" data-role="panel" [attr.data-layout]="layout()">
+  @switch (layout()) {
+    @case ('right-button') {
+      <div
+        class="smart:flex smart:items-center smart:justify-between smart:gap-4"
+      >
+        <div class="smart:flex-1">
+          <ng-container [ngTemplateOutlet]="titleZone" />
+          <ng-container [ngTemplateOutlet]="descriptionZone" />
+          <ng-container [ngTemplateOutlet]="contentZone" />
+        </div>
+        <ng-container [ngTemplateOutlet]="actionsZone" />
+      </div>
+    }
+    @case ('top-right-button') {
+      <div
+        class="smart:flex smart:items-start smart:justify-between smart:gap-4"
+      >
+        <ng-container [ngTemplateOutlet]="titleZone" />
+        <ng-container [ngTemplateOutlet]="actionsZone" />
+      </div>
+      <ng-container [ngTemplateOutlet]="descriptionZone" />
+      <ng-container [ngTemplateOutlet]="contentZone" />
+    }
+    @case ('with-toggle') {
+      <div
+        class="smart:flex smart:items-center smart:justify-between smart:gap-4"
+      >
+        <div class="smart:flex-1">
+          <ng-container [ngTemplateOutlet]="titleZone" />
+          <ng-container [ngTemplateOutlet]="descriptionZone" />
+        </div>
+        <ng-container [ngTemplateOutlet]="contentZone" />
+      </div>
+      <ng-container [ngTemplateOutlet]="actionsZone" />
+    }
+    @case ('with-input') {
+      <ng-container [ngTemplateOutlet]="titleZone" />
+      <ng-container [ngTemplateOutlet]="descriptionZone" />
+      <ng-container [ngTemplateOutlet]="contentZone" />
+      <ng-container [ngTemplateOutlet]="actionsZone" />
+    }
+    @case ('payment-method') {
+      <ng-container [ngTemplateOutlet]="titleZone" />
+      <ng-container [ngTemplateOutlet]="descriptionZone" />
+      <ng-container [ngTemplateOutlet]="contentZone" />
+      <ng-container [ngTemplateOutlet]="actionsZone" />
+    }
+    @case ('well') {
+      <ng-container [ngTemplateOutlet]="titleZone" />
+      <ng-container [ngTemplateOutlet]="descriptionZone" />
+      <div [class]="wellClasses" data-role="well">
+        <ng-container [ngTemplateOutlet]="contentZone" />
+        <ng-container [ngTemplateOutlet]="actionsZone" />
+      </div>
+    }
+    @default {
+      <ng-container [ngTemplateOutlet]="titleZone" />
+      <ng-container [ngTemplateOutlet]="descriptionZone" />
+      <ng-container [ngTemplateOutlet]="contentZone" />
+      <ng-container [ngTemplateOutlet]="actionsZone" />
+    }
+  }
+</div>

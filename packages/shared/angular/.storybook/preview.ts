@@ -30,14 +30,17 @@ const preview: Preview = {
       const theme = context.globals['theme'] || getSystemTheme();
       const isDark = theme === 'dark';
       if (typeof document !== 'undefined') {
+        // Toggling the class is the whole mechanism — `styles.css` redefines
+        // Tailwind's `dark:` variant as `&:where(.dark, .dark *)`.
+        //
+        // Deliberately no inline background/color here. Forcing #f9fafb in
+        // light mode put every component on a gray-50 page, which the presets
+        // (Preline / HyperUI / Tailwind UI derived) are not designed for:
+        // gray-100 selected states, gray-50 surfaces and hairline borders all
+        // disappeared against it. Light mode renders on white, dark mode gets
+        // its background from the component surfaces themselves.
         document.documentElement.classList.toggle('dark', isDark);
         document.body.classList.toggle('dark', isDark);
-        document.documentElement.style.backgroundColor = isDark
-          ? '#111827'
-          : '#f9fafb';
-        document.body.style.backgroundColor = isDark ? '#111827' : '#f9fafb';
-        document.documentElement.style.color = isDark ? '#f9fafb' : '#111827';
-        document.body.style.color = isDark ? '#f9fafb' : '#111827';
       }
       return story();
     },

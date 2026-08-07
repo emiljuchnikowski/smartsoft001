@@ -1,4 +1,9 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PageHeadingStandardComponent } from './standard.component';
@@ -148,7 +153,7 @@ describe('@smartsoft001/shared-angular: PageHeadingStandardComponent', () => {
 
     it('should render breadcrumbsTpl in <nav.breadcrumbs>', async () => {
       host.options = { breadcrumbsTpl: host.breadcrumbs };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -161,7 +166,7 @@ describe('@smartsoft001/shared-angular: PageHeadingStandardComponent', () => {
 
     it('should render avatarTpl in <.avatar>', async () => {
       host.options = { avatarTpl: host.avatar };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -174,7 +179,7 @@ describe('@smartsoft001/shared-angular: PageHeadingStandardComponent', () => {
 
     it('should render bannerTpl in <.banner>', async () => {
       host.options = { bannerTpl: host.banner };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -185,7 +190,7 @@ describe('@smartsoft001/shared-angular: PageHeadingStandardComponent', () => {
 
     it('should render actionsTpl in <.actions>', async () => {
       host.options = { actionsTpl: host.actions };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -203,7 +208,7 @@ describe('@smartsoft001/shared-angular: PageHeadingStandardComponent', () => {
         logoTpl: host.logo,
         filtersTpl: host.filters,
       };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 

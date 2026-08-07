@@ -200,10 +200,57 @@ function onRunCommand({ commandId }: { commandId: string }): void {
 }
 ```
 
+## Preset
+
+`CommandPalettePresetComponent` (`<smart-command-palette-preset>`) is the styled, production-ready replacement for the barebones standard component. It `extends CommandPaletteStandardComponent`, so all filtering (`filteredCommands`), query handling (`onQueryChange`), selection (`selectCommand` → emit `runCommand` + close), and `close()` behavior are inherited unchanged; the preset only adds the visual layer driven by `options.variant`.
+
+The base look is a native `<dialog [open]>` styled `smart:mx-auto smart:mt-16 smart:w-full smart:max-w-xl smart:rounded-xl` with a gray border, white/`dark:bg-gray-800` surface and `smart:shadow-xl`; a search input with a leading magnifier SVG (`ps-11`, `focus:ring-blue-500`); a `<ul role="listbox">` with `smart:divide-y` rows that hover `smart:bg-gray-100 dark:bg-gray-700`; and a centered `smart:text-gray-500` empty state using `options.emptyText` (fallback `No results`). All Tailwind utilities are `smart:`-prefixed with explicit `dark:` twins in the same template. Class recipes live in `preset/preset-classes.util.ts` (`getCommandPalette*Classes`, never barrel-exported).
+
+### Variants (`options.variant`, default `simple`)
+
+| Variant            | Rendering                                                                                       |
+| ------------------ | ----------------------------------------------------------------------------------------------- |
+| `simple`           | Base dialog + listbox, opaque white/`dark:gray-800` surface.                                    |
+| `with-padding`     | Looser row padding (`smart:px-6 smart:py-4`) for a roomier list.                                |
+| `with-icons`       | Leading square glyph per row from `ICommand.icon` (falls back to `#` when absent).              |
+| `with-images`      | Leading rounded avatar per row from `ICommand.imageUrl` (rows without an image show no avatar). |
+| `semi-transparent` | Translucent `smart:bg-white/90 dark:bg-gray-800/90 smart:backdrop-blur` dialog surface.         |
+| `with-groups`      | Grouped rows under uppercase headers (`data-role="group"`) from `ICommand.group`.               |
+| `with-footer`      | Adds a bottom bar (`data-role="footer"`) with a result count and `Enter / Esc` hint text.       |
+| `with-preview`     | Two-pane layout: half-width list + a preview panel showing the hovered (default first) command. |
+
+`with-groups` groups by `ICommand.group`; commands without a `group` fall under an `Other` header. `with-preview` uses `ICommand.description` for the preview body and widens the dialog to `smart:max-w-3xl`.
+
+### data-role hooks
+
+The template exposes stable `data-role` attributes for testing/targeting: `dialog`, `search-wrap`, `search`, `list`, `item`, `item-icon`, `item-image`, `group`, `empty`, `footer`, `preview-layout`, `preview`.
+
+### Token registration
+
+```typescript
+import { COMMAND_PALETTE_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+import { CommandPalettePresetComponent } from '@smartsoft001/angular';
+
+providers: [
+  {
+    provide: COMMAND_PALETTE_STANDARD_COMPONENT_TOKEN,
+    useValue: CommandPalettePresetComponent,
+  },
+];
+```
+
+Because `CommandPaletteComponent` forwards inputs canonically through `NgComponentOutlet` (`componentInputs = { commands, open, query, options, cssClass }`), the preset declares `override cssClass = input<string>('')` (dropping the inherited `class` alias) so external classes bind.
+
+### Known limitation — model() two-way writeback
+
+`open` and `query` are `model()` signals, but the wrapper renders the preset via `NgComponentOutlet`, which passes inputs by value and does not wire an output-side binding. So `[(open)]`/`[(query)]` two-way writeback from the injected preset does **not** propagate back up through the wrapper (a token-path limitation). The preset still updates its own `open`/`query` internally (e.g. `selectCommand` closes the dialog locally, `onQueryChange` filters), and `runCommand` is forwarded normally. If you need the parent's `open`/`query` signals kept in sync, use `<smart-command-palette-preset>` directly with `[(open)]`/`[(query)]` instead of going through the token, or drive `open`/`query` as one-way inputs and react to `runCommand`. This is a wrapper-level constraint and is intentionally not patched here.
+
 ## File Locations
 
 - Wrapper: `packages/shared/angular/src/lib/components/command-palette/command-palette.component.ts`
 - Standard: `packages/shared/angular/src/lib/components/command-palette/standard/standard.component.ts`
+- Preset: `packages/shared/angular/src/lib/components/command-palette/preset/preset.component.ts` (classes in `preset/preset-classes.util.ts`)
+- Stories: `packages/shared/angular/src/lib/components/command-palette/command-palette.component.stories.ts`
 - Base class: `packages/shared/angular/src/lib/components/command-palette/base/base.component.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`COMMAND_PALETTE_STANDARD_COMPONENT_TOKEN`)
 - Interfaces: `packages/shared/angular/src/lib/models/interfaces.ts` (`ICommand`, `ICommandPaletteOptions`)

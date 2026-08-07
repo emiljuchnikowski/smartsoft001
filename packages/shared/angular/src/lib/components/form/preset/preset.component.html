@@ -1,0 +1,19 @@
+<div [class]="containerClasses()" data-role="form">
+  @for (field of fields; track field) {
+    @if (form().controls[field] && !get__smartDisabled(field)) {
+      <div [class]="fieldClasses" data-role="field" [attr.data-key]="field">
+        <smart-input
+          [options]="{
+            treeLevel: treeLevel ?? 0,
+            fieldKey: field,
+            control: getUntypedFormControl(field),
+            model: model,
+            mode: mode,
+            possibilities: possibilities[field],
+            component: inputComponents[field],
+          }"
+        ></smart-input>
+      </div>
+    }
+  }
+</div>

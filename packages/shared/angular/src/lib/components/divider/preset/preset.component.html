@@ -1,0 +1,42 @@
+@if (isPlain()) {
+  <hr role="separator" [class]="plainClasses() + ' ' + cssClass()" />
+} @else if (isToolbar()) {
+  <div role="separator" [class]="toolbarClasses() + ' ' + cssClass()">
+    @if (content()) {
+      <span>{{ content() }}</span>
+    }
+    <div [class]="toolbarLineClasses()"></div>
+    @if (actionLabel()) {
+      <button
+        type="button"
+        [class]="actionClasses()"
+        (click)="actionClick.emit()"
+      >
+        @if (iconName()) {
+          <span [class]="iconClasses()">{{ iconName() }}</span>
+        }
+        {{ actionLabel() }}
+      </button>
+    }
+  </div>
+} @else if (isButton()) {
+  <div role="separator" [class]="containerClasses() + ' ' + cssClass()">
+    <button
+      type="button"
+      [class]="actionClasses()"
+      (click)="actionClick.emit()"
+    >
+      @if (iconName()) {
+        <span [class]="iconClasses()">{{ iconName() }}</span>
+      }
+      {{ actionLabel() }}
+    </button>
+  </div>
+} @else {
+  <div role="separator" [class]="containerClasses() + ' ' + cssClass()">
+    @if (iconName()) {
+      <span [class]="iconClasses()">{{ iconName() }}</span>
+    }
+    {{ content() }}
+  </div>
+}

@@ -46,9 +46,9 @@ export class AccordionHeaderComponent {
       'smart:font-medium',
       'smart:text-gray-900',
       'smart:cursor-pointer',
-      'hover:smart:bg-gray-50',
+      'smart:hover:bg-gray-50',
       'smart:dark:text-white',
-      'dark:hover:smart:bg-gray-800',
+      'smart:dark:hover:bg-gray-800',
     ];
 
     const extra = this.cssClass();

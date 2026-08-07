@@ -1,0 +1,188 @@
+<header [class]="headerClasses()">
+  <nav [class]="navContainerClasses">
+    <div [class]="brandRowClasses">
+      @if (options()?.logoTpl) {
+        @if (options()?.logoHref) {
+          <a
+            [href]="options()!.logoHref"
+            [class]="brandClasses()"
+            aria-label="Brand"
+          >
+            <ng-container [ngTemplateOutlet]="options()!.logoTpl!" />
+          </a>
+        } @else {
+          <span [class]="brandClasses()" aria-label="Brand">
+            <ng-container [ngTemplateOutlet]="options()!.logoTpl!" />
+          </span>
+        }
+      } @else if (options()?.logoUrl) {
+        @if (options()?.logoHref) {
+          <a
+            [href]="options()!.logoHref"
+            [class]="brandClasses()"
+            aria-label="Brand"
+          >
+            <img
+              class="smart:w-10 smart:h-auto"
+              [src]="options()!.logoUrl"
+              [attr.alt]="options()?.logoAlt ?? ''"
+            />
+          </a>
+        } @else {
+          <span [class]="brandClasses()" aria-label="Brand">
+            <img
+              class="smart:w-10 smart:h-auto"
+              [src]="options()!.logoUrl"
+              [attr.alt]="options()?.logoAlt ?? ''"
+            />
+          </span>
+        }
+      }
+
+      <div [class]="toggleWrapperClasses()">
+        <button
+          type="button"
+          [class]="toggleClasses()"
+          [attr.aria-expanded]="mobileMenuOpen()"
+          aria-controls="smart-navbar-collapse"
+          aria-label="Toggle navigation"
+          (click)="toggleMobileMenu()"
+        >
+          @if (!mobileMenuOpen()) {
+            <svg
+              class="smart:shrink-0 smart:size-4"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <line x1="3" x2="21" y1="6" y2="6" />
+              <line x1="3" x2="21" y1="12" y2="12" />
+              <line x1="3" x2="21" y1="18" y2="18" />
+            </svg>
+          } @else {
+            <svg
+              class="smart:shrink-0 smart:size-4"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M18 6 6 18" />
+              <path d="m6 6 12 12" />
+            </svg>
+          }
+          <span class="smart:sr-only">Toggle navigation</span>
+        </button>
+      </div>
+    </div>
+
+    <div
+      id="smart-navbar-collapse"
+      [class]="collapseClasses()"
+      role="region"
+      aria-label="Main menu"
+    >
+      <div [class]="linksContainerClasses">
+        @for (item of items(); track item.id) {
+          @if (item.href) {
+            <a
+              [href]="item.href"
+              [class]="itemClasses(!!item.current)"
+              [attr.aria-current]="item.current ? 'page' : null"
+            >
+              @if (item.iconTpl) {
+                <span class="smart:shrink-0">
+                  <ng-container [ngTemplateOutlet]="item.iconTpl" />
+                </span>
+              }
+              @if (item.label) {
+                {{ item.label }}
+              }
+            </a>
+          } @else {
+            <button
+              type="button"
+              [class]="itemClasses(!!item.current)"
+              [attr.aria-current]="item.current ? 'page' : null"
+              (click)="onItemClick(item.id)"
+            >
+              @if (item.iconTpl) {
+                <span class="smart:shrink-0">
+                  <ng-container [ngTemplateOutlet]="item.iconTpl" />
+                </span>
+              }
+              @if (item.label) {
+                {{ item.label }}
+              }
+            </button>
+          }
+        }
+
+        @if (options()?.searchTpl) {
+          <div class="smart:sm:ms-2">
+            <ng-container [ngTemplateOutlet]="options()!.searchTpl!" />
+          </div>
+        }
+        @if (options()?.actionTpl) {
+          <div>
+            <ng-container [ngTemplateOutlet]="options()!.actionTpl!" />
+          </div>
+        }
+        @if (options()?.notificationTpl) {
+          <div>
+            <ng-container [ngTemplateOutlet]="options()!.notificationTpl!" />
+          </div>
+        }
+        @if (options()?.userMenuTpl) {
+          <div>
+            <ng-container [ngTemplateOutlet]="options()!.userMenuTpl!" />
+          </div>
+        }
+      </div>
+    </div>
+  </nav>
+
+  @if (secondaryItems().length > 0) {
+    <nav [class]="secondaryNavClasses()" aria-label="Secondary">
+      <div [class]="secondaryContainerClasses">
+        @for (item of secondaryItems(); track item.id) {
+          @if (item.href) {
+            <a
+              [href]="item.href"
+              [class]="itemClasses(!!item.current)"
+              [attr.aria-current]="item.current ? 'page' : null"
+            >
+              @if (item.label) {
+                {{ item.label }}
+              }
+            </a>
+          } @else {
+            <button
+              type="button"
+              [class]="itemClasses(!!item.current)"
+              [attr.aria-current]="item.current ? 'page' : null"
+              (click)="onItemClick(item.id)"
+            >
+              @if (item.label) {
+                {{ item.label }}
+              }
+            </button>
+          }
+        }
+      </div>
+    </nav>
+  }
+</header>

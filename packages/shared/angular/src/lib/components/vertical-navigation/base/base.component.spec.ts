@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { VerticalNavigationBaseComponent } from './base.component';
@@ -53,7 +53,7 @@ describe('@smartsoft001/shared-angular: VerticalNavigationBaseComponent', () => 
 
   it('should accept options', async () => {
     host.options = { items: [{ id: 'a', label: 'A' }] };
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 

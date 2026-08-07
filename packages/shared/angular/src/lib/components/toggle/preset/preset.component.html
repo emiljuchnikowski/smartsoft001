@@ -1,0 +1,36 @@
+<div [class]="containerClasses() + ' ' + cssClass()">
+  @if (hasText() && labelPosition() === 'left') {
+    <span [class]="textWrapClasses()">
+      @if (label()) {
+        <span [class]="labelClasses()">{{ label() }}</span>
+      }
+      @if (description()) {
+        <span [class]="descriptionClasses()">{{ description() }}</span>
+      }
+    </span>
+  }
+
+  <label [class]="switchClasses()">
+    <input
+      type="checkbox"
+      [class]="inputClasses"
+      [checked]="value()"
+      [disabled]="disabled()"
+      [attr.aria-label]="ariaLabel()"
+      (change)="onChange($event)"
+    />
+    <span [class]="trackClasses()"></span>
+    <span [class]="thumbClasses()"></span>
+  </label>
+
+  @if (hasText() && labelPosition() === 'right') {
+    <span [class]="textWrapClasses()">
+      @if (label()) {
+        <span [class]="labelClasses()">{{ label() }}</span>
+      }
+      @if (description()) {
+        <span [class]="descriptionClasses()">{{ description() }}</span>
+      }
+    </span>
+  }
+</div>

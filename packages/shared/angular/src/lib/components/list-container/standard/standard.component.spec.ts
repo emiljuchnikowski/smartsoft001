@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ListContainerStandardComponent } from './standard.component';
@@ -48,7 +48,7 @@ describe('@smartsoft001/shared-angular: ListContainerStandardComponent', () => {
 
   it('should set data-variant from options when provided', async () => {
     host.options = { variant: 'separate-cards' };
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -66,7 +66,7 @@ describe('@smartsoft001/shared-angular: ListContainerStandardComponent', () => {
 
   it('should apply external cssClass on the host div when provided', async () => {
     host.cssClass = 'my-extra-class';
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 

@@ -23,6 +23,14 @@ Main wrapper component. Renders `DrawerStandardComponent` by default. When `DRAW
 
 Barebones placeholder concrete implementation. When `open()` is `true`, renders an optional overlay `<div class="drawer-overlay">` (when `options.withOverlay`) and an `<aside role="dialog" aria-modal="true">` with a `data-position` attribute (`left` or `right`, default `right`). When a `title` is provided, the aside includes a `<header>` with an `<h2 id="smart-drawer-title">` and a close `<button aria-label="Close">`. Projected content is rendered via `<ng-content />`. It does not include Tailwind UI styling — it exists solely as the default structural placeholder until a custom implementation is registered through the token.
 
+### DrawerPresetComponent (`<smart-drawer-preset>`)
+
+Fully-styled variation that extends `DrawerBaseComponent` and is a drop-in replacement for `DrawerStandardComponent`. Register it via `DRAWER_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-drawer>`, or use the `<smart-drawer-preset>` selector directly. It renders the translated Preline **offcanvas** look: a fixed, sliding side panel (`role="dialog"`, `aria-modal="true"`, `tabindex="-1"`) with a header (title + circular close button with the Preline X icon), a `<ng-content />` body, and an optional dimmed backdrop. It consumes `options.position` (`left`/`right`, default `right` → `data-position` + start/end placement), `options.wide` (`max-w-xs` → `max-w-md`), `options.withOverlay` (renders a click-to-close backdrop), and `options.brandedHeader` (blue header bar with inverted title/close styling). Open/close is Angular-driven via the `open` model + `@if` and `close()` (no Preline JS runtime). All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants. The class recipes live in `preset/preset-classes.util.ts` (`getDrawerPanelClasses`, `getDrawerBackdropClasses`, `getDrawerHeaderClasses`, `getDrawerTitleClasses`, `getDrawerCloseClasses`, `getDrawerBodyClasses`).
+
+> Because `DrawerComponent` renders injected components via `NgComponentOutlet` (which passes inputs by canonical name), `DrawerPresetComponent` overrides `cssClass` as `input<string>('')` **without** the `class` alias. Bind it as `[cssClass]` when using the `<smart-drawer-preset>` selector directly, or just pass `class` on `<smart-drawer>` (the wrapper forwards it).
+>
+> The preset uses `<ng-content />` for its body, which works with the `<smart-drawer-preset>` selector directly but is **not** propagated when rendered through `DRAWER_STANDARD_COMPONENT_TOKEN` (see "Content Projection Limitation"). It does not consume `options.stickyFooter` (no footer slot in the base API) or `options.variant` (content-type variants are projected via `<ng-content />`, not built into the offcanvas shell). Top/bottom placements from the Preline reference are not expressible — `IDrawerOptions.position` is `left | right` only.
+
 ### DrawerBaseComponent (abstract)
 
 Abstract base directive for extending custom drawer implementations. Exposes `open` as a two-way `ModelSignal<boolean>` (default `false`), `title` as an `InputSignal<string | undefined>`, `options` as an `InputSignal<IDrawerOptions | undefined>`, `cssClass` as an `InputSignal<string>` (with alias `class`), a `closed` output, and a `close()` method that sets `open` to `false` and emits `closed`.
@@ -189,6 +197,8 @@ When extending the base directly, remember to:
 
 - Wrapper: `packages/shared/angular/src/lib/components/drawer/drawer.component.ts`
 - Standard: `packages/shared/angular/src/lib/components/drawer/standard/standard.component.ts`
+- Preset variation: `packages/shared/angular/src/lib/components/drawer/preset/preset.component.ts`
+- Preset class recipes: `packages/shared/angular/src/lib/components/drawer/preset/preset-classes.util.ts`
 - Base class: `packages/shared/angular/src/lib/components/drawer/base/base.component.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`DRAWER_STANDARD_COMPONENT_TOKEN`)
 - Interface: `packages/shared/angular/src/lib/models/interfaces.ts` (`IDrawerOptions`, `SmartDrawerVariant`)

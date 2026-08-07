@@ -17,7 +17,7 @@ const noop = () => undefined;
   template: `
     @if (!options()?.hideHeader) {
       <div
-        class="smart:md:flex smart:md:items-center smart:md:justify-between smart:px-4 smart:py-4 sm:smart:px-6 lg:smart:px-8"
+        class="smart:md:flex smart:md:items-center smart:md:justify-between smart:px-4 smart:py-4 smart:sm:px-6 smart:lg:px-8"
       >
         <div class="smart:min-w-0 smart:flex-1">
           <div class="smart:flex smart:items-center smart:gap-x-3">
@@ -25,7 +25,7 @@ const noop = () => undefined;
               <button
                 type="button"
                 (click)="back()"
-                class="smart:inline-flex smart:items-center smart:rounded-md smart:p-1.5 smart:text-gray-400 hover:smart:text-gray-500 smart:dark:text-gray-500 dark:hover:smart:text-gray-400"
+                class="smart:inline-flex smart:items-center smart:rounded-md smart:p-1.5 smart:text-gray-400 smart:hover:text-gray-500 smart:dark:text-gray-500 smart:dark:hover:text-gray-400"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -42,7 +42,7 @@ const noop = () => undefined;
               </button>
             }
             <h2
-              class="smart:text-2xl/7 smart:font-bold smart:text-gray-900 sm:smart:truncate sm:smart:text-3xl sm:smart:tracking-tight smart:dark:text-white"
+              class="smart:text-2xl/7 smart:font-bold smart:text-gray-900 smart:sm:truncate smart:sm:text-3xl smart:sm:tracking-tight smart:dark:text-white"
             >
               {{ options()?.title ?? '' | translate }}
             </h2>
@@ -50,7 +50,7 @@ const noop = () => undefined;
         </div>
         @if (options()?.endButtons?.length || options()?.search) {
           <div
-            class="smart:mt-4 smart:flex smart:shrink-0 smart:gap-x-2 md:smart:ml-4 md:smart:mt-0"
+            class="smart:mt-4 smart:flex smart:shrink-0 smart:gap-x-2 smart:md:ml-4 smart:md:mt-0"
           >
             @if (options()?.search; as search) {
               <div class="smart:relative smart:rounded-md smart:shadow-xs">
@@ -59,7 +59,7 @@ const noop = () => undefined;
                   [value]="search.text() ?? ''"
                   (input)="search.set($any($event.target).value)"
                   [placeholder]="'search' | translate"
-                  class="smart:block smart:w-full smart:rounded-md smart:border-0 smart:py-1.5 smart:pl-3 smart:pr-10 smart:text-gray-900 smart:ring-1 smart:ring-inset smart:ring-gray-300 placeholder:smart:text-gray-400 focus:smart:ring-2 focus:smart:ring-inset focus:smart:ring-indigo-600 sm:smart:text-sm/6 smart:dark:bg-white/5 smart:dark:text-white smart:dark:ring-white/10 dark:placeholder:smart:text-gray-500"
+                  class="smart:block smart:w-full smart:rounded-md smart:border-0 smart:py-1.5 smart:pl-3 smart:pr-10 smart:text-gray-900 smart:ring-1 smart:ring-inset smart:ring-gray-300 smart:placeholder:text-gray-400 smart:focus:ring-2 smart:focus:ring-inset smart:focus:ring-indigo-600 smart:sm:text-sm/6 smart:dark:bg-white/5 smart:dark:text-white smart:dark:ring-white/10 smart:dark:placeholder:text-gray-500"
                 />
               </div>
             }
@@ -83,7 +83,7 @@ const noop = () => undefined;
         }
       </div>
     }
-    <div class="smart:px-4 sm:smart:px-6 lg:smart:px-8">
+    <div class="smart:px-4 smart:sm:px-6 smart:lg:px-8">
       @if (options()?.bodyTpl; as bodyTpl) {
         <ng-container [ngTemplateOutlet]="bodyTpl"></ng-container>
       }

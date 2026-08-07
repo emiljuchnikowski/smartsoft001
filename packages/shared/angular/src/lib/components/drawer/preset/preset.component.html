@@ -1,0 +1,46 @@
+@if (open()) {
+  @if (withOverlay()) {
+    <div [class]="backdropClasses()" aria-hidden="true" (click)="close()"></div>
+  }
+  <aside
+    role="dialog"
+    aria-modal="true"
+    tabindex="-1"
+    [class]="panelClasses() + ' ' + cssClass()"
+    [attr.data-position]="position()"
+    [attr.aria-labelledby]="title() ? 'smart-drawer-preset-title' : null"
+  >
+    <div [class]="headerClasses()">
+      <h3 id="smart-drawer-preset-title" [class]="titleClasses()">
+        {{ title() }}
+      </h3>
+      <button
+        type="button"
+        aria-label="Close"
+        [class]="closeClasses()"
+        (click)="close()"
+      >
+        <span class="smart:sr-only">Close</span>
+        <svg
+          class="smart:shrink-0 smart:size-4"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M18 6 6 18" />
+          <path d="m6 6 12 12" />
+        </svg>
+      </button>
+    </div>
+    <div [class]="bodyClasses()">
+      <ng-content />
+    </div>
+  </aside>
+}

@@ -23,6 +23,12 @@ Main wrapper component. Renders `ToggleStandardComponent` by default. When `TOGG
 
 Barebones placeholder concrete implementation. Renders a minimal `<input type="checkbox">` bound to `value` and `disabled`, with an optional `aria-label` from `options.ariaLabel`, and the external `cssClass` applied to the input element. It does not include Tailwind UI styling — it exists solely as the default structural placeholder until a custom implementation is registered through the token.
 
+### TogglePresetComponent (`<smart-toggle-preset>`)
+
+Styled variation that extends `ToggleBaseComponent` and is a drop-in replacement for `ToggleStandardComponent`. Register it via `TOGGLE_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-toggle>`, or use the `<smart-toggle-preset>` selector directly. It renders the Preline **default switch**: a hidden, accessible `<input type="checkbox">` (with `peer sr-only`) drives the track / thumb visuals through `peer-checked` / `peer-disabled` states, while the `value` model holds the checked state (updated via the checkbox `change` event). Honors `options.label` and `options.description` (rendered beside the switch), `options.labelPosition` (`'left'` | `'right'`, default `'right'`), `options.ariaLabel` (forwarded to the checkbox), and `disabled`. All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants. The class recipes live in `preset/preset-classes.util.ts` (`getToggleContainerClasses`, `getToggleSwitchClasses`, `getToggleTrackClasses`, `getToggleThumbClasses`, `getToggleTextWrapClasses`, `getToggleLabelClasses`, `getToggleDescriptionClasses`).
+
+> Because `ToggleComponent` renders injected components via `NgComponentOutlet` (which passes inputs by canonical name), `TogglePresetComponent` overrides `cssClass` as `input<string>('')` **without** the `class` alias. Bind it as `[cssClass]` when using the `<smart-toggle-preset>` selector directly, or just pass `class` on `<smart-toggle>` (the wrapper forwards it). Note that the Preline doc's size, soft-color, rounded, icon, tooltip, and validation-state variants are **not** exposed, because `IToggleOptions` has no size/variant/color fields; the preset renders the default medium pill switch in the primary (blue) color.
+
 ### ToggleBaseComponent (abstract)
 
 Abstract base directive for extending custom toggle implementations. Exposes `value` as a two-way `ModelSignal<boolean>` (default `false`), `disabled` as an `InputSignal<boolean>` (default `false`), `options` as an `InputSignal<IToggleOptions | undefined>`, `cssClass` as an `InputSignal<string>` (with alias `class`), and a `toggle()` method that calls `value.set(!value())` when `disabled()` is `false`.
@@ -146,10 +152,46 @@ When extending the base directly, remember to:
 <smart-toggle [(value)]="enabled" class="smart:my-2" />
 ```
 
+### Using the preset variation
+
+```typescript
+// Register globally (or in a feature's providers) to restyle every <smart-toggle>:
+import {
+  TOGGLE_STANDARD_COMPONENT_TOKEN,
+  TogglePresetComponent,
+} from '@smartsoft001/angular';
+
+providers: [
+  { provide: TOGGLE_STANDARD_COMPONENT_TOKEN, useValue: TogglePresetComponent },
+];
+```
+
+```html
+<!-- Then drive it through value + options -->
+<smart-toggle [(value)]="enabled" [options]="{ label: 'Notifications' }" />
+<smart-toggle
+  [(value)]="enabled"
+  [options]="{
+    label: 'Dark mode',
+    description: 'Use the dark theme',
+    labelPosition: 'left',
+  }"
+/>
+
+<!-- Or use the variation selector directly (note [cssClass], not class) -->
+<smart-toggle-preset
+  [(value)]="enabled"
+  [options]="{ ariaLabel: 'Use setting' }"
+/>
+```
+
 ## File Locations
 
 - Wrapper: `packages/shared/angular/src/lib/components/toggle/toggle.component.ts`
 - Standard: `packages/shared/angular/src/lib/components/toggle/standard/standard.component.ts`
+- Preset variation: `packages/shared/angular/src/lib/components/toggle/preset/preset.component.ts`
+- Preset class recipes: `packages/shared/angular/src/lib/components/toggle/preset/preset-classes.util.ts`
+- Stories: `packages/shared/angular/src/lib/components/toggle/toggle.component.stories.ts`
 - Base class: `packages/shared/angular/src/lib/components/toggle/base/base.component.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`TOGGLE_STANDARD_COMPONENT_TOKEN`)
 - Interface: `packages/shared/angular/src/lib/models/interfaces.ts` (`IToggleOptions`)

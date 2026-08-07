@@ -27,6 +27,7 @@ import { STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
   `,
   encapsulation: ViewEncapsulation.None,
   imports: [StackedLayoutStandardComponent, NgComponentOutlet],
+  host: { class: 'smart:contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StackedLayoutComponent {

@@ -30,6 +30,7 @@ import { LoaderStandardComponent } from './standard/standard.component';
   `,
   encapsulation: ViewEncapsulation.None,
   imports: [LoaderStandardComponent, NgComponentOutlet],
+  host: { class: 'smart:contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoaderComponent {

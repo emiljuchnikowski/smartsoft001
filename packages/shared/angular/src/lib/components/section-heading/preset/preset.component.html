@@ -1,0 +1,44 @@
+<section [class]="sectionClasses()" data-role="section">
+  <div [class]="containerClasses">
+    <div [class]="gridClasses()" data-role="grid">
+      @if (imageFirst() && options()?.imageTpl) {
+        <div [class]="imageClasses()" data-role="image">
+          <ng-container [ngTemplateOutlet]="options()!.imageTpl!" />
+        </div>
+      }
+
+      <div [class]="textClasses()" data-role="text">
+        @if (hasEyebrow()) {
+          <div [class]="eyebrowClasses" data-role="eyebrow">
+            @if (options()?.label) {
+              <span>{{ options()!.label }}</span>
+            }
+            @if (options()?.badgeTpl) {
+              <ng-container [ngTemplateOutlet]="options()!.badgeTpl!" />
+            }
+          </div>
+        }
+
+        @if (options()?.title) {
+          <h2 [class]="titleClasses">{{ options()!.title }}</h2>
+        }
+
+        @if (options()?.description) {
+          <p [class]="descriptionClasses">{{ options()!.description }}</p>
+        }
+
+        @if (options()?.actionsTpl) {
+          <div [class]="actionsClasses" data-role="actions">
+            <ng-container [ngTemplateOutlet]="options()!.actionsTpl!" />
+          </div>
+        }
+      </div>
+
+      @if (!imageFirst() && options()?.imageTpl) {
+        <div [class]="imageClasses()" data-role="image">
+          <ng-container [ngTemplateOutlet]="options()!.imageTpl!" />
+        </div>
+      }
+    </div>
+  </div>
+</section>

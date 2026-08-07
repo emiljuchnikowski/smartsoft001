@@ -1,4 +1,4 @@
-import { Component, input, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, input, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { IEntity } from '@smartsoft001/domain-core';
@@ -81,7 +81,7 @@ describe('@smartsoft001/shared-angular: DetailsStandardComponent', () => {
 
   it('should append cssClass to the container', async () => {
     fixture.componentInstance.cssClass = 'my-extra-class';
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 

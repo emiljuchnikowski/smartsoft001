@@ -1,0 +1,153 @@
+<div [class]="containerClasses + ' ' + cssClass()">
+  @if (options()?.iconTpl) {
+    <div [class]="iconWrapClasses">
+      <ng-container [ngTemplateOutlet]="options()!.iconTpl!" />
+    </div>
+  }
+
+  @if (options()?.title) {
+    <h3 [class]="titleClasses">{{ options()!.title }}</h3>
+  }
+
+  @if (options()?.description) {
+    <p [class]="descriptionClasses">{{ options()!.description }}</p>
+  }
+
+  @if (options()?.formTpl) {
+    <div [class]="formClasses">
+      <ng-container [ngTemplateOutlet]="options()!.formTpl!" />
+    </div>
+  }
+
+  @if (options()?.footerLinkLabel) {
+    <div [class]="footerWrapClasses">
+      @if (options()?.footerLinkHref) {
+        <a [href]="options()!.footerLinkHref" [class]="footerLinkClasses">
+          {{ options()!.footerLinkLabel }}
+          <svg
+            class="smart:shrink-0 smart:size-4"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="m9 18 6-6-6-6" />
+          </svg>
+        </a>
+      } @else {
+        <span [class]="footerLinkClasses">{{
+          options()!.footerLinkLabel
+        }}</span>
+      }
+    </div>
+  }
+
+  @if ((options()?.actions ?? []).length > 0) {
+    <div [class]="actionsClasses">
+      @for (action of options()!.actions!; track action.id) {
+        @if (action.href) {
+          <a [href]="action.href" [class]="actionClasses(action)">
+            @if (action.iconTpl) {
+              <ng-container [ngTemplateOutlet]="action.iconTpl" />
+            }
+            @if (action.label) {
+              {{ action.label }}
+            }
+          </a>
+        } @else {
+          <button
+            type="button"
+            [class]="actionClasses(action)"
+            (click)="onActionClick(action.id)"
+          >
+            @if (action.iconTpl) {
+              <ng-container [ngTemplateOutlet]="action.iconTpl" />
+            }
+            @if (action.label) {
+              {{ action.label }}
+            }
+          </button>
+        }
+      }
+    </div>
+  }
+
+  @if ((options()?.items ?? []).length > 0) {
+    @if (options()?.itemsTitle) {
+      <h4 [class]="itemsTitleClasses">{{ options()!.itemsTitle }}</h4>
+    }
+    <ul [class]="itemsListClasses" role="list">
+      @for (item of options()!.items!; track item.id) {
+        <li>
+          @if (item.href) {
+            <a [href]="item.href" [class]="itemClasses">
+              @if (item.iconTpl) {
+                <span [class]="itemIconClasses">
+                  <ng-container [ngTemplateOutlet]="item.iconTpl" />
+                </span>
+              }
+              @if (item.imageUrl) {
+                <img
+                  [src]="item.imageUrl"
+                  [attr.alt]="item.imageAlt ?? ''"
+                  [class]="itemImageClasses"
+                />
+              }
+              <span [class]="itemContentClasses">
+                @if (item.title) {
+                  <span [class]="itemTitleClasses">{{ item.title }}</span>
+                }
+                @if (item.description) {
+                  <span [class]="itemDescriptionClasses">{{
+                    item.description
+                  }}</span>
+                }
+                @if (item.meta) {
+                  <span [class]="itemMetaClasses">{{ item.meta }}</span>
+                }
+              </span>
+            </a>
+          } @else {
+            <button
+              type="button"
+              [class]="itemClasses"
+              (click)="onItemClick(item.id)"
+            >
+              @if (item.iconTpl) {
+                <span [class]="itemIconClasses">
+                  <ng-container [ngTemplateOutlet]="item.iconTpl" />
+                </span>
+              }
+              @if (item.imageUrl) {
+                <img
+                  [src]="item.imageUrl"
+                  [attr.alt]="item.imageAlt ?? ''"
+                  [class]="itemImageClasses"
+                />
+              }
+              <span [class]="itemContentClasses">
+                @if (item.title) {
+                  <span [class]="itemTitleClasses">{{ item.title }}</span>
+                }
+                @if (item.description) {
+                  <span [class]="itemDescriptionClasses">{{
+                    item.description
+                  }}</span>
+                }
+                @if (item.meta) {
+                  <span [class]="itemMetaClasses">{{ item.meta }}</span>
+                }
+              </span>
+            </button>
+          }
+        </li>
+      }
+    </ul>
+  }
+</div>

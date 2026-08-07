@@ -24,6 +24,14 @@ Main wrapper component. Renders `ButtonGroupStandardComponent` by default. When 
 
 Default concrete implementation. Renders a `<div role="group">` containing one `<button>` per item, with optional label and count spans.
 
+### ButtonGroupPresetComponent (`<smart-button-group-preset>`)
+
+Fully-styled, drop-in concrete implementation (Preline button-group look) that extends `ButtonGroupBaseComponent`. Renders a segmented control with a `bg-white`/`dark:bg-gray-800` surface, shared borders collapsed via `-ms-px`, and rounded ends. The segment matching `selected` is emphasised (`aria-pressed="true"` + blue text). `options.variant` adjusts per-button content: `icon-only` hides labels (and sets `aria-label`), `with-stat` styles the count pill with the blue stat palette; all other variants render the basic label + count layout.
+
+Register it through `BUTTON_GROUP_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-button-group>`, or use the `<smart-button-group-preset>` selector directly.
+
+> NgComponentOutlet note: when registered through the token, the wrapper passes inputs by **canonical name**, so the preset overrides the inherited `class` alias with a plain `cssClass = input<string>('')` so external classes still bind.
+
 ### ButtonGroupBaseComponent (abstract)
 
 Abstract base directive (`@Directive()`) for extending custom button-group implementations. Exposes `select(id: string)` which sets `selected` and emits `buttonClick`.
@@ -153,6 +161,9 @@ The base class provides `select(id: string)` which sets `selected` and emits `bu
 - Wrapper: `packages/shared/angular/src/lib/components/button-group/button-group.component.ts`
 - Standard: `packages/shared/angular/src/lib/components/button-group/standard/standard.component.ts`
 - Standard template: `packages/shared/angular/src/lib/components/button-group/standard/standard.component.html`
+- Preset: `packages/shared/angular/src/lib/components/button-group/preset/preset.component.ts`
+- Preset template: `packages/shared/angular/src/lib/components/button-group/preset/preset.component.html`
+- Preset classes: `packages/shared/angular/src/lib/components/button-group/preset/preset-classes.util.ts`
 - Base class: `packages/shared/angular/src/lib/components/button-group/base/base.component.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`BUTTON_GROUP_STANDARD_COMPONENT_TOKEN`)
 - Interfaces: `packages/shared/angular/src/lib/models/interfaces.ts` (`IButtonGroupButton`, `IButtonGroupOptions`, `SmartButtonGroupVariant`)

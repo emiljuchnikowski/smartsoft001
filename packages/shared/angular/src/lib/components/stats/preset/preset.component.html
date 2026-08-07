@@ -1,0 +1,31 @@
+<div [class]="containerClasses() + ' ' + cssClass()">
+  @if (title()) {
+    <h2 [class]="titleClasses()">{{ title() }}</h2>
+  }
+  <div [class]="gridClasses()">
+    @for (item of items(); track $index) {
+      <div [attr.aria-label]="item.ariaLabel ?? null">
+        @if (item.iconTpl) {
+          <div [class]="iconWrapClasses()">
+            <ng-container [ngTemplateOutlet]="item.iconTpl" />
+          </div>
+        }
+        <h4 [class]="labelClasses()">{{ item.label }}</h4>
+        <p [class]="valueClasses()">
+          {{ item.value }}
+          @if (item.change) {
+            <span [class]="changeClasses(item.trend)">{{ item.change }}</span>
+          }
+        </p>
+        @if (item.previousValue !== undefined && item.previousValue !== null) {
+          <p [class]="subClasses()">{{ item.previousValue }}</p>
+        }
+        @if (item.actionTpl) {
+          <div [class]="actionClasses()">
+            <ng-container [ngTemplateOutlet]="item.actionTpl" />
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>
