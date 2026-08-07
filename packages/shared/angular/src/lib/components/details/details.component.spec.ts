@@ -1,5 +1,6 @@
 import { Component, input, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 
 import { IEntity } from '@smartsoft001/domain-core';
 import { Field, Model } from '@smartsoft001/models';
@@ -67,6 +68,27 @@ describe('@smartsoft001/shared-angular: DetailsComponent', () => {
       );
 
       expect(standard).toBeTruthy();
+    });
+
+    it('should render fields when item is a plain object (not a class instance)', () => {
+      // Arrange — plain objects (e.g. API payloads) are not `instanceof type`,
+      // so the base component must convert them via ObjectService.createByType
+      fixture.componentRef.setInput('options', {
+        type: TestItemModel,
+        item: signal({ id: 'plain-id', name: 'Plain name' } as TestItemModel),
+      });
+
+      // Act
+      fixture.detectChanges();
+      const standard = fixture.debugElement.query(
+        By.directive(DetailsStandardComponent),
+      ).componentInstance as DetailsStandardComponent<TestItemModel>;
+
+      // Assert — reading the computed must convert the plain object, not crash
+      let converted: TestItemModel | undefined;
+      expect(() => (converted = standard.item?.())).not.toThrow();
+      expect(converted).toBeInstanceOf(TestItemModel);
+      expect(converted?.name).toBe('Plain name');
     });
   });
 

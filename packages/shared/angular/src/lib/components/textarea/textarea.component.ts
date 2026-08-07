@@ -35,6 +35,7 @@ import { TEXTAREA_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
   `,
   encapsulation: ViewEncapsulation.None,
   imports: [TextareaStandardComponent, NgComponentOutlet],
+  host: { class: 'smart:contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TextareaComponent {

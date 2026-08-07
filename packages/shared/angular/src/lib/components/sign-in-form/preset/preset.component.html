@@ -1,0 +1,150 @@
+<ng-template #formContent>
+  <form
+    data-role="form"
+    class="smart:space-y-4"
+    (submit)="onSubmit($event)"
+    [attr.aria-label]="options()?.ariaLabel ?? null"
+    novalidate
+  >
+    <div>
+      @if (showLabels()) {
+        <label for="smart-sign-in-form-email" [class]="labelClasses"
+          >Email</label
+        >
+      }
+      <input
+        data-role="email"
+        id="smart-sign-in-form-email"
+        type="email"
+        name="email"
+        autocomplete="email"
+        [class]="inputClasses"
+        [attr.placeholder]="options()?.emailPlaceholder ?? null"
+        [disabled]="disabled()"
+        [value]="email()"
+        (input)="onEmailInput($event)"
+        required
+      />
+    </div>
+    <div>
+      @if (showLabels()) {
+        <label for="smart-sign-in-form-password" [class]="labelClasses"
+          >Password</label
+        >
+      }
+      <input
+        data-role="password"
+        id="smart-sign-in-form-password"
+        type="password"
+        name="password"
+        [class]="inputClasses"
+        [attr.autocomplete]="
+          mode() === 'sign-up' ? 'new-password' : 'current-password'
+        "
+        [attr.placeholder]="options()?.passwordPlaceholder ?? null"
+        [disabled]="disabled()"
+        [value]="password()"
+        (input)="onPasswordInput($event)"
+        required
+      />
+    </div>
+    @if (mode() === 'sign-in' && options()?.forgotPasswordHref) {
+      <div class="smart:text-right">
+        <a
+          data-role="forgot"
+          [class]="linkClasses"
+          [attr.href]="options()!.forgotPasswordHref"
+          >Forgot password?</a
+        >
+      </div>
+    }
+    <button
+      data-role="submit"
+      type="submit"
+      [class]="submitClasses"
+      [disabled]="disabled()"
+    >
+      {{
+        options()?.submitLabel ?? (mode() === 'sign-up' ? 'Sign up' : 'Sign in')
+      }}
+    </button>
+    @if ((options()?.socialProviders ?? []).length > 0) {
+      <div class="smart:space-y-2">
+        @for (provider of options()!.socialProviders!; track provider.id) {
+          <button
+            data-role="social"
+            type="button"
+            [class]="socialClasses"
+            [disabled]="disabled()"
+            (click)="onSocialClick(provider.id)"
+          >
+            @if (provider.iconTpl) {
+              <span class="smart:inline-flex smart:size-5 smart:items-center">
+                <ng-container [ngTemplateOutlet]="provider.iconTpl" />
+              </span>
+            } @else if (provider.iconUrl) {
+              <img class="smart:size-5" [src]="provider.iconUrl" alt="" />
+            }
+            {{ provider.label }}
+          </button>
+        }
+      </div>
+    }
+    @if (mode() === 'sign-in' && options()?.signUpHref) {
+      <a
+        data-role="alt-link"
+        class="smart:block smart:text-center"
+        [class]="linkClasses"
+        [attr.href]="options()!.signUpHref"
+        >Create an account</a
+      >
+    }
+    @if (mode() === 'sign-up' && options()?.signInHref) {
+      <a
+        data-role="alt-link"
+        class="smart:block smart:text-center"
+        [class]="linkClasses"
+        [attr.href]="options()!.signInHref"
+        >Already have an account?</a
+      >
+    }
+    @if (options()?.extraTpl) {
+      <div data-role="extra">
+        <ng-container [ngTemplateOutlet]="options()!.extraTpl!" />
+      </div>
+    }
+  </form>
+</ng-template>
+
+@switch (layout()) {
+  @case ('split-screen') {
+    <div data-role="container" [class]="containerClasses()">
+      <div data-role="hero" [class]="heroClasses">
+        @if (options()?.heroImageUrl) {
+          <img
+            class="smart:absolute smart:inset-0 smart:h-full smart:w-full smart:object-cover"
+            [src]="options()!.heroImageUrl"
+            alt=""
+          />
+        }
+      </div>
+      <div [class]="columnClasses">
+        <div class="smart:w-full smart:max-w-sm">
+          <ng-container [ngTemplateOutlet]="formContent" />
+        </div>
+      </div>
+    </div>
+  }
+  @case ('card') {
+    <div data-role="container" [class]="containerClasses()">
+      <div data-role="card" [class]="cardClasses">
+        <ng-container [ngTemplateOutlet]="formContent" />
+      </div>
+    </div>
+  }
+  @default {
+    <div data-role="container" [class]="containerClasses()">
+      <ng-container [ngTemplateOutlet]="formContent" />
+    </div>
+  }
+}

@@ -28,7 +28,7 @@ import { FilterDateComponent } from '../date/date.component';
             type="button"
             (click)="refresh(null, '>=')"
             aria-label="clear-from"
-            class="smart:shrink-0 smart:rounded smart:px-2 smart:py-2 smart:text-red-600 hover:smart:bg-red-50"
+            class="smart:shrink-0 smart:rounded smart:px-2 smart:py-2 smart:text-red-600 smart:hover:bg-red-50"
           >
             ×
           </button>
@@ -47,7 +47,7 @@ import { FilterDateComponent } from '../date/date.component';
             type="button"
             (click)="refresh(null, '<=')"
             aria-label="clear-to"
-            class="smart:shrink-0 smart:rounded smart:px-2 smart:py-2 smart:text-red-600 hover:smart:bg-red-50"
+            class="smart:shrink-0 smart:rounded smart:px-2 smart:py-2 smart:text-red-600 smart:hover:bg-red-50"
           >
             ×
           </button>

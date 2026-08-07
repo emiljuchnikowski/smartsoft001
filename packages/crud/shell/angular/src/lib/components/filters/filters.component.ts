@@ -77,7 +77,7 @@ import { FiltersBaseComponent } from './base/base.component';
             type="button"
             (click)="onClose()"
             aria-label="close"
-            class="smart:rounded smart:p-1 smart:text-gray-500 hover:smart:bg-gray-100"
+            class="smart:rounded smart:p-1 smart:text-gray-500 smart:hover:bg-gray-100"
           >
             ✕
           </button>

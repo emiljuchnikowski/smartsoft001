@@ -1,4 +1,9 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FeedStandardComponent } from './standard.component';
@@ -127,7 +132,7 @@ describe('@smartsoft001/shared-angular: FeedStandardComponent', () => {
           { id: '3', title: 'Paid invoice' },
         ],
       };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -138,7 +143,7 @@ describe('@smartsoft001/shared-angular: FeedStandardComponent', () => {
 
     it('should render event.title inside <span class="title"> when no href', async () => {
       host.options = { events: [{ title: 'Created invoice' }] };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -153,7 +158,7 @@ describe('@smartsoft001/shared-angular: FeedStandardComponent', () => {
       host.options = {
         events: [{ title: 'Created invoice', href: '/invoice/1' }],
       };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -167,7 +172,7 @@ describe('@smartsoft001/shared-angular: FeedStandardComponent', () => {
       host.options = {
         events: [{ title: 'Created invoice', timestamp: '2026-01-23T10:32' }],
       };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -182,7 +187,7 @@ describe('@smartsoft001/shared-angular: FeedStandardComponent', () => {
       host.options = {
         events: [{ title: 'Comment', avatarUrl: '/img/u.jpg' }],
       };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -202,7 +207,7 @@ describe('@smartsoft001/shared-angular: FeedStandardComponent', () => {
           },
         ],
       };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -232,7 +237,7 @@ describe('@smartsoft001/shared-angular: FeedStandardComponent', () => {
           },
         ],
       };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -257,7 +262,7 @@ describe('@smartsoft001/shared-angular: FeedStandardComponent', () => {
 
     it('should render emptyTpl when events is empty', async () => {
       host.options = { events: [], emptyTpl: host.emptyTpl };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -268,7 +273,7 @@ describe('@smartsoft001/shared-angular: FeedStandardComponent', () => {
 
     it('should render commentSubmitTpl inside <.comment-submit>', async () => {
       host.options = { commentSubmitTpl: host.commentSubmitTpl };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -281,7 +286,7 @@ describe('@smartsoft001/shared-angular: FeedStandardComponent', () => {
 
     it('should render footerTpl inside <.footer>', async () => {
       host.options = { footerTpl: host.footerTpl };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -296,7 +301,7 @@ describe('@smartsoft001/shared-angular: FeedStandardComponent', () => {
       host.options = {
         events: [{ title: 'Hello', ariaLabel: 'Greeting event' }],
       };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 

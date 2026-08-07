@@ -74,6 +74,7 @@ import { FormStandardComponent } from './standard/standard.component';
   `,
   imports: [ReactiveFormsModule, FormStandardComponent, NgComponentOutlet],
   encapsulation: ViewEncapsulation.None,
+  host: { class: 'smart:contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormComponent<T> implements OnDestroy {

@@ -23,6 +23,12 @@ Main wrapper. Delegates to `BreadcrumbsStandardComponent` by default. When `BREA
 
 Barebones placeholder using native HTML. Renders a `<nav class="breadcrumbs">` (with `aria-label` from `options.ariaLabel` or default `"Breadcrumb"`) containing an `<ol>` of items. Each item renders as `<a class="breadcrumbs-link">` (when `href` provided) or `<button class="breadcrumbs-button">` (otherwise, emitting `itemClick`). Items get `current` class and `aria-current="page"` when `item.current === true`. Supports `iconTpl` (e.g. for the home item) and `srOnlyLabel`. Items are joined by a `<span class="breadcrumbs-separator">` with a `data-separator` attribute reflecting `options.separator` (defaults to `chevron`).
 
+### BreadcrumbsPresetComponent (`<smart-breadcrumbs-preset>`)
+
+Styled variation that extends `BreadcrumbsBaseComponent` and is a drop-in replacement for `BreadcrumbsStandardComponent`. Register it via `BREADCRUMBS_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-breadcrumbs>`, or use the `<smart-breadcrumbs-preset>` selector directly. Translates the Preline breadcrumb: muted links (`text-gray-500`) that brighten to blue on hover/focus, a bold non-link current crumb (`font-semibold text-gray-900`), and a configurable separator SVG between crumbs selected via `options.separator` — `chevron` (default), `slash` (drawn slightly larger), or `arrow`. The `options.layout` field wraps the bar: `contained` (inline padded gray panel with rounded corners) and `full-width-bar` (full-width gray bar with top/bottom borders); the `simple-with-slashes` layout also implies a slash separator when `separator` is unset. Items render as `<a>` (when `href` is set and not current), `<button>` (no href → emits `itemClick`), or a plain `<span>` (when `current`). All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants. Class recipes live in `preset/preset-classes.util.ts` (`getNavClasses`, `getListClasses`, `getItemClasses`, `getLinkClasses`, `getSeparatorClasses`, `resolveSeparator`).
+
+> Because `BreadcrumbsComponent` renders injected components via `NgComponentOutlet` (which passes inputs by canonical name), `BreadcrumbsPresetComponent` overrides `cssClass` as `input<string>('')` **without** the `class` alias. Bind it as `[cssClass]` when using the `<smart-breadcrumbs-preset>` selector directly, or just pass `class` on `<smart-breadcrumbs>` (the wrapper forwards it).
+
 ### BreadcrumbsBaseComponent (abstract)
 
 Abstract base directive. Exposes:
@@ -147,6 +153,9 @@ export class MyCustomBreadcrumbsComponent extends BreadcrumbsBaseComponent {
 
 - Wrapper: `packages/shared/angular/src/lib/components/breadcrumbs/breadcrumbs.component.ts`
 - Standard: `packages/shared/angular/src/lib/components/breadcrumbs/standard/standard.component.ts`
+- Preset variation: `packages/shared/angular/src/lib/components/breadcrumbs/preset/preset.component.ts`
+- Preset class recipes: `packages/shared/angular/src/lib/components/breadcrumbs/preset/preset-classes.util.ts`
+- Stories: `packages/shared/angular/src/lib/components/breadcrumbs/breadcrumbs.component.stories.ts`
 - Base class: `packages/shared/angular/src/lib/components/breadcrumbs/base/base.component.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`BREADCRUMBS_STANDARD_COMPONENT_TOKEN`)
 - Interfaces: `packages/shared/angular/src/lib/models/interfaces.ts` (`IBreadcrumbsOptions`, `IBreadcrumbItem`, `SmartBreadcrumbsLayout`, `SmartBreadcrumbsSeparator`)

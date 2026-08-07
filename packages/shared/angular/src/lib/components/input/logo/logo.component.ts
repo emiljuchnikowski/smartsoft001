@@ -31,7 +31,7 @@ import { InputBaseComponent } from '../base/base.component';
           <button
             type="button"
             (click)="clear()"
-            class="smart:rounded-md smart:bg-red-600 smart:px-2 smart:py-1 smart:text-xs smart:font-semibold smart:text-white hover:smart:bg-red-500"
+            class="smart:rounded-md smart:bg-red-600 smart:px-2 smart:py-1 smart:text-xs smart:font-semibold smart:text-white smart:hover:bg-red-500"
           >
             ×
           </button>
@@ -39,7 +39,7 @@ import { InputBaseComponent } from '../base/base.component';
           <button
             type="button"
             (click)="set(inputFile)"
-            class="smart:rounded-md smart:bg-indigo-600 smart:px-3 smart:py-2 smart:text-sm smart:font-semibold smart:text-white hover:smart:bg-indigo-500"
+            class="smart:rounded-md smart:bg-indigo-600 smart:px-3 smart:py-2 smart:text-sm smart:font-semibold smart:text-white smart:hover:bg-indigo-500"
           >
             Wybierz plik
           </button>

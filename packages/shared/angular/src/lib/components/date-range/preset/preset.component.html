@@ -1,0 +1,195 @@
+<div class="smart:relative smart:inline-block">
+  <div class="smart:inline-flex smart:items-center smart:gap-2">
+    <button
+      type="button"
+      [class]="triggerClasses"
+      (click)="onClick()"
+      data-role="trigger"
+    >
+      <svg
+        class="smart:size-5 smart:text-gray-400"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M5.75 2a.75.75 0 0 1 .75.75V4h7V2.75a.75.75 0 0 1 1.5 0V4h.25A2.75 2.75 0 0 1 18 6.75v8.5A2.75 2.75 0 0 1 15.25 18H4.75A2.75 2.75 0 0 1 2 15.25v-8.5A2.75 2.75 0 0 1 4.75 4H5V2.75A.75.75 0 0 1 5.75 2Zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25v-6.5c0-.69-.56-1.25-1.25-1.25H4.75Z"
+          clip-rule="evenodd"
+        />
+      </svg>
+      @if (value && value.start && value.end) {
+        {{ value.start + ' - ' + value.end }}
+      } @else {
+        {{ 'select' | translate }}
+      }
+    </button>
+
+    @if (value) {
+      <button
+        type="button"
+        [class]="clearClasses"
+        (click)="onClear()"
+        aria-label="Clear"
+        data-role="clear"
+      >
+        <svg
+          class="smart:size-4"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z"
+          />
+        </svg>
+      </button>
+    }
+  </div>
+
+  @if (isOpen()) {
+    <div [class]="popoverClasses" role="dialog" aria-label="Select date range">
+      <!-- Calendar -->
+      <div class="smart:p-3 smart:space-y-0.5">
+        <!-- Months -->
+        <div
+          class="smart:grid smart:grid-cols-5 smart:items-center smart:gap-x-3 smart:mx-1.5 smart:pb-3"
+        >
+          <div class="smart:col-span-1">
+            <button
+              type="button"
+              [class]="navButtonClasses"
+              (click)="prevMonth()"
+              aria-label="Previous"
+              data-role="prev"
+            >
+              <svg
+                class="smart:shrink-0 smart:size-4"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="m15 18-6-6 6-6" />
+              </svg>
+            </button>
+          </div>
+
+          <div
+            class="smart:col-span-3 smart:flex smart:justify-center smart:items-center smart:gap-x-1"
+          >
+            <select
+              [class]="selectClasses"
+              (change)="onMonthChange($event)"
+              aria-label="Select month"
+              data-role="month"
+            >
+              @for (month of months; track month.index) {
+                <option
+                  [value]="month.index"
+                  [selected]="month.index === currentMonth().month()"
+                >
+                  {{ month.name }}
+                </option>
+              }
+            </select>
+
+            <span class="smart:text-gray-800 smart:dark:text-gray-200">/</span>
+
+            <select
+              [class]="selectClasses"
+              (change)="onYearChange($event)"
+              aria-label="Select year"
+              data-role="year"
+            >
+              @for (year of years(); track year) {
+                <option
+                  [value]="year"
+                  [selected]="year === currentMonth().year()"
+                >
+                  {{ year }}
+                </option>
+              }
+            </select>
+          </div>
+
+          <div class="smart:col-span-1 smart:flex smart:justify-end">
+            <button
+              type="button"
+              [class]="navButtonClasses"
+              (click)="nextMonth()"
+              aria-label="Next"
+              data-role="next"
+            >
+              <svg
+                class="smart:shrink-0 smart:size-4"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="m9 18 6-6-6-6" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Weeks -->
+        <div class="smart:flex smart:pb-1.5">
+          @for (weekday of weekdays; track weekday) {
+            <span [class]="weekdayClasses">{{ weekday }}</span>
+          }
+        </div>
+
+        <!-- Days -->
+        @for (week of weeks(); track $index) {
+          <div class="smart:flex">
+            @for (day of week; track day.valueOf()) {
+              <div [class]="dayWrapperClasses(day)">
+                <button
+                  type="button"
+                  [class]="dayButtonClasses(day)"
+                  (click)="selectDay(day)"
+                  data-role="day"
+                >
+                  {{ day.date() }}
+                </button>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Button Group -->
+      <div [class]="footerClasses">
+        <button
+          type="button"
+          [class]="cancelClasses"
+          (click)="cancel()"
+          data-role="cancel"
+        >
+          {{ 'cancel' | translate }}
+        </button>
+        <button
+          type="button"
+          [class]="applyClasses"
+          [disabled]="!rangeStart()"
+          (click)="apply()"
+          data-role="apply"
+        >
+          {{ 'select' | translate }}
+        </button>
+      </div>
+    </div>
+  }
+</div>

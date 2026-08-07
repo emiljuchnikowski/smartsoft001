@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { IconBaseComponent } from './base.component';
@@ -42,7 +42,7 @@ describe('IconBaseComponent', () => {
 
   it('should accept cssClass via class alias', async () => {
     fixture.componentInstance.cssClass = 'custom-class';
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 

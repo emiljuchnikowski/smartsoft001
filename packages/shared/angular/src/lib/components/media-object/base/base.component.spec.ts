@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MediaObjectBaseComponent } from './base.component';
@@ -69,7 +69,7 @@ describe('@smartsoft001/shared-angular: MediaObjectBaseComponent', () => {
 
   it('should accept cssClass via class alias', async () => {
     host.cssClass = 'my-class';
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -78,7 +78,7 @@ describe('@smartsoft001/shared-angular: MediaObjectBaseComponent', () => {
 
   it('should accept IMediaObjectOptions via options input', async () => {
     host.options = { position: 'right', alignment: 'center' };
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 

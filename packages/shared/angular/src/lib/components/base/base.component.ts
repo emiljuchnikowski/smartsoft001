@@ -1,6 +1,5 @@
 import {
   ChangeDetectorRef,
-  ComponentFactoryResolver,
   ComponentRef,
   Directive,
   DoCheck,
@@ -58,7 +57,6 @@ export function CreateDynamicComponent<
   abstract class Component extends BaseComponent implements DoCheck {
     private cd = inject(ChangeDetectorRef);
     private moduleRef = inject(NgModuleRef<any>);
-    private componentFactoryResolver = inject(ComponentFactoryResolver);
     private injector = inject(Injector);
 
     private _renderCustom = false;
@@ -110,12 +108,10 @@ export function CreateDynamicComponent<
       this.template.set(component ? 'custom' : 'default');
 
       if (component && !this._renderCustom) {
-        const factory =
-          this.componentFactoryResolver.resolveComponentFactory(component);
         const first = this.dynamicContents()[0];
         if (first) {
           this._renderCustom = true;
-          this.baseComponentRef = first.container.createComponent(factory);
+          this.baseComponentRef = first.container.createComponent(component);
           this.baseInstance = this.baseComponentRef.instance;
           this.refreshDynamicInstance();
           this.baseInstance

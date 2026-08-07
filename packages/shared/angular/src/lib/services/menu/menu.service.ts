@@ -1,11 +1,4 @@
-import {
-  ComponentFactoryResolver,
-  inject,
-  Injectable,
-  Injector,
-  signal,
-  ViewContainerRef,
-} from '@angular/core';
+import { Injectable, Injector, signal, ViewContainerRef } from '@angular/core';
 
 import { IMenuItem } from '../../models';
 
@@ -17,7 +10,6 @@ import { IMenuItem } from '../../models';
   providedIn: 'root',
 })
 export class MenuService {
-  private readonly resolver = inject(ComponentFactoryResolver);
   // private readonly menuCtrl: MenuController, //TODO: to be injected
 
   private _endContainer!: ViewContainerRef;
@@ -81,11 +73,11 @@ export class MenuService {
     this._openedEnd = true;
 
     if (this._endContainer) {
-      const resolver = options.injector.get(ComponentFactoryResolver);
-
       this._endContainer.clear();
-      const factory = resolver.resolveComponentFactory(options.component);
-      this._endContainer.createComponent(factory, 0, options.injector);
+      this._endContainer.createComponent(options.component, {
+        index: 0,
+        injector: options.injector,
+      });
     }
 
     // await this.menuCtrl.enable(true, 'end');

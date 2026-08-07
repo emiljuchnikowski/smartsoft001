@@ -193,10 +193,49 @@ export class MyCustomSignInFormComponent extends SignInFormBaseComponent {
 <smart-sign-in-form [disabled]="loading()" (submit)="onSignIn($event)" />
 ```
 
+## Preset
+
+`SignInFormPresetComponent` (`<smart-sign-in-form-preset>`) is a styled drop-in
+replacement that `extends SignInFormStandardComponent`, so it inherits all form
+logic unchanged (email/password signals, `onSubmit` with the disabled guard,
+`onSocialClick`, and mode reactivity for labels/links). It realizes the four
+`options.layout` values with Tailwind (`smart:`-prefixed, explicit
+`smart:dark:*` twins) and consistent field styling (`rounded-lg`, gray borders,
+blue focus ring; solid blue submit; outline social buttons; blue text links).
+
+| `options.layout`   | Look                                                                    |
+| ------------------ | ----------------------------------------------------------------------- |
+| `simple` (default) | Single column, `max-w-sm mx-auto`, labeled fields                       |
+| `simple-no-labels` | Single column, placeholders only (labels off unless `showLabels: true`) |
+| `card`             | `simple` wrapped in a bordered, rounded, shadowed white/dark card       |
+| `split-screen`     | `grid lg:grid-cols-2`: `heroImageUrl` cover image column + form column  |
+
+`data-role` hooks for testing/styling: `container`, `form`, `email`, `password`,
+`submit`, `social`, `forgot`, `alt-link`, `hero`, `extra`, `card`.
+
+Register it via the token so `<smart-sign-in-form>` renders the preset:
+
+```typescript
+import { SIGN_IN_FORM_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+import { SignInFormPresetComponent } from '@smartsoft001/angular';
+
+providers: [
+  {
+    provide: SIGN_IN_FORM_STANDARD_COMPONENT_TOKEN,
+    useValue: SignInFormPresetComponent,
+  },
+];
+```
+
+Gaps: `heroImageUrl` renders as a `smart:lg:block` cover image (hidden below the
+`lg` breakpoint); `submitLabel`, `emailPlaceholder`, `passwordPlaceholder`, and
+the `extraTpl` slot are all honored.
+
 ## File Locations
 
 - Wrapper: `packages/shared/angular/src/lib/components/sign-in-form/sign-in-form.component.ts`
 - Standard: `packages/shared/angular/src/lib/components/sign-in-form/standard/standard.component.ts`
+- Preset: `packages/shared/angular/src/lib/components/sign-in-form/preset/preset.component.ts` (classes in `preset/preset-classes.util.ts`)
 - Base class: `packages/shared/angular/src/lib/components/sign-in-form/base/base.component.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`SIGN_IN_FORM_STANDARD_COMPONENT_TOKEN`)
 - Interfaces: `packages/shared/angular/src/lib/models/interfaces.ts` (`ISignInFormOptions`, `ISocialProvider`, `ISignInFormSubmit`, `ISignInFormSocialClick`, `SmartSignInFormMode`, `SmartSignInFormLayout`)

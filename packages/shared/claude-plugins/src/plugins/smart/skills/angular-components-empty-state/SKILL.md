@@ -23,6 +23,10 @@ Main wrapper. Delegates to `EmptyStateStandardComponent` by default. When `EMPTY
 
 Barebones placeholder using native HTML. Renders an outer wrapper with `cssClass`, a `<div class="empty-state">` containing optional `iconTpl` (rendered via `NgTemplateOutlet`), `<h3 class="title">{{ options.title }}</h3>`, `<p class="description">{{ options.description }}</p>`, an optional `formTpl` slot, an optional row of action buttons or anchors (`<button class="action variant-{variant}">` or `<a>` when `action.href` provided), an optional list of items (`<a class="item-link">` when `item.href` provided, otherwise `<button class="item-button">`) with title / description / meta / icon / image, and an optional footer link.
 
+### EmptyStatePresetComponent (`<smart-empty-state-preset>`)
+
+Fully-styled drop-in replacement for `EmptyStateStandardComponent`, adapting Preline's "Invoice Table Empty State" centered block: a rounded icon tile (`iconTpl`), title, description, a "Learn more" text link (`footerLinkLabel` / `footerLinkHref`) and a row of action buttons. Optional `items` render as a simple bordered list so it stays a full drop-in. All Tailwind classes are `smart:`-prefixed with explicit `dark:` variants. Action `variant` maps to: `primary` (blue button), `secondary` (white/layer button), `ghost` (text + hover) and `link` (inline blue link). Register through `EMPTY_STATE_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-empty-state>`, or use the selector directly. Like every preset it declares `override cssClass = input<string>('')` (no `class` alias) so `NgComponentOutlet` binds `cssClass` by its canonical name.
+
 ### EmptyStateBaseComponent (abstract)
 
 Abstract base directive. Exposes:
@@ -193,6 +197,7 @@ export class MyCustomEmptyStateComponent extends EmptyStateBaseComponent {
 
 - Wrapper: `packages/shared/angular/src/lib/components/empty-state/empty-state.component.ts`
 - Standard: `packages/shared/angular/src/lib/components/empty-state/standard/standard.component.ts`
+- Preset: `packages/shared/angular/src/lib/components/empty-state/preset/preset.component.ts`
 - Base class: `packages/shared/angular/src/lib/components/empty-state/base/base.component.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`EMPTY_STATE_STANDARD_COMPONENT_TOKEN`)
 - Interfaces: `packages/shared/angular/src/lib/models/interfaces.ts` (`IEmptyStateOptions`, `IEmptyStateAction`, `IEmptyStateItem`, `SmartEmptyStateLayout`)

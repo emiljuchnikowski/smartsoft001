@@ -1,0 +1,90 @@
+<div [class]="rootClasses + ' ' + cssClass()">
+  @if (title()) {
+    <div [class]="headingWrapClasses">
+      <h3 [class]="headingTextClasses">{{ title() }}</h3>
+    </div>
+  }
+  @if (description()) {
+    <p [class]="descriptionClasses">{{ description() }}</p>
+  }
+
+  @if (events().length > 0) {
+    @for (event of events(); track event.id ?? $index) {
+      <div [class]="itemClasses" [attr.aria-label]="event.ariaLabel ?? null">
+        @if (event.timestamp) {
+          <div [class]="timestampSideClasses">
+            <span [class]="timestampTextClasses">{{ event.timestamp }}</span>
+          </div>
+        }
+
+        <div [class]="markerRailClasses">
+          <div [class]="markerInnerClasses">
+            @if (event.iconTpl) {
+              <ng-container [ngTemplateOutlet]="event.iconTpl" />
+            } @else if (event.avatarUrl) {
+              <img [class]="avatarClasses" [src]="event.avatarUrl" alt="" />
+            } @else {
+              <span [class]="dotClasses" aria-hidden="true"></span>
+            }
+          </div>
+        </div>
+
+        <div [class]="bodyClasses">
+          @if (event.href) {
+            <a [class]="eventTitleLinkClasses" [attr.href]="event.href">{{
+              event.title
+            }}</a>
+          } @else {
+            <h3 [class]="eventTitleClasses">{{ event.title }}</h3>
+          }
+
+          @if (event.description) {
+            <p [class]="eventDescriptionClasses">{{ event.description }}</p>
+          }
+
+          @if ((event.comments ?? []).length > 0) {
+            @for (comment of event.comments!; track comment.id ?? $index) {
+              <div class="smart:flex smart:flex-col">
+                <button type="button" [class]="commentButtonClasses">
+                  @if (comment.authorAvatarUrl) {
+                    <img
+                      [class]="commentAvatarClasses"
+                      [src]="comment.authorAvatarUrl"
+                      alt=""
+                    />
+                  } @else {
+                    <span [class]="commentInitialsClasses">{{
+                      initial(comment.authorName)
+                    }}</span>
+                  }
+                  {{ comment.authorName }}
+                  @if (comment.timestamp) {
+                    <time [class]="commentTimeClasses">{{
+                      comment.timestamp
+                    }}</time>
+                  }
+                </button>
+                <p [class]="commentContentClasses">{{ comment.content }}</p>
+              </div>
+            }
+          }
+        </div>
+      </div>
+    }
+  } @else if (emptyTpl()) {
+    <div [class]="emptyClasses">
+      <ng-container [ngTemplateOutlet]="emptyTpl()!" />
+    </div>
+  }
+
+  @if (commentSubmitTpl()) {
+    <div [class]="commentSubmitClasses">
+      <ng-container [ngTemplateOutlet]="commentSubmitTpl()!" />
+    </div>
+  }
+  @if (footerTpl()) {
+    <div [class]="footerClasses">
+      <ng-container [ngTemplateOutlet]="footerTpl()!" />
+    </div>
+  }
+</div>

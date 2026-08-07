@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LoaderBaseComponent } from './base.component';
@@ -67,7 +67,7 @@ describe('@smartsoft001/shared-angular: LoaderBaseComponent', () => {
 
   it('should accept cssClass via class alias', async () => {
     fixture.componentInstance.cssClass = 'custom-class';
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -84,7 +84,7 @@ describe('@smartsoft001/shared-angular: LoaderBaseComponent', () => {
 
   it('should map size "xs" to smart:size-4', async () => {
     fixture.componentInstance.size = 'xs';
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -93,7 +93,7 @@ describe('@smartsoft001/shared-angular: LoaderBaseComponent', () => {
 
   it('should map size "sm" to smart:size-5', async () => {
     fixture.componentInstance.size = 'sm';
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -102,7 +102,7 @@ describe('@smartsoft001/shared-angular: LoaderBaseComponent', () => {
 
   it('should map size "md" to smart:size-6', async () => {
     fixture.componentInstance.size = 'md';
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -111,7 +111,7 @@ describe('@smartsoft001/shared-angular: LoaderBaseComponent', () => {
 
   it('should map size "lg" to smart:size-8', async () => {
     fixture.componentInstance.size = 'lg';
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -120,7 +120,7 @@ describe('@smartsoft001/shared-angular: LoaderBaseComponent', () => {
 
   it('should map size "xl" to smart:size-10', async () => {
     fixture.componentInstance.size = 'xl';
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -129,7 +129,7 @@ describe('@smartsoft001/shared-angular: LoaderBaseComponent', () => {
 
   it('should map color "red" to smart:text-red-600', async () => {
     fixture.componentInstance.color = 'red';
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -138,7 +138,7 @@ describe('@smartsoft001/shared-angular: LoaderBaseComponent', () => {
 
   it('should map color "emerald" to smart:text-emerald-600', async () => {
     fixture.componentInstance.color = 'emerald';
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -147,7 +147,7 @@ describe('@smartsoft001/shared-angular: LoaderBaseComponent', () => {
 
   it('should include cssClass value in spinnerClasses when non-empty', async () => {
     fixture.componentInstance.cssClass = 'extra-class';
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 

@@ -23,6 +23,10 @@ Main wrapper. Delegates to `VerticalNavigationStandardComponent` by default. Whe
 
 Barebones placeholder using native HTML. Renders an outer wrapper with `cssClass`, a `<nav class="vertical-navigation">` (with `aria-label` from `options.ariaLabel` or default `"Sidebar"`), and a `<ul>` of groups. Each group renders an optional `<div class="group-title">` and a `<ul>` of items; each item renders as `<a class="item-link">` (when `href` provided) or `<button class="item-button">` (otherwise, emitting `itemClick`). Items get `current` class and `aria-current="page"` when `item.current === true`. Supports `iconTpl`, `initial` (e.g. project letter), `label`, and `badge`.
 
+### VerticalNavigationPresetComponent (`<smart-vertical-navigation-preset>`)
+
+Fully-styled, drop-in concrete implementation extending `VerticalNavigationBaseComponent`. Renders the Preline vertical-tabs look: a container with a trailing border (`border-e-2`), and each item rendered as a tab (`<a>` for `href`, `<button>` otherwise) with its own trailing border. The `current` item gains the primary accent (`border-blue-600`, `text-blue-600`, `font-medium`); inactive items are muted gray with a primary hover/focus. Supports `iconTpl`, `initial`, `label`, `badge`, and group titles. All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants. Register it through `VERTICAL_NAVIGATION_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-vertical-navigation>`, or use the selector directly. Because `NgComponentOutlet` passes inputs by canonical name, this component overrides `cssClass = input<string>('')` (no `class` alias).
+
 ### VerticalNavigationBaseComponent (abstract)
 
 Abstract base directive. Exposes:
@@ -153,6 +157,7 @@ export class MyCustomVerticalNavigationComponent extends VerticalNavigationBaseC
 
 - Wrapper: `packages/shared/angular/src/lib/components/vertical-navigation/vertical-navigation.component.ts`
 - Standard: `packages/shared/angular/src/lib/components/vertical-navigation/standard/standard.component.ts`
+- Preset: `packages/shared/angular/src/lib/components/vertical-navigation/preset/preset.component.ts`
 - Base class: `packages/shared/angular/src/lib/components/vertical-navigation/base/base.component.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`VERTICAL_NAVIGATION_STANDARD_COMPONENT_TOKEN`)
 - Interfaces: `packages/shared/angular/src/lib/models/interfaces.ts` (`IVerticalNavOptions`, `IVerticalNavGroup`, `IVerticalNavItem`, `SmartVerticalNavLayout`)

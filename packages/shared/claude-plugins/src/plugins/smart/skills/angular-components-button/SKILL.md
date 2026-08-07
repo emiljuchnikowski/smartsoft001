@@ -23,6 +23,23 @@ Main wrapper component. Renders `ButtonStandardComponent` by default. When `BUTT
 
 Default concrete implementation. Simple Tailwind-styled button with size-dependent rounding and padding.
 
+### ButtonPresetComponent (`<smart-button-preset>`)
+
+Fully-styled, drop-in preset implementation extending `ButtonBaseComponent`. Register it through `BUTTON_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-button>`, or use the `<smart-button-preset>` selector directly.
+
+Groups the Preline button types into one component, selected via the existing `options.variant`: `primary` → solid, `secondary` → outline, `soft` → soft. Works across the full `SmartColor` palette and every `SmartSize`, and honours `options.rounded` (pill), `options.circular` (square padding + pill), `options.loading`, `options.confirm`, and the `disabled` input. All classes are `smart:`-prefixed vanilla Tailwind with explicit `dark:` variants.
+
+```typescript
+providers: [
+  {
+    provide: BUTTON_STANDARD_COMPONENT_TOKEN,
+    useValue: ButtonPresetComponent,
+  },
+];
+```
+
+Because `ButtonComponent` renders the injected component via `NgComponentOutlet`, inputs are passed by **canonical name** — `ButtonPresetComponent` therefore overrides `cssClass` as a plain `input<string>('')` (dropping the inherited `class` alias). Note that `NgComponentOutlet` does not project `<ng-content>`, so a button label set via content only shows when the preset is used directly through `<smart-button-preset>` (not through the token path).
+
 ### ButtonBaseComponent (abstract)
 
 Abstract base directive for extending custom button implementations.
@@ -130,6 +147,7 @@ export class MyCustomButtonComponent extends ButtonBaseComponent {
 
 - Wrapper: `packages/shared/angular/src/lib/components/button/button.component.ts`
 - Standard: `packages/shared/angular/src/lib/components/button/standard/standard.component.ts`
+- Preset: `packages/shared/angular/src/lib/components/button/preset/preset.component.ts` (classes: `preset/preset-classes.util.ts`)
 - Base class: `packages/shared/angular/src/lib/components/button/base/base.component.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`BUTTON_STANDARD_COMPONENT_TOKEN`)
 - Interface: `packages/shared/angular/src/lib/models/interfaces.ts` (`IButtonOptions`)

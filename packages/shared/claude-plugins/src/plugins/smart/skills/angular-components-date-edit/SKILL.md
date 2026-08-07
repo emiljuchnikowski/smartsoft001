@@ -94,9 +94,35 @@ import { DateEditBaseComponent } from '@smartsoft001/angular';
 export class MyDateEditComponent extends DateEditBaseComponent {}
 ```
 
+## DateEditPresetComponent (`<smart-date-edit-preset>`)
+
+A fully-styled Preline single datepicker variation — a read-only trigger input
+plus a calendar popover. Drop-in replacement for the standard editor.
+
+Unlike token-based components, `<smart-date-edit>` selects its variation through a
+`variant` input (NOT an `InjectionToken` / `NgComponentOutlet`). The wrapper
+dispatches via `@switch (variant())` over `DateEditVariantName`
+(`'standard' | 'preset'`). Render the preset with:
+
+```html
+<smart-date-edit variant="preset" [(ngModel)]="dateValue"></smart-date-edit>
+```
+
+The preset extends `DateEditBaseComponent`, so it shares `ngModel` (`YYYY-MM-DD`),
+`validDate`, and `validChange`. Preline's JS plugin is not installed, so the
+popover (open/close, prev/next month, day selection) is driven entirely by
+Angular signals — no external runtime. Month/year pickers are native `<select>`
+elements styled to match Preline.
+
+```typescript
+import { DateEditPresetComponent } from '@smartsoft001/angular';
+```
+
 ## File Locations
 
 - Base class: `packages/shared/angular/src/lib/components/date-edit/base/base.component.ts`
+- Preset component: `packages/shared/angular/src/lib/components/date-edit/preset/preset.component.ts`
+- Preset template: `packages/shared/angular/src/lib/components/date-edit/preset/preset.component.html`
 - Default component: `packages/shared/angular/src/lib/components/date-edit/default/default.component.ts`
 - Default template: `packages/shared/angular/src/lib/components/date-edit/default/default.component.html`
 - Tests: `packages/shared/angular/src/lib/components/date-edit/date-edit.component.spec.ts`

@@ -105,6 +105,37 @@ Consequences for custom implementations:
 - A custom component provided via `CONTAINER_STANDARD_COMPONENT_TOKEN` **must not rely on `<ng-content />`**. Instead, drive the rendered content through inputs (e.g. `options`, additional input signals on the custom subclass, or a `TemplateRef` input).
 - If you genuinely need projected children with a custom variant, expose a `bodyTpl: input<TemplateRef>()` style input and render it with `<ng-container *ngTemplateOutlet="bodyTpl()" />`.
 
+## Preset
+
+`ContainerPresetComponent` (selector `smart-container-preset`, dir `container/preset/`) is a styled drop-in for the neutral standard component. It `extends ContainerStandardComponent` and maps `IContainerOptions` to real Tailwind layout utilities (all `smart:`-prefixed) on a single root `<div data-role="container">` that preserves `<ng-content />`. No new options fields are introduced.
+
+Class mapping (`getContainerClasses(mode, padding, narrow)` in `preset/preset-classes.util.ts`):
+
+| Option                       | Classes                                                                                       |
+| ---------------------------- | --------------------------------------------------------------------------------------------- |
+| `mode: 'container'`          | `smart:mx-auto smart:max-w-7xl`                                                               |
+| `mode: 'constrained'`        | `smart:mx-auto smart:max-w-5xl`                                                               |
+| `mode: 'full-width'` / unset | `smart:w-full`                                                                                |
+| `narrow: true`               | tightens max-width to `smart:max-w-3xl` (wins over the mode max-width, stays `smart:mx-auto`) |
+| `padding: 'always'`          | `smart:px-4 smart:sm:px-6 smart:lg:px-8`                                                      |
+| `padding: 'mobile'`          | `smart:px-4 smart:sm:px-0`                                                                    |
+| `padding: 'none'` / unset    | no padding classes                                                                            |
+
+The wrapper forwards inputs canonically through `NgComponentOutlet`, so the preset does `override cssClass = input<string>('')` (dropping the `class` alias). External `cssClass` is appended after the mapped classes.
+
+Register it via the token:
+
+```typescript
+providers: [
+  {
+    provide: CONTAINER_STANDARD_COMPONENT_TOKEN,
+    useValue: ContainerPresetComponent,
+  },
+];
+```
+
+Documented gap: because `NgComponentOutlet` does not forward content projection, projected children only render when `<smart-container-preset>` is used directly, not through `<smart-container>` (see the projection limitation above). Story: `container.component.stories.ts` → `Preset`.
+
 ## File Locations
 
 - Wrapper: `packages/shared/angular/src/lib/components/container/container.component.ts`

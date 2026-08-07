@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EmptyStateBaseComponent } from './base.component';
@@ -51,7 +51,7 @@ describe('@smartsoft001/shared-angular: EmptyStateBaseComponent', () => {
 
   it('should accept options', async () => {
     host.options = { title: 'No projects' };
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -60,7 +60,7 @@ describe('@smartsoft001/shared-angular: EmptyStateBaseComponent', () => {
 
   it('should accept cssClass via class alias', async () => {
     host.cssClass = 'my-class';
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 

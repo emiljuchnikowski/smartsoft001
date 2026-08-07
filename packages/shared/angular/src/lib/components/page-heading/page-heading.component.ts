@@ -25,6 +25,7 @@ import { PAGE_HEADING_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
   `,
   encapsulation: ViewEncapsulation.None,
   imports: [PageHeadingStandardComponent, NgComponentOutlet],
+  host: { class: 'smart:contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PageHeadingComponent {

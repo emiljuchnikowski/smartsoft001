@@ -172,3 +172,47 @@ export class MyCustomMultiColumnLayoutComponent extends MultiColumnLayoutBaseCom
 - Base class: `packages/shared/angular/src/lib/components/multi-column-layout/base/base.component.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`MULTI_COLUMN_LAYOUT_STANDARD_COMPONENT_TOKEN`)
 - Interface: `packages/shared/angular/src/lib/models/interfaces.ts` (`IMultiColumnLayoutOptions`)
+
+## Preset
+
+`MultiColumnLayoutPresetComponent` (`<smart-multi-column-layout-preset>`) is a fully styled drop-in replacement for the barebones standard component. It extends `MultiColumnLayoutStandardComponent` and renders a Tailwind app-shell scaffold with explicit light/dark classes (every utility is `smart:`-prefixed).
+
+### Structure
+
+- **root** (`data-role="root"`) — full-height gray page (`smart:min-h-full smart:bg-gray-50 smart:dark:bg-gray-900`); merges the external `cssClass`.
+- **header** (`data-role="header"`) — rendered only when `options.headerTpl` or `options.title` is set. White surface with a bottom border, matching the stacked-layout/sidebar-layout preset headers. Renders `headerTpl`, falling back to a `title` `<h1>` (`data-role="title"`).
+- flex row containing:
+  - **nav** (`data-role="nav"`, `<aside>`) — rendered only when `options.navTpl` is set. White surface, `smart:w-64 smart:shrink-0 smart:border-e`, mirroring the sidebar-layout preset nav.
+  - **content** (`data-role="content"`, `<main>`) — gray page surface with `smart:py-8`; projects `<ng-content>` inside an inner container whose horizontal rhythm follows `options.width`.
+  - **secondary** (`data-role="secondary"`, `<aside>`) — rendered only when `options.secondaryTpl` is set. White surface on the trailing edge (`smart:border-s`); width follows `options.secondaryWidth`.
+
+### Options consumed
+
+The preset consumes the full `IMultiColumnLayoutOptions` surface (the standard component only reads the templates):
+
+- `width` — `'constrained'` centers the main content container at `max-w-7xl`; `'full'` (default) uses full width. Both keep `px-4 sm:px-6 lg:px-8`.
+- `secondaryWidth` — `'sm'` → `w-64` (default), `'md'` → `w-80`, `'lg'` → `w-96`.
+- `headerTpl` / `title`, `navTpl`, `secondaryTpl` — as above.
+
+Class recipes live in `preset/preset-classes.util.ts` (`getMultiColumnLayout…Classes`, including the width/secondaryWidth maps).
+
+### Token registration
+
+```typescript
+import { MULTI_COLUMN_LAYOUT_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+import { MultiColumnLayoutPresetComponent } from '@smartsoft001/angular';
+
+providers: [
+  {
+    provide: MULTI_COLUMN_LAYOUT_STANDARD_COMPONENT_TOKEN,
+    useValue: MultiColumnLayoutPresetComponent,
+  },
+];
+```
+
+When registered through the token, the wrapper passes inputs by canonical name via `NgComponentOutlet`, so the preset overrides `cssClass` as `input<string>('')` (dropping the `class` alias).
+
+### Gaps
+
+- The nav and secondary asides render on the flex row at all viewport sizes — there is no built-in mobile collapse/drawer behavior.
+- Files: `preset/preset.component.ts`, `preset/preset.component.html`, `preset/preset-classes.util.ts`; story `Preset` in `multi-column-layout.component.stories.ts`.

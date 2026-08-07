@@ -23,6 +23,12 @@ Main wrapper component. Renders `CalendarStandardComponent` by default. When `CA
 
 Barebones placeholder concrete implementation. Renders a wrapper `<div>` containing an optional toolbar (`<button.prev>`, `<button.today-btn>`, `<button.next>`, optional `toolbarActionsTpl` slot) and a `<div class="view-grid">` with one `<div class="week">` per week and one `<button class="day">` per day. Each day exposes `data-current-month`, `data-today`, and `data-selected` attributes plus an `aria-label` of the date string. If `dayCellTpl` is provided in options, it replaces the default day-number content. The external `cssClass` is applied to the root wrapper. It does not include any visual styling — it exists solely as the default structural placeholder until a custom implementation is registered through the token.
 
+### CalendarPresetComponent (`<smart-calendar-preset>`)
+
+Styled single date-picker variation that extends `CalendarBaseComponent` and is a drop-in replacement for `CalendarStandardComponent`. Register it via `CALENDAR_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-calendar>`, or use the `<smart-calendar-preset>` selector directly. It reproduces Preline's single date-picker visual (a `w-80` rounded popover card: month/year navigation header with chevron prev/next buttons, a weekday header row, and a 6×7 grid of circular day buttons) translated to `smart:`-prefixed vanilla Tailwind with explicit `dark:` variants. Month navigation (`prevPeriod`/`nextPeriod`) and day selection (`selectDay`) are driven entirely by Angular signals — the Preline datepicker JS plugin is **not** required. It honors `options.weekStart` (rotates the weekday header; default `1` → Monday) and `options.showToolbar` (toggles the navigation header). Selected, today, default, and out-of-month day states each get distinct styling; out-of-month days are rendered disabled. Days that have matching `events` show a small dot marker, and `options.dayCellTpl` overrides the default day content. The class recipes live in `preset/preset-classes.util.ts` (`getCalendarPresetDayClasses` plus the `CALENDAR_PRESET_*` layout constants).
+
+> Because `CalendarComponent` renders injected components via `NgComponentOutlet` (which passes inputs by canonical name), `CalendarPresetComponent` overrides `cssClass` as `input<string>('')` **without** the `class` alias. Bind it as `[cssClass]` when using the `<smart-calendar-preset>` selector directly, or just pass `class` on `<smart-calendar>` (the wrapper forwards it). Note also that when used through the wrapper the `value` two-way binding is re-applied as a one-way input on every change-detection (and `referenceDate` is not forwarded at all, since its canonical input name is `referenceDateInput`), so for interactive selection / external reference-date control use the `<smart-calendar-preset>` selector directly with `[(value)]` and `[referenceDate]`.
+
 ### CalendarBaseComponent (abstract)
 
 Abstract base directive containing the shared calendar logic. Exposes inputs and signals for state, plus methods for navigation and selection.
@@ -217,6 +223,7 @@ export class MyCustomCalendarComponent extends CalendarBaseComponent {
 
 - Wrapper: `packages/shared/angular/src/lib/components/calendar/calendar.component.ts`
 - Standard: `packages/shared/angular/src/lib/components/calendar/standard/standard.component.ts`
+- Preset: `packages/shared/angular/src/lib/components/calendar/preset/preset.component.ts` (selector `smart-calendar-preset`, class recipes in `preset/preset-classes.util.ts`)
 - Base class: `packages/shared/angular/src/lib/components/calendar/base/base.component.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`CALENDAR_STANDARD_COMPONENT_TOKEN`)
 - Interfaces: `packages/shared/angular/src/lib/models/interfaces.ts` (`ICalendarOptions`, `ICalendarEvent`, `ICalendarDayCell`, `SmartCalendarView`)

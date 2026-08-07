@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CalendarBaseComponent } from './base.component';
@@ -84,7 +84,7 @@ describe('@smartsoft001/shared-angular: CalendarBaseComponent', () => {
 
     it('should expose view from options when set', async () => {
       host.options = { view: 'week' };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -93,7 +93,7 @@ describe('@smartsoft001/shared-angular: CalendarBaseComponent', () => {
 
     it('should expose weekStart from options when set', async () => {
       host.options = { weekStart: 0 };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -102,7 +102,7 @@ describe('@smartsoft001/shared-angular: CalendarBaseComponent', () => {
 
     it('should expose showToolbar from options when set to false', async () => {
       host.options = { showToolbar: false };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -255,7 +255,7 @@ describe('@smartsoft001/shared-angular: CalendarBaseComponent', () => {
           title: 'Lunch',
         },
       ];
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -267,7 +267,7 @@ describe('@smartsoft001/shared-angular: CalendarBaseComponent', () => {
 
     it('should return [] for days with no events', async () => {
       host.events = [{ id: 1, start: new Date(2026, 0, 15), title: 'Solo' }];
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -282,7 +282,7 @@ describe('@smartsoft001/shared-angular: CalendarBaseComponent', () => {
         { id: 2, start: new Date(2026, 0, 15, 14), title: 'B' },
         { id: 3, start: new Date(2026, 0, 15, 18), title: 'C' },
       ];
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -334,7 +334,7 @@ describe('@smartsoft001/shared-angular: CalendarBaseComponent', () => {
 
     it('should seed reference() from referenceDate input when provided', async () => {
       host.referenceDate = new Date(2026, 5, 15);
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -344,7 +344,7 @@ describe('@smartsoft001/shared-angular: CalendarBaseComponent', () => {
 
     it('goToToday should reset reference() to today', async () => {
       host.referenceDate = new Date(2020, 0, 1);
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -359,7 +359,7 @@ describe('@smartsoft001/shared-angular: CalendarBaseComponent', () => {
 
     it('prevPeriod in month view should move reference back 1 month', async () => {
       host.referenceDate = new Date(2026, 5, 15);
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -371,7 +371,7 @@ describe('@smartsoft001/shared-angular: CalendarBaseComponent', () => {
 
     it('nextPeriod in month view should move reference forward 1 month', async () => {
       host.referenceDate = new Date(2026, 5, 15);
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -384,7 +384,7 @@ describe('@smartsoft001/shared-angular: CalendarBaseComponent', () => {
     it('prevPeriod in week view should move reference back 7 days', async () => {
       host.options = { view: 'week' };
       host.referenceDate = new Date(2026, 5, 15);
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -396,7 +396,7 @@ describe('@smartsoft001/shared-angular: CalendarBaseComponent', () => {
     it('prevPeriod in day view should move reference back 1 day', async () => {
       host.options = { view: 'day' };
       host.referenceDate = new Date(2026, 5, 15);
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -408,7 +408,7 @@ describe('@smartsoft001/shared-angular: CalendarBaseComponent', () => {
     it('prevPeriod in year view should move reference back 1 year', async () => {
       host.options = { view: 'year' };
       host.referenceDate = new Date(2026, 5, 15);
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -419,7 +419,7 @@ describe('@smartsoft001/shared-angular: CalendarBaseComponent', () => {
 
     it('prevPeriod in month view should cross year boundary (Jan -> Dec previous year)', async () => {
       host.referenceDate = new Date(2026, 0, 15);
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -431,7 +431,7 @@ describe('@smartsoft001/shared-angular: CalendarBaseComponent', () => {
 
     it('nextPeriod in month view should cross year boundary (Dec -> Jan next year)', async () => {
       host.referenceDate = new Date(2026, 11, 15);
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -460,7 +460,7 @@ describe('@smartsoft001/shared-angular: CalendarBaseComponent', () => {
 
     it('should recompute monthGrid when referenceDate input changes', async () => {
       host.referenceDate = new Date(2026, 0, 15);
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -471,7 +471,7 @@ describe('@smartsoft001/shared-angular: CalendarBaseComponent', () => {
       expect(janCells.length).toBe(31);
 
       host.referenceDate = new Date(2026, 1, 15);
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -484,7 +484,7 @@ describe('@smartsoft001/shared-angular: CalendarBaseComponent', () => {
 
     it('should reflect selectDay() in monthGrid via isSelected flag', async () => {
       host.referenceDate = new Date(2026, 0, 15);
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 

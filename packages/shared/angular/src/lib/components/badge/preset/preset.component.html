@@ -1,0 +1,25 @@
+<span [class]="badgeClasses() + ' ' + cssClass()">
+  @if (withDot()) {
+    <svg [class]="dotClasses()" viewBox="0 0 6 6" aria-hidden="true">
+      <circle cx="3" cy="3" r="3" />
+    </svg>
+  }
+  {{ text() }}
+  @if (withRemove()) {
+    <button
+      type="button"
+      aria-label="Remove"
+      [class]="removeClasses()"
+      (click)="remove()"
+    >
+      <span class="smart:sr-only">Remove</span>
+      <svg
+        class="smart:size-3.5 smart:stroke-current smart:opacity-50 smart:group-hover:opacity-75"
+        viewBox="0 0 14 14"
+        aria-hidden="true"
+      >
+        <path d="M4 4l6 6m0-6l-6 6" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+    </button>
+  }
+</span>

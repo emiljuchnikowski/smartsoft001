@@ -35,6 +35,7 @@ const baseMap: Partial<Record<SmartPageVariant, Type<PageBaseComponent>>> = {
   `,
   encapsulation: ViewEncapsulation.None,
   imports: [NgComponentOutlet],
+  host: { class: 'smart:contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PageComponent {

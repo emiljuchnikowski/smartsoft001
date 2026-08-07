@@ -175,3 +175,39 @@ export class MyCustomSectionHeadingComponent extends SectionHeadingBaseComponent
 - Base class: `packages/shared/angular/src/lib/components/section-heading/base/base.component.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`SECTION_HEADING_STANDARD_COMPONENT_TOKEN`)
 - Interface: `packages/shared/angular/src/lib/models/interfaces.ts` (`ISectionHeadingOptions`)
+
+## HyperUI preset
+
+`SectionHeadingPresetComponent` (`smart-section-heading-preset`) is a HyperUI-styled "content with image" variation. It renders an eyebrow row (label + `badgeTpl`), an `<h2>` title, a description `<p>`, `actionsTpl` below the text, and an optional image column fed by `imageTpl`. Vanilla Tailwind classes are prefixed with `smart:` and ship explicit `smart:dark:*` variants (gray-900 ↔ white for the title, gray-700 ↔ gray-300 for text). Every zone exposes a `data-role` hook: `section`, `grid`, `text`, `image`, `eyebrow`, `actions`.
+
+### New `ISectionHeadingOptions` fields
+
+- `imageTpl?: TemplateRef<unknown>` — the image column. The zone is only rendered when this is provided (`@if`); the template owns the `<img>` and its classes.
+- `presentation?: { layout?: 'half' | 'narrow' | 'wide' | 'vertical' }` — layout selector (default `half`). Consumed only by the preset; the standard component ignores it.
+
+| Layout     | Grid                                    | Notes                               |
+| ---------- | --------------------------------------- | ----------------------------------- |
+| `half`     | `md:grid-cols-2`, text \| image         | Default. Balanced two-column split. |
+| `narrow`   | `md:grid-cols-4`, text (1) \| image (3) | Narrow copy, wide image.            |
+| `wide`     | `md:grid-cols-4`, image (3) \| text (1) | Image rendered **first**.           |
+| `vertical` | `space-y-*` stack (no grid)             | Copy on top, image underneath.      |
+
+### Register the preset
+
+```ts
+import { SectionHeadingPresetComponent } from '@smartsoft001/angular';
+import { SECTION_HEADING_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  {
+    provide: SECTION_HEADING_STANDARD_COMPONENT_TOKEN,
+    useValue: SectionHeadingPresetComponent,
+  },
+];
+```
+
+Registering the token restyles every `<smart-section-heading>`; alternatively use `<smart-section-heading-preset>` directly.
+
+### Gaps
+
+`tabsTpl` and `inputGroupTpl` are **not** styled by this preset (they are only rendered by the standard component). Use the standard component when those slots are needed.

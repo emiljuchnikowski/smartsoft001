@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CommandPaletteBaseComponent } from './base.component';
@@ -71,7 +71,7 @@ describe('@smartsoft001/shared-angular: CommandPaletteBaseComponent', () => {
 
   it('should accept cssClass via class alias', async () => {
     host.cssClass = 'my-class';
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -80,7 +80,7 @@ describe('@smartsoft001/shared-angular: CommandPaletteBaseComponent', () => {
 
   it('should accept ICommandPaletteOptions via options input', async () => {
     host.options = { variant: 'simple', placeholder: 'Search…' };
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -96,7 +96,7 @@ describe('@smartsoft001/shared-angular: CommandPaletteBaseComponent', () => {
         { id: 'a', label: 'Alpha' },
         { id: 'b', label: 'Bravo' },
       ];
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -110,7 +110,7 @@ describe('@smartsoft001/shared-angular: CommandPaletteBaseComponent', () => {
         { id: 'c', label: 'Charlie' },
       ];
       host.query = 'br';
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -120,7 +120,7 @@ describe('@smartsoft001/shared-angular: CommandPaletteBaseComponent', () => {
     it('should return empty array when no command matches query', async () => {
       host.commands = [{ id: 'a', label: 'Alpha' }];
       host.query = 'zzz';
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 

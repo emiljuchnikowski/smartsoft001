@@ -28,6 +28,12 @@ Default concrete implementation. Renders:
 - Tailwind-styled container with `smart:dark:*` dark-mode classes,
 - a `document:click` listener that closes the popover on outside click.
 
+### InfoPresetComponent (`<smart-info-preset>`)
+
+Styled variation that extends `InfoBaseComponent` and is a drop-in replacement for `InfoStandardComponent`. Register it via `INFO_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-info>`, or use the `<smart-info-preset>` selector directly. It renders the Preline **Tooltip** look: a circular icon toggle plus a small tooltip bubble. Visibility is driven by Angular hover/focus (`(mouseenter)`/`(mouseleave)` + `(focus)`/`(blur)`) using the inherited `isOpen` signal and `@if` — Preline's JS plugin is not installed. It keeps the translated Preline visual classes, exposes a `placement` input (`'top'` (default) | `'bottom'` | `'left'` | `'right'`) for tooltip position, and renders `role="tooltip"` with `aria-describedby` wiring on the toggle. All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants. The class recipes live in `preset/preset-classes.util.ts` (`getInfoContainerClasses`, `getInfoToggleClasses`, `getInfoTooltipClasses`).
+
+> Because `InfoComponent` renders injected components via `NgComponentOutlet` (which passes inputs by canonical name), `InfoPresetComponent` overrides `cssClass` as `input<string>('')` **without** the `class` alias. Bind it as `[cssClass]` when using the `<smart-info-preset>` selector directly, or just pass `class` on `<smart-info>` (the wrapper forwards it). The `placement` input is only available on the preset selector directly — the `<smart-info>` wrapper forwards only `options` and `cssClass`, so through the token tooltips default to `'top'`.
+
 ### InfoBaseComponent (abstract)
 
 Abstract base directive for extending custom info implementations. Exposes `options`, `cssClass`, `isOpen` signal, and `toggle()`/`open()`/`close()` methods.
@@ -155,6 +161,8 @@ When extending the base directly, remember to:
 
 - Wrapper: `packages/shared/angular/src/lib/components/info/info.component.ts`
 - Standard: `packages/shared/angular/src/lib/components/info/standard/standard.component.ts`
+- Preset variation: `packages/shared/angular/src/lib/components/info/preset/preset.component.ts`
+- Preset class recipes: `packages/shared/angular/src/lib/components/info/preset/preset-classes.util.ts`
 - Base class: `packages/shared/angular/src/lib/components/info/base/base.component.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`INFO_STANDARD_COMPONENT_TOKEN`)
 - Interface: `packages/shared/angular/src/lib/models/interfaces.ts` (`IInfoOptions`)

@@ -1,0 +1,132 @@
+<dialog
+  data-role="dialog"
+  [open]="open()"
+  [class]="dialogClasses()"
+  (close)="close()"
+>
+  <div data-role="search-wrap" [class]="searchWrapClasses">
+    <svg
+      [class]="searchIconClasses"
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <circle cx="11" cy="11" r="8" />
+      <path d="m21 21-4.3-4.3" />
+    </svg>
+    <input
+      data-role="search"
+      type="search"
+      [class]="searchClasses"
+      [value]="query()"
+      [attr.placeholder]="options()?.placeholder ?? null"
+      [attr.aria-label]="options()?.ariaLabel ?? null"
+      (input)="onQueryChange($event)"
+    />
+  </div>
+
+  @switch (variant()) {
+    @case ('with-preview') {
+      <div data-role="preview-layout" [class]="previewLayoutClasses">
+        <ul data-role="list" role="listbox" [class]="listClasses()">
+          @for (command of filteredCommands(); track command.id) {
+            <li
+              data-role="item"
+              role="option"
+              [class]="itemClasses()"
+              (mouseenter)="setPreview(command)"
+              (click)="selectCommand(command.id)"
+            >
+              <ng-container
+                *ngTemplateOutlet="row; context: { $implicit: command }"
+              />
+            </li>
+          } @empty {
+            <li data-role="empty" [class]="emptyClasses">{{ emptyText() }}</li>
+          }
+        </ul>
+        <div data-role="preview" [class]="previewClasses">
+          @if (previewCommand(); as pc) {
+            <p
+              class="smart:font-medium smart:text-gray-900 smart:dark:text-white"
+            >
+              {{ pc.label }}
+            </p>
+            @if (pc.description) {
+              <p class="smart:mt-1">{{ pc.description }}</p>
+            }
+          }
+        </div>
+      </div>
+    }
+    @case ('with-groups') {
+      <ul data-role="list" role="listbox" [class]="listClasses()">
+        @for (grp of groupedCommands(); track grp.group) {
+          <li data-role="group" [class]="groupClasses">{{ grp.group }}</li>
+          @for (command of grp.commands; track command.id) {
+            <li
+              data-role="item"
+              role="option"
+              [class]="itemClasses()"
+              (click)="selectCommand(command.id)"
+            >
+              <ng-container
+                *ngTemplateOutlet="row; context: { $implicit: command }"
+              />
+            </li>
+          }
+        } @empty {
+          <li data-role="empty" [class]="emptyClasses">{{ emptyText() }}</li>
+        }
+      </ul>
+    }
+    @default {
+      <ul data-role="list" role="listbox" [class]="listClasses()">
+        @for (command of filteredCommands(); track command.id) {
+          <li
+            data-role="item"
+            role="option"
+            [class]="itemClasses()"
+            (click)="selectCommand(command.id)"
+          >
+            <ng-container
+              *ngTemplateOutlet="row; context: { $implicit: command }"
+            />
+          </li>
+        } @empty {
+          <li data-role="empty" [class]="emptyClasses">{{ emptyText() }}</li>
+        }
+      </ul>
+    }
+  }
+
+  @if (variant() === 'with-footer') {
+    <div data-role="footer" [class]="footerClasses">
+      <span>{{ filteredCommands().length }} results</span>
+      <span>Enter to run &middot; Esc to close</span>
+    </div>
+  }
+</dialog>
+
+<ng-template #row let-command>
+  @if (variant() === 'with-images' && command.imageUrl) {
+    <img
+      data-role="item-image"
+      [class]="itemImageClasses"
+      [src]="command.imageUrl"
+      [alt]="command.label"
+    />
+  } @else if (variant() === 'with-icons') {
+    <span data-role="item-icon" [class]="itemIconClasses">{{
+      command.icon ?? '#'
+    }}</span>
+  }
+  <span [class]="itemLabelClasses">{{ command.label }}</span>
+</ng-template>

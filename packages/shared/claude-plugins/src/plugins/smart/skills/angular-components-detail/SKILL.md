@@ -95,6 +95,55 @@ providers: [
 
 Maps are merged (`{ ...baseMap, ...extendMap }`), so only selected types need to be overridden.
 
+## Preline field presets
+
+Fifteen field types ship a Preline-styled **preset** (`Detail<Field>PresetComponent`, selector
+`smart-detail-<field>-preset`) alongside the default sub-component, living in `<field>/preset/`:
+
+| FieldType       | Preset                               | Look                                                         |
+| --------------- | ------------------------------------ | ------------------------------------------------------------ |
+| `email`         | `DetailEmailPresetComponent`         | `mailto:` link, blue + `hover:underline`, envelope icon      |
+| `enum`          | `DetailEnumPresetComponent`          | Values as soft blue badges (reuses badge preset recipes)     |
+| `flag`          | `DetailFlagPresetComponent`          | Soft badge — green ✓ / red ✗ (reuses badge preset recipes)   |
+| `color`         | `DetailColorPresetComponent`         | `size-6` rounded swatch + monospace hex code                 |
+| `address`       | `DetailAddressPresetComponent`       | Multi-line `text-sm` block with pin icon                     |
+| `dateRange`     | `DetailDateRangePresetComponent`     | `start – end` as two soft gray chips                         |
+| `phoneNumberPl` | `DetailPhoneNumberPlPresetComponent` | `tel:` link styled as a soft blue badge                      |
+| `logo`          | `DetailLogoPresetComponent`          | `<img>` `max-h-10 object-contain`                            |
+| `image`         | `DetailImagePresetComponent`         | 150×150 preview, `rounded-xl`, border + `shadow-2xs`         |
+| `video`         | `DetailVideoPresetComponent`         | `<video controls>` framed `rounded-xl` border + `shadow-2xs` |
+| `attachment`    | `DetailAttachmentPresetComponent`    | File chip: icon, file name (`fileName`/`name`), download     |
+| `pdf`           | `DetailPdfPresetComponent`           | File chip: red PDF icon, file name, show button              |
+| `text`          | `DetailTextPresetComponent`          | `text-sm` typography, `text-pretty`; em-dash when empty      |
+| `object`        | `DetailObjectPresetComponent`        | Card envelope around the untouched nested details            |
+| `array`         | `DetailArrayPresetComponent`         | `space-y-2` stack of item cards; em-dash when empty          |
+
+Apply them via the ready-made partial map:
+
+```typescript
+import {
+  DETAIL_FIELD_COMPONENTS_TOKEN,
+  DETAIL_PRESET_FIELD_COMPONENTS,
+} from '@smartsoft001/angular';
+
+providers: [
+  {
+    provide: DETAIL_FIELD_COMPONENTS_TOKEN,
+    useValue: DETAIL_PRESET_FIELD_COMPONENTS,
+  },
+];
+```
+
+Notes:
+
+- The map is partial — all other field types keep their standard components (maps merge over `baseMap`).
+  Registering `text` in the map does NOT change the fallback for unmapped/unknown types — the map is
+  keyed per `FieldType`, so those still fall back to the standard `DetailTextComponent`.
+- Unlike their standard components, the `text` and `array` presets render an em-dash placeholder when
+  the value is empty (the standard components collapse to nothing).
+- The presets have a fixed look; `IDetailOptions` carries no per-field style channel (deliberate,
+  matches the fidelity-gap deferral from the Preline group).
+
 ## Extending the Base Class
 
 ```typescript

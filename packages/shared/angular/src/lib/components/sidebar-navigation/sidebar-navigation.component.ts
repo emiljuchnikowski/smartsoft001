@@ -35,6 +35,7 @@ import { SIDEBAR_NAVIGATION_STANDARD_COMPONENT_TOKEN } from '../../shared.inecto
   `,
   encapsulation: ViewEncapsulation.None,
   imports: [SidebarNavigationStandardComponent, NgComponentOutlet],
+  host: { class: 'smart:contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SidebarNavigationComponent {

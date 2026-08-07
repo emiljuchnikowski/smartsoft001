@@ -31,6 +31,7 @@ import { VERTICAL_NAVIGATION_STANDARD_COMPONENT_TOKEN } from '../../shared.inect
   `,
   encapsulation: ViewEncapsulation.None,
   imports: [VerticalNavigationStandardComponent, NgComponentOutlet],
+  host: { class: 'smart:contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VerticalNavigationComponent {

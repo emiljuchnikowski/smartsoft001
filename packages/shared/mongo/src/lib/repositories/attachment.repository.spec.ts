@@ -38,7 +38,6 @@ jest.mock('mongodb', () => {
     emit: jest.fn((event, ...args) => {
       if (event === 'finish') {
         setTimeout(() => {
-          // eslint-disable-next-line @typescript-eslint/no-empty-function
           mockWriteStream.on('finish', () => {
             // Simulate the finish event
           });

@@ -1,0 +1,55 @@
+<div [class]="containerClasses + ' ' + cssClass()">
+  <button
+    type="button"
+    [class]="triggerClasses()"
+    aria-haspopup="menu"
+    [attr.aria-expanded]="open()"
+    [attr.aria-label]="triggerLabel() ?? 'Dropdown'"
+    (click)="toggle()"
+  >
+    {{ triggerLabel() ?? 'Actions' }}
+    <svg
+      [class]="chevronClasses()"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="m6 9 6 6 6-6" />
+    </svg>
+  </button>
+
+  @if (open()) {
+    <div [class]="menuClasses()" role="menu" aria-orientation="vertical">
+      @if (variant() === 'with-header' && headerLabel()) {
+        <div [class]="headerClasses">
+          <p [class]="headerTextClasses">{{ headerLabel() }}</p>
+        </div>
+      }
+      @for (group of groups(); track $index) {
+        <div data-role="group" [class]="groupClasses">
+          @for (item of group; track item.id) {
+            <button
+              type="button"
+              role="menuitem"
+              [class]="itemClasses"
+              [disabled]="item.disabled"
+              (click)="selectItem(item.id)"
+            >
+              @if (showIcons() && item.icon) {
+                <span [class]="iconClasses" aria-hidden="true">{{
+                  item.icon
+                }}</span>
+              }
+              {{ item.label }}
+            </button>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

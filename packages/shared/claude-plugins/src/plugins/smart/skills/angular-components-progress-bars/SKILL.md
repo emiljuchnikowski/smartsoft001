@@ -29,6 +29,17 @@ Renders `<nav class="progress-bars">` (with `aria-label` from `options.ariaLabel
 **Bar mode (layout `progress-bar`):**
 Renders `<div class="progress-bars-bar-wrapper">` with optional `<h4 class="sr-only">` (from `srOnlyTitle`), optional `<p class="progress-bars-title">` (from `title`), a track + `<div class="progress-bars-fill" role="progressbar">` (width = clamped `value` 0–100), and optional `<div class="progress-bars-columns">` row of column labels (each with `active` class when `column.active === true`).
 
+### ProgressBarsPresetComponent (`<smart-progress-bars-preset>`)
+
+Fully-styled variation that extends `ProgressBarsBaseComponent` and is a drop-in replacement for `ProgressBarsStandardComponent`. Register it via `PROGRESS_BARS_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-progress-bars>`, or use the `<smart-progress-bars-preset>` selector directly. It renders both modes off the shared `IProgressBarsOptions` API:
+
+- **Percentage bar** (`layout: 'progress-bar'`): a rounded track + animated `bg-blue-600` fill sized to the clamped `value` (0–100). Shows a title header with a `value%` label when `title` is set, an `sr-only` `<h4>` from `srOnlyTitle`, and a grid of column captions from `columns` (active columns rendered semibold).
+- **Stepper** (all other layouts): a `<nav>`/`<ol>` of steps. Markers adapt to the layout — numbered/check circles for `circles`, `circles-with-text`, `panels`, `panels-with-border`; small dots for `bullets`, `bullets-and-text`; a colored top border (no marker) for `simple`. `bullets-and-text` and `circles-with-text` lay out vertically; the other step layouts lay out horizontally, with connector lines between markers for `circles`/`bullets`. Completed circle steps show a check SVG; current/upcoming circle steps show `step.index` (falling back to the 1-based position). Each step renders an `<a>` when `step.href` is set, otherwise a `<button>` that emits `stepClick`. Names/markers tint by `status` (`complete`/`current`/`upcoming`).
+
+All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants. The class recipes live in `preset/preset-classes.util.ts` (kept out of the public barrel; every export is `ProgressBars`-prefixed).
+
+> Because `ProgressBarsComponent` renders injected components via `NgComponentOutlet` (which passes inputs by canonical name), `ProgressBarsPresetComponent` overrides `cssClass` as `input<string>('')` **without** the `class` alias. Bind it as `[cssClass]` when using the `<smart-progress-bars-preset>` selector directly, or just pass `class` on `<smart-progress-bars>` (the wrapper forwards it).
+
 ### ProgressBarsBaseComponent (abstract)
 
 Abstract base directive. Exposes:
@@ -182,6 +193,8 @@ export class MyCustomProgressBarsComponent extends ProgressBarsBaseComponent {
 
 - Wrapper: `packages/shared/angular/src/lib/components/progress-bars/progress-bars.component.ts`
 - Standard: `packages/shared/angular/src/lib/components/progress-bars/standard/standard.component.ts`
+- Preset variation: `packages/shared/angular/src/lib/components/progress-bars/preset/preset.component.ts`
+- Preset class recipes: `packages/shared/angular/src/lib/components/progress-bars/preset/preset-classes.util.ts`
 - Base class: `packages/shared/angular/src/lib/components/progress-bars/base/base.component.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`PROGRESS_BARS_STANDARD_COMPONENT_TOKEN`)
 - Interfaces: `packages/shared/angular/src/lib/models/interfaces.ts` (`IProgressBarsOptions`, `IProgressStep`, `IProgressBarColumn`, `SmartProgressBarsLayout`, `SmartProgressStepStatus`)

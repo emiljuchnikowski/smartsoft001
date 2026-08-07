@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -75,7 +75,7 @@ describe('@smartsoft001/shared-angular: ListBaseComponent', () => {
 
   it('should accept cssClass via class alias', async () => {
     fixture.componentInstance.cssClass = 'my-custom-class';
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -93,7 +93,7 @@ describe('@smartsoft001/shared-angular: ListBaseComponent', () => {
       fields: [{ key: 'firstName', options: { list: true } }],
       remove: { provider: { invoke: jest.fn() } },
     } as IListInternalOptions<TestItemModel>;
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 

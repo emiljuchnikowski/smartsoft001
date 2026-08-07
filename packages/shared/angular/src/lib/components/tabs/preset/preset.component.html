@@ -1,0 +1,77 @@
+<div [class]="cssClass()">
+  @if (showMobileSelect()) {
+    <select
+      [class]="mobileSelectClasses"
+      [attr.aria-label]="ariaLabel()"
+      (change)="onSelectChange($event)"
+    >
+      @for (item of items(); track item.id) {
+        <option
+          [value]="item.id"
+          [attr.selected]="isCurrent(item.id) ? '' : null"
+        >
+          {{ item.label ?? item.id }}
+        </option>
+      }
+    </select>
+  }
+
+  <div [class]="desktopWrapperClasses()">
+    <div [class]="containerClasses()">
+      <nav
+        [class]="navClasses()"
+        role="tablist"
+        aria-orientation="horizontal"
+        [attr.aria-label]="ariaLabel()"
+      >
+        @for (item of items(); track item.id) {
+          @if (item.href) {
+            <a
+              [href]="item.href"
+              role="tab"
+              [id]="item.id + '-tab'"
+              [class]="triggerClasses(item.id)"
+              [attr.aria-selected]="isCurrent(item.id)"
+              [attr.aria-controls]="item.id"
+              (click)="onTabClick(item.id)"
+            >
+              @if (item.iconTpl) {
+                <span [class]="iconClasses">
+                  <ng-container [ngTemplateOutlet]="item.iconTpl" />
+                </span>
+              }
+              @if (item.label) {
+                {{ item.label }}
+              }
+              @if (item.badge !== undefined && item.badge !== null) {
+                <span [class]="badgeClasses(item.id)">{{ item.badge }}</span>
+              }
+            </a>
+          } @else {
+            <button
+              type="button"
+              role="tab"
+              [id]="item.id + '-tab'"
+              [class]="triggerClasses(item.id)"
+              [attr.aria-selected]="isCurrent(item.id)"
+              [attr.aria-controls]="item.id"
+              (click)="onTabClick(item.id)"
+            >
+              @if (item.iconTpl) {
+                <span [class]="iconClasses">
+                  <ng-container [ngTemplateOutlet]="item.iconTpl" />
+                </span>
+              }
+              @if (item.label) {
+                {{ item.label }}
+              }
+              @if (item.badge !== undefined && item.badge !== null) {
+                <span [class]="badgeClasses(item.id)">{{ item.badge }}</span>
+              }
+            </button>
+          }
+        }
+      </nav>
+    </div>
+  </div>
+</div>

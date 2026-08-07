@@ -1,0 +1,22 @@
+<div role="group" [class]="groupClasses() + ' ' + cssClass()">
+  @for (btn of buttons(); track btn.id) {
+    <button
+      type="button"
+      [disabled]="btn.disabled"
+      [class]="buttonClasses(selected() === btn.id)"
+      [attr.aria-pressed]="selected() === btn.id"
+      [attr.aria-label]="iconOnly() ? btn.label : null"
+      (click)="select(btn.id)"
+    >
+      @if (btn.icon) {
+        <span [class]="iconClasses()" aria-hidden="true">{{ btn.icon }}</span>
+      }
+      @if (!iconOnly() && btn.label) {
+        <span>{{ btn.label }}</span>
+      }
+      @if (!iconOnly() && btn.count != null) {
+        <span data-role="count" [class]="countClasses()">{{ btn.count }}</span>
+      }
+    </button>
+  }
+</div>

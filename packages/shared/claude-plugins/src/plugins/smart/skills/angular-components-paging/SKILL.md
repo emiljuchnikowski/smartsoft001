@@ -23,6 +23,20 @@ Main wrapper component. Renders `PagingStandardComponent` by default. When `PAGI
 
 Default concrete implementation. Simple Tailwind-styled pagination placeholder with prev/next buttons, numeric page buttons (with ellipsis handling) and `aria-current` for the active page. Supports dark mode and disabled states.
 
+### PagingPresetComponent (`<smart-paging-preset>`)
+
+Styled variation that extends `PagingBaseComponent` and is a drop-in replacement for `PagingStandardComponent`. Register it via `PAGING_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-paging>`, or use the `<smart-paging-preset>` selector directly. Translates the Preline pagination examples into `smart:`-prefixed vanilla Tailwind classes with explicit `dark:` variants. It drives page state purely through the inherited signals/methods (`pages`, `canGoBack`, `canGoForward`, `goToPage`, `nextPage`, `previousPage`) — no Preline JS runtime is required. The `variant` input selects the layout:
+
+- `card-footer` — a "Showing X to Y of Z results" summary (built from `showingFrom`/`showingTo`/`totalItems`) alongside the nav, justified between on `sm`+ screens;
+- `centered` — the nav centered horizontally;
+- `simple` — the bare nav.
+
+The per-variant class recipes live in `preset/preset-classes.util.ts` (`getPagingContainerClasses`, `getPagingNavClasses`, `getPagingPageClasses`, plus the `PAGING_*` const class strings); they are kept out of the public barrel and prefixed with the component name.
+
+> Unlike most preset components, `PagingPresetComponent` keeps the inherited `cssClass` **with** its `class` alias. `PagingComponent` instantiates the injected component with `ViewContainerRef.createComponent` and forwards inputs via `setInput('class', …)` (the public alias) — not `NgComponentOutlet` — so dropping the alias would break the forwarded class binding. Bind `class` on either `<smart-paging>` or `<smart-paging-preset>`.
+>
+> Note: `PagingComponent` does **not** forward the `variant` input, so selecting a variant requires using the `<smart-paging-preset>` selector directly (or another wrapper that forwards `variant`).
+
 ### PagingBaseComponent (abstract)
 
 Abstract base directive for extending custom paging implementations. Provides signal-based state (`currentPage`, `totalPages`, `pageSize`, `totalItems`, `variant`, `cssClass`), computed helpers (`showingFrom`, `showingTo`, `canGoBack`, `canGoForward`, `pages`) and navigation methods (`goToPage`, `nextPage`, `previousPage`).
@@ -124,9 +138,45 @@ export class MyCustomPagingComponent extends PagingBaseComponent {}
 ></smart-paging>
 ```
 
+### Using the preset variation
+
+```typescript
+// Register globally (or in a feature's providers) to restyle every <smart-paging>:
+import {
+  PAGING_STANDARD_COMPONENT_TOKEN,
+  PagingPresetComponent,
+} from '@smartsoft001/angular';
+
+providers: [
+  { provide: PAGING_STANDARD_COMPONENT_TOKEN, useValue: PagingPresetComponent },
+];
+```
+
+```html
+<!-- Use the variation selector directly to pick a variant -->
+<smart-paging-preset
+  variant="card-footer"
+  [currentPage]="page()"
+  [totalPages]="totalPages()"
+  [pageSize]="25"
+  [totalItems]="248"
+  (pageChange)="onPageChange($event)"
+></smart-paging-preset>
+
+<smart-paging-preset
+  variant="centered"
+  [currentPage]="page()"
+  [totalPages]="totalPages()"
+  (pageChange)="onPageChange($event)"
+></smart-paging-preset>
+```
+
 ## File Locations
 
 - Wrapper: `packages/shared/angular/src/lib/components/paging/paging.component.ts`
 - Standard: `packages/shared/angular/src/lib/components/paging/standard/standard.component.ts`
+- Preset variation: `packages/shared/angular/src/lib/components/paging/preset/preset.component.ts`
+- Preset class recipes: `packages/shared/angular/src/lib/components/paging/preset/preset-classes.util.ts`
 - Base class: `packages/shared/angular/src/lib/components/paging/base/base.component.ts`
+- Stories: `packages/shared/angular/src/lib/components/paging/paging.component.stories.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`PAGING_STANDARD_COMPONENT_TOKEN`)

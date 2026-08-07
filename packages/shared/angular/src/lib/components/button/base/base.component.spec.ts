@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ButtonBaseComponent } from './base.component';
@@ -57,7 +57,7 @@ describe('@smartsoft001/shared-angular: ButtonBaseComponent', () => {
 
   it('should accept cssClass via class alias', async () => {
     fixture.componentInstance.cssClass = 'my-custom-class';
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -78,7 +78,7 @@ describe('@smartsoft001/shared-angular: ButtonBaseComponent', () => {
       click: jest.fn(),
       variant: 'secondary',
     };
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -91,7 +91,7 @@ describe('@smartsoft001/shared-angular: ButtonBaseComponent', () => {
 
   it('should compute variantClasses with soft variant', async () => {
     fixture.componentInstance.options = { click: jest.fn(), variant: 'soft' };
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -103,7 +103,7 @@ describe('@smartsoft001/shared-angular: ButtonBaseComponent', () => {
 
   it('should compute variantClasses with custom color (red)', async () => {
     fixture.componentInstance.options = { click: jest.fn(), color: 'red' };
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -115,7 +115,7 @@ describe('@smartsoft001/shared-angular: ButtonBaseComponent', () => {
 
   it('should add opacity/cursor-not-allowed classes when disabled', async () => {
     fixture.componentInstance.disabled = true;
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -128,7 +128,7 @@ describe('@smartsoft001/shared-angular: ButtonBaseComponent', () => {
   it('should call click handler on invoke()', () => {
     const clickFn = jest.fn();
     fixture.componentInstance.options = { click: clickFn };
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
 
     button.invoke();
@@ -138,7 +138,7 @@ describe('@smartsoft001/shared-angular: ButtonBaseComponent', () => {
 
   it('should enter confirm mode when options.confirm is true', () => {
     fixture.componentInstance.options = { click: jest.fn(), confirm: true };
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
 
     button.invoke();
@@ -149,7 +149,7 @@ describe('@smartsoft001/shared-angular: ButtonBaseComponent', () => {
   it('should execute click and reset mode on confirmInvoke()', () => {
     const clickFn = jest.fn();
     fixture.componentInstance.options = { click: clickFn, confirm: true };
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     button.mode.set('confirm');
 
@@ -161,7 +161,7 @@ describe('@smartsoft001/shared-angular: ButtonBaseComponent', () => {
 
   it('should reset mode on confirmCancel()', () => {
     fixture.componentInstance.options = { click: jest.fn(), confirm: true };
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     button.mode.set('confirm');
 

@@ -137,3 +137,56 @@ export class MyCustomMediaObjectComponent extends MediaObjectBaseComponent {}
 - Base class: `packages/shared/angular/src/lib/components/media-object/base/base.component.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`MEDIA_OBJECT_STANDARD_COMPONENT_TOKEN`)
 - Interface: `packages/shared/angular/src/lib/models/interfaces.ts` (`IMediaObjectOptions`)
+
+## Preset
+
+`MediaObjectPresetComponent` (selector `smart-media-object-preset`) is a styled,
+drop-in replacement for the standard component. It extends
+`MediaObjectStandardComponent` and reuses the same inputs
+(`mediaUrl`, `mediaAlt`, `options`, `class`), so registering it through the
+token restyles every `<smart-media-object>`.
+
+Look: a flex row (`smart:flex smart:gap-4`) with a rounded, cover-fitted
+thumbnail (`smart:size-16 smart:rounded-lg smart:object-cover smart:shrink-0`)
+beside small, muted body text (`smart:text-sm smart:text-gray-700
+smart:dark:text-gray-300`). All utilities are `smart:`-prefixed and dark-mode
+aware.
+
+`IMediaObjectOptions` drives every variant (no new fields):
+
+- `position: 'right'` reverses the row (`smart:flex-row-reverse`).
+- `alignment: 'top' | 'center' | 'bottom'` maps to
+  `smart:items-start | items-center | items-end`; `'stretched'` instead makes
+  the media fill the row height (`smart:self-stretch smart:h-auto`).
+- `responsive: true` stacks into a column on mobile then rows out from `sm`
+  (`smart:flex-col smart:sm:flex-row`, reversed when `position: 'right'`).
+- `nested: true` tightens the gap to `smart:gap-3` and indents with
+  `smart:mt-4`.
+- `wide: true` widens the thumbnail to `smart:w-32` (keeping a `smart:h-16`
+  height).
+
+`data-role` hooks (`root`, `media`, `body`) and the `data-position` /
+`data-alignment` attributes are exposed for testing and targeting; the
+`smart-media-object-body` marker class is preserved for content projection
+parity with the standard component.
+
+Register it as the standard replacement:
+
+```ts
+import { MEDIA_OBJECT_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+import { MediaObjectPresetComponent } from '@smartsoft001/angular';
+
+providers: [
+  {
+    provide: MEDIA_OBJECT_STANDARD_COMPONENT_TOKEN,
+    useValue: MediaObjectPresetComponent,
+  },
+],
+```
+
+Class recipes live in `media-object/preset/preset-classes.util.ts`
+(`getMediaObjectRootClasses`, `getMediaObjectMediaClasses`,
+`getMediaObjectBodyClasses`).
+
+Gaps: the media is always an `<img>` (no icon/video slot), and `wide` uses a
+fixed `w-32`/`h-16` footprint rather than an intrinsic aspect ratio.
