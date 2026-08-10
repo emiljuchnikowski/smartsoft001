@@ -1,4 +1,8 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DrawerBaseComponent } from './base.component';
@@ -68,7 +72,7 @@ describe('@smartsoft001/shared-angular: DrawerBaseComponent', () => {
 
   it('should accept cssClass via class alias', async () => {
     host.cssClass = 'my-class';
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -77,7 +81,7 @@ describe('@smartsoft001/shared-angular: DrawerBaseComponent', () => {
 
   it('should accept IDrawerOptions via options input', async () => {
     host.options = { position: 'left', withOverlay: true };
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -89,7 +93,7 @@ describe('@smartsoft001/shared-angular: DrawerBaseComponent', () => {
 
   it('should set open to false and emit closed on close()', async () => {
     host.open = true;
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 

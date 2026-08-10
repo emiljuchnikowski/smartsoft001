@@ -68,16 +68,16 @@ export class InputPasswordComponent<T> extends InputBaseComponent<T> {
       'smart:outline-1',
       '-outline-offset-1',
       'smart:outline-gray-300',
-      'placeholder:smart:text-gray-400',
-      'focus:smart:outline-2',
-      'focus:smart:outline-offset-2',
-      'focus:smart:outline-indigo-600',
-      'sm:smart:text-sm/6',
+      'smart:placeholder:text-gray-400',
+      'smart:focus:outline-2',
+      'smart:focus:outline-offset-2',
+      'smart:focus:outline-indigo-600',
+      'smart:sm:text-sm/6',
       'smart:dark:bg-white/5',
       'smart:dark:text-white',
       'smart:dark:outline-white/10',
-      'dark:placeholder:smart:text-gray-500',
-      'dark:focus:smart:outline-indigo-500',
+      'smart:dark:placeholder:text-gray-500',
+      'smart:dark:focus:outline-indigo-500',
     ];
     const extra = this.cssClass();
     if (extra) classes.push(extra);

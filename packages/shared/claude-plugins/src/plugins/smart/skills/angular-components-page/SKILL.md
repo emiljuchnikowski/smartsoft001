@@ -221,10 +221,68 @@ export class MyCustomPageComponent extends PageBaseComponent {
 </smart-page>
 ```
 
+## Preset
+
+`PagePresetComponent` (`<smart-page-preset>`) is a styled `'preset'` variant that extends `PageStandardComponent`. It renders a full application-shell layout instead of the plain standard header: a bordered `<header>`, a gray page body and a content card. Every utility is `smart:`-prefixed with explicit `smart:dark:*` twins.
+
+### Registration
+
+The preset is dispatched by map key `'preset'` — the built-in `'standard'` variant is untouched. Register the ready-made map for `PAGE_VARIANT_COMPONENTS_TOKEN`:
+
+```typescript
+import {
+  PAGE_VARIANT_COMPONENTS_TOKEN,
+  PAGE_PRESET_VARIANT_COMPONENTS, // { preset: PagePresetComponent }
+} from '@smartsoft001/angular';
+
+providers: [
+  {
+    provide: PAGE_VARIANT_COMPONENTS_TOKEN,
+    useValue: PAGE_PRESET_VARIANT_COMPONENTS,
+  },
+];
+```
+
+Then set `variant: 'preset'` on `IPageOptions`:
+
+```html
+<smart-page [options]="{ title: 'Alice', variant: 'preset' }">
+  <p>Body rendered inside the content card.</p>
+</smart-page>
+```
+
+### Zones (all keyed by `data-role`)
+
+| `data-role`   | Source                       | Notes                                                     |
+| ------------- | ---------------------------- | --------------------------------------------------------- |
+| `page`        | outer wrapper                | `bg-gray-50 dark:bg-gray-900`; picks up `cssClass`.       |
+| `banner`      | `bannerTpl`                  | Full-width strip above the header.                        |
+| `header`      | header shell                 | Skipped entirely when `hideHeader` is true.               |
+| `breadcrumbs` | `breadcrumbsTpl`             | Row at the top of the header container.                   |
+| `title`       | `title` (h1) + `subtitleTpl` | Title row also holds back button, avatar/logo, actions.   |
+| `actions`     | `search` + `endButtons`      | Right side of the title row; hidden when both are absent. |
+| `meta`        | `metaTpl` + `statsTpl`       | Row under the title; hidden when both are absent.         |
+| `filters`     | `filtersTpl`                 | Bar under the header.                                     |
+| `sidebar`     | `sidebarTpl`                 | Rendered as `<aside>` in a flex row (`lg:` and up).       |
+| `body`        | `bodyTpl` / `<ng-content>`   | Rendered inside a bordered content card.                  |
+
+The back button (`button[data-role="back"]`) appears only when `showBackButton` is true and calls the inherited `back()`. A hamburger `button[data-role="menu-button"]` renders unless `hideMenuButton` is true.
+
+### cssClass
+
+Registered through the token, the wrapper forwards inputs canonically via `NgComponentOutlet` (`{ options, cssClass }`), so the preset does `override cssClass = input<string>('')` (drops the `class` alias). External classes land on the `data-role="page"` wrapper.
+
+### Documented gaps
+
+- `hideMenuButton` only toggles a decorative hamburger button; there is no menu panel wired to it.
+- Unused slots (`bannerTpl`, `breadcrumbsTpl`, `metaTpl`, `statsTpl`, `filtersTpl`, `sidebarTpl`, `avatarTpl`, `logoTpl`, `subtitleTpl`) simply render nothing when omitted; `navTpl` is not consumed by this preset.
+
 ## File Locations
 
 - Wrapper: `packages/shared/angular/src/lib/components/page/page.component.ts`
 - Standard: `packages/shared/angular/src/lib/components/page/standard/standard.component.ts`
+- Preset: `packages/shared/angular/src/lib/components/page/preset/preset.component.ts`
+- Preset variant map: `packages/shared/angular/src/lib/components/page/preset-variants.ts` (`PAGE_PRESET_VARIANT_COMPONENTS`)
 - Base class: `packages/shared/angular/src/lib/components/page/base/base.component.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`PAGE_VARIANT_COMPONENTS_TOKEN`)
 - Interface: `packages/shared/angular/src/lib/models/interfaces.ts` (`IPageOptions`, `SmartPageVariant`, `IIconButtonOptions`)

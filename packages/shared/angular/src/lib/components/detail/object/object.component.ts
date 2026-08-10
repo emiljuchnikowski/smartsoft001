@@ -37,6 +37,7 @@ import { DetailBaseComponent } from '../base/base.component';
     DynamicIoDirective,
     ComponentOutletInjectorDirective,
   ],
+  host: { class: 'smart:contents' },
 })
 export class DetailObjectComponent<
   T extends (IEntity<string> & { [key: string]: any }) | undefined,

@@ -126,6 +126,7 @@ const baseMap: Partial<Record<FieldTypeDef, Type<InputBaseComponent<any>>>> = {
     LoaderComponent,
     InputErrorComponent,
   ],
+  host: { class: 'smart:contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputComponent<T> implements OnInit {
@@ -136,6 +137,7 @@ export class InputComponent<T> implements OnInit {
   fieldOptions: IFieldOptions | undefined;
 
   options = input<InputOptions<T>>();
+  cssClass = input<string>('', { alias: 'class' });
 
   component = computed(() => {
     const explicit = this.options()?.component as
@@ -148,9 +150,13 @@ export class InputComponent<T> implements OnInit {
     return map[type] ?? null;
   });
 
+  // The host is `display: contents`, so an external class has to be forwarded
+  // to the field component to have any effect. InputBaseComponent aliases it
+  // back to `class`, so the key here is `class`, matching ListComponent.
   componentInputs = computed(() => ({
     options: this.options(),
     fieldOptions: this.fieldOptions,
+    class: this.cssClass(),
   }));
 
   constructor() {

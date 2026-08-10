@@ -40,6 +40,8 @@ export interface ITranslateData {
   download: string;
   play: string;
   writeHere: string;
+  browse: string;
+  remove: string;
   next: string;
   prev: string;
   edit: string;
@@ -111,6 +113,7 @@ export interface ITranslateData {
     zipCode: string;
   };
   INPUT: {
+    dropFileHereOr: string;
     ERRORS: {
       required: string;
       requires: string;
@@ -163,6 +166,8 @@ export const TRANSLATE_DATA_ENG: ITranslateData = {
   download: 'download',
   play: 'play',
   writeHere: 'write here',
+  browse: 'browse',
+  remove: 'remove',
   next: 'next',
   prev: 'prev',
   edit: 'edit',
@@ -234,6 +239,7 @@ export const TRANSLATE_DATA_ENG: ITranslateData = {
     zipCode: 'zip code',
   },
   INPUT: {
+    dropFileHereOr: 'Drop file here or',
     ERRORS: {
       required: 'field is required',
       requires: 'fields are required',
@@ -286,6 +292,8 @@ export const TRANSLATE_DATA_PL: ITranslateData = {
   download: 'pobierz',
   play: 'włącz',
   writeHere: 'napisz tutaj',
+  browse: 'przeglądaj',
+  remove: 'usuń',
   next: 'dalej',
   prev: 'wstecz',
   edit: 'edycja',
@@ -357,6 +365,7 @@ export const TRANSLATE_DATA_PL: ITranslateData = {
     zipCode: 'kod pocztowy',
   },
   INPUT: {
+    dropFileHereOr: 'Upuść plik tutaj lub',
     ERRORS: {
       required: 'to pole jest wymagane',
       requires: 'te pola są wymagane',

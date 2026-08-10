@@ -1,4 +1,8 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ExportBaseComponent } from './base.component';
@@ -60,7 +64,7 @@ describe('ExportBaseComponent', () => {
 
   it('should accept cssClass via class alias', async () => {
     fixture.componentInstance.cssClass = 'custom-class';
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -71,7 +75,7 @@ describe('ExportBaseComponent', () => {
     const handlerFn = jest.fn();
     fixture.componentInstance.handler = handlerFn;
     fixture.componentInstance.value = { data: 'test' };
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -84,7 +88,7 @@ describe('ExportBaseComponent', () => {
     const handlerFn = jest.fn();
     fixture.componentInstance.handler = handlerFn;
     fixture.componentInstance.value = undefined;
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -95,7 +99,7 @@ describe('ExportBaseComponent', () => {
 
   it('should update value input when host changes value', async () => {
     fixture.componentInstance.value = 'new-value';
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -104,7 +108,7 @@ describe('ExportBaseComponent', () => {
 
   it('should update fileName input when host changes value', async () => {
     fixture.componentInstance.fileName = 'report.csv';
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 

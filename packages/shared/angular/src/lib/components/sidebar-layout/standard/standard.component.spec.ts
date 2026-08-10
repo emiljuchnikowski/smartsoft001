@@ -3,6 +3,7 @@ import {
   TemplateRef,
   ViewChild,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
@@ -106,7 +107,7 @@ describe('@smartsoft001/shared-angular: SidebarLayoutStandardComponent', () => {
 
     it('should render options.sidebarTpl inside the <aside>', async () => {
       host.options = { sidebarTpl: host.sidebarContent };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -117,7 +118,7 @@ describe('@smartsoft001/shared-angular: SidebarLayoutStandardComponent', () => {
 
     it('should render <header> with options.headerTpl when provided', async () => {
       host.options = { headerTpl: host.headerContent };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -128,7 +129,7 @@ describe('@smartsoft001/shared-angular: SidebarLayoutStandardComponent', () => {
 
     it('should place <aside> after <main> when sidebarPosition is right', async () => {
       host.options = { sidebarPosition: 'right' };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 

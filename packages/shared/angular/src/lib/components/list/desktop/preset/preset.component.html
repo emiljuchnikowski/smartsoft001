@@ -1,0 +1,150 @@
+<div #topTpl></div>
+
+<div [class]="containerClasses()">
+  <table
+    cdk-table
+    data-role="table"
+    [dataSource]="desktopList() ?? []"
+    [trackBy]="myTrackById"
+    [class]="tableClasses()"
+  >
+    @for (key of desktopKeys; track key) {
+      @let last = $last;
+      <ng-template #pagination>
+        @if (last && loadNextPage && totalPages()) {
+          <div class="smart:float-right smart:text-sm smart:text-gray-500">
+            {{ 'page' | translate }}:
+            <b>{{ page() }}/{{ totalPages() }}</b>
+          </div>
+        }
+      </ng-template>
+      <ng-container [cdkColumnDef]="key">
+        @switch (key) {
+          @case ('selectMulti') {
+            <th
+              cdk-header-cell
+              *cdkHeaderCellDef
+              class="smart:w-10 smart:px-3 smart:py-3"
+            ></th>
+            <td
+              cdk-cell
+              *cdkCellDef="let element"
+              class="smart:w-10 smart:px-3 smart:py-4"
+            >
+              @let listValue = desktopList();
+              @if (listValue) {
+                <input
+                  type="checkbox"
+                  class="smart:shrink-0 smart:border-gray-300 smart:rounded-sm smart:text-blue-600 smart:focus:ring-blue-500 smart:dark:bg-gray-800 smart:dark:border-gray-600 smart:dark:checked:bg-blue-500 smart:dark:checked:border-blue-500"
+                  (change)="
+                    onChangeMultiselect(
+                      $any($event.target).checked,
+                      element,
+                      listValue
+                    )
+                  "
+                />
+              }
+            </td>
+          }
+          @case ('removeAction') {
+            <th
+              cdk-header-cell
+              *cdkHeaderCellDef
+              [class]="headerCellClasses() + ' smart:w-10 smart:text-end'"
+            >
+              <ng-container *ngTemplateOutlet="pagination"></ng-container>
+            </th>
+            <td
+              cdk-cell
+              *cdkCellDef="let element"
+              [class]="cellClasses() + ' smart:w-10 smart:text-end'"
+            >
+              @if (!checkRemoveHandler || checkRemoveHandler(element)) {
+                <button
+                  type="button"
+                  data-role="remove"
+                  class="smart:inline-flex smart:items-center smart:gap-x-2 smart:text-sm smart:font-semibold smart:rounded-lg smart:text-red-600 smart:hover:text-red-700 smart:dark:text-red-400 smart:dark:hover:text-red-300 smart:focus:outline-hidden smart:disabled:opacity-50 smart:disabled:pointer-events-none"
+                  (click)="removeHandler?.(element)"
+                >
+                  {{ 'remove' | translate }}
+                </button>
+              }
+            </td>
+          }
+          @case ('itemAction') {
+            <th
+              cdk-header-cell
+              *cdkHeaderCellDef
+              [class]="headerCellClasses() + ' smart:w-10 smart:text-end'"
+            >
+              <ng-container *ngTemplateOutlet="pagination"></ng-container>
+            </th>
+            <td
+              cdk-cell
+              *cdkCellDef="let element"
+              [class]="cellClasses() + ' smart:w-10 smart:text-end'"
+            >
+              <button
+                type="button"
+                data-role="item"
+                class="smart:inline-flex smart:items-center smart:gap-x-2 smart:text-sm smart:font-semibold smart:rounded-lg smart:text-blue-600 smart:hover:text-blue-700 smart:dark:text-blue-400 smart:dark:hover:text-blue-300 smart:focus:outline-hidden smart:disabled:opacity-50 smart:disabled:pointer-events-none"
+                (click)="itemHandler?.(element.id)"
+              >
+                →
+              </button>
+            </td>
+          }
+          @default {
+            <th cdk-header-cell *cdkHeaderCellDef [class]="headerCellClasses()">
+              {{ (desktopList() | smartListHeader: key : type)() }}
+              <ng-container *ngTemplateOutlet="pagination"></ng-container>
+            </th>
+            <td
+              cdk-cell
+              *cdkCellDef="let element"
+              [class]="cellClasses()"
+              [attr.smart-item-key]="key"
+            >
+              @let cell = element | smartListCell: key : cellPipe : type;
+              @if (cell) {
+                @if (cell.type === FieldType.image) {
+                  <img
+                    height="50"
+                    [lazyLoad]="cell.value | smartFileUrl"
+                    alt=""
+                    src=""
+                    class="smart:h-10 smart:w-auto"
+                  />
+                } @else {
+                  <div [innerHTML]="cell.value"></div>
+                }
+              }
+            </td>
+          }
+        }
+      </ng-container>
+    }
+
+    <tr
+      cdk-header-row
+      data-role="header-row"
+      *cdkHeaderRowDef="desktopKeys ?? []; sticky: true"
+      [class]="headerRowClasses()"
+    ></tr>
+    <tr
+      cdk-row
+      data-role="row"
+      *cdkRowDef="let row; columns: desktopKeys ?? []"
+      [class]="rowClasses()"
+    ></tr>
+  </table>
+</div>
+
+@if (options()?.pagination?.mode === PaginationMode.singlePage) {
+  <smart-paging
+    [currentPage]="page() ?? 1"
+    [totalPages]="totalPages() ?? 1"
+    (pageChange)="handlePageChange($event)"
+  ></smart-paging>
+}

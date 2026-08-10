@@ -3,6 +3,7 @@ import {
   TemplateRef,
   ViewChild,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
@@ -163,7 +164,7 @@ describe('@smartsoft001/shared-angular: DescriptionListStandardComponent', () =>
       host.options = {
         items: [{ label: 'Full name', value: 'Margot Foster' }],
       };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -182,7 +183,7 @@ describe('@smartsoft001/shared-angular: DescriptionListStandardComponent', () =>
           { label: 'Email address', value: 'margotfoster@example.com' },
         ],
       };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -195,7 +196,7 @@ describe('@smartsoft001/shared-angular: DescriptionListStandardComponent', () =>
       host.options = {
         items: [{ label: 'Full name', valueTpl: host.valueTpl }],
       };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -217,7 +218,7 @@ describe('@smartsoft001/shared-angular: DescriptionListStandardComponent', () =>
           },
         ],
       };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -230,7 +231,7 @@ describe('@smartsoft001/shared-angular: DescriptionListStandardComponent', () =>
 
     it('should render attachmentsTpl inside <.attachments>', async () => {
       host.options = { attachmentsTpl: host.attachmentsTpl };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -243,7 +244,7 @@ describe('@smartsoft001/shared-angular: DescriptionListStandardComponent', () =>
 
     it('should render footerTpl inside <.footer>', async () => {
       host.options = { footerTpl: host.footerTpl };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 

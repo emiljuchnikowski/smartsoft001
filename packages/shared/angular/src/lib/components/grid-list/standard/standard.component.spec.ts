@@ -3,6 +3,7 @@ import {
   TemplateRef,
   ViewChild,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
@@ -143,7 +144,7 @@ describe('@smartsoft001/shared-angular: GridListStandardComponent', () => {
           { id: '3', title: 'Card C' },
         ],
       };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -154,7 +155,7 @@ describe('@smartsoft001/shared-angular: GridListStandardComponent', () => {
 
     it('should render item.title inside <span class="title"> when no href', async () => {
       host.options = { items: [{ title: 'Card A' }] };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -168,7 +169,7 @@ describe('@smartsoft001/shared-angular: GridListStandardComponent', () => {
       host.options = {
         items: [{ title: 'Card A', href: '/a' }],
       };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -184,7 +185,7 @@ describe('@smartsoft001/shared-angular: GridListStandardComponent', () => {
           { title: 'Card A', imageUrl: '/img/a.jpg', imageAlt: 'Card A image' },
         ],
       };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -205,7 +206,7 @@ describe('@smartsoft001/shared-angular: GridListStandardComponent', () => {
           },
         ],
       };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -222,7 +223,7 @@ describe('@smartsoft001/shared-angular: GridListStandardComponent', () => {
       host.options = {
         items: [{ title: 'Card A', badgeTpl: host.badgeTpl }],
       };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -237,7 +238,7 @@ describe('@smartsoft001/shared-angular: GridListStandardComponent', () => {
       host.options = {
         items: [{ title: 'Card A', actionTpl: host.actionTpl }],
       };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -250,7 +251,7 @@ describe('@smartsoft001/shared-angular: GridListStandardComponent', () => {
 
     it('should render emptyTpl when items is empty', async () => {
       host.options = { items: [], emptyTpl: host.emptyTpl };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -261,7 +262,7 @@ describe('@smartsoft001/shared-angular: GridListStandardComponent', () => {
 
     it('should render footerTpl inside <.footer> when provided', async () => {
       host.options = { footerTpl: host.footerTpl };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -276,7 +277,7 @@ describe('@smartsoft001/shared-angular: GridListStandardComponent', () => {
       host.options = {
         items: [{ title: 'Card A', ariaLabel: 'Open card A' }],
       };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 

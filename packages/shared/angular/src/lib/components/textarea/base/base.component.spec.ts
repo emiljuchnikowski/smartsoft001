@@ -1,4 +1,8 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TextareaBaseComponent } from './base.component';
@@ -68,7 +72,7 @@ describe('@smartsoft001/shared-angular: TextareaBaseComponent', () => {
 
   it('should accept value via two-way model', async () => {
     host.value = 'Hello';
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -77,7 +81,7 @@ describe('@smartsoft001/shared-angular: TextareaBaseComponent', () => {
 
   it('should accept cssClass via class alias', async () => {
     host.cssClass = 'my-class';
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 

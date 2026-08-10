@@ -3,6 +3,7 @@ import {
   TemplateRef,
   ViewChild,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
@@ -22,7 +23,7 @@ import { ICardOptions } from '../../../models';
       [options]="options"
       [hasHeader]="hasHeader"
       [hasFooter]="hasFooter"
-      [cssClass]="cssClass"
+      [class]="cssClass"
     />
   `,
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -75,7 +76,7 @@ describe('@smartsoft001/shared-angular: CardStandardComponent', () => {
 
   it('should append cssClass input to container classes', async () => {
     fixture.componentInstance.cssClass = 'my-extra-class';
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -104,7 +105,7 @@ describe('@smartsoft001/shared-angular: CardStandardComponent', () => {
 
   it('should render header section when hasHeader is true', async () => {
     fixture.componentInstance.hasHeader = true;
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -118,7 +119,7 @@ describe('@smartsoft001/shared-angular: CardStandardComponent', () => {
   it('should render h3 with title from options when hasHeader is true', async () => {
     fixture.componentInstance.hasHeader = true;
     fixture.componentInstance.options = { title: 'My Card Title' };
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -142,7 +143,7 @@ describe('@smartsoft001/shared-angular: CardStandardComponent', () => {
 
   it('should render footer section when hasFooter is true', async () => {
     fixture.componentInstance.hasFooter = true;
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -155,7 +156,7 @@ describe('@smartsoft001/shared-angular: CardStandardComponent', () => {
 
   it('should apply divide-y class when header is present', async () => {
     fixture.componentInstance.hasHeader = true;
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -168,7 +169,7 @@ describe('@smartsoft001/shared-angular: CardStandardComponent', () => {
 
   it('should apply divide-y class when footer is present', async () => {
     fixture.componentInstance.hasFooter = true;
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -181,7 +182,7 @@ describe('@smartsoft001/shared-angular: CardStandardComponent', () => {
 
   it('should apply gray body class when options.grayBody is true', async () => {
     fixture.componentInstance.options = { grayBody: true };
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -195,7 +196,7 @@ describe('@smartsoft001/shared-angular: CardStandardComponent', () => {
   it('should apply gray footer class when options.grayFooter is true', async () => {
     fixture.componentInstance.hasFooter = true;
     fixture.componentInstance.options = { grayFooter: true };
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 

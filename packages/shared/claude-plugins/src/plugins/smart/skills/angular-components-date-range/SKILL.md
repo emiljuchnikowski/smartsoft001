@@ -54,6 +54,36 @@ interface IDateRange {
 - `ControlValueAccessor` for forms
 - Dark mode
 
+## DateRangePresetComponent (`<smart-date-range-preset>`)
+
+A fully styled, drop-in variation based on the Preline "single calendar range"
+datepicker (FRA-219). The Preline JS plugin is **not** installed, so the range
+calendar is rendered entirely with Angular signals (no external runtime): click
+the trigger to open an inline popover, pick a start and end day to highlight the
+range, switch months via prev/next buttons or the month/year selects, then Apply.
+
+Extends `DateRangeBaseComponent` (reuses `onClick`, `onModalApply`, `onModalDismiss`,
+`onClear`), so it consumes the exact same API and `ControlValueAccessor` contract
+as the standard variant — no new interface options or tokens are required.
+
+### Selecting the variant
+
+`<smart-date-range>` dispatches over the `variant` input (type
+`DateRangeVariantName = 'standard' | 'preset'`) with an internal `@switch`. This
+component does **not** use the InjectionToken / `NgComponentOutlet` pattern:
+
+```html
+<!-- via the wrapper -->
+<smart-date-range variant="preset" [(ngModel)]="dateRange"></smart-date-range>
+
+<!-- or directly -->
+<smart-date-range-preset [(ngModel)]="dateRange"></smart-date-range-preset>
+```
+
+Because the wrapper binds `[class]="cssClass()"` directly on the selector (not via
+`NgComponentOutlet`), the host `class` is applied natively — no `cssClass` input
+override is needed (unlike token-based components such as `badge`).
+
 ## Base Classes API (for Extension)
 
 ### DateRangeBaseComponent
@@ -133,6 +163,10 @@ export class MyDateRangeComponent extends DateRangeBaseComponent {}
 - Default component: `packages/shared/angular/src/lib/components/date-range/default/date-range-default.component.ts`
 - Default template: `packages/shared/angular/src/lib/components/date-range/default/date-range-default.component.html`
 - Default modal: `packages/shared/angular/src/lib/components/date-range/default/date-range-modal-default.component.ts`
+- Preset component: `packages/shared/angular/src/lib/components/date-range/preset/preset.component.ts`
+- Preset template: `packages/shared/angular/src/lib/components/date-range/preset/preset.component.html`
+- Preset classes: `packages/shared/angular/src/lib/components/date-range/preset/preset-classes.util.ts`
+- Preset tests: `packages/shared/angular/src/lib/components/date-range/preset/preset.component.spec.ts`
 - Tests: `packages/shared/angular/src/lib/components/date-range/date-range.component.spec.ts`
 - Stories: `packages/shared/angular/src/lib/components/date-range/date-range.component.stories.ts`
 - Calendar service: `packages/shared/angular/src/lib/services/calendar/calendar.service.ts`

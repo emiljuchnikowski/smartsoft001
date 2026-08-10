@@ -1,0 +1,23 @@
+<div [class]="rootClasses()" data-role="root">
+  @if (options()?.headerTpl || options()?.title) {
+    <header [class]="headerClasses()" data-role="header">
+      @if (options()?.headerTpl) {
+        <ng-container [ngTemplateOutlet]="options()!.headerTpl!" />
+      } @else if (options()?.title) {
+        <h1 [class]="titleClasses()" data-role="title">
+          {{ options()?.title }}
+        </h1>
+      }
+    </header>
+  }
+  <div [class]="rowClasses()" data-role="row">
+    <aside [class]="sidebarClasses()" data-role="sidebar">
+      @if (options()?.sidebarTpl) {
+        <ng-container [ngTemplateOutlet]="options()!.sidebarTpl!" />
+      }
+    </aside>
+    <main [class]="mainClasses()" data-role="content">
+      <ng-content />
+    </main>
+  </div>
+</div>

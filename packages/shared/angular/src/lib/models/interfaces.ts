@@ -556,7 +556,14 @@ export type SmartBadgeColor =
   | 'pink';
 
 export interface IBadgeOptions {
-  variant?: 'border' | 'flat';
+  /**
+   * Visual style variant (consumed by `BadgePresetComponent`):
+   * - `solid` — filled background with inverse text
+   * - `soft` — tinted background with same-hue text
+   * - `outline` — transparent background with colored border + text
+   */
+  variant?: 'solid' | 'soft' | 'outline';
+  /** Fully rounded pill shape (default `true`); `false` renders `rounded-md` corners. */
   pill?: boolean;
   withDot?: boolean;
   withRemove?: boolean;
@@ -659,6 +666,10 @@ export interface ICardHeadingOptions {
   avatarTpl?: TemplateRef<unknown>;
   actionsTpl?: TemplateRef<unknown>;
   metaTpl?: TemplateRef<unknown>;
+  // Consumed only by CardHeadingPresetComponent; standard component ignores it.
+  presentation?: {
+    variant?: 'author' | 'stacked' | 'overlay' | 'outline';
+  };
 }
 
 export interface IPageHeadingOptions {
@@ -672,6 +683,11 @@ export interface IPageHeadingOptions {
   statsTpl?: TemplateRef<unknown>;
   logoTpl?: TemplateRef<unknown>;
   filtersTpl?: TemplateRef<unknown>;
+  navTpl?: TemplateRef<unknown>;
+  // Consumed only by PageHeadingPresetComponent; standard component ignores it.
+  presentation?: {
+    layout?: 'links-left' | 'links-center' | 'links-right' | 'user';
+  };
 }
 
 export type SmartMultiColumnLayoutWidth = 'full' | 'constrained';
@@ -694,6 +710,11 @@ export interface ISectionHeadingOptions {
   tabsTpl?: TemplateRef<unknown>;
   inputGroupTpl?: TemplateRef<unknown>;
   badgeTpl?: TemplateRef<unknown>;
+  imageTpl?: TemplateRef<unknown>;
+  // Consumed only by SectionHeadingPresetComponent; standard component ignores it.
+  presentation?: {
+    layout?: 'half' | 'narrow' | 'wide' | 'vertical';
+  };
 }
 
 export interface IDescriptionListItem {
@@ -1154,6 +1175,14 @@ export interface IListOptions<T> {
       };
 
   select?: 'multi';
+
+  // Consumed only by the desktop preset (ListDesktopPresetComponent) to pick
+  // Preline table styling variations.
+  presentation?: {
+    variant?: 'default' | 'striped' | 'bordered' | 'borderless';
+    hoverable?: boolean;
+    header?: 'default' | 'muted' | 'none';
+  };
 }
 
 export interface IRemoveProvider<T> {

@@ -75,7 +75,8 @@
         "outputDir": "dist/storybook/angular",
         "configDir": "packages/shared/angular/.storybook",
         "browserTarget": "angular:build-storybook",
-        "compodoc": false
+        "compodoc": false,
+        "styles": ["packages/shared/angular/src/lib/styles.css"]
       },
       "configurations": {
         "ci": {

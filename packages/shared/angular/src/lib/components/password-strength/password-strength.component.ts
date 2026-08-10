@@ -33,6 +33,7 @@ import { PASSWORD_STRENGTH_STANDARD_COMPONENT_TOKEN } from '../../shared.inector
   `,
   encapsulation: ViewEncapsulation.None,
   imports: [PasswordStrengthStandardComponent, NgComponentOutlet],
+  host: { class: 'smart:contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PasswordStrengthComponent {

@@ -3,6 +3,7 @@ import {
   TemplateRef,
   ViewChild,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
@@ -144,7 +145,7 @@ describe('@smartsoft001/shared-angular: SectionHeadingStandardComponent', () => 
 
     it('should render actionsTpl in <.actions>', async () => {
       host.options = { actionsTpl: host.actions };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -157,7 +158,7 @@ describe('@smartsoft001/shared-angular: SectionHeadingStandardComponent', () => 
 
     it('should render tabsTpl in <.tabs>', async () => {
       host.options = { tabsTpl: host.tabs };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -168,7 +169,7 @@ describe('@smartsoft001/shared-angular: SectionHeadingStandardComponent', () => 
 
     it('should render inputGroupTpl in <.input-group>', async () => {
       host.options = { inputGroupTpl: host.inputGroup };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -181,7 +182,7 @@ describe('@smartsoft001/shared-angular: SectionHeadingStandardComponent', () => 
 
     it('should render badgeTpl in <.badge>', async () => {
       host.options = { badgeTpl: host.badge };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 

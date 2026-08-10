@@ -1,4 +1,8 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ContainerStandardComponent } from './standard.component';
@@ -59,7 +63,7 @@ describe('@smartsoft001/shared-angular: ContainerStandardComponent', () => {
 
   it('should reflect options.mode in the data-mode attribute', async () => {
     host.options = { mode: 'constrained' };
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -72,7 +76,7 @@ describe('@smartsoft001/shared-angular: ContainerStandardComponent', () => {
 
   it('should reflect options.padding in the data-padding attribute', async () => {
     host.options = { padding: 'mobile' };
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -85,7 +89,7 @@ describe('@smartsoft001/shared-angular: ContainerStandardComponent', () => {
 
   it('should apply cssClass on the host div', async () => {
     host.cssClass = 'my-extra-class';
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 

@@ -1,4 +1,9 @@
-import { Component, input, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  input,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 
@@ -82,7 +87,7 @@ describe('@smartsoft001/shared-angular: FormStandardComponent', () => {
 
   it('should append cssClass input to containerClasses()', async () => {
     fixture.componentInstance.cssClass = 'my-extra-class';
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -97,7 +102,7 @@ describe('@smartsoft001/shared-angular: FormStandardComponent', () => {
       lastName: host.form.controls['lastName'],
     });
     (host.form.controls['firstName'] as any)['__smartDisabled'] = true;
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
 
     const inputs = fixture.nativeElement.querySelectorAll('smart-input');

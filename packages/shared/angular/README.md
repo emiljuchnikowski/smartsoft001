@@ -3019,7 +3019,7 @@ The `<smart-avatar>` component renders a single avatar (image, initials, or plac
 
 ### BadgeBaseComponent
 
-Abstract base class for badge components. Exposes required `text`, optional `color` (`SmartBadgeColor`, default `'gray'`), `size` (`'sm' | 'md'`, default `'md'`), `IBadgeOptions` (`variant`, `pill`, `withDot`, `withRemove`), `cssClass` (alias `class`), `removed` output, and a `remove()` method.
+Abstract base class for badge components. Exposes required `text`, optional `color` (`SmartBadgeColor`, default `'gray'`), `size` (`'sm' | 'md'`, default `'md'`), `IBadgeOptions` (`variant` — `'solid' | 'soft' | 'outline'`, `pill`, `withDot`, `withRemove`), `cssClass` (alias `class`), `removed` output, and a `remove()` method.
 
 **Inputs:** `text` (`string`, required), `color` (`SmartBadgeColor`), `size` (`'sm' | 'md'`), `options` (`IBadgeOptions`), `class` (`string`)
 **Outputs:** `removed` (`void`)
@@ -3030,6 +3030,14 @@ The `<smart-badge>` component renders a small status/label chip with an optional
 
 **Wrapper:** `BadgeComponent` (selector: `smart-badge`)
 **Default:** `BadgeStandardComponent` (selector: `smart-badge-standard`)
+**Preset variation:** `BadgePresetComponent` (selector: `smart-badge-preset`) — styled drop-in replacement grouping the **solid / soft / outline** color presets (via `options.variant`, default `'soft'`) across the full `SmartBadgeColor` palette, with `pill`, `size`, `withDot`, and `withRemove` support and `dark:` styling. Register through the token to restyle every `<smart-badge>`:
+
+```typescript
+providers: [
+  { provide: BADGE_STANDARD_COMPONENT_TOKEN, useValue: BadgePresetComponent },
+];
+```
+
 **Token:** `BADGE_STANDARD_COMPONENT_TOKEN` — provide a `Type<BadgeBaseComponent>` to override the default.
 
 ### ButtonGroupBaseComponent

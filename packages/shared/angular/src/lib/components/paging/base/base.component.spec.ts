@@ -1,4 +1,8 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PagingBaseComponent } from './base.component';
@@ -73,7 +77,7 @@ describe('PagingBaseComponent', () => {
   describe('cssClass alias', () => {
     it('should accept cssClass via class alias', async () => {
       fixture.componentInstance.cssClass = 'custom-class';
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -89,7 +93,7 @@ describe('PagingBaseComponent', () => {
     it('should return 1 for first page', async () => {
       fixture.componentInstance.totalItems = 50;
       fixture.componentInstance.currentPage = 1;
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -100,7 +104,7 @@ describe('PagingBaseComponent', () => {
       fixture.componentInstance.totalItems = 50;
       fixture.componentInstance.currentPage = 2;
       fixture.componentInstance.pageSize = 10;
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -117,7 +121,7 @@ describe('PagingBaseComponent', () => {
       fixture.componentInstance.totalItems = 50;
       fixture.componentInstance.currentPage = 1;
       fixture.componentInstance.pageSize = 10;
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -128,7 +132,7 @@ describe('PagingBaseComponent', () => {
       fixture.componentInstance.totalItems = 25;
       fixture.componentInstance.currentPage = 3;
       fixture.componentInstance.pageSize = 10;
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -143,7 +147,7 @@ describe('PagingBaseComponent', () => {
 
     it('should return true when currentPage > 1', async () => {
       fixture.componentInstance.currentPage = 2;
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -159,7 +163,7 @@ describe('PagingBaseComponent', () => {
     it('should return true when currentPage < totalPages', async () => {
       fixture.componentInstance.totalPages = 5;
       fixture.componentInstance.currentPage = 3;
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -175,7 +179,7 @@ describe('PagingBaseComponent', () => {
     it('should return all pages when totalPages <= 7', async () => {
       fixture.componentInstance.totalPages = 5;
       fixture.componentInstance.currentPage = 3;
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -185,7 +189,7 @@ describe('PagingBaseComponent', () => {
     it('should show ellipsis for page 5 of 10', async () => {
       fixture.componentInstance.totalPages = 10;
       fixture.componentInstance.currentPage = 5;
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -195,7 +199,7 @@ describe('PagingBaseComponent', () => {
     it('should show ellipsis only after start when near beginning', async () => {
       fixture.componentInstance.totalPages = 10;
       fixture.componentInstance.currentPage = 1;
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -205,7 +209,7 @@ describe('PagingBaseComponent', () => {
     it('should show ellipsis only before end when near end', async () => {
       fixture.componentInstance.totalPages = 10;
       fixture.componentInstance.currentPage = 10;
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -215,7 +219,7 @@ describe('PagingBaseComponent', () => {
     it('should handle page 2 of 10', async () => {
       fixture.componentInstance.totalPages = 10;
       fixture.componentInstance.currentPage = 2;
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -225,7 +229,7 @@ describe('PagingBaseComponent', () => {
     it('should handle page 9 of 10', async () => {
       fixture.componentInstance.totalPages = 10;
       fixture.componentInstance.currentPage = 9;
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -239,7 +243,7 @@ describe('PagingBaseComponent', () => {
       comp.pageChange.subscribe(spy);
 
       fixture.componentInstance.totalPages = 5;
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
 
       comp.goToPage(3);
@@ -261,7 +265,7 @@ describe('PagingBaseComponent', () => {
       comp.pageChange.subscribe(spy);
 
       fixture.componentInstance.totalPages = 5;
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
 
       comp.goToPage(6);
@@ -277,7 +281,7 @@ describe('PagingBaseComponent', () => {
 
       fixture.componentInstance.totalPages = 5;
       fixture.componentInstance.currentPage = 2;
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -303,7 +307,7 @@ describe('PagingBaseComponent', () => {
 
       fixture.componentInstance.totalPages = 5;
       fixture.componentInstance.currentPage = 3;
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 

@@ -86,7 +86,7 @@ import { InputBaseComponent } from '../base/base.component';
 })
 export class InputAddressComponent<T> extends InputBaseComponent<T> {
   fieldInputClasses =
-    'smart:mt-1 smart:block smart:w-full smart:rounded-md smart:bg-white smart:px-2 smart:py-1 smart:text-sm smart:text-gray-900 smart:outline-1 smart:outline-gray-300 focus:smart:outline-2 focus:smart:outline-indigo-600 smart:dark:bg-white/5 smart:dark:text-white smart:dark:outline-white/10';
+    'smart:mt-1 smart:block smart:w-full smart:rounded-md smart:bg-white smart:px-2 smart:py-1 smart:text-sm smart:text-gray-900 smart:outline-1 smart:outline-gray-300 smart:focus:outline-2 smart:focus:outline-indigo-600 smart:dark:bg-white/5 smart:dark:text-white smart:dark:outline-white/10';
 
   labelClasses = computed(() =>
     [

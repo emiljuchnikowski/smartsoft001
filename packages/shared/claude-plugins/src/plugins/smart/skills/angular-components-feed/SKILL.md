@@ -23,6 +23,12 @@ Main wrapper component. Renders `FeedStandardComponent` by default. When `FEED_S
 
 Barebones placeholder concrete implementation. Renders a wrapper `<div>` containing an optional `<h3 class="title">`, optional `<p class="description">`, and a `<ol role="list">` with one `<li class="event">` per event. Each event renders the icon/avatar (icon template wins over avatar URL), an optional `<time class="timestamp">`, the title (rendered as `<a class="title">` if `href` is provided, otherwise `<span class="title">`), an optional description, and a nested `<ul class="comments">` with one `<li class="comment">` per comment (avatar, author name, optional timestamp, content). When events list is empty, the optional `emptyTpl` is rendered inside `<div class="empty">`. An optional `commentSubmitTpl` renders inside `<div class="comment-submit">`. A bottom `footerTpl` renders inside `<div class="footer">`. The external `cssClass` is applied to the root wrapper. It does not include any visual styling — it exists solely as the default structural placeholder until a custom implementation is registered through the token.
 
+### FeedPresetComponent (`<smart-feed-preset>`)
+
+Styled variation that extends `FeedBaseComponent` and is a drop-in replacement for `FeedStandardComponent`. Register it via `FEED_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-feed>`, or use the `<smart-feed-preset>` selector directly. It renders the Preline timeline look in vanilla Tailwind: a vertical rail (drawn with an `after:` pseudo-element, hidden on the last item) with a per-event circular marker, a left-hand side timestamp column, the event title (rendered as a link when `href` is set), an event description, and nested comments shown as Preline-style author rows. The marker chooses `iconTpl` first, then `avatarUrl` (image), then a default dot. Comments render the author avatar when `authorAvatarUrl` is set, otherwise an initials fallback derived from the first letter of `authorName`. The `emptyTpl`, `commentSubmitTpl`, and `footerTpl` slots are honored. All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants; the class recipes live in `preset/preset-classes.util.ts`.
+
+> Because `FeedComponent` renders injected components via `NgComponentOutlet` (which passes inputs by canonical name), `FeedPresetComponent` overrides `cssClass` as `input<string>('')` **without** the `class` alias. Bind it as `[cssClass]` when using the `<smart-feed-preset>` selector directly, or just pass `class` on `<smart-feed>` (the wrapper forwards it).
+
 ### FeedBaseComponent (abstract)
 
 Abstract base directive for extending custom feed implementations. Exposes `options` as an `InputSignal<IFeedOptions | undefined>` and `cssClass` as an `InputSignal<string>` (with alias `class`).
@@ -194,6 +200,9 @@ export class MyCustomFeedComponent extends FeedBaseComponent {
 
 - Wrapper: `packages/shared/angular/src/lib/components/feed/feed.component.ts`
 - Standard: `packages/shared/angular/src/lib/components/feed/standard/standard.component.ts`
+- Preset variation: `packages/shared/angular/src/lib/components/feed/preset/preset.component.ts`
+- Preset class recipes: `packages/shared/angular/src/lib/components/feed/preset/preset-classes.util.ts`
 - Base class: `packages/shared/angular/src/lib/components/feed/base/base.component.ts`
+- Stories: `packages/shared/angular/src/lib/components/feed/feed.component.stories.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`FEED_STANDARD_COMPONENT_TOKEN`)
 - Interfaces: `packages/shared/angular/src/lib/models/interfaces.ts` (`IFeedOptions`, `IFeedEvent`, `IFeedComment`, `SmartFeedVariant`)

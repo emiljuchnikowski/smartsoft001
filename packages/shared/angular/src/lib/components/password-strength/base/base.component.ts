@@ -25,7 +25,7 @@ const MSG_COLOR_CLASSES: readonly string[] = [
   'smart:text-yellow-600 smart:dark:text-yellow-500',
 ];
 
-const CONTAINER_BASE = 'smart:w-1/3 max-sm:smart:w-full';
+const CONTAINER_BASE = 'smart:w-1/3 smart:max-sm:w-full';
 
 interface PasswordStrengthResult {
   lowerLetters: boolean;

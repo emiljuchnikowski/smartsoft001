@@ -3,6 +3,7 @@ import {
   TemplateRef,
   ViewChild,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
@@ -127,7 +128,7 @@ describe('@smartsoft001/shared-angular: CardHeadingStandardComponent', () => {
 
     it('should render avatarTpl in <.avatar>', async () => {
       host.options = { avatarTpl: host.avatar };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -140,7 +141,7 @@ describe('@smartsoft001/shared-angular: CardHeadingStandardComponent', () => {
 
     it('should render actionsTpl in <.actions>', async () => {
       host.options = { actionsTpl: host.actions };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -153,7 +154,7 @@ describe('@smartsoft001/shared-angular: CardHeadingStandardComponent', () => {
 
     it('should render metaTpl inside the content area', async () => {
       host.options = { metaTpl: host.meta };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 

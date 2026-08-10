@@ -1,0 +1,143 @@
+<div
+  role="alert"
+  tabindex="-1"
+  [attr.aria-live]="ariaLive()"
+  [attr.aria-labelledby]="labelId"
+  [class]="containerClasses() + ' ' + cssClass()"
+>
+  @if (variant() === 'condensed') {
+    <div class="smart:flex smart:p-4">
+      <p [id]="labelId" [class]="messageClasses()">{{ title() }}</p>
+      <div class="smart:ms-auto smart:flex smart:items-center smart:space-x-3">
+        @for (action of actions(); track action.id) {
+          <button
+            type="button"
+            [class]="actionClasses(action)"
+            (click)="invokeAction(action.id)"
+          >
+            {{ action.label }}
+          </button>
+        }
+        @if (dismissible()) {
+          <button
+            type="button"
+            aria-label="Close"
+            [class]="closeInlineClasses()"
+            (click)="dismiss()"
+          >
+            <span class="smart:sr-only">Close</span>
+            <svg
+              class="smart:shrink-0 smart:size-4"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M18 6 6 18" />
+              <path d="m6 6 12 12" />
+            </svg>
+          </button>
+        }
+      </div>
+    </div>
+  } @else if (variant() === 'simple') {
+    <div class="smart:flex smart:gap-x-3 smart:p-4">
+      @if (iconName()) {
+        <span [class]="iconClasses()">{{ iconName() }}</span>
+      }
+      <div class="smart:grow">
+        <p [id]="labelId" [class]="messageClasses()">{{ title() }}</p>
+        @if (description()) {
+          <div [class]="descriptionClasses()">{{ description() }}</div>
+        }
+      </div>
+      @if (dismissible()) {
+        <div class="smart:ms-auto">
+          <button
+            type="button"
+            aria-label="Close"
+            [class]="closeInlineClasses()"
+            (click)="dismiss()"
+          >
+            <span class="smart:sr-only">Close</span>
+            <svg
+              class="smart:shrink-0 smart:size-4"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M18 6 6 18" />
+              <path d="m6 6 12 12" />
+            </svg>
+          </button>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="smart:relative smart:flex smart:gap-x-3 smart:p-4">
+      @if (variant() === 'with-avatar' && avatarUrl()) {
+        <img [class]="avatarClasses()" [src]="avatarUrl()" alt="" />
+      } @else if (iconName()) {
+        <span [class]="iconClasses()">{{ iconName() }}</span>
+      }
+      @if (dismissible()) {
+        <button
+          type="button"
+          aria-label="Close"
+          [class]="closeAbsoluteClasses()"
+          (click)="dismiss()"
+        >
+          <span class="smart:sr-only">Close</span>
+          <svg
+            class="smart:shrink-0 smart:size-4"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M18 6 6 18" />
+            <path d="m6 6 12 12" />
+          </svg>
+        </button>
+      }
+      <div class="smart:grow smart:pe-4">
+        <h3 [id]="labelId" [class]="titleClasses()">{{ title() }}</h3>
+        @if (description()) {
+          <div [class]="descriptionClasses()">{{ description() }}</div>
+        }
+        @if (actions().length) {
+          <div [class]="actionsRowClasses()">
+            @for (action of actions(); track action.id) {
+              <button
+                type="button"
+                [class]="actionClasses(action)"
+                (click)="invokeAction(action.id)"
+              >
+                {{ action.label }}
+              </button>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

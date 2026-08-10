@@ -196,6 +196,28 @@ export class MyCustomDescriptionListComponent extends DescriptionListBaseCompone
 />
 ```
 
+## Preset
+
+`DescriptionListPresetComponent` (`<smart-description-list-preset>`) is a styled drop-in replacement for the barebones standard component. It renders the same structure with Tailwind utility classes (every class carries the `smart:` prefix, with explicit `smart:dark:*` twins):
+
+- Optional header (`data-role="header"`): title as `<h3>` (`text-base font-semibold text-gray-900 dark:text-white`) and description as `<p>` (`text-sm text-gray-500 dark:text-gray-400`). Rendered only when title or description is set.
+- List (`data-role="list"`): the `<dl>` carries `divide-y divide-gray-200 dark:divide-gray-700`; the external `cssClass` is merged onto it.
+- Rows (`data-role="row"`): `grid py-3 sm:grid-cols-3 sm:gap-4` with `<dt>` (`data-role="term"`, `text-sm font-medium text-gray-500 dark:text-gray-400`) and `<dd>` (`data-role="value"`, `text-sm text-gray-900 dark:text-white sm:col-span-2`). `valueTpl` wins over `value`; `actionTpl` renders right-aligned inside `data-role="action"`.
+- Optional `attachmentsTpl` (`data-role="attachments"`) and `footerTpl` (`data-role="footer"`) render as separate sections below the list.
+
+Because the wrapper forwards inputs canonically through `NgComponentOutlet`, the preset declares `override cssClass = input<string>('')` (dropping the inherited `class` alias). Register it through the token to restyle every `<smart-description-list>`:
+
+```typescript
+providers: [
+  {
+    provide: DESCRIPTION_LIST_STANDARD_COMPONENT_TOKEN,
+    useValue: DescriptionListPresetComponent,
+  },
+];
+```
+
+No new `IDescriptionListOptions` fields are introduced; the preset consumes the existing API. Class recipes live in `preset/preset-classes.util.ts` (not exported from the barrel).
+
 ## File Locations
 
 - Wrapper: `packages/shared/angular/src/lib/components/description-list/description-list.component.ts`

@@ -41,6 +41,7 @@ const baseMap: Partial<Record<ListMode, Type<ListBaseComponent<any>>>> = {
   templateUrl: './list.component.html',
   encapsulation: ViewEncapsulation.None,
   imports: [NgComponentOutlet, TranslatePipe, LoaderComponent],
+  host: { class: 'smart:contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListComponent<T extends IEntity<string>> {

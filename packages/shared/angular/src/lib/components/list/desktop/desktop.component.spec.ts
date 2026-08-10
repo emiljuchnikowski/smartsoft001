@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   Pipe,
   PipeTransform,
@@ -143,7 +144,7 @@ describe('@smartsoft001/shared-angular: ListDesktopComponent', () => {
 
   it('should append cssClass to containerClasses when provided', async () => {
     fixture.componentInstance.cssClass = 'my-extra-class';
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 

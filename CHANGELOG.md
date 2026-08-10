@@ -1,3 +1,7 @@
+## 2.127.0 (2026-08-07)
+
+This was a version bump only, there were no code changes.
+
 ## 2.126.0 (2026-07-24)
 
 This was a version bump only, there were no code changes.

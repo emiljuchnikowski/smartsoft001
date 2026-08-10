@@ -17,6 +17,7 @@ import {
 import { IDateRange } from '@smartsoft001/domain-core';
 
 import { DateRangeVariantName } from './base/date-range-base.component';
+import { DateRangePresetComponent } from './preset/preset.component';
 import { DateRangeStandardComponent } from './standard/standard.component';
 
 @Component({
@@ -30,11 +31,18 @@ import { DateRangeStandardComponent } from './standard/standard.component';
           [class]="cssClass()"
         />
       }
+      @case ('preset') {
+        <smart-date-range-preset
+          [ngModel]="ngModel()"
+          (ngModelChange)="onInnerChange($event)"
+          [class]="cssClass()"
+        />
+      }
     }
   `,
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DateRangeStandardComponent, FormsModule],
+  imports: [DateRangeStandardComponent, DateRangePresetComponent, FormsModule],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

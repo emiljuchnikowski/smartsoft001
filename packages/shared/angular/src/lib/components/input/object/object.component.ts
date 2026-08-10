@@ -5,7 +5,10 @@ import {
   computed,
   inject,
 } from '@angular/core';
-import { DynamicIoDirective } from 'ng-dynamic-component';
+import {
+  ComponentOutletInjectorDirective,
+  DynamicIoDirective,
+} from 'ng-dynamic-component';
 
 import { IFormOptions } from '../../../models';
 import { ModelLabelPipe } from '../../../pipes';
@@ -35,7 +38,13 @@ import { InputBaseComponent } from '../base/base.component';
       </div>
     }
   `,
-  imports: [ModelLabelPipe, NgComponentOutlet, DynamicIoDirective],
+  imports: [
+    ModelLabelPipe,
+    NgComponentOutlet,
+    DynamicIoDirective,
+    ComponentOutletInjectorDirective,
+  ],
+  host: { class: 'smart:contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputObjectComponent<T, TChild> extends InputBaseComponent<T> {

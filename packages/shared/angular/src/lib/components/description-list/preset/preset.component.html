@@ -1,0 +1,39 @@
+@if (hasHeader()) {
+  <div data-role="header">
+    @if (options()?.title) {
+      <h3 [class]="titleClasses">{{ options()!.title }}</h3>
+    }
+    @if (options()?.description) {
+      <p [class]="descriptionClasses">{{ options()!.description }}</p>
+    }
+  </div>
+}
+<dl data-role="list" [class]="listClasses()">
+  @for (item of options()?.items ?? []; track $index) {
+    <div data-role="row" [class]="rowClasses">
+      <dt data-role="term" [class]="termClasses">{{ item.label }}</dt>
+      <dd data-role="value" [class]="valueClasses">
+        @if (item.valueTpl) {
+          <ng-container [ngTemplateOutlet]="item.valueTpl" />
+        } @else {
+          {{ item.value }}
+        }
+      </dd>
+      @if (item.actionTpl) {
+        <span data-role="action" [class]="actionClasses">
+          <ng-container [ngTemplateOutlet]="item.actionTpl" />
+        </span>
+      }
+    </div>
+  }
+</dl>
+@if (options()?.attachmentsTpl) {
+  <div data-role="attachments" [class]="attachmentsClasses">
+    <ng-container [ngTemplateOutlet]="options()!.attachmentsTpl!" />
+  </div>
+}
+@if (options()?.footerTpl) {
+  <div data-role="footer" [class]="footerClasses">
+    <ng-container [ngTemplateOutlet]="options()!.footerTpl!" />
+  </div>
+}

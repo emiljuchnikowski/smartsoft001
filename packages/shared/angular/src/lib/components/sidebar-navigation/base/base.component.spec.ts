@@ -1,4 +1,8 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SidebarNavigationBaseComponent } from './base.component';
@@ -53,7 +57,7 @@ describe('@smartsoft001/shared-angular: SidebarNavigationBaseComponent', () => {
 
   it('should accept options', async () => {
     host.options = { items: [{ id: 'a', label: 'A' }] };
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 

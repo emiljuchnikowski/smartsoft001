@@ -30,7 +30,7 @@ import { InputFileBaseComponent } from '../base/file.component';
         <button
           type="button"
           (click)="addButtonOptions.click()"
-          class="smart:rounded-md smart:bg-indigo-600 smart:px-3 smart:py-1.5 smart:text-sm smart:font-semibold smart:text-white hover:smart:bg-indigo-500"
+          class="smart:rounded-md smart:bg-indigo-600 smart:px-3 smart:py-1.5 smart:text-sm smart:font-semibold smart:text-white smart:hover:bg-indigo-500"
         >
           {{ (control.value ? 'change' : 'add') | translate }}
         </button>
@@ -38,7 +38,7 @@ import { InputFileBaseComponent } from '../base/file.component';
           <button
             type="button"
             (click)="playButtonOptions.click()"
-            class="smart:rounded-md smart:bg-gray-200 smart:px-3 smart:py-1.5 smart:text-sm smart:font-semibold smart:text-gray-900 hover:smart:bg-gray-300 smart:dark:bg-white/10 smart:dark:text-white"
+            class="smart:rounded-md smart:bg-gray-200 smart:px-3 smart:py-1.5 smart:text-sm smart:font-semibold smart:text-gray-900 smart:hover:bg-gray-300 smart:dark:bg-white/10 smart:dark:text-white"
           >
             {{ 'play' | translate }}
           </button>
@@ -47,7 +47,7 @@ import { InputFileBaseComponent } from '../base/file.component';
           <button
             type="button"
             (click)="deleteButtonOptions.click()"
-            class="smart:rounded-md smart:bg-red-600 smart:px-3 smart:py-1.5 smart:text-sm smart:font-semibold smart:text-white hover:smart:bg-red-500"
+            class="smart:rounded-md smart:bg-red-600 smart:px-3 smart:py-1.5 smart:text-sm smart:font-semibold smart:text-white smart:hover:bg-red-500"
           >
             {{ 'delete' | translate }}
           </button>

@@ -1,0 +1,46 @@
+<div #topTpl></div>
+
+<ul role="list" data-role="grid" [class]="containerClasses()">
+  @for (item of listWithImages() ?? []; track item.data.id) {
+    <li data-role="card" [class]="cardContainerClasses">
+      @if (item.image) {
+        <img
+          data-role="card-image"
+          class="smart:h-48 smart:w-full smart:object-cover smart:rounded-t-xl"
+          [ngSrc]="item.image | smartFileUrl"
+          width="400"
+          height="192"
+          alt=""
+        />
+      }
+      <div class="smart:p-4">
+        @for (key of keys; track key) {
+          @let cell = item.data | smartListCell: key : cellPipe : type;
+          @if (cell && cell.type !== FieldType.image) {
+            @if (key === titleKey) {
+              <h3
+                data-role="card-title"
+                class="smart:font-semibold smart:text-gray-900 smart:dark:text-white"
+                [innerHTML]="cell.value"
+              ></h3>
+            } @else {
+              <p
+                data-role="card-text"
+                class="smart:mt-1 smart:text-gray-500 smart:dark:text-gray-400"
+                [innerHTML]="cell.value"
+              ></p>
+            }
+          }
+        }
+      </div>
+    </li>
+  }
+</ul>
+
+@if (options()?.pagination?.mode === PaginationMode.singlePage) {
+  <smart-paging
+    [currentPage]="page() ?? 1"
+    [totalPages]="totalPages() ?? 1"
+    (pageChange)="handlePageChange($event)"
+  ></smart-paging>
+}

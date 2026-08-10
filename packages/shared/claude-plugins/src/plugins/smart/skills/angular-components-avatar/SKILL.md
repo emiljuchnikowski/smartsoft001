@@ -29,6 +29,12 @@ Barebones placeholder concrete implementation. Renders a host `<span>` carrying 
 
 It does not include Tailwind UI styling — it exists solely as the default structural placeholder until a custom implementation is registered through the token.
 
+### AvatarPresetComponent (`<smart-avatar-preset>`)
+
+Styled variation that extends `AvatarBaseComponent` and is a drop-in replacement for `AvatarStandardComponent`. Register it via `AVATAR_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-avatar>`, or use the `<smart-avatar-preset>` selector directly. It renders three content modes — an `<img>` (when `imageUrl` is set), an initials chip (when `initials` is set or `options.placeholderType === 'initials'`), or an SVG icon placeholder (the default) — across the full `SmartAvatarSize` scale (`xs`→`size-8`, `sm`→`size-9.5`, `md`→`size-11`, `lg`→`size-15.5`, `xl`→`size-20`) in both `circle` (`rounded-full`) and `rounded` (`rounded-lg`) shapes. When `notificationPosition` (`top`/`bottom`) is set the avatar is wrapped in a `relative` container with a corner status dot; when `group()` is non-empty it renders an overlapping stacked group (negative `-space-x-2`, ringed members), reversed when `options.stackDirection === 'bottom-to-top'`. All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants. The class recipes live in `preset/preset-classes.util.ts` (`getImageClasses`, `getInitialsClasses`, `getIconWrapperClasses`, `getStatusClasses`, `getGroupContainerClasses`, `getGroupItemImageClasses`, `getGroupItemInitialsClasses`).
+
+> Because `AvatarComponent` renders injected components via `NgComponentOutlet` (which passes inputs by canonical name), `AvatarPresetComponent` overrides `cssClass` as `input<string>('')` **without** the `class` alias. Bind it as `[cssClass]` when using the `<smart-avatar-preset>` selector directly, or just pass `class` on `<smart-avatar>` (the wrapper forwards it).
+
 ### AvatarBaseComponent (abstract)
 
 Abstract base directive for extending custom avatar implementations. Static `smartType: DynamicComponentType = 'avatar'`. Exposes:
@@ -213,6 +219,8 @@ When extending the base directly, remember to:
 
 - Wrapper: `packages/shared/angular/src/lib/components/avatar/avatar.component.ts`
 - Standard: `packages/shared/angular/src/lib/components/avatar/standard/standard.component.ts`
+- Preset variation: `packages/shared/angular/src/lib/components/avatar/preset/preset.component.ts`
+- Preset class recipes: `packages/shared/angular/src/lib/components/avatar/preset/preset-classes.util.ts`
 - Base class: `packages/shared/angular/src/lib/components/avatar/base/base.component.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`AVATAR_STANDARD_COMPONENT_TOKEN`)
 - Interfaces: `packages/shared/angular/src/lib/models/interfaces.ts` (`IAvatarItem`, `IAvatarOptions`, `SmartAvatarSize`, `SmartAvatarShape`)

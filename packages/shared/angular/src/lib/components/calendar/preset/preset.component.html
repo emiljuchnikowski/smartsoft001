@@ -1,0 +1,110 @@
+<div [class]="cssClass()">
+  <div data-role="calendar" [class]="containerClass">
+    <div [class]="innerClass">
+      @if (showToolbar()) {
+        <div [class]="headerClass">
+          <div class="smart:col-span-1">
+            <button
+              type="button"
+              [class]="navButtonClass"
+              aria-label="Previous"
+              (click)="prevPeriod()"
+            >
+              <svg
+                class="smart:shrink-0 smart:size-4"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="m15 18-6-6 6-6" />
+              </svg>
+            </button>
+          </div>
+
+          <div
+            class="smart:col-span-3 smart:flex smart:justify-center smart:items-center smart:gap-x-1"
+          >
+            <span data-role="month-label" [class]="monthLabelClass">{{
+              monthLabel()
+            }}</span>
+            <span class="smart:text-gray-900 smart:dark:text-white">/</span>
+            <span data-role="year-label" [class]="monthLabelClass">{{
+              yearLabel()
+            }}</span>
+          </div>
+
+          <div class="smart:col-span-1 smart:flex smart:justify-end">
+            <button
+              type="button"
+              [class]="navButtonClass"
+              aria-label="Next"
+              (click)="nextPeriod()"
+            >
+              <svg
+                class="smart:shrink-0 smart:size-4"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="m9 18 6-6-6-6" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      }
+
+      <div [class]="weekRowClass">
+        @for (label of weekdayLabels(); track label) {
+          <span data-role="weekday" [class]="weekdayClass">{{ label }}</span>
+        }
+      </div>
+
+      @for (week of monthGrid(); track $index) {
+        <div [class]="dayRowClass">
+          @for (cell of week; track cell.date.getTime()) {
+            <div>
+              <button
+                type="button"
+                data-role="day"
+                [class]="dayClasses(cell)"
+                [disabled]="!cell.isCurrentMonth"
+                [attr.data-today]="cell.isToday ? 'true' : null"
+                [attr.data-selected]="cell.isSelected ? 'true' : null"
+                [attr.aria-label]="cell.date.toDateString()"
+                [attr.aria-pressed]="cell.isSelected"
+                (click)="selectDay(cell.date)"
+              >
+                @if (options()?.dayCellTpl) {
+                  <ng-container
+                    [ngTemplateOutlet]="options()!.dayCellTpl!"
+                    [ngTemplateOutletContext]="{
+                      $implicit: cell,
+                      events: eventsForDay(cell.date),
+                    }"
+                  />
+                } @else {
+                  {{ cell.date.getDate() }}
+                  @if (eventsForDay(cell.date).length) {
+                    <span data-role="event-dot" [class]="eventDotClass"></span>
+                  }
+                }
+              </button>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>

@@ -41,4 +41,28 @@ describe('angular: DynamicComponentLoader', () => {
     expect(result[0].factory).toBe(compA);
     expect(result[1].factory).toBe(compB);
   });
+
+  it('should prefer a factory from a previously declared component', async () => {
+    const compA = { name: 'A' };
+    const declaredFactory = { name: 'declared-A' };
+    DynamicComponentLoader.declaredComponents = [
+      { component: compA, factory: declaredFactory },
+    ];
+
+    const result = await loader.getComponentsWithFactories({
+      components: [compA],
+    });
+
+    expect(result[0].factory).toBe(declaredFactory);
+  });
+
+  it('should register resolved components in declaredComponents', async () => {
+    const compA = { name: 'A' };
+
+    await loader.getComponentsWithFactories({ components: [compA] });
+
+    expect(DynamicComponentLoader.declaredComponents).toEqual([
+      { component: compA, factory: compA },
+    ]);
+  });
 });

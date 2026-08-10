@@ -3,6 +3,7 @@ import {
   TemplateRef,
   ViewChild,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
@@ -156,7 +157,7 @@ describe('@smartsoft001/shared-angular: StackedListStandardComponent', () => {
           { id: '3', title: 'Tom Cook' },
         ],
       };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -167,7 +168,7 @@ describe('@smartsoft001/shared-angular: StackedListStandardComponent', () => {
 
     it('should render item.title inside <span class="title"> when no href', async () => {
       host.options = { items: [{ title: 'Lindsay Walton' }] };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -181,7 +182,7 @@ describe('@smartsoft001/shared-angular: StackedListStandardComponent', () => {
       host.options = {
         items: [{ title: 'Lindsay Walton', href: '/team/lindsay' }],
       };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -202,7 +203,7 @@ describe('@smartsoft001/shared-angular: StackedListStandardComponent', () => {
           },
         ],
       };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -217,7 +218,7 @@ describe('@smartsoft001/shared-angular: StackedListStandardComponent', () => {
       host.options = {
         items: [{ title: 'Lindsay Walton', avatarUrl: '/img/lindsay.jpg' }],
       };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -231,7 +232,7 @@ describe('@smartsoft001/shared-angular: StackedListStandardComponent', () => {
       host.options = {
         items: [{ title: 'Lindsay Walton', iconTpl: host.iconTpl }],
       };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -246,7 +247,7 @@ describe('@smartsoft001/shared-angular: StackedListStandardComponent', () => {
       host.options = {
         items: [{ title: 'Lindsay Walton', badgeTpl: host.badgeTpl }],
       };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -261,7 +262,7 @@ describe('@smartsoft001/shared-angular: StackedListStandardComponent', () => {
       host.options = {
         items: [{ title: 'Lindsay Walton', actionTpl: host.actionTpl }],
       };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -274,7 +275,7 @@ describe('@smartsoft001/shared-angular: StackedListStandardComponent', () => {
 
     it('should render emptyTpl when no items and emptyTpl provided', async () => {
       host.options = { items: [], emptyTpl: host.emptyTpl };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -285,7 +286,7 @@ describe('@smartsoft001/shared-angular: StackedListStandardComponent', () => {
 
     it('should render footerTpl inside <.footer> when provided', async () => {
       host.options = { footerTpl: host.footerTpl };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -300,7 +301,7 @@ describe('@smartsoft001/shared-angular: StackedListStandardComponent', () => {
       host.options = {
         items: [{ title: 'Lindsay Walton', ariaLabel: 'Team member: Lindsay' }],
       };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 

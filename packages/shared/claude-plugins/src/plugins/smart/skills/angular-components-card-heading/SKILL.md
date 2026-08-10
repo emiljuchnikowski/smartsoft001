@@ -147,8 +147,67 @@ export class MyCustomCardHeadingComponent extends CardHeadingBaseComponent {
 </smart-card>
 ```
 
+## HyperUI preset
+
+`CardHeadingPresetComponent` (`<smart-card-heading-preset>`) is a HyperUI-styled
+drop-in replacement for the standard component. It extends
+`CardHeadingStandardComponent`, is `OnPush` + `ViewEncapsulation.None`, and
+restyles the heading into one of four card looks selected by
+`options.presentation.variant`. All utilities are `smart:`-prefixed with
+explicit `smart:dark:*` variants. Content flows from the shared
+`ICardHeadingOptions` slots; the root element carries `data-role="card"` and
+per-variant zones expose `data-role` hooks (`avatar`, `title`, `description`,
+`meta`, `actions`, plus `title-hover` for the outline variant).
+
+Because the wrapper forwards inputs canonically through `NgComponentOutlet`, the
+preset does `override cssClass = input<string>('')` (dropping the inherited
+`class` alias) and merges it into the root card classes.
+
+| Variant   | Look                                                              | Slots used                                                   |
+| --------- | ----------------------------------------------------------------- | ------------------------------------------------------------ |
+| `author`  | Bordered, rounded card; avatar to the side, meta `<dl>` (default) | title, description, avatarTpl, metaTpl, actionsTpl           |
+| `stacked` | Large top image, title + description stacked underneath           | title, description, avatarTpl, metaTpl, actionsTpl           |
+| `overlay` | Full-bleed image on a black backdrop, content revealed on hover   | title, description, avatarTpl, metaTpl (eyebrow), actionsTpl |
+| `outline` | Dashed offset border, title flips to description/action on hover  | title, description, avatarTpl, actionsTpl                    |
+
+`presentation.variant` defaults to `author` (also the fallback for an unknown
+value).
+
+### Register the preset
+
+```typescript
+import { CARD_HEADING_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+import { CardHeadingPresetComponent } from '@smartsoft001/angular';
+
+providers: [
+  {
+    provide: CARD_HEADING_STANDARD_COMPONENT_TOKEN,
+    useValue: CardHeadingPresetComponent,
+  },
+];
+```
+
+### Gaps (out of scope)
+
+HyperUI card templates 5–9 are not implemented — they need domain fields absent
+from `ICardHeadingOptions`:
+
+- **Property card** — price, address, list of numeric specs (beds/baths/area).
+- **Profile with social + project links** — dedicated social-icon and
+  project-link collections (dark profile card).
+- **Shaped image** — a decorative clip-path/image-shape treatment with no
+  content-driven data channel.
+- **Podcast post** — episode number, duration, and audio/player metadata.
+- **Forum post** — author, reply count, tag list, and activity timestamps.
+
+Adding any of these would require extending `ICardHeadingOptions` (e.g.
+structured `stats`, `links`, or `badges` collections) before a faithful preset
+variant can be built.
+
 ## File Locations
 
+- Preset: `packages/shared/angular/src/lib/components/card-heading/preset/preset.component.ts`
+- Preset classes: `packages/shared/angular/src/lib/components/card-heading/preset/preset-classes.util.ts`
 - Wrapper: `packages/shared/angular/src/lib/components/card-heading/card-heading.component.ts`
 - Standard: `packages/shared/angular/src/lib/components/card-heading/standard/standard.component.ts`
 - Base class: `packages/shared/angular/src/lib/components/card-heading/base/base.component.ts`

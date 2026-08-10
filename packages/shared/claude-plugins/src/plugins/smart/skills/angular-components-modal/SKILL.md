@@ -23,6 +23,14 @@ Main wrapper component. Renders `ModalStandardComponent` by default. When `MODAL
 
 Barebones placeholder concrete implementation. Renders a native `<dialog [open] role="dialog" aria-modal="true">` containing an optional `<h2 id="smart-modal-title">`, an optional `<p>` description, an `<ng-content>` slot for arbitrary body content, an optional dismiss `<button>` (when `options.withDismiss` is `true`), and a `<footer>` with one `<button data-variant>` per action. It does not include Tailwind UI styling — it exists solely as the default structural placeholder until a custom implementation is registered through the token.
 
+### ModalPresetComponent (`<smart-modal-preset>`)
+
+Styled variation that extends `ModalBaseComponent` and is a drop-in replacement for `ModalStandardComponent`. Register it via `MODAL_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-modal>`, or use the `<smart-modal-preset>` selector directly. It renders a translated Preline overlay — a full-screen scrollable backdrop hosting a `rounded-xl` card with a header (`title` + optional dismiss `×`), a body (`description` + projected content), and a footer of action buttons. The look is selected through `options.variant` (default `'centered'`): `centered`/`alert` are vertically centered (`alert` is narrower), `wide` is a top-aligned large dialog, and `left-aligned-buttons` left-aligns the footer. `options.footerStyle: 'gray'` tints the footer, and action buttons are styled by their `variant` (`primary`/`secondary`/`danger`). All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants. The class recipes live in `preset/preset-classes.util.ts`.
+
+> **Preline JS is NOT used.** Open/close is driven entirely by the existing `open` model signal + `@if` (no `HSOverlay`, no `data-hs-*`). The component binds its own dismiss UX: clicking the backdrop and pressing `Escape` both call `close()` (which sets `open` to `false` and emits `closed`). The dialog ARIA contract is preserved (`role="dialog"`, `aria-modal="true"`, `aria-labelledby` when `title` is set, else `aria-label` from `options.ariaLabel`). The header dismiss `×` button is only shown when `options.withDismiss` is `true`.
+>
+> Because `ModalComponent` renders injected components via `NgComponentOutlet` (which passes inputs by canonical name), `ModalPresetComponent` overrides `cssClass` as `input<string>('')` **without** the `class` alias (applied to the centering wrapper). Bind it as `[cssClass]` when using the `<smart-modal-preset>` selector directly, or just pass `class` on `<smart-modal>` (the wrapper forwards it).
+
 ### ModalBaseComponent (abstract)
 
 Abstract base directive for extending custom modal implementations. Exposes `open` as a two-way `ModelSignal<boolean>`, `title` / `description` as optional `InputSignal<string | undefined>`, `actions` as `InputSignal<IModalAction[]>` (default `[]`), `options` as `InputSignal<IModalOptions | undefined>`, `cssClass` as `InputSignal<string>` (with alias `class`), `actionClick` and `closed` outputs, plus `invokeAction(actionId)` (emits `actionClick`) and `close()` (sets `open` to `false` and emits `closed`).
@@ -170,6 +178,9 @@ When extending the base directly, remember to:
 
 - Wrapper: `packages/shared/angular/src/lib/components/modal/modal.component.ts`
 - Standard: `packages/shared/angular/src/lib/components/modal/standard/standard.component.ts`
+- Preset variation: `packages/shared/angular/src/lib/components/modal/preset/preset.component.ts`
+- Preset class recipes: `packages/shared/angular/src/lib/components/modal/preset/preset-classes.util.ts`
 - Base class: `packages/shared/angular/src/lib/components/modal/base/base.component.ts`
+- Stories: `packages/shared/angular/src/lib/components/modal/modal.component.stories.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`MODAL_STANDARD_COMPONENT_TOKEN`)
 - Interfaces: `packages/shared/angular/src/lib/models/interfaces.ts` (`IModalAction`, `IModalOptions`)

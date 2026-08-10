@@ -3,6 +3,7 @@ import {
   TemplateRef,
   ViewChild,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
@@ -117,7 +118,7 @@ describe('@smartsoft001/shared-angular: MultiColumnLayoutStandardComponent', () 
 
     it('should render options.navTpl inside the nav <aside>', async () => {
       host.options = { navTpl: host.navContent };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -128,7 +129,7 @@ describe('@smartsoft001/shared-angular: MultiColumnLayoutStandardComponent', () 
 
     it('should render options.secondaryTpl inside the secondary <aside>', async () => {
       host.options = { secondaryTpl: host.secondaryContent };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 
@@ -141,7 +142,7 @@ describe('@smartsoft001/shared-angular: MultiColumnLayoutStandardComponent', () 
 
     it('should render <header> with options.headerTpl when provided', async () => {
       host.options = { headerTpl: host.headerContent };
-      fixture.changeDetectorRef.markForCheck();
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
       fixture.detectChanges();
       await fixture.whenStable();
 

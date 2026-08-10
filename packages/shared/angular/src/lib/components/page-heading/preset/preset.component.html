@@ -1,0 +1,143 @@
+<ng-template #logoZone>
+  <div class="smart:flex smart:items-center" data-role="logo">
+    @if (options()?.logoTpl) {
+      <ng-container [ngTemplateOutlet]="options()!.logoTpl!" />
+    } @else if (options()?.title) {
+      <span [class]="titleClasses">{{ options()!.title }}</span>
+    }
+  </div>
+</ng-template>
+
+<ng-template #navZone>
+  @if (options()?.navTpl) {
+    <div class="smart:hidden smart:md:block" data-role="nav">
+      <ng-container [ngTemplateOutlet]="options()!.navTpl!" />
+    </div>
+  }
+</ng-template>
+
+<ng-template #actionsZone>
+  @if (options()?.actionsTpl) {
+    <div
+      class="smart:hidden smart:md:flex smart:items-center smart:gap-4"
+      data-role="actions"
+    >
+      <ng-container [ngTemplateOutlet]="options()!.actionsTpl!" />
+    </div>
+  }
+</ng-template>
+
+<ng-template #avatarZone>
+  @if (options()?.avatarTpl) {
+    <div
+      class="smart:hidden smart:md:relative smart:md:block"
+      data-role="avatar"
+    >
+      <ng-container [ngTemplateOutlet]="options()!.avatarTpl!" />
+    </div>
+  }
+</ng-template>
+
+<ng-template #hamburgerZone>
+  <button
+    type="button"
+    [class]="hamburgerClasses"
+    (click)="toggleMenu()"
+    data-role="hamburger"
+    aria-label="Toggle menu"
+  >
+    <span class="smart:sr-only">Toggle menu</span>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="smart:size-5"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      stroke-width="2"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M4 6h16M4 12h16M4 18h16"
+      ></path>
+    </svg>
+  </button>
+</ng-template>
+
+<header [class]="headerClasses()" data-role="header">
+  <div
+    class="smart:mx-auto smart:max-w-7xl smart:px-4 smart:sm:px-6 smart:lg:px-8"
+  >
+    @switch (layout()) {
+      @case ('links-center') {
+        <div [class]="barClasses()">
+          <ng-container [ngTemplateOutlet]="logoZone" />
+          <div
+            class="smart:hidden smart:md:flex smart:md:flex-1 smart:md:justify-center"
+          >
+            <ng-container [ngTemplateOutlet]="navZone" />
+          </div>
+          <div class="smart:flex smart:items-center smart:gap-4">
+            <ng-container [ngTemplateOutlet]="actionsZone" />
+            <ng-container [ngTemplateOutlet]="hamburgerZone" />
+          </div>
+        </div>
+      }
+      @case ('links-right') {
+        <div [class]="barClasses()">
+          <div class="smart:flex smart:flex-1 smart:items-center">
+            <ng-container [ngTemplateOutlet]="logoZone" />
+          </div>
+          <div
+            class="smart:hidden smart:md:flex smart:md:items-center smart:md:gap-12"
+          >
+            <ng-container [ngTemplateOutlet]="navZone" />
+            <ng-container [ngTemplateOutlet]="actionsZone" />
+          </div>
+          <ng-container [ngTemplateOutlet]="hamburgerZone" />
+        </div>
+      }
+      @case ('user') {
+        <div [class]="barClasses()">
+          <div class="smart:flex smart:flex-1 smart:items-center">
+            <ng-container [ngTemplateOutlet]="logoZone" />
+          </div>
+          <div
+            class="smart:hidden smart:md:flex smart:md:items-center smart:md:gap-12"
+          >
+            <ng-container [ngTemplateOutlet]="navZone" />
+            <ng-container [ngTemplateOutlet]="avatarZone" />
+          </div>
+          <ng-container [ngTemplateOutlet]="hamburgerZone" />
+        </div>
+      }
+      @default {
+        <div [class]="barClasses()">
+          <ng-container [ngTemplateOutlet]="logoZone" />
+          <div
+            class="smart:flex smart:flex-1 smart:items-center smart:justify-end smart:md:justify-between"
+          >
+            <ng-container [ngTemplateOutlet]="navZone" />
+            <div class="smart:flex smart:items-center smart:gap-4">
+              <ng-container [ngTemplateOutlet]="actionsZone" />
+              <ng-container [ngTemplateOutlet]="hamburgerZone" />
+            </div>
+          </div>
+        </div>
+      }
+    }
+  </div>
+
+  @if (menuOpened()) {
+    <div class="smart:md:hidden smart:px-4 smart:pb-4" data-role="mobile-panel">
+      @if (options()?.navTpl) {
+        <ng-container [ngTemplateOutlet]="options()!.navTpl!" />
+      }
+      @if (options()?.actionsTpl) {
+        <div class="smart:mt-4">
+          <ng-container [ngTemplateOutlet]="options()!.actionsTpl!" />
+        </div>
+      }
+    </div>
+  }
+</header>

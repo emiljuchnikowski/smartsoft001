@@ -4,7 +4,8 @@ import type { Meta, StoryObj } from '@storybook/angular';
 import { applicationConfig, moduleMetadata } from '@storybook/angular';
 
 import { InfoComponent } from './info.component';
-import { InfoStandardComponent } from './standard/standard.component';
+import { InfoPresetComponent } from './preset/preset.component';
+import { INFO_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 const meta: Meta<InfoComponent> = {
   title: 'Components/Info',
@@ -15,7 +16,15 @@ const meta: Meta<InfoComponent> = {
       providers: [importProvidersFrom(TranslateModule.forRoot())],
     }),
     moduleMetadata({
-      imports: [InfoComponent, InfoStandardComponent],
+      imports: [InfoComponent, InfoPresetComponent],
+      // Register the preset variation as the replacement for the standard
+      // info component, so every <smart-info> renders InfoPresetComponent.
+      providers: [
+        {
+          provide: INFO_STANDARD_COMPONENT_TOKEN,
+          useValue: InfoPresetComponent,
+        },
+      ],
     }),
   ],
   argTypes: {
@@ -44,9 +53,9 @@ export const Playground: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <div style="padding: 40px;">
+      <div style="padding: 60px;">
         <p style="margin-bottom: 16px; font-size: 14px;">
-          Click the info icon to toggle the popover:
+          Hover or focus the info icon to reveal the tooltip:
         </p>
         <smart-info [options]="options" [class]="cssClass"></smart-info>
       </div>
@@ -61,29 +70,43 @@ export const AllVariants: Story = {
   },
   render: () => ({
     template: `
-      <div style="display: flex; flex-direction: column; gap: 32px; padding: 24px;">
+      <div style="display: flex; flex-direction: column; gap: 48px; padding: 48px;">
 
         <section>
-          <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">
-            Default
+          <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 24px;">
+            Placements (hover / focus the icon)
           </h3>
-          <smart-info
-            [options]="{ text: 'This is a tooltip with helpful information.' }"
-          ></smart-info>
+          <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; max-width: 320px;">
+            <div style="grid-column-start: 2; text-align: center;">
+              <smart-info-preset
+                placement="top"
+                [options]="{ text: 'Tooltip on top' }"
+              ></smart-info-preset>
+            </div>
+            <div style="grid-column-start: 1; text-align: end;">
+              <smart-info-preset
+                placement="left"
+                [options]="{ text: 'Tooltip on left' }"
+              ></smart-info-preset>
+            </div>
+            <div style="grid-column-start: 3;">
+              <smart-info-preset
+                placement="right"
+                [options]="{ text: 'Tooltip on right' }"
+              ></smart-info-preset>
+            </div>
+            <div style="grid-column-start: 2; text-align: center;">
+              <smart-info-preset
+                placement="bottom"
+                [options]="{ text: 'Tooltip on bottom' }"
+              ></smart-info-preset>
+            </div>
+          </div>
         </section>
 
         <section>
           <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">
-            With long text
-          </h3>
-          <smart-info
-            [options]="{ text: 'A longer description that provides detailed information about a specific field or feature. It can contain multiple sentences and will wrap nicely inside the popover container.' }"
-          ></smart-info>
-        </section>
-
-        <section>
-          <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">
-            Inline with label
+            Inline with label (registered via token)
           </h3>
           <div style="display: flex; align-items: center; gap: 8px;">
             <label style="font-size: 14px; font-weight: 500;">
@@ -97,81 +120,13 @@ export const AllVariants: Story = {
 
         <section>
           <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">
-            Multiple instances
-          </h3>
-          <div style="display: flex; flex-direction: column; gap: 12px;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <label style="font-size: 14px; font-weight: 500;">First name</label>
-              <smart-info
-                [options]="{ text: 'Your legal first name as it appears on official documents.' }"
-              ></smart-info>
-            </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <label style="font-size: 14px; font-weight: 500;">Last name</label>
-              <smart-info
-                [options]="{ text: 'Your legal last name / family name.' }"
-              ></smart-info>
-            </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <label style="font-size: 14px; font-weight: 500;">Phone</label>
-              <smart-info
-                [options]="{ text: 'Enter your phone number with country code.' }"
-              ></smart-info>
-            </div>
-          </div>
-        </section>
-
-        <section>
-          <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">
             With external class
           </h3>
           <smart-info
-            class="smart:text-indigo-600 smart:dark:text-indigo-400"
+            class="smart:opacity-90"
             [options]="{ text: 'External class applied via the class alias.' }"
           ></smart-info>
         </section>
-
-      </div>
-    `,
-  }),
-};
-
-export const LightAndDarkMode: Story = {
-  name: 'Light and dark mode',
-  parameters: {
-    controls: { disable: true },
-  },
-  render: () => ({
-    template: `
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0; min-height: 240px;">
-
-        <div style="padding: 24px; background: #f9fafb; color: #111827;">
-          <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">
-            Light mode
-          </h3>
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <label style="font-size: 14px; font-weight: 500;">
-              Email address
-            </label>
-            <smart-info
-              [options]="{ text: 'Shown in light mode — popover uses light styles.' }"
-            ></smart-info>
-          </div>
-        </div>
-
-        <div class="dark" style="padding: 24px; background: #111827; color: #f9fafb;">
-          <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">
-            Dark mode
-          </h3>
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <label style="font-size: 14px; font-weight: 500;">
-              Email address
-            </label>
-            <smart-info
-              [options]="{ text: 'Shown in dark mode — popover uses dark styles.' }"
-            ></smart-info>
-          </div>
-        </div>
 
       </div>
     `,

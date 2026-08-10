@@ -23,6 +23,12 @@ Main wrapper component. Renders `StatsStandardComponent` by default. When `STATS
 
 Barebones placeholder concrete implementation. Renders a wrapper `<div>` containing an optional `<h3 class="title">` and a `<dl>` with one `<div class="item">` per item. Each item renders an optional icon (`iconTpl` in `<div class="icon">`), label (`<dt class="label">`), value (`<dd class="value">`), optional previous value (`<dd class="previous">`), optional change with `data-trend` attribute (`<dd class="change">`), and optional action template (`actionTpl` in `<div class="action">`). The external `cssClass` is applied to the root wrapper. It does not include any visual styling — it exists solely as the default structural placeholder until a custom implementation is registered through the token.
 
+### StatsPresetComponent (`<smart-stats-preset>`)
+
+Styled variation that extends `StatsBaseComponent` and is a drop-in replacement for `StatsStandardComponent`. Register it via `STATS_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-stats>`, or use the `<smart-stats-preset>` selector directly. Renders the Preline "Three-Column Stats with Primary Accent" look: a responsive grid of stat blocks, each with an optional leading icon (`iconTpl`), a `label` heading, the big primary-accent `value` (with an optional inline `change` badge coloured by `trend` — green for `up`, red for `down`, gray for `neutral`/unset), an optional muted `previousValue` sub-line, and an optional `actionTpl`. Column count comes from `options.columns` (default `3`); an optional `options.title` renders as a heading above the grid. All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants. The class recipes live in `preset/preset-classes.util.ts` (`getStatsContainerClasses`, `getStatsGridClasses`, `getStatsChangeClasses`, etc.).
+
+> Because `StatsComponent` renders injected components via `NgComponentOutlet` (which passes inputs by canonical name), `StatsPresetComponent` overrides `cssClass` as `input<string>('')` **without** the `class` alias. Bind it as `[cssClass]` when using the `<smart-stats-preset>` selector directly, or just pass `class` on `<smart-stats>` (the wrapper forwards it).
+
 ### StatsBaseComponent (abstract)
 
 Abstract base directive for extending custom stats implementations. Exposes `options` as an `InputSignal<IStatsOptions | undefined>` and `cssClass` as an `InputSignal<string>` (with alias `class`).
@@ -204,10 +210,47 @@ export class MyCustomStatsComponent extends StatsBaseComponent {
 />
 ```
 
+### Using the preset variation
+
+```typescript
+// Register globally (or in a feature's providers) to restyle every <smart-stats>:
+import {
+  STATS_STANDARD_COMPONENT_TOKEN,
+  StatsPresetComponent,
+} from '@smartsoft001/angular';
+
+providers: [
+  { provide: STATS_STANDARD_COMPONENT_TOKEN, useValue: StatsPresetComponent },
+];
+```
+
+```html
+<!-- Then drive the look via options (columns, trend-coloured change badges) -->
+<smart-stats
+  [options]="{
+    title: 'By the numbers',
+    columns: 3,
+    items: [
+      { label: 'Accuracy rate', value: '99.95%', previousValue: 'in fulfilling orders' },
+      { label: 'Conversion', value: '92%', change: '+7%', trend: 'up' },
+    ],
+  }"
+/>
+
+<!-- Or use the variation selector directly (note [cssClass], not class) -->
+<smart-stats-preset
+  [options]="{ columns: 2, items: stats }"
+  [cssClass]="'smart:py-4'"
+/>
+```
+
 ## File Locations
 
 - Wrapper: `packages/shared/angular/src/lib/components/stats/stats.component.ts`
 - Standard: `packages/shared/angular/src/lib/components/stats/standard/standard.component.ts`
+- Preset variation: `packages/shared/angular/src/lib/components/stats/preset/preset.component.ts`
+- Preset class recipes: `packages/shared/angular/src/lib/components/stats/preset/preset-classes.util.ts`
 - Base class: `packages/shared/angular/src/lib/components/stats/base/base.component.ts`
+- Stories: `packages/shared/angular/src/lib/components/stats/stats.component.stories.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`STATS_STANDARD_COMPONENT_TOKEN`)
 - Interfaces: `packages/shared/angular/src/lib/models/interfaces.ts` (`IStatsOptions`, `IStatItem`)

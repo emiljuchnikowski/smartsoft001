@@ -16,6 +16,7 @@ import {
 } from '@angular/forms';
 
 import { DateEditVariantName } from './base/base.component';
+import { DateEditPresetComponent } from './preset/preset.component';
 import { DateEditStandardComponent } from './standard/standard.component';
 
 @Component({
@@ -30,11 +31,19 @@ import { DateEditStandardComponent } from './standard/standard.component';
           [class]="cssClass()"
         />
       }
+      @case ('preset') {
+        <smart-date-edit-preset
+          [ngModel]="ngModel()"
+          (ngModelChange)="onInnerChange($event)"
+          (validChange)="validChange.emit($event)"
+          [class]="cssClass()"
+        />
+      }
     }
   `,
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DateEditStandardComponent, FormsModule],
+  imports: [DateEditStandardComponent, DateEditPresetComponent, FormsModule],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

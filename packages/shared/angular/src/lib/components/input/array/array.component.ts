@@ -8,7 +8,10 @@ import {
 } from '@angular/core';
 import { UntypedFormArray } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
-import { DynamicIoDirective } from 'ng-dynamic-component';
+import {
+  ComponentOutletInjectorDirective,
+  DynamicIoDirective,
+} from 'ng-dynamic-component';
 
 import {
   FieldType,
@@ -65,8 +68,10 @@ import { InputBaseComponent } from '../base/base.component';
     TranslatePipe,
     NgComponentOutlet,
     DynamicIoDirective,
+    ComponentOutletInjectorDirective,
     ButtonComponent,
   ],
+  host: { class: 'smart:contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputArrayComponent<T, TChild> extends InputBaseComponent<T> {

@@ -150,10 +150,38 @@ export class MyCustomFormComponent extends FormBaseComponent<any> {}
 
 Each field is rendered via `<smart-input>`. Per-field dispatch by `FieldType` is handled inside `<smart-input>` itself. See the `angular-components-input` skill for per-field details.
 
+## Preset
+
+`FormPresetComponent` (`<smart-form-preset>`) is a styled, drop-in replacement for `FormStandardComponent`. It extends the standard component and reuses all of its logic (field iteration, statuses, submit-on-enter, and the value/valid/partial outputs on the wrapper). The preset only restyles the **shell**: the form root gets a vertical rhythm (`smart:space-y-5`) and each field row is wrapped in a `data-role="field"` element (with the field key on `data-key`); the root carries `data-role="form"`.
+
+**The form preset does NOT restyle field internals.** Each field is still rendered by `<smart-input>`, so to get the full styled look, register the input presets alongside it. The recommended duet provides both tokens:
+
+```typescript
+import {
+  FormPresetComponent,
+  FORM_STANDARD_COMPONENT_TOKEN,
+} from '@smartsoft001/angular';
+import {
+  INPUT_FIELD_COMPONENTS_TOKEN,
+  INPUT_PRESET_FIELD_COMPONENTS,
+} from '@smartsoft001/angular';
+
+providers: [
+  { provide: FORM_STANDARD_COMPONENT_TOKEN, useValue: FormPresetComponent },
+  {
+    provide: INPUT_FIELD_COMPONENTS_TOKEN,
+    useValue: INPUT_PRESET_FIELD_COMPONENTS,
+  },
+];
+```
+
+Providing only `FORM_STANDARD_COMPONENT_TOKEN` restyles the form layout but leaves the inputs in their default look. The preset keeps the inherited `class` alias, so `<smart-form class="…">` still lands external classes on the form root.
+
 ## File Locations
 
 - Wrapper: `packages/shared/angular/src/lib/components/form/form.component.ts`
 - Standard: `packages/shared/angular/src/lib/components/form/standard/standard.component.ts`
+- Preset: `packages/shared/angular/src/lib/components/form/preset/preset.component.ts`
 - Base class: `packages/shared/angular/src/lib/components/form/base/base.component.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`FORM_STANDARD_COMPONENT_TOKEN`)
 - Interface: `packages/shared/angular/src/lib/models/interfaces.ts` (`IFormOptions`)

@@ -1,4 +1,8 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NotificationBaseComponent } from './base.component';
@@ -88,7 +92,7 @@ describe('@smartsoft001/shared-angular: NotificationBaseComponent', () => {
 
   it('should accept cssClass via class alias', async () => {
     host.cssClass = 'my-class';
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 
@@ -97,7 +101,7 @@ describe('@smartsoft001/shared-angular: NotificationBaseComponent', () => {
 
   it('should accept INotificationOptions via options input', async () => {
     host.options = { ariaLive: 'assertive', variant: 'with-actions-below' };
-    fixture.changeDetectorRef.markForCheck();
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();
     await fixture.whenStable();
 

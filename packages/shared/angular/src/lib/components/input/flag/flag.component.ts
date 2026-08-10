@@ -50,7 +50,7 @@ export class InputFlagComponent<T> extends InputBaseComponent<T> {
       'smart:rounded',
       'smart:border-gray-300',
       'smart:text-indigo-600',
-      'focus:smart:ring-indigo-500',
+      'smart:focus:ring-indigo-500',
       'smart:dark:border-gray-600',
       'smart:dark:bg-white/5',
     ];
