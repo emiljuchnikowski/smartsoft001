@@ -26,7 +26,19 @@ runs:
       uses: actions/cache@v4
       with:
         path: node_modules
-        key: deps-node-modules-${{inputs.prod}}-${{ hashFiles('package-lock.json | jq -S ".dependencies, .devDependencies"') }}
+        # `hashFiles` takes a file name only, not a shell pipeline. The previous
+        # argument matched no file, so it evaluated to an empty string and this
+        # key was the constant `deps-node-modules-false-`. The cache then always
+        # hit, which skipped the `npm ci` step below (it is gated on cache-hit),
+        # so runners kept a node_modules from before the Angular 22 bump.
+        #
+        # That pipe could not have worked even if `hashFiles` ran shell: this is
+        # a lockfileVersion 3 file, which has no top-level `.dependencies` or
+        # `.devDependencies` (they all moved under `.packages`), so jq prints
+        # `null null` for any lockfile - a constant hash, the same bug again.
+        # Hashing the whole file is what we want anyway: a lockfile changes
+        # exactly when the dependency tree changes.
+        key: deps-node-modules-${{ inputs.prod }}-${{ hashFiles('package-lock.json') }}
     - name: Install dependencies
       if: (steps.cache.outputs.cache-hit != 'true' || inputs.caching != 'true') && inputs.prod == 'false'
       run: |
