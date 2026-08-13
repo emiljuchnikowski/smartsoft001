@@ -7,6 +7,14 @@ import { PAGE_HEADING_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 const LAYOUTS = ['links-left', 'links-center', 'links-right', 'user'] as const;
 
+// Showcase headings read as prose, not as the raw option value.
+const LAYOUT_LABELS: Record<(typeof LAYOUTS)[number], string> = {
+  'links-left': 'Links left',
+  'links-center': 'Links center',
+  'links-right': 'Links right',
+  user: 'User (avatar)',
+};
+
 interface PageHeadingArgs {
   layout: (typeof LAYOUTS)[number];
   withNav: boolean;
@@ -126,14 +134,14 @@ export const AllVariants: Story = {
         ${LAYOUTS.filter((layout) => layout !== 'user')
           .map((layout) =>
             section(
-              layout,
+              LAYOUT_LABELS[layout],
               `{ logoTpl: logo, navTpl: nav, actionsTpl: actions, presentation: { layout: '${layout}' } }`,
             ),
           )
           .join('\n')}
 
         ${section(
-          'user (avatar)',
+          LAYOUT_LABELS['user'],
           `{ logoTpl: logo, navTpl: nav, avatarTpl: avatar, presentation: { layout: 'user' } }`,
         )}
 

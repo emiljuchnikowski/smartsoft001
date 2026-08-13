@@ -248,7 +248,7 @@ export const AllVariants: Story = {
         )}
 
         ${section(
-          'Empty — custom emptyTpl',
+          'Empty with a custom template',
           `<smart-grid-list [options]="{ title: 'Empty state', items: [], emptyTpl: empty }"></smart-grid-list>`,
         )}
 

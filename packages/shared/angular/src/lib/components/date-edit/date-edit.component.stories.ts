@@ -13,10 +13,9 @@ const meta: Meta<DateEditArgs> = {
   tags: ['autodocs'],
   decorators: [
     moduleMetadata({
-      // Only DateEditComponent — deliberately NOT FormsModule. Without the
-      // NgModel directive in scope, [(ngModel)] binds the component's own
-      // model() signal. Pulling FormsModule in would route it through the CVA
-      // writeValue() -> cd.detectChanges() path, which loops (NG0103).
+      // Only DateEditComponent — deliberately NOT FormsModule, so [(ngModel)]
+      // below binds the component's own model() signal rather than also
+      // matching the NgModel directive. See the note in date-edit.component.ts.
       imports: [DateEditComponent],
     }),
   ],
@@ -64,7 +63,6 @@ export const AllVariants: Story = {
   parameters: { controls: { disable: true } },
   render: () => ({
     props: {
-      defaultValue: '2001-01-01',
       validValue: '2026-04-07',
       invalidValue: 'not-a-date',
       styledValue: '2026-04-07',
@@ -77,14 +75,15 @@ export const AllVariants: Story = {
 
         ${section(
           'Default value',
-          'No value supplied — the component falls back to 2001-01-01.',
-          `<smart-date-edit variant="preset" [(ngModel)]="defaultValue"></smart-date-edit>`,
+          'No value bound at all — the component falls back to 2001-01-01.',
+          `<smart-date-edit variant="preset"></smart-date-edit>`,
         )}
 
         ${section(
           'Supplied date',
           'A valid YYYY-MM-DD value shown in the trigger.',
-          `<smart-date-edit variant="preset" [(ngModel)]="validValue"></smart-date-edit>`,
+          `<smart-date-edit variant="preset" [(ngModel)]="validValue"></smart-date-edit>
+           <p style="margin-top: 8px; font-size: 13px; opacity: .7;">Bound value: {{ validValue }}</p>`,
         )}
 
         ${section(

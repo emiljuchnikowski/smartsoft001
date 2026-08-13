@@ -130,14 +130,14 @@ export const AllVariants: Story = {
         )}
 
         ${section(
-          'Header: title fallback vs headerTpl',
+          'Header from a title or from a template',
           [
             layout(
-              'title fallback (no headerTpl)',
+              'Header taken from the title',
               `{ title: 'Dashboard', navTpl: navTpl, containerWidth: 'md' }`,
             ),
             layout(
-              'custom headerTpl',
+              'Header taken from a template',
               `{ navTpl: navTpl, headerTpl: headerTpl, containerWidth: 'md' }`,
             ),
           ].join('\n'),
@@ -147,11 +147,11 @@ export const AllVariants: Story = {
           'Optional navigation',
           [
             layout(
-              'with navTpl',
+              'With a navigation template',
               `{ navTpl: navTpl, headerTpl: headerTpl, containerWidth: 'xl' }`,
             ),
             layout(
-              'no navTpl',
+              'Without a navigation template',
               `{ title: 'No navigation', containerWidth: 'xl' }`,
             ),
           ].join('\n'),

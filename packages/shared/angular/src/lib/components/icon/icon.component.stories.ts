@@ -129,7 +129,9 @@ export const AllVariants: Story = {
             grid(
               ICON_NAMES.map((name) =>
                 cell(
-                  name,
+                  // The icon name is an API value, so it is marked up as code
+                  // rather than presented as a prose label.
+                  `<code>${name}</code>`,
                   `<smart-icon-preset variant="${variant}" name="${name}" size="md"></smart-icon-preset>`,
                 ),
               ).join('\n'),
@@ -150,7 +152,7 @@ export const AllVariants: Story = {
         )}
 
         ${section(
-          'Bare icon with class-driven size and colour',
+          'Bare icon sized and coloured by class',
           grid(
             [
               cell(
