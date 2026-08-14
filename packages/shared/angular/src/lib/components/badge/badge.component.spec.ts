@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { BadgeComponent } from './badge.component';
@@ -7,6 +7,7 @@ import { BADGE_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-badge-injected',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="injected-badge">injected</div>',
 })
 class MockInjectedComponent extends BadgeBaseComponent {

@@ -1,4 +1,8 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ButtonGroupBaseComponent } from './base.component';
@@ -6,6 +10,7 @@ import { IButtonGroupButton, IButtonGroupOptions } from '../../../models';
 
 @Component({
   selector: 'smart-test-button-group',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestButtonGroupComponent extends ButtonGroupBaseComponent {}
@@ -18,6 +23,7 @@ class TestButtonGroupComponent extends ButtonGroupBaseComponent {}
     [(selected)]="selected"
     [class]="cssClass"
   />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestButtonGroupComponent],
 })
 class TestHostComponent {

@@ -1,8 +1,9 @@
 import {
-  ChangeDetectorRef,
   Component,
   TemplateRef,
   ViewChild,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
@@ -10,6 +11,7 @@ import { CardBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-card',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `<ng-template #bodyTpl>Body</ng-template>`,
 })
 class TestCardComponent extends CardBaseComponent {
@@ -25,6 +27,7 @@ class TestCardComponent extends CardBaseComponent {
     [hasFooter]="hasFooter"
     #card
   />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestCardComponent],
 })
 class TestHostComponent {

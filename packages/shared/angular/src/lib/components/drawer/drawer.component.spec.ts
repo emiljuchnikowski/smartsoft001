@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DrawerBaseComponent } from './base/base.component';
@@ -7,6 +7,7 @@ import { DRAWER_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-drawer-injected',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="injected-drawer">injected</div>',
 })
 class MockInjectedComponent extends DrawerBaseComponent {

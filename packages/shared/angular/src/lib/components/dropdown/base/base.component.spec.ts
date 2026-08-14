@@ -1,4 +1,8 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DropdownBaseComponent } from './base.component';
@@ -6,6 +10,7 @@ import { IDropdownItem, IDropdownOptions } from '../../../models';
 
 @Component({
   selector: 'smart-test-dropdown',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestDropdownComponent extends DropdownBaseComponent {}
@@ -20,6 +25,7 @@ class TestDropdownComponent extends DropdownBaseComponent {}
     [class]="cssClass"
     (selectedItem)="onSelected($event)"
   />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestDropdownComponent],
 })
 class TestHostComponent {

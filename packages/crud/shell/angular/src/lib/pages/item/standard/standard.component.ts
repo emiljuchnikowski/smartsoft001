@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 import { DetailsComponent, FormComponent } from '@smartsoft001/angular';
 import { IEntity } from '@smartsoft001/domain-core';
@@ -24,7 +24,7 @@ import { CrudItemPageBaseComponent } from '../base/base.component';
           selected()
             | smartFormOptions
               : mode()
-              : config?.type
+              : $safeNavigationMigration(config?.type)
               : uniqueProvider()
               : config.inputComponents
         "
@@ -37,6 +37,7 @@ import { CrudItemPageBaseComponent } from '../base/base.component';
     <br /><br />
   `,
   styleUrls: ['./standard.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     DetailsComponent,
     FormComponent,

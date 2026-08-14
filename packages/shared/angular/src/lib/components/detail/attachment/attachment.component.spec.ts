@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -16,6 +16,7 @@ import { FileService } from '../../../services';
       [class]="cssClass"
     ></smart-detail-attachment>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [DetailAttachmentComponent],
 })
 class TestHostComponent {

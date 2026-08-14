@@ -1,15 +1,16 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { InfoComponent } from './info.component';
 import { IInfoOptions } from '../../models';
 import { INFO_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { InfoBaseComponent } from './base/base.component';
-import { InfoComponent } from './info.component';
 import { InfoStandardComponent } from './standard/standard.component';
 
 @Component({
   selector: 'smart-test-injected-info',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="injected-info">injected</div>',
 })
 class MockInjectedInfoComponent extends InfoBaseComponent {

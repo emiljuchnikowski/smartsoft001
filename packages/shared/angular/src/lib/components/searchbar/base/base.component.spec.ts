@@ -1,4 +1,8 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SearchbarBaseComponent } from './base.component';
@@ -6,6 +10,7 @@ import { ISearchbarOptions } from '../../../models';
 
 @Component({
   selector: 'smart-test-searchbar',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestSearchbarComponent extends SearchbarBaseComponent {}
@@ -18,6 +23,7 @@ class TestSearchbarComponent extends SearchbarBaseComponent {}
     [(show)]="show"
     [class]="cssClass"
   />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestSearchbarComponent],
 })
 class TestHostComponent {

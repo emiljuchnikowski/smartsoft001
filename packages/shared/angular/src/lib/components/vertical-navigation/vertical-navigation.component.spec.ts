@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { VerticalNavigationBaseComponent } from './base/base.component';
@@ -7,6 +7,7 @@ import { VERTICAL_NAVIGATION_STANDARD_COMPONENT_TOKEN } from '../../shared.inect
 
 @Component({
   selector: 'smart-test-vnav-injected',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="injected-vnav">injected</div>',
 })
 class MockInjectedComponent extends VerticalNavigationBaseComponent {

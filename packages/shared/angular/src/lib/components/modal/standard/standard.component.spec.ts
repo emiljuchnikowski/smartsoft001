@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ModalStandardComponent } from './standard.component';
@@ -15,6 +15,7 @@ import { ModalStandardComponent } from './standard.component';
   >
     <span class="projected-content">projected-body</span>
   </smart-modal-standard>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ModalStandardComponent],
 })
 class TestModalHostComponent {

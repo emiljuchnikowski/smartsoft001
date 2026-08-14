@@ -1,10 +1,18 @@
-import { Component, computed, inject, signal, Signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  signal,
+  Signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { FileService } from '../../../services';
 import { DetailBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-detail-image',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     @let url = imageUrl();
     @if (url) {

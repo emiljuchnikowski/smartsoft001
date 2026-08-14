@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AccordionComponent } from './accordion.component';
@@ -13,6 +13,7 @@ import { AccordionHeaderComponent } from './header/header.component';
       <div accordionBody>Test Body Content</div>
     </smart-accordion>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [AccordionComponent],
 })
 class TestHostComponent {

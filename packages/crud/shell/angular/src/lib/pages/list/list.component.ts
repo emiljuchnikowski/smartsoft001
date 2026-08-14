@@ -16,6 +16,7 @@ import {
   viewChildren,
   ViewContainerRef,
   WritableSignal,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -56,6 +57,7 @@ import { CrudSearchService } from '../../services/search/search.service';
 @Component({
   selector: 'smart-crud-list-page',
   imports: [PageComponent, ListStandardComponent, NgTemplateOutlet],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     @if (filter() && pageOptions()) {
       <smart-page [options]="pageOptions()" [class]="config.cssClass || ''">

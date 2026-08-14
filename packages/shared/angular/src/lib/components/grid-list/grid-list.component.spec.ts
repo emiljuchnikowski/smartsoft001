@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GridListBaseComponent } from './base/base.component';
@@ -7,6 +7,7 @@ import { GRID_LIST_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-grid-list-injected',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="injected-grid-list">injected</div>',
 })
 class MockInjectedComponent extends GridListBaseComponent {

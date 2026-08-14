@@ -1,4 +1,10 @@
-import { Component, input, Pipe, PipeTransform } from '@angular/core';
+import {
+  Component,
+  input,
+  Pipe,
+  PipeTransform,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -16,6 +22,7 @@ class MockTranslatePipe implements PipeTransform {
 
 @Component({
   selector: 'smart-test-searchbar-injected',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="injected-searchbar">injected</div>',
 })
 class MockInjectedComponent extends SearchbarBaseComponent {

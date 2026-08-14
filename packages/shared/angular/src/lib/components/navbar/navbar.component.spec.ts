@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NavbarBaseComponent } from './base/base.component';
@@ -7,6 +7,7 @@ import { NAVBAR_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-navbar-injected',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="injected-navbar">injected</div>',
 })
 class MockInjectedComponent extends NavbarBaseComponent {

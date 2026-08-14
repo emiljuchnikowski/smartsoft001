@@ -1,4 +1,8 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TabsBaseComponent } from './base.component';
@@ -6,6 +10,7 @@ import { ITabsOptions } from '../../../models';
 
 @Component({
   selector: 'smart-test-tabs',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestTabsComponent extends TabsBaseComponent {}
@@ -17,6 +22,7 @@ class TestTabsComponent extends TabsBaseComponent {}
     [class]="cssClass"
     [(selectedId)]="selectedId"
   />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestTabsComponent],
 })
 class TestHostComponent {

@@ -16,6 +16,7 @@ import {
   viewChildren,
   ViewContainerRef,
   WritableSignal,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -55,6 +56,7 @@ import { PageService } from '../../services/page/page.service';
 @Component({
   selector: 'smart-crud-item-page',
   imports: [PageComponent, ItemStandardComponent, NgTemplateOutlet],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <smart-page [options]="pageOptions()" [class]="config.cssClass || ''">
       <div #topTpl class="text-xl py-2.5 separator"></div>

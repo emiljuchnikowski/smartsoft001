@@ -1,4 +1,8 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MultiColumnLayoutBaseComponent } from './base.component';
@@ -6,6 +10,7 @@ import { IMultiColumnLayoutOptions } from '../../../models';
 
 @Component({
   selector: 'smart-test-multi-column-layout',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestMultiColumnLayoutComponent extends MultiColumnLayoutBaseComponent {}
@@ -16,6 +21,7 @@ class TestMultiColumnLayoutComponent extends MultiColumnLayoutBaseComponent {}
     [options]="options"
     [class]="cssClass"
   />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestMultiColumnLayoutComponent],
 })
 class TestHostComponent {

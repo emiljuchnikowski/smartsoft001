@@ -1,4 +1,8 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NavbarBaseComponent } from './base.component';
@@ -6,6 +10,7 @@ import { INavbarOptions } from '../../../models';
 
 @Component({
   selector: 'smart-test-navbar',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestNavbarComponent extends NavbarBaseComponent {}
@@ -17,6 +22,7 @@ class TestNavbarComponent extends NavbarBaseComponent {}
     [class]="cssClass"
     [(mobileMenuOpen)]="mobileMenuOpen"
   />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestNavbarComponent],
 })
 class TestHostComponent {

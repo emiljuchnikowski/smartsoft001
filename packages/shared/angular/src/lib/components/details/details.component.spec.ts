@@ -1,4 +1,9 @@
-import { Component, input, signal } from '@angular/core';
+import {
+  Component,
+  input,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
@@ -7,13 +12,14 @@ import { Field, Model } from '@smartsoft001/models';
 
 import { DetailsBaseComponent } from './base/base.component';
 import { DetailsComponent } from './details.component';
+import { IDetailsOptions } from '../../models';
 import { DetailComponent } from '../detail';
 import { DetailsStandardComponent } from './standard/standard.component';
-import { IDetailsOptions } from '../../models';
 import { DETAILS_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-detail',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<span class="mock-detail">mock</span>',
 })
 class MockDetailComponent {
@@ -31,6 +37,7 @@ class TestItemModel implements IEntity<string> {
 
 @Component({
   selector: 'smart-test-custom-details',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="custom-details">custom</div>',
 })
 class TestCustomDetailsComponent extends DetailsBaseComponent<TestItemModel> {

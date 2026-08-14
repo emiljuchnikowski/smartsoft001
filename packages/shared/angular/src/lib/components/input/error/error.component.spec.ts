@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -7,6 +7,7 @@ import { InputErrorComponent } from './error.component';
 @Component({
   selector: 'smart-test-host',
   template: `<smart-input-error [errors]="errors"></smart-input-error>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [InputErrorComponent],
 })
 class TestHostComponent {

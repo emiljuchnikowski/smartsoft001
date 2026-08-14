@@ -1,4 +1,4 @@
-import { Component, computed } from '@angular/core';
+import { Component, computed, ChangeDetectionStrategy } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { DetailBaseComponent } from '../base/base.component';
@@ -6,8 +6,8 @@ import { DetailBaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-detail-enum',
   template: `
-    @let item = options()?.item?.();
-    @let key = options()?.key;
+    @let item = $safeNavigationMigration(options()?.item?.());
+    @let key = $safeNavigationMigration(options()?.key);
     @if (item && key) {
       <p [class]="enumClasses()">
         @for (val of this.getValues(item, key); track val; let first = $first) {
@@ -19,6 +19,7 @@ import { DetailBaseComponent } from '../base/base.component';
       </p>
     }
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TranslatePipe],
 })
 export class DetailEnumComponent<

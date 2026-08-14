@@ -1,10 +1,15 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PagingBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-paging',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestPagingComponent extends PagingBaseComponent {}
@@ -18,6 +23,7 @@ class TestPagingComponent extends PagingBaseComponent {}
     [totalItems]="totalItems"
     [class]="cssClass"
   />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestPagingComponent],
 })
 class TestHostComponent {

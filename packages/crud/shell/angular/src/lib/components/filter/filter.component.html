@@ -1,5 +1,5 @@
 <div class="smart:py-1">
-  @switch (item()?.fieldType) {
+  @switch ($safeNavigationMigration(item()?.fieldType)) {
     @case (FieldType.date) {
       <smart-crud-filter-date
         [item]="item()"
