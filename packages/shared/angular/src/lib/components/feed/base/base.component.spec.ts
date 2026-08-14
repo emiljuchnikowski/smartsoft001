@@ -1,4 +1,8 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FeedBaseComponent } from './base.component';
@@ -6,6 +10,7 @@ import { IFeedOptions } from '../../../models';
 
 @Component({
   selector: 'smart-test-feed',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestFeedComponent extends FeedBaseComponent {}
@@ -13,6 +18,7 @@ class TestFeedComponent extends FeedBaseComponent {}
 @Component({
   selector: 'smart-test-host',
   template: `<smart-test-feed [options]="options" [class]="cssClass" />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestFeedComponent],
 })
 class TestHostComponent {

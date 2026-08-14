@@ -1,4 +1,9 @@
-import { Component, computed, inject } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { IEntity } from '@smartsoft001/domain-core';
 
@@ -7,8 +12,9 @@ import { DetailBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-detail-video',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
-    @let item = options()?.item?.();
+    @let item = $safeNavigationMigration(options()?.item?.());
     @if (item && options()?.key) {
       <video [class]="videoClasses()" controls controlsList="nodownload">
         <source type="video/mp4" [src]="getUrl(item)" />

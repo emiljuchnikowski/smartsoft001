@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NotificationBaseComponent } from './base/base.component';
@@ -7,6 +7,7 @@ import { NOTIFICATION_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-notification-injected',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="injected-notification">injected</div>',
 })
 class MockInjectedComponent extends NotificationBaseComponent {

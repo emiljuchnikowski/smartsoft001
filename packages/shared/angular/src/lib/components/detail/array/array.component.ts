@@ -1,5 +1,12 @@
 import { NgComponentOutlet } from '@angular/common';
-import { Component, computed, inject, signal, Signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  signal,
+  Signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {
   ComponentOutletInjectorDirective,
   DynamicIoDirective,
@@ -26,6 +33,7 @@ import { DetailBaseComponent } from '../base/base.component';
       </div>
     }
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     NgComponentOutlet,
     DynamicIoDirective,

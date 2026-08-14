@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -13,6 +13,7 @@ import { FileService } from '../../../services';
   template: `
     <smart-detail-pdf [options]="options" [class]="cssClass"></smart-detail-pdf>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [DetailPdfComponent],
 })
 class TestHostComponent {

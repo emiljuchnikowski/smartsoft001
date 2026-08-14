@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   ReactiveFormsModule,
@@ -36,6 +36,7 @@ class MockModelLabelProvider extends IModelLabelProvider {
 
 @Component({
   selector: 'smart-dummy-form',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class DummyFormComponent {}
@@ -49,6 +50,7 @@ class DummyFormComponent {}
       [class]="cssClass"
     ></smart-input-array>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [InputArrayComponent],
 })
 class TestHostComponent {

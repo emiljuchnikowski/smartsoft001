@@ -1,12 +1,13 @@
-import { Component, computed } from '@angular/core';
+import { Component, computed, ChangeDetectionStrategy } from '@angular/core';
 
 import { DetailBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'smart-detail-logo',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
-    @let item = options()?.item?.();
-    @let key = options()?.key;
+    @let item = $safeNavigationMigration(options()?.item?.());
+    @let key = $safeNavigationMigration(options()?.key);
     @if (item && key && item[key]) {
       <img [class]="logoClasses()" [src]="item[key]" alt="" />
     }

@@ -1,4 +1,10 @@
-import { Component, computed, inject, Signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  Signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { ListComponent } from '@smartsoft001/angular';
 import { IEntity } from '@smartsoft001/domain-core';
@@ -13,7 +19,7 @@ import { CrudListPageBaseComponent } from '../base/base.component';
   selector: 'smart-crud-list-standard-page',
   template: `
     <smart-crud-filters-config></smart-crud-filters-config>
-    @let groups = config.list?.groups;
+    @let groups = $safeNavigationMigration(config.list?.groups);
     @if (listOptions()) {
       <smart-list
         [hidden]="groups && !isSearch()"
@@ -28,6 +34,7 @@ import { CrudListPageBaseComponent } from '../base/base.component';
     }
   `,
   imports: [FiltersConfigComponent, ListComponent, GroupComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [CrudListGroupService],
 })
 export class ListStandardComponent<

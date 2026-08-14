@@ -1,4 +1,9 @@
-import { ChangeDetectorRef, Component, signal } from '@angular/core';
+import {
+  Component,
+  signal,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { IEntity } from '@smartsoft001/domain-core';
@@ -17,6 +22,7 @@ class TestItemModel implements IEntity<string> {
 
 @Component({
   selector: 'smart-test-details',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestDetailsComponent extends DetailsBaseComponent<TestItemModel> {}
@@ -24,6 +30,7 @@ class TestDetailsComponent extends DetailsBaseComponent<TestItemModel> {}
 @Component({
   selector: 'smart-test-host',
   template: `<smart-test-details [options]="options" [class]="cssClass" />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestDetailsComponent],
 })
 class TestHostComponent {

@@ -1,4 +1,11 @@
-import { Component, input, output, Pipe, PipeTransform } from '@angular/core';
+import {
+  Component,
+  input,
+  output,
+  Pipe,
+  PipeTransform,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -16,6 +23,7 @@ class MockTranslatePipe implements PipeTransform {
 
 @Component({
   selector: 'smart-test-injected-paging',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<nav class="injected">injected</nav>',
 })
 class MockInjectedPagingComponent extends PagingBaseComponent {

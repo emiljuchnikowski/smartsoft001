@@ -1,4 +1,8 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SectionHeadingBaseComponent } from './base.component';
@@ -6,6 +10,7 @@ import { ISectionHeadingOptions } from '../../../models';
 
 @Component({
   selector: 'smart-test-section-heading',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestSectionHeadingComponent extends SectionHeadingBaseComponent {}
@@ -16,6 +21,7 @@ class TestSectionHeadingComponent extends SectionHeadingBaseComponent {}
     [options]="options"
     [class]="cssClass"
   />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestSectionHeadingComponent],
 })
 class TestHostComponent {

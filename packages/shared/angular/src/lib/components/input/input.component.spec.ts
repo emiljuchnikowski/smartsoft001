@@ -1,4 +1,9 @@
-import { Component, input, signal } from '@angular/core';
+import {
+  Component,
+  input,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   ReactiveFormsModule,
@@ -9,15 +14,16 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
+import { InputComponent } from './input.component';
 import { InputOptions } from '../../models';
 import { IModelLabelProvider } from '../../providers';
 import { StyleService } from '../../services';
 import { INPUT_FIELD_COMPONENTS_TOKEN } from '../../shared.inectors';
 import { InputBaseComponent } from './base/base.component';
-import { InputComponent } from './input.component';
 
 @Component({
   selector: 'smart-test-input-injected',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="injected-input">injected</div>',
 })
 class MockInjectedComponent extends InputBaseComponent<any> {

@@ -18,10 +18,10 @@ import { InputBaseComponent } from '../base/base.component';
     @if (control) {
       <label [class]="labelClasses()">
         {{
-          control?.parent?.value
+          $safeNavigationMigration(control?.parent?.value)
             | smartModelLabel
               : internalOptions.fieldKey
-              : internalOptions?.model?.constructor
+              : $safeNavigationMigration(internalOptions?.model?.constructor)
         }}
         @if (required) {
           <span class="smart:text-red-500 smart:ml-0.5">*</span>

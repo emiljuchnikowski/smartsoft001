@@ -1,4 +1,8 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NotificationBaseComponent } from './base.component';
@@ -6,6 +10,7 @@ import { INotificationAction, INotificationOptions } from '../../../models';
 
 @Component({
   selector: 'smart-test-notification',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestNotificationComponent extends NotificationBaseComponent {}
@@ -24,6 +29,7 @@ class TestNotificationComponent extends NotificationBaseComponent {}
     (dismissed)="onDismissed()"
     (actionClick)="onActionClick($event)"
   />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestNotificationComponent],
 })
 class TestHostComponent {

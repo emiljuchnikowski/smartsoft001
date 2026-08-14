@@ -1,4 +1,8 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GridListBaseComponent } from './base.component';
@@ -6,6 +10,7 @@ import { IGridListOptions } from '../../../models';
 
 @Component({
   selector: 'smart-test-grid-list',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestGridListComponent extends GridListBaseComponent {}
@@ -13,6 +18,7 @@ class TestGridListComponent extends GridListBaseComponent {}
 @Component({
   selector: 'smart-test-host',
   template: `<smart-test-grid-list [options]="options" [class]="cssClass" />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestGridListComponent],
 })
 class TestHostComponent {

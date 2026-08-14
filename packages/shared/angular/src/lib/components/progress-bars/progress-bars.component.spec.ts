@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProgressBarsBaseComponent } from './base/base.component';
@@ -7,6 +7,7 @@ import { PROGRESS_BARS_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-progress-bars-injected',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="injected-progress-bars">injected</div>',
 })
 class MockInjectedComponent extends ProgressBarsBaseComponent {

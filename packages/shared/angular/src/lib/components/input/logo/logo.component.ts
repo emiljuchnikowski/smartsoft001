@@ -9,10 +9,10 @@ import { InputBaseComponent } from '../base/base.component';
     @if (control) {
       <label [class]="labelClasses()">
         {{
-          control?.parent?.value
+          $safeNavigationMigration(control?.parent?.value)
             | smartModelLabel
               : internalOptions.fieldKey
-              : internalOptions?.model?.constructor
+              : $safeNavigationMigration(internalOptions?.model?.constructor)
         }}
         @if (required) {
           <span class="smart:text-red-500 smart:ml-0.5">*</span>
@@ -24,7 +24,7 @@ import { InputBaseComponent } from '../base/base.component';
       >
         @if (control?.value) {
           <img
-            [src]="control?.value"
+            [src]="$safeNavigationMigration(control?.value)"
             (click)="set(inputFile)"
             class="smart:h-20 smart:w-20 smart:cursor-pointer smart:rounded smart:border smart:border-gray-300 smart:object-cover smart:dark:border-gray-600"
           />

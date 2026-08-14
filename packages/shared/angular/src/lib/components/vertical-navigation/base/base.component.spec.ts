@@ -1,4 +1,8 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { VerticalNavigationBaseComponent } from './base.component';
@@ -6,6 +10,7 @@ import { IVerticalNavOptions } from '../../../models';
 
 @Component({
   selector: 'smart-test-vnav',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestVNavComponent extends VerticalNavigationBaseComponent {}
@@ -13,6 +18,7 @@ class TestVNavComponent extends VerticalNavigationBaseComponent {}
 @Component({
   selector: 'smart-test-host',
   template: `<smart-test-vnav [options]="options" [class]="cssClass" />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestVNavComponent],
 })
 class TestHostComponent {

@@ -6,6 +6,7 @@ import {
   signal,
   TemplateRef,
   viewChild,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -29,6 +30,7 @@ class MockTranslatePipe implements PipeTransform {
       <p id="body">body-content</p>
     </ng-template>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [PageStandardComponent],
 })
 class BodyTplHostComponent {

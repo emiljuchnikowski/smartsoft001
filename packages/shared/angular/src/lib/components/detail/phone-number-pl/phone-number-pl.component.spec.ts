@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -15,6 +15,7 @@ import { IDetailOptions } from '../../../models';
       [class]="cssClass"
     ></smart-detail-phone-number-pl>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [DetailPhoneNumberPlComponent],
 })
 class TestHostComponent {

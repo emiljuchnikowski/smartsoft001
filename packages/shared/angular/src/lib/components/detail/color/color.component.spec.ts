@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FieldType } from '@smartsoft001/models';
@@ -14,6 +14,7 @@ import { IDetailOptions } from '../../../models';
       [class]="cssClass"
     ></smart-detail-color>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [DetailColorComponent],
 })
 class TestHostComponent {

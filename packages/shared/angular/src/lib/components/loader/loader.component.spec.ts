@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LOADER_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
@@ -7,6 +7,7 @@ import { LoaderComponent } from './loader.component';
 
 @Component({
   selector: 'smart-test-injected-loader',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="injected-loader">injected</div>',
 })
 class MockInjectedLoaderComponent extends LoaderBaseComponent {

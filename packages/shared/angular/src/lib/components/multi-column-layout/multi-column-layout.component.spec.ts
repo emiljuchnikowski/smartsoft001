@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MultiColumnLayoutBaseComponent } from './base/base.component';
@@ -7,6 +7,7 @@ import { MULTI_COLUMN_LAYOUT_STANDARD_COMPONENT_TOKEN } from '../../shared.inect
 
 @Component({
   selector: 'smart-test-multi-column-layout-injected',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="injected-multi-column-layout">injected</div>',
 })
 class MockInjectedComponent extends MultiColumnLayoutBaseComponent {

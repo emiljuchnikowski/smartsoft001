@@ -1,4 +1,11 @@
-import { Component, input, Pipe, PipeTransform, signal } from '@angular/core';
+import {
+  Component,
+  input,
+  Pipe,
+  PipeTransform,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -19,6 +26,7 @@ class MockTranslatePipe implements PipeTransform {
 
 @Component({
   selector: 'smart-list-desktop-mock',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="mock-desktop">desktop</div>',
 })
 class MockDesktopComponent {
@@ -28,6 +36,7 @@ class MockDesktopComponent {
 
 @Component({
   selector: 'smart-list-mobile-mock',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="mock-mobile">mobile</div>',
 })
 class MockMobileComponent {
@@ -37,6 +46,7 @@ class MockMobileComponent {
 
 @Component({
   selector: 'smart-list-masonry-mock',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="mock-masonry">masonry</div>',
 })
 class MockMasonryComponent {
@@ -46,6 +56,7 @@ class MockMasonryComponent {
 
 @Component({
   selector: 'smart-list-custom-mock',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="mock-custom">custom</div>',
 })
 class MockCustomComponent {

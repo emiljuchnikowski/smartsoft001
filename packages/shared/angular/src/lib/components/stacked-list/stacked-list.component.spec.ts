@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StackedListBaseComponent } from './base/base.component';
@@ -7,6 +7,7 @@ import { STACKED_LIST_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-stacked-list-injected',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="injected-stacked-list">injected</div>',
 })
 class MockInjectedComponent extends StackedListBaseComponent {

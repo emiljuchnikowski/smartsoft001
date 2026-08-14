@@ -1,4 +1,8 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { BreadcrumbsBaseComponent } from './base.component';
@@ -6,6 +10,7 @@ import { IBreadcrumbsOptions } from '../../../models';
 
 @Component({
   selector: 'smart-test-breadcrumbs',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestBreadcrumbsComponent extends BreadcrumbsBaseComponent {}
@@ -13,6 +18,7 @@ class TestBreadcrumbsComponent extends BreadcrumbsBaseComponent {}
 @Component({
   selector: 'smart-test-host',
   template: `<smart-test-breadcrumbs [options]="options" [class]="cssClass" />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestBreadcrumbsComponent],
 })
 class TestHostComponent {

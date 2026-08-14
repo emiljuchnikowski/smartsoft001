@@ -1,4 +1,8 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ContainerStandardComponent } from './standard.component';
@@ -9,6 +13,7 @@ import { IContainerOptions } from '../../../models';
   template: `<smart-container-standard [options]="options" [class]="cssClass">
     <span class="projected">x</span>
   </smart-container-standard>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ContainerStandardComponent],
 })
 class TestHostComponent {

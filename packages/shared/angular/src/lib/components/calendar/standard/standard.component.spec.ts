@@ -1,8 +1,9 @@
 import {
-  ChangeDetectorRef,
   Component,
   TemplateRef,
   ViewChild,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
@@ -198,6 +199,7 @@ describe('@smartsoft001/shared-angular: CalendarStandardComponent', () => {
 
   describe('templates', () => {
     @Component({
+      changeDetection: ChangeDetectionStrategy.Eager,
       selector: 'smart-test-host',
       template: `
         <ng-template #dayCellTpl let-cell>

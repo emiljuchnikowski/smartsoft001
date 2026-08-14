@@ -1,4 +1,8 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DrawerBaseComponent } from './base.component';
@@ -6,6 +10,7 @@ import { IDrawerOptions } from '../../../models';
 
 @Component({
   selector: 'smart-test-drawer',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestDrawerComponent extends DrawerBaseComponent {}
@@ -19,6 +24,7 @@ class TestDrawerComponent extends DrawerBaseComponent {}
     [class]="cssClass"
     (closed)="onClosed()"
   />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestDrawerComponent],
 })
 class TestHostComponent {
