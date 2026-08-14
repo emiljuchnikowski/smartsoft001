@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   FormControl,
@@ -35,6 +35,7 @@ class MockModelLabelProvider extends IModelLabelProvider {
       [class]="cssClass"
     ></smart-input-address>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [InputAddressComponent],
 })
 class TestHostComponent {

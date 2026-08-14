@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MediaObjectBaseComponent } from './base/base.component';
@@ -7,6 +7,7 @@ import { MEDIA_OBJECT_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-media-object-injected',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="injected-media-object">injected</div>',
 })
 class MockInjectedComponent extends MediaObjectBaseComponent {

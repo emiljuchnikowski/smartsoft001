@@ -6,6 +6,7 @@ import {
   OnInit,
   signal,
   WritableSignal,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 
 import { IEntity } from '@smartsoft001/domain-core';
@@ -22,6 +23,7 @@ import { ModalService, StyleService } from '../../services';
 @Component({
   templateUrl: './details.page.html',
   imports: [/* PageComponent, */ DetailsComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./details.page.scss'],
 })
 export class DetailsPage<T extends IEntity<string>> implements OnInit {

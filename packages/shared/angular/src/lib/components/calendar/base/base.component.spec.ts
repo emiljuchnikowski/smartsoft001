@@ -1,4 +1,8 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CalendarBaseComponent } from './base.component';
@@ -6,6 +10,7 @@ import { ICalendarEvent, ICalendarOptions } from '../../../models';
 
 @Component({
   selector: 'smart-test-calendar',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestCalendarComponent extends CalendarBaseComponent {}
@@ -19,6 +24,7 @@ class TestCalendarComponent extends CalendarBaseComponent {}
     [referenceDate]="referenceDate"
     [events]="events"
   />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestCalendarComponent],
 })
 class TestHostComponent {

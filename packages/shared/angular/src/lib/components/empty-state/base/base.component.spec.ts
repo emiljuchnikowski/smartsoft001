@@ -1,4 +1,8 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EmptyStateBaseComponent } from './base.component';
@@ -6,6 +10,7 @@ import { IEmptyStateOptions } from '../../../models';
 
 @Component({
   selector: 'smart-test-empty-state',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestEmptyStateComponent extends EmptyStateBaseComponent {}
@@ -13,6 +18,7 @@ class TestEmptyStateComponent extends EmptyStateBaseComponent {}
 @Component({
   selector: 'smart-test-host',
   template: `<smart-test-empty-state [options]="options" [class]="cssClass" />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestEmptyStateComponent],
 })
 class TestHostComponent {

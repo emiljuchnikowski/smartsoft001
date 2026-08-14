@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ButtonGroupBaseComponent } from './base/base.component';
@@ -7,6 +7,7 @@ import { BUTTON_GROUP_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-button-group-injected',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="injected-button-group">injected</div>',
 })
 class MockInjectedComponent extends ButtonGroupBaseComponent {

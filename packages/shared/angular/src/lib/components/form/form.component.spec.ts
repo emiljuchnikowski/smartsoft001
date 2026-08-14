@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 
@@ -14,6 +14,7 @@ import { InputComponent } from '../input';
 
 @Component({
   selector: 'smart-input',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<span class="mock-input">mock</span>',
 })
 class MockInputComponent {
@@ -22,6 +23,7 @@ class MockInputComponent {
 
 @Component({
   selector: 'smart-test-custom-form',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="custom-form">custom</div>',
 })
 class TestCustomFormComponent extends FormBaseComponent<any> {

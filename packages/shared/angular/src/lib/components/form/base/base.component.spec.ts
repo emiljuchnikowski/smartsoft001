@@ -1,4 +1,9 @@
-import { ChangeDetectorRef, Component, input } from '@angular/core';
+import {
+  Component,
+  input,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 
@@ -18,6 +23,7 @@ class TestItemModel {
 
 @Component({
   selector: 'smart-test-form',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestFormComponent extends FormBaseComponent<TestItemModel> {}
@@ -30,6 +36,7 @@ class TestFormComponent extends FormBaseComponent<TestItemModel> {}
     [class]="cssClass"
     (invokeSubmit)="onSubmit($event)"
   />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestFormComponent],
 })
 class TestHostComponent {

@@ -1,4 +1,9 @@
-import { Component, computed, inject } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { IEntity } from '@smartsoft001/domain-core';
@@ -9,8 +14,8 @@ import { DetailBaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-detail-attachment',
   template: `
-    @let item = options()?.item?.();
-    @let key = options()?.key;
+    @let item = $safeNavigationMigration(options()?.item?.());
+    @let key = $safeNavigationMigration(options()?.key);
     @if (item && key) {
       <button
         type="button"
@@ -21,6 +26,7 @@ import { DetailBaseComponent } from '../base/base.component';
       </button>
     }
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TranslatePipe],
 })
 export class DetailAttachmentComponent<

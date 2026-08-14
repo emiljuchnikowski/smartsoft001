@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SidebarLayoutBaseComponent } from './base/base.component';
@@ -7,6 +7,7 @@ import { SIDEBAR_LAYOUT_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-sidebar-layout-injected',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="injected-sidebar-layout">injected</div>',
 })
 class MockInjectedComponent extends SidebarLayoutBaseComponent {

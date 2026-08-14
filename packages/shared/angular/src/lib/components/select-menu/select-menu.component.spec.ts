@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SelectMenuBaseComponent } from './base/base.component';
@@ -7,6 +7,7 @@ import { SELECT_MENU_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-select-menu-injected',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="injected-select-menu">injected</div>',
 })
 class MockInjectedComponent extends SelectMenuBaseComponent {

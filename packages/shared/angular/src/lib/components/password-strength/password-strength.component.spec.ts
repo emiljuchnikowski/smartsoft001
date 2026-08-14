@@ -1,4 +1,10 @@
-import { Component, Pipe, PipeTransform, input } from '@angular/core';
+import {
+  Component,
+  Pipe,
+  PipeTransform,
+  input,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -17,6 +23,7 @@ class MockTranslatePipe implements PipeTransform {
 
 @Component({
   selector: 'smart-test-injected-password-strength',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="injected-ps">injected</div>',
 })
 class MockInjectedPasswordStrengthComponent extends PasswordStrengthBaseComponent {

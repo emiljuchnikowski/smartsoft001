@@ -1,4 +1,9 @@
-import { ChangeDetectorRef, Component, signal } from '@angular/core';
+import {
+  Component,
+  signal,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -20,6 +25,7 @@ class TestItemModel implements IEntity<string> {
 
 @Component({
   selector: 'smart-test-list',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestListComponent extends ListBaseComponent<TestItemModel> {}
@@ -35,6 +41,7 @@ function createProvider(): IListProvider<TestItemModel> {
 @Component({
   selector: 'smart-test-host',
   template: `<smart-test-list [options]="options" [class]="cssClass" />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestListComponent],
 })
 class TestHostComponent {

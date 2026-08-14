@@ -1,8 +1,9 @@
 import {
-  ChangeDetectorRef,
   Component,
   TemplateRef,
   ViewChild,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
@@ -188,6 +189,7 @@ describe('@smartsoft001/shared-angular: SelectMenuStandardComponent', () => {
 
   describe('with empty items + emptyTpl', () => {
     @Component({
+      changeDetection: ChangeDetectionStrategy.Eager,
       selector: 'smart-test-host',
       template: `
         <ng-template #emptyTpl>

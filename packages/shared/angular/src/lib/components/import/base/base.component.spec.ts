@@ -1,10 +1,15 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ImportBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-import',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `<input
     type="file"
     [accept]="accept() ? accept() : 'application/json'"
@@ -18,6 +23,7 @@ class TestImportComponent extends ImportBaseComponent {}
 @Component({
   selector: 'smart-test-host',
   template: `<smart-test-import [accept]="accept" [class]="cssClass" />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestImportComponent],
 })
 class TestHostComponent {

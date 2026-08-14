@@ -1,4 +1,8 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SidebarNavigationBaseComponent } from './base.component';
@@ -6,6 +10,7 @@ import { ISidebarNavOptions } from '../../../models';
 
 @Component({
   selector: 'smart-test-sidebar-nav',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestSidebarNavComponent extends SidebarNavigationBaseComponent {}
@@ -13,6 +18,7 @@ class TestSidebarNavComponent extends SidebarNavigationBaseComponent {}
 @Component({
   selector: 'smart-test-host',
   template: `<smart-test-sidebar-nav [options]="options" [class]="cssClass" />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestSidebarNavComponent],
 })
 class TestHostComponent {

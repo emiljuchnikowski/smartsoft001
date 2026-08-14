@@ -1,4 +1,8 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TableBaseComponent } from './base.component';
@@ -6,6 +10,7 @@ import { ITableOptions } from '../../../models';
 
 @Component({
   selector: 'smart-test-table',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestTableComponent extends TableBaseComponent {}
@@ -13,6 +18,7 @@ class TestTableComponent extends TableBaseComponent {}
 @Component({
   selector: 'smart-test-host',
   template: `<smart-test-table [options]="options" [class]="cssClass" />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestTableComponent],
 })
 class TestHostComponent {

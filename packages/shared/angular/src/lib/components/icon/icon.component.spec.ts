@@ -1,4 +1,10 @@
-import { Component, signal, TemplateRef, viewChild } from '@angular/core';
+import {
+  Component,
+  signal,
+  TemplateRef,
+  viewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import type { IconName } from './base/base.component';
@@ -14,6 +20,7 @@ import { IconComponent } from './icon.component';
     </ng-template>
     <smart-icon [name]="name()" [template]="customTpl()" />
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [IconComponent],
 })
 class TestHostComponent {

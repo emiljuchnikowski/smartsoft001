@@ -1,4 +1,8 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DividerBaseComponent } from './base.component';
@@ -6,6 +10,7 @@ import { IDividerOptions } from '../../../models';
 
 @Component({
   selector: 'smart-test-divider',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class TestDividerComponent extends DividerBaseComponent {}
@@ -20,6 +25,7 @@ class TestDividerComponent extends DividerBaseComponent {}
     [options]="options"
     [class]="cssClass"
   />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TestDividerComponent],
 })
 class TestHostComponent {

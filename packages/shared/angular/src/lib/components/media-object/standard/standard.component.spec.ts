@@ -1,4 +1,8 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MediaObjectStandardComponent } from './standard.component';
@@ -14,6 +18,7 @@ import { IMediaObjectOptions } from '../../../models';
   >
     <span class="projected-body">Body content</span>
   </smart-media-object-standard>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MediaObjectStandardComponent],
 })
 class TestHostComponent {

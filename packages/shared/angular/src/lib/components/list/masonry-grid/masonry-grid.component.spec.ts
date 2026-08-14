@@ -4,6 +4,7 @@ import {
   Pipe,
   PipeTransform,
   signal,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
@@ -52,6 +53,7 @@ function createProvider(
 
 @Component({
   selector: 'smart-paging',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class MockPagingComponent {
@@ -65,6 +67,7 @@ class MockPagingComponent {
     [options]="options"
     [class]="cssClass"
   ></smart-list-masonry-grid>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ListMasonryGridComponent],
 })
 class TestHostComponent {

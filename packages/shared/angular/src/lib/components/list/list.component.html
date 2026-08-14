@@ -1,4 +1,4 @@
-@let loading = internalOptions?.provider?.loading?.();
+@let loading = $safeNavigationMigration(internalOptions?.provider?.loading?.());
 @if (componentType(); as cmp) {
   <ng-container
     *ngComponentOutlet="cmp; inputs: componentInputs()"
