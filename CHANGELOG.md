@@ -1,3 +1,49 @@
+## 2.129.0 (2026-08-21)
+
+### 🚀 Features
+
+- **crud:** add NgRx store integration and error handling services ([80b25bf](https://github.com/emiljuchnikowski/smartsoft001/commit/80b25bf))
+- **crud:** add constructor for initializing reducers and effects ([3cd36b2](https://github.com/emiljuchnikowski/smartsoft001/commit/3cd36b2))
+- **crud:** add constructor for initializing reducers and effects ([55bdd10](https://github.com/emiljuchnikowski/smartsoft001/commit/55bdd10))
+- **shared:** add nx-release-publish configuration with packageRoot option ([02ac11e](https://github.com/emiljuchnikowski/smartsoft001/commit/02ac11e))
+- **shared:** add default configuration for production environment ([e3400ad](https://github.com/emiljuchnikowski/smartsoft001/commit/e3400ad))
+- **shared:** add decorators for Redux action and selection handling ([3681a1e](https://github.com/emiljuchnikowski/smartsoft001/commit/3681a1e))
+- **shared:** add slug pipe and service for URL-friendly text conversion ([b729945](https://github.com/emiljuchnikowski/smartsoft001/commit/b729945))
+- **shared:** add capitalize function and corresponding tests ([6a560a9](https://github.com/emiljuchnikowski/smartsoft001/commit/6a560a9))
+- **shared:** add remove HTML utility and corresponding tests ([4acc95c](https://github.com/emiljuchnikowski/smartsoft001/commit/4acc95c))
+- **shared:** add remove HTML utility and corresponding tests ([b2ff22f](https://github.com/emiljuchnikowski/smartsoft001/commit/b2ff22f))
+- **shared:** add hooks configuration and validation scripts ([8eebb29](https://github.com/emiljuchnikowski/smartsoft001/commit/8eebb29))
+- **shared:** add Smart Plugin for Claude Code with safety validation and logging ([80ea8af](https://github.com/emiljuchnikowski/smartsoft001/commit/80ea8af))
+- **shared:** add Smart Plugin for Claude Code with safety validation and logging ([86ef099](https://github.com/emiljuchnikowski/smartsoft001/commit/86ef099))
+- **shared:** add Smart Plugin for Claude Code with safety validation and logging ([602c3ad](https://github.com/emiljuchnikowski/smartsoft001/commit/602c3ad))
+- **shared:** add Smart Plugin for Claude Code with safety validation and logging ([6a5a294](https://github.com/emiljuchnikowski/smartsoft001/commit/6a5a294))
+- **shared:** enhance Smart Plugin with new hooks and skills for safety and formatting ([648bfaa](https://github.com/emiljuchnikowski/smartsoft001/commit/648bfaa))
+- **shared:** add Claude Code agent and skill configurations ([13ba4fa](https://github.com/emiljuchnikowski/smartsoft001/commit/13ba4fa))
+- **shared:** upgrade Angular 21, Nx 22.5, Storybook 10, Jest 30 ([7c54112](https://github.com/emiljuchnikowski/smartsoft001/commit/7c54112))
+- **shared:** add angular-components skill for UI component creation ([985e2e0](https://github.com/emiljuchnikowski/smartsoft001/commit/985e2e0))
+- **shared:** add button component with Tailwind v4 and color palette ([c54c68d](https://github.com/emiljuchnikowski/smartsoft001/commit/c54c68d))
+- **shared:** add button plugin skill and angular-components agent ([747d09e](https://github.com/emiljuchnikowski/smartsoft001/commit/747d09e))
+- **shared:** upgrade Revolut Merchant API to 2024-09-01 ([ac1cf95](https://github.com/emiljuchnikowski/smartsoft001/commit/ac1cf95))
+- **shared:** base, main, standard komponenty dla 12 komponentów ([#29](https://github.com/emiljuchnikowski/smartsoft001/pull/29))
+- **shared:** add scaffold-nx-workspace skill to smart plugin ([#31](https://github.com/emiljuchnikowski/smartsoft001/pull/31))
+
+### 🩹 Fixes
+
+- update types to handle undefined values in CRUD components ([ffdf73c](https://github.com/emiljuchnikowski/smartsoft001/commit/ffdf73c))
+- **crud:** add postcss config for Tailwind v4 compatibility ([b92415e](https://github.com/emiljuchnikowski/smartsoft001/commit/b92415e))
+- **crud:** remove obsolete expand property from button options ([2a60653](https://github.com/emiljuchnikowski/smartsoft001/commit/2a60653))
+- **shared:** restore package-lock.json for CI compatibility ([15f77da](https://github.com/emiljuchnikowski/smartsoft001/commit/15f77da))
+- **shared:** update Tailwind prefix to smart: in angular-components skill ([d1617fd](https://github.com/emiljuchnikowski/smartsoft001/commit/d1617fd))
+
+### ❤️ Thank You
+
+- Claude Opus 4.6
+- Claude Opus 4.6 (1M context)
+- Claude Opus 4.7 (1M context)
+- cookie_lobster @AndriiBilych
+- Emil Juchnikowski
+- root
+
 ## 2.128.0 (2026-08-14)
 
 This was a version bump only, there were no code changes.
