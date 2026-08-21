@@ -16,6 +16,13 @@ interface PagingArgs {
 
 const VARIANTS: PagingVariant[] = ['card-footer', 'centered', 'simple'];
 
+// Showcase headings read as prose, not as the raw option value.
+const VARIANT_LABELS: Record<PagingVariant, string> = {
+  'card-footer': 'Card footer',
+  centered: 'Centered',
+  simple: 'Simple',
+};
+
 const meta: Meta<PagingArgs> = {
   title: 'Components/Paging',
   tags: ['autodocs'],
@@ -77,7 +84,7 @@ export const Playground: Story = {
 
 const variantSection = (variant: PagingVariant) => `
   <section>
-    <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">${variant}</h3>
+    <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">${VARIANT_LABELS[variant]}</h3>
     <smart-paging-preset
       [currentPage]="3"
       [totalPages]="10"

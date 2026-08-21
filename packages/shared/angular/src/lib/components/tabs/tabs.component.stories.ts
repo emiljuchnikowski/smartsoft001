@@ -18,6 +18,19 @@ const LAYOUTS: SmartTabsLayout[] = [
   'simple',
 ];
 
+// Showcase headings read as prose, not as the raw option value.
+const LAYOUT_LABELS: Record<SmartTabsLayout, string> = {
+  underline: 'Underline',
+  'underline-with-icons': 'Underline with icons',
+  'underline-with-badges': 'Underline with badges',
+  'underline-full-width': 'Underline, full width',
+  pills: 'Pills',
+  'pills-on-gray': 'Pills on gray',
+  'pills-with-brand-color': 'Pills with brand color',
+  'bar-with-underline': 'Bar with underline',
+  simple: 'Simple',
+};
+
 const ITEMS: ITabItem[] = [
   { id: 'tab-1', label: 'Tab 1' },
   { id: 'tab-2', label: 'Tab 2' },
@@ -86,7 +99,7 @@ export const Playground: Story = {
 
 const layoutSection = (layout: SmartTabsLayout) => `
   <section style="margin-bottom: 32px;">
-    <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 12px; font-family: sans-serif;">${layout}</h3>
+    <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">${LAYOUT_LABELS[layout]}</h3>
     <smart-tabs
       [options]="{
         layout: '${layout}',

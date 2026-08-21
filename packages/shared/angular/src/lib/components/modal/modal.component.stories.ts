@@ -17,6 +17,14 @@ const VARIANTS: SmartModalVariant[] = [
   'left-aligned-buttons',
 ];
 
+// Showcase headings read as prose, not as the raw option value.
+const VARIANT_LABELS: Record<SmartModalVariant, string> = {
+  centered: 'Centered',
+  wide: 'Wide',
+  alert: 'Alert',
+  'left-aligned-buttons': 'Buttons aligned to the left',
+};
+
 const ACTIONS: IModalAction[] = [
   { id: 'cancel', label: 'Close', variant: 'secondary' },
   { id: 'save', label: 'Save changes', variant: 'primary' },
@@ -59,7 +67,7 @@ const meta: Meta<ModalArgs> = {
     open: true,
     title: 'Modal title',
     description:
-      'This is a wider card with supporting text below as a natural lead-in to additional content.',
+      'This is a wider card with supporting text below as a natural introduction to additional content.',
     variant: 'centered',
     footerStyle: 'default',
     withDismiss: true,
@@ -106,12 +114,12 @@ export const Playground: Story = {
 // backdrops compose to near-black, and only the topmost is clickable.
 const modalBlock = (variant: SmartModalVariant) => `
   <section>
-    <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">${variant}</h3>
+    <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">${VARIANT_LABELS[variant]}</h3>
     <div style="position: relative; transform: translateZ(0); overflow: hidden; min-height: 360px;">
       <smart-modal
         [open]="true"
         title="Modal title"
-        description="This is a wider card with supporting text below as a natural lead-in to additional content."
+        description="This is a wider card with supporting text below as a natural introduction to additional content."
         [actions]="actions"
         [options]="{ variant: '${variant}', withDismiss: true }"
       ></smart-modal>

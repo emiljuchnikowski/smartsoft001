@@ -6,7 +6,20 @@ import { ContainerPresetComponent } from './preset/preset.component';
 import { CONTAINER_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 const MODES = ['full-width', 'constrained', 'container'] as const;
+
+// Showcase headings read as prose, not as the raw option value.
+const MODE_LABELS: Record<(typeof MODES)[number], string> = {
+  'full-width': 'Full width',
+  constrained: 'Constrained',
+  container: 'Container',
+};
 const PADDINGS = ['none', 'mobile', 'always'] as const;
+
+const PADDING_LABELS: Record<(typeof PADDINGS)[number], string> = {
+  none: 'No padding',
+  mobile: 'Padded on mobile only',
+  always: 'Padded at every width',
+};
 
 interface ContainerArgs {
   mode: (typeof MODES)[number];
@@ -98,11 +111,11 @@ export const AllVariants: Story = {
         ${MODES.map(
           (mode) => `
           <section>
-            <h3 style="font-size: 16px; font-weight: 600; margin: 0 24px 12px;">mode: ${mode}</h3>
+            <h3 style="font-size: 16px; font-weight: 600; margin: 0 24px 12px;">${MODE_LABELS[mode]}</h3>
             <div style="display: flex; flex-direction: column; gap: 12px;">
               ${PADDINGS.map((padding) =>
                 box(
-                  `padding: ${padding}`,
+                  PADDING_LABELS[padding],
                   `{ mode: '${mode}', padding: '${padding}' }`,
                 ),
               ).join('\n')}
@@ -111,14 +124,14 @@ export const AllVariants: Story = {
         ).join('\n')}
 
         <section>
-          <h3 style="font-size: 16px; font-weight: 600; margin: 0 24px 12px;">narrow (max-w-3xl, wins over mode)</h3>
+          <h3 style="font-size: 16px; font-weight: 600; margin: 0 24px 12px;">Narrow, which overrides the mode</h3>
           <div style="display: flex; flex-direction: column; gap: 12px;">
             ${box(
-              'mode: container &middot; narrow &middot; padding: always',
+              'Container, narrowed, padded at every width',
               `{ mode: 'container', narrow: true, padding: 'always' }`,
             )}
             ${box(
-              'mode: full-width &middot; narrow &middot; padding: mobile',
+              'Full width, narrowed, padded on mobile only',
               `{ mode: 'full-width', narrow: true, padding: 'mobile' }`,
             )}
           </div>

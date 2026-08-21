@@ -135,7 +135,7 @@ export const AllVariants: Story = {
         )}
 
         ${section(
-          'Shown, pre-filled',
+          'Shown with text typed in',
           `<smart-searchbar [(show)]="shown" [(text)]="shownFilled" [options]="base" />`,
         )}
 

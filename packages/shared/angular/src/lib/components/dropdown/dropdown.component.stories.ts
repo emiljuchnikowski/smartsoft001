@@ -14,6 +14,15 @@ const VARIANTS: SmartDropdownVariant[] = [
   'with-header',
 ];
 
+// Showcase headings read as prose, not as the raw option value.
+const VARIANT_LABELS: Record<SmartDropdownVariant, string> = {
+  simple: 'Simple',
+  'with-dividers': 'With dividers',
+  'with-icons': 'With icons',
+  minimal: 'Minimal',
+  'with-header': 'With header',
+};
+
 const ITEMS: IDropdownItem[] = [
   { id: 'newsletter', label: 'Newsletter', icon: '✉' },
   { id: 'purchases', label: 'Purchases', icon: '🛒' },
@@ -92,7 +101,7 @@ export const Playground: Story = {
 // Reserving 280px of width and 320px of height per section keeps them apart.
 const variantColumn = (variant: SmartDropdownVariant) => `
   <section style="display: flex; flex-direction: column; gap: 8px; width: 280px; min-height: 320px;">
-    <h3 style="font-size: 14px; font-weight: 600; text-transform: capitalize;">${variant}</h3>
+    <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">${VARIANT_LABELS[variant]}</h3>
     <smart-dropdown
       [items]="items"
       triggerLabel="Actions"

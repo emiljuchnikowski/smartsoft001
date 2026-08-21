@@ -91,7 +91,7 @@ export const AllVariants: Story = {
         </section>
 
         <section>
-          <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">Pre-selected day</h3>
+          <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">Day already selected</h3>
           <smart-calendar [value]="today"></smart-calendar>
         </section>
 

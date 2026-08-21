@@ -243,7 +243,7 @@ export const Playground: Story = {
 
 const row = (key: string, type: FieldTypeDef) => `
   <div style="font-size: 13px;">
-    ${key}<br /><code style="opacity: .6;">${type}</code>
+    <code>${key}</code><br /><code style="opacity: .6;">${type}</code>
   </div>
   <div><smart-detail [options]="opt_${key}" [type]="type"></smart-detail></div>
 `;
