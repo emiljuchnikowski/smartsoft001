@@ -82,11 +82,11 @@ export const AllVariants: Story = {
 
         ${section('Empty password', '')}
 
-        ${section('Weak (poor)', 'abc')}
+        ${section('Weak', 'abc')}
 
-        ${section('Medium (notGood)', 'Abcdefgh')}
+        ${section('Medium', 'Abcdefgh')}
 
-        ${section('Strong (good)', 'Abcdefg1!')}
+        ${section('Strong', 'Abcdefg1!')}
 
         <!-- Same empty message as the empty-password cell, but for a different
              reason: long enough, yet matching none of the three character

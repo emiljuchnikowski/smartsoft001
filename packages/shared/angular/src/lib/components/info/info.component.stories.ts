@@ -73,7 +73,7 @@ export const AllVariants: Story = {
       <div style="display: flex; flex-direction: column; gap: 48px; padding: 48px;">
 
         <section>
-          <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 24px;">
+          <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">
             Placements (hover / focus the icon)
           </h3>
           <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; max-width: 320px;">

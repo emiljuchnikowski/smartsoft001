@@ -40,6 +40,12 @@ import { DateEditDefaultComponent } from '@smartsoft001/angular';
 ></smart-date-edit>
 ```
 
+Both binding styles work, with or without `FormsModule` in the consuming
+component. `<smart-date-edit>` renders from an internal signal rather than
+straight off `ngModel`, so when `FormsModule` is imported and Angular's own
+`NgModel` directive also matches the element, the `null` it seeds its
+`FormControl` with cannot leak back into your bound property.
+
 ### Features
 
 - 8 individual digit inputs (DD + MM + YYYY)

@@ -134,7 +134,7 @@ export const AllVariants: Story = {
         )}
 
         <section>
-          <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">split-screen</h3>
+          <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">Split screen</h3>
           <div style="min-height: 420px;">
             ${form(`{
               layout: 'split-screen',

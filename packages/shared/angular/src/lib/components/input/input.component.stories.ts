@@ -306,12 +306,7 @@ const SECTIONS: Array<{ title: string; keys: string[] }> = [
     title: 'Choice',
     keys: ['categories', 'status', 'tags', 'labels', 'active'],
   },
-  // `dateEdit` is deliberately absent: InputDateWithEditPresetComponent renders
-  // <smart-date-edit variant="preset">, whose [ngModel] binding + CVA writeValue
-  // feed each other and throw NG0103 ("endless change notifications"), which
-  // destabilises the whole showcase page. The field is still reachable from the
-  // Playground so the bug can be reproduced in isolation.
-  { title: 'Date', keys: ['startDate', 'range'] },
+  { title: 'Date', keys: ['startDate', 'dateEdit', 'range'] },
   {
     title: 'Media',
     keys: ['file', 'image', 'document', 'attachment', 'clip', 'logo', 'color'],
@@ -511,7 +506,7 @@ export const AllVariants: Story = {
         </section>
 
         <section>
-          <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">Validation messages (smart-input-error-preset)</h3>
+          <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">Validation messages</h3>
           <div style="display: grid; gap: 8px;">
             <smart-input-error-preset [errors]="{ required: true }"></smart-input-error-preset>
             <smart-input-error-preset [errors]="{ email: true }"></smart-input-error-preset>

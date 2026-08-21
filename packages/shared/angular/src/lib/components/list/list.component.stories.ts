@@ -237,7 +237,7 @@ export const AllVariants: Story = {
         ${section('Mode: mobile', `<smart-list [options]="mobile"></smart-list>`)}
 
         ${section(
-          'Mode: masonryGrid',
+          'Mode: masonry grid',
           `<smart-list [options]="masonry"></smart-list>`,
         )}
 

@@ -123,7 +123,7 @@ export const AllVariants: Story = {
         </section>
 
         <section>
-          <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">Full-width bar</h3>
+          <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">Bar across the full width</h3>
           <smart-breadcrumbs [options]="fullWidth"></smart-breadcrumbs>
         </section>
 

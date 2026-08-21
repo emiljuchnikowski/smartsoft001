@@ -52,6 +52,18 @@ const VARIANTS: SmartCommandPaletteVariant[] = [
   'with-preview',
 ];
 
+// Showcase headings read as prose, not as the raw option value.
+const VARIANT_LABELS: Record<SmartCommandPaletteVariant, string> = {
+  simple: 'Simple',
+  'with-padding': 'With padding',
+  'with-icons': 'With icons',
+  'with-images': 'With images',
+  'semi-transparent': 'Translucent background',
+  'with-groups': 'With groups',
+  'with-footer': 'With footer',
+  'with-preview': 'With preview',
+};
+
 interface CommandPaletteArgs {
   variant: SmartCommandPaletteVariant;
   placeholder: string;
@@ -143,7 +155,7 @@ const heightFor = (variant: SmartCommandPaletteVariant) =>
 
 const block = (variant: SmartCommandPaletteVariant) => `
   <section>
-    <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">${variant}</h3>
+    <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">${VARIANT_LABELS[variant]}</h3>
     ${wrap(
       `<smart-command-palette
       [commands]="commands"
