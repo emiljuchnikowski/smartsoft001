@@ -39,7 +39,7 @@ export class MongoAttachmentRepository<
         data.id as any,
         data.fileName,
         {
-          contentType: data.mimeType,
+          metadata: { contentType: data.mimeType },
         },
       );
 
@@ -78,7 +78,11 @@ export class MongoAttachmentRepository<
 
     return {
       fileName: items[0].filename,
-      contentType: items[0].contentType,
+      // mongodb 7 removed the deprecated top-level contentType - files written
+      // by older driver versions still carry it, so fall back to it
+      contentType:
+        (items[0].metadata?.['contentType'] as string) ??
+        (items[0] as { contentType?: string }).contentType,
       length: items[0].length,
     };
   }

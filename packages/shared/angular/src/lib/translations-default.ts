@@ -1,4 +1,4 @@
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslationObject } from '@ngx-translate/core';
 
 export function setDefaultTranslationsAndLang(service: TranslateService) {
   const map = {
@@ -9,7 +9,11 @@ export function setDefaultTranslationsAndLang(service: TranslateService) {
   const DEFAULT_LANG = 'pl';
 
   Object.keys(map).forEach((key: string) => {
-    service.setTranslation(key, map[key as 'pl' | 'eng'], true);
+    service.setTranslation(
+      key,
+      map[key as 'pl' | 'eng'] as unknown as TranslationObject,
+      true,
+    );
   });
 
   if (!service.currentLang) {

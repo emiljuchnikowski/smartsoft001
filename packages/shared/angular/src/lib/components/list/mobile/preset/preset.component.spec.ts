@@ -114,6 +114,9 @@ describe('@smartsoft001/shared-angular: ListMobilePresetComponent', () => {
             onDefaultLangChange: {
               subscribe: () => ({ unsubscribe: () => undefined }),
             },
+            onFallbackLangChange: {
+              subscribe: () => ({ unsubscribe: () => undefined }),
+            },
           },
         },
       ],

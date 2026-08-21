@@ -51,6 +51,7 @@ describe('crud-shell-angular: ItemComponent (GAP-28 styling surface)', () => {
       onLangChange: of(),
       onTranslationChange: of(),
       onDefaultLangChange: of(),
+      onFallbackLangChange: of(),
     };
 
     TestBed.configureTestingModule({

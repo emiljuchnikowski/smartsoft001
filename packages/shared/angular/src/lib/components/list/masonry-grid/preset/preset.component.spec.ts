@@ -113,6 +113,9 @@ describe('@smartsoft001/shared-angular: ListMasonryGridPresetComponent', () => {
             onDefaultLangChange: {
               subscribe: () => ({ unsubscribe: () => undefined }),
             },
+            onFallbackLangChange: {
+              subscribe: () => ({ unsubscribe: () => undefined }),
+            },
           },
         },
       ],

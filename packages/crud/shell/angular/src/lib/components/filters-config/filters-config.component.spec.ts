@@ -30,6 +30,7 @@ describe('crud-shell-angular: FiltersConfigComponent', () => {
       onLangChange: of(),
       onTranslationChange: of(),
       onDefaultLangChange: of(),
+      onFallbackLangChange: of(),
     };
 
     TestBed.configureTestingModule({

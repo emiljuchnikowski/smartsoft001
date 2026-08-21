@@ -55,6 +55,33 @@
 
 - Install [Node.js] which includes [Node Package Manager][npm]
 
+### Storybook
+
+Component libraries are documented with Storybook. Install dependencies first (`npm install`), then start the
+Storybook of the library you want to work on:
+
+```
+# Shared Angular components (http://localhost:4400)
+npx nx storybook angular
+
+# CRUD shell Angular components (http://localhost:4401)
+npx nx storybook crud-shell-angular
+```
+
+Build a static Storybook (output in `dist/storybook/<project>`):
+
+```
+npx nx build-storybook angular
+npx nx build-storybook crud-shell-angular
+```
+
+Serve the static build or run the interaction tests (requires a running Storybook on port 4400):
+
+```
+npx nx static-storybook angular
+npx nx test-storybook angular
+```
+
 [//]: # (### Setting Up new Project)
 
 [//]: # ()

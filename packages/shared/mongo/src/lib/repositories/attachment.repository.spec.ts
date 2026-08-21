@@ -158,7 +158,7 @@ describe('shared-mongo: MongoAttachmentRepository', () => {
     const mockFileData = [
       {
         filename: 'test-file.txt',
-        contentType: 'text/plain',
+        metadata: { contentType: 'text/plain' },
         length: 1024,
       },
     ];
@@ -230,7 +230,7 @@ describe('shared-mongo: MongoAttachmentRepository', () => {
       data.id,
       data.fileName,
       {
-        contentType: data.mimeType,
+        metadata: { contentType: data.mimeType },
       },
     );
   });

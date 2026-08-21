@@ -16,7 +16,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
@@ -45,7 +45,7 @@ jobs:
           git diff origin/${{ github.event.pull_request.base.ref }}...HEAD > review-payload/pr.diff
 
       - name: Upload review payload
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: review-payload
           path: review-payload/

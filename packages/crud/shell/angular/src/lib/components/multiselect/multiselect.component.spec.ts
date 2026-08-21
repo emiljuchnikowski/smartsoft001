@@ -24,6 +24,7 @@ describe('crud-shell-angular: MultiselectComponent (characterization)', () => {
       onLangChange: { subscribe: jest.fn() },
       onTranslationChange: { subscribe: jest.fn() },
       onDefaultLangChange: { subscribe: jest.fn() },
+      onFallbackLangChange: { subscribe: jest.fn() },
     };
 
     TestBed.configureTestingModule({
@@ -95,6 +96,7 @@ describe('crud-shell-angular: MultiselectComponent (characterization)', () => {
         onLangChange: { subscribe: jest.fn() },
         onTranslationChange: { subscribe: jest.fn() },
         onDefaultLangChange: { subscribe: jest.fn() },
+        onFallbackLangChange: { subscribe: jest.fn() },
       };
 
       TestBed.configureTestingModule({
