@@ -35,9 +35,9 @@ jobs:
         uses: ./.github/actions/cached-deps
         with:
           node-version: '26.5.1'
-      - run: npx pnpm dlx nx-cloud start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="build"
+      - run: npx nx-cloud start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="build"
       - run: npx nx format:check
-      - run: npx pnpm exec nx affected -t lint test build postbuild
+      - run: npx nx affected -t lint test build postbuild
       - name: Set version
         run: npx nx release version minor && npm version minor --no-git-tag-version
       - id: package
