@@ -33,21 +33,15 @@
 [//]: # ()
 [//]: # (<hr>)
 
-[//]: # (## Documentation)
+## Documentation
 
-[//]: # ()
-[//]: # (Get started with Angular, learn the fundamentals and explore advanced topics on our documentation website.)
+The public documentation lives at **https://emiljuchnikowski.github.io/smartsoft001/**.
+It is built from `docs/site` and deployed automatically on every push to `main`
+(see `.github/workflows/docs.yml`). Run it locally with:
 
-[//]: # ()
-[//]: # (- [Getting Started][quickstart])
-
-[//]: # (- [Architecture][architecture])
-
-[//]: # (- [Components and Templates][componentstemplates])
-
-[//]: # (- [Forms][forms])
-
-[//]: # (- [API][api])
+```
+npx nx run docs:serve
+```
 
 ## Development Setup
 
