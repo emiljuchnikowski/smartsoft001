@@ -62,3 +62,9 @@ packages/**/cypress/screenshots
 packages/**/cypress/videos
 .playwright-mcp
 .nx/migrate-runs
+
+# Documentation site (Next.js)
+docs/site/.next
+docs/site/out
+docs/site/next-env.d.ts
+docs/site/*.tsbuildinfo

@@ -10,7 +10,13 @@ export default [
   ...nx.configs['flat/javascript'],
   {
     // Migrated from `.eslintignore`, which ESLint v9 no longer supports.
-    ignores: ['**/dist', '**/node_modules', '**/tailwind.config.js'],
+    ignores: [
+      '**/dist',
+      '**/node_modules',
+      '**/tailwind.config.js',
+      'docs/site/.next',
+      'docs/site/out',
+    ],
   },
   {
     plugins: {

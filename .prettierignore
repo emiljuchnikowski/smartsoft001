@@ -13,3 +13,7 @@ packages/shared/utils/README.md
 .angular
 
 .nx/self-healing
+
+docs/site/.next
+docs/site/out
+docs/site/next-env.d.ts

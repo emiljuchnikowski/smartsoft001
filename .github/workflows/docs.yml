@@ -1,0 +1,62 @@
+# Builds and deploys the documentation site (Nx project `docs`) to GitHub
+# Pages. The site is served under https://emiljuchnikowski.github.io/smartsoft001/
+# (see the `basePath` in docs/site/next.config.mjs), so the GitHub Pages
+# settings for this repository must have the source set to "GitHub Actions".
+# `.nojekyll` is required because Next.js emits a `_next` directory, and
+# GitHub Pages' default Jekyll processing ignores underscore-prefixed
+# directories, which would break the deployed site's assets.
+name: Docs
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/docs.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.repository_owner == 'emiljuchnikowski'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Load & cache dependencies
+        uses: ./.github/actions/cached-deps
+        with:
+          node-version: '26.5.1'
+      - name: Build documentation site
+        run: npx nx run docs:build
+        env:
+          NX_CLOUD_DISTRIBUTED_EXECUTION: false
+      - name: Disable Jekyll processing
+        run: touch docs/site/out/.nojekyll
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: docs/site/out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -85,14 +85,14 @@ Rules:
 
 ## 3. Content and sources
 
-| Section | Pages | Prose source | Code source |
-|---|---|---|---|
-| Getting started | intro, installation, architecture (domain / shell / app-services) | hand-written, EN | `examples/install`, `examples/angular`, `examples/node` |
-| Packages | 26, one per `@smartsoft001/*` manifest under `packages/**/package.json` (`claude-plugins` is covered by the Skills section) | rewritten from package READMEs | `docs/examples/*` |
-| Components | 55 skill-backed + every exported component family without a skill (today `loader`, `export`, `import`) | **generated at build time from `SKILL.md`** where a skill exists, hand-written otherwise | `usage` region from `*.stories.ts` + optional `docs/examples/angular/src/components/<name>/*.example.ts` + Storybook embed |
-| CRUD | list/item pages, filters, export, groups, multiselect | skill `smart-crud` + crud-shell-angular README | `examples/angular/crud`, `examples/node/crud` |
-| Skills | plugin install, every `user-invocable: true` skill, agent `angular-components`, hooks | SKILL.md frontmatter (name, description) + hand-written usage | command names verified by parity |
-| Contributing | commit, plan, impl, push, review, Nx conventions, testing | `.claude/skills/*/SKILL.md` + CONTRIBUTING.md | none |
+| Section         | Pages                                                                                                                       | Prose source                                                                             | Code source                                                                                                                |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Getting started | intro, installation, architecture (domain / shell / app-services)                                                           | hand-written, EN                                                                         | `examples/install`, `examples/angular`, `examples/node`                                                                    |
+| Packages        | 26, one per `@smartsoft001/*` manifest under `packages/**/package.json` (`claude-plugins` is covered by the Skills section) | rewritten from package READMEs                                                           | `docs/examples/*`                                                                                                          |
+| Components      | 55 skill-backed + every exported component family without a skill (today `loader`, `export`, `import`)                      | **generated at build time from `SKILL.md`** where a skill exists, hand-written otherwise | `usage` region from `*.stories.ts` + optional `docs/examples/angular/src/components/<name>/*.example.ts` + Storybook embed |
+| CRUD            | list/item pages, filters, export, groups, multiselect                                                                       | skill `smart-crud` + crud-shell-angular README                                           | `examples/angular/crud`, `examples/node/crud`                                                                              |
+| Skills          | plugin install, every `user-invocable: true` skill, agent `angular-components`, hooks                                       | SKILL.md frontmatter (name, description) + hand-written usage                            | command names verified by parity                                                                                           |
+| Contributing    | commit, plan, impl, push, review, Nx conventions, testing                                                                   | `.claude/skills/*/SKILL.md` + CONTRIBUTING.md                                            | none                                                                                                                       |
 
 Components in v1 take their prose from `SKILL.md` (already English API docs with input and
 token tables), so skills and docs share one source and cannot drift. Code in `SKILL.md` is
@@ -155,7 +155,7 @@ FlexSearch indexes at build time and works unchanged after static export.
 2. **Tooling**: snippet loader, `docs/examples/*` projects, `docs-check`, navigation generator,
    tests for all three.
 3. **Getting started + Installation** with `install.sh` in CI.
-4. **Packages** (26) in order: models, domain-core, utils, angular, crud-*, auth-*, trans-*,
+4. **Packages** (26) in order: models, domain-core, utils, angular, crud-_, auth-_, trans-*,
    nestjs, mongo, users, paypal, payu, paynow, revolut, fb, google.
 5. **Components** (55 skill-backed + loader, export, import): generator from `SKILL.md`, usage
    regions in stories, `test-storybook` for both Storybooks, Storybook embeds.
