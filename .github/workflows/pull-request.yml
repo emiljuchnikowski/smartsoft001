@@ -31,6 +31,7 @@ jobs:
           node-version: '26.5.1'
       - run: npx nx format:check --base=origin/${{ github.event.pull_request.base.ref }}
       - run: npx nx run-many -t lint --max-parallel=4
+      - run: npx nx run docs:check
       - run: |
           export NODE_OPTIONS="--max-old-space-size=8192"
           npx nx run-many -t test --max-parallel=4

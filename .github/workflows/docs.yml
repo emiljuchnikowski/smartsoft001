@@ -5,6 +5,8 @@
 # `.nojekyll` is required because Next.js emits a `_next` directory, and
 # GitHub Pages' default Jekyll processing ignores underscore-prefixed
 # directories, which would break the deployed site's assets.
+# The docs tooling projects (docs, docs-examples-angular, docs-examples-node)
+# are checked and tested before the site is built.
 name: Docs
 
 on:
@@ -16,6 +18,11 @@ on:
       - 'package.json'
       - 'package-lock.json'
       - '.github/workflows/docs.yml'
+      - 'tools/scripts/**'
+      - 'packages/**/*.stories.ts'
+      - 'packages/**/package.json'
+      - 'packages/shared/claude-plugins/src/plugins/smart/skills/**'
+      - '.claude/skills/**'
   workflow_dispatch:
 
 permissions:
@@ -39,8 +46,8 @@ jobs:
         uses: ./.github/actions/cached-deps
         with:
           node-version: '26.5.1'
-      - name: Build documentation site
-        run: npx nx run docs:build
+      - name: Check, test and build documentation
+        run: npx nx run-many -t check test build -p docs docs-examples-angular docs-examples-node
         env:
           NX_CLOUD_DISTRIBUTED_EXECUTION: false
       - name: Disable Jekyll processing

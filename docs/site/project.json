@@ -7,15 +7,19 @@
   "targets": {
     "serve": {
       "executor": "nx:run-commands",
+      "dependsOn": ["generate"],
       "options": { "command": "next dev --webpack", "cwd": "docs/site" }
     },
     "build": {
       "executor": "nx:run-commands",
+      "dependsOn": ["generate"],
       "outputs": ["{projectRoot}/out"],
       "cache": true,
       "inputs": [
         "default",
         "{projectRoot}/src/**/*",
+        "{workspaceRoot}/docs/examples/**/*",
+        "{workspaceRoot}/packages/**/*",
         "{projectRoot}/next.config.mjs",
         "{projectRoot}/postcss.config.js",
         "{projectRoot}/tsconfig.json",
@@ -25,9 +29,50 @@
     },
     "lint": {
       "executor": "nx:run-commands",
+      "dependsOn": ["generate"],
       "cache": true,
       "inputs": ["default", "{projectRoot}/eslint.config.mjs"],
       "options": { "command": "eslint .", "cwd": "docs/site" }
+    },
+    "generate": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": [
+        "{projectRoot}/src/app/**/page.md",
+        "{projectRoot}/tools/navigation.mjs",
+        "{projectRoot}/tools/sections.mjs",
+        "{projectRoot}/tools/generate-navigation.mjs"
+      ],
+      "outputs": ["{projectRoot}/src/lib/navigation.ts"],
+      "options": { "command": "node docs/site/tools/generate-navigation.mjs" }
+    },
+    "check": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": [
+        "{workspaceRoot}/docs/site/src/app/**/*",
+        "{workspaceRoot}/docs/site/tools/*.mjs",
+        "{workspaceRoot}/docs/examples/**/*",
+        "{workspaceRoot}/tools/scripts/docs-check.mjs",
+        "{workspaceRoot}/packages/**/package.json",
+        "{workspaceRoot}/packages/**/*.stories.ts",
+        "{workspaceRoot}/packages/shared/angular/src/lib/components/index.ts",
+        "{workspaceRoot}/packages/shared/claude-plugins/src/plugins/smart/skills/**/SKILL.md",
+        "{workspaceRoot}/.claude/skills/**/SKILL.md"
+      ],
+      "options": { "command": "node tools/scripts/docs-check.mjs" }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": [
+        "{projectRoot}/tools/**/*",
+        "{workspaceRoot}/tools/scripts/docs-check.mjs",
+        "{workspaceRoot}/tools/scripts/docs-check.test.mjs"
+      ],
+      "options": {
+        "command": "node --test docs/site/tools/*.test.mjs tools/scripts/docs-check.test.mjs"
+      }
     }
   }
 }
