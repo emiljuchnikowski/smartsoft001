@@ -73,6 +73,11 @@
       "options": {
         "command": "node --test docs/site/tools/*.test.mjs tools/scripts/docs-check.test.mjs"
       }
+    },
+    "install-smoke": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "options": { "command": "bash docs/examples/install/install.sh" }
     }
   }
 }

@@ -44,7 +44,7 @@ describe('docs-check CLI', () => {
     const findings = JSON.parse(result.stdout);
 
     assert.equal(result.status, 1);
-    assert.equal(findings.length, 14);
+    assert.equal(findings.length, 15);
     assert.ok(findings.every((finding) => finding.rule && finding.level));
   });
 });

@@ -8,7 +8,7 @@ smartsoft001 is a set of publishable npm packages that share the models, UI comp
 
 {% quick-links %}
 
-{% quick-link title="Installation" icon="installation" href="/" description="Add the packages you need to an existing Angular, NestJS or Ionic workspace." /%}
+{% quick-link title="Installation" icon="installation" href="/docs/installation" description="Add the packages you need to an existing Angular, NestJS or Ionic workspace." /%}
 
 {% quick-link title="Packages" icon="presets" href="/" description="Browse the shared libraries and the crud, auth and trans feature families." /%}
 

@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url'
 
 import {
   componentInventory,
+  NO_HANDWRITTEN_CODE_DIRS,
   packageInventory,
   rule1,
   rule2,
@@ -226,6 +227,12 @@ describe('rule4 (snippet tags)', () => {
     assert.equal(finding.level, 'error')
   })
 
+  test('accepts a region declared with a shell "#" marker', () => {
+    const findings = rule4(context())
+
+    assert.ok(!findings.some((finding) => /setup\.sh/.test(finding.message)))
+  })
+
   test('rejects a snippet path that escapes its root', () => {
     const findings = rule4(context())
 
@@ -292,18 +299,57 @@ describe('rule6 (no inline code blocks)', () => {
 
   test('reports a typescript fence on a component page with its line', () => {
     const findings = rule6(context())
+    const finding = findings.find((item) =>
+      /components\/button\/page\.md/.test(item.message),
+    )
 
-    assert.equal(findings.length, 1)
-    assert.equal(findings[0].rule, 'R6')
-    assert.equal(findings[0].level, 'error')
-    assert.match(findings[0].message, /components\/button\/page\.md:8/)
-    assert.match(findings[0].message, /ts/)
+    assert.equal(findings.length, 2)
+    assert.ok(finding)
+    assert.equal(finding.rule, 'R6')
+    assert.equal(finding.level, 'error')
+    assert.match(finding.message, /components\/button\/page\.md:8/)
+    assert.match(finding.message, /ts/)
   })
 
-  test('ignores pages outside the packages and components sections', () => {
+  test('ignores pages outside the covered directories', () => {
     const findings = rule6(context())
 
     assert.ok(!findings.some((finding) => finding.file.includes('guides')))
+  })
+
+  test('covers the getting started pages as well', () => {
+    assert.deepEqual(NO_HANDWRITTEN_CODE_DIRS, [
+      'docs/architecture',
+      'docs/components',
+      'docs/installation',
+      'docs/introduction',
+      'docs/packages',
+    ])
+  })
+
+  test('reports a typescript fence on the architecture page', () => {
+    const findings = rule6(context())
+    const finding = findings.find((item) =>
+      /architecture\/page\.md/.test(item.message),
+    )
+
+    assert.ok(finding)
+    assert.equal(finding.level, 'error')
+    assert.match(finding.message, /:8:/)
+  })
+
+  test('accepts a bash fence on the installation page', () => {
+    const findings = rule6(context())
+
+    assert.ok(
+      !findings.some((finding) => finding.file.includes('installation')),
+    )
+  })
+
+  test('leaves the root page uncovered', () => {
+    const findings = rule6(context())
+
+    assert.ok(!findings.some((finding) => /^page\.md/.test(finding.message)))
   })
 })
 
@@ -350,7 +396,7 @@ describe('runAllRules', () => {
       [...new Set(findings.map((finding) => finding.rule))],
       ['R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7'],
     )
-    assert.equal(findings.length, 14)
+    assert.equal(findings.length, 15)
   })
 
   test('turns parity warnings into errors in strict mode', () => {

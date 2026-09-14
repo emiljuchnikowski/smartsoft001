@@ -7,22 +7,17 @@
 # directories, which would break the deployed site's assets.
 # The docs tooling projects (docs, docs-examples-angular, docs-examples-node)
 # are checked and tested before the site is built.
+# The site deploys after a successful `Publish` run so that the installation
+# smoke test and the documented snippets match what is actually on npm. A
+# failed `Publish` therefore also blocks the docs deploy; `workflow_dispatch`
+# remains available to rebuild the site on demand.
 name: Docs
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'docs/**'
-      - 'package.json'
-      - 'package-lock.json'
-      - '.github/workflows/docs.yml'
-      - 'tools/scripts/**'
-      - 'packages/**/*.stories.ts'
-      - 'packages/**/package.json'
-      - 'packages/shared/claude-plugins/src/plugins/smart/skills/**'
-      - '.claude/skills/**'
+  workflow_run:
+    workflows: ['Publish']
+    types: [completed]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -36,7 +31,10 @@ concurrency:
 
 jobs:
   build:
-    if: github.repository_owner == 'emiljuchnikowski'
+    if: >-
+      github.repository_owner == 'emiljuchnikowski' &&
+      (github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success')
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
@@ -46,6 +44,10 @@ jobs:
         uses: ./.github/actions/cached-deps
         with:
           node-version: '26.5.1'
+      - name: Verify installation from npm
+        run: npx nx run docs:install-smoke
+        env:
+          NX_CLOUD_DISTRIBUTED_EXECUTION: false
       - name: Check, test and build documentation
         run: npx nx run-many -t check test build -p docs docs-examples-angular docs-examples-node
         env:
