@@ -1,3 +1,7 @@
+## 2.132.0 (2026-09-14)
+
+This was a version bump only, there were no code changes.
+
 ## 2.131.0 (2026-09-14)
 
 ### 🚀 Features
