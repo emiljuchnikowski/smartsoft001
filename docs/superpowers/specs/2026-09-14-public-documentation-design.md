@@ -72,29 +72,40 @@ Rules:
   installs every published `@smartsoft001/*` package. The docs workflow runs it before the site
   build. Commands on the Installation page are regions of that script; provider/module wiring
   snippets come from the angular/node examples.
-- Storybook: the docs workflow builds both Storybooks (`angular`, `crud-shell-angular`) and
-  copies them to `out/storybook/<project>/`. Tag
+- Storybook: the docs workflow builds both Storybooks (`angular`, `crud-shell-angular`),
+  **runs them** (`static-storybook` + `test-storybook`, the Storybook test-runner, against the
+  static build; `crud-shell-angular` gets the same two targets), and only then copies them to
+  `docs/site/out/storybook/<project>/` **after** `next build` (a static export recreates `out`,
+  so copying before the build would lose them). Tag
   `{% storybook project="angular" story="components-button--primary" /%}` renders an iframe
-  (`storybook/<project>/iframe.html?id=<story>&viewMode=story`) so each component page shows a
-  compiled usage snippet **and** a live rendering on the same host.
+  whose `src` is prefixed with the configured `basePath`
+  (`/smartsoft001/storybook/<project>/iframe.html?id=<story>&viewMode=story`; a relative URL
+  would resolve against the nested page path and 404). Each component page therefore shows a
+  compiled **and executed** usage snippet plus a live rendering on the same host.
 
 ## 3. Content and sources
 
 | Section | Pages | Prose source | Code source |
 |---|---|---|---|
 | Getting started | intro, installation, architecture (domain / shell / app-services) | hand-written, EN | `examples/install`, `examples/angular`, `examples/node` |
-| Packages | 23, one per alias in `tsconfig.base.json` | rewritten from package READMEs | `docs/examples/*` |
-| Components | 55 | **generated at build time from `SKILL.md`** of `angular-components-*` skills | `usage` region from `*.stories.ts` + Storybook embed |
+| Packages | 26, one per `@smartsoft001/*` manifest under `packages/**/package.json` (`claude-plugins` is covered by the Skills section) | rewritten from package READMEs | `docs/examples/*` |
+| Components | 55 skill-backed + every exported component family without a skill (today `loader`, `export`, `import`) | **generated at build time from `SKILL.md`** where a skill exists, hand-written otherwise | `usage` region from `*.stories.ts` + optional `docs/examples/angular/src/components/<name>/*.example.ts` + Storybook embed |
 | CRUD | list/item pages, filters, export, groups, multiselect | skill `smart-crud` + crud-shell-angular README | `examples/angular/crud`, `examples/node/crud` |
 | Skills | plugin install, every `user-invocable: true` skill, agent `angular-components`, hooks | SKILL.md frontmatter (name, description) + hand-written usage | command names verified by parity |
 | Contributing | commit, plan, impl, push, review, Nx conventions, testing | `.claude/skills/*/SKILL.md` + CONTRIBUTING.md | none |
 
 Components in v1 take their prose from `SKILL.md` (already English API docs with input and
-token tables), so skills and docs share one source and cannot drift. Because code in
-`SKILL.md` is hand-written, every component page additionally gets a mandatory **Usage**
-snippet cut from the component's stories, which CI compiles via `build-storybook`.
-Full single-sourcing (snippet tags inside `SKILL.md`, expanded during the plugin build) is
-deferred to v2 because it changes the plugin authoring workflow.
+token tables), so skills and docs share one source and cannot drift. Code in `SKILL.md` is
+hand-written, so the generator **drops every fence** from the skill body and replaces the code
+with executable snippets: a mandatory **Usage** region cut from the component's stories
+(compiled by `build-storybook` and executed by `test-storybook`), plus, where the skill showed a
+token-override or extension example, a `docs/examples/angular/src/components/<name>/*.example.ts`
+file with its spec. Components exported from `packages/shared/angular/src/lib/components/index.ts`
+that have no skill get a hand-written page following the same template. The package inventory
+comes from `@smartsoft001/*` names in `packages/**/package.json`, not from `tsconfig.base.json`
+(the aliases miss `auth-shell-dtos`, `auth-shell-nestjs`, `crud-shell-angular` and use a different
+name for `trans-shell-dtos-services`). Single-sourcing the other way (snippet tags inside
+`SKILL.md`, expanded during the plugin build) stays deferred to v2.
 
 Per-page frontmatter (Markdoc): `title`, `section`, `order`, `package` (for parity),
 `nextjs.metadata.description`.
@@ -109,15 +120,21 @@ FlexSearch indexes at build time and works unchanged after static export.
 
 ## 5. Staying current
 
-1. `docs.yml` on push to `main`: `nx affected -t check test build` for the docs projects,
-   `install.sh`, `build-storybook` for both projects, `next build` (static export), deploy with
-   `actions/upload-pages-artifact` + `actions/deploy-pages`. Concurrency group `pages`.
-2. `docs-check` runs in `pull-request.yml` and `publish.yml`:
-   - every alias in `tsconfig.base.json` has `docs/site/src/app/docs/packages/<name>/page.md`,
-   - every `angular-components-*` skill has a component page,
+1. `docs.yml` on push to `main`, in this order: `nx run-many -t check test build` for the docs
+   projects, `install.sh`, `build-storybook` + `static-storybook` + `test-storybook` for both
+   Storybook projects, `next build` (static export), copy `dist/storybook/*` into
+   `docs/site/out/storybook/`, verify every `{% storybook %}` id against the built
+   `index.json` (hard failure), deploy with `actions/upload-pages-artifact` +
+   `actions/deploy-pages`. Concurrency group `pages`.
+2. `docs-check` runs in `pull-request.yml` and `publish.yml` and needs no build output:
+   - every `@smartsoft001/*` manifest under `packages/**/package.json` (except `claude-plugins`)
+     has `docs/site/src/app/docs/packages/<name>/page.md`,
+   - every component in the union of `angular-components-*` skills and component directories
+     exported from `packages/shared/angular/src/lib/components/index.ts` has a component page,
    - every `user-invocable: true` skill (plugin and `.claude/skills`) has a page,
    - every `{% snippet %}` points at an existing file and region,
-   - every `{% storybook %}` story id exists in the built `index.json` (when present),
+   - every `{% storybook %}` story id matches a story derived from the `*.stories.ts` sources
+     (`title` + export names), independent of any build artifact,
    - no hand-written `ts`/`html` fences under `packages/` and `components/`,
    - every page appears in generated navigation.
 3. Contributor skill `docs` in `.claude/skills`: on adding a package, component or skill it
@@ -138,11 +155,20 @@ FlexSearch indexes at build time and works unchanged after static export.
 2. **Tooling**: snippet loader, `docs/examples/*` projects, `docs-check`, navigation generator,
    tests for all three.
 3. **Getting started + Installation** with `install.sh` in CI.
-4. **Packages** (23) in order: models, domain-core, utils, angular, crud-*, auth-*, trans-*,
+4. **Packages** (26) in order: models, domain-core, utils, angular, crud-*, auth-*, trans-*,
    nestjs, mongo, users, paypal, payu, paynow, revolut, fb, google.
-5. **Components** (55): generator from `SKILL.md`, usage regions in stories, Storybook embeds.
+5. **Components** (55 skill-backed + loader, export, import): generator from `SKILL.md`, usage
+   regions in stories, `test-storybook` for both Storybooks, Storybook embeds.
 6. **Skills + Contributing**.
 7. **Contributor skill `docs`** and hook-up to `angular-components`.
+
+## Review amendments (2026-09-14, Codex review of the first draft)
+
+Applied above: package inventory from manifests instead of tsconfig aliases; component
+inventory is the union of skills and exported component directories; generator drops all
+`SKILL.md` fences and replaces them with executable snippets; Storybooks are executed with
+`test-storybook`, copied after `next build`, and embedded with base-path-aware URLs; story ids
+are validated from sources in `docs-check` and against `index.json` in `docs.yml`.
 
 ## Out of scope (v1)
 
