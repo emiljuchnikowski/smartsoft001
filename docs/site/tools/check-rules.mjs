@@ -20,6 +20,20 @@ const CODE_LANGUAGES = new Set([
   'angular-html',
 ])
 
+/**
+ * Pages below these directories (relative to the docs app) must embed their
+ * code through `{% snippet %}` tags instead of hand-writing it. The root
+ * `page.md` is deliberately not covered: it is a landing page, not reference
+ * documentation.
+ */
+export const NO_HANDWRITTEN_CODE_DIRS = [
+  'docs/architecture',
+  'docs/components',
+  'docs/installation',
+  'docs/introduction',
+  'docs/packages',
+]
+
 const STORY_PROJECTS = [
   { dir: 'packages/shared/angular', project: 'angular' },
   { dir: 'packages/crud/shell/angular', project: 'crud-shell-angular' },
@@ -373,6 +387,7 @@ function hasRegion(source, region) {
     .some(
       (line) =>
         line.trim() === `// #region ${region}` ||
+        line.trim() === `# #region ${region}` ||
         line.trim() === `<!-- #region ${region} -->`,
     )
 }
@@ -462,19 +477,17 @@ export function rule5(ctx) {
   return findings
 }
 
-/** R6: package and component pages embed snippets, never inline code. */
+/** R6: reference pages embed snippets, never inline code. */
 export function rule6(ctx) {
   const findings = []
 
   for (const page of docsPages(ctx)) {
     const relative = relativeToDocs(ctx, page)
+    const covered = NO_HANDWRITTEN_CODE_DIRS.some((dir) =>
+      relative.startsWith(`${dir}/`),
+    )
 
-    if (
-      !relative.startsWith('docs/packages/') &&
-      !relative.startsWith('docs/components/')
-    ) {
-      continue
-    }
+    if (!covered) continue
 
     const lines = fs.readFileSync(page, 'utf8').split(/\r?\n/)
     let fence = null

@@ -17,7 +17,8 @@ import * as path from 'node:path'
 const SNIPPET_TAG = /\{%\s*snippet\b([\s\S]*?)\/%\}/g
 const ATTRIBUTE = /([a-zA-Z][\w-]*)\s*=\s*(?:"([^"]*)"|'([^']*)')/g
 
-// `// #region name`, `/* #region name */` or `<!-- #region name -->`.
+// `// #region name`, `/* #region name */`, `<!-- #region name -->` or, for
+// shell, YAML and other `#` comment languages, `# #region name`.
 const REGION_START =
   /^\s*(?:\/\/|\/\*|<!--|#)\s*#region\s+(.*?)\s*(?:-->|\*\/)?\s*$/
 const REGION_END = /^\s*(?:\/\/|\/\*|<!--|#)\s*#endregion\b/

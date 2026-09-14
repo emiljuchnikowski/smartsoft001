@@ -342,3 +342,54 @@ test('languageFor falls back to text for unknown extensions', () => {
   assert.equal(languageFor('a.weird'), 'text')
   assert.equal(languageFor('Dockerfile'), 'text')
 })
+
+test('expandSnippets understands shell comment markers', () => {
+  const source = '{% snippet file="install/demo.sh" region="clone" /%}'
+
+  const result = expandSnippets(source, options)
+
+  assert.equal(
+    result,
+    [
+      '```bash',
+      'git clone https://github.com/emiljuchnikowski/smartsoft.git',
+      'cd smartsoft',
+      '```',
+    ].join('\n'),
+  )
+})
+
+test('expandSnippets keeps plain shell comments inside a region', () => {
+  const source = '{% snippet file="install/demo.sh" region="install" /%}'
+
+  const result = expandSnippets(source, options)
+
+  assert.equal(
+    result,
+    ['```bash', '# install everything', 'npm ci', '```'].join('\n'),
+  )
+})
+
+test('expandSnippets strips every shell marker when no region is given', () => {
+  const source = '{% snippet file="install/demo.sh" /%}'
+
+  const result = expandSnippets(source, options)
+
+  assert.equal(
+    result,
+    [
+      '```bash',
+      '#!/usr/bin/env bash',
+      'set -euo pipefail',
+      '',
+      'git clone https://github.com/emiljuchnikowski/smartsoft.git',
+      'cd smartsoft',
+      '',
+      'echo "between the regions"',
+      '',
+      '# install everything',
+      'npm ci',
+      '```',
+    ].join('\n'),
+  )
+})
