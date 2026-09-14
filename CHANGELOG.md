@@ -1,3 +1,13 @@
+## 2.131.0 (2026-09-14)
+
+### 🚀 Features
+
+- **nx:** add docs tooling — executable snippets, examples, docs-check, generated navigation ([#39](https://github.com/emiljuchnikowski/smartsoft001/pull/39))
+
+### ❤️ Thank You
+
+- Emil Juchnikowski
+
 ## 2.130.0 (2026-09-14)
 
 ### 🩹 Fixes
