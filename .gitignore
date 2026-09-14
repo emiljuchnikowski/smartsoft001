@@ -68,3 +68,6 @@ docs/site/.next
 docs/site/out
 docs/site/next-env.d.ts
 docs/site/*.tsbuildinfo
+
+# Generated from page frontmatter by docs/site/tools/generate-navigation.mjs
+docs/site/src/lib/navigation.ts

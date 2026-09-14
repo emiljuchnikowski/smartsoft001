@@ -6,7 +6,13 @@ import * as path from 'path'
 import { createLoader } from 'simple-functional-loader'
 import * as url from 'url'
 
+import { expandSnippets } from '../../tools/snippets.mjs'
+
 const __filename = url.fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+const siteRoot = path.resolve(__dirname, '..', '..')
+const repoRoot = path.resolve(siteRoot, '..', '..')
+const examplesRoot = path.join(repoRoot, 'docs', 'examples')
 const slugify = slugifyWithCounter()
 
 function toString(node) {
@@ -57,7 +63,14 @@ export default function withSearch(nextConfig = {}) {
             let data = files.map((file) => {
               let url =
                 file === 'page.md' ? '/' : `/${file.replace(/\/page\.md$/, '')}`
-              let md = fs.readFileSync(path.join(pagesDir, file), 'utf8')
+              let pagePath = path.join(pagesDir, file)
+              // Expand snippets here too: the indexer parses the pages itself,
+              // outside of the loader chain, and must not see the unknown tag.
+              let md = expandSnippets(fs.readFileSync(pagePath, 'utf8'), {
+                pagePath,
+                examplesRoot,
+                repoRoot,
+              })
 
               let sections
 

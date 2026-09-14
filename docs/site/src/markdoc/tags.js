@@ -1,5 +1,6 @@
 import { Callout } from '@/components/Callout'
 import { QuickLink, QuickLinks } from '@/components/QuickLinks'
+import { Storybook } from '@/components/Storybook'
 
 const tags = {
   callout: {
@@ -28,6 +29,15 @@ const tags = {
         <figcaption>{caption}</figcaption>
       </figure>
     ),
+  },
+  storybook: {
+    selfClosing: true,
+    attributes: {
+      project: { type: String, required: true },
+      story: { type: String, required: true },
+      height: { type: Number, default: 320 },
+    },
+    render: Storybook,
   },
   'quick-links': {
     render: QuickLinks,

@@ -1,5 +1,7 @@
 ---
 title: Getting started
+section: Getting started
+order: 0
 ---
 
 smartsoft001 is a set of publishable npm packages that share the models, UI components and backend building blocks used across Angular, NestJS and Ionic projects. {% .lead %}
@@ -31,5 +33,9 @@ Install the packages you need in an existing workspace.
 ```bash
 npm install @smartsoft001/angular @smartsoft001/models
 ```
+
+Then drop a framework component into a standalone Angular component. The code below is not typed into this page: it is cut from an example file that is compiled and executed by the repository's test suite, so it always matches the published packages.
+
+{% snippet file="angular/src/button/basic.example.ts" region="usage" /%}
 
 Installation details and per-package guides are being published section by section, so this page will grow as each area of the framework is documented.
