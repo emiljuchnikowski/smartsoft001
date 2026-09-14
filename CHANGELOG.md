@@ -1,3 +1,14 @@
+## 2.130.0 (2026-09-14)
+
+### 🩹 Fixes
+
+- **nx:** bump next to 16.3.5 to clear critical CVEs blocking publish ([#38](https://github.com/emiljuchnikowski/smartsoft001/pull/38))
+
+### ❤️ Thank You
+
+- Claude Fable 5.1
+- Emil Juchnikowski
+
 ## 2.129.0 (2026-08-21)
 
 ### 🚀 Features
