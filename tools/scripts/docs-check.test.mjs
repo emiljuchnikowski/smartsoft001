@@ -39,6 +39,35 @@ describe('docs-check CLI', () => {
     assert.match(result.stdout, /docs-check: 1 errors, 0 warnings/);
   });
 
+  test('exits 1 with --strict=R1 when a package page is missing', () => {
+    const result = run(path.join(fixtures, 'check-warnings'), '--strict=R1');
+
+    assert.equal(result.status, 1);
+    assert.match(result.stdout, /ERROR R1/);
+    assert.match(result.stdout, /docs-check: 1 errors, 0 warnings/);
+  });
+
+  test('exits 0 with --strict=R1 when only components and skills are missing', () => {
+    const result = run(path.join(fixtures, 'check-warnings-r2'), '--strict=R1');
+
+    assert.equal(result.status, 0);
+    assert.match(result.stdout, /WARN R2/);
+    assert.match(result.stdout, /WARN R3/);
+    assert.match(result.stdout, /docs-check: 0 errors, 2 warnings/);
+  });
+
+  test('exits 1 for that repository once R2 is strict as well', () => {
+    const result = run(
+      path.join(fixtures, 'check-warnings-r2'),
+      '--strict=R1,R2',
+    );
+
+    assert.equal(result.status, 1);
+    assert.match(result.stdout, /ERROR R2/);
+    assert.match(result.stdout, /WARN R3/);
+    assert.match(result.stdout, /docs-check: 1 errors, 1 warnings/);
+  });
+
   test('prints findings of every rule, including rules added after R7', () => {
     const result = run(path.join(fixtures, 'check'));
 

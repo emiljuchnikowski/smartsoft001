@@ -305,10 +305,24 @@ function docsPage(ctx, ...segments) {
   return path.join(ctx.docsAppDir, 'docs', ...segments, 'page.md')
 }
 
+/**
+ * True when `rule` is one of the parity rules the caller asked to be strict
+ * about. `ctx.strict` is a collection of rule ids (`['R1']`, `new Set(['R1'])`)
+ * so a section can be enforced before the others are written; `true` means
+ * every parity rule and `false` means none.
+ */
+function isStrict(ctx, rule) {
+  const { strict } = ctx
+
+  if (typeof strict === 'boolean' || strict == null) return Boolean(strict)
+
+  return strict instanceof Set ? strict.has(rule) : [...strict].includes(rule)
+}
+
 function missingPageFinding(ctx, rule, kind, name, page) {
   return {
     rule,
-    level: ctx.strict ? 'error' : 'warn',
+    level: isStrict(ctx, rule) ? 'error' : 'warn',
     message: `${kind} "${name}" has no documentation page (expected ${path
       .relative(ctx.docsAppDir, page)
       .split(path.sep)

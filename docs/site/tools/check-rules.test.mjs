@@ -142,6 +142,12 @@ describe('rule1 (package pages)', () => {
 
     assert.equal(findings[0].level, 'error')
   })
+
+  test('raises the level to error when only R1 is strict', () => {
+    const findings = rule1(context({ strict: new Set(['R1']) }))
+
+    assert.equal(findings[0].level, 'error')
+  })
 })
 
 describe('rule2 (component pages)', () => {
@@ -166,6 +172,12 @@ describe('rule2 (component pages)', () => {
     const findings = rule2(context({ strict: true }))
 
     assert.ok(findings.every((finding) => finding.level === 'error'))
+  })
+
+  test('stays a warning when only R1 is strict', () => {
+    const findings = rule2(context({ strict: new Set(['R1']) }))
+
+    assert.ok(findings.every((finding) => finding.level === 'warn'))
   })
 })
 
@@ -195,6 +207,12 @@ describe('rule3 (skill pages)', () => {
 
   test('raises the level to error in strict mode', () => {
     const findings = rule3(context({ strict: true }))
+
+    assert.equal(findings[0].level, 'error')
+  })
+
+  test('accepts a list of strict rule ids as well as a set', () => {
+    const findings = rule3(context({ strict: ['R1', 'R3'] }))
 
     assert.equal(findings[0].level, 'error')
   })
@@ -484,5 +502,17 @@ describe('runAllRules', () => {
     const findings = runAllRules(context({ strict: true }))
 
     assert.ok(findings.every((finding) => finding.level === 'error'))
+  })
+
+  test('keeps the rules outside a partial strict set as warnings', () => {
+    const findings = runAllRules(context({ strict: new Set(['R1']) }))
+    const levels = (rule) =>
+      findings
+        .filter((finding) => finding.rule === rule)
+        .map((finding) => finding.level)
+
+    assert.deepEqual(levels('R1'), ['error'])
+    assert.deepEqual(levels('R2'), ['warn', 'warn'])
+    assert.deepEqual(levels('R3'), ['warn'])
   })
 })
