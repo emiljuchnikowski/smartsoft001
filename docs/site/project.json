@@ -99,6 +99,7 @@
     },
     "test": {
       "executor": "nx:run-commands",
+      "dependsOn": ["generate"],
       "cache": true,
       "inputs": [
         "{projectRoot}/tools/**/*",
