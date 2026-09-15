@@ -23,6 +23,9 @@
         "packages/auth/shell/app-services/src/index.ts"
       ],
       "@smartsoft001/crud-domain": ["packages/crud/domain/src/index.ts"],
+      "@smartsoft001/crud-shell-angular": [
+        "packages/crud/shell/angular/src/index.ts"
+      ],
       "@smartsoft001/crud-shell-app-services": [
         "packages/crud/shell/app-services/src/index.ts"
       ],
