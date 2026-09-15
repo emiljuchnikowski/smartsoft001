@@ -29,6 +29,7 @@ const CODE_LANGUAGES = new Set([
 export const NO_HANDWRITTEN_CODE_DIRS = [
   'docs/architecture',
   'docs/components',
+  'docs/crud',
   'docs/installation',
   'docs/introduction',
   'docs/packages',

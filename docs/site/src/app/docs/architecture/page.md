@@ -42,7 +42,7 @@ Field metadata says what the data is; it cannot say how a screen should behave. 
 
 ### The engine builds the screens
 
-The list and item page components in `@smartsoft001/crud-shell-angular` are built on `CreateDynamicComponent` from `@smartsoft001/angular`. Instead of a fixed template, the page resolves its children at runtime from the configuration and the field metadata, which is how one pair of page components serves every entity in an application. The code for this comes in the [CRUD section (coming soon)](/).
+The list and item page components in `@smartsoft001/crud-shell-angular` are built on `CreateDynamicComponent` from `@smartsoft001/angular`. Instead of a fixed template, the page resolves its children at runtime from the configuration and the field metadata, which is how one pair of page components serves every entity in an application. The [CRUD overview](/docs/crud/overview) has the code for this, and the [list page](/docs/crud/list-page) and [item page](/docs/crud/item-page) pages describe what each of the two generates.
 
 ---
 
@@ -67,5 +67,5 @@ Writes are guarded by the JWT strategy, while reads also accept an anonymous tok
 ## Where next
 
 - [Installation](/docs/installation) has the wiring for both sides in full.
-- [CRUD section (coming soon)](/) will show the configuration and the generated screens in code.
+- [CRUD overview](/docs/crud/overview) shows the configuration and the generated screens in code.
 - [Packages](/) will document each library on its own page.
