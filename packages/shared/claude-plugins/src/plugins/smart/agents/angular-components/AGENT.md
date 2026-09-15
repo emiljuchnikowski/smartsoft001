@@ -166,6 +166,14 @@ Always delegate to the per-component skill for detailed API, usage examples, and
 npm i @smartsoft001/angular
 ```
 
+## Public documentation
+
+Every component in the tables above also has a public page at
+https://emiljuchnikowski.github.io/smartsoft001/docs/components/ with its API, a usage example taken from
+the component's Storybook story and the live story itself. The pages are generated from these same skills,
+so they never disagree with what this agent tells you; point a developer there when they want to browse the
+catalogue rather than ask for one component.
+
 ## Import Patterns
 
 ```typescript

@@ -18,6 +18,7 @@ Changes to the framework go through a Linear-driven workflow run by Claude Code 
 | [Conventions](/docs/contributing/conventions)     | Repository layout, project tags, commit messages, git hooks and testing conventions.                   |
 | [Agents](/docs/contributing/agents)               | The `shared-*`, `angular-*` and `nestjs-*` agents that Claude delegates to.                            |
 | [Documentation](/docs/contributing/documentation) | How to add a package, component or skill page, the snippet conventions and the `docs-check` rules.     |
+| [`docs` skill](/docs/contributing/docs)           | The skill that runs all of that for you and then runs the checks.                                      |
 
 ## Before you start
 
