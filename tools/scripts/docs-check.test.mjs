@@ -53,7 +53,8 @@ describe('docs-check CLI', () => {
     assert.equal(result.status, 0);
     assert.match(result.stdout, /WARN R2/);
     assert.match(result.stdout, /WARN R3/);
-    assert.match(result.stdout, /docs-check: 0 errors, 2 warnings/);
+    assert.match(result.stdout, /WARN R9/);
+    assert.match(result.stdout, /docs-check: 0 errors, 3 warnings/);
   });
 
   test('exits 1 for that repository once R2 is strict as well', () => {
@@ -65,7 +66,26 @@ describe('docs-check CLI', () => {
     assert.equal(result.status, 1);
     assert.match(result.stdout, /ERROR R2/);
     assert.match(result.stdout, /WARN R3/);
-    assert.match(result.stdout, /docs-check: 1 errors, 1 warnings/);
+    assert.match(result.stdout, /WARN R9/);
+    assert.match(result.stdout, /docs-check: 1 errors, 2 warnings/);
+  });
+
+  test('covers R9 with a bare --strict', () => {
+    const result = run(path.join(fixtures, 'check-warnings-r2'), '--strict');
+
+    assert.equal(result.status, 1);
+    assert.match(result.stdout, /ERROR R9 Component "badge" has no Storybook/);
+    assert.match(result.stdout, /docs-check: 3 errors, 0 warnings/);
+  });
+
+  test('exits 1 with --strict=R9 while the other rules still warn', () => {
+    const result = run(path.join(fixtures, 'check-warnings-r2'), '--strict=R9');
+
+    assert.equal(result.status, 1);
+    assert.match(result.stdout, /WARN R2/);
+    assert.match(result.stdout, /WARN R3/);
+    assert.match(result.stdout, /ERROR R9/);
+    assert.match(result.stdout, /docs-check: 1 errors, 2 warnings/);
   });
 
   test('prints findings of every rule, including rules added after R7', () => {
@@ -73,7 +93,7 @@ describe('docs-check CLI', () => {
 
     assert.equal(result.status, 1);
     assert.match(result.stdout, /ERROR R8 .*bad-pkg\/page\.md/);
-    assert.match(result.stdout, /docs-check: 16 errors, 4 warnings/);
+    assert.match(result.stdout, /docs-check: 16 errors, 6 warnings/);
   });
 
   test('exits 1 when a rule fails and prints findings as JSON with --json', () => {
@@ -81,7 +101,7 @@ describe('docs-check CLI', () => {
     const findings = JSON.parse(result.stdout);
 
     assert.equal(result.status, 1);
-    assert.equal(findings.length, 20);
+    assert.equal(findings.length, 22);
     assert.ok(findings.every((finding) => finding.rule && finding.level));
   });
 });

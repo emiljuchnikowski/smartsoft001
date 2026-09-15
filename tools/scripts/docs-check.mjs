@@ -1,16 +1,17 @@
 /**
  * Checks that the documentation site stays in sync with the workspace:
  * every package, component and skill has a page, every snippet and storybook
- * tag resolves, no page inlines code that should come from an example and
- * every package page follows the package page skeleton.
+ * tag resolves, no page inlines code that should come from an example, every
+ * package page follows the package page skeleton and every component ships a
+ * story with a `usage` region.
  *
  * Usage: node tools/scripts/docs-check.mjs [--strict[=R1,R2]] [--json]
  *
- * Without `--strict` the parity rules (R1-R3) only warn, so the check passes
- * while the pages are still being written. `--strict` enforces all three,
- * `--strict=R1,R3` only the rules it names, which lets a finished section be
- * enforced while the others are still warnings. Exits 1 as soon as one error
- * is reported.
+ * Without `--strict` the parity rules (R1-R3 and R9) only warn, so the check
+ * passes while the pages are still being written. `--strict` enforces all
+ * four, `--strict=R1,R3` only the rules it names, which lets a finished
+ * section be enforced while the others are still warnings. Exits 1 as soon as
+ * one error is reported.
  */
 
 import path from 'node:path';
@@ -20,7 +21,7 @@ import { fileURLToPath } from 'node:url';
 import { runAllRules } from '../../docs/site/tools/check-rules.mjs';
 
 /** The parity rules `--strict` covers when it names no rule of its own. */
-const PARITY_RULES = ['R1', 'R2', 'R3'];
+const PARITY_RULES = ['R1', 'R2', 'R3', 'R9'];
 
 /**
  * The set of rule ids to report as errors: empty without `--strict`, every

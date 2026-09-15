@@ -44,5 +44,5 @@ Every code sample in these docs is cut from a file in the repository that is com
 - [Architecture](/docs/architecture) explains the layers and follows one entity from its decorators to a working screen.
 - [CRUD](/docs/crud/overview) documents the family that generates the screens and the endpoints from one model.
 - [Packages](/docs/packages) documents each library on its own page.
-- [Components](/) will cover the Angular UI components and the metadata-driven forms and lists built on them.
+- [Components](/docs/components) documents every `smart-*` UI component with its API, an executed usage example and the live Storybook story.
 - [Skills](/) will describe the `smart@smartsoft` Claude Code plugin.

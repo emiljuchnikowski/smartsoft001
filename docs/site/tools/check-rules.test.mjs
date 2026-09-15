@@ -15,6 +15,7 @@ import {
   rule6,
   rule7,
   rule8,
+  rule9,
   runAllRules,
   skillInventory,
   storyInventory,
@@ -22,12 +23,23 @@ import {
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const fixtureRoot = path.join(here, '__fixtures__', 'check')
+const regionRoot = path.join(here, '__fixtures__', 'check-r9')
 
 function context(overrides = {}) {
   return {
     repoRoot: fixtureRoot,
     docsAppDir: path.join(fixtureRoot, 'docs', 'site', 'src', 'app'),
     examplesRoot: path.join(fixtureRoot, 'docs', 'examples'),
+    strict: false,
+    ...overrides,
+  }
+}
+
+function regionContext(overrides = {}) {
+  return {
+    repoRoot: regionRoot,
+    docsAppDir: path.join(regionRoot, 'docs', 'site', 'src', 'app'),
+    examplesRoot: path.join(regionRoot, 'docs', 'examples'),
     strict: false,
     ...overrides,
   }
@@ -487,15 +499,115 @@ describe('rule8 (package page structure)', () => {
   })
 })
 
+describe('rule9 (usage regions in stories)', () => {
+  test('accepts a component whose stories declare a usage region', () => {
+    const findings = rule9(context())
+
+    assert.ok(!findings.some((finding) => /"button"/.test(finding.message)))
+  })
+
+  test('reports a component that has no stories file at all', () => {
+    const findings = rule9(context())
+
+    assert.deepEqual(
+      findings.map((finding) => finding.level),
+      ['warn', 'warn'],
+    )
+    assert.equal(findings[0].rule, 'R9')
+    assert.equal(
+      findings[0].message,
+      'Component "card" has no Storybook story (expected a *.stories.ts ' +
+        'under packages/shared/angular/src/lib/components/card with a ' +
+        '"usage" region)',
+    )
+    assert.match(findings[1].message, /^Component "loader" has no Storybook/)
+  })
+
+  test('reports stories that never open a usage region, naming the first file', () => {
+    const finding = rule9(regionContext()).find((item) =>
+      item.message.includes('"badge"'),
+    )
+
+    assert.ok(finding)
+    assert.equal(finding.rule, 'R9')
+    assert.equal(finding.level, 'warn')
+    assert.equal(
+      finding.message,
+      'Component "badge" has no "usage" region in its stories ' +
+        '(packages/shared/angular/src/lib/components/badge/' +
+        'badge.component.stories.ts)',
+    )
+  })
+
+  test('ignores a usage region that is never closed by a #endregion', () => {
+    const finding = rule9(regionContext()).find((item) =>
+      item.message.includes('"chip"'),
+    )
+
+    assert.ok(finding)
+    assert.match(finding.message, /has no "usage" region in its stories/)
+    assert.match(finding.message, /chip\/chip\.component\.stories\.ts/)
+  })
+
+  test('accepts a component when any of its stories files has the region', () => {
+    const findings = rule9(regionContext())
+
+    assert.ok(!findings.some((finding) => finding.message.includes('"tag"')))
+  })
+
+  test('reports every component without a usage region exactly once', () => {
+    const findings = rule9(regionContext())
+
+    assert.equal(findings.length, 2)
+    assert.ok(findings.every((finding) => finding.rule === 'R9'))
+    assert.ok(findings.every((finding) => finding.level === 'warn'))
+  })
+
+  test('raises the level to error in strict mode', () => {
+    const findings = rule9(regionContext({ strict: true }))
+
+    assert.ok(findings.every((finding) => finding.level === 'error'))
+  })
+
+  test('raises the level to error when only R9 is strict', () => {
+    const findings = rule9(regionContext({ strict: new Set(['R9']) }))
+
+    assert.equal(findings.length, 2)
+    assert.ok(findings.every((finding) => finding.level === 'error'))
+  })
+
+  test('stays a warning when only R1 is strict', () => {
+    const findings = rule9(regionContext({ strict: new Set(['R1']) }))
+
+    assert.ok(findings.every((finding) => finding.level === 'warn'))
+  })
+
+  test('points at the component directory when no stories file exists', () => {
+    const finding = rule9(context()).find((item) =>
+      item.message.includes('"card"'),
+    )
+
+    assert.ok(finding.file.endsWith(path.join('components', 'card')))
+  })
+
+  test('points at the stories file when the region is the missing part', () => {
+    const finding = rule9(regionContext()).find((item) =>
+      item.message.includes('"badge"'),
+    )
+
+    assert.ok(finding.file.endsWith('badge.component.stories.ts'))
+  })
+})
+
 describe('runAllRules', () => {
   test('concatenates the findings of every rule, in rule order', () => {
     const findings = runAllRules(context())
 
     assert.deepEqual(
       [...new Set(findings.map((finding) => finding.rule))],
-      ['R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'R8'],
+      ['R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'R8', 'R9'],
     )
-    assert.equal(findings.length, 20)
+    assert.equal(findings.length, 22)
   })
 
   test('turns parity warnings into errors in strict mode', () => {
@@ -514,5 +626,6 @@ describe('runAllRules', () => {
     assert.deepEqual(levels('R1'), ['error'])
     assert.deepEqual(levels('R2'), ['warn', 'warn'])
     assert.deepEqual(levels('R3'), ['warn'])
+    assert.deepEqual(levels('R9'), ['warn', 'warn'])
   })
 })
