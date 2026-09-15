@@ -1,6 +1,8 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 
+import { insideFence } from './fences.mjs'
+
 /**
  * Executable snippets: instead of copying code into the docs, a page.md writes
  *
@@ -157,16 +159,23 @@ export function languageFor(file, lang) {
 
 /**
  * Replaces every `{% snippet … /%}` tag of `source` with a fenced code block.
- * Everything else is returned untouched. `onDependency` is called once per
- * referenced file so that the loader can watch it in dev mode.
+ * Everything else is returned untouched, including a tag inside a fenced code
+ * block: that one is a quoted example of the syntax, not an instruction.
+ * `onDependency` is called once per referenced file so that the loader can
+ * watch it in dev mode.
  */
 export function expandSnippets(
   source,
   { pagePath, examplesRoot, repoRoot, onDependency } = {},
 ) {
   const announced = new Set()
+  const fenced = insideFence(source)
 
-  return source.replace(SNIPPET_TAG, (tag, rawAttributes) => {
+  return source.replace(SNIPPET_TAG, (tag, rawAttributes, offset) => {
+    if (fenced(offset)) {
+      return tag
+    }
+
     const { file, region, lang } = parseAttributes(rawAttributes)
 
     if (!file) {

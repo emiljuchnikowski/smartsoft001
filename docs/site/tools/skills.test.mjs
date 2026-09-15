@@ -224,3 +224,26 @@ test('expandSkillTags throws for an unknown skill', () => {
     isSkillError('"ghost"', 'does not exist'),
   )
 })
+
+test('expandSkillTags leaves a tag inside a fenced code block untouched', () => {
+  const source = [
+    '```markdown',
+    '{% skill name="audit-log" /%}',
+    '```',
+    '',
+    '{% skill name="audit-log" /%}',
+  ].join('\n')
+
+  const result = expandSkillTags(source, { repoRoot })
+
+  assert.equal(result.split('\n')[1], '{% skill name="audit-log" /%}')
+  assert.ok(result.includes('{% callout title="/smart:audit-log" %}'))
+})
+
+test('expandSkillTags does not resolve a quoted tag that names a missing skill', () => {
+  const source = ['~~~markdown', '{% skill name="gone" /%}', '~~~'].join('\n')
+
+  const result = expandSkillTags(source, { repoRoot })
+
+  assert.equal(result, source)
+})

@@ -28,6 +28,7 @@ const fixtureRoot = path.join(here, '__fixtures__', 'check')
 const regionRoot = path.join(here, '__fixtures__', 'check-r9')
 const skillRoot = path.join(here, '__fixtures__', 'check-r10')
 const fenceRoot = path.join(here, '__fixtures__', 'check-r11')
+const quotedRoot = path.join(here, '__fixtures__', 'check-fenced')
 
 function context(overrides = {}) {
   return {
@@ -54,6 +55,16 @@ function skillContext(overrides = {}) {
     repoRoot: skillRoot,
     docsAppDir: path.join(skillRoot, 'docs', 'site', 'src', 'app'),
     examplesRoot: path.join(skillRoot, 'docs', 'examples'),
+    strict: false,
+    ...overrides,
+  }
+}
+
+function quotedContext(overrides = {}) {
+  return {
+    repoRoot: quotedRoot,
+    docsAppDir: path.join(quotedRoot, 'docs', 'site', 'src', 'app'),
+    examplesRoot: path.join(quotedRoot, 'docs', 'examples'),
     strict: false,
     ...overrides,
   }
@@ -772,6 +783,41 @@ describe('rule11 (fenced code blocks)', () => {
     const findings = rule11(fenceContext({ strict: true }))
 
     assert.deepEqual(findings, rule11(fenceContext()))
+  })
+})
+
+describe('tags inside a fenced code block', () => {
+  test('R4 ignores a quoted {% snippet %} tag and reports the real one', () => {
+    const findings = rule4(quotedContext())
+
+    assert.equal(findings.length, 1)
+    assert.equal(
+      findings[0].message,
+      'docs/guides/quoting/page.md:16: snippet file ' +
+        '"node/src/quoted.example.ts" does not exist',
+    )
+  })
+
+  test('R5 ignores a quoted {% storybook %} tag and reports the real one', () => {
+    const findings = rule5(quotedContext())
+
+    assert.equal(findings.length, 1)
+    assert.equal(
+      findings[0].message,
+      'docs/guides/quoting/page.md:18: unknown story ' +
+        '"components-quoted--playground" for project "angular"',
+    )
+  })
+
+  test('R10 ignores a quoted {% skill %} tag and reports the real one', () => {
+    const findings = rule10(quotedContext())
+
+    assert.equal(findings.length, 1)
+    assert.equal(
+      findings[0].message,
+      'docs/guides/quoting/page.md:20: unknown skill "quoted" ' +
+        '(source "plugin")',
+    )
   })
 })
 
