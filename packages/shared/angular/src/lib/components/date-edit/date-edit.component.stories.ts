@@ -33,6 +33,7 @@ const meta: Meta<DateEditArgs> = {
 export default meta;
 type Story = StoryObj<DateEditArgs>;
 
+// #region usage
 export const Playground: Story = {
   name: 'Playground',
   render: (args) => ({
@@ -49,6 +50,7 @@ export const Playground: Story = {
     `,
   }),
 };
+// #endregion
 
 const section = (title: string, note: string, body: string) => `
   <section>

@@ -47,6 +47,7 @@ const meta: Meta<PasswordStrengthArgs> = {
 export default meta;
 type Story = StoryObj<PasswordStrengthArgs>;
 
+// #region usage
 export const Playground: Story = {
   name: 'Playground',
   render: (args) => ({
@@ -62,6 +63,7 @@ export const Playground: Story = {
     `,
   }),
 };
+// #endregion
 
 const section = (title: string, password: string, showHint = false) => `
   <section>

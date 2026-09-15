@@ -60,6 +60,7 @@ const meta: Meta<PagingArgs> = {
 export default meta;
 type Story = StoryObj<PagingArgs>;
 
+// #region usage
 export const Playground: Story = {
   name: 'Playground',
   render: (args) => ({
@@ -81,6 +82,7 @@ export const Playground: Story = {
     `,
   }),
 };
+// #endregion
 
 const variantSection = (variant: PagingVariant) => `
   <section>

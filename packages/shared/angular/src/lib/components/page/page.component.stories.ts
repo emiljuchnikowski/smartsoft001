@@ -162,6 +162,7 @@ const meta: Meta<PageArgs> = {
 export default meta;
 type Story = StoryObj<PageArgs>;
 
+// #region usage
 export const Playground: Story = {
   name: 'Playground',
   render: (args) => ({
@@ -183,6 +184,7 @@ export const Playground: Story = {
     `,
   }),
 };
+// #endregion
 
 const section = (title: string, host: string) => `
   <section>

@@ -65,6 +65,7 @@ const meta: Meta<DateRangeArgs> = {
 export default meta;
 type Story = StoryObj<DateRangeArgs>;
 
+// #region usage
 export const Playground: Story = {
   name: 'Playground',
   render: (args) => ({
@@ -86,6 +87,7 @@ export const Playground: Story = {
     `,
   }),
 };
+// #endregion
 
 const section = (title: string, note: string, body: string) => `
   <section>

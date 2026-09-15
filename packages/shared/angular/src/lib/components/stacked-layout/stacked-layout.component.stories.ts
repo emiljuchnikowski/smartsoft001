@@ -73,6 +73,7 @@ const SLOTS = `
   </ng-template>
 `;
 
+// #region usage
 export const Playground: Story = {
   name: 'Playground',
   render: (args) => ({
@@ -96,6 +97,7 @@ export const Playground: Story = {
     `,
   }),
 };
+// #endregion
 
 const layout = (body: string, options: string) => `
   <smart-stacked-layout-preset [options]="${options}">

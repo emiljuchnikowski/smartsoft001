@@ -77,6 +77,7 @@ const meta: Meta<TabsArgs> = {
 export default meta;
 type Story = StoryObj<TabsArgs>;
 
+// #region usage
 export const Playground: Story = {
   name: 'Playground',
   render: (args) => ({
@@ -96,6 +97,7 @@ export const Playground: Story = {
     `,
   }),
 };
+// #endregion
 
 const layoutSection = (layout: SmartTabsLayout) => `
   <section style="margin-bottom: 32px;">

@@ -172,6 +172,7 @@ const meta: Meta<ListArgs> = {
 export default meta;
 type Story = StoryObj<ListArgs>;
 
+// #region usage
 export const Playground: Story = {
   name: 'Playground',
   render: (args) => ({
@@ -194,6 +195,7 @@ export const Playground: Story = {
     `,
   }),
 };
+// #endregion
 
 const section = (title: string, body: string) => `
   <section>

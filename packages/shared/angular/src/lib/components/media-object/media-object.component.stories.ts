@@ -103,6 +103,7 @@ const meta: Meta<MediaObjectArgs> = {
 export default meta;
 type Story = StoryObj<MediaObjectArgs>;
 
+// #region usage
 export const Playground: Story = {
   name: 'Playground',
   render: (args) => ({
@@ -132,6 +133,7 @@ export const Playground: Story = {
     `,
   }),
 };
+// #endregion
 
 const item = (heading: string, body: string, options: string) => `
   <smart-media-object-preset

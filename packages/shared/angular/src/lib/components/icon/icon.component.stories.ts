@@ -69,6 +69,7 @@ const HEART_TEMPLATE = `
   </ng-template>
 `;
 
+// #region usage
 export const Playground: Story = {
   name: 'Playground',
   render: (args) => ({
@@ -93,6 +94,7 @@ export const Playground: Story = {
     `,
   }),
 };
+// #endregion
 
 const cell = (label: string, markup: string) => `
   <div style="text-align: center;">

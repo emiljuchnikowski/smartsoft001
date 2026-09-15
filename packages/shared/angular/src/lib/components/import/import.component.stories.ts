@@ -45,6 +45,7 @@ type Story = StoryObj<ImportArgs>;
 const onFileSelected = (file: File) =>
   console.log('[storybook] imported', file.name, file.size);
 
+// #region usage
 export const Playground: Story = {
   name: 'Playground',
   render: (args) => ({
@@ -64,6 +65,7 @@ export const Playground: Story = {
     `,
   }),
 };
+// #endregion
 
 export const AllVariants: Story = {
   name: 'All variants',

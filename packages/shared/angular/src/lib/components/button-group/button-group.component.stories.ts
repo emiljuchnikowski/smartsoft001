@@ -54,6 +54,7 @@ const meta: Meta<ButtonGroupArgs> = {
 export default meta;
 type Story = StoryObj<ButtonGroupArgs>;
 
+// #region usage
 export const Playground: Story = {
   name: 'Playground',
   render: (args) => ({
@@ -73,6 +74,7 @@ export const Playground: Story = {
     `,
   }),
 };
+// #endregion
 
 const STAT_BUTTONS: IButtonGroupButton[] = [
   { id: 'all', label: 'All', count: 24 },

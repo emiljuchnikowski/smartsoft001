@@ -40,6 +40,7 @@ const meta: Meta<StatsArgs> = {
 export default meta;
 type Story = StoryObj<StatsArgs>;
 
+// #region usage
 export const Playground: Story = {
   name: 'Playground',
   render: (args) => ({
@@ -69,6 +70,7 @@ export const Playground: Story = {
     template: `<smart-stats [options]="options"></smart-stats>`,
   }),
 };
+// #endregion
 
 const leadMetric: IStatsOptions = {
   columns: 3,
