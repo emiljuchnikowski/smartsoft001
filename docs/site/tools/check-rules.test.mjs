@@ -322,6 +322,7 @@ describe('rule6 (no inline code blocks)', () => {
     assert.deepEqual(NO_HANDWRITTEN_CODE_DIRS, [
       'docs/architecture',
       'docs/components',
+      'docs/crud',
       'docs/installation',
       'docs/introduction',
       'docs/packages',

@@ -3,10 +3,8 @@
   "compilerOptions": {
     "module": "es2022",
     "forceConsistentCasingInFileNames": true,
-    "noImplicitOverride": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "noPropertyAccessFromIndexSignature": true,
     "ignoreDeprecations": "6.0"
   },
   "files": [],
