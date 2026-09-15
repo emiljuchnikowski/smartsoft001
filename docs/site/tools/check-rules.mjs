@@ -545,9 +545,82 @@ export function rule7(ctx) {
   return findings
 }
 
+/**
+ * The sections every package page carries, in the order they must appear in
+ * the template.
+ */
+const PACKAGE_HEADINGS = ['## Install', '## Usage', '## API']
+
+/** The body of the `## <name>` section, up to the next `## ` heading. */
+function section(source, heading) {
+  const lines = source.split(/\r?\n/)
+  const start = lines.findIndex((line) => line.trim() === heading)
+
+  if (start === -1) return null
+
+  const rest = lines.slice(start + 1)
+  const end = rest.findIndex((line) => /^##\s/.test(line))
+
+  return (end === -1 ? rest : rest.slice(0, end)).join('\n')
+}
+
+/** R8: every package page names its package and follows the page skeleton. */
+export function rule8(ctx) {
+  const findings = []
+
+  for (const page of docsPages(ctx)) {
+    const relative = relativeToDocs(ctx, page)
+    const match = relative.match(/^docs\/packages\/([^/]+)\/page\.md$/)
+
+    if (!match) continue
+
+    const source = fs.readFileSync(page, 'utf8')
+    const frontmatter = readFrontmatter(page) ?? {}
+    const expected = `${SCOPE}${match[1]}`
+    const declared = frontmatter.package
+    const report = (message) =>
+      findings.push({
+        rule: 'R8',
+        level: 'error',
+        message: `${relative}: ${message}`,
+        file: page,
+      })
+
+    if (!declared) {
+      report(`missing frontmatter "package", expected "${expected}"`)
+    } else if (declared !== expected) {
+      report(`frontmatter "package" is "${declared}", expected "${expected}"`)
+    }
+
+    for (const heading of PACKAGE_HEADINGS) {
+      if (section(source, heading) === null) {
+        report(`missing heading "${heading}"`)
+      }
+    }
+
+    if (!tags(source, 'snippet').length) {
+      report('no {% snippet %} tag, package pages embed their examples')
+    }
+
+    const install = section(source, '## Install')
+
+    if (
+      install !== null &&
+      !/^\s*(`{3,}|~{3,})\s*bash\b/m.test(install) &&
+      !install.includes('{% callout')
+    ) {
+      report(
+        '"## Install" section has neither a bash code block nor a {% callout %}',
+      )
+    }
+  }
+
+  return findings
+}
+
 /** Every rule, in order. */
 export function runAllRules(ctx) {
-  return [rule1, rule2, rule3, rule4, rule5, rule6, rule7].flatMap((rule) =>
-    rule(ctx),
+  return [rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8].flatMap(
+    (rule) => rule(ctx),
   )
 }

@@ -14,6 +14,7 @@ import {
   rule5,
   rule6,
   rule7,
+  rule8,
   runAllRules,
   skillInventory,
   storyInventory,
@@ -388,15 +389,94 @@ describe('rule7 (frontmatter)', () => {
   })
 })
 
+describe('rule8 (package page structure)', () => {
+  function messagesFor(page) {
+    return rule8(context())
+      .filter((finding) => finding.file.endsWith(`${page}/page.md`))
+      .map((finding) => finding.message)
+  }
+
+  test('accepts a page with the right package, the three headings and a snippet', () => {
+    assert.deepEqual(messagesFor('good-pkg'), [])
+  })
+
+  test('reports a package value that does not match the directory', () => {
+    const messages = messagesFor('bad-pkg')
+    const finding = messages.find((message) => /"package"/.test(message))
+
+    assert.ok(finding)
+    assert.match(finding, /@smartsoft001\/wrong-name/)
+    assert.match(finding, /@smartsoft001\/bad-pkg/)
+  })
+
+  test('reports a missing package value with the expected name', () => {
+    const messages = messagesFor('no-package-pkg')
+
+    assert.equal(messages.length, 1)
+    assert.match(messages[0], /missing frontmatter "package"/)
+    assert.match(messages[0], /@smartsoft001\/no-package-pkg/)
+  })
+
+  test('reports every structural problem of a bad page exactly once', () => {
+    const messages = messagesFor('bad-pkg')
+
+    assert.equal(messages.length, 4)
+    assert.equal(
+      messages.filter((message) => /missing heading "## API"/.test(message))
+        .length,
+      1,
+    )
+    assert.equal(
+      messages.filter((message) => /snippet/.test(message)).length,
+      1,
+    )
+    assert.equal(
+      messages.filter((message) => /"## Install" section/.test(message)).length,
+      1,
+    )
+  })
+
+  test('does not report headings that the bad page does have', () => {
+    const messages = messagesFor('bad-pkg')
+
+    assert.ok(!messages.some((message) => /"## Usage"/.test(message)))
+    assert.ok(
+      !messages.some((message) => /missing heading "## Install"/.test(message)),
+    )
+  })
+
+  test('accepts an install section that explains itself in a callout', () => {
+    assert.deepEqual(messagesFor('callout-pkg'), [])
+  })
+
+  test('leaves the packages index page uncovered', () => {
+    const findings = rule8(context())
+
+    assert.ok(
+      !findings.some((finding) =>
+        /docs\/packages\/page\.md/.test(finding.message),
+      ),
+    )
+  })
+
+  test('reports every finding as an R8 error', () => {
+    const findings = rule8(context())
+
+    assert.equal(findings.length, 5)
+    assert.ok(findings.every((finding) => finding.rule === 'R8'))
+    assert.ok(findings.every((finding) => finding.level === 'error'))
+  })
+})
+
 describe('runAllRules', () => {
   test('concatenates the findings of every rule, in rule order', () => {
     const findings = runAllRules(context())
 
     assert.deepEqual(
       [...new Set(findings.map((finding) => finding.rule))],
-      ['R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7'],
+      ['R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'R8'],
     )
-    assert.equal(findings.length, 15)
+    assert.equal(findings.length, 20)
   })
 
   test('turns parity warnings into errors in strict mode', () => {

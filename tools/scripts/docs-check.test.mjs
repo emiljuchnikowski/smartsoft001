@@ -39,12 +39,20 @@ describe('docs-check CLI', () => {
     assert.match(result.stdout, /docs-check: 1 errors, 0 warnings/);
   });
 
+  test('prints findings of every rule, including rules added after R7', () => {
+    const result = run(path.join(fixtures, 'check'));
+
+    assert.equal(result.status, 1);
+    assert.match(result.stdout, /ERROR R8 .*bad-pkg\/page\.md/);
+    assert.match(result.stdout, /docs-check: 16 errors, 4 warnings/);
+  });
+
   test('exits 1 when a rule fails and prints findings as JSON with --json', () => {
     const result = run(path.join(fixtures, 'check'), '--json');
     const findings = JSON.parse(result.stdout);
 
     assert.equal(result.status, 1);
-    assert.equal(findings.length, 15);
+    assert.equal(findings.length, 20);
     assert.ok(findings.every((finding) => finding.rule && finding.level));
   });
 });
