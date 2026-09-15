@@ -10,8 +10,10 @@
  * - R7: every page declares a title and a known section.
  * - R8: every package page names its package and follows the skeleton.
  * - R9: every UI component has a story with a `usage` region.
+ * - R10: every skill reference points at an existing skill.
+ * - R11: every fenced code block declares a language.
  *
- * R1-R3 and R9 are the parity rules: they compare the workspace with the
+ * R1-R3, R9 and R10 are the parity rules: they compare the workspace with the
  * site and only warn until `--strict` names them.
  */
 
@@ -509,6 +511,34 @@ export function rule5(ctx) {
   return findings
 }
 
+/**
+ * Every fence that opens a code block, with its line number and the language
+ * token that follows it. Lines inside an open block are content: a ``` inside
+ * a ~~~ block opens nothing, and only a marker of the same kind without a
+ * language closes the block again.
+ */
+function openingFences(source) {
+  const openings = []
+  let fence = null
+
+  source.split(/\r?\n/).forEach((line, index) => {
+    const match = line.match(/^\s*(`{3,}|~{3,})\s*([\w-]*)/)
+
+    if (!match) return
+
+    if (fence) {
+      if (match[1].startsWith(fence) && !match[2]) fence = null
+      return
+    }
+
+    fence = match[1]
+
+    openings.push({ line: index + 1, language: match[2] })
+  })
+
+  return openings
+}
+
 /** R6: reference pages embed snippets, never inline code. */
 export function rule6(ctx) {
   const findings = []
@@ -521,30 +551,18 @@ export function rule6(ctx) {
 
     if (!covered) continue
 
-    const lines = fs.readFileSync(page, 'utf8').split(/\r?\n/)
-    let fence = null
-
-    lines.forEach((line, index) => {
-      const match = line.match(/^\s*(`{3,}|~{3,})\s*([\w-]*)/)
-
-      if (!match) return
-
-      if (fence) {
-        if (match[1].startsWith(fence) && !match[2]) fence = null
-        return
-      }
-
-      fence = match[1]
-
-      if (!CODE_LANGUAGES.has(match[2].toLowerCase())) return
+    for (const { line, language } of openingFences(
+      fs.readFileSync(page, 'utf8'),
+    )) {
+      if (!CODE_LANGUAGES.has(language.toLowerCase())) continue
 
       findings.push({
         rule: 'R6',
         level: 'error',
-        message: `${relative}:${index + 1}: inline "${match[2]}" code block, use a {% snippet %} tag instead`,
+        message: `${relative}:${line}: inline "${language}" code block, use a {% snippet %} tag instead`,
         file: page,
       })
-    })
+    }
   }
 
   return findings
@@ -707,6 +725,132 @@ export function rule9(ctx) {
   return findings
 }
 
+/** Where a skill lives, per the source a page or a tag names. */
+const SKILL_DIRS = { plugin: PLUGIN_SKILLS_DIR, repo: REPO_SKILLS_DIR }
+
+/**
+ * The directories whose pages document a skill, with the source their
+ * `skill:` frontmatter resolves against.
+ */
+const SKILL_PAGE_DIRS = [
+  { dir: 'docs/skills/', source: 'plugin' },
+  { dir: 'docs/contributing/', source: 'repo' },
+]
+
+/**
+ * The `SKILL.md` of `name` relative to the repo root, or `null` when `source`
+ * is not a known skill source.
+ */
+function skillFile(source, name) {
+  const dir = SKILL_DIRS[source]
+
+  return dir ? `${dir}/${name}/SKILL.md` : null
+}
+
+/**
+ * The problems of the `skill:` frontmatter of one page: a documented page
+ * names a skill that exists and carries its name as the page title.
+ */
+function skillPageMessages(ctx, page, relative) {
+  const documented = SKILL_PAGE_DIRS.find((entry) =>
+    relative.startsWith(entry.dir),
+  )
+
+  if (!documented) return []
+
+  const frontmatter = readFrontmatter(page) ?? {}
+  const name = frontmatter.skill
+
+  if (!name) return []
+
+  const file = skillFile(documented.source, name)
+  const resolved = path.join(ctx.repoRoot, file)
+
+  if (!fs.existsSync(resolved)) {
+    return [`skill "${name}" has no SKILL.md (expected ${file})`]
+  }
+
+  const declared = (readFrontmatter(resolved) ?? {}).name
+
+  if (frontmatter.title === declared) return []
+
+  return [
+    `title "${frontmatter.title}" does not match the skill name "${declared}"`,
+  ]
+}
+
+/** The `{% skill %}` tags of one page that resolve to no `SKILL.md`. */
+function skillTagMessages(ctx, source) {
+  const broken = []
+
+  for (const { attributes, line } of tags(source, 'skill')) {
+    const name = attributes.name ?? ''
+    const from = attributes.source ?? 'plugin'
+    const file = skillFile(from, name)
+
+    if (file && fs.existsSync(path.join(ctx.repoRoot, file))) continue
+
+    broken.push({ line, message: `unknown skill "${name}" (source "${from}")` })
+  }
+
+  return broken
+}
+
+/** R10: every skill reference points at an existing skill. */
+export function rule10(ctx) {
+  const level = isStrict(ctx, 'R10') ? 'error' : 'warn'
+  const findings = []
+
+  for (const page of docsPages(ctx)) {
+    const relative = relativeToDocs(ctx, page)
+    const messages = skillPageMessages(ctx, page, relative).map(
+      (message) => `${relative}: ${message}`,
+    )
+
+    for (const { line, message } of skillTagMessages(
+      ctx,
+      fs.readFileSync(page, 'utf8'),
+    )) {
+      messages.push(`${relative}:${line}: ${message}`)
+    }
+
+    findings.push(
+      ...messages.map((message) => ({
+        rule: 'R10',
+        level,
+        message,
+        file: page,
+      })),
+    )
+  }
+
+  return findings
+}
+
+/** R11: every fenced code block declares a language. */
+export function rule11(ctx) {
+  const findings = []
+
+  for (const page of docsPages(ctx)) {
+    const relative = relativeToDocs(ctx, page)
+
+    for (const { line, language } of openingFences(
+      fs.readFileSync(page, 'utf8'),
+    )) {
+      if (language) continue
+
+      findings.push({
+        rule: 'R11',
+        level: 'error',
+        message: `${relative}:${line}: fenced code block has no language (use \`\`\`text for plain output)`,
+        file: page,
+      })
+    }
+  }
+
+  return findings
+}
+
 /** Every rule, in order. */
 export function runAllRules(ctx) {
   return [
@@ -719,5 +863,7 @@ export function runAllRules(ctx) {
     rule7,
     rule8,
     rule9,
+    rule10,
+    rule11,
   ].flatMap((rule) => rule(ctx))
 }

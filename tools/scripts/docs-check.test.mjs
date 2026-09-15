@@ -88,6 +88,56 @@ describe('docs-check CLI', () => {
     assert.match(result.stdout, /docs-check: 1 errors, 2 warnings/);
   });
 
+  test('warns about unresolved skill references without --strict', () => {
+    const result = run(path.join(fixtures, 'check-r10'));
+
+    assert.equal(result.status, 0);
+    assert.match(result.stdout, /WARN R10 docs\/skills\/ghost\/page\.md/);
+    assert.match(result.stdout, /docs-check: 0 errors, 4 warnings/);
+  });
+
+  test('covers R10 with a bare --strict', () => {
+    const result = run(path.join(fixtures, 'check-r10'), '--strict');
+
+    assert.equal(result.status, 1);
+    assert.match(result.stdout, /ERROR R10 .*unknown skill "nope"/);
+    assert.match(result.stdout, /docs-check: 4 errors, 0 warnings/);
+  });
+
+  test('exits 1 with --strict=R10 alone', () => {
+    const result = run(path.join(fixtures, 'check-r10'), '--strict=R10');
+
+    assert.equal(result.status, 1);
+    assert.match(result.stdout, /ERROR R10/);
+    assert.match(result.stdout, /docs-check: 4 errors, 0 warnings/);
+  });
+
+  test('leaves R10 a warning when another rule is strict', () => {
+    const result = run(path.join(fixtures, 'check-r10'), '--strict=R1');
+
+    assert.equal(result.status, 0);
+    assert.match(result.stdout, /WARN R10/);
+    assert.match(result.stdout, /docs-check: 0 errors, 4 warnings/);
+  });
+
+  test('exits 1 for a bare fence even without --strict', () => {
+    const result = run(path.join(fixtures, 'check-r11'));
+
+    assert.equal(result.status, 1);
+    assert.match(
+      result.stdout,
+      /ERROR R11 docs\/guides\/fences\/page\.md:8: fenced code block has no language/,
+    );
+    assert.match(result.stdout, /docs-check: 1 errors, 0 warnings/);
+  });
+
+  test('keeps R11 an error when only another rule is strict', () => {
+    const result = run(path.join(fixtures, 'check-r11'), '--strict=R1');
+
+    assert.equal(result.status, 1);
+    assert.match(result.stdout, /docs-check: 1 errors, 0 warnings/);
+  });
+
   test('prints findings of every rule, including rules added after R7', () => {
     const result = run(path.join(fixtures, 'check'));
 

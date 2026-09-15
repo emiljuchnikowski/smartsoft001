@@ -16,6 +16,8 @@ import {
   rule7,
   rule8,
   rule9,
+  rule10,
+  rule11,
   runAllRules,
   skillInventory,
   storyInventory,
@@ -24,6 +26,8 @@ import {
 const here = path.dirname(fileURLToPath(import.meta.url))
 const fixtureRoot = path.join(here, '__fixtures__', 'check')
 const regionRoot = path.join(here, '__fixtures__', 'check-r9')
+const skillRoot = path.join(here, '__fixtures__', 'check-r10')
+const fenceRoot = path.join(here, '__fixtures__', 'check-r11')
 
 function context(overrides = {}) {
   return {
@@ -40,6 +44,26 @@ function regionContext(overrides = {}) {
     repoRoot: regionRoot,
     docsAppDir: path.join(regionRoot, 'docs', 'site', 'src', 'app'),
     examplesRoot: path.join(regionRoot, 'docs', 'examples'),
+    strict: false,
+    ...overrides,
+  }
+}
+
+function skillContext(overrides = {}) {
+  return {
+    repoRoot: skillRoot,
+    docsAppDir: path.join(skillRoot, 'docs', 'site', 'src', 'app'),
+    examplesRoot: path.join(skillRoot, 'docs', 'examples'),
+    strict: false,
+    ...overrides,
+  }
+}
+
+function fenceContext(overrides = {}) {
+  return {
+    repoRoot: fenceRoot,
+    docsAppDir: path.join(fenceRoot, 'docs', 'site', 'src', 'app'),
+    examplesRoot: path.join(fenceRoot, 'docs', 'examples'),
     strict: false,
     ...overrides,
   }
@@ -599,6 +623,158 @@ describe('rule9 (usage regions in stories)', () => {
   })
 })
 
+describe('rule10 (skill references)', () => {
+  test('accepts a page whose skill and title match an existing skill', () => {
+    const findings = rule10(skillContext())
+
+    assert.ok(!findings.some((finding) => /deploy/.test(finding.message)))
+  })
+
+  test('reports a "skill" frontmatter that names no plugin skill', () => {
+    const finding = rule10(skillContext()).find((item) =>
+      /ghost/.test(item.message),
+    )
+
+    assert.ok(finding)
+    assert.equal(finding.rule, 'R10')
+    assert.equal(finding.level, 'warn')
+    assert.equal(
+      finding.message,
+      'docs/skills/ghost/page.md: skill "ghost" has no SKILL.md (expected ' +
+        'packages/shared/claude-plugins/src/plugins/smart/skills/ghost/' +
+        'SKILL.md)',
+    )
+    assert.ok(finding.file.endsWith(path.join('ghost', 'page.md')))
+  })
+
+  test('reports a page title that is not the name of its skill', () => {
+    const finding = rule10(skillContext()).find((item) =>
+      /review/.test(item.message),
+    )
+
+    assert.ok(finding)
+    assert.equal(
+      finding.message,
+      'docs/skills/review/page.md: title "Review" does not match the skill ' +
+        'name "review"',
+    )
+  })
+
+  test('reports a {% skill %} tag whose skill does not exist, with its line', () => {
+    const finding = rule10(skillContext()).find((item) =>
+      /"nope"/.test(item.message),
+    )
+
+    assert.ok(finding)
+    assert.equal(finding.rule, 'R10')
+    assert.equal(finding.level, 'warn')
+    assert.equal(
+      finding.message,
+      'docs/guides/tags/page.md:6: unknown skill "nope" (source "plugin")',
+    )
+  })
+
+  test('reports a tag whose source is not a known skill source', () => {
+    const finding = rule10(skillContext()).find((item) =>
+      /wiki/.test(item.message),
+    )
+
+    assert.ok(finding)
+    assert.equal(
+      finding.message,
+      'docs/guides/tags/page.md:8: unknown skill "commit" (source "wiki")',
+    )
+  })
+
+  test('resolves a tag with source="repo" against .claude/skills', () => {
+    const findings = rule10(skillContext())
+
+    assert.ok(
+      !findings.some((finding) =>
+        finding.file.endsWith(path.join('contributing', 'commit', 'page.md')),
+      ),
+    )
+  })
+
+  test('ignores a page that documents no skill', () => {
+    const findings = rule10(skillContext())
+
+    assert.ok(
+      !findings.some((finding) =>
+        /^docs\/skills\/page\.md/.test(finding.message),
+      ),
+    )
+  })
+
+  test('reports every broken reference exactly once', () => {
+    const findings = rule10(skillContext())
+
+    assert.equal(findings.length, 4)
+    assert.ok(findings.every((finding) => finding.rule === 'R10'))
+    assert.ok(findings.every((finding) => finding.level === 'warn'))
+  })
+
+  test('raises the level to error in strict mode', () => {
+    const findings = rule10(skillContext({ strict: true }))
+
+    assert.ok(findings.every((finding) => finding.level === 'error'))
+  })
+
+  test('raises the level to error when only R10 is strict', () => {
+    const findings = rule10(skillContext({ strict: new Set(['R10']) }))
+
+    assert.equal(findings.length, 4)
+    assert.ok(findings.every((finding) => finding.level === 'error'))
+  })
+
+  test('stays a warning when only R1 is strict', () => {
+    const findings = rule10(skillContext({ strict: new Set(['R1']) }))
+
+    assert.ok(findings.every((finding) => finding.level === 'warn'))
+  })
+})
+
+describe('rule11 (fenced code blocks)', () => {
+  test('reports a fence that declares no language, with its line', () => {
+    const findings = rule11(fenceContext())
+
+    assert.equal(findings.length, 1)
+    assert.equal(findings[0].rule, 'R11')
+    assert.equal(findings[0].level, 'error')
+    assert.equal(
+      findings[0].message,
+      'docs/guides/fences/page.md:8: fenced code block has no language ' +
+        '(use ```text for plain output)',
+    )
+    assert.ok(findings[0].file.endsWith(path.join('fences', 'page.md')))
+  })
+
+  test('accepts a fence that names its language', () => {
+    const findings = rule11(fenceContext())
+
+    assert.ok(!findings.some((finding) => /:14:/.test(finding.message)))
+    assert.ok(!findings.some((finding) => /^page\.md/.test(finding.message)))
+  })
+
+  test('ignores a bare fence that is the content of another fence', () => {
+    const findings = rule11(fenceContext())
+
+    assert.ok(!findings.some((finding) => /:2[0-9]:/.test(finding.message)))
+  })
+
+  test('stays an error when no rule is strict', () => {
+    const findings = rule11(fenceContext({ strict: new Set() }))
+
+    assert.ok(findings.every((finding) => finding.level === 'error'))
+  })
+
+  test('is unaffected by strict mode', () => {
+    const findings = rule11(fenceContext({ strict: true }))
+
+    assert.deepEqual(findings, rule11(fenceContext()))
+  })
+})
+
 describe('runAllRules', () => {
   test('concatenates the findings of every rule, in rule order', () => {
     const findings = runAllRules(context())
@@ -608,6 +784,26 @@ describe('runAllRules', () => {
       ['R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'R8', 'R9'],
     )
     assert.equal(findings.length, 22)
+  })
+
+  test('runs R10 after R9', () => {
+    const findings = runAllRules(skillContext())
+
+    assert.deepEqual(
+      [...new Set(findings.map((finding) => finding.rule))],
+      ['R10'],
+    )
+    assert.equal(findings.length, 4)
+  })
+
+  test('runs R11 after R10', () => {
+    const findings = runAllRules(fenceContext())
+
+    assert.deepEqual(
+      [...new Set(findings.map((finding) => finding.rule))],
+      ['R11'],
+    )
+    assert.equal(findings.length, 1)
   })
 
   test('turns parity warnings into errors in strict mode', () => {

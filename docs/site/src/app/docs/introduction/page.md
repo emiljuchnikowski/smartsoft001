@@ -45,4 +45,4 @@ Every code sample in these docs is cut from a file in the repository that is com
 - [CRUD](/docs/crud/overview) documents the family that generates the screens and the endpoints from one model.
 - [Packages](/docs/packages) documents each library on its own page.
 - [Components](/docs/components) documents every `smart-*` UI component with its API, an executed usage example and the live Storybook story.
-- [Skills](/) will describe the `smart@smartsoft` Claude Code plugin.
+- [Skills](/docs/skills) describes the `smart@smartsoft` Claude Code plugin: its hooks, the skills you can invoke and the components agent.

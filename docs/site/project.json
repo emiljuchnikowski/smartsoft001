@@ -90,10 +90,11 @@
         "{workspaceRoot}/packages/**/*.stories.ts",
         "{workspaceRoot}/packages/shared/angular/src/lib/components/index.ts",
         "{workspaceRoot}/packages/shared/claude-plugins/src/plugins/smart/skills/**/SKILL.md",
-        "{workspaceRoot}/.claude/skills/**/SKILL.md"
+        "{workspaceRoot}/.claude/skills/**/SKILL.md",
+        "{workspaceRoot}/packages/shared/claude-plugins/src/plugins/smart/agents/**/*"
       ],
       "options": {
-        "command": "node tools/scripts/docs-check.mjs --strict=R1,R2,R5,R9"
+        "command": "node tools/scripts/docs-check.mjs --strict=R1,R2,R3,R5,R9,R10"
       },
       "dependsOn": ["generate"]
     },

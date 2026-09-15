@@ -6,6 +6,7 @@ import * as path from 'path'
 import { createLoader } from 'simple-functional-loader'
 import * as url from 'url'
 
+import { expandSkillTags } from '../../tools/skills.mjs'
 import { expandSnippets } from '../../tools/snippets.mjs'
 
 const __filename = url.fileURLToPath(import.meta.url)
@@ -64,13 +65,17 @@ export default function withSearch(nextConfig = {}) {
               let url =
                 file === 'page.md' ? '/' : `/${file.replace(/\/page\.md$/, '')}`
               let pagePath = path.join(pagesDir, file)
-              // Expand snippets here too: the indexer parses the pages itself,
-              // outside of the loader chain, and must not see the unknown tag.
-              let md = expandSnippets(fs.readFileSync(pagePath, 'utf8'), {
-                pagePath,
-                examplesRoot,
-                repoRoot,
-              })
+              // Expand the build time tags here too: the indexer parses the
+              // pages itself, outside of the loader chain, and must neither see
+              // an unknown tag nor miss what a skill header contributes.
+              let md = expandSkillTags(
+                expandSnippets(fs.readFileSync(pagePath, 'utf8'), {
+                  pagePath,
+                  examplesRoot,
+                  repoRoot,
+                }),
+                { repoRoot },
+              )
 
               let sections
 

@@ -14,7 +14,7 @@ smartsoft001 is a set of publishable npm packages that share the models, UI comp
 
 {% quick-link title="Components" icon="theming" href="/docs/components" description="Every smart-* UI component with its API, an executed usage example and the live Storybook story." /%}
 
-{% quick-link title="Claude Code skills" icon="plugins" href="/" description="The smart@smartsoft plugin that brings the repository conventions into Claude Code." /%}
+{% quick-link title="Claude Code skills" icon="plugins" href="/docs/skills" description="The smart@smartsoft plugin that brings the repository conventions into Claude Code." /%}
 
 {% /quick-links %}
 
