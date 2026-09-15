@@ -6,7 +6,11 @@
 # GitHub Pages' default Jekyll processing ignores underscore-prefixed
 # directories, which would break the deployed site's assets.
 # The docs tooling projects (docs, docs-examples-angular, docs-examples-node)
-# are checked and tested before the site is built.
+# are checked and tested before the site is built. Both Storybooks are built,
+# smoke-tested in Chromium (every story must render without throwing) and
+# copied into the static export under `storybook/<project>`, where the
+# `{% storybook %}` embeds of the component pages point; every embedded story
+# id is verified against the built `index.json` before the upload.
 # The site deploys after a successful `Publish` run so that the installation
 # smoke test and the documented snippets match what is actually on npm. A
 # failed `Publish` therefore also blocks the docs deploy; `workflow_dispatch`
@@ -48,8 +52,35 @@ jobs:
         run: npx nx run docs:install-smoke
         env:
           NX_CLOUD_DISTRIBUTED_EXECUTION: false
+      - name: Resolve Playwright version
+        id: playwright
+        run: echo "version=$(node -p "require('playwright/package.json').version")" >> "$GITHUB_OUTPUT"
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ steps.playwright.outputs.version }}
+      - name: Install Chromium for the Storybook smoke test
+        # `--with-deps` installs the system libraries Chromium needs on the
+        # runner; they are not part of the cache, so run it on every job.
+        run: npx playwright install --with-deps chromium
+      - name: Build and smoke-test both Storybooks
+        run: npx nx run-many -t test-storybook -p angular crud-shell-angular -c ci
+        env:
+          NX_CLOUD_DISTRIBUTED_EXECUTION: false
       - name: Check, test and build documentation
         run: npx nx run-many -t check test build -p docs docs-examples-angular docs-examples-node
+        env:
+          NX_CLOUD_DISTRIBUTED_EXECUTION: false
+      - name: Publish the Storybooks next to the site
+        # `next build` recreates docs/site/out, so the copy has to come after it.
+        run: |
+          mkdir -p docs/site/out/storybook
+          cp -r dist/storybook/angular docs/site/out/storybook/angular
+          cp -r dist/storybook/crud-shell-angular docs/site/out/storybook/crud-shell-angular
+      - name: Verify every embedded story exists
+        run: npx nx run docs:verify-storybook
         env:
           NX_CLOUD_DISTRIBUTED_EXECUTION: false
       - name: Disable Jekyll processing
