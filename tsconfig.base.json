@@ -22,6 +22,12 @@
       "@smartsoft001/auth-shell-app-services": [
         "packages/auth/shell/app-services/src/index.ts"
       ],
+      "@smartsoft001/auth-shell-dtos": [
+        "packages/auth/shell/dtos/src/index.ts"
+      ],
+      "@smartsoft001/auth-shell-nestjs": [
+        "packages/auth/shell/nestjs/src/index.ts"
+      ],
       "@smartsoft001/crud-domain": ["packages/crud/domain/src/index.ts"],
       "@smartsoft001/crud-shell-angular": [
         "packages/crud/shell/angular/src/index.ts"
