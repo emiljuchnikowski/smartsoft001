@@ -46,3 +46,4 @@ Every code sample in these docs is cut from a file in the repository that is com
 - [Packages](/docs/packages) documents each library on its own page.
 - [Components](/docs/components) documents every `smart-*` UI component with its API, an executed usage example and the live Storybook story.
 - [Skills](/docs/skills) describes the `smart@smartsoft` Claude Code plugin: its hooks, the skills you can invoke and the components agent.
+- [Contributing](/docs/contributing) explains the Linear-driven workflow, the repository conventions, the agents and how this documentation is kept in sync with the code.

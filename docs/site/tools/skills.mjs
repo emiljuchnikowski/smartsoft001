@@ -1,6 +1,7 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 
+import { insideFence } from './fences.mjs'
 import { parseFrontmatter } from './navigation.mjs'
 
 /**
@@ -16,8 +17,8 @@ import { parseFrontmatter } from './navigation.mjs'
  * search indexer, which reads the same pages straight from disk.
  */
 
-// A tag has to own its line: `{% skill … /%}` inside a fenced code block or a
-// sentence stays verbatim, exactly like any other quoted example.
+// A tag has to own its line: `{% skill … /%}` inside a sentence stays
+// verbatim, exactly like a tag quoted inside a fenced code block.
 const SKILL_TAG = /^[ \t]*\{%\s*skill\b([^\n]*?)\/%\}[ \t]*$/gm
 const ATTRIBUTE = /([a-zA-Z][\w-]*)\s*=\s*(?:"([^"]*)"|'([^']*)')/g
 
@@ -164,13 +165,20 @@ export function renderSkillHeader(meta) {
 
 /**
  * Replaces every `{% skill … /%}` line of `markdown` with the header of that
- * skill. Everything else is returned untouched. `onDependency` is called once
- * per `SKILL.md` so that the loader rebuilds the page when the skill changes.
+ * skill. Everything else is returned untouched, including a tag inside a
+ * fenced code block: that one is a quoted example of the syntax, not an
+ * instruction. `onDependency` is called once per `SKILL.md` so that the loader
+ * rebuilds the page when the skill changes.
  */
 export function expandSkillTags(markdown, { repoRoot, onDependency } = {}) {
   const announced = new Set()
+  const fenced = insideFence(markdown)
 
-  return markdown.replace(SKILL_TAG, (tag) => {
+  return markdown.replace(SKILL_TAG, (tag, rawAttributes, offset) => {
+    if (fenced(offset)) {
+      return tag
+    }
+
     const { name, source } = parseSkillTag(tag)
     const meta = readSkillMeta({ repoRoot, name, source })
 

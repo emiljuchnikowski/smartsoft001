@@ -22,6 +22,7 @@ import { load as parseYaml } from 'js-yaml'
 import fs from 'node:fs'
 import path from 'node:path'
 
+import { insideFence, openingFences } from './fences.mjs'
 import { SECTION_ORDER } from './sections.mjs'
 
 const SCOPE = '@smartsoft001/'
@@ -401,18 +402,25 @@ function lineOf(source, index) {
   return source.slice(0, index).split('\n').length
 }
 
+/**
+ * Every `{% name … /%}` tag of `source` that is an instruction: a tag inside a
+ * fenced code block is a quoted example and is left to the reader.
+ */
 function tags(source, name) {
   const pattern = new RegExp(`\\{%\\s*${name}\\s+([^%]*?)\\/%\\}`, 'g')
+  const fenced = insideFence(source)
 
-  return [...source.matchAll(pattern)].map((match) => {
-    const attributes = {}
+  return [...source.matchAll(pattern)]
+    .filter((match) => !fenced(match.index))
+    .map((match) => {
+      const attributes = {}
 
-    for (const attribute of match[1].matchAll(/(\w+)="([^"]*)"/g)) {
-      attributes[attribute[1]] = attribute[2]
-    }
+      for (const attribute of match[1].matchAll(/(\w+)="([^"]*)"/g)) {
+        attributes[attribute[1]] = attribute[2]
+      }
 
-    return { attributes, line: lineOf(source, match.index) }
-  })
+      return { attributes, line: lineOf(source, match.index) }
+    })
 }
 
 function hasRegion(source, region) {
@@ -509,34 +517,6 @@ export function rule5(ctx) {
   }
 
   return findings
-}
-
-/**
- * Every fence that opens a code block, with its line number and the language
- * token that follows it. Lines inside an open block are content: a ``` inside
- * a ~~~ block opens nothing, and only a marker of the same kind without a
- * language closes the block again.
- */
-function openingFences(source) {
-  const openings = []
-  let fence = null
-
-  source.split(/\r?\n/).forEach((line, index) => {
-    const match = line.match(/^\s*(`{3,}|~{3,})\s*([\w-]*)/)
-
-    if (!match) return
-
-    if (fence) {
-      if (match[1].startsWith(fence) && !match[2]) fence = null
-      return
-    }
-
-    fence = match[1]
-
-    openings.push({ line: index + 1, language: match[2] })
-  })
-
-  return openings
 }
 
 /** R6: reference pages embed snippets, never inline code. */

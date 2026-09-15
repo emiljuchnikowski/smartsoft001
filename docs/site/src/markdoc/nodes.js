@@ -2,6 +2,7 @@ import { nodes as defaultNodes, Tag } from '@markdoc/markdoc'
 import { slugifyWithCounter } from '@sindresorhus/slugify'
 import yaml from 'js-yaml'
 
+import { fenceNode } from '../../tools/markdoc-fence.mjs'
 import { DocsLayout } from '@/components/DocsLayout'
 import { Fence } from '@/components/Fence'
 
@@ -50,14 +51,7 @@ const nodes = {
       },
     },
   },
-  fence: {
-    render: Fence,
-    attributes: {
-      language: {
-        type: String,
-      },
-    },
-  },
+  fence: fenceNode(Fence),
 }
 
 export default nodes

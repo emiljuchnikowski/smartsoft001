@@ -393,3 +393,31 @@ test('expandSnippets strips every shell marker when no region is given', () => {
     ].join('\n'),
   )
 })
+
+test('expandSnippets leaves a tag inside a fenced code block untouched', () => {
+  const source = [
+    '```markdown',
+    '{% snippet file="basic.ts" region="service" /%}',
+    '```',
+    '',
+    '{% snippet file="basic.ts" region="service" /%}',
+  ].join('\n')
+
+  const result = expandSnippets(source, options)
+
+  assert.equal(
+    result.split('\n')[1],
+    '{% snippet file="basic.ts" region="service" /%}',
+  )
+  assert.ok(result.includes('export class DemoService {'))
+})
+
+test('expandSnippets does not resolve a quoted tag that names a missing file', () => {
+  const source = ['```markdown', '{% snippet file="gone.ts" /%}', '```'].join(
+    '\n',
+  )
+
+  const result = expandSnippets(source, options)
+
+  assert.equal(result, source)
+})
