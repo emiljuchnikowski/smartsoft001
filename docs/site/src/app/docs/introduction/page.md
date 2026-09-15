@@ -28,7 +28,7 @@ The repository also ships `smart@smartsoft`, a Claude Code plugin whose skills a
 | Integrations | `fb`, `google`                                                                                         | Facebook and Google clients.                                                                                                                   |
 | crud         | `crud-domain`, `crud-shell-nestjs`, `crud-shell-angular`, `crud-shell-dtos`, `crud-shell-app-services` | Metadata-driven data management: generic REST endpoints on the backend and generated list and item pages on the frontend.                      |
 | auth         | `auth-domain`, `auth-shell-nestjs`, `auth-shell-dtos`, `auth-shell-app-services`                       | Authentication, tokens and the contracts around them.                                                                                          |
-| trans        | `trans-domain`, `trans-shell-nestjs`, `trans-shell-dtos-services`, `trans-shell-app-services`          | Translations stored and served by the backend.                                                                                                 |
+| trans        | `trans-domain`, `trans-shell-nestjs`, `trans-shell-dtos-services`, `trans-shell-app-services`          | Payment transactions: create, refresh and refund across PayU, PayPal, Paynow and Revolut, with provider webhooks.                              |
 
 ## The domain and shell split
 
@@ -43,6 +43,6 @@ Every code sample in these docs is cut from a file in the repository that is com
 - [Installation](/docs/installation) adds the packages to a workspace and shows the minimum Angular and NestJS wiring.
 - [Architecture](/docs/architecture) explains the layers and follows one entity from its decorators to a working screen.
 - [CRUD](/docs/crud/overview) documents the family that generates the screens and the endpoints from one model.
-- [Packages](/) will document each library on its own page.
+- [Packages](/docs/packages) documents each library on its own page.
 - [Components](/) will cover the Angular UI components and the metadata-driven forms and lists built on them.
 - [Skills](/) will describe the `smart@smartsoft` Claude Code plugin.

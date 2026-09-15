@@ -60,7 +60,7 @@
         "{workspaceRoot}/packages/shared/claude-plugins/src/plugins/smart/skills/**/SKILL.md",
         "{workspaceRoot}/.claude/skills/**/SKILL.md"
       ],
-      "options": { "command": "node tools/scripts/docs-check.mjs" }
+      "options": { "command": "node tools/scripts/docs-check.mjs --strict=R1" }
     },
     "test": {
       "executor": "nx:run-commands",
