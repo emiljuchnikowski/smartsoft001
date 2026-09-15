@@ -3,7 +3,7 @@ import { ClientSession, MongoClient, TransactionOptions } from 'mongodb';
 
 import { ITransaction, IUnitOfWork } from '@smartsoft001/domain-core';
 
-import { MongoConfig } from './mongo.module';
+import { MongoConfig } from './mongo.config';
 import { getMongoUrl } from './mongo.utils';
 
 export interface IMongoTransaction extends ITransaction {

@@ -20,7 +20,7 @@ import { getModelFieldsWithOptions } from '@smartsoft001/models';
 import { IUser } from '@smartsoft001/users';
 import { ObjectService } from '@smartsoft001/utils';
 
-import { MongoConfig } from '../mongo.module';
+import { MongoConfig } from '../mongo.config';
 import { IMongoTransaction } from '../mongo.unitofwork';
 import { getMongoUrl } from '../mongo.utils';
 import { ItemChangedData } from './interfaces';

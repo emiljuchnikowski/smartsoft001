@@ -1,9 +1,18 @@
 ---
 title: Alpha
 section: Packages
+package: '@smartsoft001/alpha'
 ---
 
 The alpha package.
+
+## Install
+
+```bash
+npm install @smartsoft001/alpha
+```
+
+## Usage
 
 {% snippet file="angular/button/basic.example.ts" region="basic" /%}
 
@@ -13,6 +22,6 @@ The alpha package.
 
 {% storybook project="angular" story="components-button--all-variants" /%}
 
-```bash
-npm install @smartsoft001/alpha
-```
+## API
+
+The package exports a single factory.

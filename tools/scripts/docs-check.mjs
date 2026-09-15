@@ -1,7 +1,8 @@
 /**
  * Checks that the documentation site stays in sync with the workspace:
  * every package, component and skill has a page, every snippet and storybook
- * tag resolves, and no page inlines code that should come from an example.
+ * tag resolves, no page inlines code that should come from an example and
+ * every package page follows the package page skeleton.
  *
  * Usage: node tools/scripts/docs-check.mjs [--strict] [--json]
  *
@@ -15,8 +16,6 @@ import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 
 import { runAllRules } from '../../docs/site/tools/check-rules.mjs';
-
-const RULES = ['R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7'];
 
 function parseArgs(argv) {
   const defaultRoot = path.resolve(
@@ -36,7 +35,12 @@ function parseArgs(argv) {
 }
 
 function report(findings) {
-  for (const rule of RULES) {
+  // `runAllRules` returns the findings rule by rule, so the order in which the
+  // rule ids first appear is the rule order. Deriving the groups from the
+  // findings means a new rule shows up without touching this file.
+  const rules = [...new Set(findings.map((finding) => finding.rule))];
+
+  for (const rule of rules) {
     const group = findings.filter((finding) => finding.rule === rule);
 
     if (!group.length) continue;

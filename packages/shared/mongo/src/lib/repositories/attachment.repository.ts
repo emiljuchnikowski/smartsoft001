@@ -6,7 +6,7 @@ import { IEntity, IAttachmentRepository } from '@smartsoft001/domain-core';
 
 import { Readable, Stream } from 'stream';
 
-import { MongoConfig } from '../mongo.module';
+import { MongoConfig } from '../mongo.config';
 import { getMongoUrl } from '../mongo.utils';
 
 @Injectable()
