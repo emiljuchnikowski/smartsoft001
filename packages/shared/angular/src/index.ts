@@ -6,6 +6,7 @@ export * from './lib/components';
 export * from './lib/factories';
 export * from './lib/providers';
 export * from './lib/pages';
+export * from './lib/shared.inectors';
 export { SharedModule } from './lib/shared.module';
 export { NgrxSharedModule } from './lib/ngrx-shared.module';
 export * from './lib/decorators';
