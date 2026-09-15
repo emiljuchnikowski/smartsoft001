@@ -39,6 +39,9 @@ Reference pages never contain hand-written code. A sample is a region of an exec
 
 ## Adding a page
 
+The [`docs` skill](/docs/contributing/docs) runs every step below for you and then runs the checks;
+what follows is what it does, and what to do when you write a page by hand.
+
 - **Package**: copy `templates/package-page.md` to `docs/packages/<name>/page.md`, write the example under `docs/examples/node/src/<name>/` or `docs/examples/angular/src/<name>/`, keep the `Install`, `Usage` and `API` headings.
 - **Component**: nothing to write when the component has an `angular-components-<name>` skill; add a `// #region usage` around the `Playground` story and, optionally, `docs/examples/angular/src/components/<name>/custom.example.ts` for the "Extending the base class" section. A component without a skill gets `docs/site/content/components/<name>.md` from `templates/component-page.md`.
 - **Skill**: copy `templates/skill-page.md` to `docs/skills/<name>/page.md`; `title` and `skill` are the skill name, the `{% skill %}` tag renders the header.

@@ -219,6 +219,7 @@ Execute each step in order. Use `shared-tdd-developer` agent for all code implem
 - [ ] **11. Create per-component plugin skill** — `packages/shared/claude-plugins/src/plugins/smart/skills/angular-components-<component-name>/SKILL.md` with component API, variants, usage examples (for **using** the component)
 - [ ] **12. Update plugin agent** — add component to "Available Components" table in `packages/shared/claude-plugins/src/plugins/smart/agents/angular-components/AGENT.md`
 - [ ] **13. Verify** — run tests (`nx test angular`), lint, build
+- [ ] **14. Public documentation** — run the `docs` skill's component flow (`/docs component <component-name>`). The public page is generated from the per-component plugin skill, so the work here is the `usage` region in the stories (rule R9 fails `docs:check` without it) and, when the skill documents an extension, `docs/examples/angular/src/components/<component-name>/custom.example.ts` plus its spec. A component is not done until `npx nx run docs:check` passes.
 
 ## Styling Rules
 
@@ -342,9 +343,7 @@ export const AllVariants: Story = {
   name: 'All variants',
   parameters: { controls: { disable: true } },
   render: () => ({
-    props: {
-      /* all option objects as separate props */
-    },
+    props: {/* all option objects as separate props */},
     template: `
       <div style="display: flex; flex-direction: column; gap: 32px;">
         <section>
@@ -404,6 +403,7 @@ Do **not** add a separate `Preset` or `CustomViaToken` story — that breaks the
 
 - File: `<component-name>.component.stories.ts`
 - Exactly two exports: `Playground` and `AllVariants` — no more, no less
+- `Playground` MUST be wrapped in `// #region usage` … `// #endregion` markers at column 0: the public documentation page embeds that region as the component's usage example, and `docs-check` rule R9 fails without it
 - All Tailwind classes with `smart:` prefix in templates (Tailwind v4 syntax)
 - Angular template expressions have **no object spread** — build option objects in `props`, or pass a factory function that takes the `TemplateRef`s
 - Reference: `button/button.component.stories.ts` as the canonical example, `input/input.component.stories.ts` for a DI-dispatch component

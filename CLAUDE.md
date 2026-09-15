@@ -92,6 +92,7 @@ packages/
 | `test-e2e`           | Playwright E2E tests with Page Objects                       |
 | `angular-patterns`   | Angular 20 signals, control flow, inject()                   |
 | `angular-components` | Create/modify Angular UI components (tests, Storybook, docs) |
+| `docs`               | Add a documentation page for a package, component or skill   |
 | `nx-conventions`     | Nx monorepo patterns and commands                            |
 | `debug-helper`       | Cross-stack debugging workflows                              |
 | `a11y-audit`         | Accessibility audits with axe-core                           |
