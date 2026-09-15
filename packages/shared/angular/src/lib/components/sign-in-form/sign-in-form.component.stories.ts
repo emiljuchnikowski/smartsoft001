@@ -67,6 +67,7 @@ const meta: Meta<SignInFormArgs> = {
 export default meta;
 type Story = StoryObj<SignInFormArgs>;
 
+// #region usage
 export const Playground: Story = {
   name: 'Playground',
   render: (args) => ({
@@ -98,6 +99,7 @@ export const Playground: Story = {
     `,
   }),
 };
+// #endregion
 
 const form = (options: string, extra = '') => `
   <smart-sign-in-form [options]="${options}" ${extra} />

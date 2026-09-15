@@ -63,6 +63,7 @@ const meta: Meta<SearchbarArgs> = {
 export default meta;
 type Story = StoryObj<SearchbarArgs>;
 
+// #region usage
 export const Playground: Story = {
   name: 'Playground',
   render: (args) => ({
@@ -88,6 +89,7 @@ export const Playground: Story = {
     `,
   }),
 };
+// #endregion
 
 // `text` is model.required — every instance must bind it or Angular throws
 // NG0950. Showcase cells use a short debounce so typing feels responsive.

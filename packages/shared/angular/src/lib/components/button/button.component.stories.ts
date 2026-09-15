@@ -76,6 +76,7 @@ const meta: Meta<ButtonArgs> = {
 export default meta;
 type Story = StoryObj<ButtonArgs>;
 
+// #region usage
 export const Playground: Story = {
   name: 'Playground',
   render: (args) => ({
@@ -100,6 +101,7 @@ export const Playground: Story = {
     `,
   }),
 };
+// #endregion
 
 const variantRow = (variant: SmartVariant) => `
   <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 8px;">

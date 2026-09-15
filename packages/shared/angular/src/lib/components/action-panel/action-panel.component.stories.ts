@@ -92,6 +92,7 @@ const SLOTS = `
   </ng-template>
 `;
 
+// #region usage
 export const Playground: Story = {
   name: 'Playground',
   render: (args) => ({
@@ -119,6 +120,7 @@ export const Playground: Story = {
     `,
   }),
 };
+// #endregion
 
 const panel = (layout: SmartActionPanelLayout, extra: string) => `
   <smart-action-panel [options]="{

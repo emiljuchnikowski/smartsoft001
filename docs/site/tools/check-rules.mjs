@@ -1,3 +1,20 @@
+/**
+ * The rules `tools/scripts/docs-check.mjs` runs over the documentation site:
+ *
+ * - R1: every publishable package has a page under `docs/packages`.
+ * - R2: every UI component has a page under `docs/components`.
+ * - R3: every user-invocable skill has a page, per its source.
+ * - R4: every `{% snippet %}` tag points at an existing file and region.
+ * - R5: every `{% storybook %}` tag points at a story that exists.
+ * - R6: reference pages embed snippets, never inline code.
+ * - R7: every page declares a title and a known section.
+ * - R8: every package page names its package and follows the skeleton.
+ * - R9: every UI component has a story with a `usage` region.
+ *
+ * R1-R3 and R9 are the parity rules: they compare the workspace with the
+ * site and only warn until `--strict` names them.
+ */
+
 import { load as parseYaml } from 'js-yaml'
 
 import fs from 'node:fs'
@@ -44,7 +61,7 @@ const STORY_PROJECTS = [
  * Lists every file below `dir` (recursively), skipping `node_modules`.
  * Returns paths relative to `dir`, using POSIX separators.
  */
-function walk(dir, base = dir) {
+export function walk(dir, base = dir) {
   if (!fs.existsSync(dir)) return []
 
   const result = []
@@ -203,7 +220,7 @@ export function skillInventory(repoRoot) {
  * Lodash-compatible `startCase`, which is how Storybook derives a story name
  * from its export name (`AllVariants` -> `All Variants`).
  */
-function startCase(value) {
+export function startCase(value) {
   const words = value.match(
     /[A-Z]{2,}(?=[A-Z][a-z]+|\b)|[A-Z]?[a-z]+|[A-Z]+|\d+/g,
   )
@@ -218,7 +235,7 @@ function startCase(value) {
 /**
  * Storybook's id sanitizer: lowercase, non-alphanumeric runs become `-`.
  */
-function sanitize(value) {
+export function sanitize(value) {
   return value
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
@@ -229,7 +246,7 @@ function stripStrings(line) {
   return line.replace(/(['"`])(?:\\.|(?!\1)[^\\])*\1/g, "''")
 }
 
-function metaTitle(source) {
+export function metaTitle(source) {
   const lines = source.split(/\r?\n/)
   const start = lines.findIndex((line) =>
     /^\s*(const meta\b|export default \{)/.test(line),
@@ -633,9 +650,74 @@ export function rule8(ctx) {
   return findings
 }
 
+/**
+ * The `// #region usage` marker `{% snippet %}` reads, as `snippets.mjs`
+ * writes it: a line comment opening the region, closed by a `#endregion`.
+ */
+const USAGE_REGION_START = /^\s*\/\/\s*#region\s+usage\s*$/
+const REGION_END = /^\s*(?:\/\/|\/\*|<!--|#)\s*#endregion\b/
+
+/** The `*.stories.ts` files of a component directory, sorted. */
+function storiesFiles(dir) {
+  return walk(dir)
+    .filter((file) => file.endsWith('.stories.ts'))
+    .sort()
+}
+
+/** True when the file opens a `usage` region and closes it again. */
+function hasUsageRegion(file) {
+  const lines = fs.readFileSync(file, 'utf8').split(/\r?\n/)
+  const start = lines.findIndex((line) => USAGE_REGION_START.test(line))
+
+  if (start === -1) return false
+
+  return lines.slice(start + 1).some((line) => REGION_END.test(line))
+}
+
+/** R9: every component has a story with a "usage" region. */
+export function rule9(ctx) {
+  const level = isStrict(ctx, 'R9') ? 'error' : 'warn'
+  const findings = []
+
+  for (const name of componentInventory(ctx.repoRoot)) {
+    const dir = path.join(ctx.repoRoot, COMPONENTS_DIR, name)
+    const relative = `${COMPONENTS_DIR}/${name}`
+    const stories = storiesFiles(dir)
+
+    if (!stories.length) {
+      findings.push({
+        rule: 'R9',
+        level,
+        message: `Component "${name}" has no Storybook story (expected a *.stories.ts under ${relative} with a "usage" region)`,
+        file: dir,
+      })
+      continue
+    }
+
+    if (stories.some((file) => hasUsageRegion(path.join(dir, file)))) continue
+
+    findings.push({
+      rule: 'R9',
+      level,
+      message: `Component "${name}" has no "usage" region in its stories (${relative}/${stories[0]})`,
+      file: path.join(dir, stories[0]),
+    })
+  }
+
+  return findings
+}
+
 /** Every rule, in order. */
 export function runAllRules(ctx) {
-  return [rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8].flatMap(
-    (rule) => rule(ctx),
-  )
+  return [
+    rule1,
+    rule2,
+    rule3,
+    rule4,
+    rule5,
+    rule6,
+    rule7,
+    rule8,
+    rule9,
+  ].flatMap((rule) => rule(ctx))
 }

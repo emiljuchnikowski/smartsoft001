@@ -7,6 +7,8 @@ const meta = {
 
 export default meta
 
+// #region usage
 export const Playground = { args: { label: 'ok' } }
+// #endregion
 
 export const AllVariants = { args: { label: 'all' } }

@@ -58,6 +58,7 @@ type Story = StoryObj<ExportArgs>;
 // it but never reads it, so it has no observable effect.
 const handler = (value: unknown) => console.log('[storybook] exported', value);
 
+// #region usage
 export const Playground: Story = {
   name: 'Playground',
   render: (args) => ({
@@ -80,6 +81,7 @@ export const Playground: Story = {
     `,
   }),
 };
+// #endregion
 
 const section = (title: string, note: string, body: string) => `
   <section>

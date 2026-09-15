@@ -111,6 +111,7 @@ const meta: Meta<CommandPaletteArgs> = {
 export default meta;
 type Story = StoryObj<CommandPaletteArgs>;
 
+// #region usage
 export const Playground: Story = {
   name: 'Playground',
   render: (args) => ({
@@ -136,6 +137,7 @@ export const Playground: Story = {
     `,
   }),
 };
+// #endregion
 
 // The palette's root is a <dialog>, which the UA stylesheet positions
 // `absolute` — no Tailwind class does it, so it is easy to miss. Being out of

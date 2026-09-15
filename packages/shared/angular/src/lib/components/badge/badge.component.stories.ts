@@ -66,6 +66,7 @@ const meta: Meta<BadgeArgs> = {
 export default meta;
 type Story = StoryObj<BadgeArgs>;
 
+// #region usage
 export const Playground: Story = {
   name: 'Playground',
   render: (args) => ({
@@ -92,6 +93,7 @@ export const Playground: Story = {
     `,
   }),
 };
+// #endregion
 
 const variantRow = (variant: 'solid' | 'soft' | 'outline') => `
   <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 8px;">

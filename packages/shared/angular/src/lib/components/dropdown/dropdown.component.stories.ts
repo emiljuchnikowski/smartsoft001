@@ -71,6 +71,7 @@ const meta: Meta<DropdownArgs> = {
 export default meta;
 type Story = StoryObj<DropdownArgs>;
 
+// #region usage
 export const Playground: Story = {
   name: 'Playground',
   render: (args) => ({
@@ -92,6 +93,7 @@ export const Playground: Story = {
     `,
   }),
 };
+// #endregion
 
 // The menu is already correctly scoped — DROPDOWN_CONTAINER is
 // `smart:relative smart:inline-flex` and the menu is `smart:absolute` inside it,

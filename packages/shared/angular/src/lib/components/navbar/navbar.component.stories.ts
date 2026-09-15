@@ -50,6 +50,7 @@ const meta: Meta<NavbarArgs> = {
 export default meta;
 type Story = StoryObj<NavbarArgs>;
 
+// #region usage
 export const Playground: Story = {
   name: 'Playground',
   render: (args) => ({
@@ -72,6 +73,7 @@ export const Playground: Story = {
     template: `<smart-navbar [options]="options"></smart-navbar>`,
   }),
 };
+// #endregion
 
 export const AllVariants: Story = {
   name: 'All variants',

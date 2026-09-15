@@ -83,6 +83,7 @@ const SLOTS = `
   </ng-template>
 `;
 
+// #region usage
 export const Playground: Story = {
   name: 'Playground',
   render: (args) => ({
@@ -115,6 +116,7 @@ export const Playground: Story = {
     `,
   }),
 };
+// #endregion
 
 const layout = (body: string, options: string) => `
   <div style="height: 260px;">

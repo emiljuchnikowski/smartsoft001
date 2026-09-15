@@ -156,6 +156,7 @@ const meta: Meta<FormArgs> = {
 export default meta;
 type Story = StoryObj<FormArgs>;
 
+// #region usage
 export const Playground: Story = {
   name: 'Playground',
   render: (args) => ({
@@ -170,6 +171,7 @@ export const Playground: Story = {
     `,
   }),
 };
+// #endregion
 
 const section = (title: string, body: string) => `
   <section>

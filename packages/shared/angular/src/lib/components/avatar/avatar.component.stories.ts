@@ -65,6 +65,7 @@ const meta: Meta<AvatarArgs> = {
 export default meta;
 type Story = StoryObj<AvatarArgs>;
 
+// #region usage
 export const Playground: Story = {
   name: 'Playground',
   render: (args) => ({
@@ -90,6 +91,7 @@ export const Playground: Story = {
     `,
   }),
 };
+// #endregion
 
 const sizeRow = (shape: SmartAvatarShape) => `
   <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 16px;">

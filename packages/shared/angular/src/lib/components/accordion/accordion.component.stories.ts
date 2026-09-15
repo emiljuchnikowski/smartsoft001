@@ -39,6 +39,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+// #region usage
 export const Playground: Story = {
   name: 'Playground',
   render: (args: any) => ({
@@ -62,6 +63,7 @@ export const Playground: Story = {
     `,
   }),
 };
+// #endregion
 
 export const AllVariants: Story = {
   name: 'All variants',

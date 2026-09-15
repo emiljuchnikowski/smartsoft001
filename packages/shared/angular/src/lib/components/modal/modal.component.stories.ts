@@ -77,6 +77,7 @@ const meta: Meta<ModalArgs> = {
 export default meta;
 type Story = StoryObj<ModalArgs>;
 
+// #region usage
 export const Playground: Story = {
   name: 'Playground',
   render: (args) => ({
@@ -104,6 +105,7 @@ export const Playground: Story = {
     `,
   }),
 };
+// #endregion
 
 // The modal's ROOT is the full-screen backdrop (`smart:fixed smart:inset-0`),
 // so `position: relative` alone does nothing — a fixed element only resolves

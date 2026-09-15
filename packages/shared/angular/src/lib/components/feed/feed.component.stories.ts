@@ -94,6 +94,7 @@ const meta: Meta<FeedArgs> = {
 export default meta;
 type Story = StoryObj<FeedArgs>;
 
+// #region usage
 export const Playground: Story = {
   name: 'Playground',
   render: (args) => ({
@@ -113,6 +114,7 @@ export const Playground: Story = {
     `,
   }),
 };
+// #endregion
 
 export const AllVariants: Story = {
   name: 'All variants',

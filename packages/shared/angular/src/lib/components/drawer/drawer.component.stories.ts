@@ -51,6 +51,7 @@ const meta: Meta<DrawerArgs> = {
 export default meta;
 type Story = StoryObj<DrawerArgs>;
 
+// #region usage
 export const Playground: Story = {
   name: 'Playground',
   render: (args) => ({
@@ -76,6 +77,7 @@ export const Playground: Story = {
     `,
   }),
 };
+// #endregion
 
 export const AllVariants: Story = {
   name: 'All variants',

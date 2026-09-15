@@ -48,6 +48,7 @@ const meta: Meta<CalendarArgs> = {
 export default meta;
 type Story = StoryObj<CalendarArgs>;
 
+// #region usage
 export const Playground: Story = {
   name: 'Playground',
   render: (args) => ({
@@ -68,6 +69,7 @@ export const Playground: Story = {
     `,
   }),
 };
+// #endregion
 
 export const AllVariants: Story = {
   name: 'All variants',

@@ -218,6 +218,7 @@ const meta: Meta<DetailArgs> = {
 export default meta;
 type Story = StoryObj<DetailArgs>;
 
+// #region usage
 export const Playground: Story = {
   name: 'Playground',
   render: (args) => ({
@@ -240,6 +241,7 @@ export const Playground: Story = {
     `,
   }),
 };
+// #endregion
 
 const row = (key: string, type: FieldTypeDef) => `
   <div style="font-size: 13px;">

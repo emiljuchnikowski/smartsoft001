@@ -43,6 +43,7 @@ const meta: Meta<EmptyStateArgs> = {
 export default meta;
 type Story = StoryObj<EmptyStateArgs>;
 
+// #region usage
 export const Playground: Story = {
   name: 'Playground',
   render: (args) => ({
@@ -65,6 +66,7 @@ export const Playground: Story = {
     `,
   }),
 };
+// #endregion
 
 export const AllVariants: Story = {
   name: 'All variants',

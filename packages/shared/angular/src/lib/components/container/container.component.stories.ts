@@ -78,6 +78,7 @@ const BOX_CLASS = [
   'smart:dark:text-white',
 ].join(' ');
 
+// #region usage
 export const Playground: Story = {
   name: 'Playground',
   render: (args) => ({
@@ -94,6 +95,7 @@ export const Playground: Story = {
     `,
   }),
 };
+// #endregion
 
 const box = (label: string, options: string) => `
   <smart-container-preset [options]="${options}">

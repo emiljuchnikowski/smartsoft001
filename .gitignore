@@ -71,3 +71,6 @@ docs/site/*.tsbuildinfo
 
 # Generated from page frontmatter by docs/site/tools/generate-navigation.mjs
 docs/site/src/lib/navigation.ts
+
+# Generated from the plugin component skills by docs/site/tools/generate-components.mjs
+docs/site/src/app/docs/components/

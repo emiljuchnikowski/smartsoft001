@@ -428,6 +428,7 @@ const meta: Meta<InputArgs> = {
 export default meta;
 type Story = StoryObj<InputArgs>;
 
+// #region usage
 export const Playground: Story = {
   name: 'Playground',
   render: (args) => ({
@@ -445,6 +446,7 @@ export const Playground: Story = {
     `,
   }),
 };
+// #endregion
 
 // Radio inputs bind [name]="fieldKey"; without an enclosing <form> per cell,
 // same-key groups across sections would merge into one DOM radio group.
