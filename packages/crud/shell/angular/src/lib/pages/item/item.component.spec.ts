@@ -8,6 +8,8 @@ import { of } from 'rxjs';
 import {
   DetailsService,
   DynamicComponentLoader,
+  FormFactory,
+  HardwareService,
   StyleService,
   ToastService,
 } from '@smartsoft001/angular';
@@ -34,13 +36,14 @@ class SomeModel {
 describe('crud-shell-angular: ItemComponent (GAP-28 styling surface)', () => {
   function setup(
     config: Partial<CrudFullConfig<any>> = {},
+    url = '/some/123',
   ): ComponentFixture<ItemComponent<any>> {
     const facadeMock = {
       selected: signal<any>(null),
       select: jest.fn(),
     };
     const routerMock = {
-      routerState: { snapshot: { url: '/some/123' } },
+      routerState: { snapshot: { url } },
       events: of(),
     };
     const activeRouteMock = { params: of({}), queryParams: of({}) };
@@ -74,6 +77,13 @@ describe('crud-shell-angular: ItemComponent (GAP-28 styling surface)', () => {
         { provide: ToastService, useValue: { info: jest.fn() } },
         { provide: PageService, useValue: { checkPermissions: jest.fn() } },
         { provide: DetailsService, useValue: { init: jest.fn() } },
+        { provide: HardwareService, useValue: { isMobile: false } },
+        {
+          // The add form is built asynchronously; a pending promise renders the
+          // chrome without driving the real form engine from a unit test.
+          provide: FormFactory,
+          useValue: { create: jest.fn(() => new Promise(() => undefined)) },
+        },
       ],
     });
 
@@ -98,5 +108,95 @@ describe('crud-shell-angular: ItemComponent (GAP-28 styling surface)', () => {
     const fixture = setup();
 
     expect(fixture.componentInstance.pageOptions().variant).toBeUndefined();
+  });
+
+  // FRA-365/1 — the template binds `[detailsOptions]="detailsOptions()"` and
+  // `[uniqueProvider]="uniqueProvider()"`, and `refreshProperties()` reads both
+  // as functions, so they must be writable signals from construction. They used
+  // to be declared with definite assignment and never created, which made the
+  // first change detection throw `detailsOptions is not a function` in add,
+  // edit and details mode.
+  /**
+   * Counts how often the constructor effect recomputes the page options while
+   * `body` runs. A self-retriggering effect would never stop, so past `cap` the
+   * recomputation is skipped: `pageOptions` stops changing, the run ends and
+   * the assertion - not a hung worker - reports the defect.
+   */
+  function countPageOptionRefreshes(
+    component: ItemComponent<any>,
+    body: () => void,
+    cap = 10,
+  ): number {
+    const refresh = (component as any).initPageOptions.bind(component);
+    let refreshes = 0;
+
+    jest.spyOn(component as any, 'initPageOptions').mockImplementation(() => {
+      refreshes += 1;
+
+      if (refreshes <= cap) refresh();
+    });
+
+    body();
+
+    return refreshes;
+  }
+
+  it('should expose detailsOptions as a writable signal from construction', () => {
+    const component = setup().componentInstance;
+
+    expect(component.detailsOptions()).toBeUndefined();
+
+    const options = { type: SomeModel } as any;
+    component.detailsOptions.set(options);
+    expect(component.detailsOptions()).toBe(options);
+  });
+
+  it('should expose uniqueProvider as a writable signal from construction', () => {
+    const component = setup().componentInstance;
+
+    expect(component.uniqueProvider()).toBeUndefined();
+
+    const provider = async () => true;
+    component.uniqueProvider.set(provider);
+    expect(component.uniqueProvider()).toBe(provider);
+  });
+
+  // FRA-365/2 — the constructor effect calls `initPageOptions()`, which used to
+  // read `pageOptions()` inside that reactive context and then write the same
+  // signal. The effect re-triggered itself forever, so the first change
+  // detection never returned and the item page froze the browser tab.
+  it('should recompute the page options once per change detection', () => {
+    const fixture = setup({ details: true });
+
+    const refreshes = countPageOptionRefreshes(fixture.componentInstance, () =>
+      fixture.detectChanges(),
+    );
+
+    expect(refreshes).toBe(1);
+  });
+
+  // FRA-365/3 — `generateComponents()` asks the top and bottom anchors for
+  // their content with `get(0)` and fills them with `createComponent()`, which
+  // is the `ViewContainerRef` API. The anchors are plain `div` elements, so
+  // declaring them as `viewChild<ViewContainerRef>` handed back an `ElementRef`
+  // and every add/edit init rejected with `get is not a function`.
+  it('should resolve generateComponents against the top and bottom anchors', async () => {
+    const fixture = setup({ details: true });
+    fixture.detectChanges();
+
+    await expect(
+      fixture.componentInstance['generateComponents']('add'),
+    ).resolves.toBeUndefined();
+  });
+
+  // The three defects above each broke this: `detailsOptions is not a
+  // function` on the first binding, then a change detection that never
+  // returned, then a rejected `generateComponents('add')`.
+  it('should render the page wrapper in add mode on first change detection', () => {
+    const fixture = setup({ add: true }, '/articles/add');
+
+    expect(() => fixture.detectChanges()).not.toThrow();
+
+    expect(fixture.nativeElement.querySelector('smart-page')).toBeTruthy();
   });
 });
