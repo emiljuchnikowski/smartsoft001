@@ -86,8 +86,17 @@
     },
     "test-storybook": {
       "executor": "nx:run-commands",
+      "dependsOn": ["build-storybook"],
+      "cache": true,
+      "inputs": [
+        "{workspaceRoot}/tools/scripts/storybook-smoke.mjs",
+        {
+          "dependentTasksOutputFiles": "**/*",
+          "transitive": false
+        }
+      ],
       "options": {
-        "command": "test-storybook -c packages/shared/angular/.storybook --url=http://localhost:4400"
+        "command": "node tools/scripts/storybook-smoke.mjs --dir dist/storybook/angular"
       }
     },
     "static-storybook": {

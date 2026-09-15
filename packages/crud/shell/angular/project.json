@@ -86,6 +86,40 @@
         "configDir": "packages/crud/shell/angular/.storybook",
         "browserTarget": "crud-shell-angular:build-storybook",
         "compodoc": false
+      },
+      "configurations": {
+        "ci": {
+          "quiet": true
+        }
+      }
+    },
+    "test-storybook": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build-storybook"],
+      "cache": true,
+      "inputs": [
+        "{workspaceRoot}/tools/scripts/storybook-smoke.mjs",
+        {
+          "dependentTasksOutputFiles": "**/*",
+          "transitive": false
+        }
+      ],
+      "options": {
+        "command": "node tools/scripts/storybook-smoke.mjs --dir dist/storybook/crud-shell-angular"
+      }
+    },
+    "static-storybook": {
+      "executor": "@nx/web:file-server",
+      "dependsOn": ["build-storybook"],
+      "options": {
+        "buildTarget": "crud-shell-angular:build-storybook",
+        "staticFilePath": "dist/storybook/crud-shell-angular",
+        "spa": true
+      },
+      "configurations": {
+        "ci": {
+          "buildTarget": "crud-shell-angular:build-storybook:ci"
+        }
       }
     }
   }

@@ -69,6 +69,7 @@
     "jsonc-eslint-parser": "^3.3.0",
     "ng-packagr": "22.1.1",
     "nx": "23.1.1",
+    "playwright": "^1.63.0",
     "pnpm": "^11.22.0",
     "postcss": "^8.4.5",
     "postcss-url": "~10.1.3",

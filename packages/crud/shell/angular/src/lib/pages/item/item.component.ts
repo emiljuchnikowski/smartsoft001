@@ -109,15 +109,16 @@ export class ItemComponent<T extends IEntity<string>>
     showBackButton: true,
     hideMenuButton: true,
   });
-  detailsOptions!: WritableSignal<IDetailsOptions<T>>;
+  detailsOptions: WritableSignal<IDetailsOptions<T> | undefined> =
+    signal(undefined);
   id!: string;
   formValue!: T;
   formValid = false;
   item!: T;
   formPartialValue!: Partial<T>;
-  uniqueProvider!: WritableSignal<
-    (values: Record<keyof T, any>) => Promise<boolean>
-  >;
+  uniqueProvider: WritableSignal<
+    ((values: Record<keyof T, any>) => Promise<boolean>) | undefined
+  > = signal(undefined);
 
   set mode(val: string) {
     this._mode = signal(val);
@@ -133,9 +134,12 @@ export class ItemComponent<T extends IEntity<string>>
 
   override contentTpl = viewChild<TemplateRef<any>>('contentTpl');
 
-  topTpl = viewChild<ViewContainerRef>('topTpl');
+  // Both anchors are plain elements, so they must be read as view containers:
+  // `generateComponents()` drives them with `get`, `createComponent` and
+  // `clear`, and the default read would hand back an `ElementRef`.
+  topTpl = viewChild('topTpl', { read: ViewContainerRef });
 
-  bottomTpl = viewChild<ViewContainerRef>('bottomTpl');
+  bottomTpl = viewChild('bottomTpl', { read: ViewContainerRef });
 
   override dynamicContents = viewChildren<DynamicContentDirective>(
     DynamicContentDirective,
@@ -151,7 +155,6 @@ export class ItemComponent<T extends IEntity<string>>
     effect(() => {
       this.item = this.facade.selected();
       this.initPageOptions();
-      this.cd.detectChanges();
     });
   }
 
@@ -340,11 +343,14 @@ export class ItemComponent<T extends IEntity<string>>
   }
 
   private initPageOptions(): void {
-    this.pageOptions.set({
-      ...this.pageOptions(),
+    // `update` reads the current options without consuming the signal
+    // reactively: this runs inside the constructor effect, and a tracked read
+    // would make the write below re-trigger that effect forever.
+    this.pageOptions.update((options) => ({
+      ...options,
       title: this.getTitle() || '',
       endButtons: this.getButtons(),
-    });
+    }));
   }
 
   private getButtons(): Array<IIconButtonOptions> | undefined {

@@ -102,11 +102,10 @@
       "cache": true,
       "inputs": [
         "{projectRoot}/tools/**/*",
-        "{workspaceRoot}/tools/scripts/docs-check.mjs",
-        "{workspaceRoot}/tools/scripts/docs-check.test.mjs"
+        "{workspaceRoot}/tools/scripts/*.mjs"
       ],
       "options": {
-        "command": "node --test docs/site/tools/*.test.mjs tools/scripts/docs-check.test.mjs"
+        "command": "node --test docs/site/tools/*.test.mjs tools/scripts/*.test.mjs"
       }
     },
     "install-smoke": {
@@ -114,6 +113,14 @@
       "cache": false,
       "options": {
         "command": "bash docs/examples/install/install.sh"
+      }
+    },
+    "verify-storybook": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["generate"],
+      "cache": false,
+      "options": {
+        "command": "node tools/scripts/verify-storybook-ids.mjs"
       }
     }
   }
