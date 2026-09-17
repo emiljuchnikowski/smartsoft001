@@ -1,3 +1,18 @@
+## 2.142.0 (2026-09-17)
+
+### 🚀 Features
+
+- **meta:** install the framework with one command per kind of project ([#58](https://github.com/emiljuchnikowski/smartsoft001/pull/58))
+
+### 🩹 Fixes
+
+- **release:** publish the version that was just tagged, not the previous one ([#57](https://github.com/emiljuchnikowski/smartsoft001/pull/57))
+
+### ❤️ Thank You
+
+- Claude Opus 5
+- Emil Juchnikowski
+
 ## 2.141.0 (2026-09-17)
 
 Published only in part. Two merges landed within a minute of each other and their
