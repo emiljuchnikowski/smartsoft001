@@ -4,6 +4,13 @@ on:
     branches:
       - main
 
+# Two merges in quick succession would otherwise race for the same version number:
+# both runs bump from the same base, both tag, and the second push is rejected as
+# non-fast-forward after the packages are already on npm. Queue them instead.
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
 jobs:
   main:
     if: github.repository_owner == 'emiljuchnikowski'
