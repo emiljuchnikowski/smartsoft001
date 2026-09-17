@@ -1,6 +1,9 @@
 {
   "name": "@smartsoft001/crud-shell-angular",
   "version": "2.142.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "Utils and Angular components",
   "repository": {
     "type": "git",

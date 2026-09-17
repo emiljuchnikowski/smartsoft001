@@ -1,6 +1,9 @@
 {
   "name": "@smartsoft001/payments-stack",
   "version": "2.142.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "The payment transaction family and the four provider integrations, installed only by services that take payments.",
   "license": "MIT",
   "dependencies": {

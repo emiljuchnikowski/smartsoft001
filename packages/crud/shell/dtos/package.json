@@ -1,6 +1,9 @@
 {
   "name": "@smartsoft001/crud-shell-dtos",
   "version": "2.142.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "This library was generated with [Nx](https://nx.dev).",
   "repository": {
     "type": "git",

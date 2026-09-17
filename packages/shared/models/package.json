@@ -3,6 +3,9 @@
   "type": "commonjs",
   "dependencies": {},
   "version": "2.142.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "./src/index.js",
   "typings": "./src/index.d.ts"
 }
