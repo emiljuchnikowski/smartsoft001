@@ -12,6 +12,19 @@ The framework publishes 26 `@smartsoft001/*` packages, installed one at a time. 
 
 ---
 
+## Install the whole set
+
+Four packages group the rest, so a project installs what it needs with one command at one version. They ship no code of their own.
+
+| Package                                           | For                           | Brings                                                                        |
+| ------------------------------------------------- | ----------------------------- | ----------------------------------------------------------------------------- |
+| [`core`](/docs/packages/core)                     | Any project                   | The decorators, contracts, helpers and DTOs that no framework choice affects. |
+| [`angular-stack`](/docs/packages/angular-stack)   | An Angular application        | `core`, the UI library and the CRUD screens.                                  |
+| [`nestjs-stack`](/docs/packages/nestjs-stack)     | A NestJS service              | `core`, the module helpers, MongoDB access and the CRUD and auth shells.      |
+| [`payments-stack`](/docs/packages/payments-stack) | A service that takes payments | The transaction family and the four provider integrations.                    |
+
+The rest of this page lists the libraries themselves, for a project that wants exactly one of them.
+
 ## Shared libraries
 
 The building blocks the rest of the framework is written against. Nothing here depends on a feature family.

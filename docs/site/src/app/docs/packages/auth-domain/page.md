@@ -1,7 +1,7 @@
 ---
 title: '@smartsoft001/auth-domain'
 section: Packages
-order: 12
+order: 16
 package: '@smartsoft001/auth-domain'
 nextjs:
   metadata:

@@ -38,9 +38,26 @@ The commands on this page are the ones the smoke test runs, and it starts from a
 
 ---
 
+## What to install
+
+Each package is published on its own, but a project rarely wants one of them. Four packages group the rest by what a project actually is, and pin one version of each library they bring, so the whole set stays consistent.
+
+| Package                        | For                           | Brings                                                                                                                |
+| ------------------------------ | ----------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `@smartsoft001/core`           | Any project                   | The model decorators, the domain contracts, the helpers and the shared DTOs. No UI framework, no server, no database. |
+| `@smartsoft001/angular-stack`  | An Angular application        | `core`, the UI library and the CRUD screens.                                                                          |
+| `@smartsoft001/nestjs-stack`   | A NestJS service              | `core`, the module helpers, MongoDB access and the CRUD and auth shells.                                              |
+| `@smartsoft001/payments-stack` | A service that takes payments | The transaction family and the PayPal, PayU, Paynow and Revolut integrations.                                         |
+
+The split follows what a project runs on rather than where the code sits, so a frontend written in something other than Angular gets its own stack later without `core` or any existing package changing name.
+
+Installing a single library still works and is the right choice when a project needs exactly one, for example only the validators from [`utils`](/docs/packages/utils). Every package page shows its own install command.
+
+---
+
 ## Angular
 
-The frontend needs the UI components and the model decorators.
+One command installs everything an Angular application uses: the UI components, the CRUD screens and the framework-agnostic core they are built on.
 
 {% snippet file="install/install.sh" region="install-angular" /%}
 
@@ -56,7 +73,7 @@ With that in place a component can use the framework's elements directly, as the
 
 ## NestJS
 
-The backend needs the shared module plus the crud family: the shell for NestJS, the contracts, the app services and the domain patterns.
+One command installs the server side: the shared module, MongoDB access, the CRUD and auth shells, and the same core.
 
 {% snippet file="install/install.sh" region="install-nestjs" /%}
 
@@ -65,6 +82,12 @@ Then configure the shared module once, in the application module.
 {% snippet file="node/src/getting-started/app-module.example.ts" region="usage" /%}
 
 `SharedModule.forRoot` takes three pieces of configuration. `tokenConfig` holds the JWT signing key and the token lifetime in seconds, and it feeds the JWT strategy that guards the endpoints, so the placeholder above must be replaced by a real secret from your environment. `permissions` maps each operation, create, read, update and delete, to the list of roles allowed to perform it, and the permission service checks the user's roles against that map. `db` is the MongoDB connection the repositories use. Use `forRoot` in the application module and `forFeature` in a feature module that should reuse the same configuration without opening a second database connection.
+
+### Payments
+
+A service that takes payments adds the transaction family and the provider integrations.
+
+{% snippet file="install/install.sh" region="install-payments" /%}
 
 {% callout type="warning" title="Server-side packages and plain Node" %}
 The Node-side packages are currently published as ES modules with a CommonJS manifest, so `require()` and `import()` from a plain Node or NestJS project fail with `SyntaxError: Unexpected token 'export'` until the packaging is fixed. Bundler-based builds such as the Angular CLI are unaffected.

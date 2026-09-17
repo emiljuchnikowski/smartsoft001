@@ -1,7 +1,7 @@
 ---
 title: '@smartsoft001/angular'
 section: Packages
-order: 20
+order: 24
 package: '@smartsoft001/angular'
 nextjs:
   metadata:

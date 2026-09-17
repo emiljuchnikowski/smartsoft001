@@ -1,7 +1,7 @@
 ---
 title: '@smartsoft001/google'
 section: Packages
-order: 26
+order: 30
 package: '@smartsoft001/google'
 nextjs:
   metadata:

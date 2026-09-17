@@ -1,7 +1,7 @@
 ---
 title: '@smartsoft001/users'
 section: Packages
-order: 4
+order: 8
 package: '@smartsoft001/users'
 nextjs:
   metadata:

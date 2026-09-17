@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url'
 import {
   componentInventory,
   NO_HANDWRITTEN_CODE_DIRS,
+  PACKAGES_OUTSIDE_META,
   packageInventory,
   rule1,
   rule2,
@@ -18,6 +19,7 @@ import {
   rule9,
   rule10,
   rule11,
+  rule12,
   runAllRules,
   skillInventory,
   storyInventory,
@@ -28,6 +30,7 @@ const fixtureRoot = path.join(here, '__fixtures__', 'check')
 const regionRoot = path.join(here, '__fixtures__', 'check-r9')
 const skillRoot = path.join(here, '__fixtures__', 'check-r10')
 const fenceRoot = path.join(here, '__fixtures__', 'check-r11')
+const metaRoot = path.join(here, '__fixtures__', 'check-r12')
 const quotedRoot = path.join(here, '__fixtures__', 'check-fenced')
 
 function context(overrides = {}) {
@@ -75,6 +78,16 @@ function fenceContext(overrides = {}) {
     repoRoot: fenceRoot,
     docsAppDir: path.join(fenceRoot, 'docs', 'site', 'src', 'app'),
     examplesRoot: path.join(fenceRoot, 'docs', 'examples'),
+    strict: false,
+    ...overrides,
+  }
+}
+
+function metaContext(overrides = {}) {
+  return {
+    repoRoot: metaRoot,
+    docsAppDir: path.join(metaRoot, 'docs', 'site', 'src', 'app'),
+    examplesRoot: path.join(metaRoot, 'docs', 'examples'),
     strict: false,
     ...overrides,
   }
@@ -786,6 +799,120 @@ describe('rule11 (fenced code blocks)', () => {
   })
 })
 
+describe('rule12 (meta package coverage)', () => {
+  test('accepts a package that one meta package aggregates', () => {
+    const findings = rule12(metaContext())
+
+    assert.ok(!findings.some((finding) => /"models"/.test(finding.message)))
+  })
+
+  test('reports a package that no meta package aggregates', () => {
+    const finding = rule12(metaContext()).find((item) =>
+      /"ghost"/.test(item.message),
+    )
+
+    assert.ok(finding)
+    assert.equal(finding.rule, 'R12')
+    assert.equal(finding.level, 'warn')
+    assert.equal(
+      finding.message,
+      'Package "ghost" belongs to no meta package (add it to one of ' +
+        'packages/meta/* or to the exclusions in check-rules.mjs)',
+    )
+    assert.equal(finding.file, path.join(metaRoot, 'packages'))
+  })
+
+  test('reports a package that two meta packages aggregate, naming both', () => {
+    const finding = rule12(metaContext()).find((item) =>
+      /"utils"/.test(item.message),
+    )
+
+    assert.ok(finding)
+    assert.equal(finding.rule, 'R12')
+    assert.equal(finding.level, 'warn')
+    assert.equal(
+      finding.message,
+      'Package "utils" belongs to more than one meta package ' +
+        '(angular-stack, core)',
+    )
+    assert.equal(
+      finding.file,
+      path.join(metaRoot, 'packages', 'meta', 'angular-stack', 'package.json'),
+    )
+  })
+
+  test('accepts an excluded package that no meta package aggregates', () => {
+    const findings = rule12(metaContext())
+
+    assert.ok(!findings.some((finding) => /"fb"/.test(finding.message)))
+  })
+
+  test('reports an excluded package that a meta package aggregates anyway', () => {
+    const finding = rule12(metaContext()).find((item) =>
+      /"google"/.test(item.message),
+    )
+
+    assert.ok(finding)
+    assert.equal(finding.rule, 'R12')
+    assert.equal(finding.level, 'warn')
+    assert.equal(
+      finding.message,
+      'Package "google" is excluded but also listed in meta package "core"',
+    )
+    assert.equal(
+      finding.file,
+      path.join(metaRoot, 'packages', 'meta', 'core', 'package.json'),
+    )
+  })
+
+  test('never asks a meta package to belong to a meta package', () => {
+    const findings = rule12(metaContext())
+
+    assert.ok(
+      !findings.some((finding) => /"angular-stack"/.test(finding.message)),
+    )
+    assert.ok(
+      !findings.some((finding) => /"core" belongs/.test(finding.message)),
+    )
+  })
+
+  test('reports every problem exactly once', () => {
+    const findings = rule12(metaContext())
+
+    assert.equal(findings.length, 3)
+    assert.ok(findings.every((finding) => finding.rule === 'R12'))
+    assert.ok(findings.every((finding) => finding.level === 'warn'))
+  })
+
+  test('raises the level to error in strict mode', () => {
+    const findings = rule12(metaContext({ strict: true }))
+
+    assert.equal(findings.length, 3)
+    assert.ok(findings.every((finding) => finding.level === 'error'))
+  })
+
+  test('raises the level to error when only R12 is strict', () => {
+    const findings = rule12(metaContext({ strict: new Set(['R12']) }))
+
+    assert.ok(findings.every((finding) => finding.level === 'error'))
+  })
+
+  test('stays a warning when only R1 is strict', () => {
+    const findings = rule12(metaContext({ strict: new Set(['R1']) }))
+
+    assert.ok(findings.every((finding) => finding.level === 'warn'))
+  })
+
+  test('gives every excluded package a reason', () => {
+    assert.ok(
+      Object.values(PACKAGES_OUTSIDE_META).every(
+        (reason) => typeof reason === 'string' && reason.length > 0,
+      ),
+    )
+    assert.ok(Object.hasOwn(PACKAGES_OUTSIDE_META, 'claude-plugins'))
+  })
+})
+
 describe('tags inside a fenced code block', () => {
   test('R4 ignores a quoted {% snippet %} tag and reports the real one', () => {
     const findings = rule4(quotedContext())
@@ -827,9 +954,9 @@ describe('runAllRules', () => {
 
     assert.deepEqual(
       [...new Set(findings.map((finding) => finding.rule))],
-      ['R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'R8', 'R9'],
+      ['R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'R8', 'R9', 'R12'],
     )
-    assert.equal(findings.length, 22)
+    assert.equal(findings.length, 24)
   })
 
   test('runs R10 after R9', () => {
@@ -850,6 +977,16 @@ describe('runAllRules', () => {
       ['R11'],
     )
     assert.equal(findings.length, 1)
+  })
+
+  test('runs R12 after R11', () => {
+    const findings = runAllRules(metaContext())
+
+    assert.deepEqual(
+      [...new Set(findings.map((finding) => finding.rule))],
+      ['R1', 'R12'],
+    )
+    assert.equal(findings.filter((finding) => finding.rule === 'R12').length, 3)
   })
 
   test('turns parity warnings into errors in strict mode', () => {

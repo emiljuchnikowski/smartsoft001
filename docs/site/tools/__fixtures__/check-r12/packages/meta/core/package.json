@@ -1,0 +1,9 @@
+{
+  "name": "@smartsoft001/core",
+  "version": "0.0.1",
+  "dependencies": {
+    "@smartsoft001/models": "0.0.1",
+    "@smartsoft001/utils": "0.0.1",
+    "@smartsoft001/google": "0.0.1"
+  }
+}

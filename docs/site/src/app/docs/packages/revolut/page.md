@@ -1,7 +1,7 @@
 ---
 title: '@smartsoft001/revolut'
 section: Packages
-order: 24
+order: 28
 package: '@smartsoft001/revolut'
 nextjs:
   metadata:

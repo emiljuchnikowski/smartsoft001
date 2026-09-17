@@ -46,6 +46,33 @@ describe('nx release: versioning reaches the published manifests', () => {
     );
   });
 
+  it('should keep every package manifest on one version', () => {
+    // `nx release version` rewrites a dependent's pin only when the pin matches
+    // the version in the dependency's own manifest. `@smartsoft001/angular` sat
+    // at 2.105.0 for dozens of releases (its manifest was excluded from the
+    // bump), so every pin on it silently stopped being updated.
+    const versions = new Map();
+
+    for (const file of fs.globSync('packages/**/package.json', {
+      cwd: repoRoot,
+      exclude: (name) => name === 'node_modules',
+    })) {
+      const manifest = readJson(file);
+
+      if (!manifest.name?.startsWith('@smartsoft001/')) continue;
+
+      versions.set(file, manifest.version);
+    }
+
+    const distinct = [...new Set(versions.values())];
+
+    assert.equal(
+      distinct.length,
+      1,
+      `every package manifest must carry the same version, found ${distinct.join(', ')} in ${[...versions].map(([file, version]) => `${file}@${version}`).join(', ')}`,
+    );
+  });
+
   it('should not let a project narrow the list back to one manifest', () => {
     const offenders = [];
 

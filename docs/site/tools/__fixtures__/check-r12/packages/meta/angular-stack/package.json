@@ -1,0 +1,9 @@
+{
+  "name": "@smartsoft001/angular-stack",
+  "version": "0.0.1",
+  "dependencies": {
+    "@smartsoft001/core": "0.0.1",
+    "@smartsoft001/utils": "0.0.1",
+    "rxjs": "^7.8.0"
+  }
+}
