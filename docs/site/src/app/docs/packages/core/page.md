@@ -50,6 +50,10 @@ None of its own. The package is a manifest with pinned dependencies, so what it 
 
 Every version is pinned exactly, so the set installs at one version and a release never leaves two of these packages on different ones.
 
+## Migrations
+
+This package also carries the framework's migrations, because every stack depends on it and therefore every project has it. `npx nx migrate @smartsoft001/core@latest` fetches a release and writes down what it wants to change; `npx nx migrate --run-migrations` performs it. [Upgrading](/docs/upgrading) describes what the migrations can do and what is left to check by hand.
+
 ## Related packages
 
 Every stack depends on this package, so installing [`angular-stack`](/docs/packages/angular-stack) or [`nestjs-stack`](/docs/packages/nestjs-stack) brings it too.

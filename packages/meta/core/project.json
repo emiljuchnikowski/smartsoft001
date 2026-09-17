@@ -8,14 +8,28 @@
       "executor": "nx:run-commands",
       "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
       "cache": true,
-      "inputs": ["{projectRoot}/package.json", "{projectRoot}/README.md"],
+      "inputs": [
+        "{projectRoot}/package.json",
+        "{projectRoot}/README.md",
+        "{projectRoot}/migrations.json",
+        "{projectRoot}/build.mjs",
+        "{projectRoot}/tsconfig.migrations.json",
+        "{projectRoot}/src/**/*",
+        "{workspaceRoot}/tsconfig.base.json"
+      ],
       "options": {
-        "commands": [
-          "mkdir -p dist/packages/meta/core",
-          "cp packages/meta/core/package.json packages/meta/core/README.md dist/packages/meta/core/"
-        ],
-        "parallel": false
+        "command": "node packages/meta/core/build.mjs"
       }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "packages/meta/core/jest.config.ts"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
     },
     "nx-release-publish": {
       "options": {
