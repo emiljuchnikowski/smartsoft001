@@ -1,3 +1,7 @@
+## 2.141.0 (2026-09-17)
+
+This was a version bump only, there were no code changes.
+
 ## 2.140.0 (2026-09-15)
 
 This was a version bump only, there were no code changes.
