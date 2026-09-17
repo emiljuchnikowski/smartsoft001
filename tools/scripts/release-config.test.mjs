@@ -46,6 +46,33 @@ describe('nx release: versioning reaches the published manifests', () => {
     );
   });
 
+  it('should mark every package as publicly published', () => {
+    // `nx-release-publish` does not pass `--access public`, and npm creates a
+    // brand-new scoped package as private, which the registry then hides behind
+    // a 404. The first three meta packages shipped that way. The older packages
+    // are public only because they were first published through the `deploy`
+    // target, which passes the flag.
+    const offenders = [];
+
+    for (const file of fs.globSync('packages/**/package.json', {
+      cwd: repoRoot,
+      exclude: (name) => name === 'node_modules',
+    })) {
+      const manifest = readJson(file);
+
+      if (!manifest.name?.startsWith('@smartsoft001/')) continue;
+      if (manifest.publishConfig?.access === 'public') continue;
+
+      offenders.push(file);
+    }
+
+    assert.deepEqual(
+      offenders,
+      [],
+      'every published manifest needs "publishConfig": { "access": "public" }',
+    );
+  });
+
   it('should keep every package manifest on one version', () => {
     // `nx release version` rewrites a dependent's pin only when the pin matches
     // the version in the dependency's own manifest. `@smartsoft001/angular` sat

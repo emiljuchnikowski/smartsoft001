@@ -1,6 +1,9 @@
 {
   "name": "@smartsoft001/utils",
   "version": "2.142.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "guid-typescript": "^1.0.9",
     "md5": "^2.3.0",

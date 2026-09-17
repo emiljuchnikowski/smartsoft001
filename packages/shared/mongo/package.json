@@ -1,6 +1,9 @@
 {
   "name": "@smartsoft001/mongo",
   "version": "2.142.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "Utils to mongo",
   "repository": {
     "type": "git",

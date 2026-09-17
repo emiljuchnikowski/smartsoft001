@@ -1,6 +1,9 @@
 {
   "name": "@smartsoft001/crud-domain",
   "version": "2.142.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "Utils to crud",
   "repository": {
     "type": "git",

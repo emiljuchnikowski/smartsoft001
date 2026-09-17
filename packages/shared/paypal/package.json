@@ -1,6 +1,9 @@
 {
   "name": "@smartsoft001/paypal",
   "version": "2.142.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "Utils for paypal",
   "repository": {
     "type": "git",

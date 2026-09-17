@@ -7,6 +7,9 @@
     "@smartsoft001/users": "2.142.0"
   },
   "version": "2.142.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "./src/index.js",
   "typings": "./src/index.d.ts"
 }

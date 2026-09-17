@@ -1,6 +1,9 @@
 {
   "name": "@smartsoft001/angular-stack",
   "version": "2.142.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "Everything an Angular application needs from @smartsoft001: the core packages, the UI library and the CRUD screens.",
   "license": "MIT",
   "dependencies": {
