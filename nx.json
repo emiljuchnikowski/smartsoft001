@@ -59,7 +59,16 @@
   "useInferencePlugins": false,
   "release": {
     "version": {
-      "preVersionCommand": "npx nx run-many -t build"
+      "preVersionCommand": "npx nx run-many -t build",
+      "manifestRootsToUpdate": [
+        {
+          "path": "{projectRoot}"
+        },
+        {
+          "path": "dist/{projectRoot}",
+          "preserveLocalDependencyProtocols": false
+        }
+      ]
     }
   },
   "generators": {
