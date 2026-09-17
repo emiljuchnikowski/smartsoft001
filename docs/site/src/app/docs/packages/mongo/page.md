@@ -1,7 +1,7 @@
 ---
 title: '@smartsoft001/mongo'
 section: Packages
-order: 5
+order: 9
 package: '@smartsoft001/mongo'
 nextjs:
   metadata:

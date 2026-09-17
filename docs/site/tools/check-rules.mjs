@@ -12,9 +12,10 @@
  * - R9: every UI component has a story with a `usage` region.
  * - R10: every skill reference points at an existing skill.
  * - R11: every fenced code block declares a language.
+ * - R12: every package belongs to exactly one meta package.
  *
- * R1-R3, R9 and R10 are the parity rules: they compare the workspace with the
- * site and only warn until `--strict` names them.
+ * R1-R3, R9, R10 and R12 are the parity rules: they compare the workspace with
+ * the site and only warn until `--strict` names them.
  */
 
 import { load as parseYaml } from 'js-yaml'
@@ -831,6 +832,101 @@ export function rule11(ctx) {
   return findings
 }
 
+/**
+ * The packages R12 does not expect any meta package to aggregate, with the
+ * reason each one stays out. An entry that stops being true has to be removed:
+ * R12 reports a package that is on this list and in a meta package as well.
+ */
+export const PACKAGES_OUTSIDE_META = {
+  fb: 'a standalone integration, chosen per project rather than installed with a stack',
+  google:
+    'a standalone integration, chosen per project rather than installed with a stack',
+  'claude-plugins': 'installed as a Claude Code plugin, not as a library',
+  'trans-shell-dtos-services':
+    'not published on npm yet (FRA-362), a stack depending on it would not install',
+}
+
+/**
+ * The meta packages: the `packages/meta/*` packages that exist only to
+ * aggregate dependencies, so a consumer installs a stack with one command.
+ * Each entry carries the `@smartsoft001/*` packages it depends on, without the
+ * scope prefix.
+ */
+function metaPackages(repoRoot) {
+  const metaDir = path.join(repoRoot, 'packages', 'meta')
+  const metas = []
+
+  for (const dir of listDirectories(metaDir)) {
+    const file = path.join(metaDir, dir, 'package.json')
+
+    let pkg
+
+    try {
+      pkg = JSON.parse(fs.readFileSync(file, 'utf8'))
+    } catch {
+      continue
+    }
+
+    if (typeof pkg.name !== 'string' || !pkg.name.startsWith(SCOPE)) continue
+
+    const dependencies = Object.keys(pkg.dependencies ?? {})
+      .filter((name) => name.startsWith(SCOPE))
+      .map((name) => name.slice(SCOPE.length))
+
+    metas.push({
+      name: pkg.name.slice(SCOPE.length),
+      file,
+      dependencies: new Set(dependencies),
+    })
+  }
+
+  return metas.sort((a, b) => a.name.localeCompare(b.name))
+}
+
+/** R12: every package reaches a consumer through a meta package. */
+export function rule12(ctx) {
+  const level = isStrict(ctx, 'R12') ? 'error' : 'warn'
+  const metas = metaPackages(ctx.repoRoot)
+  const metaNames = new Set(metas.map((meta) => meta.name))
+  const finding = (message, file) => ({ rule: 'R12', level, message, file })
+  const findings = []
+
+  for (const name of packageInventory(ctx.repoRoot)) {
+    // A meta package aggregates the others, it does not belong to one itself.
+    if (metaNames.has(name)) continue
+
+    const owners = metas.filter((meta) => meta.dependencies.has(name))
+    const named = owners.map((meta) => meta.name).join(', ')
+
+    if (Object.hasOwn(PACKAGES_OUTSIDE_META, name)) {
+      findings.push(
+        ...owners.map((meta) =>
+          finding(
+            `Package "${name}" is excluded but also listed in meta package "${meta.name}"`,
+            meta.file,
+          ),
+        ),
+      )
+    } else if (!owners.length) {
+      findings.push(
+        finding(
+          `Package "${name}" belongs to no meta package (add it to one of packages/meta/* or to the exclusions in check-rules.mjs)`,
+          path.join(ctx.repoRoot, 'packages'),
+        ),
+      )
+    } else if (owners.length > 1) {
+      findings.push(
+        finding(
+          `Package "${name}" belongs to more than one meta package (${named})`,
+          owners[0].file,
+        ),
+      )
+    }
+  }
+
+  return findings
+}
+
 /** Every rule, in order. */
 export function runAllRules(ctx) {
   return [
@@ -845,5 +941,6 @@ export function runAllRules(ctx) {
     rule9,
     rule10,
     rule11,
+    rule12,
   ].flatMap((rule) => rule(ctx))
 }

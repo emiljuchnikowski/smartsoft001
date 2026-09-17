@@ -1,7 +1,7 @@
 ---
 title: '@smartsoft001/crud-domain'
 section: Packages
-order: 7
+order: 11
 package: '@smartsoft001/crud-domain'
 nextjs:
   metadata:

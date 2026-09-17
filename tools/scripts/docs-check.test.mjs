@@ -27,24 +27,27 @@ describe('docs-check CLI', () => {
     const result = run(path.join(fixtures, 'check-warnings'));
 
     assert.equal(result.status, 0);
-    assert.match(result.stdout, /WARN R1/);
-    assert.match(result.stdout, /docs-check: 0 errors, 1 warnings/);
+    assert.match(result.stdout, /WARN R1 /);
+    assert.match(result.stdout, /WARN R12 /);
+    assert.match(result.stdout, /docs-check: 0 errors, 2 warnings/);
   });
 
   test('exits 1 for the same repository with --strict', () => {
     const result = run(path.join(fixtures, 'check-warnings'), '--strict');
 
     assert.equal(result.status, 1);
-    assert.match(result.stdout, /ERROR R1/);
-    assert.match(result.stdout, /docs-check: 1 errors, 0 warnings/);
+    assert.match(result.stdout, /ERROR R1 /);
+    assert.match(result.stdout, /ERROR R12 /);
+    assert.match(result.stdout, /docs-check: 2 errors, 0 warnings/);
   });
 
   test('exits 1 with --strict=R1 when a package page is missing', () => {
     const result = run(path.join(fixtures, 'check-warnings'), '--strict=R1');
 
     assert.equal(result.status, 1);
-    assert.match(result.stdout, /ERROR R1/);
-    assert.match(result.stdout, /docs-check: 1 errors, 0 warnings/);
+    assert.match(result.stdout, /ERROR R1 /);
+    assert.match(result.stdout, /WARN R12 /);
+    assert.match(result.stdout, /docs-check: 1 errors, 1 warnings/);
   });
 
   test('exits 0 with --strict=R1 when only components and skills are missing', () => {
@@ -54,7 +57,8 @@ describe('docs-check CLI', () => {
     assert.match(result.stdout, /WARN R2/);
     assert.match(result.stdout, /WARN R3/);
     assert.match(result.stdout, /WARN R9/);
-    assert.match(result.stdout, /docs-check: 0 errors, 3 warnings/);
+    assert.match(result.stdout, /WARN R12/);
+    assert.match(result.stdout, /docs-check: 0 errors, 4 warnings/);
   });
 
   test('exits 1 for that repository once R2 is strict as well', () => {
@@ -67,7 +71,7 @@ describe('docs-check CLI', () => {
     assert.match(result.stdout, /ERROR R2/);
     assert.match(result.stdout, /WARN R3/);
     assert.match(result.stdout, /WARN R9/);
-    assert.match(result.stdout, /docs-check: 1 errors, 2 warnings/);
+    assert.match(result.stdout, /docs-check: 1 errors, 3 warnings/);
   });
 
   test('covers R9 with a bare --strict', () => {
@@ -75,7 +79,7 @@ describe('docs-check CLI', () => {
 
     assert.equal(result.status, 1);
     assert.match(result.stdout, /ERROR R9 Component "badge" has no Storybook/);
-    assert.match(result.stdout, /docs-check: 3 errors, 0 warnings/);
+    assert.match(result.stdout, /docs-check: 4 errors, 0 warnings/);
   });
 
   test('exits 1 with --strict=R9 while the other rules still warn', () => {
@@ -85,7 +89,7 @@ describe('docs-check CLI', () => {
     assert.match(result.stdout, /WARN R2/);
     assert.match(result.stdout, /WARN R3/);
     assert.match(result.stdout, /ERROR R9/);
-    assert.match(result.stdout, /docs-check: 1 errors, 2 warnings/);
+    assert.match(result.stdout, /docs-check: 1 errors, 3 warnings/);
   });
 
   test('warns about unresolved skill references without --strict', () => {
@@ -138,12 +142,47 @@ describe('docs-check CLI', () => {
     assert.match(result.stdout, /docs-check: 1 errors, 0 warnings/);
   });
 
+  test('warns about a package outside every meta package without --strict', () => {
+    const result = run(path.join(fixtures, 'check-r12'));
+
+    assert.equal(result.status, 0);
+    assert.match(
+      result.stdout,
+      /WARN R12 Package "ghost" belongs to no meta package/,
+    );
+    assert.match(result.stdout, /docs-check: 0 errors, 10 warnings/);
+  });
+
+  test('covers R12 with a bare --strict', () => {
+    const result = run(path.join(fixtures, 'check-r12'), '--strict');
+
+    assert.equal(result.status, 1);
+    assert.match(
+      result.stdout,
+      /ERROR R12 Package "utils" belongs to more than one meta package/,
+    );
+    assert.match(result.stdout, /docs-check: 10 errors, 0 warnings/);
+  });
+
+  test('exits 1 with --strict=R12 while the other rules still warn', () => {
+    const result = run(path.join(fixtures, 'check-r12'), '--strict=R12');
+
+    assert.equal(result.status, 1);
+    assert.match(result.stdout, /WARN R1 /);
+    assert.match(
+      result.stdout,
+      /ERROR R12 Package "google" is excluded but also listed in meta package "core"/,
+    );
+    assert.match(result.stdout, /docs-check: 3 errors, 7 warnings/);
+  });
+
   test('prints findings of every rule, including rules added after R7', () => {
     const result = run(path.join(fixtures, 'check'));
 
     assert.equal(result.status, 1);
     assert.match(result.stdout, /ERROR R8 .*bad-pkg\/page\.md/);
-    assert.match(result.stdout, /docs-check: 16 errors, 6 warnings/);
+    assert.match(result.stdout, /WARN R12 Package "alpha"/);
+    assert.match(result.stdout, /docs-check: 16 errors, 8 warnings/);
   });
 
   test('exits 1 when a rule fails and prints findings as JSON with --json', () => {
@@ -151,7 +190,7 @@ describe('docs-check CLI', () => {
     const findings = JSON.parse(result.stdout);
 
     assert.equal(result.status, 1);
-    assert.equal(findings.length, 22);
+    assert.equal(findings.length, 24);
     assert.ok(findings.every((finding) => finding.rule && finding.level));
   });
 });

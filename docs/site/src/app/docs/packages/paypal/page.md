@@ -1,7 +1,7 @@
 ---
 title: '@smartsoft001/paypal'
 section: Packages
-order: 21
+order: 25
 package: '@smartsoft001/paypal'
 nextjs:
   metadata:

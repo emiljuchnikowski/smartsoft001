@@ -55,13 +55,25 @@ create_project() {
 
 install_angular() {
   # #region install-angular
-  npm install @smartsoft001/angular @smartsoft001/models
+  npm install @smartsoft001/angular-stack
   # #endregion
 }
 
 install_nestjs() {
   # #region install-nestjs
-  npm install @smartsoft001/nestjs @smartsoft001/crud-shell-nestjs @smartsoft001/crud-shell-dtos @smartsoft001/crud-shell-app-services @smartsoft001/domain-core
+  npm install @smartsoft001/nestjs-stack
+  # #endregion
+}
+
+install_payments() {
+  # #region install-payments
+  npm install @smartsoft001/payments-stack
+  # #endregion
+}
+
+install_core_only() {
+  # #region install-core
+  npm install @smartsoft001/core
   # #endregion
 }
 
@@ -92,11 +104,35 @@ trap 'rm -rf "$workspace"' EXIT
 cd "$workspace"
 create_project
 
-step='install the Angular packages'
+step='install the Angular stack'
 install_angular
 
-step='install the NestJS packages'
+step='install the NestJS stack'
 install_nestjs
+
+step='install the payments stack'
+install_payments
+
+# The stacks are the documented path, but every package is also published on its
+# own and a project is free to install one directly. This second, throwaway
+# project checks that parity: each published package, installed by itself. It
+# deliberately does NOT share the project above, because mixing exact pins from a
+# stack with `latest` for the same library is how a release-window mismatch turns
+# into an unresolvable tree.
+# A stack is nothing but pinned dependencies, so the check that matters is that
+# installing one brings the libraries it names. `require.resolve` rather than
+# `require`: the published tarballs declare `"type": "commonjs"` but ship ES
+# module source in `src/index.js`, so neither `require()` nor `import()` can load
+# them from a plain project. Resolving the entry points still proves the packages
+# installed and are reachable, which is what this smoke test is about.
+step='resolve the packages the stacks pulled in'
+node -e "require.resolve('@smartsoft001/utils'); require.resolve('@smartsoft001/models'); require.resolve('@smartsoft001/angular'); require.resolve('@smartsoft001/nestjs'); console.log('ok')"
+
+step='create a second project for the per-package check'
+per_package_workspace="$(mktemp -d)"
+trap 'rm -rf "$workspace" "$per_package_workspace"' EXIT
+cd "$per_package_workspace"
+npm init -y >/dev/null
 
 step='resolve the published packages'
 inventory="$(node --input-type=module -e "import { packageInventory } from '${REPO_ROOT}/docs/site/tools/check-rules.mjs'; console.log(packageInventory('${REPO_ROOT}').join(' '))")"
@@ -118,13 +154,9 @@ fi
 step='install every published package'
 npm install --no-audit --no-fund "${published[@]}"
 
-# `require.resolve` rather than `require`: the published tarballs declare
-# `"type": "commonjs"` but ship ES module source in `src/index.js`, so neither
-# `require()` nor `import()` can load them from a plain project. Resolving the
-# entry points still proves the packages installed and are reachable, which is
-# what this smoke test is about.
-step='resolve the installed packages'
+
+step='resolve the individually installed packages'
 node -e "require.resolve('@smartsoft001/utils'); require.resolve('@smartsoft001/models'); console.log('ok')"
 
 trap - ERR
-echo "Installed ${#published[@]} ${SCOPE}/* packages in ${SECONDS}s."
+echo "Installed the stacks and ${#published[@]} individual ${SCOPE}/* packages in ${SECONDS}s."

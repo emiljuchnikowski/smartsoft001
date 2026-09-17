@@ -1,7 +1,7 @@
 ---
 title: '@smartsoft001/crud-shell-angular'
 section: Packages
-order: 11
+order: 15
 package: '@smartsoft001/crud-shell-angular'
 nextjs:
   metadata:

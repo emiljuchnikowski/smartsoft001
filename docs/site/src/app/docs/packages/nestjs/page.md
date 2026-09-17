@@ -1,7 +1,7 @@
 ---
 title: '@smartsoft001/nestjs'
 section: Packages
-order: 6
+order: 10
 package: '@smartsoft001/nestjs'
 nextjs:
   metadata:

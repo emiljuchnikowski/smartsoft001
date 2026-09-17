@@ -1,7 +1,7 @@
 ---
 title: '@smartsoft001/crud-shell-nestjs'
 section: Packages
-order: 10
+order: 14
 package: '@smartsoft001/crud-shell-nestjs'
 nextjs:
   metadata:
