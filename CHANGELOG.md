@@ -1,3 +1,14 @@
+## 2.143.0 (2026-09-17)
+
+### 🩹 Fixes
+
+- **release:** publish every package publicly ([#60](https://github.com/emiljuchnikowski/smartsoft001/pull/60))
+
+### ❤️ Thank You
+
+- Claude Opus 5
+- Emil Juchnikowski
+
 ## 2.142.0 (2026-09-17)
 
 ### 🚀 Features
