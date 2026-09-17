@@ -1,0 +1,11 @@
+{
+  "generators": {
+    "use-stack-packages": {
+      "cli": "nx",
+      "version": "2.145.0",
+      "description": "Replace individually installed @smartsoft001 packages with the stack package that already pins them.",
+      "factory": "./src/migrations/use-stack-packages/use-stack-packages",
+      "documentation": "./src/migrations/use-stack-packages/README.md"
+    }
+  }
+}

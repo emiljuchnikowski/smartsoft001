@@ -4,6 +4,10 @@
   "publishConfig": {
     "access": "public"
   },
+  "ng-update": {
+    "migrations": "./migrations.json",
+    "supportsOptionalMigrations": true
+  },
   "description": "Every framework-agnostic @smartsoft001 package in one install: the model decorators, the domain contracts, the helpers and the shared DTOs.",
   "license": "MIT",
   "dependencies": {

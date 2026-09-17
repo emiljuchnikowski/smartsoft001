@@ -67,6 +67,17 @@ Angular tests run in the zoneless `jest-preset-angular` environment with unknown
 
 Components are standalone, use signals (`input()`, `output()`, `computed()`, `model()`), the built-in control flow (`@if`, `@for`) and `inject()` instead of constructor injection; change detection is `OnPush`. UI components in `@smartsoft001/angular` use the `smart` selector prefix and ship a base class, a standard implementation and, where one exists, a preset that can be registered through an injection token; see any page of the [Components](/docs/components) section for the pattern.
 
+## Breaking changes ship a migration
+
+A change that makes a consumer's code stop compiling, or stop meaning what it meant, is not finished until the release can perform it. Migrations live in `packages/meta/core`: `migrations.json` lists them, `src/migrations/<name>/` holds each one, and `@smartsoft001/core` is the package that carries them because every stack depends on it.
+
+An entry is one of two kinds:
+
+- **`factory`** points at a TypeScript migration that rewrites the project. Use it whenever the change can be described mechanically: a renamed export, a moved option, a split package. It takes an Nx `Tree`, and its test drives it with `createTreeWithEmptyWorkspace`.
+- **`prompt`** points at a markdown file describing the change in prose. `nx migrate --run-migrations --agentic` hands it to a coding agent. Use it when a script cannot express the change, for example when the meaning of an option changed rather than its name. `tools/ai-migrations/MIGRATE_STORYBOOK_10.md` is the shape such a file takes.
+
+Both accept a `documentation` file, shown to whoever reads the migration and given to the agent as context. The `version` of an entry is the release it first applies to, so it must be higher than the version already published.
+
 ## Formatting
 
 Prettier with single quotes and ESLint's flat config (`eslint.config.mjs`) with import ordering. `npm run format` (or [`/smart:format-code`](/docs/skills/format-code)) formats and auto-fixes the whole workspace; `nx format:check` is what CI runs.

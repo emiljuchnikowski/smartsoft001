@@ -95,6 +95,12 @@ The Node-side packages are currently published as ES modules with a CommonJS man
 
 ---
 
+## Keeping it up to date
+
+The packages are released together, so a project moves the whole set at once and the release brings its own migrations with it. [Upgrading](/docs/upgrading) has the two commands.
+
+---
+
 ## Verify
 
 There is nothing to take on trust here. The commands above are not transcribed into this page: they are regions of the installation script that the repository's continuous integration executes against the packages published on npm before every deploy of these docs. The script installs every published `@smartsoft001/*` package into a throwaway project and resolves the entry points, so if an install command stopped working the docs would not ship.
