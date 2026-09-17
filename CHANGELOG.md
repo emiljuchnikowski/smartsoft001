@@ -1,3 +1,15 @@
+## 2.141.0 (2026-09-17)
+
+Published only in part. Two merges landed within a minute of each other and their
+`Publish` runs raced: the first had already published `@smartsoft001/angular` when the
+second tried, npm answered `409 Conflict`, and the run stopped. `@smartsoft001/crud-shell-angular`
+never reached the registry at this version and neither did the four new meta packages, while
+the version commit never reached `main` even though the tag `v2.141.0` was created.
+
+The release after this one skips to 2.142.0 rather than reusing a tag that already exists.
+The race itself is fixed: `Publish` now runs under a concurrency group, and versioning reaches
+the manifests that actually get published.
+
 ## 2.140.0 (2026-09-15)
 
 This was a version bump only, there were no code changes.
