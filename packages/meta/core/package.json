@@ -1,21 +1,21 @@
 {
   "name": "@smartsoft001/core",
-  "version": "2.143.0",
+  "version": "2.144.0",
   "publishConfig": {
     "access": "public"
   },
   "description": "Every framework-agnostic @smartsoft001 package in one install: the model decorators, the domain contracts, the helpers and the shared DTOs.",
   "license": "MIT",
   "dependencies": {
-    "@smartsoft001/models": "2.143.0",
-    "@smartsoft001/domain-core": "2.143.0",
-    "@smartsoft001/utils": "2.143.0",
-    "@smartsoft001/users": "2.143.0",
-    "@smartsoft001/auth-domain": "2.143.0",
-    "@smartsoft001/crud-domain": "2.143.0",
-    "@smartsoft001/crud-shell-dtos": "2.143.0",
-    "@smartsoft001/auth-shell-dtos": "2.143.0",
-    "@smartsoft001/crud-shell-app-services": "2.143.0",
-    "@smartsoft001/auth-shell-app-services": "2.143.0"
+    "@smartsoft001/models": "2.144.0",
+    "@smartsoft001/domain-core": "2.144.0",
+    "@smartsoft001/utils": "2.144.0",
+    "@smartsoft001/users": "2.144.0",
+    "@smartsoft001/auth-domain": "2.144.0",
+    "@smartsoft001/crud-domain": "2.144.0",
+    "@smartsoft001/crud-shell-dtos": "2.144.0",
+    "@smartsoft001/auth-shell-dtos": "2.144.0",
+    "@smartsoft001/crud-shell-app-services": "2.144.0",
+    "@smartsoft001/auth-shell-app-services": "2.144.0"
   }
 }
