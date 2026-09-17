@@ -8,7 +8,7 @@ nextjs:
     description: What the smartsoft001 framework is, which packages it publishes and how they are layered.
 ---
 
-smartsoft001 is an Nx monorepo that publishes 26 `@smartsoft001/*` npm packages: the models, UI components and backend building blocks shared by Angular, NestJS and Ionic projects. {% .lead %}
+smartsoft001 is an Nx monorepo that publishes 26 `@smartsoft001/*` npm packages: the models, UI components and backend building blocks shared by Angular and NestJS projects. {% .lead %}
 
 ---
 

@@ -4,11 +4,11 @@ section: Getting started
 order: 0
 ---
 
-smartsoft001 is a set of publishable npm packages that share the models, UI components and backend building blocks used across Angular, NestJS and Ionic projects. {% .lead %}
+smartsoft001 is a set of publishable npm packages that share the models, UI components and backend building blocks used across Angular and NestJS projects. {% .lead %}
 
 {% quick-links %}
 
-{% quick-link title="Installation" icon="installation" href="/docs/installation" description="Add the packages you need to an existing Angular, NestJS or Ionic workspace." /%}
+{% quick-link title="Installation" icon="installation" href="/docs/installation" description="Add the packages you need to an existing Angular or NestJS workspace." /%}
 
 {% quick-link title="Packages" icon="presets" href="/docs/packages" description="Browse the shared libraries and the crud, auth and trans feature families." /%}
 

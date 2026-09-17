@@ -52,9 +52,9 @@ export function Hero() {
                 Build faster with @smartsoft001.
               </p>
               <p className="mt-3 text-2xl tracking-tight text-slate-400">
-                Shared Angular, NestJS and Ionic libraries with a
-                metadata-driven CRUD engine, so a decorated model gives you
-                forms, lists and a REST API.
+                Shared Angular and NestJS libraries with a metadata-driven CRUD
+                engine, so a decorated model gives you forms, lists and a REST
+                API.
               </p>
               <div className="mt-8 flex gap-4 md:justify-center lg:justify-start">
                 <Button href="/">Get started</Button>
