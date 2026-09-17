@@ -1,3 +1,14 @@
+## 2.145.0 (2026-09-17)
+
+### 🚀 Features
+
+- **meta:** give the framework an upgrade path ([#62](https://github.com/emiljuchnikowski/smartsoft001/pull/62))
+
+### ❤️ Thank You
+
+- Claude Opus 5
+- Emil Juchnikowski
+
 ## 2.144.0 (2026-09-17)
 
 This was a version bump only, there were no code changes.

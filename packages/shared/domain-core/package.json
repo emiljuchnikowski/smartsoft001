@@ -3,10 +3,10 @@
   "type": "commonjs",
   "dependencies": {
     "rxjs": "^7.8.1",
-    "@smartsoft001/models": "2.144.0",
-    "@smartsoft001/users": "2.144.0"
+    "@smartsoft001/models": "2.145.0",
+    "@smartsoft001/users": "2.145.0"
   },
-  "version": "2.144.0",
+  "version": "2.145.0",
   "publishConfig": {
     "access": "public"
   },

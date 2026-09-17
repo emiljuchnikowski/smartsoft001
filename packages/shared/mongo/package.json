@@ -1,6 +1,6 @@
 {
   "name": "@smartsoft001/mongo",
-  "version": "2.144.0",
+  "version": "2.145.0",
   "publishConfig": {
     "access": "public"
   },
