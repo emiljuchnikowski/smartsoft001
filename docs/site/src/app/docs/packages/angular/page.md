@@ -123,7 +123,7 @@ Seven services are `providedIn: 'root'` and need no registration. The rest come 
 | `DynamicComponentStorageService` | Neither      | Not injectable at all. The static `get(key, moduleRef)` reads `DYNAMIC_COMPONENTS_STORE` and returns the components whose `smartType` matches.             |
 
 {% callout type="warning" title="The overlay services are shells today" %}
-`ToastService`, `AlertService`, `ModalService`, `PopoverService`, `UIService` and `HardwareService` were Ionic wrappers, and the Ionic calls inside them are commented out. They still resolve and still return, but nothing appears: `ModalService.show` hands back an empty object cast to `IModal`, and `HardwareService.isMobile` is a hard-coded `false`. Anything built on them inherits that. `DetailsDirective` and `DetailsPage` both open their content through `ModalService`, and `ErrorService.log` reports through `ToastService`. The `smart-modal`, `smart-drawer` and `smart-notification` components are unaffected, they render their own markup.
+`ToastService`, `AlertService`, `ModalService`, `PopoverService`, `UIService` and `HardwareService` wrap an overlay layer the package no longer ships, and every call inside them is commented out. They still resolve and still return, but nothing appears: `ModalService.show` hands back an empty object cast to `IModal`, and `HardwareService.isMobile` is a hard-coded `false`. Anything built on them inherits that. `DetailsDirective` and `DetailsPage` both open their content through `ModalService`, and `ErrorService.log` reports through `ToastService`. The `smart-modal`, `smart-drawer` and `smart-notification` components are unaffected, they render their own markup.
 {% /callout %}
 
 Also exported from the services barrel: `SmartFormGroup`, the `UntypedFormGroup` subclass `FormFactory` returns, and the `FILE_SERVICE_CONFIG` and `DYNAMIC_COMPONENTS_STORE` tokens.
@@ -223,7 +223,7 @@ Three of them fan out into families that are the real metadata engine. `smart-in
 
 ### Pages
 
-`DetailsPage<T extends IEntity<string>>` and `SharedPagesModule`. The page reads its options from the navigation parameters of the old Ionic shell, and that lookup is commented out, so it renders an empty details view unless the options are supplied another way.
+`DetailsPage<T extends IEntity<string>>` and `SharedPagesModule`. The page reads its options from the navigation parameters of an application shell the package no longer ships, and that lookup is commented out, so it renders an empty details view unless the options are supplied another way.
 
 ### Decorators
 

@@ -28,7 +28,7 @@ If you are starting from nothing, the `smart:scaffold-nx-workspace` skill from t
 
 ### An existing workspace
 
-In an existing Angular, NestJS or Ionic project nothing needs to be restructured. Install the packages into the project that uses them and continue with the wiring below.
+In an existing Angular or NestJS project nothing needs to be restructured. Install the packages into the project that uses them and continue with the wiring below.
 
 ## Create a project
 
