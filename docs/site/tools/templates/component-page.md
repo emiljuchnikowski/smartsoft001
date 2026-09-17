@@ -19,6 +19,8 @@ nextjs:
 
   The Usage block must embed the `usage` region of the component's stories
   file; rule R9 requires that region and rule R6 rejects hand-written code.
+  Rule R13 requires the three tabs below: the HTML tab is cut from the story's
+  template at build time, the TypeScript tab is the story itself.
 -->
 
 `<smart-{{name}}>` {{what it renders and when to use it}}. {% .lead %}
@@ -27,7 +29,27 @@ nextjs:
 
 ## Usage
 
+{% tabs %}
+
+{% tab title="HTML" %}
+
+{% story-template file="packages/shared/angular/src/lib/components/{{name}}/{{name}}.component.stories.ts" region="usage" /%}
+
+{% /tab %}
+
+{% tab title="TypeScript" %}
+
 {% snippet file="packages/shared/angular/src/lib/components/{{name}}/{{name}}.component.stories.ts" region="usage" /%}
+
+{% /tab %}
+
+{% tab title="Claude Code" %}
+
+{{how to ask Claude Code for this component; see docs/site/content/components/loader.md}}
+
+{% /tab %}
+
+{% /tabs %}
 
 {% storybook project="angular" story="components-{{name}}--playground" height=320 /%}
 

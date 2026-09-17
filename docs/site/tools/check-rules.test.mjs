@@ -20,6 +20,7 @@ import {
   rule10,
   rule11,
   rule12,
+  rule13,
   runAllRules,
   skillInventory,
   storyInventory,
@@ -31,6 +32,7 @@ const regionRoot = path.join(here, '__fixtures__', 'check-r9')
 const skillRoot = path.join(here, '__fixtures__', 'check-r10')
 const fenceRoot = path.join(here, '__fixtures__', 'check-r11')
 const metaRoot = path.join(here, '__fixtures__', 'check-r12')
+const tabsRoot = path.join(here, '__fixtures__', 'check-r13')
 const quotedRoot = path.join(here, '__fixtures__', 'check-fenced')
 
 function context(overrides = {}) {
@@ -88,6 +90,16 @@ function metaContext(overrides = {}) {
     repoRoot: metaRoot,
     docsAppDir: path.join(metaRoot, 'docs', 'site', 'src', 'app'),
     examplesRoot: path.join(metaRoot, 'docs', 'examples'),
+    strict: false,
+    ...overrides,
+  }
+}
+
+function tabsContext(overrides = {}) {
+  return {
+    repoRoot: tabsRoot,
+    docsAppDir: path.join(tabsRoot, 'docs', 'site', 'src', 'app'),
+    examplesRoot: path.join(tabsRoot, 'docs', 'examples'),
     strict: false,
     ...overrides,
   }
@@ -913,6 +925,108 @@ describe('rule12 (meta package coverage)', () => {
   })
 })
 
+describe('rule13 (usage tabs)', () => {
+  test('accepts a component page whose tabs carry the three titles', () => {
+    const findings = rule13(tabsContext())
+
+    assert.ok(!findings.some((finding) => /good/.test(finding.message)))
+  })
+
+  test('reports a component page without a tabs block', () => {
+    const finding = rule13(tabsContext()).find((item) =>
+      /no-tabs/.test(item.message),
+    )
+
+    assert.ok(finding)
+    assert.equal(finding.rule, 'R13')
+    assert.equal(finding.level, 'warn')
+    assert.equal(
+      finding.message,
+      'docs/components/no-tabs/page.md: the usage section has no ' +
+        '{% tabs %} block',
+    )
+    assert.ok(finding.file.endsWith(path.join('no-tabs', 'page.md')))
+  })
+
+  test('reports a required tab title the block does not carry', () => {
+    const finding = rule13(tabsContext()).find((item) =>
+      /missing-tab/.test(item.message),
+    )
+
+    assert.ok(finding)
+    assert.equal(finding.rule, 'R13')
+    assert.equal(finding.level, 'warn')
+    assert.equal(
+      finding.message,
+      'docs/components/missing-tab/page.md: usage tabs are missing ' +
+        '"TypeScript"',
+    )
+  })
+
+  test('reports a tab title that does not belong in the usage block', () => {
+    const finding = rule13(tabsContext()).find((item) =>
+      /extra-tab/.test(item.message),
+    )
+
+    assert.ok(finding)
+    assert.equal(finding.rule, 'R13')
+    assert.equal(finding.level, 'warn')
+    assert.equal(
+      finding.message,
+      'docs/components/extra-tab/page.md: unexpected usage tab "Preview"',
+    )
+  })
+
+  test('allows an "Nx generator" tab next to the three required ones', () => {
+    const findings = rule13(tabsContext())
+
+    assert.ok(!findings.some((finding) => /generator/.test(finding.message)))
+  })
+
+  test('ignores the components section index', () => {
+    const findings = rule13(tabsContext())
+
+    assert.ok(
+      !findings.some((finding) =>
+        /^docs\/components\/page\.md/.test(finding.message),
+      ),
+    )
+  })
+
+  test('ignores a tab title quoted inside a fenced code block', () => {
+    const findings = rule13(tabsContext())
+
+    assert.ok(!findings.some((finding) => /quoted/.test(finding.message)))
+  })
+
+  test('reports every problem exactly once', () => {
+    const findings = rule13(tabsContext())
+
+    assert.equal(findings.length, 3)
+    assert.ok(findings.every((finding) => finding.rule === 'R13'))
+    assert.ok(findings.every((finding) => finding.level === 'warn'))
+  })
+
+  test('raises the level to error in strict mode', () => {
+    const findings = rule13(tabsContext({ strict: true }))
+
+    assert.equal(findings.length, 3)
+    assert.ok(findings.every((finding) => finding.level === 'error'))
+  })
+
+  test('raises the level to error when only R13 is strict', () => {
+    const findings = rule13(tabsContext({ strict: new Set(['R13']) }))
+
+    assert.ok(findings.every((finding) => finding.level === 'error'))
+  })
+
+  test('stays a warning when only R1 is strict', () => {
+    const findings = rule13(tabsContext({ strict: new Set(['R1']) }))
+
+    assert.ok(findings.every((finding) => finding.level === 'warn'))
+  })
+})
+
 describe('tags inside a fenced code block', () => {
   test('R4 ignores a quoted {% snippet %} tag and reports the real one', () => {
     const findings = rule4(quotedContext())
@@ -954,9 +1068,9 @@ describe('runAllRules', () => {
 
     assert.deepEqual(
       [...new Set(findings.map((finding) => finding.rule))],
-      ['R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'R8', 'R9', 'R12'],
+      ['R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'R8', 'R9', 'R12', 'R13'],
     )
-    assert.equal(findings.length, 24)
+    assert.equal(findings.length, 25)
   })
 
   test('runs R10 after R9', () => {
@@ -987,6 +1101,16 @@ describe('runAllRules', () => {
       ['R1', 'R12'],
     )
     assert.equal(findings.filter((finding) => finding.rule === 'R12').length, 3)
+  })
+
+  test('runs R13 after R12', () => {
+    const findings = runAllRules(tabsContext())
+
+    assert.deepEqual(
+      [...new Set(findings.map((finding) => finding.rule))],
+      ['R13'],
+    )
+    assert.equal(findings.length, 3)
   })
 
   test('turns parity warnings into errors in strict mode', () => {
