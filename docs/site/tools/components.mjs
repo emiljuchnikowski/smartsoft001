@@ -34,6 +34,13 @@ const EXAMPLES_DIR = 'docs/examples'
 const STORY_PROJECT = 'angular'
 const USAGE_REGION = 'usage'
 
+/**
+ * Component name to the Nx generator that scaffolds a usage of it. Empty while
+ * the workspace ships no generator collection; adding an entry here makes the
+ * generator tab appear on that component's page.
+ */
+const GENERATORS = new Map()
+
 /** Sections written for Claude Code, dropped from the published page. */
 const DROPPED_SECTIONS = new Set([
   'when to use this skill',
@@ -344,15 +351,86 @@ function storyHeight(name) {
   return TALL_STORIES.has(name) ? TALL_STORY_HEIGHT : DEFAULT_STORY_HEIGHT
 }
 
+/**
+ * The same example in the shape each reader needs it: the markup to paste into
+ * a template, the TypeScript behind it, and the way to ask Claude Code for it.
+ * Both code tabs are cut from the story at build time, so neither can drift
+ * from what Storybook renders below them.
+ *
+ * A fourth tab, the Nx generator that scaffolds a usage of the component, is
+ * part of this contract but stays out until such a generator exists: see
+ * `generatorTab`.
+ */
 function usageBlock(name, story) {
+  const tabs = [
+    {
+      title: 'HTML',
+      lines: [
+        `{% story-template file="${story.file}" region="${USAGE_REGION}" /%}`,
+      ],
+    },
+    {
+      title: 'TypeScript',
+      lines: [`{% snippet file="${story.file}" region="${USAGE_REGION}" /%}`],
+    },
+    { title: 'Claude Code', lines: skillTabLines(name) },
+  ]
+
+  const generator = generatorTab(name)
+
+  if (generator) tabs.splice(2, 0, generator)
+
   return [
     '## Usage',
     '',
-    `{% snippet file="${story.file}" region="${USAGE_REGION}" /%}`,
+    '{% tabs %}',
+    ...tabs.flatMap(({ title, lines }) => [
+      '',
+      `{% tab title="${title}" %}`,
+      '',
+      ...lines,
+      '',
+      '{% /tab %}',
+    ]),
+    '',
+    '{% /tabs %}',
     '',
     `{% storybook project="${STORY_PROJECT}" story="${story.id}" height=${storyHeight(name)} /%}`,
     '',
   ]
+}
+
+/**
+ * How to get the component out of Claude Code. The per-component skills are
+ * background knowledge rather than commands (`user-invocable: false`), so what
+ * a developer types is a request to the agent, not a slash command.
+ */
+function skillTabLines(name) {
+  return [
+    `With the [\`smart@smartsoft\` plugin](/docs/skills/installing-the-plugin) installed, ask for the component and Claude Code reads the \`${SKILL_PREFIX}${name}\` skill through its [components agent](/docs/skills/angular-components-agent):`,
+    '',
+    '```text',
+    `Add a ${name} to the settings page, using @smartsoft001/angular.`,
+    '```',
+    '',
+    'The skill carries the same API this page documents, so the generated code matches it.',
+  ]
+}
+
+/**
+ * The Nx generator tab, once the workspace ships a generator collection. It is
+ * resolved per component so the tab appears on the pages that have one and
+ * nowhere else; today no collection exists, so this returns null everywhere.
+ */
+function generatorTab(name) {
+  const generator = GENERATORS.get(name)
+
+  if (!generator) return null
+
+  return {
+    title: 'Nx generator',
+    lines: ['```bash', `npx nx generate ${generator} --name=my-${name}`, '```'],
+  }
 }
 
 function sourceBlock(name) {

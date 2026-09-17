@@ -184,11 +184,15 @@ describe('transformSkillToPage body', () => {
     )
   })
 
-  test('removes every fenced code block', () => {
+  test('removes every fenced code block the skill wrote', () => {
     const { content: page } = button()
 
-    assert.ok(!page.includes('```'))
+    // The page still contains fences of its own: the Claude Code tab shows a
+    // prompt, and the HTML tab is produced from the story at build time. What
+    // must be gone is the prose code the skill carried.
     assert.ok(!page.includes('interface IButtonOptions'))
+    assert.ok(!page.includes('```typescript'))
+    assert.ok(!page.includes('```html'))
   })
 
   test('drops a sub heading left empty by the removed fence', () => {
@@ -218,10 +222,52 @@ describe('transformSkillToPage body', () => {
   test('inserts the usage block between the intro and the first section', () => {
     const { content: page } = button()
 
-    assert.match(
-      page,
-      /---\n\n## Usage\n\n\{% snippet file="packages\/shared\/angular\/src\/lib\/components\/button\/button\.component\.stories\.ts" region="usage" \/%\}\n\n\{% storybook project="angular" story="components-button--playground" height=320 \/%\}\n\n## Components\n/,
+    const story =
+      'packages/shared/angular/src/lib/components/button/button.component.stories.ts'
+    const usage = page.slice(
+      page.indexOf('## Usage'),
+      page.indexOf('## Components'),
     )
+
+    assert.match(page, /---\n\n## Usage\n/)
+    assert.match(usage, /\{% tabs %\}/)
+    assert.match(
+      usage,
+      new RegExp(
+        `\\{% tab title="HTML" %\\}\\n\\n\\{% story-template file="${story}" region="usage" /%\\}`,
+      ),
+    )
+    assert.match(
+      usage,
+      new RegExp(
+        `\\{% tab title="TypeScript" %\\}\\n\\n\\{% snippet file="${story}" region="usage" /%\\}`,
+      ),
+    )
+    assert.match(usage, /\{% tab title="Claude Code" %\}/)
+    assert.match(usage, /\{% \/tabs %\}/)
+    assert.match(
+      usage,
+      /\{% storybook project="angular" story="components-button--playground" height=320 \/%\}/,
+    )
+  })
+
+  test('orders the tabs markup, code, then the way to ask for it', () => {
+    const { content: page } = button()
+    const order = ['HTML', 'TypeScript', 'Claude Code'].map((title) =>
+      page.indexOf(`{% tab title="${title}" %}`),
+    )
+
+    assert.ok(order.every((index) => index > -1))
+    assert.deepEqual(
+      [...order].sort((a, b) => a - b),
+      order,
+    )
+  })
+
+  test('leaves out the generator tab while no generator collection exists', () => {
+    const { content: page } = button()
+
+    assert.ok(!page.includes('Nx generator'))
   })
 
   test('uses the taller story frame for the layout components', () => {

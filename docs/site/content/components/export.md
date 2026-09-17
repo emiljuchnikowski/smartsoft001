@@ -14,7 +14,31 @@ nextjs:
 
 ## Usage
 
+{% tabs %}
+
+{% tab title="HTML" %}
+
+{% story-template file="packages/shared/angular/src/lib/components/export/export.component.stories.ts" region="usage" /%}
+
+{% /tab %}
+
+{% tab title="TypeScript" %}
+
 {% snippet file="packages/shared/angular/src/lib/components/export/export.component.stories.ts" region="usage" /%}
+
+{% /tab %}
+
+{% tab title="Claude Code" %}
+
+This component has no skill of its own, so Claude Code works from the API on this page. With the [`smart@smartsoft` plugin](/docs/skills/installing-the-plugin) installed, its [components agent](/docs/skills/angular-components-agent) picks the component and asks for the details it needs:
+
+```text
+Add a export to the settings page, using @smartsoft001/angular.
+```
+
+{% /tab %}
+
+{% /tabs %}
 
 {% storybook project="angular" story="components-export--playground" height=320 /%}
 

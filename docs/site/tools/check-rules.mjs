@@ -13,9 +13,10 @@
  * - R10: every skill reference points at an existing skill.
  * - R11: every fenced code block declares a language.
  * - R12: every package belongs to exactly one meta package.
+ * - R13: every component page documents its usage in a tabs block.
  *
- * R1-R3, R9, R10 and R12 are the parity rules: they compare the workspace with
- * the site and only warn until `--strict` names them.
+ * R1-R3, R9, R10, R12 and R13 are the parity rules: they compare the workspace
+ * with the site and only warn until `--strict` names them.
  */
 
 import { load as parseYaml } from 'js-yaml'
@@ -404,11 +405,11 @@ function lineOf(source, index) {
 }
 
 /**
- * Every `{% name … /%}` tag of `source` that is an instruction: a tag inside a
- * fenced code block is a quoted example and is left to the reader.
+ * Every `{% … %}` match of `pattern` that is an instruction: a tag inside a
+ * fenced code block is a quoted example and is left to the reader. Group 1 of
+ * `pattern`, when it has one, holds the attributes.
  */
-function tags(source, name) {
-  const pattern = new RegExp(`\\{%\\s*${name}\\s+([^%]*?)\\/%\\}`, 'g')
+function tagMatches(source, pattern) {
   const fenced = insideFence(source)
 
   return [...source.matchAll(pattern)]
@@ -416,12 +417,40 @@ function tags(source, name) {
     .map((match) => {
       const attributes = {}
 
-      for (const attribute of match[1].matchAll(/(\w+)="([^"]*)"/g)) {
+      for (const attribute of (match[1] ?? '').matchAll(/(\w+)="([^"]*)"/g)) {
         attributes[attribute[1]] = attribute[2]
       }
 
-      return { attributes, line: lineOf(source, match.index) }
+      return {
+        attributes,
+        index: match.index,
+        line: lineOf(source, match.index),
+      }
     })
+}
+
+/** Every self-closing `{% name … /%}` tag of `source`. */
+function tags(source, name) {
+  return tagMatches(
+    source,
+    new RegExp(`\\{%\\s*${name}\\s+([^%]*?)\\/%\\}`, 'g'),
+  )
+}
+
+/**
+ * Every opening tag of the block tag `name`, such as `{% tabs %}` or
+ * `{% tab title="HTML" %}`. The lookahead keeps `tab` from matching `tabs`.
+ */
+function blockTags(source, name) {
+  return tagMatches(
+    source,
+    new RegExp(`\\{%\\s*${name}(?![\\w-])([^%]*?)%\\}`, 'g'),
+  )
+}
+
+/** Every closing `{% /name %}` tag of the block tag `name`. */
+function closingTags(source, name) {
+  return tagMatches(source, new RegExp(`\\{%\\s*\\/${name}\\s*%\\}`, 'g'))
 }
 
 function hasRegion(source, region) {
@@ -927,6 +956,64 @@ export function rule12(ctx) {
   return findings
 }
 
+/**
+ * The tab titles every component page carries, in the order they appear, and
+ * the ones it may carry on top of them. The `Nx generator` tab only shows up
+ * once a generator collection exists, so it is allowed but not required.
+ */
+const REQUIRED_USAGE_TABS = ['HTML', 'TypeScript', 'Claude Code']
+const ALLOWED_USAGE_TABS = [...REQUIRED_USAGE_TABS, 'Nx generator']
+
+/** The `title` of every `{% tab %}` between the tabs block delimiters. */
+function usageTabTitles(source, opening, closing) {
+  return blockTags(source, 'tab')
+    .filter((tag) => tag.index > opening.index && tag.index < closing.index)
+    .map((tag) => tag.attributes.title)
+}
+
+/** R13: every component page documents its usage in a tabs block. */
+export function rule13(ctx) {
+  const level = isStrict(ctx, 'R13') ? 'error' : 'warn'
+  const findings = []
+
+  for (const page of docsPages(ctx)) {
+    const relative = relativeToDocs(ctx, page)
+
+    // The section index documents no component of its own.
+    if (!/^docs\/components\/[^/]+\/page\.md$/.test(relative)) continue
+
+    const source = fs.readFileSync(page, 'utf8')
+    const report = (message) =>
+      findings.push({
+        rule: 'R13',
+        level,
+        message: `${relative}: ${message}`,
+        file: page,
+      })
+    const opening = blockTags(source, 'tabs')
+    const closing = closingTags(source, 'tabs')
+
+    if (!opening.length || !closing.length) {
+      report('the usage section has no {% tabs %} block')
+      continue
+    }
+
+    const titles = usageTabTitles(source, opening[0], closing.at(-1))
+
+    for (const title of REQUIRED_USAGE_TABS) {
+      if (!titles.includes(title)) report(`usage tabs are missing "${title}"`)
+    }
+
+    for (const title of new Set(titles)) {
+      if (ALLOWED_USAGE_TABS.includes(title)) continue
+
+      report(`unexpected usage tab "${title}"`)
+    }
+  }
+
+  return findings
+}
+
 /** Every rule, in order. */
 export function runAllRules(ctx) {
   return [
@@ -942,5 +1029,6 @@ export function runAllRules(ctx) {
     rule10,
     rule11,
     rule12,
+    rule13,
   ].flatMap((rule) => rule(ctx))
 }

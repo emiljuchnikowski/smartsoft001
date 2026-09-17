@@ -1,6 +1,7 @@
 import { Callout } from '@/components/Callout'
 import { QuickLink, QuickLinks } from '@/components/QuickLinks'
 import { Storybook } from '@/components/Storybook'
+import { Tab, Tabs } from '@/components/Tabs'
 
 const tags = {
   callout: {
@@ -38,6 +39,15 @@ const tags = {
       height: { type: Number, default: 320 },
     },
     render: Storybook,
+  },
+  tabs: {
+    render: Tabs,
+  },
+  tab: {
+    render: Tab,
+    attributes: {
+      title: { type: String, required: true },
+    },
   },
   'quick-links': {
     render: QuickLinks,

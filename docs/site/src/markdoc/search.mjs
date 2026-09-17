@@ -8,6 +8,7 @@ import * as url from 'url'
 
 import { expandSkillTags } from '../../tools/skills.mjs'
 import { expandSnippets } from '../../tools/snippets.mjs'
+import { expandStoryTemplates } from '../../tools/templates.mjs'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -68,12 +69,15 @@ export default function withSearch(nextConfig = {}) {
               // Expand the build time tags here too: the indexer parses the
               // pages itself, outside of the loader chain, and must neither see
               // an unknown tag nor miss what a skill header contributes.
-              let md = expandSkillTags(
-                expandSnippets(fs.readFileSync(pagePath, 'utf8'), {
-                  pagePath,
-                  examplesRoot,
-                  repoRoot,
-                }),
+              let md = expandStoryTemplates(
+                expandSkillTags(
+                  expandSnippets(fs.readFileSync(pagePath, 'utf8'), {
+                    pagePath,
+                    examplesRoot,
+                    repoRoot,
+                  }),
+                  { repoRoot },
+                ),
                 { repoRoot },
               )
 
