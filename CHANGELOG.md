@@ -1,3 +1,14 @@
+## 2.146.0 (2026-09-21)
+
+### 🩹 Fixes
+
+- **meta:** make the migration run in a workspace that is not ours ([#63](https://github.com/emiljuchnikowski/smartsoft001/pull/63))
+
+### ❤️ Thank You
+
+- Claude Opus 5
+- Emil Juchnikowski
+
 ## 2.145.0 (2026-09-17)
 
 ### 🚀 Features

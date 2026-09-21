@@ -1,6 +1,6 @@
 {
   "name": "@smartsoft001/crud-shell-nestjs",
-  "version": "2.145.0",
+  "version": "2.146.0",
   "publishConfig": {
     "access": "public"
   },
@@ -20,9 +20,9 @@
     "url": "https://github.com/emiljuchnikowski/smartsoft/issues"
   },
   "peerDependencies": {
-    "@smartsoft001/crud-shell-app-services": "2.145.0",
-    "@smartsoft001/crud-shell-dtos": "2.145.0",
-    "@smartsoft001/domain-core": "2.145.0"
+    "@smartsoft001/crud-shell-app-services": "2.146.0",
+    "@smartsoft001/crud-shell-dtos": "2.146.0",
+    "@smartsoft001/domain-core": "2.146.0"
   },
   "homepage": "https://github.com/emiljuchnikowski/smartsoft#readme"
 }
