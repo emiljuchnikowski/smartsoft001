@@ -1,4 +1,12 @@
-import { Tree, logger, updateJson } from '@nx/devkit';
+/**
+ * A migration runs in the consumer's workspace, where the only thing it may
+ * assume is the `Tree` Nx hands it. `@nx/devkit` is a development dependency of
+ * this repository, not of a project that installs the framework, so importing
+ * its helpers at runtime fails with `Cannot find module '@nx/devkit'` the first
+ * time someone runs the migration. The type import below is erased at compile
+ * time and costs the consumer nothing.
+ */
+import type { Tree } from '@nx/devkit';
 
 /**
  * The meta packages and the packages each of them pins.
@@ -97,6 +105,19 @@ function highestVersion(versions: string[]): string {
   );
 }
 
+/**
+ * A plain version or range: `2.145.0`, `^2.145.0`, `>=2.145.0 <3.0.0`.
+ *
+ * Anything else — `file:`, `workspace:`, a git URL, an alias — means the
+ * project resolves that package its own way, and the stack's pinned version
+ * would not be the same thing. Those groups are left alone rather than
+ * guessed at: comparing the digits inside `file:smartsoft001-core-2.145.0.tgz`
+ * produces a number, and the wrong one.
+ */
+function isVersionRange(specifier: string): boolean {
+  return /^[\^~>=< ]*\d+\.\d+\.\d+[\w.+-]*( .*)?$/.test(specifier.trim());
+}
+
 function isSorted(names: string[]): boolean {
   return names.every((name, index) => index === 0 || names[index - 1] <= name);
 }
@@ -105,15 +126,31 @@ function isSorted(names: string[]): boolean {
  * Replaces every group of two or more members of one stack with the stack,
  * in the position of the first entry it replaces.
  */
-function collapse(deps: Deps): { deps: Deps; replacements: Replacement[] } {
+function collapse(deps: Deps): {
+  deps: Deps;
+  replacements: Replacement[];
+  skipped: string[];
+} {
   const keepSorted = isSorted(Object.keys(deps));
   const replacements: Replacement[] = [];
+  const skipped: string[] = [];
   let entries = Object.entries(deps);
 
   for (const [stack, members] of Object.entries(STACKS)) {
     const present = entries.filter(([name]) => members.includes(name));
 
     if (present.length < 2) {
+      continue;
+    }
+
+    const unusual = present.filter(([, version]) => !isVersionRange(version));
+
+    if (unusual.length > 0) {
+      skipped.push(
+        `${stack}: left alone, ${unusual
+          .map(([name, version]) => `${name} is "${version}"`)
+          .join(', ')}`,
+      );
       continue;
     }
 
@@ -147,7 +184,7 @@ function collapse(deps: Deps): { deps: Deps; replacements: Replacement[] } {
     entries.sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
   }
 
-  return { deps: Object.fromEntries(entries), replacements };
+  return { deps: Object.fromEntries(entries), replacements, skipped };
 }
 
 function describeReplacement(
@@ -162,36 +199,57 @@ function describeReplacement(
   return `${section}: ${replaced.join(', ')} -> ${stack}@${version}${disagreed}`;
 }
 
+/** The shape `updateJson` writes: two spaces and a trailing newline. */
+function serialize(json: PackageJson): string {
+  return `${JSON.stringify(json, null, 2)}\n`;
+}
+
 export default async function update(tree: Tree): Promise<void> {
+  const contents = tree.exists('package.json')
+    ? tree.read('package.json', 'utf-8')
+    : null;
+
+  if (!contents) {
+    return;
+  }
+
+  const json = JSON.parse(contents) as PackageJson;
   const leftovers: string[] = [];
+  const messages: string[] = [];
 
-  updateJson(tree, 'package.json', (json: PackageJson) => {
-    for (const section of SECTIONS) {
-      const current = json[section];
+  for (const section of SECTIONS) {
+    const current = json[section];
 
-      if (!current) {
-        continue;
-      }
-
-      const { deps, replacements } = collapse(current);
-
-      json[section] = deps;
-
-      for (const replacement of replacements) {
-        logger.info(describeReplacement(section, replacement));
-      }
-
-      for (const name of Object.keys(deps)) {
-        if (MEMBERS.has(name) && !leftovers.includes(name)) {
-          leftovers.push(name);
-        }
-      }
+    if (!current) {
+      continue;
     }
 
-    return json;
-  });
+    const { deps, replacements, skipped } = collapse(current);
+
+    json[section] = deps;
+
+    for (const replacement of replacements) {
+      messages.push(describeReplacement(section, replacement));
+    }
+
+    for (const note of skipped) {
+      messages.push(`${section}: ${note}`);
+    }
+
+    for (const name of Object.keys(deps)) {
+      if (MEMBERS.has(name) && !leftovers.includes(name)) {
+        leftovers.push(name);
+      }
+    }
+  }
+
+  tree.write('package.json', serialize(json));
+
+  for (const message of messages) {
+    console.log(message);
+  }
 
   if (leftovers.length > 0) {
-    logger.info(`Still installed individually: ${leftovers.join(', ')}`);
+    console.log(`Still installed individually: ${leftovers.join(', ')}`);
   }
 }
