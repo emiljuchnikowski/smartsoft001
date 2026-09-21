@@ -1,3 +1,33 @@
+## 2.148.0 (2026-09-21)
+
+Published from `fix(release): make every published Node package loadable (#65)` and
+nothing later. Four pull requests merged within forty-five seconds of each other and
+each queued a `Publish` run. The concurrency group let the first one through and
+GitHub cancelled the ones that piled up behind it, which is expected. The first run
+published every package at this version and then failed on its last step, writing the
+version commit back to `main`, because three more merges had landed while it ran and
+the push was no longer a fast-forward. So the tag `v2.148.0` exists, npm carries
+2.148.0, and `main` still said 2.147.0.
+
+What reached npm at this version is therefore only #65. The three merges that followed
+it are not in it:
+
+- **meta:** make nx migrate bump every package, not just core ([#66](https://github.com/emiljuchnikowski/smartsoft001/pull/66))
+- **shared:** declare what each package needs and export what it wires ([#68](https://github.com/emiljuchnikowski/smartsoft001/pull/68))
+- **shared:** compile the decorated packages so their metadata survives ([#69](https://github.com/emiljuchnikowski/smartsoft001/pull/69))
+
+The manifests move to 2.148.0 so the next release is 2.149.0 and carries all three,
+rather than reusing a tag that is already public.
+
+### 🩹 Fixes
+
+- **release:** make every published Node package loadable ([#65](https://github.com/emiljuchnikowski/smartsoft001/pull/65))
+
+### ❤️ Thank You
+
+- Claude Opus 5
+- Emil Juchnikowski
+
 ## 2.147.0 (2026-09-21)
 
 ### 🩹 Fixes

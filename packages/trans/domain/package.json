@@ -1,6 +1,6 @@
 {
   "name": "@smartsoft001/trans-domain",
-  "version": "2.147.0",
+  "version": "2.148.0",
   "type": "commonjs",
   "main": "./src/index.js",
   "typings": "./src/index.d.ts",
@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/emiljuchnikowski/smartsoft#readme",
   "peerDependencies": {
-    "@smartsoft001/domain-core": "2.147.0",
-    "@smartsoft001/utils": "2.147.0"
+    "@smartsoft001/domain-core": "2.148.0",
+    "@smartsoft001/utils": "2.148.0"
   }
 }

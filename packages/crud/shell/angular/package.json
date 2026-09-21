@@ -1,6 +1,6 @@
 {
   "name": "@smartsoft001/crud-shell-angular",
-  "version": "2.147.0",
+  "version": "2.148.0",
   "publishConfig": {
     "access": "public"
   },
@@ -21,9 +21,9 @@
   },
   "homepage": "https://github.com/emiljuchnikowski/smartsoft#readme",
   "peerDependencies": {
-    "@smartsoft001/angular": "2.147.0",
-    "@smartsoft001/domain-core": "2.147.0",
-    "@smartsoft001/models": "2.147.0",
-    "@smartsoft001/utils": "2.147.0"
+    "@smartsoft001/angular": "2.148.0",
+    "@smartsoft001/domain-core": "2.148.0",
+    "@smartsoft001/models": "2.148.0",
+    "@smartsoft001/utils": "2.148.0"
   }
 }
