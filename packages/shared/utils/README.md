@@ -98,6 +98,28 @@ Methods:
     </tr>
 </table>
 
+### RemoveHtmlService
+
+Methods:
+
+<table>
+    <tr>
+        <td>create(val: string | undefined | null): string</td>
+        <td>strip HTML tags and decode HTML entities, returning '' for empty input</td>
+    </tr>
+</table>
+
+### SlugService
+
+Methods:
+
+<table>
+    <tr>
+        <td>create(text: string | undefined | null): string</td>
+        <td>convert text to a URL friendly slug, transliterating Polish characters</td>
+    </tr>
+</table>
+
 ### SpecificationService
 
 Methods:

@@ -15,5 +15,8 @@
     "nestjs"
   ],
   "author": "Emil Juchnikowski",
-  "license": "MIT"
+  "license": "MIT",
+  "peerDependencies": {
+    "@smartsoft001/auth-domain": "2.147.0"
+  }
 }

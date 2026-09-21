@@ -1,10 +1,10 @@
 {
   "name": "@smartsoft001/paynow",
   "version": "2.147.0",
+  "description": "PaynowService: payment creation, status lookup and refunds against the Paynow API, with HMAC-SHA256 request signing and per-request idempotency keys.",
   "publishConfig": {
     "access": "public"
   },
-  "description": "This library was generated with [Nx](https://nx.dev).",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/emiljuchnikowski/smartsoft.git"
@@ -14,5 +14,9 @@
   "bugs": {
     "url": "https://github.com/emiljuchnikowski/smartsoft/issues"
   },
-  "homepage": "https://github.com/emiljuchnikowski/smartsoft#readme"
+  "homepage": "https://github.com/emiljuchnikowski/smartsoft#readme",
+  "peerDependencies": {
+    "@smartsoft001/trans-domain": "2.147.0",
+    "@smartsoft001/utils": "2.147.0"
+  }
 }

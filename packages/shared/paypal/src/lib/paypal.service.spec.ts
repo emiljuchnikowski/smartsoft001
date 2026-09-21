@@ -63,6 +63,22 @@ describe('paypal: PaypalService', () => {
     jest.clearAllMocks();
   });
 
+  describe('dependencies', () => {
+    it('should resolve without an HttpService provider', async () => {
+      const module: TestingModule = await Test.createTestingModule({
+        providers: [
+          PaypalService,
+          { provide: PaypalConfig, useValue: mockPaypalConfig },
+          { provide: ModuleRef, useValue: mockModuleRef },
+        ],
+      }).compile();
+
+      expect(module.get<PaypalService>(PaypalService)).toBeInstanceOf(
+        PaypalService,
+      );
+    });
+  });
+
   describe('create', () => {
     it('should create a payment and return orderId and redirectUrl', async () => {
       const mockPayment = {
@@ -83,6 +99,34 @@ describe('paypal: PaypalService', () => {
         email: 'test@example.com',
         clientIp: '127.0.0.1',
         data: {},
+      });
+
+      expect(result).toEqual({
+        orderId: 'test-payment-id',
+        redirectUrl: 'https://approval.url',
+      });
+    });
+
+    it('should accept the options property the payment contract passes', async () => {
+      const mockPayment = {
+        id: 'test-payment-id',
+        links: [{ rel: 'approval_url', href: 'https://approval.url' }],
+      };
+
+      (paypal.payment.create as jest.Mock).mockImplementation(
+        (data, config, callback) => {
+          callback(null, mockPayment);
+        },
+      );
+
+      const result = await service.create({
+        id: 'test-id',
+        name: 'test-name',
+        amount: 1000,
+        email: 'test@example.com',
+        clientIp: '127.0.0.1',
+        data: {},
+        options: { payMethod: 'card' },
       });
 
       expect(result).toEqual({

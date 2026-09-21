@@ -20,9 +20,14 @@
     "url": "https://github.com/emiljuchnikowski/smartsoft/issues"
   },
   "peerDependencies": {
+    "@smartsoft001/crud-domain": "2.147.0",
     "@smartsoft001/crud-shell-app-services": "2.147.0",
     "@smartsoft001/crud-shell-dtos": "2.147.0",
-    "@smartsoft001/domain-core": "2.147.0"
+    "@smartsoft001/domain-core": "2.147.0",
+    "@smartsoft001/mongo": "2.147.0",
+    "@smartsoft001/nestjs": "2.147.0",
+    "@smartsoft001/users": "2.147.0",
+    "@smartsoft001/utils": "2.147.0"
   },
   "homepage": "https://github.com/emiljuchnikowski/smartsoft#readme"
 }

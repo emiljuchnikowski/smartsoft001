@@ -19,7 +19,7 @@ One module call gives an application a route that starts a payment and a webhook
 npm install @smartsoft001/trans-shell-nestjs @smartsoft001/trans-shell-app-services @smartsoft001/trans-domain @smartsoft001/crud-shell-nestjs @smartsoft001/nestjs @smartsoft001/payu @smartsoft001/paypal @smartsoft001/paynow @smartsoft001/revolut
 ```
 
-The manifest declares neither dependencies nor peer dependencies, so a package manager will not warn about any of these and the failure appears at import time instead. The four payment packages are imported unconditionally, for their config and service classes, even though each one is only registered when you pass its config. [`@smartsoft001/crud-shell-nestjs`](/docs/packages/crud-shell-nestjs) comes with its own list, including [`@smartsoft001/mongo`](/docs/packages/mongo), [`@smartsoft001/domain-core`](/docs/packages/domain-core), [`@smartsoft001/users`](/docs/packages/users) and [`@smartsoft001/utils`](/docs/packages/utils).
+The manifest declares the eight workspace packages above as peer dependencies, pinned to its own version. The four payment packages are imported unconditionally, for their config and service classes, even though each one is only registered when you pass its config. [`@smartsoft001/crud-shell-nestjs`](/docs/packages/crud-shell-nestjs) comes with its own list, including [`@smartsoft001/mongo`](/docs/packages/mongo), [`@smartsoft001/domain-core`](/docs/packages/domain-core), [`@smartsoft001/users`](/docs/packages/users) and [`@smartsoft001/utils`](/docs/packages/utils).
 
 From NestJS it needs `@nestjs/common`, `@nestjs/core`, `@nestjs/axios` with `axios`, `@nestjs/jwt` and `@nestjs/passport`.
 
@@ -58,17 +58,13 @@ The options are `SharedConfig` from [`@smartsoft001/nestjs`](/docs/packages/nest
 | `revolutConfig`                     | `RevolutConfig`                                     | Registers `RevolutConfig` and `RevolutService` when present.                                                       |
 | `paynowConfig`                      | `PaynowConfig`                                      | Registers `PaynowConfig` and `PaynowService` when present.                                                         |
 
-The dynamic module provides `TransService`, the three domain services, `TransConfig` as a value provider holding the whole options object, and the gated provider pairs. It registers all four controllers. It imports `HttpModule`, `CrudShellNestjsModule.forRoot({ ...options, db: { ...options.db, collection: 'trans' }, restApi: false, socket: false })`, `PassportModule` with the `jwt` default strategy and sessions off, and `JwtModule`. It exports `TransService`, `TransConfig` and the PayU, PayPal and Revolut pairs.
-
-{% callout type="warning" title="Paynow is provided but not exported" %}
-The `exports` array of this module lists the PayU, PayPal and Revolut pairs and omits `PaynowConfig` and `PaynowService`, which it provides. An application that configures Paynow gets a working webhook, because the controller lives inside this module, but a module importing this one cannot inject either class. The core variant below exports them, so the two are inconsistent and only one of them can be right.
-{% /callout %}
+The dynamic module provides `TransService`, the three domain services, `TransConfig` as a value provider holding the whole options object, and the gated provider pairs. It registers all four controllers. It imports `HttpModule`, `CrudShellNestjsModule.forRoot({ ...options, db: { ...options.db, collection: 'trans' }, restApi: false, socket: false })`, `PassportModule` with the `jwt` default strategy and sessions off, and `JwtModule`. It exports `TransService`, `TransConfig` and every provider pair it registered, so a module importing this one can inject any payment service it configured.
 
 ### `TransShellNestjsCoreModule.forRoot(options)`
 
 The same options, and a module that returns `module: TransShellNestjsCoreModule`, its own class. It registers no controllers, which is what makes it the right choice for a process that consumes transactions without exposing them, a worker or a scheduled job.
 
-Its provider and export lists differ from each other. It provides the PayU, PayPal and Paynow pairs, with **no `revolutConfig` branch at all**, while its `exports` list all four, Revolut included. Configuring Revolut against this module therefore yields an export of two classes that were never provided.
+Its provider and export lists match the plain variant. Each of the four configs registers its pair when present, and the same pairs are exported alongside `TransService` and `TransConfig`.
 
 ### `TransController`
 

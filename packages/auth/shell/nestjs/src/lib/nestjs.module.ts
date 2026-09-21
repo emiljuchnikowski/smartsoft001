@@ -48,7 +48,7 @@ export class AuthShellNestjsModule {
 export class AuthShellNestjsCoreModule {
   static forRoot(options: { tokenConfig: TokenConfig }): DynamicModule {
     return {
-      module: AuthShellNestjsModule,
+      module: AuthShellNestjsCoreModule,
       providers: [
         { provide: TokenConfig, useValue: options.tokenConfig },
         AuthService,

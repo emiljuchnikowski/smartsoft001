@@ -19,7 +19,7 @@ Two dynamic modules and a single route: `POST /token`, wired to the factory that
 npm install @smartsoft001/auth-shell-nestjs @smartsoft001/auth-domain @smartsoft001/auth-shell-app-services @smartsoft001/fb @smartsoft001/google
 ```
 
-The manifest declares neither dependencies nor peer dependencies, so a package manager will not warn about any of this and the failure shows up at import time instead. The four workspace packages above are all reached from the module file or the controller.
+The manifest declares the four workspace packages above as peer dependencies, pinned to its own version, and they are all reached from the module file or the controller. The packages outside the workspace are not declared, so a missing one still shows up at import time rather than at install time.
 
 The module's `imports` array is what decides the rest: `@nestjs/axios` for `HttpModule`, `@nestjs/typeorm` with `typeorm` for `forFeature(ENTITIES)`, `@nestjs/passport` with `passport` for the strategy registration, and `@nestjs/jwt` for the signing module. Add `@nestjs/common`, `@nestjs/core` and the `express` types, which the controller and the service use directly.
 
@@ -77,9 +77,7 @@ The same options, a different set of trade-offs.
 
 `TypeOrmModule.forFeature(ENTITIES)`, the Passport registration and `JwtModule.register(...)` are identical to the other variant, including the missing root connection.
 
-{% callout type="warning" title="The core module returns the other class" %}
-The `DynamicModule` that `AuthShellNestjsCoreModule.forRoot` returns sets `module: AuthShellNestjsModule`. Nest registers the configuration against the non-core class, so importing both variants in one application means registering the same module class twice with different provider and controller sets.
-{% /callout %}
+The `DynamicModule` it returns sets `module: AuthShellNestjsCoreModule`, its own class, so the two variants are separate modules and an application can import either one.
 
 ### `TokenController`
 

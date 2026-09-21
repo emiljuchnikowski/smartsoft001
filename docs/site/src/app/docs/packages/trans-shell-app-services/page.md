@@ -19,7 +19,7 @@ The one service an application calls: it chooses the payment provider, decides w
 npm install @smartsoft001/trans-shell-app-services @smartsoft001/trans-domain @smartsoft001/domain-core @smartsoft001/payu @smartsoft001/paypal @smartsoft001/paynow @smartsoft001/revolut
 ```
 
-The manifest declares neither dependencies nor peer dependencies. All four payment packages are imported unconditionally, as constructor parameter types, so all four have to be installed even in an application that enables only one provider. On top of them it needs `@nestjs/common` for `@Injectable` and `@Optional`, `@nestjs/core` for `ModuleRef` and `@nestjs/axios` for `HttpService`.
+The manifest declares the six workspace packages above as peer dependencies, pinned to its own version. All four payment packages are imported unconditionally, as constructor parameter types, so all four have to be installed even in an application that enables only one provider. On top of them it needs `@nestjs/common` for `@Injectable` and `@Optional`, `@nestjs/core` for `ModuleRef` and `@nestjs/axios` for `HttpService`.
 
 {% callout type="note" title="Two ways in" %}
 Almost every application gets this service by importing [`@smartsoft001/trans-shell-nestjs`](/docs/packages/trans-shell-nestjs), which provides it and its collaborators. Constructing it by hand, as the example below does, is what a test or a non-Nest process would do, and it is the shortest way to see exactly what it depends on.

@@ -16,10 +16,10 @@ Ships the 56 `smart-*` components every screen in the framework is built from, t
 ## Install
 
 ```bash
-npm install @smartsoft001/angular @smartsoft001/models
+npm install @smartsoft001/angular @smartsoft001/domain-core @smartsoft001/models @smartsoft001/utils
 ```
 
-The published manifest carries a name, a version and `sideEffects: false`, nothing else, so every import the library makes has to resolve in the application. From Angular that means `@angular/common`, `@angular/core`, `@angular/forms`, `@angular/router` and `@angular/cdk`, plus `rxjs`. From the ecosystem it means `@ngx-translate/core`, which `SharedModule` injects in its constructor, `ngx-cookie` for the cookie-backed storage, `ng-dynamic-component` for the pluggable slots, `ng-lazyload-image` for list thumbnails, and `ngx-editor` and `ngx-color-picker` for two of the field editors. The remaining runtime helpers are `lodash`, `lodash-decorators`, `moment`, `jwt-decode` and `guid-typescript`, and the workspace companions are [`@smartsoft001/models`](/docs/packages/models), [`@smartsoft001/domain-core`](/docs/packages/domain-core) and [`@smartsoft001/utils`](/docs/packages/utils). `@ngrx/store` is only needed by the applications that import `NgrxSharedModule`.
+The published manifest declares [`@smartsoft001/models`](/docs/packages/models), [`@smartsoft001/domain-core`](/docs/packages/domain-core) and [`@smartsoft001/utils`](/docs/packages/utils) as peer dependencies, pinned to its own version. Every other import the library makes still has to resolve in the application. From Angular that means `@angular/common`, `@angular/core`, `@angular/forms`, `@angular/router` and `@angular/cdk`, plus `rxjs`. From the ecosystem it means `@ngx-translate/core`, which `SharedModule` injects in its constructor, `ngx-cookie` for the cookie-backed storage, `ng-dynamic-component` for the pluggable slots, `ng-lazyload-image` for list thumbnails, and `ngx-editor` and `ngx-color-picker` for two of the field editors. The remaining runtime helpers are `lodash`, `lodash-decorators`, `moment`, `jwt-decode` and `guid-typescript`. `@ngrx/store` is only needed by the applications that import `NgrxSharedModule`.
 
 The components are styled with Tailwind CSS 4. The build compiles the library's own entry stylesheet and publishes the result as `styles.css` at the package root, so an application adds that one file to its styles and gets the whole component look. Every utility the library emits carries the `smart:` prefix, which keeps it from colliding with the application's own Tailwind layer, and the dark variant is redefined as class-based, so a `dark` class on `<html>` switches the theme rather than the operating system setting.
 
@@ -154,7 +154,7 @@ The providers barrel also exports the `IModelLabelOptions`, `IModelPossibilities
 
 ### Component substitution
 
-Every facade component injects a token for its standard implementation, so a replacement can be provided without touching the template. Four of those tokens reach the public barrel, together with the preset maps that fill them with the Preline-styled variants.
+Every facade component injects a token for its standard implementation, so a replacement can be provided without touching the template. The file that declares them, `src/lib/shared.inectors.ts`, is exported from the package barrel, so all of them can be imported from `@smartsoft001/angular`. The four below are the ones that come with a preset map filling them with the Preline-styled variants.
 
 | Token                           | Preset map                       | Replaces                                    |
 | ------------------------------- | -------------------------------- | ------------------------------------------- |
@@ -163,8 +163,8 @@ Every facade component injects a token for its standard implementation, so a rep
 | `PAGE_VARIANT_COMPONENTS_TOKEN` | `PAGE_PRESET_VARIANT_COMPONENTS` | The page shell, keyed by variant.           |
 | `FORM_STANDARD_COMPONENT_TOKEN` | Not applicable                   | The form body.                              |
 
-{% callout type="note" title="The other substitution tokens are not public" %}
-The file that declares them holds 51 tokens, one per component family, and it is not exported from the package barrel. Only the four above are re-exported through their component index files, so `BUTTON_STANDARD_COMPONENT_TOKEN`, `TABLE_STANDARD_COMPONENT_TOKEN` and the rest cannot be imported from `@smartsoft001/angular` today. `LIST_MODE_COMPONENTS_TOKEN` is the same case with a twist: its companion map `LIST_PRESET_MODE_COMPONENTS` is exported and the token is not, so the list-mode substitution the sources describe in a comment cannot be written against the public API. Swapping a standard component out is therefore limited to the four rows above.
+{% callout type="note" title="One token per component family" %}
+The same file declares a `*_STANDARD_COMPONENT_TOKEN` for each of the 46 component families, `FORM_STANDARD_COMPONENT_TOKEN` above among them, plus `LIST_MODE_COMPONENTS_TOKEN` for the list modes. All of them are part of the public API, so `providers: [{ provide: BUTTON_STANDARD_COMPONENT_TOKEN, useValue: MyButton }]` in an application swaps the standard implementation out wherever the facade renders it. A spec at the package entry point asserts that they stay reachable.
 {% /callout %}
 
 ### Directives

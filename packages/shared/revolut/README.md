@@ -10,7 +10,7 @@ Supported Revolut Merchant API version: **`2024-09-01`**.
 
 ## 🛠️ Services & Methods
 
-### PaypalService
+### RevolutService
 
 Methods:
 
@@ -20,11 +20,11 @@ Methods:
         <td>Creates a new order with payment provider (Revolut)</td>
     </tr>
     <tr>
-        <td>confirm</td>
+        <td>getStatus</td>
         <td>Fetches the current status of an existing transaction/order</td>
     </tr>
     <tr>
         <td>refund</td>
-        <td>Refund handling (unsupported)</td>
+        <td>Refund handling (unsupported, the returned promise always rejects)</td>
     </tr>
 </table>

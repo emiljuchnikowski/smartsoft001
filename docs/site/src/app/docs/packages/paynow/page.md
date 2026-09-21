@@ -19,7 +19,7 @@ The Paynow end of a transaction: three calls against the payments API, each muta
 npm install @smartsoft001/paynow @smartsoft001/trans-domain @smartsoft001/utils @nestjs/axios crypto-js
 ```
 
-The manifest declares neither dependencies nor peer dependencies. Every request goes through the `HttpService` of `@nestjs/axios`, `crypto-js` computes the signature, `GuidService` from [`@smartsoft001/utils`](/docs/packages/utils) produces the idempotency key, `@nestjs/common` provides `@Injectable` and `Logger`, and `@nestjs/core` provides `ModuleRef`. The imports from [`@smartsoft001/trans-domain`](/docs/packages/trans-domain) are used only as types. Unlike its five siblings, this package still carries the generated placeholder as its `description`, so do not read anything into it.
+The manifest declares [`@smartsoft001/trans-domain`](/docs/packages/trans-domain) and [`@smartsoft001/utils`](/docs/packages/utils) as peer dependencies, pinned to its own version. Every request goes through the `HttpService` of `@nestjs/axios`, `crypto-js` computes the signature, `GuidService` from [`@smartsoft001/utils`](/docs/packages/utils) produces the idempotency key, `@nestjs/common` provides `@Injectable` and `Logger`, and `@nestjs/core` provides `ModuleRef`. The imports from [`@smartsoft001/trans-domain`](/docs/packages/trans-domain) are used only as types.
 
 ## What it is
 

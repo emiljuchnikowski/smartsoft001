@@ -1,10 +1,10 @@
 {
   "name": "@smartsoft001/trans-domain",
   "version": "2.147.0",
+  "description": "The payment transaction lifecycle: one entity with its own history, three services that create, refresh and refund it, and the two contracts every payment provider fulfils.",
   "publishConfig": {
     "access": "public"
   },
-  "description": "This library was generated with [Nx](https://nx.dev).",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/emiljuchnikowski/smartsoft.git"
@@ -14,5 +14,9 @@
   "bugs": {
     "url": "https://github.com/emiljuchnikowski/smartsoft/issues"
   },
-  "homepage": "https://github.com/emiljuchnikowski/smartsoft#readme"
+  "homepage": "https://github.com/emiljuchnikowski/smartsoft#readme",
+  "peerDependencies": {
+    "@smartsoft001/domain-core": "2.147.0",
+    "@smartsoft001/utils": "2.147.0"
+  }
 }

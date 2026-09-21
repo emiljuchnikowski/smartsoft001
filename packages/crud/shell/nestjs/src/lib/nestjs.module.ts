@@ -75,7 +75,7 @@ export class CrudShellNestjsCoreModule {
     },
   ): DynamicModule {
     return {
-      module: CrudShellNestjsModule,
+      module: CrudShellNestjsCoreModule,
       providers: [...SERVICES, ...GATEWAYS, AuthJwtGuard],
       imports: [
         PassportModule.register({ defaultStrategy: 'jwt', session: false }),

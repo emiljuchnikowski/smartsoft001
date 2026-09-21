@@ -16,14 +16,10 @@ The PayPal end of a transaction: four calls through the legacy REST SDK, with th
 ## Install
 
 ```bash
-npm install @smartsoft001/paypal @smartsoft001/trans-domain @nestjs/axios paypal-rest-sdk
+npm install @smartsoft001/paypal @smartsoft001/trans-domain paypal-rest-sdk
 ```
 
-The manifest declares neither dependencies nor peer dependencies, so everything the service reaches for has to be installed alongside it. `paypal-rest-sdk` carries every outbound call, `@nestjs/common` provides `@Injectable` and `Logger`, `@nestjs/core` provides `ModuleRef`, and `@nestjs/axios` provides the `HttpService` the constructor asks for. The three imports from [`@smartsoft001/trans-domain`](/docs/packages/trans-domain) are used only as types, so they cost nothing at runtime but are needed to compile.
-
-{% callout type="note" title="The injected HttpService is never used" %}
-`PaypalService` declares `HttpService` as its first constructor parameter and never calls it. All four methods go through `paypal-rest-sdk`. The dependency still has to resolve, which is why the example below imports `HttpModule`.
-{% /callout %}
+The manifest declares [`@smartsoft001/trans-domain`](/docs/packages/trans-domain) as a peer dependency, pinned to its own version. Everything else the service reaches for has to be installed alongside it. `paypal-rest-sdk` carries every outbound call, `@nestjs/common` provides `@Injectable` and `Logger`, and `@nestjs/core` provides `ModuleRef`. The three imports from [`@smartsoft001/trans-domain`](/docs/packages/trans-domain) are used only as types, so they cost nothing at runtime but are needed to compile. There is no HTTP client here, because all four methods go through the SDK.
 
 ## What it is
 
@@ -37,9 +33,9 @@ Credentials are never installed globally. `paypal.configure()` is never called; 
 
 {% snippet file="node/src/paypal/paypal-service.example.ts" region="usage" /%}
 
-The region registers the two providers the service needs and wraps them in a module that imports `HttpModule`. `PaypalConfig` is the one config class in this family with a positional constructor, so it is built with `new` rather than passed as an object literal. The comments on the arguments carry the part that is easy to get wrong: `apiUrl` is your own API base, not a PayPal host.
+The region registers the two providers the service needs and wraps them in a module that imports nothing at all. `PaypalConfig` is the one config class in this family with a positional constructor, so it is built with `new` rather than passed as an object literal. The comments on the arguments carry the part that is easy to get wrong: `apiUrl` is your own API base, not a PayPal host.
 
-Its spec compiles that module with a stubbed `HttpService` and asserts four things. `PaypalService` resolves, so the three constructor dependencies are satisfiable from these providers alone. The `PaypalConfig` read back out of the injector equals the one the example built, so the value provider is the injectable rather than a copy. The HTTP stub recorded no call. And every mocked SDK entry point, including `configure`, is still untouched after the service has been resolved, which is the offline guarantee stated above: nothing is sent while the provider is being registered.
+Its spec compiles that module and asserts three things. `PaypalService` resolves, so the two constructor dependencies are satisfiable from these providers alone. The `PaypalConfig` read back out of the injector equals the one the example built, so the value provider is the injectable rather than a copy. And every mocked SDK entry point, including `configure`, is still untouched after the service has been resolved, which is the offline guarantee stated above: nothing is sent while the provider is being registered.
 
 ## API
 
@@ -66,7 +62,7 @@ A plain class with a positional constructor, used as both the injection token an
 | `getStatus<T>(trans)`                               | `Promise<{ status: TransStatus; data: any }>`       | Reads the payment by the order id stored on the `started` history entry and maps its `state`.                                                                    |
 | `refund(trans, comment)`                            | `Promise<any>`                                      | Refunds `trans.amount / 100` with `comment` as the description. Throws `Paypal transaction ID not found for refund` when no sale id can be found on the history. |
 
-`create` takes `{ id, name, amount, firstName?, lastName?, email?, contactPhone?, clientIp, data }`. The shared `ITransPaymentSingleService` also declares a required `options`, which this implementation omits, so an `options` value passed by a caller is ignored here while PayU and Paynow read it.
+`create` takes `{ id, name, amount, firstName?, lastName?, email?, contactPhone?, clientIp, data, options? }`, which is the shared `ITransPaymentSingleService` shape with `options` made optional. Nothing here reads `options`, so a value passed by a caller is accepted and ignored, while PayU and Paynow read it.
 
 `refund` does not use the order id it looks up. It walks the history for a `completed` entry carrying `customData.transactions[0].related_resources[0].sale.id` and refunds that sale, so a transaction that was never confirmed through this service cannot be refunded through it either.
 

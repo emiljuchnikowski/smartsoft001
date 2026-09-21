@@ -1,10 +1,10 @@
 {
   "name": "@smartsoft001/trans-shell-app-services",
   "version": "2.147.0",
+  "description": "TransService: the application service that picks a payment provider by name, resolves the internal service and delegates to the three trans domain services.",
   "publishConfig": {
     "access": "public"
   },
-  "description": "This library was generated with [Nx](https://nx.dev).",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/emiljuchnikowski/smartsoft.git"
@@ -14,5 +14,13 @@
   "bugs": {
     "url": "https://github.com/emiljuchnikowski/smartsoft/issues"
   },
-  "homepage": "https://github.com/emiljuchnikowski/smartsoft#readme"
+  "homepage": "https://github.com/emiljuchnikowski/smartsoft#readme",
+  "peerDependencies": {
+    "@smartsoft001/domain-core": "2.147.0",
+    "@smartsoft001/paynow": "2.147.0",
+    "@smartsoft001/paypal": "2.147.0",
+    "@smartsoft001/payu": "2.147.0",
+    "@smartsoft001/revolut": "2.147.0",
+    "@smartsoft001/trans-domain": "2.147.0"
+  }
 }

@@ -1,4 +1,3 @@
-import { HttpService } from '@nestjs/axios';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as paypal from 'paypal-rest-sdk';
 
@@ -7,9 +6,9 @@ import { PaypalConfig, PaypalService } from '@smartsoft001/paypal';
 import { paypalProviders } from './paypal-service.example';
 
 /**
- * `PaypalService` talks to PayPal through `paypal-rest-sdk`, not through
- * `HttpService`. Replacing every SDK entry point with a jest mock makes an
- * unexpected call visible; ts-jest hoists this above the imports above.
+ * `PaypalService` talks to PayPal through `paypal-rest-sdk`, which is its
+ * only outbound path. Replacing every SDK entry point with a jest mock makes
+ * an unexpected call visible; ts-jest hoists this above the imports above.
  */
 jest.mock('paypal-rest-sdk', () => ({
   payment: {
@@ -23,40 +22,12 @@ jest.mock('paypal-rest-sdk', () => ({
   configure: jest.fn(),
 }));
 
-/**
- * The injected `HttpService` is unused by this package today. The stub
- * records and throws anyway, so a future call would fail loudly here.
- */
-class RecordingHttpService {
-  readonly calls: string[] = [];
-
-  get(url: string): never {
-    return this.record('GET', url);
-  }
-
-  post(url: string): never {
-    return this.record('POST', url);
-  }
-
-  private record(method: string, url: string): never {
-    this.calls.push(`${method} ${url}`);
-
-    throw new Error('the docs example must not reach the network');
-  }
-}
-
 describe('docs-examples-node: PaypalPaymentsModule', () => {
   let moduleRef: TestingModule;
-  let httpService: RecordingHttpService;
 
   beforeEach(async () => {
-    httpService = new RecordingHttpService();
-
     moduleRef = await Test.createTestingModule({
-      providers: [
-        ...paypalProviders,
-        { provide: HttpService, useValue: httpService },
-      ],
+      providers: [...paypalProviders],
     }).compile();
   });
 
@@ -84,12 +55,6 @@ describe('docs-examples-node: PaypalPaymentsModule', () => {
         true,
       ),
     );
-  });
-
-  it('should make no http call while registering the service', () => {
-    moduleRef.get(PaypalService);
-
-    expect(httpService.calls).toEqual([]);
   });
 
   it('should leave the paypal sdk untouched, including its configure call', () => {

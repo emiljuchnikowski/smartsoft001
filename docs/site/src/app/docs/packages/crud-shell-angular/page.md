@@ -19,7 +19,7 @@ Generates the list and item screens of a collection from one configuration objec
 npm install @smartsoft001/crud-shell-angular @smartsoft001/angular @smartsoft001/domain-core @smartsoft001/models @smartsoft001/utils
 ```
 
-The manifest declares no dependencies and no peers, so everything the package imports has to be present in the application. Besides the workspace packages above that means `@angular/common`, `@angular/core`, `@angular/forms` and `@angular/router`, `@ngrx/store` and `@ngrx/effects`, `@ngx-translate/core` for the labels, `ng-dynamic-component` for the pluggable slots, plus `rxjs`, `lodash`, `lodash-decorators` and `moment`.
+The manifest declares the four workspace packages above as peer dependencies, pinned to its own version. Everything else the package imports still has to be present in the application: `@angular/common`, `@angular/core`, `@angular/forms` and `@angular/router`, `@ngrx/store` and `@ngrx/effects`, `@ngx-translate/core` for the labels, `ng-dynamic-component` for the pluggable slots, plus `rxjs`, `lodash`, `lodash-decorators` and `moment`.
 
 ## What it is
 

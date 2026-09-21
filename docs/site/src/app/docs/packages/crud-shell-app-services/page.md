@@ -19,7 +19,7 @@ One service that sits between a transport and a repository, and applies the same
 npm install @smartsoft001/crud-shell-app-services @smartsoft001/crud-domain @smartsoft001/crud-shell-dtos @smartsoft001/domain-core @smartsoft001/models @smartsoft001/nestjs @smartsoft001/users @smartsoft001/utils
 ```
 
-The manifest declares neither dependencies nor peer dependencies, so everything the service imports has to be installed alongside it. Besides the seven workspace packages above, it pulls in `@nestjs/common` for `@Injectable` and `Logger`, `rxjs` for the change feed, `guid-typescript` for id generation, `lodash-decorators` for the memoised attachment lookup, and `combined-stream` for resumable uploads.
+The manifest declares the seven workspace packages above as peer dependencies, pinned to its own version. The rest has to be installed alongside it: `@nestjs/common` for `@Injectable` and `Logger`, `rxjs` for the change feed, `guid-typescript` for id generation, `lodash-decorators` for the memoised attachment lookup, and `combined-stream` for resumable uploads.
 
 {% callout type="note" title="It never talks to a database" %}
 The service depends on the abstract `IItemRepository` and `IAttachmentRepository` from [`@smartsoft001/domain-core`](/docs/packages/domain-core), never on a driver. Nothing here opens a connection, which is why the examples on this page run against an array in memory and the specs need no database.
