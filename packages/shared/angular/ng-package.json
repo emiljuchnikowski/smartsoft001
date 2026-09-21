@@ -3,5 +3,12 @@
   "dest": "../../../dist/packages/shared/angular",
   "lib": {
     "entryFile": "src/index.ts"
-  }
+  },
+  "allowedNonPeerDependencies": [
+    "guid-typescript",
+    "jwt-decode",
+    "lodash",
+    "lodash-decorators",
+    "moment"
+  ]
 }

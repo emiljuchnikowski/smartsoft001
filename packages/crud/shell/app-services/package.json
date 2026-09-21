@@ -23,13 +23,20 @@
     "url": "https://github.com/emiljuchnikowski/smartsoft/issues"
   },
   "homepage": "https://github.com/emiljuchnikowski/smartsoft#readme",
+  "dependencies": {
+    "combined-stream": "^1.0.8",
+    "guid-typescript": "^1.0.9",
+    "lodash-decorators": "^6.0.1"
+  },
   "peerDependencies": {
+    "@nestjs/common": "^11.1.5",
     "@smartsoft001/crud-domain": "2.150.0",
     "@smartsoft001/crud-shell-dtos": "2.150.0",
     "@smartsoft001/domain-core": "2.150.0",
     "@smartsoft001/models": "2.150.0",
     "@smartsoft001/nestjs": "2.150.0",
     "@smartsoft001/users": "2.150.0",
-    "@smartsoft001/utils": "2.150.0"
+    "@smartsoft001/utils": "2.150.0",
+    "rxjs": "^7.8.1"
   }
 }

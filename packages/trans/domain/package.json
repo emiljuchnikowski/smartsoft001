@@ -18,8 +18,13 @@
     "url": "https://github.com/emiljuchnikowski/smartsoft/issues"
   },
   "homepage": "https://github.com/emiljuchnikowski/smartsoft#readme",
+  "dependencies": {
+    "guid-typescript": "^1.0.9"
+  },
   "peerDependencies": {
+    "@nestjs/common": "^11.1.5",
     "@smartsoft001/domain-core": "2.150.0",
-    "@smartsoft001/utils": "2.150.0"
+    "@smartsoft001/utils": "2.150.0",
+    "typeorm": "^1.1.0"
   }
 }

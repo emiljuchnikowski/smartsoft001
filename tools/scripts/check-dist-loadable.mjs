@@ -135,30 +135,40 @@ function main() {
   }
 
   const workspace = fs.mkdtempSync(path.join(os.tmpdir(), 'dist-loadable-'));
-  const scope = path.join(workspace, 'node_modules', '@smartsoft001');
+  const tarballs = path.join(workspace, 'tarballs');
 
   try {
-    fs.mkdirSync(scope, { recursive: true });
+    fs.mkdirSync(tarballs, { recursive: true });
     fs.writeFileSync(
       path.join(workspace, 'package.json'),
       `${JSON.stringify({ name: 'dist-loadable-probe', private: true, type: 'commonjs' }, null, 2)}\n`,
     );
 
-    // The third-party dependencies come from the repository's own install.
-    for (const entry of fs.readdirSync(path.join(repoRoot, 'node_modules'))) {
-      if (entry === '@smartsoft001') continue;
-
-      fs.symlinkSync(
-        path.join(repoRoot, 'node_modules', entry),
-        path.join(workspace, 'node_modules', entry),
-      );
-    }
-
+    // Pack each build and let npm install the tarballs, which is what a
+    // consumer does. An earlier version of this check copied the builds into
+    // `node_modules` and symlinked the repository's own installed packages
+    // beside them. That resolved everything, declared or not, so it could not
+    // see a manifest missing a dependency the code imports. Four packages went
+    // to npm unloadable while it reported them fine. Here npm resolves only
+    // what the manifests declare, which is the whole point.
     for (const entry of packages) {
-      const short = entry.name.slice('@smartsoft001/'.length);
-
-      fs.cpSync(entry.distRoot, path.join(scope, short), { recursive: true });
+      execFileSync('npm', ['pack', entry.distRoot, '--silent'], {
+        cwd: tarballs,
+        stdio: 'pipe',
+      });
     }
+
+    execFileSync(
+      'npm',
+      [
+        'install',
+        '--no-audit',
+        '--no-fund',
+        '--silent',
+        ...fs.readdirSync(tarballs).map((name) => path.join(tarballs, name)),
+      ],
+      { cwd: workspace, stdio: 'pipe' },
+    );
 
     const unexpectedFailures = [];
     const unexpectedPasses = [];

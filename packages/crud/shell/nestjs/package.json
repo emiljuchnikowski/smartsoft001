@@ -22,7 +22,18 @@
   "bugs": {
     "url": "https://github.com/emiljuchnikowski/smartsoft/issues"
   },
+  "dependencies": {
+    "busboy": "^1.6.0",
+    "json2csv": "^6.0.0-alpha.2",
+    "lodash": "^4.18.1",
+    "moment-timezone": "^0.6.0",
+    "xlsx": "^0.18.5"
+  },
   "peerDependencies": {
+    "@nestjs/common": "^11.1.5",
+    "@nestjs/jwt": "^11.0.0",
+    "@nestjs/passport": "^11.0.5",
+    "@nestjs/websockets": "^11.2.1",
     "@smartsoft001/crud-domain": "2.150.0",
     "@smartsoft001/crud-shell-app-services": "2.150.0",
     "@smartsoft001/crud-shell-dtos": "2.150.0",
@@ -30,7 +41,10 @@
     "@smartsoft001/mongo": "2.150.0",
     "@smartsoft001/nestjs": "2.150.0",
     "@smartsoft001/users": "2.150.0",
-    "@smartsoft001/utils": "2.150.0"
+    "@smartsoft001/utils": "2.150.0",
+    "express": "^5.2.1",
+    "rxjs": "^7.8.1",
+    "socket.io": "^4.8.1"
   },
   "homepage": "https://github.com/emiljuchnikowski/smartsoft#readme"
 }

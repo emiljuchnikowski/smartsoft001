@@ -3,5 +3,6 @@
   "dest": "../../../../dist/packages/crud/shell/angular",
   "lib": {
     "entryFile": "src/index.ts"
-  }
+  },
+  "allowedNonPeerDependencies": ["lodash", "lodash-decorators", "moment"]
 }
