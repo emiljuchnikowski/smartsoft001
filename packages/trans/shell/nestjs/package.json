@@ -1,6 +1,6 @@
 {
   "name": "@smartsoft001/trans-shell-nestjs",
-  "version": "2.150.0",
+  "version": "2.151.0",
   "type": "commonjs",
   "main": "./src/index.js",
   "typings": "./src/index.d.ts",
@@ -23,13 +23,13 @@
     "@nestjs/common": "^11.1.5",
     "@nestjs/jwt": "^11.0.0",
     "@nestjs/passport": "^11.0.5",
-    "@smartsoft001/crud-shell-nestjs": "2.150.0",
-    "@smartsoft001/nestjs": "2.150.0",
-    "@smartsoft001/paynow": "2.150.0",
-    "@smartsoft001/paypal": "2.150.0",
-    "@smartsoft001/payu": "2.150.0",
-    "@smartsoft001/revolut": "2.150.0",
-    "@smartsoft001/trans-domain": "2.150.0",
-    "@smartsoft001/trans-shell-app-services": "2.150.0"
+    "@smartsoft001/crud-shell-nestjs": "2.151.0",
+    "@smartsoft001/nestjs": "2.151.0",
+    "@smartsoft001/paynow": "2.151.0",
+    "@smartsoft001/paypal": "2.151.0",
+    "@smartsoft001/payu": "2.151.0",
+    "@smartsoft001/revolut": "2.151.0",
+    "@smartsoft001/trans-domain": "2.151.0",
+    "@smartsoft001/trans-shell-app-services": "2.151.0"
   }
 }

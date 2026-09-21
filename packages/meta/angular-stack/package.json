@@ -1,14 +1,14 @@
 {
   "name": "@smartsoft001/angular-stack",
-  "version": "2.150.0",
+  "version": "2.151.0",
   "publishConfig": {
     "access": "public"
   },
   "description": "Everything an Angular application needs from @smartsoft001: the core packages, the UI library and the CRUD screens.",
   "license": "MIT",
   "dependencies": {
-    "@smartsoft001/core": "2.150.0",
-    "@smartsoft001/angular": "2.150.0",
-    "@smartsoft001/crud-shell-angular": "2.150.0"
+    "@smartsoft001/core": "2.151.0",
+    "@smartsoft001/angular": "2.151.0",
+    "@smartsoft001/crud-shell-angular": "2.151.0"
   }
 }

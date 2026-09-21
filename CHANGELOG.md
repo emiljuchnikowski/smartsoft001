@@ -1,3 +1,14 @@
+## 2.151.0 (2026-09-21)
+
+### 🩹 Fixes
+
+- **shared:** declare the third-party packages the sources import ([#71](https://github.com/emiljuchnikowski/smartsoft001/pull/71))
+
+### ❤️ Thank You
+
+- Claude Opus 5
+- Emil Juchnikowski
+
 ## 2.150.0 (2026-09-21)
 
 ### 🩹 Fixes
