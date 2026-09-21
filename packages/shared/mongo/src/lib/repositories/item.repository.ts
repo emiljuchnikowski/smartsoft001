@@ -540,10 +540,7 @@ export class MongoItemRepository<
 
     delete criteria['$search'];
 
-    criteria = {
-      ...criteria,
-      ...customCriteria,
-    };
+    Object.assign(criteria, customCriteria);
   }
 
   protected convertIdInCriteria(criteria: any) {

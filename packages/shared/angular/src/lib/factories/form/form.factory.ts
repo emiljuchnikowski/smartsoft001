@@ -164,6 +164,14 @@ export class FormFactory {
         control.setAsyncValidators(providerResult?.asyncValidators ?? null);
       }
 
+      // `setValidators` and `setAsyncValidators` do not recalculate the status,
+      // so the control still carries the one it computed before it had any
+      // validators. Recalculate it here, once every validator is attached, or
+      // the group would be built from stale child statuses and report VALID.
+      // Silently: the only subscribers this early are the `enabled` pipelines
+      // of the nested groups, and the `addControl` below emits anyway.
+      control.updateValueAndValidity({ emitEvent: false });
+
       result.addControl(field.key, control);
 
       if (options.confirm && options.type === FieldType.object) {

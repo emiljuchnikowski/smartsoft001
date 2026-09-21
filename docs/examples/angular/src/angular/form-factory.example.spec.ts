@@ -66,11 +66,11 @@ describe('docs-examples-angular: buildContactForm', () => {
     expect(form.valid).toBe(true);
   });
 
-  it('should report VALID straight out of factory.create until the controls are refreshed', async () => {
+  it('should report INVALID straight out of factory.create', async () => {
     const raw = await TestBed.inject(FormFactory).create(new Contact(), {
       mode: 'create',
     });
 
-    expect(raw.valid).toBe(true);
+    expect(raw.valid).toBe(false);
   });
 });

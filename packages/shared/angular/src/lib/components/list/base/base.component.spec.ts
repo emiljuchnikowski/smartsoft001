@@ -12,7 +12,11 @@ import { IEntity } from '@smartsoft001/domain-core';
 import { Field, Model } from '@smartsoft001/models';
 
 import { ListBaseComponent } from './base.component';
-import { IListInternalOptions, IListProvider } from '../../../models';
+import {
+  IDetailsProvider,
+  IListInternalOptions,
+  IListProvider,
+} from '../../../models';
 import { AlertService, AuthService } from '../../../services';
 
 @Model({})
@@ -37,6 +41,22 @@ function createProvider(): IListProvider<TestItemModel> {
     getData: jest.fn(),
   } as unknown as IListProvider<TestItemModel>;
 }
+
+function createDetailsProvider(): IDetailsProvider<TestItemModel> {
+  return {
+    getData: jest.fn(),
+    clearData: jest.fn(),
+    item: signal({ id: 'test-id' } as TestItemModel),
+    loading: signal(false),
+  };
+}
+
+@Component({
+  selector: 'smart-test-details',
+  changeDetection: ChangeDetectionStrategy.Eager,
+  template: '',
+})
+class TestDetailsComponent {}
 
 @Component({
   selector: 'smart-test-host',
@@ -105,5 +125,64 @@ describe('@smartsoft001/shared-angular: ListBaseComponent', () => {
     await fixture.whenStable();
 
     expect(list.removeHandler).not.toBeNull();
+  });
+  describe('details options', () => {
+    function createFixtureWithDetails(
+      details: IListInternalOptions<TestItemModel>['details'],
+    ): ComponentFixture<TestHostComponent> {
+      const detailsFixture = TestBed.createComponent(TestHostComponent);
+      detailsFixture.componentInstance.options = {
+        provider: createProvider(),
+        type: TestItemModel,
+        fields: [{ key: 'firstName', options: { list: true } }],
+        details,
+      } as IListInternalOptions<TestItemModel>;
+
+      return detailsFixture;
+    }
+
+    it('should initialise when details has a provider and no component', () => {
+      const detailsFixture = createFixtureWithDetails({
+        provider: createDetailsProvider(),
+      });
+
+      expect(() => detailsFixture.detectChanges()).not.toThrow();
+      expect(
+        detailsFixture.debugElement.children[0].componentInstance.keys,
+      ).toEqual(['firstName']);
+    });
+
+    it('should throw when details has no provider', () => {
+      const detailsFixture = createFixtureWithDetails(
+        {} as IListInternalOptions<TestItemModel>['details'],
+      );
+
+      expect(() => detailsFixture.detectChanges()).toThrow(
+        'Must set details provider',
+      );
+    });
+
+    it('should assign detailsComponent and props when a component is set', () => {
+      const provider = createDetailsProvider();
+      const componentFactories = { top: TestDetailsComponent };
+      const detailsFixture = createFixtureWithDetails({
+        provider,
+        component: TestDetailsComponent,
+        componentFactories,
+      });
+
+      detailsFixture.detectChanges();
+
+      const list = detailsFixture.debugElement.children[0].componentInstance;
+      expect(list.detailsComponent).toBe(TestDetailsComponent);
+      expect(list.detailsComponentProps).toEqual({
+        item: provider.item,
+        type: TestItemModel,
+        loading: provider.loading,
+        itemHandler: null,
+        removeHandler: null,
+        componentFactories,
+      });
+    });
   });
 });

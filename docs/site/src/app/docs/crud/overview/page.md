@@ -64,8 +64,8 @@ The server side takes one module import, configured once per feature.
 
 `tokenConfig` feeds the JWT strategy that guards the write routes, `permissions` maps each operation to the roles allowed to perform it, and `db` is the MongoDB collection the repository reads. The `apiUrl` in the Angular configuration points at wherever this module is mounted.
 
-{% callout type="warning" title="The details mode throws on the list page" %}
-Setting `details` on the configuration makes the list page build detail options without a detail component, and the shared list component rejects that with `Error: Must set details component` while it is initialising. The rest of the page never renders. Until that is fixed, leave `details` off the configuration and use `edit` to open a record on its own route.
+{% callout type="note" title="What the details mode does" %}
+Setting `details` on the configuration makes the rows of the list open the record on its own route, where the item page renders it read-only. The list itself never shows an inline detail panel, so use `edit` as well when the record also has to be editable.
 {% /callout %}
 
 ---

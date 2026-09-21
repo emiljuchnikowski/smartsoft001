@@ -67,11 +67,9 @@ The spec mounts the component and reads the DOM. The title renders as `zazolc-ge
 
 `FormFactory` is the bridge between the decorators and Angular's reactive forms. It is `@Injectable()` without `providedIn`, provided by `SharedFactoriesModule`, and it injects four things: `UntypedFormBuilder`, `AuthService`, `DetailsService` and `MODEL_VALIDATORS_PROVIDER`. The last one is not optional, so an application that registers no extra validators still has to provide the token, even as `null`. `create` walks the fields the mode admits, builds a control for each and attaches the validators the field metadata implies: required, email, phone number, PESEL, min, max, minimum and maximum length, the async uniqueness check and the `confirm` companion control.
 
-{% callout type="warning" title="A freshly built group reports VALID" %}
-`create` attaches the validators after each control has already computed its status, so the group it returns is `VALID` even when a required field is empty. Call `updateValueAndValidity()` on every control before rendering the form or gating a submit button, as the example does. The spec pins both sides of this: the refreshed group is invalid with `{ required: true }` on `name`, and the same group straight out of `create` reports `valid === true`.
-{% /callout %}
+Each control is recalculated once every validator it needs has been attached, so the group `create` hands back already carries the right status and nothing has to be refreshed before rendering the form or gating a submit button.
 
-The rest of that spec covers what the metadata produced. The controls are exactly `name` and `email`, the two fields with a create block. Filling `name` makes the group valid. `email` stays valid while empty, because `create: true` opted it into the form without making it mandatory, but `FieldType.email` still rejects `not-an-email` with `{ email: true }`.
+The spec covers what the metadata produced. The controls are exactly `name` and `email`, the two fields with a create block. The group is invalid straight out of `create` while `name` is empty, with `{ required: true }` on that control, and filling `name` makes it valid. `email` stays valid while empty, because `create: true` opted it into the form without making it mandatory, but `FieldType.email` still rejects `not-an-email` with `{ email: true }`.
 
 ### Put a component on screen
 

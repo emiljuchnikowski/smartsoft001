@@ -157,20 +157,21 @@ export abstract class ListBaseComponent<T extends IEntity<string>> {
 
       if (options.details) {
         if (!details?.provider) throw Error('Must set details provider');
-        if (!details?.component) throw Error('Must set details component');
 
-        this.detailsComponent = details.component;
-        this.detailsComponentProps = {
-          item: details?.provider.item,
-          type: options.type,
-          loading: details?.provider.loading,
-          itemHandler: this.itemHandler ?? null,
-          removeHandler: this.removeHandler,
-          componentFactories: details?.componentFactories,
-        };
+        if (details.component) {
+          this.detailsComponent = details.component;
+          this.detailsComponentProps = {
+            item: details.provider.item,
+            type: options.type,
+            loading: details.provider.loading,
+            itemHandler: this.itemHandler ?? null,
+            removeHandler: this.removeHandler,
+            componentFactories: details.componentFactories,
+          };
+        }
 
-        this.select = details?.provider.getData;
-        this.unselect = details?.provider.clearData;
+        this.select = details.provider.getData;
+        this.unselect = details.provider.clearData;
       }
 
       if (options.pagination) {
