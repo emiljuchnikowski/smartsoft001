@@ -5,6 +5,7 @@ import yaml from 'js-yaml'
 import { fenceNode } from '../../tools/markdoc-fence.mjs'
 import { DocsLayout } from '@/components/DocsLayout'
 import { Fence } from '@/components/Fence'
+import { MarkdocLink } from '@/components/MarkdocLink'
 
 let documentSlugifyMap = new Map()
 
@@ -52,6 +53,13 @@ const nodes = {
     },
   },
   fence: fenceNode(Fence),
+  link: {
+    // A plain anchor does not get the base path; next/link does. Without this
+    // every `[text](/docs/x)` on the site pointed one level above it on
+    // GitHub Pages. The export check fails the build if one slips through.
+    ...defaultNodes.link,
+    render: MarkdocLink,
+  },
 }
 
 export default nodes

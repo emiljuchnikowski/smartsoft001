@@ -188,6 +188,11 @@ undefined (reading 'toLowerCase')` and names the page but not the line. Use `tex
   means rewriting the branch. Use clearly named placeholder variables.
 - **Storybook iframes need the deployed build.** `nx run docs:serve` has no Storybook, so story embeds
   are empty locally; that is expected.
+- **Write internal links as `/docs/...` and nothing else.** The site is served under `/smartsoft001`,
+  and only `next/link` adds that prefix; the Markdoc `link` node routes every internal href through it.
+  A hand-written `<a href="/docs/x">` in a tag or component bypasses it and 404s on GitHub Pages.
+  `docs/site/tools/check-export.mjs` runs after `next build` and fails on any absolute reference without
+  the prefix.
 
 ## Related
 
