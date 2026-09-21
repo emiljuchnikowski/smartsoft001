@@ -168,4 +168,20 @@ describe('crud-shell-angular: ListComponent (GAP-27 styling surface)', () => {
 
     expect(() => ngOnInit()).not.toThrow();
   });
+
+  // Regression: `details: true` used to make the rendered list throw
+  // `Must set details component`, because the page builds the descriptor with
+  // a provider and component factories and never with a component.
+  it('should build details options with a provider and no component', async () => {
+    const { fixture } = setup({ title: 'Details', details: true });
+
+    await fixture.componentInstance.ngOnInit();
+
+    const details = fixture.componentInstance.listOptions()?.details as {
+      provider?: unknown;
+      component?: unknown;
+    };
+    expect(details.provider).toBeDefined();
+    expect(details.component).toBeUndefined();
+  });
 });

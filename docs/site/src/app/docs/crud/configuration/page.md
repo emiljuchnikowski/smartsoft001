@@ -36,22 +36,22 @@ The base class carries what every part of the feature needs: where the data is a
 
 `CrudFullConfig<T>` extends `CrudConfig<T>` with everything the generated pages need. It is required when `routing` is true.
 
-| Field             | Type                                                         | Default | Effect                                                                                                                       |
-| ----------------- | ------------------------------------------------------------ | ------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `title`           | `string`                                                     | —       | Required. The title of the list page.                                                                                        |
-| `details`         | `boolean` or `{ cellPipe?; components?: { top?; bottom? } }` | off     | Makes the item page open read-only, with an edit button when `edit` is also set. See the warning below before turning it on. |
-| `edit`            | `boolean` or `{ cellPipe?; components?: { top?; bottom? } }` | off     | Allows updates. Rows in the list become links to the record's route, and the item page renders a form with a save button.    |
-| `add`             | `boolean` or `{ components?: { top?; bottom? } }`            | off     | Adds the add button to the list header, which navigates to the `add` route.                                                  |
-| `remove`          | `boolean`                                                    | off     | Adds a per-row delete, behind a confirmation alert.                                                                          |
-| `search`          | `boolean`                                                    | off     | Renders the search box in the page header and sends its text as the free-text part of the query.                             |
-| `export`          | `boolean`                                                    | off     | Adds the export button, whose popover offers CSV and XLSX.                                                                   |
-| `pagination`      | `{ limit: number }`                                          | —       | The page size. It seeds the first read with that limit and an offset of zero, and drives the page counter.                   |
-| `sort`            | `boolean` or `{ default?: string; defaultDesc?: boolean }`   | off     | Enables sorting in the list. The object form also seeds the first read with a sort field and direction.                      |
-| `list`            | object, see below                                            | —       | Everything specific to the collection view.                                                                                  |
-| `buttons`         | `Array<IIconButtonOptions>`                                  | —       | Extra buttons, appended to the generated ones in the list page header.                                                       |
-| `inputComponents` | `{ [fieldKey: string]: Type<InputBaseComponent<T>> }`        | —       | Replaces the generated editor for named fields in the item form.                                                             |
-| `cssClass`        | `string`                                                     | —       | Bound as the class of the page wrapper on both pages.                                                                        |
-| `variant`         | `SmartPageVariant`                                           | —       | Threaded into the page options as the page variant, which selects the page presentation.                                     |
+| Field             | Type                                                         | Default | Effect                                                                                                                                |
+| ----------------- | ------------------------------------------------------------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `title`           | `string`                                                     | —       | Required. The title of the list page.                                                                                                 |
+| `details`         | `boolean` or `{ cellPipe?; components?: { top?; bottom? } }` | off     | Makes the item page open read-only, with an edit button when `edit` is also set. Rows in the list become links to the record's route. |
+| `edit`            | `boolean` or `{ cellPipe?; components?: { top?; bottom? } }` | off     | Allows updates. Rows in the list become links to the record's route, and the item page renders a form with a save button.             |
+| `add`             | `boolean` or `{ components?: { top?; bottom? } }`            | off     | Adds the add button to the list header, which navigates to the `add` route.                                                           |
+| `remove`          | `boolean`                                                    | off     | Adds a per-row delete, behind a confirmation alert.                                                                                   |
+| `search`          | `boolean`                                                    | off     | Renders the search box in the page header and sends its text as the free-text part of the query.                                      |
+| `export`          | `boolean`                                                    | off     | Adds the export button, whose popover offers CSV and XLSX.                                                                            |
+| `pagination`      | `{ limit: number }`                                          | —       | The page size. It seeds the first read with that limit and an offset of zero, and drives the page counter.                            |
+| `sort`            | `boolean` or `{ default?: string; defaultDesc?: boolean }`   | off     | Enables sorting in the list. The object form also seeds the first read with a sort field and direction.                               |
+| `list`            | object, see below                                            | —       | Everything specific to the collection view.                                                                                           |
+| `buttons`         | `Array<IIconButtonOptions>`                                  | —       | Extra buttons, appended to the generated ones in the list page header.                                                                |
+| `inputComponents` | `{ [fieldKey: string]: Type<InputBaseComponent<T>> }`        | —       | Replaces the generated editor for named fields in the item form.                                                                      |
+| `cssClass`        | `string`                                                     | —       | Bound as the class of the page wrapper on both pages.                                                                                 |
+| `variant`         | `SmartPageVariant`                                           | —       | Threaded into the page options as the page variant, which selects the page presentation.                                              |
 
 ### The list block
 
@@ -64,8 +64,8 @@ The base class carries what every part of the feature needs: where the data is a
 | `resetQuery`     | `'beforeInit'`          | Discards any filter left in the store and rebuilds it from the configuration when the page initialises.             |
 | `groups`         | `Array<ICrudListGroup>` | Splits the list into disclosure groups. See [export, multiselect and groups](/docs/crud/export-multiselect-groups). |
 
-{% callout type="warning" title="The details mode throws on the list page" %}
-When `details` is truthy the list page builds detail options without a detail component, and the shared list component throws `Error: Must set details component` while it initialises, so the page does not render. Use `edit` alone until that is fixed.
+{% callout type="note" title="The details mode has no inline panel" %}
+`details` does not add a detail panel to the list itself. It makes the rows navigate to the item page, which renders the record read-only. Nothing in the list template renders a details component, so the `components` block of `details` reaches the item page only.
 {% /callout %}
 
 ---

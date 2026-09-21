@@ -22,15 +22,6 @@ export class Contact {
 export async function buildContactForm(
   factory: FormFactory,
 ): Promise<SmartFormGroup> {
-  const form = await factory.create(new Contact(), { mode: 'create' });
-
-  // `create()` attaches the validators after each control has already computed
-  // its status, so a freshly built group reports VALID until the controls are
-  // refreshed. Refresh them before showing the form or gating a submit button.
-  Object.keys(form.controls).forEach((key) =>
-    form.controls[key].updateValueAndValidity(),
-  );
-
-  return form;
+  return factory.create(new Contact(), { mode: 'create' });
 }
 // #endregion

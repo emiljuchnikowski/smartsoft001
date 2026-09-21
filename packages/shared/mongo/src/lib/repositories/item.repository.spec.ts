@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 
 import { IItemRepositoryOptions } from '@smartsoft001/domain-core';
+import { Field } from '@smartsoft001/models';
 import { IUser } from '@smartsoft001/users';
 
 import { MongoConfig, MongoItemRepository } from '../mongo.module';
@@ -1269,3 +1270,81 @@ describe('shared-mongo: MongoItemRepository getByCriteria function', () => {
 //     });
 //   });
 // });
+
+describe('shared-mongo: MongoItemRepository generateSearch function', () => {
+  class SearchableModel {
+    @Field({ search: true })
+    name: string;
+
+    @Field({ search: true })
+    description: string;
+
+    @Field()
+    code: string;
+  }
+
+  class NotSearchableModel {
+    @Field()
+    name: string;
+
+    @Field()
+    code: string;
+  }
+
+  class TestableRepository extends MongoItemRepository<any> {
+    callGenerateSearch(criteria: any): void {
+      this.generateSearch(criteria);
+    }
+  }
+
+  function createRepository(type?: any): TestableRepository {
+    const config = new MongoConfig();
+    config.type = type;
+
+    return new TestableRepository(config);
+  }
+
+  it('should replace $search with $or regex conditions when model has searchable fields', () => {
+    const repository = createRepository(SearchableModel);
+    const criteria: any = { $search: 'abc' };
+
+    repository.callGenerateSearch(criteria);
+
+    expect(criteria['$search']).toBeUndefined();
+    expect(criteria['$or']).toEqual([
+      { name: { $regex: 'abc', $options: 'i' } },
+      { description: { $regex: 'abc', $options: 'i' } },
+    ]);
+  });
+
+  it('should set $text on the criteria when model has no searchable fields', () => {
+    const repository = createRepository(NotSearchableModel);
+    const criteria: any = { $search: 'abc' };
+
+    repository.callGenerateSearch(criteria);
+
+    expect(criteria['$search']).toBeUndefined();
+    expect(criteria['$text']).toEqual({ $search: ' "abc" ' });
+  });
+
+  it('should keep other criteria keys when adding $text', () => {
+    const repository = createRepository(NotSearchableModel);
+    const criteria: any = { $search: 'abc', code: '123' };
+
+    repository.callGenerateSearch(criteria);
+
+    expect(criteria).toEqual({
+      code: '123',
+      $text: { $search: ' "abc" ' },
+    });
+  });
+
+  it('should leave criteria untouched when there is no $search', () => {
+    const repository = createRepository(NotSearchableModel);
+    const criteria: any = { code: '123' };
+
+    repository.callGenerateSearch(criteria);
+
+    expect(criteria).toEqual({ code: '123' });
+  });
+});
