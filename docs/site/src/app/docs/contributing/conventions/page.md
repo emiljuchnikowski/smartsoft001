@@ -67,6 +67,18 @@ Angular tests run in the zoneless `jest-preset-angular` environment with unknown
 
 Components are standalone, use signals (`input()`, `output()`, `computed()`, `model()`), the built-in control flow (`@if`, `@for`) and `inject()` instead of constructor injection; change detection is `OnPush`. UI components in `@smartsoft001/angular` use the `smart` selector prefix and ship a base class, a standard implementation and, where one exists, a preset that can be registered through an injection token; see any page of the [Components](/docs/components) section for the pattern.
 
+## A package has to be loadable
+
+Every suite in this repository compiles the sources. Nothing loads the artefact, so a package can be green everywhere and still be impossible to install. Five of them shipped for months emitting `export` statements from a manifest that declared CommonJS, and neither `require` nor `import` could open them.
+
+Two checks hold the line, and a change to how a package is built has to keep both green.
+
+`tools/scripts/package-module-format.test.mjs` runs with the rest of the Node tooling tests and needs no build. For every package compiled by `@nx/js:tsc` it reads the tsconfig through its `extends` chain and asserts the compiler emits CommonJS, that module resolution is not the bundler algorithm, and that no manifest declares itself an ES module. The Node libraries are CommonJS because a NestJS application is.
+
+`npm run verify:dist` runs after the build, in the pull request workflow and again before the packages reach npm. It copies each built package into a throwaway `node_modules` and loads it the way a consumer would. Angular libraries are resolved rather than executed, because their entry points are bundles meant for a bundler. Meta packages are skipped, because they carry dependencies and no code.
+
+A package that genuinely cannot be loaded yet goes in that script's `KNOWN_BROKEN` map with the issue that tracks it. The check also fails when an entry on the list starts working, so the list cannot go stale.
+
 ## Breaking changes ship a migration
 
 A change that makes a consumer's code stop compiling, or stop meaning what it meant, is not finished until the release can perform it. Migrations live in `packages/meta/core`: `migrations.json` lists them, `src/migrations/<name>/` holds each one, and `@smartsoft001/core` is the package that carries them because every stack depends on it.

@@ -36,6 +36,10 @@ jobs:
           export NODE_OPTIONS="--max-old-space-size=8192"
           npx nx run-many -t test --max-parallel=4
       - run: npx nx run-many -t build --max-parallel=4
+      # A package can pass every unit test and still be impossible to install:
+      # the suites compile the sources, never the artefact. Load what the build
+      # produced, the way a consumer would.
+      - run: npm run verify:dist
       # Produce the diff for the review. We deliberately do NOT run Claude or
       # post comments here (no secrets / read-only token on fork PRs). Only the
       # diff text is handed off; the PR number is re-derived from the trusted
