@@ -24,13 +24,12 @@
       "outputs": ["{workspaceRoot}/coverage/packages/trans/domain"]
     },
     "build": {
-      "executor": "@nx/esbuild:esbuild",
+      "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/trans/domain",
-        "tsConfig": "packages/trans/domain/tsconfig.lib.json",
-        "packageJson": "packages/trans/domain/package.json",
         "main": "packages/trans/domain/src/index.ts",
+        "tsConfig": "packages/trans/domain/tsconfig.lib.json",
         "assets": ["packages/trans/domain/*.md"]
       }
     },

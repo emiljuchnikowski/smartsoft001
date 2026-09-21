@@ -35,15 +35,14 @@
       }
     },
     "build": {
-      "executor": "@nx/esbuild:esbuild",
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/crud/domain",
-        "tsConfig": "packages/crud/domain/tsconfig.lib.json",
-        "packageJson": "packages/crud/domain/package.json",
         "main": "packages/crud/domain/src/index.ts",
+        "tsConfig": "packages/crud/domain/tsconfig.lib.json",
         "assets": ["packages/crud/domain/*.md"]
-      },
-      "outputs": ["{options.outputPath}"]
+      }
     }
   }
 }

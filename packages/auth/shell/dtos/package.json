@@ -1,6 +1,9 @@
 {
   "name": "@smartsoft001/auth-shell-dtos",
   "version": "2.147.0",
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "typings": "./src/index.d.ts",
   "description": "LoginDto, the decorated credentials model of the auth family: two required fields the framework can render as a form and check for completeness.",
   "publishConfig": {
     "access": "public"

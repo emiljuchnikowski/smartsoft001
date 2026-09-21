@@ -30,13 +30,12 @@
       }
     },
     "build": {
-      "executor": "@nx/esbuild:esbuild",
+      "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/trans/shell/app-services",
-        "tsConfig": "packages/trans/shell/app-services/tsconfig.lib.json",
-        "packageJson": "packages/trans/shell/app-services/package.json",
         "main": "packages/trans/shell/app-services/src/index.ts",
+        "tsConfig": "packages/trans/shell/app-services/tsconfig.lib.json",
         "assets": ["packages/trans/shell/app-services/*.md"]
       }
     }

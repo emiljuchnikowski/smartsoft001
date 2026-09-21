@@ -23,13 +23,12 @@
       "outputs": ["{workspaceRoot}/coverage/packages/shared/revolut"]
     },
     "build": {
-      "executor": "@nx/esbuild:esbuild",
+      "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/shared/revolut",
-        "tsConfig": "packages/shared/revolut/tsconfig.lib.json",
-        "packageJson": "packages/shared/revolut/package.json",
         "main": "packages/shared/revolut/src/index.ts",
+        "tsConfig": "packages/shared/revolut/tsconfig.lib.json",
         "assets": ["packages/shared/revolut/*.md"]
       }
     },

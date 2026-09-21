@@ -28,13 +28,12 @@
       }
     },
     "build": {
-      "executor": "@nx/esbuild:esbuild",
+      "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/auth/shell/nestjs",
-        "tsConfig": "packages/auth/shell/nestjs/tsconfig.lib.json",
-        "packageJson": "packages/auth/shell/nestjs/package.json",
         "main": "packages/auth/shell/nestjs/src/index.ts",
+        "tsConfig": "packages/auth/shell/nestjs/tsconfig.lib.json",
         "assets": ["packages/auth/shell/nestjs/*.md"]
       }
     }

@@ -1,6 +1,9 @@
 {
   "name": "@smartsoft001/paynow",
   "version": "2.147.0",
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "typings": "./src/index.d.ts",
   "description": "PaynowService: payment creation, status lookup and refunds against the Paynow API, with HMAC-SHA256 request signing and per-request idempotency keys.",
   "publishConfig": {
     "access": "public"

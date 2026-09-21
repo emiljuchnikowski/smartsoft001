@@ -1,6 +1,9 @@
 {
   "name": "@smartsoft001/trans-domain",
   "version": "2.147.0",
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "typings": "./src/index.d.ts",
   "description": "The payment transaction lifecycle: one entity with its own history, three services that create, refresh and refund it, and the two contracts every payment provider fulfils.",
   "publishConfig": {
     "access": "public"

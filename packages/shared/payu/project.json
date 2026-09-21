@@ -28,15 +28,14 @@
       }
     },
     "build": {
-      "executor": "@nx/esbuild:esbuild",
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/shared/payu",
-        "tsConfig": "packages/shared/payu/tsconfig.lib.json",
-        "packageJson": "packages/shared/payu/package.json",
         "main": "packages/shared/payu/src/index.ts",
+        "tsConfig": "packages/shared/payu/tsconfig.lib.json",
         "assets": ["packages/shared/payu/*.md"]
-      },
-      "outputs": ["{options.outputPath}"]
+      }
     }
   }
 }
