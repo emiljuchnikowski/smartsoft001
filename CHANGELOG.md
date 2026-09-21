@@ -1,3 +1,14 @@
+## 2.147.0 (2026-09-21)
+
+### 🩹 Fixes
+
+- **shared:** repair three defects found while documenting crud ([#64](https://github.com/emiljuchnikowski/smartsoft001/pull/64))
+
+### ❤️ Thank You
+
+- Claude Opus 5
+- Emil Juchnikowski
+
 ## 2.146.0 (2026-09-21)
 
 ### 🩹 Fixes
