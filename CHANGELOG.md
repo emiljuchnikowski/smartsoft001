@@ -1,3 +1,14 @@
+## 2.148.0 (2026-09-21)
+
+### 🩹 Fixes
+
+- **release:** make every published Node package loadable ([#65](https://github.com/emiljuchnikowski/smartsoft001/pull/65))
+
+### ❤️ Thank You
+
+- Claude Opus 5
+- Emil Juchnikowski
+
 ## 2.147.0 (2026-09-21)
 
 ### 🩹 Fixes
