@@ -1,18 +1,18 @@
 {
   "name": "@smartsoft001/payments-stack",
-  "version": "2.149.0",
+  "version": "2.150.0",
   "publishConfig": {
     "access": "public"
   },
   "description": "The payment transaction family and the four provider integrations, installed only by services that take payments.",
   "license": "MIT",
   "dependencies": {
-    "@smartsoft001/trans-domain": "2.149.0",
-    "@smartsoft001/trans-shell-app-services": "2.149.0",
-    "@smartsoft001/trans-shell-nestjs": "2.149.0",
-    "@smartsoft001/paypal": "2.149.0",
-    "@smartsoft001/payu": "2.149.0",
-    "@smartsoft001/paynow": "2.149.0",
-    "@smartsoft001/revolut": "2.149.0"
+    "@smartsoft001/trans-domain": "2.150.0",
+    "@smartsoft001/trans-shell-app-services": "2.150.0",
+    "@smartsoft001/trans-shell-nestjs": "2.150.0",
+    "@smartsoft001/paypal": "2.150.0",
+    "@smartsoft001/payu": "2.150.0",
+    "@smartsoft001/paynow": "2.150.0",
+    "@smartsoft001/revolut": "2.150.0"
   }
 }

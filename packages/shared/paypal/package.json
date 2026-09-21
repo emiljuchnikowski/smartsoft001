@@ -1,6 +1,6 @@
 {
   "name": "@smartsoft001/paypal",
-  "version": "2.149.0",
+  "version": "2.150.0",
   "type": "commonjs",
   "main": "./src/index.js",
   "typings": "./src/index.d.ts",
@@ -19,6 +19,6 @@
   },
   "homepage": "https://github.com/emiljuchnikowski/smartsoft#readme",
   "peerDependencies": {
-    "@smartsoft001/trans-domain": "2.149.0"
+    "@smartsoft001/trans-domain": "2.150.0"
   }
 }

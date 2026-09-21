@@ -1,3 +1,14 @@
+## 2.150.0 (2026-09-21)
+
+### 🩹 Fixes
+
+- **nx:** route markdown links through next/link so they keep the base path ([#72](https://github.com/emiljuchnikowski/smartsoft001/pull/72))
+
+### ❤️ Thank You
+
+- Claude Fable 5.1
+- Emil Juchnikowski
+
 ## 2.149.0 (2026-09-21)
 
 ### 🩹 Fixes

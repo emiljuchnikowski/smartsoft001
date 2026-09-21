@@ -1,6 +1,6 @@
 {
   "name": "@smartsoft001/claude-plugins",
-  "version": "2.149.0",
+  "version": "2.150.0",
   "description": "Installs the smart@smartsoft Claude Code plugin into a project: the agents, skills and hooks this workspace develops with.",
   "publishConfig": {
     "access": "public"
