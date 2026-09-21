@@ -1,5 +1,9 @@
-import { Tree, logger, readJson, writeJson } from '@nx/devkit';
+import { Tree, readJson, writeJson } from '@nx/devkit';
 import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
+import { ModuleKind, ScriptTarget, transpileModule } from 'typescript';
+
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 
 import update from './use-stack-packages';
 
@@ -9,7 +13,7 @@ describe('use-stack-packages migration', () => {
 
   beforeEach(() => {
     tree = createTreeWithEmptyWorkspace();
-    info = jest.spyOn(logger, 'info').mockImplementation(() => undefined);
+    info = jest.spyOn(console, 'log').mockImplementation(() => undefined);
   });
 
   afterEach(() => {
@@ -359,5 +363,69 @@ describe('use-stack-packages migration', () => {
     expect(readJson(tree, 'package.json').dependencies).toEqual({
       '@smartsoft001/angular-stack': '2.144.0',
     });
+  });
+
+  it('should compile to JavaScript that requires nothing', () => {
+    // The unit tests above run inside this repository, where `@nx/devkit` is
+    // installed. A consumer's workspace has `nx` and nothing else, so an import
+    // that survives compilation fails there and only there: 2.145.0 shipped
+    // with `Cannot find module '@nx/devkit'` while every test above was green.
+    const source = readFileSync(
+      join(__dirname, 'use-stack-packages.ts'),
+      'utf-8',
+    );
+
+    const { outputText } = transpileModule(source, {
+      compilerOptions: {
+        module: ModuleKind.CommonJS,
+        target: ScriptTarget.ES2022,
+      },
+    });
+
+    const required = [
+      ...outputText.matchAll(/require\(["']([^"']+)["']\)/g),
+    ].map((match) => match[1]);
+
+    expect(required).toEqual([]);
+  });
+
+  it('should leave a group alone when a member is not on a plain version', async () => {
+    // A `file:`, `workspace:` or git specifier means the project resolves that
+    // package its own way, and the stack's pinned version is not the same
+    // thing. Comparing the digits inside such a string yields a number, and
+    // the wrong one.
+    writeJson(tree, 'package.json', {
+      dependencies: {
+        '@smartsoft001/angular': 'file:../angular',
+        '@smartsoft001/crud-shell-angular': '2.145.0',
+      },
+    });
+
+    await update(tree);
+
+    expect(readJson(tree, 'package.json').dependencies).toEqual({
+      '@smartsoft001/angular': 'file:../angular',
+      '@smartsoft001/crud-shell-angular': '2.145.0',
+    });
+    expect(info).toHaveBeenCalledWith(
+      expect.stringContaining(
+        'left alone, @smartsoft001/angular is "file:../angular"',
+      ),
+    );
+  });
+
+  it('should still collapse a group written with ranges', async () => {
+    writeJson(tree, 'package.json', {
+      dependencies: {
+        '@smartsoft001/angular': '^2.145.0',
+        '@smartsoft001/crud-shell-angular': '~2.145.0',
+      },
+    });
+
+    await update(tree);
+
+    expect(Object.keys(readJson(tree, 'package.json').dependencies)).toEqual([
+      '@smartsoft001/angular-stack',
+    ]);
   });
 });

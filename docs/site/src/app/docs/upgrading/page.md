@@ -21,7 +21,17 @@ npx nx migrate --run-migrations
 
 The first rewrites the versions in `package.json`, installs them and writes a `migrations.json` in the project root listing what the release wants to change. The second runs those changes and deletes the file. Review the diff between the two commands, as with any other `nx migrate`.
 
-`@smartsoft001/core` is the package to name because every stack depends on it, so every project has it. The migrations it carries cover the whole family: they are written against what a consumer's code looks like, not against one package.
+`@smartsoft001/core` is the package to name because it carries the migrations, and every stack depends on it, so a project that installed a stack already has it. The migrations cover the whole family: they are written against what a project's code looks like, not against one package.
+
+{% callout type="warning" title="A project that installs packages one by one" %}
+`nx migrate` can only migrate a package the project depends on. A project that lists the libraries individually has no `@smartsoft001/core`, and the command answers `No packages to migrate` without doing anything. Add it once:
+
+```bash
+npm install @smartsoft001/core@latest
+```
+
+The first migration then folds those individual entries into the stack that covers them, and every release after that works with the two commands above.
+{% /callout %}
 
 {% callout title="A project without Nx" %}
 `ng update @smartsoft001/core` reads the same file and runs the same migrations through the Angular CLI. A project with neither reads [what each release changed](https://github.com/emiljuchnikowski/smartsoft001/blob/main/CHANGELOG.md) and applies it by hand; the migrations are plain TypeScript and their source is in the package, under `src/migrations`.
