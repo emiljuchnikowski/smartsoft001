@@ -34,15 +34,14 @@
       }
     },
     "build": {
-      "executor": "@nx/esbuild:esbuild",
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/crud/shell/nestjs",
-        "tsConfig": "packages/crud/shell/nestjs/tsconfig.lib.json",
-        "packageJson": "packages/crud/shell/nestjs/package.json",
         "main": "packages/crud/shell/nestjs/src/index.ts",
+        "tsConfig": "packages/crud/shell/nestjs/tsconfig.lib.json",
         "assets": ["packages/crud/shell/nestjs/*.md"]
-      },
-      "outputs": ["{options.outputPath}"]
+      }
     }
   }
 }

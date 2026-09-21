@@ -1,11 +1,13 @@
 {
   "name": "@smartsoft001/mongo",
   "version": "2.147.0",
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "typings": "./src/index.d.ts",
   "publishConfig": {
     "access": "public"
   },
   "description": "Utils to mongo",
-  "typings": "./src/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/emiljuchnikowski/smartsoft.git"

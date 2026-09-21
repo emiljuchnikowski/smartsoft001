@@ -28,13 +28,12 @@
       }
     },
     "build": {
-      "executor": "@nx/esbuild:esbuild",
+      "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/shared/google",
-        "tsConfig": "packages/shared/google/tsconfig.lib.json",
-        "packageJson": "packages/shared/google/package.json",
         "main": "packages/shared/google/src/index.ts",
+        "tsConfig": "packages/shared/google/tsconfig.lib.json",
         "assets": ["packages/shared/google/*.md"]
       }
     }

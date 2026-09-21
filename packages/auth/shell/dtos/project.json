@@ -21,13 +21,12 @@
       }
     },
     "build": {
-      "executor": "@nx/esbuild:esbuild",
+      "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/auth/shell/dtos",
-        "tsConfig": "packages/auth/shell/dtos/tsconfig.lib.json",
-        "packageJson": "packages/auth/shell/dtos/package.json",
         "main": "packages/auth/shell/dtos/src/index.ts",
+        "tsConfig": "packages/auth/shell/dtos/tsconfig.lib.json",
         "assets": ["packages/auth/shell/dtos/*.md"]
       }
     },

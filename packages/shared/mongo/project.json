@@ -24,16 +24,13 @@
       "outputs": ["{workspaceRoot}/coverage/packages/shared/mongo"]
     },
     "build": {
-      "executor": "@nx/esbuild:esbuild",
+      "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/shared/mongo",
-        "tsConfig": "packages/shared/mongo/tsconfig.lib.json",
-        "packageJson": "packages/shared/mongo/package.json",
         "main": "packages/shared/mongo/src/index.ts",
-        "assets": ["packages/shared/mongo/*.md"],
-        "generatePackageJson": true,
-        "format": ["cjs"]
+        "tsConfig": "packages/shared/mongo/tsconfig.lib.json",
+        "assets": ["packages/shared/mongo/*.md"]
       }
     },
     "nx-release-publish": {

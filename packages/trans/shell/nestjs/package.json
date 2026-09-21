@@ -1,6 +1,9 @@
 {
   "name": "@smartsoft001/trans-shell-nestjs",
   "version": "2.147.0",
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "typings": "./src/index.d.ts",
   "description": "The NestJS shell around TransService: one dynamic module that gates each payment provider behind its own config, a route that starts a payment and one webhook controller per provider.",
   "publishConfig": {
     "access": "public"

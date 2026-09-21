@@ -35,16 +35,35 @@ const repoRoot = path.resolve(
  * package on this list is allowed to fail, and the check fails if it starts
  * working, so the list cannot quietly go stale.
  */
-const KNOWN_BROKEN = new Map([
-  [
-    '@smartsoft001/trans-domain',
-    'FRA-371: esbuild emits no decorator metadata, so typeorm cannot read the column types',
-  ],
-  [
-    '@smartsoft001/trans-shell-nestjs',
-    'FRA-371: esbuild emits no decorator metadata, so typeorm cannot read the column types',
-  ],
-]);
+const KNOWN_BROKEN = new Map();
+
+/**
+ * Decorated classes whose constructor metadata has to survive the build.
+ *
+ * Loading a package proves the module system is satisfied. It does not prove
+ * the package is usable: NestJS resolves a class provider's constructor from
+ * the `design:paramtypes` TypeScript emits under `emitDecoratorMetadata`, and
+ * typeorm reads `design:type` for a column with no explicit type. Eighteen
+ * packages spent months built by esbuild, which does not implement that
+ * option, so every decorated class shipped without its metadata. The suites
+ * stayed green throughout, because ts-jest compiles the sources and does emit
+ * it, and the entry points still imported, so a load check alone would have
+ * said nothing.
+ *
+ * Each entry names a class the framework itself injects, and the parameter
+ * types Nest has to see to construct it.
+ */
+const DECORATED_CLASSES = [
+  {
+    package: '@smartsoft001/crud-shell-app-services',
+    export: 'CrudService',
+    paramTypes: [
+      'PermissionService',
+      'IItemRepository',
+      'IAttachmentRepository',
+    ],
+  },
+];
 
 function readJson(absolute) {
   return JSON.parse(fs.readFileSync(absolute, 'utf8'));
@@ -203,11 +222,74 @@ function main() {
     }
 
     console.log(
-      `\n${checked - KNOWN_BROKEN.size} of ${checked} checked packages load; ` +
-        `${KNOWN_BROKEN.size} are known broken and tracked.`,
+      `\n${checked - KNOWN_BROKEN.size} of ${checked} checked packages load` +
+        (KNOWN_BROKEN.size
+          ? `; ${KNOWN_BROKEN.size} are known broken and tracked.`
+          : '.'),
     );
+
+    checkDecoratorMetadata(workspace);
   } finally {
     fs.rmSync(workspace, { recursive: true, force: true });
+  }
+}
+
+/**
+ * Reads the constructor metadata off each class in `DECORATED_CLASSES`, in a
+ * child process so that `reflect-metadata` is loaded the way a consumer loads
+ * it, and fails when a class lost the types Nest needs.
+ */
+function checkDecoratorMetadata(workspace) {
+  const offenders = [];
+
+  for (const entry of DECORATED_CLASSES) {
+    const program = `
+      require('reflect-metadata');
+      const mod = require(${JSON.stringify(entry.package)});
+      const target = mod[${JSON.stringify(entry.export)}];
+      if (!target) throw new Error('export not found');
+      const types = Reflect.getMetadata('design:paramtypes', target);
+      process.stdout.write(JSON.stringify(types ? types.map((t) => (t ? t.name : null)) : null));
+    `;
+
+    let actual = null;
+
+    try {
+      actual = JSON.parse(
+        execFileSync(process.execPath, ['-e', program], {
+          cwd: workspace,
+          stdio: 'pipe',
+        }).toString(),
+      );
+    } catch (caught) {
+      offenders.push(
+        `${entry.package} ${entry.export}: ${String(caught.stderr ?? caught.message).split('\n')[0]}`,
+      );
+      continue;
+    }
+
+    const label = `${entry.package} ${entry.export}`;
+
+    if (actual === null) {
+      offenders.push(
+        `${label}: no design:paramtypes at all, so Nest cannot construct it`,
+      );
+    } else if (actual.join() !== entry.paramTypes.join()) {
+      offenders.push(
+        `${label}: expected [${entry.paramTypes.join(', ')}], got [${actual.join(', ')}]`,
+      );
+    } else {
+      console.log(`ok    ${label} (metadata)`);
+    }
+  }
+
+  if (offenders.length) {
+    console.error(
+      '\nDecorator metadata did not survive the build:\n  ' +
+        offenders.join('\n  ') +
+        '\n\nThe build has to emit "emitDecoratorMetadata". esbuild does not implement it.',
+    );
+    process.exit(1);
   }
 }
 

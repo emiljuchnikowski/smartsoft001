@@ -24,13 +24,12 @@
       "outputs": ["{workspaceRoot}/coverage/packages/shared/paypal"]
     },
     "build": {
-      "executor": "@nx/esbuild:esbuild",
+      "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/shared/paypal",
-        "tsConfig": "packages/shared/paypal/tsconfig.lib.json",
-        "packageJson": "packages/shared/paypal/package.json",
         "main": "packages/shared/paypal/src/index.ts",
+        "tsConfig": "packages/shared/paypal/tsconfig.lib.json",
         "assets": ["packages/shared/paypal/*.md"]
       }
     },

@@ -30,13 +30,12 @@
       }
     },
     "build": {
-      "executor": "@nx/esbuild:esbuild",
+      "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/trans/shell/dtos",
-        "tsConfig": "packages/trans/shell/dtos/tsconfig.lib.json",
-        "packageJson": "packages/trans/shell/dtos/package.json",
         "main": "packages/trans/shell/dtos/src/index.ts",
+        "tsConfig": "packages/trans/shell/dtos/tsconfig.lib.json",
         "assets": ["packages/trans/shell/dtos/*.md"]
       }
     }

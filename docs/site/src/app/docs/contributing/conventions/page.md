@@ -77,7 +77,9 @@ Two checks hold the line, and a change to how a package is built has to keep bot
 
 `npm run verify:dist` runs after the build, in the pull request workflow and again before the packages reach npm. It copies each built package into a throwaway `node_modules` and loads it the way a consumer would. Angular libraries are resolved rather than executed, because their entry points are bundles meant for a bundler. Meta packages are skipped, because they carry dependencies and no code.
 
-A package that genuinely cannot be loaded yet goes in that script's `KNOWN_BROKEN` map with the issue that tracks it. The check also fails when an entry on the list starts working, so the list cannot go stale.
+The same script then reads the constructor metadata off a decorated class in the built output. Loading a package proves the module system is satisfied; it does not prove the package is usable. NestJS resolves a class provider's constructor from the `design:paramtypes` that TypeScript emits under `emitDecoratorMetadata`, and typeorm reads `design:type` for a column with no explicit type. Eighteen packages were built by esbuild, which does not implement that option, so every decorated class shipped without it while every suite stayed green. Anything that changes how a package is built has to keep that assertion passing, which in practice means compiling the decorated packages with `@nx/js:tsc`.
+
+A package that genuinely cannot be loaded yet goes in that script's `KNOWN_BROKEN` map with the issue that tracks it. The map is empty today. The check also fails when an entry on the list starts working, so the list cannot go stale.
 
 ## Breaking changes ship a migration
 

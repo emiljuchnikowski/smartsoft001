@@ -294,12 +294,11 @@ describe('@smartsoft001/mongo: where the published types live', () => {
     assert.equal(manifest.typings, './src/index.d.ts');
   });
 
-  it('should leave "main" to the builder that writes the bundle', () => {
-    // The siblings that declare `"main": "./src/index.js"` are compiled file
-    // by file by `@nx/js:tsc`. This one is bundled by `@nx/esbuild:esbuild`
-    // into a single `index.cjs` at the package root, and the executor writes
-    // the matching `main` into the generated manifest. Copying the siblings'
-    // value here would name a file this package does not publish.
-    assert.equal(manifest.main, undefined);
+  it('should name the entry the build emits', () => {
+    // This package used to be bundled into a single `index.cjs`, and left
+    // `main` to the executor that wrote the bundle. It is compiled file by
+    // file by `@nx/js:tsc` now, for the decorator metadata esbuild does not
+    // emit, so the entry is the same `src/index.js` every sibling declares.
+    assert.equal(manifest.main, './src/index.js');
   });
 });
