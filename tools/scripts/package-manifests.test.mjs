@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import { isBuiltin } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, it } from 'node:test';
@@ -13,6 +14,20 @@ const repoRoot = path.resolve(
 /** Nx writes this sentence into every generated library manifest. */
 const NX_PLACEHOLDER_DESCRIPTION =
   'This library was generated with [Nx](https://nx.dev).';
+
+/**
+ * Imports that are written in the sources and are deliberately not declared,
+ * because nothing the package ships ever resolves them.
+ *
+ * `@smartsoft001/core`'s migration takes the `Tree` Nx hands it. The type is
+ * erased at compile time on purpose: the migration has to run in a workspace
+ * that installs the framework and not the devkit, so requiring `@nx/devkit`
+ * there would fail. Declaring it would install a whole Nx toolchain into every
+ * consumer to satisfy an import that is not in the JavaScript.
+ */
+const ERASED_IMPORTS = {
+  '@smartsoft001/core': ['@nx/devkit'],
+};
 
 function readJson(relative) {
   return JSON.parse(fs.readFileSync(path.join(repoRoot, relative), 'utf8'));
@@ -32,50 +47,13 @@ function publishedPackages() {
 }
 
 /**
- * The `@smartsoft001/*` packages a project's shipped sources import.
+ * The names of every package a project's shipped sources import.
  *
  * Reading this out of the sources rather than out of a list kept here means a
  * new import shows up in the check on the commit that adds it. Specs, stories
- * and tests are excluded: they are not built into the package, so what they
- * import is a workspace concern rather than something a consumer installs.
- */
-function importedPackages(dir) {
-  const sourceRoot = path.join(repoRoot, dir, 'src');
-
-  if (!fs.existsSync(sourceRoot)) return new Set();
-
-  const sources = fs
-    .globSync('**/*.ts', {
-      cwd: sourceRoot,
-      exclude: (name) => name === 'node_modules',
-    })
-    .filter((file) => !/\.(spec|stories|test)\.ts$/.test(file));
-
-  const found = new Set();
-
-  for (const file of sources) {
-    const text = fs.readFileSync(path.join(sourceRoot, file), 'utf8');
-
-    // `from '@smartsoft001/x'` covers imports, re-exports and `import type`;
-    // the second pattern covers a bare side-effect `import '@smartsoft001/x'`.
-    for (const match of text.matchAll(
-      /\bfrom\s+['"](@smartsoft001\/[a-z0-9-]+)['"]/g,
-    )) {
-      found.add(match[1]);
-    }
-
-    for (const match of text.matchAll(
-      /\bimport\s+['"](@smartsoft001\/[a-z0-9-]+)['"]/g,
-    )) {
-      found.add(match[1]);
-    }
-  }
-
-  return found;
-}
-
-/**
- * Every package name the shipped sources import, workspace or not.
+ * and tests are excluded, and so is `test-setup.ts`: none of them is built
+ * into the package, so what they import is a workspace concern rather than
+ * something a consumer installs.
  *
  * A subpath import is credited to the package it comes from, so `rxjs/operators`
  * counts as `rxjs` and `@nestjs/common/x` as `@nestjs/common`.
@@ -90,14 +68,17 @@ function importedNames(dir) {
       cwd: sourceRoot,
       exclude: (name) => name === 'node_modules',
     })
-    .filter((file) => !/\.(spec|stories|test)\.ts$/.test(file));
+    .filter((file) => !/\.(spec|stories|test)\.ts$/.test(file))
+    .filter((file) => path.basename(file) !== 'test-setup.ts');
 
   const found = new Set();
 
   for (const file of sources) {
     const text = fs.readFileSync(path.join(sourceRoot, file), 'utf8');
 
-    // A leading `.` marks a relative path, which resolves inside the package.
+    // `from 'x'` covers imports, re-exports and `import type`; the second
+    // pattern covers a bare side-effect `import 'x'`. A leading `.` marks a
+    // relative path, which resolves inside the package.
     for (const match of text.matchAll(/\bfrom\s+['"]([^'".][^'"]*)['"]/g)) {
       found.add(match[1]);
     }
@@ -134,29 +115,40 @@ describe('package manifests: what a project imports, it declares', () => {
     );
   });
 
-  it('should declare every workspace package its sources import', () => {
-    // An undeclared workspace import installs nothing: the consumer gets a
+  it('should declare every package its sources import', () => {
+    // An undeclared import installs nothing: the consumer gets a
     // module-not-found at import time, or a type error with no hint of which
-    // package is missing, and no package manager warns about either.
+    // package is missing, and no package manager warns about either. This
+    // check used to look at `@smartsoft001/*` specifiers only, which is why
+    // eighteen packages reached npm importing ninety-six third-party
+    // libraries between them that none of their manifests named. esbuild had
+    // been inlining those libraries into the bundle; `@nx/js:tsc` leaves the
+    // require in place, and it resolves to nothing.
     const offenders = [];
 
     for (const { file, dir, manifest } of packages) {
       const declared = declaredPackages(manifest);
+      const imported = importedNames(dir);
 
-      for (const imported of [...importedPackages(dir)].sort()) {
+      if (imported === null) continue;
+
+      for (const name of [...imported].sort()) {
+        // Node ships these, in both spellings; nothing declares them.
+        if (name.startsWith('node:') || isBuiltin(name)) continue;
         // A package importing its own entry point through the path alias
         // declares nothing: the code is already there.
-        if (imported === manifest.name) continue;
-        if (imported in declared) continue;
+        if (name === manifest.name) continue;
+        if (ERASED_IMPORTS[manifest.name]?.includes(name)) continue;
+        if (name in declared) continue;
 
-        offenders.push(`${file}: ${imported}`);
+        offenders.push(`${file}: ${name}`);
       }
     }
 
     assert.deepEqual(
       offenders,
       [],
-      'every @smartsoft001 package a project imports must appear in its "dependencies" or "peerDependencies"',
+      'every package a project imports must appear in its "dependencies" or "peerDependencies"',
     );
   });
 

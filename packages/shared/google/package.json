@@ -17,5 +17,9 @@
   "bugs": {
     "url": "https://github.com/emiljuchnikowski/smartsoft/issues"
   },
-  "homepage": "https://github.com/emiljuchnikowski/smartsoft#readme"
+  "homepage": "https://github.com/emiljuchnikowski/smartsoft#readme",
+  "peerDependencies": {
+    "@nestjs/axios": "^4.0.1",
+    "@nestjs/common": "^11.1.5"
+  }
 }
