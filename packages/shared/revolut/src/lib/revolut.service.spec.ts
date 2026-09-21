@@ -69,6 +69,34 @@ describe('revolut: RevolutService', () => {
       });
     });
 
+    it('should return the checkout url as redirectUrl', async () => {
+      const mockResponse = {
+        data: {
+          token: 'test-order-token',
+          id: 'test-internal-id',
+          state: 'pending',
+          checkout_url: 'https://checkout.revolut.com/payment-link/test',
+        },
+      };
+
+      mockHttpService.post.mockReturnValue(of(mockResponse));
+
+      const result = await service.create({
+        id: 'test-id',
+        name: 'test-name',
+        amount: 1000,
+        email: 'test@example.com',
+        clientIp: '127.0.0.1',
+        data: {},
+      });
+
+      expect(result).toEqual({
+        orderId: 'test-order-token',
+        redirectUrl: 'https://checkout.revolut.com/payment-link/test',
+        responseData: mockResponse.data,
+      });
+    });
+
     it('should use sandbox URL and Revolut-Api-Version header when test mode is enabled', async () => {
       const mockResponse = {
         data: {

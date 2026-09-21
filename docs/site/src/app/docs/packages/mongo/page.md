@@ -16,8 +16,10 @@ The MongoDB side of the storage contracts: one module import binds the abstract 
 ## Install
 
 ```bash
-npm install @smartsoft001/mongo
+npm install @smartsoft001/mongo @smartsoft001/domain-core @smartsoft001/models @smartsoft001/users @smartsoft001/utils
 ```
+
+The manifest declares those four workspace packages as peer dependencies, pinned to its own version, so a package manager warns when one of them is missing. Sharing one copy of `domain-core` with the rest of the application matters here beyond type checking: `IItemRepository` and its siblings are abstract classes used as NestJS injection tokens, and a second copy would be a different token. From outside the workspace the package needs `mongodb` for the driver, `@nestjs/common` for `@Injectable` and `DynamicModule`, and `rxjs` for the change feed.
 
 ## What it is
 
@@ -88,16 +90,18 @@ Extends `IItemRepository<T>` and takes a `MongoConfig` in its constructor. Injec
 
 Every write takes the acting `IUser` from [@smartsoft001/users](/docs/packages/users), and the optional last argument carries a transaction opened by the unit of work.
 
-### Reachable through injection, not through the package index
+### The rest of the surface
 
-`MongoAttachmentRepository`, `MongoUnitOfWork`, the `IMongoTransaction` interface and the `getMongoUrl` helper are part of the working surface but are not re-exported from the package entry point, so they cannot be imported by name from `@smartsoft001/mongo`. Use them through the tokens `forRoot` registers.
+`MongoAttachmentRepository`, `MongoUnitOfWork`, the `IMongoTransaction` interface and the `getMongoUrl` helper are all exported from the package entry point, so they can be imported by name as well as reached through the tokens `forRoot` registers.
 
-| Not exported                | Reach it as                            | What it is                                                                                           |
+| Export                      | Normally reached as                    | What it is                                                                                           |
 | --------------------------- | -------------------------------------- | ---------------------------------------------------------------------------------------------------- |
 | `MongoAttachmentRepository` | inject `IAttachmentRepository`         | File storage on GridFS: `upload`, `getInfo`, `getStream` and `delete`, bucket named by `collection`. |
 | `MongoUnitOfWork`           | inject `IUnitOfWork`                   | `scope(definition)` runs the callback inside a MongoDB transaction, committing or aborting it.       |
 | `IMongoTransaction`         | the value handed to a `scope` callback | An `ITransaction` carrying the driver's `session`, which the repositories pass to every operation.   |
-| `getMongoUrl(config)`       | not reachable                          | Builds the connection string the repositories connect with.                                          |
+| `getMongoUrl(config)`       | imported by name                       | Builds the connection string the repositories connect with.                                          |
+
+The change feed payload types `ItemChangedData`, `IItemCreateData`, `IItemUpdateData` and `IItemDeleteData` come out of the same entry point, which is what a subscriber to `changesByCriteria` needs to narrow an event by its `type`.
 
 ## Related packages
 

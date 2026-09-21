@@ -33,7 +33,8 @@ export class RevolutService implements ITransPaymentSingleService {
     contactPhone?: string;
     clientIp: string;
     data: any;
-  }): Promise<{ orderId: string; responseData: any }> {
+    options?: any;
+  }): Promise<{ orderId: string; redirectUrl: string; responseData: any }> {
     const config = await this.getConfig(obj.data);
 
     const data: Record<string, any> = {
@@ -64,6 +65,7 @@ export class RevolutService implements ITransPaymentSingleService {
       .toPromise();
 
     return {
+      redirectUrl: response.data.checkout_url,
       responseData: response.data,
       orderId: response.data.token,
     };

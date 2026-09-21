@@ -16,13 +16,13 @@ Describes an entity once with decorators, and exposes readers so generic code ca
 ## Install
 
 ```bash
-npm install @smartsoft001/models reflect-metadata @smartsoft001/utils
+npm install @smartsoft001/models
 ```
 
-The published manifest declares no dependencies, so the two runtime companions have to be installed next to it. The decorators call `Reflect.defineMetadata`, which comes from `reflect-metadata`, and the field decorator calls `ObjectService.createByType` from [`@smartsoft001/utils`](/docs/packages/utils) whenever a field declares a `classType`.
+The manifest declares both runtime companions, so installing this package brings them along. The decorators call `Reflect.defineMetadata`, which comes from `reflect-metadata`, and the field decorator calls `ObjectService.createByType` from [`@smartsoft001/utils`](/docs/packages/utils) whenever a field declares a `classType`.
 
 {% callout type="note" title="Angular appears in the type declarations" %}
-The interface file imports `Signal` from `@angular/core` for one optional property, `IModelFilter.possibilities`. The import is type-only and disappears from the compiled JavaScript, but it stays in the shipped `.d.ts`, so a backend project that type-checks against these declarations still resolves the Angular types.
+The interface file imports `Signal` from `@angular/core` for one optional property, `IModelFilter.possibilities`. The import is type-only and disappears from the compiled JavaScript, but it stays in the shipped `.d.ts`, so a project that type-checks against these declarations still has to resolve the Angular types. The manifest declares `@angular/core` as an optional peer dependency for exactly that reason. A NestJS service that never installs Angular keeps working, because nothing in the compiled JavaScript reaches for it.
 {% /callout %}
 
 ## What it is

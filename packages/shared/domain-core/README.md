@@ -455,3 +455,146 @@ throws an error if retrieving the file stream fails.
 returns a `Promise<void>` that resolves when the file has been successfully deleted.
 
 throws an error if the deletion fails.
+
+## Unit of work
+
+### IUnitOfWork
+
+An abstract class that runs a set of repository calls as one atomic unit, so they either all commit or all roll back. It is implemented per storage technology; [@smartsoft001/mongo](../mongo/README.md) binds `MongoUnitOfWork` to it.
+
+**scope** - Executes a set of operations within a transactional scope.
+
+<table>
+    <thead>
+        <tr>
+            <td>Param</td>
+            <td>Description</td>
+        </tr>
+    </thead>
+    <tr>
+        <td>definition:
+
+`(transaction: ITransaction) => Promise<void>`
+
+</td>
+        <td>The operations to run inside the transaction. The callback receives the transaction to pass on to every repository call it makes.</td>
+    </tr>
+</table>
+
+returns a `Promise<void>` that resolves once the transaction has been committed.
+throws an error if the transaction fails, in which case every operation is rolled back.
+
+```typescript
+await this.unitOfWork.scope(async (transaction) => {
+  await this.itemRepository.updatePartial(
+    { id: firstId, status: 'finished' },
+    user,
+    { transaction },
+  );
+
+  await this.itemRepository.updatePartial(
+    { id: secondId, status: 'finished' },
+    user,
+    { transaction },
+  );
+});
+```
+
+### ITransaction
+
+The context handed to a `scope` callback. It carries a single property, `connection`, whose type depends on the storage implementation, and it is what `IItemRepositoryOptions.transaction` expects.
+
+## Specifications
+
+A specification is an object with a `criteria` property that a repository turns into a query. `getBySpecification`, `countBySpecification` and `updatePartialManyBySpecification` all take one, and `SpecificationService` in [@smartsoft001/utils](../utils/README.md) evaluates the same object in memory.
+
+<table>
+    <thead>
+        <tr>
+            <td>Class</td>
+            <td>Description</td>
+        </tr>
+    </thead>
+    <tr>
+        <td>BasicSpecification</td>
+        <td>Holds one criteria object. The base class the other three extend, and the one to extend for a specification of your own.</td>
+    </tr>
+    <tr>
+        <td>MergeSpecification</td>
+        <td>Shallow merges the criteria of every specification it is given into one object. A later specification overwrites an earlier one on the same key.</td>
+    </tr>
+    <tr>
+        <td>AndSpecification</td>
+        <td>Combines the given specifications under `$and`, matching entities that satisfy all of them.</td>
+    </tr>
+    <tr>
+        <td>OrSpecification</td>
+        <td>Combines the given specifications under `$or`, matching entities that satisfy at least one of them.</td>
+    </tr>
+</table>
+
+```typescript
+const spec = new AndSpecification(
+  new BasicSpecification({ status: 'finished' }),
+  new OrSpecification(
+    new BasicSpecification({ owner: 'ann' }),
+    new BasicSpecification({ owner: 'bob' }),
+  ),
+);
+
+const { data, totalCount } = await repository.getBySpecification(spec);
+```
+
+`ISpecification`, the interface all four implement, is re-exported here from [@smartsoft001/models](../models/README.md) so that the domain layer can be written against this package alone.
+
+## Errors
+
+Two error classes the domain layer throws and the HTTP layer maps to status codes. Each one carries a `type` property holding its own constructor, which is how a filter recognises it after the class has crossed a package boundary.
+
+<table>
+    <thead>
+        <tr>
+            <td>Class</td>
+            <td>Description</td>
+        </tr>
+    </thead>
+    <tr>
+        <td>DomainValidationError</td>
+        <td>The request was understood but the data is not acceptable. The NestJS filter in [@smartsoft001/nestjs](../nestjs/README.md) answers 400.</td>
+    </tr>
+    <tr>
+        <td>DomainForbiddenError</td>
+        <td>The acting user is not allowed to perform the operation. The same filter answers 403.</td>
+    </tr>
+</table>
+
+## Interfaces
+
+<table>
+    <thead>
+        <tr>
+            <td>Interface</td>
+            <td>Description</td>
+        </tr>
+    </thead>
+    <tr>
+        <td>IEntity&lt;T&gt;</td>
+        <td>Anything the repositories store: a single `id` of type `T`.</td>
+    </tr>
+    <tr>
+        <td>IAddress</td>
+        <td>City, street, building number, optional flat number and zip code.</td>
+    </tr>
+    <tr>
+        <td>IDateRange</td>
+        <td>A `start` and an `end`, both `YYYY-MM-DD` strings.</td>
+    </tr>
+    <tr>
+        <td>IFactory&lt;T, TConfig&gt;</td>
+        <td>`create(config)` returning a `Promise<T>`, the contract a factory service implements.</td>
+    </tr>
+    <tr>
+        <td>IItemRepositoryOptions</td>
+        <td>The last argument of every repository method: a `transaction` from the unit of work.</td>
+    </tr>
+</table>

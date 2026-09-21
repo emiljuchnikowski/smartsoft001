@@ -16,10 +16,10 @@ Turns `CrudService` into an endpoint: one module call gives a collection its RES
 ## Install
 
 ```bash
-npm install @smartsoft001/crud-shell-nestjs @smartsoft001/crud-shell-app-services @smartsoft001/crud-shell-dtos @smartsoft001/domain-core @smartsoft001/mongo @smartsoft001/nestjs @smartsoft001/users @smartsoft001/utils
+npm install @smartsoft001/crud-shell-nestjs @smartsoft001/crud-domain @smartsoft001/crud-shell-app-services @smartsoft001/crud-shell-dtos @smartsoft001/domain-core @smartsoft001/mongo @smartsoft001/nestjs @smartsoft001/users @smartsoft001/utils
 ```
 
-The manifest declares three peer dependencies: `crud-shell-app-services`, `crud-shell-dtos` and `domain-core`. The module and the controller also import [`@smartsoft001/mongo`](/docs/packages/mongo), [`@smartsoft001/nestjs`](/docs/packages/nestjs), [`@smartsoft001/users`](/docs/packages/users) and [`@smartsoft001/utils`](/docs/packages/utils), none of which is declared as a peer, so a package manager will not warn when they are missing and the failure appears at import time instead. Install all seven.
+The manifest declares all eight workspace packages above as peer dependencies, pinned to its own version, so a package manager warns when one of them is missing rather than letting the failure appear at import time. Alongside `crud-shell-app-services`, `crud-shell-dtos` and `domain-core` that covers [`@smartsoft001/mongo`](/docs/packages/mongo), [`@smartsoft001/nestjs`](/docs/packages/nestjs), [`@smartsoft001/users`](/docs/packages/users), [`@smartsoft001/utils`](/docs/packages/utils) and [`@smartsoft001/crud-domain`](/docs/packages/crud-domain), which the controller names in the signature of its create route.
 
 On top of the workspace packages the controller and the gateway need `@nestjs/common`, `@nestjs/jwt`, `@nestjs/passport`, `@nestjs/websockets` with `socket.io`, `express`, `busboy` for multipart uploads, `json2csv` and `xlsx` for the two export formats, plus `lodash` and `moment-timezone`.
 
@@ -70,10 +70,10 @@ The module provides the CRUD service and `AuthJwtGuard`, and imports `SharedModu
 
 ### `CrudShellNestjsCoreModule.forRoot(options)`
 
-The same options without `restApi` and `socket`. It never registers controllers, always registers the gateway and the guard, always registers Passport and `JwtModule`, and imports `SharedModule.forRoot(options)` rather than `forFeature`, so it also carries the root configuration. Its `exports` list is empty, which means an importing module sees none of its providers.
+The same options without `restApi` and `socket`. It never registers controllers, always registers the gateway and the guard, always registers Passport and `JwtModule`, and imports `SharedModule.forRoot(options)` rather than `forFeature`, so it also carries the root configuration. The `DynamicModule` it returns sets `module: CrudShellNestjsCoreModule`, its own class, so the two variants are separate modules and an application can import either one.
 
-{% callout type="warning" title="The core module returns the other class" %}
-The `DynamicModule` that `CrudShellNestjsCoreModule.forRoot` returns sets `module: CrudShellNestjsModule`. Nest therefore registers the configuration against the non-core class, and importing both in one application means importing the same module class twice with different provider sets.
+{% callout type="warning" title="The core module exports nothing" %}
+Its `exports` list is empty, which means an importing module sees none of its providers. Import `CrudShellNestjsModule` with `restApi: false` and `socket: false` when the importing module has to inject the CRUD service or the repositories.
 {% /callout %}
 
 ### `CrudController`

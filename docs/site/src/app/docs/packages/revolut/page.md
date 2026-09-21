@@ -19,11 +19,11 @@ The Revolut end of a transaction: two calls against the Merchant orders API, pin
 npm install @smartsoft001/revolut @smartsoft001/trans-domain @nestjs/axios
 ```
 
-The manifest declares neither dependencies nor peer dependencies. Both requests go through the `HttpService` of `@nestjs/axios`, `@nestjs/common` provides `@Injectable`, `@Optional` and `Logger`, and `@nestjs/core` provides `ModuleRef`. The imports from [`@smartsoft001/trans-domain`](/docs/packages/trans-domain) are used only as types, so they are a build-time requirement rather than a runtime one.
+The manifest declares [`@smartsoft001/trans-domain`](/docs/packages/trans-domain) as a peer dependency, pinned to its own version, and nothing else. Both requests go through the `HttpService` of `@nestjs/axios`, `@nestjs/common` provides `@Injectable`, `@Optional` and `Logger`, and `@nestjs/core` provides `ModuleRef`. The imports from [`@smartsoft001/trans-domain`](/docs/packages/trans-domain) are used only as types, so they are a build-time requirement rather than a runtime one.
 
 ## What it is
 
-One of the four payment providers behind [`@smartsoft001/trans-shell-app-services`](/docs/packages/trans-shell-app-services). The service implements `ITransPaymentSingleService`, the contract the transaction domain calls whenever a transaction names `revolut` as its system, but it differs from the other three in three visible ways: `create` answers with `responseData` instead of a `redirectUrl`, `refund` always rejects, and the config is injected with `@Optional()`.
+One of the four payment providers behind [`@smartsoft001/trans-shell-app-services`](/docs/packages/trans-shell-app-services). The service implements `ITransPaymentSingleService`, the contract the transaction domain calls whenever a transaction names `revolut` as its system, but it differs from the other three in three visible ways: `create` answers with the whole Revolut body as `responseData` alongside the `redirectUrl`, `refund` always rejects, and the config is injected with `@Optional()`.
 
 The package ships no NestJS module and no `forRoot`. An application normally gets the service from `TransShellNestjsModule.forRoot({ revolutConfig })`, which registers `RevolutConfig` as a value provider and `RevolutService` as a class provider, and only when that key is present. Register the two providers by hand, as the example does, to use the Revolut calls without the rest of the transaction shell.
 
@@ -56,16 +56,16 @@ A plain class with no decorators, used as both the injection token and the type.
 
 ### `RevolutService`
 
-| Method                   | Returns                                           | What it does                                                                                                    |
-| ------------------------ | ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `create(obj)`            | `Promise<{ orderId: string; responseData: any }>` | Creates an order and returns the whole answer as `responseData`, with `token` from that answer as the order id. |
-| `getStatus<T>(trans)`    | `Promise<{ status: TransStatus; data: any }>`     | Reads the order by the id stored on the `started` history entry and maps the `state` of the answer.             |
-| `refund(trans, comment)` | `Promise<any>`, always rejected                   | Rejects with the string `Revolut does not support refund`. It sends no request and does not read the config.    |
+| Method                   | Returns                                                                | What it does                                                                                                                          |
+| ------------------------ | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `create(obj)`            | `Promise<{ orderId: string; redirectUrl: string; responseData: any }>` | Creates an order and returns its `checkout_url` as the redirect, its `token` as the order id, and the whole answer as `responseData`. |
+| `getStatus<T>(trans)`    | `Promise<{ status: TransStatus; data: any }>`                          | Reads the order by the id stored on the `started` history entry and maps the `state` of the answer.                                   |
+| `refund(trans, comment)` | `Promise<any>`, always rejected                                        | Rejects with the string `Revolut does not support refund`. It sends no request and does not read the config.                          |
 
-`create` takes `{ id, name, amount, firstName?, lastName?, email?, contactPhone?, clientIp, data }`. The shared `ITransPaymentSingleService` also declares a required `options`, which this implementation omits, so an `options` value passed by a caller is ignored here while PayU and Paynow read it. The order it builds sends `id` as `merchant_order_ext_ref` and `name` as the description, hard-codes the currency to `PLN` and `capture_mode` to `automatic`, so `amount` is read as minor units and sent unchanged, and adds a `customer` object only when at least one of the email, phone, first name and last name is present, joining the names into `full_name`.
+`create` takes `{ id, name, amount, firstName?, lastName?, email?, contactPhone?, clientIp, data, options? }`, which is the shared `ITransPaymentSingleService` shape with `options` made optional. Nothing here reads `options`, so a value passed by a caller is accepted and ignored, while PayU and Paynow read it. The order it builds sends `id` as `merchant_order_ext_ref` and `name` as the description, hard-codes the currency to `PLN` and `capture_mode` to `automatic`, so `amount` is read as minor units and sent unchanged, and adds a `customer` object only when at least one of the email, phone, first name and last name is present, joining the names into `full_name`.
 
-{% callout type="note" title="create returns no redirect url, and the two ids differ" %}
-The shared contract allows either a `redirectUrl` or a `responseData`, and this is the implementation that takes the second option: the Revolut answer is handed back whole, and a caller builds the checkout from it. That matters for the follow-up call, because the two methods use different identifiers. `create` reports `response.data.token` as the `orderId`, which is what the transaction is stored under, while `getStatus` reads the order id from `historyItem.data.responseData.id` instead. A history entry that kept only the order id, and not the response body, cannot be refreshed.
+{% callout type="note" title="The two methods use different identifiers" %}
+The shared contract allows both a `redirectUrl` and a `responseData`, and this implementation returns both: the redirect comes from `response.data.checkout_url`, and the Revolut answer is handed back whole beside it. That whole answer matters for the follow-up call, because the two methods use different identifiers. `create` reports `response.data.token` as the `orderId`, which is what the transaction is stored under, while `getStatus` reads the order id from `historyItem.data.responseData.id` instead. A history entry that kept only the order id, and not the response body, cannot be refreshed.
 {% /callout %}
 
 ### Choosing the credentials

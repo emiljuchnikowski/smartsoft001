@@ -71,7 +71,7 @@ export class PayuService implements ITransPaymentSingleService {
     }
 
     try {
-      await this.httpService
+      const response = await this.httpService
         .post(this.getBaseUrl(config) + '/api/v2_1/orders', data, {
           headers: {
             'Content-Type': 'application/json',
@@ -82,7 +82,10 @@ export class PayuService implements ITransPaymentSingleService {
         })
         .toPromise();
 
-      return null;
+      return {
+        redirectUrl: response.data.redirectUri,
+        orderId: response.data.orderId,
+      };
     } catch (e) {
       if (e.response && e.response.status === 302) {
         return {
@@ -192,7 +195,7 @@ export class PayuService implements ITransPaymentSingleService {
       );
       return await provider.get(data);
     } catch (e) {
-      Logger.warn('PayPal config provider not found', PayuService.name);
+      Logger.warn('PayU config provider not found', PayuService.name);
     }
 
     return this.config;

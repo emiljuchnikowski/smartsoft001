@@ -1,5 +1,4 @@
 // #region usage
-import { HttpModule } from '@nestjs/axios';
 import { Module, Provider } from '@nestjs/common';
 
 import { PaypalConfig, PaypalService } from '@smartsoft001/paypal';
@@ -44,15 +43,13 @@ export const paypalProviders: Provider[] = [
 ];
 
 /**
- * `HttpModule` supplies the `HttpService` the constructor asks for, even
- * though this package routes its calls through `paypal-rest-sdk` instead. The
- * third dependency, `ModuleRef`, comes from Nest itself: `PaypalService` uses
- * it to look up an optional `IPaypalConfigProvider` under the
- * `PAYPAL_CONFIG_PROVIDER` token and falls back to the config above when
- * there is none.
+ * The module needs no HTTP client, because this package routes every call
+ * through `paypal-rest-sdk`. The second dependency, `ModuleRef`, comes from
+ * Nest itself: `PaypalService` uses it to look up an optional
+ * `IPaypalConfigProvider` under the `PAYPAL_CONFIG_PROVIDER` token and falls
+ * back to the config above when there is none.
  */
 @Module({
-  imports: [HttpModule],
   providers: paypalProviders,
   exports: [PaypalService],
 })

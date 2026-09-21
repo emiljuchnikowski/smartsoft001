@@ -25,7 +25,7 @@ Authentication, authorisation and error shaping look the same in every service h
 
 The exception filter is the one part that stands on its own. It belongs here because the errors it translates come from the domain layer, which knows nothing about HTTP, so something has to map one onto the other at the edge.
 
-The dependency footprint is worth knowing before you install: `@nestjs/testing` is declared as a runtime dependency of this package, not a development one, so it is installed into production alongside `@nestjs/common`, `@nestjs/passport` and `passport-jwt`.
+Installing it brings `@nestjs/common`, `@nestjs/passport`, `passport-jwt`, [`@smartsoft001/domain-core`](/docs/packages/domain-core) and [`@smartsoft001/users`](/docs/packages/users) along, and those five are everything the shipped sources import. Registering the exception filter through `APP_FILTER` needs `@nestjs/core` in the application, which any NestJS application already has.
 
 ## Usage
 

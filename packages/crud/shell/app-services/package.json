@@ -19,5 +19,14 @@
   "bugs": {
     "url": "https://github.com/emiljuchnikowski/smartsoft/issues"
   },
-  "homepage": "https://github.com/emiljuchnikowski/smartsoft#readme"
+  "homepage": "https://github.com/emiljuchnikowski/smartsoft#readme",
+  "peerDependencies": {
+    "@smartsoft001/crud-domain": "2.147.0",
+    "@smartsoft001/crud-shell-dtos": "2.147.0",
+    "@smartsoft001/domain-core": "2.147.0",
+    "@smartsoft001/models": "2.147.0",
+    "@smartsoft001/nestjs": "2.147.0",
+    "@smartsoft001/users": "2.147.0",
+    "@smartsoft001/utils": "2.147.0"
+  }
 }

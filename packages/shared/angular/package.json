@@ -1,8 +1,14 @@
 {
   "name": "@smartsoft001/angular",
   "version": "2.147.0",
+  "description": "The Angular UI library: standalone smart-* components, the services, pipes and providers behind them, and the form factory that turns model metadata into a reactive form.",
   "publishConfig": {
     "access": "public"
   },
-  "sideEffects": false
+  "sideEffects": false,
+  "peerDependencies": {
+    "@smartsoft001/domain-core": "2.147.0",
+    "@smartsoft001/models": "2.147.0",
+    "@smartsoft001/utils": "2.147.0"
+  }
 }

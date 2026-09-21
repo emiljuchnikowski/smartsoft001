@@ -19,7 +19,7 @@ One factory that turns a token request into a signed bearer token, across four g
 npm install @smartsoft001/auth-domain @smartsoft001/domain-core @smartsoft001/fb @smartsoft001/google @smartsoft001/users @smartsoft001/utils
 ```
 
-The manifest declares neither dependencies nor peer dependencies, so every import has to be installed next to it. The five workspace packages above are all reached directly: `domain-core` for the factory contract and the validation error, [`@smartsoft001/users`](/docs/packages/users) for the two interfaces the entity implements, [`@smartsoft001/utils`](/docs/packages/utils) for the password comparison, and the Facebook and Google services for the two social grants.
+The manifest declares the five workspace packages above as peer dependencies, pinned to its own version, so a package manager warns when one of them is missing instead of letting the failure surface at import time. They are all reached directly: `domain-core` for the factory contract and the validation error, [`@smartsoft001/users`](/docs/packages/users) for the two interfaces the entity implements, [`@smartsoft001/utils`](/docs/packages/utils) for the password comparison, and the Facebook and Google services for the two social grants.
 
 From outside the workspace it needs `typeorm` for the entity decorators and the repository type, `@nestjs/typeorm` for `@InjectRepository`, `@nestjs/common` for `@Injectable`, `@nestjs/jwt` for the service that signs the access token, `guid-typescript` for the refresh token, and the `express` types for the optional request object. `FbService` and `GoogleService` are built on `@nestjs/axios`, so that comes along with them.
 

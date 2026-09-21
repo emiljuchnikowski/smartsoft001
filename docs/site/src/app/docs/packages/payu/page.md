@@ -19,7 +19,7 @@ The PayU end of a transaction: three calls against the REST API v2_1, each one p
 npm install @smartsoft001/payu @smartsoft001/trans-domain @nestjs/axios
 ```
 
-The manifest declares neither dependencies nor peer dependencies. Every request goes through the `HttpService` of `@nestjs/axios`, `@nestjs/common` provides `@Injectable` and `Logger`, and `@nestjs/core` provides `ModuleRef`. The imports from [`@smartsoft001/trans-domain`](/docs/packages/trans-domain) are used only as types, so they are a build-time requirement rather than a runtime one.
+The manifest declares [`@smartsoft001/trans-domain`](/docs/packages/trans-domain) as a peer dependency, pinned to its own version, and nothing else. Every request goes through the `HttpService` of `@nestjs/axios`, `@nestjs/common` provides `@Injectable` and `Logger`, and `@nestjs/core` provides `ModuleRef`. The imports from [`@smartsoft001/trans-domain`](/docs/packages/trans-domain) are used only as types, so they are a build-time requirement rather than a runtime one.
 
 ## What it is
 
@@ -56,14 +56,14 @@ A plain class with no decorators, used as both the injection token and the type.
 
 | Method                   | Returns                                             | What it does                                                                                                                              |
 | ------------------------ | --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| `create(obj)`            | `Promise<{ orderId: string; redirectUrl: string }>` | Creates an order with `maxRedirects: 0` and reads the redirect out of the 302 answer. See the callout below.                              |
+| `create(obj)`            | `Promise<{ orderId: string; redirectUrl: string }>` | Creates an order with `maxRedirects: 0` and reads the redirect out of the answer, whether it arrives as a 302 or as a 2xx.                |
 | `getStatus<T>(trans)`    | `Promise<{ status: TransStatus; data: any }>`       | Reads the order by the id stored on the `started` history entry, maps its status, and returns `null` when the answer carries no `orders`. |
 | `refund(trans, comment)` | `Promise<any>`                                      | Posts a refund for the whole order with `comment` as its description, and resolves the PayU response body.                                |
 
 `create` takes `{ id, name, amount, firstName?, lastName?, email?, contactPhone?, clientIp, data, options? }`, which is the shared `ITransPaymentSingleService` shape with `options` made optional. Three things about the order it builds are worth knowing. The currency is hard-coded to `PLN`, so `amount` is read as grosze and sent unchanged as `totalAmount`. A `buyer` block is added only when at least one of the email, phone, first name and last name is present. And `options.payMethod`, when present, becomes `payMethods.payMethod`, which is how a single payment method is preselected for the buyer.
 
-{% callout type="warning" title="create resolves to null on a 2xx answer" %}
-The order request is sent with `maxRedirects: 0`, and PayU answers a successful creation with a 302 to the payment page. Axios treats that as an error, so the useful result is assembled in the `catch` branch, from `e.response.data.redirectUri` and `e.response.data.orderId`. The `try` branch, reached when the answer is a 2xx, returns `null`. A caller that reaches PayU through the transaction domain never sees this, because the domain only stores what it gets, but a caller using the service directly should treat `null` as a failure to obtain a redirect rather than as a success.
+{% callout type="note" title="Both answers carry the same two fields" %}
+The order request is sent with `maxRedirects: 0`, and PayU answers a successful creation with a 302 to the payment page. Axios treats that as an error, so the usual path runs in the `catch` branch and reads `e.response.data.redirectUri` and `e.response.data.orderId`. PayU answers with a 2xx instead when the order preselects a payment method, and the `try` branch reads `redirectUri` and `orderId` out of that body, so both answers resolve to the same pair of fields.
 {% /callout %}
 
 ### Choosing the credentials
@@ -73,11 +73,7 @@ The order request is sent with `maxRedirects: 0`, and PayU answers a successful 
 | Static config   | A `PayuConfig` value provider, as in the example.                        | Whenever no config provider resolves.                                            |
 | Per transaction | A class implementing `IPayuConfigProvider` under `PAYU_CONFIG_PROVIDER`. | Whenever the lookup succeeds. Its `get(data)` receives the transaction's `data`. |
 
-`PAYU_CONFIG_PROVIDER` is a string constant and `IPayuConfigProvider` is an abstract class with a single `get(data: any): Promise<PayuConfig>`. Every public method resolves the config first, through `moduleRef.get(PAYU_CONFIG_PROVIDER, { strict: false })` inside a `try`, so the provider can live in any module of the application. A missing token throws and the statically injected config is used instead.
-
-{% callout type="note" title="The fallback warning names the wrong provider" %}
-When no config provider is registered, the `catch` in `PayuService` logs `PayPal config provider not found`, under the `PayuService` context. The message was copied from the PayPal implementation and never adjusted. An application on the static config path sees it on every call, and it says nothing about PayPal.
-{% /callout %}
+`PAYU_CONFIG_PROVIDER` is a string constant and `IPayuConfigProvider` is an abstract class with a single `get(data: any): Promise<PayuConfig>`. Every public method resolves the config first, through `moduleRef.get(PAYU_CONFIG_PROVIDER, { strict: false })` inside a `try`, so the provider can live in any module of the application. A missing token throws, the `catch` logs `PayU config provider not found` at warning level under the `PayuService` context, and the statically injected config is used instead, so an application on the static path logs that warning on every call.
 
 ### External calls
 

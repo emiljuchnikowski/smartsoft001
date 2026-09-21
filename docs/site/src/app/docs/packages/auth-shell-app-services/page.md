@@ -19,7 +19,7 @@ One service with one method: look the three optional token providers up in the i
 npm install @smartsoft001/auth-shell-app-services @smartsoft001/auth-domain
 ```
 
-The manifest declares neither dependencies nor peer dependencies. [`@smartsoft001/auth-domain`](/docs/packages/auth-domain) is the only workspace package it imports, and installing it pulls the rest of the chain into play, because the factory this service delegates to needs a TypeORM repository, a JWT service and the two social services.
+[`@smartsoft001/auth-domain`](/docs/packages/auth-domain) is the only workspace package it imports, and the manifest declares it as a peer dependency pinned to its own version. Installing it pulls the rest of the chain into play, because the factory this service delegates to needs a TypeORM repository, a JWT service and the two social services.
 
 Outside the workspace it needs `@nestjs/common` for `@Injectable` and `Logger`, `@nestjs/core` for `ModuleRef`, and the `express` types for the optional request object it forwards.
 
@@ -66,9 +66,9 @@ Private helpers, one per token, identical in shape: `moduleRef.get(token, { stri
 
 All three contracts and tokens are defined in [`@smartsoft001/auth-domain`](/docs/packages/auth-domain), which documents what each one may change.
 
-{% callout type="note" title="The provider array is not exported" %}
-`src/lib/services/index.ts` defines `SERVICES = [AuthService]`, but the package barrel re-exports only the service file, so `SERVICES` is not part of the public API. Its CRUD and trans siblings do export theirs. A module here has to name `AuthService` directly, which is what `AuthShellNestjsModule` does.
-{% /callout %}
+### `SERVICES`
+
+`SERVICES` is `[AuthService]`, the provider array a Nest module spreads into its `providers` and `exports`, the same shape the CRUD and trans siblings export. `AuthShellNestjsModule` names `AuthService` directly rather than spreading the array, so nothing in the workspace depends on it yet, but it is part of the public API for an application that wires the service up itself.
 
 ## Related packages
 

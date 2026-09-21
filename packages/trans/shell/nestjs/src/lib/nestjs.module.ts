@@ -91,6 +91,7 @@ export class TransShellNestjsModule {
         ...(config.payuConfig ? [PayuConfig, PayuService] : []),
         ...(config.paypalConfig ? [PaypalConfig, PaypalService] : []),
         ...(config.revolutConfig ? [RevolutConfig, RevolutService] : []),
+        ...(config.paynowConfig ? [PaynowConfig, PaynowService] : []),
       ],
     };
   }
@@ -132,6 +133,12 @@ export class TransShellNestjsCoreModule {
           ? [
               { provide: PaypalConfig, useValue: config.paypalConfig },
               PaypalService,
+            ]
+          : []),
+        ...(config.revolutConfig
+          ? [
+              { provide: RevolutConfig, useValue: config.revolutConfig },
+              RevolutService,
             ]
           : []),
         ...(config.paynowConfig

@@ -19,7 +19,7 @@ A payment as a record that keeps its own history: created, handed to a provider,
 npm install @smartsoft001/trans-domain @smartsoft001/domain-core @smartsoft001/utils
 ```
 
-The manifest declares neither dependencies nor peer dependencies, so everything the package imports has to be installed next to it. Besides the two workspace packages above it needs `@nestjs/common` for `@Injectable` and `NotFoundException`, `typeorm` for the entity decorators, and `guid-typescript` for the id every new transaction gets.
+The manifest declares the two workspace packages above as peer dependencies, pinned to its own version. Besides them it needs `@nestjs/common` for `@Injectable` and `NotFoundException`, `typeorm` for the entity decorators, and `guid-typescript` for the id every new transaction gets.
 
 {% callout type="note" title="It talks to nothing" %}
 The three services take one constructor argument, the abstract `IItemRepository` from [`@smartsoft001/domain-core`](/docs/packages/domain-core). Your back end and the payment provider arrive as **arguments to each call**, not as injected dependencies, so every path through this package can be driven by plain objects. That is why the examples below run offline, against an array.
@@ -136,9 +136,9 @@ A class with a positional constructor, `new TransConfig(internalApiUrl, tokenCon
 
 `[CreatorService, RefresherService, RefundService]`, the provider array a Nest module spreads into its `providers`. `TransShellNestjsModule` does exactly that.
 
-### Not part of the public API
+### `TransBaseService`
 
-`TransBaseService`, the abstract parent holding `addHistory` and `setError`, lives at `src/lib/trans.service.ts` and is not re-exported from the barrel. The three services extend it, but application code cannot, so a fourth service of your own has to reimplement the history handling rather than inherit it.
+The abstract parent holding `addHistory` and `setError` lives at `src/lib/trans.service.ts` and is exported from the package entry point. The three services extend it, and a fourth service of your own can do the same and inherit the history handling rather than reimplement it.
 
 ## Related packages
 

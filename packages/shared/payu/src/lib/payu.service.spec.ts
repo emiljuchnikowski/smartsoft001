@@ -1,4 +1,5 @@
 import { HttpService } from '@nestjs/axios';
+import { Logger } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
 import { of, throwError } from 'rxjs';
@@ -206,6 +207,76 @@ describe('payu: PayuService', () => {
         orderId: 'test-order-id',
         redirectUrl: 'https://redirect.url',
       });
+    });
+
+    it('should return redirect URL and order ID when PayU answers with a 2xx', async () => {
+      const mockTokenResponse = {
+        data: {
+          access_token: 'mock-token',
+        },
+      };
+      const mockOrderResponse = {
+        status: 200,
+        data: {
+          status: { statusCode: 'SUCCESS' },
+          redirectUri: 'https://redirect.url',
+          orderId: 'test-order-id',
+          extOrderId: 'test-id',
+        },
+      };
+
+      mockHttpService.post
+        .mockReturnValueOnce(of(mockTokenResponse))
+        .mockReturnValueOnce(of(mockOrderResponse));
+
+      const result = await service.create({
+        id: 'test-id',
+        name: 'test-name',
+        amount: 100,
+        email: 'test@example.com',
+        clientIp: '127.0.0.1',
+        data: {},
+      });
+
+      expect(result).toEqual({
+        orderId: 'test-order-id',
+        redirectUrl: 'https://redirect.url',
+      });
+    });
+  });
+
+  describe('getConfig', () => {
+    it('should warn about a missing PayU config provider', async () => {
+      const warnSpy = jest.spyOn(Logger, 'warn').mockImplementation();
+      mockModuleRef.get.mockImplementation(() => {
+        throw new Error('provider not found');
+      });
+      mockHttpService.post
+        .mockReturnValueOnce(of({ data: { access_token: 'mock-token' } }))
+        .mockReturnValueOnce(
+          of({
+            data: {
+              redirectUri: 'https://redirect.url',
+              orderId: 'test-order-id',
+            },
+          }),
+        );
+
+      await service.create({
+        id: 'test-id',
+        name: 'test-name',
+        amount: 100,
+        email: 'test@example.com',
+        clientIp: '127.0.0.1',
+        data: {},
+      });
+
+      expect(warnSpy).toHaveBeenCalledWith(
+        'PayU config provider not found',
+        'PayuService',
+      );
+
+      warnSpy.mockRestore();
     });
   });
 

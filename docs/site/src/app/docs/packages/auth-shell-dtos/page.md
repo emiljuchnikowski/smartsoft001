@@ -19,7 +19,7 @@ One class, two required fields: the credentials model the auth family renders as
 npm install @smartsoft001/auth-shell-dtos @smartsoft001/models reflect-metadata
 ```
 
-The manifest holds nothing but a name and a version, so its two imports have to be installed alongside it. `LoginDto` carries `@Model` and `@Field` from [`@smartsoft001/models`](/docs/packages/models), and those decorators write their metadata through `reflect-metadata`. There is no NestJS dependency, no database and no HTTP client here.
+The manifest declares [`@smartsoft001/models`](/docs/packages/models) as a peer dependency, and `reflect-metadata` has to be installed alongside it as well. `LoginDto` carries `@Model` and `@Field` from the models package, and those decorators write their metadata through `reflect-metadata`. There is no NestJS dependency, no database and no HTTP client here.
 
 ## What it is
 

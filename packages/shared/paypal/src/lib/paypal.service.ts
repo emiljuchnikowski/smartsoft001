@@ -1,4 +1,3 @@
-import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import * as paypal from 'paypal-rest-sdk';
@@ -18,7 +17,6 @@ import {
 @Injectable()
 export class PaypalService implements ITransPaymentSingleService {
   constructor(
-    private readonly httpService: HttpService,
     private config: PaypalConfig,
     private moduleRef: ModuleRef,
   ) {}
@@ -33,6 +31,7 @@ export class PaypalService implements ITransPaymentSingleService {
     contactPhone?: string;
     clientIp: string;
     data: any;
+    options?: any;
   }): Promise<{ orderId: string; redirectUrl: string }> {
     const config = await this.getConfig(obj.data);
 
@@ -238,12 +237,6 @@ export class PaypalService implements ITransPaymentSingleService {
       client_id: config.clientId,
       client_secret: config.clientSecret,
     };
-  }
-
-  private getApiUrl(config: PaypalConfig): string {
-    return config.test
-      ? 'https://api-m.sandbox.paypal.com/'
-      : 'https://api-m.paypal.com/';
   }
 
   private getTransactionId(trans: Trans<any>): string {

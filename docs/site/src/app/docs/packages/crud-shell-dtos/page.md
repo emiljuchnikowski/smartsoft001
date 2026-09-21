@@ -19,7 +19,7 @@ The shapes that cross the wire: one decorated credentials model, and the three p
 npm install @smartsoft001/crud-shell-dtos @smartsoft001/models reflect-metadata
 ```
 
-The manifest declares no dependencies of its own. `UserDto` carries `@Model` and `@Field` from [`@smartsoft001/models`](/docs/packages/models), and those decorators write into `reflect-metadata`, so both have to be installed next to it. The change-feed interfaces are types and cost nothing at runtime.
+The manifest depends on [`@smartsoft001/models`](/docs/packages/models), so installing this package brings it along. `UserDto` carries `@Model` and `@Field` from it, and those decorators write into `reflect-metadata`, which still has to be installed next to it. The change-feed interfaces are types and cost nothing at runtime.
 
 ## What it is
 
