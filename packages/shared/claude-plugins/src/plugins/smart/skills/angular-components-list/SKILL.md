@@ -101,19 +101,19 @@ interface IListOptions<T> {
 
 ### IListOptions property reference
 
-| Property             | Type                                                                                  | Default    | Description                                                                         |
-| -------------------- | ------------------------------------------------------------------------------------- | ---------- | ----------------------------------------------------------------------------------- |
-| `provider`           | `IListProvider<T>`                                                                    | _required_ | Data provider (list signal, loading signal, getData callback)                       |
-| `type`               | `any`                                                                                 | _required_ | Model class decorated with `@Model`                                                 |
-| `mode`               | `ListMode`                                                                            | -          | Force a specific mode; omit to auto-detect via `HardwareService.isMobile`           |
-| `pagination`         | `IListPaginationOptions`                                                              | -          | Pagination config (mode, limit, page signal, totalPages signal, load callbacks)     |
-| `cellPipe`           | `ICellPipe<T>`                                                                        | -          | Pipe for transforming each cell value                                               |
-| `componentFactories` | `IListComponentFactories<T>`                                                          | -          | Top dynamic component factory                                                       |
-| `sort`               | `boolean \| { default?: string; defaultDesc?: boolean }`                              | -          | Enable sorting; optionally set a default sort column and direction                  |
-| `details`            | `boolean \| { provider?: IDetailsProvider<T>; componentFactories?: ...; component? }` | -          | Enable detail drill-down; optionally provide a custom details provider or component |
-| `item`               | `boolean \| { options?: ItemOptions }`                                                | -          | Enable item row action (navigate or custom select)                                  |
-| `remove`             | `boolean \| { provider?: IRemoveProvider<T> }`                                        | -          | Enable row remove action; optionally provide a custom remove provider               |
-| `select`             | `'multi'`                                                                             | -          | Enable multi-select mode                                                            |
+| Property             | Type                                                                                  | Default    | Description                                                                                        |
+| -------------------- | ------------------------------------------------------------------------------------- | ---------- | -------------------------------------------------------------------------------------------------- |
+| `provider`           | `IListProvider<T>`                                                                    | _required_ | Data provider (list signal, loading signal, getData callback)                                      |
+| `type`               | `any`                                                                                 | _required_ | Model class decorated with `@Model`                                                                |
+| `mode`               | `ListMode`                                                                            | -          | Force a specific mode; omit to auto-detect via `HardwareService.isMobile`                          |
+| `pagination`         | `IListPaginationOptions`                                                              | -          | Pagination config (mode, limit, page signal, totalPages signal, load callbacks)                    |
+| `cellPipe`           | `ICellPipe<T>`                                                                        | -          | Pipe for transforming each cell value                                                              |
+| `componentFactories` | `IListComponentFactories<T>`                                                          | -          | Top dynamic component factory                                                                      |
+| `sort`               | `boolean \| { default?: string; defaultDesc?: boolean }`                              | -          | Enable sorting; optionally set a default sort column and direction                                 |
+| `details`            | `boolean \| { provider?: IDetailsProvider<T>; componentFactories?: ...; component? }` | -          | Enable detail drill-down. The provider is required whenever this is set; the component is optional |
+| `item`               | `boolean \| { options?: ItemOptions }`                                                | -          | Enable item row action (navigate or custom select)                                                 |
+| `remove`             | `boolean \| { provider?: IRemoveProvider<T> }`                                        | -          | Enable row remove action; optionally provide a custom remove provider                              |
+| `select`             | `'multi'`                                                                             | -          | Enable multi-select mode                                                                           |
 
 ## IListProvider\<T>
 
