@@ -1,3 +1,17 @@
+## 2.149.0 (2026-09-21)
+
+### 🩹 Fixes
+
+- **meta:** make nx migrate bump every package, not just core ([#66](https://github.com/emiljuchnikowski/smartsoft001/pull/66))
+- **release:** make every published Node package loadable ([#65](https://github.com/emiljuchnikowski/smartsoft001/pull/65))
+- **shared:** declare what each package needs and export what it wires ([#68](https://github.com/emiljuchnikowski/smartsoft001/pull/68))
+- **shared:** compile the decorated packages so their metadata survives ([#69](https://github.com/emiljuchnikowski/smartsoft001/pull/69))
+
+### ❤️ Thank You
+
+- Claude Opus 5
+- Emil Juchnikowski
+
 ## 2.148.0 (2026-09-21)
 
 Published from `fix(release): make every published Node package loadable (#65)` and

@@ -1,6 +1,6 @@
 {
   "name": "@smartsoft001/auth-shell-app-services",
-  "version": "2.148.0",
+  "version": "2.149.0",
   "type": "commonjs",
   "main": "./src/index.js",
   "typings": "./src/index.d.ts",
@@ -20,6 +20,6 @@
   "author": "Emil Juchnikowski",
   "license": "MIT",
   "peerDependencies": {
-    "@smartsoft001/auth-domain": "2.148.0"
+    "@smartsoft001/auth-domain": "2.149.0"
   }
 }

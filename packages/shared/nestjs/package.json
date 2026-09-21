@@ -1,6 +1,6 @@
 {
   "name": "@smartsoft001/nestjs",
-  "version": "2.148.0",
+  "version": "2.149.0",
   "description": "Shared NestJS building blocks: SharedModule with its JWT and permission configuration, PermissionService, the JWT strategy, the @User decorator and the application exception filter.",
   "publishConfig": {
     "access": "public"
@@ -13,7 +13,7 @@
     "passport-jwt": "^4.0.1",
     "@nestjs/passport": "^11.0.5",
     "@nestjs/common": "^11.0.7",
-    "@smartsoft001/domain-core": "2.148.0",
-    "@smartsoft001/users": "2.148.0"
+    "@smartsoft001/domain-core": "2.149.0",
+    "@smartsoft001/users": "2.149.0"
   }
 }
