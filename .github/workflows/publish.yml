@@ -64,6 +64,10 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Check login
         run: npm whoami
+      # The version bump reruns the full build as its preVersionCommand, so this
+      # is the last moment the artefacts can be checked before they reach npm.
+      - name: Check the built packages can be loaded
+        run: npm run verify:dist
       - name: Publish to NPM
         run: npx nx run-many -t nx-release-publish
         env:

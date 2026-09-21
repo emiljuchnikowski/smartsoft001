@@ -4,6 +4,7 @@
   "license": "MIT",
   "scripts": {
     "test": "nx run-many --target=test --all",
+    "verify:dist": "node tools/scripts/check-dist-loadable.mjs",
     "format": "nx format && nx run-many --target=lint --fix",
     "prepare": "husky"
   },

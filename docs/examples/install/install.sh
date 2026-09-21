@@ -120,13 +120,14 @@ install_payments
 # stack with `latest` for the same library is how a release-window mismatch turns
 # into an unresolvable tree.
 # A stack is nothing but pinned dependencies, so the check that matters is that
-# installing one brings the libraries it names. `require.resolve` rather than
-# `require`: the published tarballs declare `"type": "commonjs"` but ship ES
-# module source in `src/index.js`, so neither `require()` nor `import()` can load
-# them from a plain project. Resolving the entry points still proves the packages
-# installed and are reachable, which is what this smoke test is about.
-step='resolve the packages the stacks pulled in'
-node -e "require.resolve('@smartsoft001/utils'); require.resolve('@smartsoft001/models'); require.resolve('@smartsoft001/angular'); require.resolve('@smartsoft001/nestjs'); console.log('ok')"
+# installing one brings the libraries it names. The Node libraries are loaded
+# rather than merely resolved, because being installable and being loadable are
+# different claims and only the second one is worth anything to a consumer.
+# `@smartsoft001/angular` is resolved instead: it is an Angular library whose
+# entry points are ESM bundles meant for a bundler, and executing one in bare
+# Node would prove nothing.
+step='load the packages the stacks pulled in'
+node -e "require('@smartsoft001/utils'); require('@smartsoft001/models'); require('@smartsoft001/nestjs'); require.resolve('@smartsoft001/angular'); console.log('ok')"
 
 step='create a second project for the per-package check'
 per_package_workspace="$(mktemp -d)"
@@ -155,8 +156,8 @@ step='install every published package'
 npm install --no-audit --no-fund "${published[@]}"
 
 
-step='resolve the individually installed packages'
-node -e "require.resolve('@smartsoft001/utils'); require.resolve('@smartsoft001/models'); console.log('ok')"
+step='load the individually installed packages'
+node -e "require('@smartsoft001/utils'); require('@smartsoft001/models'); console.log('ok')"
 
 trap - ERR
 echo "Installed the stacks and ${#published[@]} individual ${SCOPE}/* packages in ${SECONDS}s."
