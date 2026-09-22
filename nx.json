@@ -68,7 +68,12 @@
           "path": "dist/{projectRoot}",
           "preserveLocalDependencyProtocols": false
         }
-      ]
+      ],
+      "currentVersionResolver": "git-tag",
+      "fallbackCurrentVersionResolver": "disk"
+    },
+    "releaseTag": {
+      "checkAllBranchesWhen": true
     }
   },
   "generators": {

@@ -55,3 +55,5 @@ The review runs over the diff of the issue's branch (or `--staged`, or `--diff=m
 ## After the merge
 
 Merging to `main` triggers the `Publish` workflow, which versions and publishes every `@smartsoft001/*` package to npm, and after a successful publish the `Docs` workflow rebuilds this site, including the Storybook smoke test and the documentation parity checks described in [Documentation](/docs/contributing/documentation).
+
+The version of a release is the latest release tag plus a minor bump, read by `nx release` from git rather than from the manifests. The workflow pushes the tag as soon as the packages are on npm and only then writes the bumped manifests back to `main`, rebasing onto whatever merged meanwhile. If that write-back is still rejected, the manifests on `main` stay one release behind until the next run, which is harmless: the next release reads the tag, not the manifests, and tags on every branch count, so a number that reached npm is never reused. Two releases were lost that way before the version came from git, and each had to be stepped over by hand.

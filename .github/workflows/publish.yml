@@ -45,8 +45,15 @@ jobs:
       - run: npx nx-cloud start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="build"
       - run: npx nx format:check
       - run: npx nx affected -t lint test build postbuild check
+      # nx reads the current version from the latest release tag, not from the
+      # manifests, so a write-back to main that failed on the previous run cannot
+      # make this run compute a version that is already on npm. The root manifest
+      # is not a release project; it follows whatever nx decided.
       - name: Set version
-        run: npx nx release version minor && npm version minor --no-git-tag-version
+        run: |
+          npx nx release version minor
+          version="$(node -p "require('./packages/meta/core/package.json').version")"
+          npm version "$version" --no-git-tag-version --allow-same-version
       - id: package
         run: |
           echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
@@ -72,6 +79,32 @@ jobs:
         run: npx nx run-many -t nx-release-publish
         env:
           NX_CLOUD_DISTRIBUTED_EXECUTION: false
+      # The packages are on npm at this version now, so the version is burnt
+      # whatever happens next. Push the tag on its own, before the branch: a tag
+      # push is never rejected as non-fast-forward, and the next run reads the
+      # latest tag across all branches, so a failed write-back below cannot make
+      # it reuse this number.
+      - name: Push the release tag
+        run: git push origin "refs/tags/v${{ steps.package.outputs.version }}"
+      # Ten minutes have passed since checkout. If main moved, the write-back
+      # below is not a fast-forward and is rejected. Move the release commit on
+      # top of the current main first, keeping the tag on the moved commit.
+      - name: Bring the release commit onto the current main
+        run: |
+          git fetch origin main
+          if git merge-base --is-ancestor origin/main HEAD; then
+            echo "main has not moved"
+            exit 0
+          fi
+          tag="v${{ steps.package.outputs.version }}"
+          if git rebase origin/main; then
+            git tag -f -a "$tag" -m "$tag" HEAD
+            git push --force origin "refs/tags/$tag"
+            echo "rebased onto origin/main and moved $tag"
+          else
+            git rebase --abort
+            echo "::warning::main moved and the release commit does not rebase cleanly; the write-back will be rejected. The tag is already pushed, so the next release is unaffected."
+          fi
       - name: Commit
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
