@@ -121,3 +121,60 @@ describe('nx release: versioning reaches the published manifests', () => {
     );
   });
 });
+
+/**
+ * The version used to come from the manifests, and the manifests were kept
+ * current by a commit pushed back to `main` at the end of every release. That
+ * push is rejected whenever `main` moved during the ten minutes the run takes,
+ * and then the next run computes a version that is already on npm and dies on
+ * a tag that already exists. It happened twice (v2.141.0, v2.148.0), and each
+ * time every manifest had to be edited by hand to step over the burnt number.
+ *
+ * Reading the current version from the latest release tag removes the
+ * dependency: a tag push is never rejected as non-fast-forward, so the tag is
+ * always there, and with all branches considered an orphaned tag still counts.
+ */
+describe('nx release: the current version comes from git, not from a write-back', () => {
+  const nxJson = readJson('nx.json');
+  const version = nxJson.release?.version ?? {};
+  const workflow = fs.readFileSync(
+    path.join(repoRoot, '.github/workflows/publish.yml'),
+    'utf8',
+  );
+
+  it('should resolve the current version from the latest release tag', () => {
+    assert.equal(version.currentVersionResolver, 'git-tag');
+  });
+
+  it('should fall back to the manifests only when there is no tag at all', () => {
+    assert.equal(version.fallbackCurrentVersionResolver, 'disk');
+  });
+
+  it('should consider tags on every branch, because a burnt tag is an orphan', () => {
+    // A release whose write-back was rejected leaves its tag on a commit that
+    // is on no branch. nx lists only tags reachable from HEAD unless told
+    // otherwise, and would then reuse the burnt number.
+    assert.equal(nxJson.release?.releaseTag?.checkAllBranchesWhen, true);
+  });
+
+  it('should not bump the root manifest on its own', () => {
+    // `npm version minor` reads the root manifest, which is exactly the file a
+    // failed write-back leaves stale; the root has to follow what nx computed.
+    assert.ok(
+      !/npm version minor/.test(workflow),
+      'publish.yml must not run "npm version minor"; set the root version to the one nx resolved',
+    );
+  });
+
+  it('should push the release tag before the write-back to main', () => {
+    const tagPush = workflow.indexOf('name: Push the release tag');
+    const publish = workflow.indexOf('name: Publish to NPM');
+    const commit = workflow.indexOf('name: Commit');
+
+    assert.ok(tagPush > 0, 'publish.yml needs a "Push the release tag" step');
+    assert.ok(
+      publish < tagPush && tagPush < commit,
+      'the tag is pushed after the packages are on npm and before the branch write-back',
+    );
+  });
+});
