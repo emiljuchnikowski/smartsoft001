@@ -1,4 +1,9 @@
+import 'reflect-metadata';
+
 import { of, Observable } from 'rxjs';
+
+import { DomainValidationError } from '@smartsoft001/domain-core';
+import { Field, Model } from '@smartsoft001/models';
 
 import { CrudService } from './crud.service';
 
@@ -228,6 +233,143 @@ describe('crud-app-services: CrudService', () => {
     it('should return observable', () => {
       const obs = service.changes({});
       expect(obs instanceof Observable).toBe(true);
+    });
+  });
+});
+
+@Model({})
+class Note {
+  id!: string;
+  @Field({
+    required: true,
+    create: { required: true },
+    update: { required: true },
+  })
+  title?: string;
+  @Field({ create: true, update: true })
+  content?: string;
+}
+
+describe('crud-app-services: CrudService model validation', () => {
+  let service: CrudService<any>;
+  let repository: any;
+  let attachmentRepository: any;
+  let permissionService: any;
+
+  beforeEach(() => {
+    repository = mockRepo();
+    attachmentRepository = mockAttachRepo();
+    permissionService = mockPerm();
+    service = new CrudService<any>(
+      permissionService,
+      repository,
+      attachmentRepository,
+      { type: Note },
+    );
+  });
+
+  describe('create', () => {
+    it('should reject a payload without a required field', async () => {
+      const data: any = { content: 'x' };
+
+      const promise = service.create(data, mockUser);
+
+      await expect(promise).rejects.toThrow(DomainValidationError);
+      expect(repository.create).not.toHaveBeenCalled();
+    });
+
+    it('should report the missing required field', async () => {
+      const data: any = { content: 'x' };
+
+      const promise = service.create(data, mockUser);
+
+      await expect(promise).rejects.toThrow('Required fields: title');
+    });
+
+    it('should store a model instance without undeclared fields', async () => {
+      const data: any = { title: 't', content: 'x', extra: 'y' };
+
+      await service.create(data, mockUser);
+
+      const item = repository.create.mock.calls[0][0];
+      expect(item).toBeInstanceOf(Note);
+      expect(item.title).toBe('t');
+      expect(item.id).toBeDefined();
+      expect('extra' in item).toBe(false);
+    });
+  });
+
+  describe('createMany', () => {
+    it('should reject when one element misses a required field', async () => {
+      const data: any = [{ title: 'a' }, { content: 'x' }];
+
+      const promise = service.createMany(data, mockUser, { mode: undefined });
+
+      await expect(promise).rejects.toThrow('Required fields: title');
+      expect(repository.createMany).not.toHaveBeenCalled();
+    });
+
+    it('should return model instances for valid elements', async () => {
+      const data: any = [{ title: 'a' }, { title: 'b', content: 'x' }];
+
+      const result = await service.createMany(data, mockUser, {
+        mode: undefined,
+      });
+
+      expect(result.every((item: any) => item instanceof Note)).toBe(true);
+    });
+  });
+
+  describe('update', () => {
+    it('should reject a payload without a required field', async () => {
+      const data: any = { content: 'x' };
+
+      const promise = service.update('id', data, mockUser);
+
+      await expect(promise).rejects.toThrow('Required fields: title');
+    });
+
+    it('should store a model instance with the given id', async () => {
+      const data: any = { title: 't', content: 'x' };
+
+      await service.update('id', data, mockUser);
+
+      const item = repository.update.mock.calls[0][0];
+      expect(item).toBeInstanceOf(Note);
+      expect(item.id).toBe('id');
+    });
+  });
+
+  describe('updatePartial', () => {
+    it('should reject an empty value for a required field', async () => {
+      const data: any = { title: '' };
+
+      const promise = service.updatePartial('id', data, mockUser);
+
+      await expect(promise).rejects.toThrow('Required fields: title');
+    });
+
+    it('should keep only the keys carried by the payload', async () => {
+      const data: any = { content: 'x' };
+
+      await service.updatePartial('id', data, mockUser);
+
+      const item = repository.updatePartial.mock.calls[0][0];
+      expect(Object.keys(item).sort()).toEqual(['content', 'id']);
+    });
+  });
+
+  describe('without a configured type', () => {
+    it('should store the payload without validation', async () => {
+      const serviceWithoutType = new CrudService<any>(
+        permissionService,
+        repository,
+        attachmentRepository,
+      );
+
+      await serviceWithoutType.create({ content: 'x' } as any, mockUser);
+
+      expect(repository.create).toHaveBeenCalled();
     });
   });
 });

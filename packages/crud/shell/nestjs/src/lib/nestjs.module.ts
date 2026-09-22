@@ -30,6 +30,8 @@ export class CrudShellNestjsModule {
   ): DynamicModule {
     // Without a token config the REST API is served without JWT auth, as before.
     const tokenConfig = options.tokenConfig;
+    // The model type reaches CrudService through SharedConfig, for validation.
+    const config = { ...options, type: options.type ?? options.db?.type };
 
     return {
       module: CrudShellNestjsModule,
@@ -54,7 +56,7 @@ export class CrudShellNestjsModule {
               }),
             ]
           : []),
-        SharedModule.forFeature(options),
+        SharedModule.forFeature(config),
         MongoModule.forRoot(options.db),
       ],
       exports: [...SERVICES, AuthJwtGuard, MongoModule.forRoot(options.db)],
@@ -82,6 +84,8 @@ export class CrudShellNestjsCoreModule {
       };
     },
   ): DynamicModule {
+    const config = { ...options, type: options.type ?? options.db?.type };
+
     return {
       module: CrudShellNestjsCoreModule,
       providers: [...SERVICES, ...GATEWAYS, AuthJwtGuard],
@@ -93,7 +97,7 @@ export class CrudShellNestjsCoreModule {
             expiresIn: options.tokenConfig.expiredIn,
           },
         }),
-        SharedModule.forRoot(options),
+        SharedModule.forRoot(config),
         MongoModule.forRoot(options.db),
       ],
       exports: [],

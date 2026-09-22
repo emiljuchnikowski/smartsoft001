@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Optional } from '@nestjs/common';
 import * as CombinedStream from 'combined-stream';
 import { Guid } from 'guid-typescript';
 import { Memoize } from 'lodash-decorators';
@@ -14,7 +14,7 @@ import {
   ISpecification,
 } from '@smartsoft001/domain-core';
 import { castModel, getInvalidFields, isModel } from '@smartsoft001/models';
-import { PermissionService } from '@smartsoft001/nestjs';
+import { PermissionService, SharedConfig } from '@smartsoft001/nestjs';
 import { IUser } from '@smartsoft001/users';
 import { GuidService, PasswordService } from '@smartsoft001/utils';
 
@@ -35,7 +35,14 @@ export class CrudService<T extends IEntity<string>> {
     protected readonly permissionService: PermissionService,
     protected readonly repository: IItemRepository<T>,
     protected readonly attachmentRepository: IAttachmentRepository<T>,
-  ) {}
+    @Optional() protected readonly config?: SharedConfig,
+  ) {
+    if (!config?.type) {
+      this._logger.warn(
+        'No model type is configured (SharedConfig.type), request bodies are stored without model validation',
+      );
+    }
+  }
 
   async create(data: T, user: IUser): Promise<string> {
     data.id = Guid.raw();
@@ -43,13 +50,15 @@ export class CrudService<T extends IEntity<string>> {
     try {
       this.permissionService.valid('create', user);
 
-      castModel(data, 'create', user.permissions);
-      this.checkValidCreate(data, user.permissions);
+      const item = this.toModel(data);
 
-      await this.hashCredentials(data);
-      await this.repository.create(data, user);
+      castModel(item, 'create', user.permissions);
+      this.checkValidCreate(item, user.permissions);
 
-      return data.id;
+      await this.hashCredentials(item);
+      await this.repository.create(item, user);
+
+      return item.id;
     } catch (e) {
       this._logger.error(e);
       throw e;
@@ -67,6 +76,10 @@ export class CrudService<T extends IEntity<string>> {
 
     try {
       this.permissionService.valid('create', user);
+
+      data.forEach((item, index) => {
+        data[index] = this.toModel(item);
+      });
 
       data.forEach((item) => {
         castModel(item, 'create', user.permissions);
@@ -137,11 +150,13 @@ export class CrudService<T extends IEntity<string>> {
       data.id = id;
       this.permissionService.valid('update', user);
 
-      castModel(data, 'update', user.permissions);
-      this.checkValidUpdate(data, user.permissions);
+      const item = this.toModel(data);
 
-      await this.hashCredentials(data);
-      await this.repository.update(data, user);
+      castModel(item, 'update', user.permissions);
+      this.checkValidUpdate(item, user.permissions);
+
+      await this.hashCredentials(item);
+      await this.repository.update(item, user);
     } catch (e) {
       this._logger.error(e);
       throw e;
@@ -154,8 +169,9 @@ export class CrudService<T extends IEntity<string>> {
     user: IUser,
   ): Promise<void> {
     try {
-      // Same object, now known to carry the id.
-      const item = Object.assign(data, { id });
+      // Same object, now known to carry the id, turned into a model instance
+      // so the field metadata is there for the validation below.
+      const item = this.toModel(Object.assign(data, { id }));
 
       this.permissionService.valid('update', user);
 
@@ -256,6 +272,29 @@ export class CrudService<T extends IEntity<string>> {
     const credentials = item as T & WithCredentials;
 
     delete credentials.password;
+  }
+
+  /**
+   * Turns a plain request body into an instance of the configured model type so
+   * that the model metadata used by castModel and getInvalidFields is available.
+   * The instance keeps only the keys the payload carried, because a new instance
+   * declares every field as an own key.
+   */
+  protected toModel<D extends Partial<T>>(data: D): D {
+    const type = this.config?.type;
+
+    if (!type || !data || data instanceof type) return data;
+
+    const keys = Object.keys(data);
+    const model = Object.assign(new type(), data);
+
+    Object.keys(model)
+      .filter((key) => !keys.some((payloadKey) => payloadKey === key))
+      .forEach((key) => {
+        delete model[key];
+      });
+
+    return model;
   }
 
   private checkValidCreate(item: T, permissions: Array<string>): void {
