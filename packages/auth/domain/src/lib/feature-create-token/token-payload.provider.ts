@@ -7,7 +7,7 @@ export const AUTH_TOKEN_PAYLOAD_PROVIDER = 'AUTH_TOKEN_PAYLOAD_PROVIDER';
 
 export abstract class ITokenPayloadProvider {
   abstract change(
-    basePayload,
+    basePayload: Record<string, unknown>,
     data: {
       request?: IAuthTokenRequest;
       user?: User;

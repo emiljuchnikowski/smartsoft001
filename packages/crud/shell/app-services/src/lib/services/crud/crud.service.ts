@@ -20,6 +20,13 @@ import { GuidService, PasswordService } from '@smartsoft001/utils';
 
 import { Readable, Stream } from 'stream';
 
+/**
+ * The two credential fields the service treats specially on every entity:
+ * `password` is hashed before it is stored and stripped before it is returned,
+ * `passwordConfirm` is only ever a form helper and never stored.
+ */
+type WithCredentials = { password?: string; passwordConfirm?: string };
+
 @Injectable()
 export class CrudService<T extends IEntity<string>> {
   private _logger = new Logger(CrudService.name, { timestamp: true });
@@ -39,12 +46,7 @@ export class CrudService<T extends IEntity<string>> {
       castModel(data, 'create', user.permissions);
       this.checkValidCreate(data, user.permissions);
 
-      if (data['password']) {
-        data['password'] = await PasswordService.hash(data['password']);
-      }
-      if (data['passwordConfirm']) {
-        delete data['passwordConfirm'];
-      }
+      await this.hashCredentials(data);
       await this.repository.create(data, user);
 
       return data.id;
@@ -76,15 +78,7 @@ export class CrudService<T extends IEntity<string>> {
       }
 
       for (let index = 0; index < data.length; index++) {
-        const item = data[index];
-
-        if (item['password']) {
-          item['password'] = await PasswordService.hash(item['password']);
-        }
-
-        if (item['passwordConfirm']) {
-          delete item['passwordConfirm'];
-        }
+        await this.hashCredentials(data[index]);
       }
 
       await this.repository.createMany(data, user);
@@ -96,11 +90,15 @@ export class CrudService<T extends IEntity<string>> {
     return data;
   }
 
-  async readById(id: string, user: IUser): Promise<T> {
+  /** Resolves to `null` when no item has that id; the caller decides what that means (the controller answers 404). */
+  async readById(id: string, user: IUser): Promise<T | null> {
     try {
       this.permissionService.valid('read', user);
       const result = await this.repository.getById(id);
-      delete result['password'];
+
+      if (!result) return null;
+
+      this.stripPassword(result);
 
       return result;
     } catch (e) {
@@ -117,7 +115,7 @@ export class CrudService<T extends IEntity<string>> {
     try {
       this.permissionService.valid('read', user);
       const result = await this.repository.getByCriteria(criteria, options);
-      result.data.forEach((item) => delete item['password']);
+      result.data.forEach((item) => this.stripPassword(item));
 
       return result;
     } catch (e) {
@@ -142,12 +140,7 @@ export class CrudService<T extends IEntity<string>> {
       castModel(data, 'update', user.permissions);
       this.checkValidUpdate(data, user.permissions);
 
-      if (data['password']) {
-        data['password'] = await PasswordService.hash(data['password']);
-      }
-      if (data['passwordConfirm']) {
-        delete data['passwordConfirm'];
-      }
+      await this.hashCredentials(data);
       await this.repository.update(data, user);
     } catch (e) {
       this._logger.error(e);
@@ -161,20 +154,16 @@ export class CrudService<T extends IEntity<string>> {
     user: IUser,
   ): Promise<void> {
     try {
-      data.id = id;
+      // Same object, now known to carry the id.
+      const item = Object.assign(data, { id });
 
       this.permissionService.valid('update', user);
 
-      castModel(data, 'update', user.permissions);
-      this.checkValidUpdatePartial(data, user.permissions);
+      castModel(item, 'update', user.permissions);
+      this.checkValidUpdatePartial(item, user.permissions);
 
-      if (data['password']) {
-        data['password'] = await PasswordService.hash(data['password']);
-      }
-      if (data['passwordConfirm']) {
-        delete data['passwordConfirm'];
-      }
-      await this.repository.updatePartial(data as Partial<T> & { id }, user);
+      await this.hashCredentials(item);
+      await this.repository.updatePartial(item, user);
     } catch (e) {
       this._logger.error(e);
       throw e;
@@ -200,12 +189,12 @@ export class CrudService<T extends IEntity<string>> {
       mimeType: string;
       encoding: string;
     },
-    options?: { streamCallback?: (r) => void; start?: number },
+    options?: { streamCallback?: (stream: unknown) => void; start?: number },
   ): Promise<string> {
     if (!data.id) {
       data.id = GuidService.create();
     }
-    let oldId = null;
+    let oldId: string | null = null;
 
     if (options?.start) {
       oldId = data.id;
@@ -232,13 +221,13 @@ export class CrudService<T extends IEntity<string>> {
   @Memoize()
   getAttachmentInfo(
     id: string,
-  ): Promise<{ fileName: string; contentType: string; length: number }> {
+  ): Promise<{ fileName: string; contentType: string; length: number } | null> {
     return this.attachmentRepository.getInfo(id);
   }
 
   getAttachmentStream(
     id: string,
-    options?: { start: number; end: number },
+    options?: { start: number; end?: number },
   ): Promise<Readable> {
     return this.attachmentRepository.getStream(id, options);
   }
@@ -249,6 +238,24 @@ export class CrudService<T extends IEntity<string>> {
 
   changes(criteria: { id?: string }): Observable<ItemChangedData> {
     return this.repository.changesByCriteria(criteria);
+  }
+
+  private async hashCredentials(item: Partial<T>): Promise<void> {
+    // Any entity may carry credentials; the decorators, not T, say whether it does.
+    const credentials = item as Partial<T> & WithCredentials;
+
+    if (credentials.password) {
+      credentials.password = await PasswordService.hash(credentials.password);
+    }
+    if (credentials.passwordConfirm) {
+      delete credentials.passwordConfirm;
+    }
+  }
+
+  private stripPassword(item: T): void {
+    const credentials = item as T & WithCredentials;
+
+    delete credentials.password;
   }
 
   private checkValidCreate(item: T, permissions: Array<string>): void {

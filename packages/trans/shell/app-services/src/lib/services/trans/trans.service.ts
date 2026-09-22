@@ -1,6 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, Optional } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
+import { firstValueFrom } from 'rxjs';
 
 import { IItemRepository } from '@smartsoft001/domain-core';
 import { PaynowService } from '@smartsoft001/paynow';
@@ -41,10 +42,9 @@ export class TransService {
           req: trans,
         });
 
-      return this.httpService
-        .post(this.config.internalApiUrl, trans)
-        .toPromise()
-        .then((res) => res.data);
+      return firstValueFrom(
+        this.httpService.post(this.config.internalApiUrl, trans),
+      ).then((res) => res.data);
     },
 
     refresh: (trans: Trans<any>) => {
@@ -55,10 +55,12 @@ export class TransService {
           id: trans.id,
         });
 
-      return this.httpService
-        .put(this.config.internalApiUrl + '/' + trans.id, trans)
-        .toPromise()
-        .then((res) => res.data);
+      return firstValueFrom(
+        this.httpService.put(
+          this.config.internalApiUrl + '/' + trans.id,
+          trans,
+        ),
+      ).then((res) => res.data);
     },
   };
 
@@ -104,7 +106,8 @@ export class TransService {
     );
   }
 
-  async getById(id: any): Promise<Trans<any>> {
+  /** `null` when no transaction has that id; the caller decides what that means. */
+  async getById(id: any): Promise<Trans<any> | null> {
     return await this.repository.getById(id);
   }
 

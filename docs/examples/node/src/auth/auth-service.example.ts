@@ -17,7 +17,7 @@ import { AuthService } from '@smartsoft001/auth-shell-app-services';
  *
  * This stub answers only for the tokens it was handed and throws for the rest,
  * which is what Nest does for an unregistered provider. `AuthService` catches
- * that error, logs it at debug level and passes `null` on instead, so an
+ * that error, logs it at debug level and leaves the option `undefined`, so an
  * application that registers none of the three still issues tokens.
  */
 export function createModuleRef(

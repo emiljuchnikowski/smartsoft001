@@ -28,5 +28,10 @@ describe('crud-nestjs: query-to-mongo', () => {
       const links = result.links('url', 10);
       expect(links).toHaveProperty('next');
     });
+    it('should treat a value made of commas only as one literal value', () => {
+      // `?a=,` has no separable parts, which used to crash the parser.
+      const result = queryToMongo.q2m('a=,');
+      expect(result.criteria).toEqual({ a: ',' });
+    });
   });
 });

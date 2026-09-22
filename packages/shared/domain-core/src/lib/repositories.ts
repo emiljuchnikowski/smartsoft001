@@ -201,12 +201,12 @@ export abstract class IItemRepository<T extends IEntity<string>> {
    * @param {string} id - The ID of the entity to be retrieved.
    * @param {IItemRepositoryOptions} [repoOptions] - Optional parameters for the operation, including transaction context.
    *
-   * @returns {Promise<T>} - A promise that resolves to the retrieved entity.
+   * @returns {Promise<T | null>} - A promise that resolves to the retrieved entity, or `null` when no entity has that ID.
    */
   abstract getById(
     id: string,
     repoOptions?: IItemRepositoryOptions,
-  ): Promise<T>;
+  ): Promise<T | null>;
 
   /**
    * Retrieves entities from the storage system that match the specified criteria.
@@ -341,7 +341,7 @@ export abstract class IAttachmentRepository<T extends IEntity<string>> {
    */
   abstract getInfo(
     id: string,
-  ): Promise<{ fileName: string; contentType: string; length: number }>;
+  ): Promise<{ fileName: string; contentType: string; length: number } | null>;
 
   /**
    * Retrieves a stream for downloading a file from the storage system.
@@ -349,7 +349,7 @@ export abstract class IAttachmentRepository<T extends IEntity<string>> {
    * @param {string} id - The unique identifier of the file.
    * @param {Object} [options] - Optional parameters for retrieving a specific range of the file.
    * @param {number} [options.start] - The starting byte position for the stream.
-   * @param {number} [options.end] - The ending byte position for the stream.
+   * @param {number} [options.end] - The ending byte position for the stream; omitted means "to the end of the file".
    *
    * @returns {Promise<any>} - A promise that resolves to a readable stream of the file.
    *
@@ -357,7 +357,7 @@ export abstract class IAttachmentRepository<T extends IEntity<string>> {
    */
   abstract getStream(
     id: string,
-    options?: { start: number; end: number },
+    options?: { start: number; end?: number },
   ): Promise<any>;
 
   /**

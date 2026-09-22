@@ -399,6 +399,27 @@ describe('payu: PayuService', () => {
         },
       });
     });
+
+    it('should reject a transaction without a started entry instead of asking for /null', async () => {
+      await expect(
+        service.getStatus({ data: {}, history: [] } as any),
+      ).rejects.toThrow('Transaction without start status');
+      expect(mockHttpService.get).not.toHaveBeenCalled();
+    });
+
+    it('should reject when PayU answers without orders instead of returning null', async () => {
+      mockHttpService.post.mockReturnValueOnce(
+        of({ data: { access_token: 'mock-token' } }),
+      );
+      mockHttpService.get.mockReturnValueOnce(of({ data: {} }));
+
+      await expect(
+        service.getStatus({
+          data: {},
+          history: [{ status: 'started', data: { orderId: 'test-order-id' } }],
+        } as any),
+      ).rejects.toThrow('PayU order not found: test-order-id');
+    });
   });
 
   describe('refund', () => {

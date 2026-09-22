@@ -37,4 +37,4 @@ export interface IFactory<T, TConfig> {
   create(config: NonNullable<TConfig>): Promise<T>;
 }
 
-export { ISpecification } from '@smartsoft001/models';
+export type { ISpecification } from '@smartsoft001/models';

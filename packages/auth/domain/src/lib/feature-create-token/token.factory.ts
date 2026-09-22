@@ -18,19 +18,16 @@ import { ITokenValidationProvider } from './token-validation.provider';
 import { TokenConfig } from './token.config';
 
 @Injectable()
-export class TokenFactory
-  implements
-    IFactory<
-      IAuthToken,
-      {
-        httpReq?: Request;
-        request: IAuthTokenRequest;
-        payloadProvider?: ITokenPayloadProvider;
-        validationProvider?: ITokenValidationProvider;
-        userProvider?: ITokenUserProvider;
-      }
-    >
-{
+export class TokenFactory implements IFactory<
+  IAuthToken,
+  {
+    httpReq?: Request;
+    request: IAuthTokenRequest;
+    payloadProvider?: ITokenPayloadProvider;
+    validationProvider?: ITokenValidationProvider;
+    userProvider?: ITokenUserProvider;
+  }
+> {
   private _invalidUsernameOrPasswordMessage = 'Invalid username or password';
 
   constructor(
@@ -41,10 +38,11 @@ export class TokenFactory
     private googleService: GoogleService,
   ) {}
 
+  /** `null` for a custom grant type: there is no built-in lookup, the user provider does it. */
   static getQuery(
     config: IAuthTokenRequest,
     customProvider = false,
-  ): Partial<User> {
+  ): Partial<User> | null {
     switch (config.grant_type) {
       case 'fb':
         return { facebookUserId: config.fb_user_id };
@@ -109,6 +107,10 @@ export class TokenFactory
       });
     }
 
+    // A replacing validation provider may have let a missing user through;
+    // no token is ever signed for nobody.
+    this.checkUser(options.request, user);
+
     const refreshToken = Guid.raw();
     await this.repository.update(
       {
@@ -146,7 +148,10 @@ export class TokenFactory
     };
   }
 
-  private checkUser(config: IAuthTokenRequest, user: User): void {
+  private checkUser(
+    config: IAuthTokenRequest,
+    user: User | null,
+  ): asserts user is User {
     if (!user)
       throw new DomainValidationError(
         config.grant_type === 'password'

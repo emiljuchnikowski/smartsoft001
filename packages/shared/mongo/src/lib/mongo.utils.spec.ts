@@ -50,4 +50,10 @@ describe('shared-mongo: utils getMongoUrl function', () => {
       expect(getMongoUrl(data)).toBe(data.result);
     });
   }
+
+  it('should name the missing host instead of crashing on it', () => {
+    const config: MongoConfig = { port: 4200, database: 'db-string' };
+
+    expect(() => getMongoUrl(config)).toThrow(/host/);
+  });
 });
