@@ -21,6 +21,7 @@ Four packages group the rest, so a project installs what it needs with one comma
 | [`core`](/docs/packages/core)                     | Any project                   | The decorators, contracts, helpers and DTOs that no framework choice affects. |
 | [`angular-stack`](/docs/packages/angular-stack)   | An Angular application        | `core`, the UI library and the CRUD screens.                                  |
 | [`nestjs-stack`](/docs/packages/nestjs-stack)     | A NestJS service              | `core`, the module helpers, MongoDB access and the CRUD and auth shells.      |
+| [`full-stack`](/docs/packages/full-stack)         | A frontend plus a backend     | `core` and both runtime stacks, so one install covers the whole project.      |
 | [`payments-stack`](/docs/packages/payments-stack) | A service that takes payments | The transaction family and the four provider integrations.                    |
 
 The rest of this page lists the libraries themselves, for a project that wants exactly one of them.

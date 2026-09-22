@@ -22,6 +22,7 @@
       "@smartsoft001/crud-shell-nestjs",
       "@smartsoft001/domain-core",
       "@smartsoft001/fb",
+      "@smartsoft001/full-stack",
       "@smartsoft001/google",
       "@smartsoft001/models",
       "@smartsoft001/mongo",

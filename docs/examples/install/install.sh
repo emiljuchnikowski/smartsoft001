@@ -71,6 +71,12 @@ install_payments() {
   # #endregion
 }
 
+install_full_stack() {
+  # #region install-full-stack
+  npm install @smartsoft001/full-stack
+  # #endregion
+}
+
 install_core_only() {
   # #region install-core
   npm install @smartsoft001/core
@@ -112,6 +118,9 @@ install_nestjs
 
 step='install the payments stack'
 install_payments
+
+step='install the full stack'
+install_full_stack
 
 # The stacks are the documented path, but every package is also published on its
 # own and a project is free to install one directly. This second, throwaway
