@@ -55,7 +55,12 @@ import { PageService } from '../../services/page/page.service';
 
 @Component({
   selector: 'smart-crud-item-page',
-  imports: [PageComponent, ItemStandardComponent, NgTemplateOutlet],
+  imports: [
+    PageComponent,
+    ItemStandardComponent,
+    NgTemplateOutlet,
+    DynamicContentDirective,
+  ],
   changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <smart-page [options]="pageOptions()" [class]="config.cssClass || ''">
@@ -465,12 +470,16 @@ export class ItemComponent<T extends IEntity<string>>
   private checkFirstInvalid(): boolean {
     this.cd.detectChanges();
 
-    const form =
+    const host =
       this.template() === 'default'
-        ? (this.standardComponents() as any)?.[0]?.formComponents?.[0]?.form
-        : this.baseInstance.formComponents()[0].form;
+        ? this.standardComponents()[0]
+        : this.baseInstance;
+    const form = host?.getForm();
 
     this.cd.detectChanges();
+
+    // Nothing has been built yet, so there is nothing valid to submit.
+    if (!form) return true;
 
     if (form.valid) return false;
 

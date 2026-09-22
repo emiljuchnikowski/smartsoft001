@@ -1,15 +1,22 @@
-import { signal } from '@angular/core';
+import { Component, input, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 
 import {
+  DYNAMIC_COMPONENTS_STORE,
   DynamicComponentLoader,
+  DynamicComponentType,
   HardwareService,
+  LIST_MODE_COMPONENTS_TOKEN,
+  ListMode,
   MenuService,
+  StyleService,
 } from '@smartsoft001/angular';
 import { Model } from '@smartsoft001/models';
 
+import { CrudListPageBaseComponent } from './base/base.component';
 import { ListComponent } from './list.component';
 import { CrudFacade } from '../../+state';
 import { CrudFullConfig } from '../../crud.config';
@@ -20,6 +27,31 @@ import { CrudSearchService } from '../../services/search/search.service';
 @Model({})
 class SomeModel {
   id!: string;
+}
+
+/**
+ * Stands in for the row engine behind `<smart-list>`, which `ListComponent`
+ * projects through `ngComponentOutlet` with the inputs `options` and `class`.
+ * The rows are not under test here; the page only needs its default body to
+ * render without pulling in the whole desktop list.
+ */
+@Component({ selector: 'test-list-body', template: '' })
+class ListBodyStubComponent {
+  options = input<unknown>();
+  cssClass = input('', { alias: 'class' });
+}
+
+/**
+ * A body registered for the `crud-list-page` dynamic component key. It has no
+ * `#contentTpl` anchor on purpose: the engine only projects the page content
+ * into a body that declares one.
+ */
+@Component({
+  selector: 'test-custom-list-body',
+  template: '<p class="custom-list-body">custom body</p>',
+})
+class CustomListBodyComponent extends CrudListPageBaseComponent<any> {
+  static override smartType: DynamicComponentType = 'crud-list-page';
 }
 
 /**
@@ -34,7 +66,17 @@ class SomeModel {
 describe('crud-shell-angular: ListComponent (GAP-27 styling surface)', () => {
   function setup(
     config: Partial<CrudFullConfig<any>> = {},
-    { omitDefaultList = false }: { omitDefaultList?: boolean } = {},
+    {
+      omitDefaultList = false,
+      filter = undefined,
+      store,
+    }: {
+      omitDefaultList?: boolean;
+      /** The page hides its whole body until the facade exposes a filter. */
+      filter?: unknown;
+      /** Components registered for the dynamic component keys. */
+      store?: unknown[];
+    } = {},
   ): {
     fixture: ComponentFixture<ListComponent<any>>;
     ngOnInit: () => void;
@@ -42,7 +84,7 @@ describe('crud-shell-angular: ListComponent (GAP-27 styling surface)', () => {
   } {
     const facadeMock = {
       links: signal<any>(null),
-      filter: signal<any>(undefined),
+      filter: signal<any>(filter),
       list: signal<any[]>([]),
       loading: signal(false),
       selected: signal<any>(null),
@@ -73,6 +115,23 @@ describe('crud-shell-angular: ListComponent (GAP-27 styling surface)', () => {
           useValue: { openEnd: jest.fn(), closeEnd: jest.fn() },
         },
         { provide: HardwareService, useValue: { isMobile: false } },
+        { provide: StyleService, useValue: { init: jest.fn() } },
+        {
+          provide: LIST_MODE_COMPONENTS_TOKEN,
+          useValue: { [ListMode.desktop]: ListBodyStubComponent },
+        },
+        {
+          provide: TranslateService,
+          useValue: {
+            currentLang: 'en',
+            get: jest.fn().mockReturnValue(of('')),
+            instant: jest.fn((k: string) => k),
+            onLangChange: of(),
+            onTranslationChange: of(),
+            onDefaultLangChange: of(),
+            onFallbackLangChange: of(),
+          },
+        },
         {
           provide: CrudListPaginationFactory,
           useValue: { create: jest.fn().mockResolvedValue({}) },
@@ -88,6 +147,9 @@ describe('crud-shell-angular: ListComponent (GAP-27 styling surface)', () => {
             getComponentsWithFactories: jest.fn().mockResolvedValue([]),
           },
         },
+        ...(store
+          ? [{ provide: DYNAMIC_COMPONENTS_STORE, useValue: store }]
+          : []),
       ],
     });
 
@@ -183,5 +245,38 @@ describe('crud-shell-angular: ListComponent (GAP-27 styling surface)', () => {
     };
     expect(details.provider).toBeDefined();
     expect(details.component).toBeUndefined();
+  });
+
+  // FRA-385 - the `.dynamic-content` anchor is only matched by
+  // `DynamicContentDirective` when the directive is in the component imports.
+  // Without it `dynamicContents()` stayed empty and a body registered for the
+  // `crud-list-page` key was never created.
+  describe('crud-list-page extension point (FRA-385)', () => {
+    /**
+     * Runs change detection and lets the dynamic-component engine react: it
+     * watches the view query through `toObservable`, so the body appears one
+     * round after the anchor does.
+     */
+    async function settle(fixture: ComponentFixture<ListComponent<any>>) {
+      fixture.detectChanges();
+      await new Promise((resolve) => setTimeout(resolve));
+      fixture.detectChanges();
+    }
+
+    it('should render a body registered for the crud-list-page key', async () => {
+      const { fixture } = setup(
+        { title: 'Custom' },
+        { filter: {}, store: [CustomListBodyComponent] },
+      );
+
+      await fixture.componentInstance.ngOnInit();
+      await settle(fixture);
+      await settle(fixture);
+
+      expect(fixture.componentInstance.template()).toBe('custom');
+      expect(
+        fixture.nativeElement.querySelector('.custom-list-body'),
+      ).toBeTruthy();
+    });
   });
 });

@@ -22,6 +22,8 @@ With `routing: true` the feature module already maps the empty path to this page
 
 The page is a shell around a generated list. Outermost is the shared page component, which carries the title from `title`, the class from `cssClass`, the variant from `variant`, the search box when `search` is on, and the buttons described below. Inside it sits the standard body: the active filter chips, and then either the list itself or, when `groups` are configured and no search text is active, the grouped disclosure view.
 
+The standard body can be replaced. The page resolves its body through the `crud-list-page` dynamic component key: a component that extends `CrudListPageBaseComponent` and is registered under the `DYNAMIC_COMPONENTS_STORE` token is created in place of the generated one, and receives the same `listOptions` input. The [item page](/docs/crud/item-page) does the same under the `crud-item-page` key.
+
 The header buttons are assembled from the configuration and the metadata, in this order.
 
 | Button      | Appears when                                                                                                                           | Does                                                             |
