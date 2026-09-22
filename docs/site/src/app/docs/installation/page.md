@@ -47,6 +47,7 @@ Each package is published on its own, but a project rarely wants one of them. Fo
 | `@smartsoft001/core`           | Any project                   | The model decorators, the domain contracts, the helpers and the shared DTOs. No UI framework, no server, no database. |
 | `@smartsoft001/angular-stack`  | An Angular application        | `core`, the UI library and the CRUD screens.                                                                          |
 | `@smartsoft001/nestjs-stack`   | A NestJS service              | `core`, the module helpers, MongoDB access and the CRUD and auth shells.                                              |
+| `@smartsoft001/full-stack`     | A frontend plus a backend     | `core` and both runtime stacks, so a project with both halves installs the whole framework with one command.          |
 | `@smartsoft001/payments-stack` | A service that takes payments | The transaction family and the PayPal, PayU, Paynow and Revolut integrations.                                         |
 
 The split follows what a project runs on rather than where the code sits, so a frontend written in something other than Angular gets its own stack later without `core` or any existing package changing name.
@@ -54,6 +55,14 @@ The split follows what a project runs on rather than where the code sits, so a f
 Installing a single library still works and is the right choice when a project needs exactly one, for example only the validators from [`utils`](/docs/packages/utils). Every package page shows its own install command.
 
 ---
+
+## Frontend and backend
+
+A project with both halves installs the whole framework with one command:
+
+{% snippet file="install/install.sh" region="install-full-stack" /%}
+
+That brings `core` and both runtime stacks at one version. The two sections below then apply to each half; nothing else is needed. Payments stay a separate opt-in, described under NestJS.
 
 ## Angular
 
