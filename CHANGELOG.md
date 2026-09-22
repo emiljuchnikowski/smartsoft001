@@ -1,3 +1,14 @@
+## 2.152.0 (2026-09-22)
+
+### 🚀 Features
+
+- **meta:** add full-stack, one install for a frontend plus a backend ([#73](https://github.com/emiljuchnikowski/smartsoft001/pull/73))
+
+### ❤️ Thank You
+
+- Claude Fable 5.1
+- Emil Juchnikowski
+
 ## 2.151.0 (2026-09-21)
 
 ### 🩹 Fixes
