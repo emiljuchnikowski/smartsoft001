@@ -1,0 +1,14 @@
+# Applied to the repository-root build context of docs/examples/app/Dockerfile.
+# Everything the API build does not need stays out of the image.
+**/node_modules
+**/dist
+**/coverage
+**/.angular
+**/.nx
+**/.git
+**/.claude
+**/.playwright-mcp
+**/tmp
+docs/site
+docs/superpowers
+docs/examples/app/.env

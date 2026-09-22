@@ -63,6 +63,7 @@
       ],
       "@smartsoft001/users": ["packages/shared/users/src/index.ts"],
       "@smartsoft001/utils": ["packages/shared/utils/src/index.ts"],
+      "@app/model": ["docs/examples/app/libs/model/src/index.ts"],
       "@angular/core/testing": [
         "node_modules/@angular/core/types/testing.d.ts"
       ],

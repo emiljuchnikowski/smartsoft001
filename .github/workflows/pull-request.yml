@@ -15,6 +15,16 @@ jobs:
     runs-on: ubuntu-24.04
     permissions:
       contents: read
+    # The example application's Playwright suite (docs/examples/app) runs the
+    # real stack: the NestJS API against this MongoDB and the Angular dev
+    # server, both started by Playwright. The suite is opt-in through
+    # RUN_EXAMPLE_APP_E2E so that `nx run-many -t test` stays runnable on a
+    # machine without MongoDB.
+    services:
+      mongo:
+        image: mongo:8
+        ports:
+          - 27017:27017
     steps:
       - uses: actions/checkout@v7
         with:
@@ -37,9 +47,21 @@ jobs:
       # the sources the way that consumer does (tools/tsconfig.strict.json).
       - run: npx nx run smartsoft001:strict-typecheck
       - run: npx nx run docs:check
+      - name: Resolve Playwright version
+        id: playwright
+        run: echo "version=$(node -p "require('playwright/package.json').version")" >> "$GITHUB_OUTPUT"
+      - name: Cache Playwright browsers
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ steps.playwright.outputs.version }}
+      - name: Install Chromium for the example app's Playwright suite
+        run: npx playwright install --with-deps chromium
       - run: |
           export NODE_OPTIONS="--max-old-space-size=8192"
           npx nx run-many -t test --max-parallel=4
+        env:
+          RUN_EXAMPLE_APP_E2E: '1'
       - run: npx nx run-many -t build --max-parallel=4
       # A package can pass every unit test and still be impossible to install:
       # the suites compile the sources, never the artefact. Load what the build
