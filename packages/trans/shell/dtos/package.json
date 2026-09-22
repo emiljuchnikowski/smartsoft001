@@ -1,6 +1,6 @@
 {
   "name": "@smartsoft001/trans-shell-dtos-services",
-  "version": "2.152.0",
+  "version": "2.153.0",
   "type": "commonjs",
   "main": "./src/index.js",
   "typings": "./src/index.d.ts",
@@ -19,6 +19,6 @@
   },
   "homepage": "https://github.com/emiljuchnikowski/smartsoft#readme",
   "peerDependencies": {
-    "@smartsoft001/models": "2.152.0"
+    "@smartsoft001/models": "2.153.0"
   }
 }

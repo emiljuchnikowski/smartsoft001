@@ -1,6 +1,6 @@
 {
   "name": "@smartsoft001/crud-shell-angular",
-  "version": "2.152.0",
+  "version": "2.153.0",
   "publishConfig": {
     "access": "public"
   },
@@ -32,10 +32,10 @@
     "@angular/router": "^22.1.3",
     "@ngrx/store": "^22.0.1",
     "@ngx-translate/core": "^17.0.0",
-    "@smartsoft001/angular": "2.152.0",
-    "@smartsoft001/domain-core": "2.152.0",
-    "@smartsoft001/models": "2.152.0",
-    "@smartsoft001/utils": "2.152.0",
+    "@smartsoft001/angular": "2.153.0",
+    "@smartsoft001/domain-core": "2.153.0",
+    "@smartsoft001/models": "2.153.0",
+    "@smartsoft001/utils": "2.153.0",
     "ng-dynamic-component": "^11.0.0",
     "reflect-metadata": "^0.2.1",
     "rxjs": "^7.8.1"

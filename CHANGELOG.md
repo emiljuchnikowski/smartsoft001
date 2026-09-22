@@ -1,3 +1,13 @@
+## 2.153.0 (2026-09-22)
+
+### 🩹 Fixes
+
+- **release:** read the version from git so a lost write-back cannot block ([#74](https://github.com/emiljuchnikowski/smartsoft001/pull/74))
+
+### ❤️ Thank You
+
+- Emil Juchnikowski
+
 ## 2.152.0 (2026-09-22)
 
 ### 🚀 Features
