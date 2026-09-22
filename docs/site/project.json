@@ -105,7 +105,11 @@
       "cache": true,
       "inputs": [
         "{projectRoot}/tools/**/*",
-        "{workspaceRoot}/tools/scripts/*.mjs"
+        "{workspaceRoot}/tools/scripts/*.mjs",
+        "{workspaceRoot}/tools/tsconfig.strict.json",
+        "{workspaceRoot}/tsconfig.base.json",
+        "{workspaceRoot}/packages/**/*.ts",
+        "{workspaceRoot}/.github/workflows/pull-request.yml"
       ],
       "options": {
         "command": "node --test docs/site/tools/*.test.mjs tools/scripts/*.test.mjs"
