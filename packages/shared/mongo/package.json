@@ -1,6 +1,6 @@
 {
   "name": "@smartsoft001/mongo",
-  "version": "2.157.0",
+  "version": "2.158.0",
   "type": "commonjs",
   "main": "./src/index.js",
   "typings": "./src/index.d.ts",
@@ -25,10 +25,10 @@
   "homepage": "https://github.com/emiljuchnikowski/smartsoft#readme",
   "peerDependencies": {
     "@nestjs/common": "^11.1.5",
-    "@smartsoft001/domain-core": "2.157.0",
-    "@smartsoft001/models": "2.157.0",
-    "@smartsoft001/users": "2.157.0",
-    "@smartsoft001/utils": "2.157.0",
+    "@smartsoft001/domain-core": "2.158.0",
+    "@smartsoft001/models": "2.158.0",
+    "@smartsoft001/users": "2.158.0",
+    "@smartsoft001/utils": "2.158.0",
     "mongodb": "^7.5.0",
     "rxjs": "^7.8.1"
   }

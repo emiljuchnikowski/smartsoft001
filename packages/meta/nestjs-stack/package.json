@@ -1,16 +1,16 @@
 {
   "name": "@smartsoft001/nestjs-stack",
-  "version": "2.157.0",
+  "version": "2.158.0",
   "publishConfig": {
     "access": "public"
   },
   "description": "Everything a NestJS service needs from @smartsoft001: the core packages, the module helpers, MongoDB access and the CRUD and auth shells.",
   "license": "MIT",
   "dependencies": {
-    "@smartsoft001/core": "2.157.0",
-    "@smartsoft001/nestjs": "2.157.0",
-    "@smartsoft001/mongo": "2.157.0",
-    "@smartsoft001/crud-shell-nestjs": "2.157.0",
-    "@smartsoft001/auth-shell-nestjs": "2.157.0"
+    "@smartsoft001/core": "2.158.0",
+    "@smartsoft001/nestjs": "2.158.0",
+    "@smartsoft001/mongo": "2.158.0",
+    "@smartsoft001/crud-shell-nestjs": "2.158.0",
+    "@smartsoft001/auth-shell-nestjs": "2.158.0"
   }
 }

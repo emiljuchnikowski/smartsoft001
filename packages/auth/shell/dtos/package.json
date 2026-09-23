@@ -1,6 +1,6 @@
 {
   "name": "@smartsoft001/auth-shell-dtos",
-  "version": "2.157.0",
+  "version": "2.158.0",
   "type": "commonjs",
   "main": "./src/index.js",
   "typings": "./src/index.d.ts",
@@ -9,6 +9,6 @@
     "access": "public"
   },
   "peerDependencies": {
-    "@smartsoft001/models": "2.157.0"
+    "@smartsoft001/models": "2.158.0"
   }
 }

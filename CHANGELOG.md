@@ -1,3 +1,14 @@
+## 2.158.0 (2026-09-23)
+
+### 🚀 Features
+
+- **nx:** add the example application under docs/examples/app ([#82](https://github.com/emiljuchnikowski/smartsoft001/pull/82))
+
+### ❤️ Thank You
+
+- Claude Fable 5.1
+- Emil Juchnikowski
+
 ## 2.157.0 (2026-09-23)
 
 ### 🩹 Fixes
