@@ -1,6 +1,7 @@
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { By } from '@angular/platform-browser';
 
 import { Field, Model } from '@smartsoft001/models';
 
@@ -9,6 +10,7 @@ import { FormComponent } from './form.component';
 import { FormStandardComponent } from './standard/standard.component';
 import { FormFactory } from '../../factories';
 import { IFormOptions } from '../../models';
+import { SmartFormGroup } from '../../services';
 import { FORM_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { InputComponent } from '../input';
 
@@ -57,6 +59,36 @@ class StubFormFactory {
     return Promise.resolve(new UntypedFormGroup({}));
   }
 }
+
+/**
+ * Builds a brand new group per call and hands back a promise the spec
+ * resolves by hand, so a build can be settled out of the order it started in.
+ */
+class DeferredFormFactory {
+  readonly groups: SmartFormGroup[] = [];
+  private readonly resolvers: Array<() => void> = [];
+
+  create = jest.fn(() => {
+    const group = SmartFormGroup.create();
+    group.addControl('firstName', new UntypedFormControl(''));
+    group.addControl('lastName', new UntypedFormControl(''));
+    this.groups.push(group);
+
+    return new Promise<SmartFormGroup>((resolve) => {
+      this.resolvers.push(() => resolve(group));
+    });
+  });
+
+  resolveBuild(index: number): void {
+    this.resolvers[index]();
+  }
+}
+
+// No `control`, so the effect goes through FormFactory.create().
+const buildFactoryOptions = (): IFormOptions<TestModel> => ({
+  model: new TestModel(),
+  show: true,
+});
 
 describe('@smartsoft001/shared-angular: FormComponent', () => {
   describe('without token', () => {
@@ -158,6 +190,97 @@ describe('@smartsoft001/shared-angular: FormComponent', () => {
         expect.arrayContaining(['options', 'form', 'class']),
       );
       expect(inputs['class']).toBe('my-extra');
+    });
+  });
+
+  describe('rebuilding the group when options change', () => {
+    let fixture: ComponentFixture<FormComponent<TestModel>>;
+    let component: FormComponent<TestModel>;
+    let factory: DeferredFormFactory;
+
+    beforeEach(async () => {
+      factory = new DeferredFormFactory();
+
+      await TestBed.configureTestingModule({
+        imports: [FormComponent, TestCustomFormComponent],
+        providers: [
+          { provide: FormFactory, useValue: factory },
+          {
+            provide: FORM_STANDARD_COMPONENT_TOKEN,
+            useValue: TestCustomFormComponent,
+          },
+        ],
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(FormComponent<TestModel>);
+      component = fixture.componentInstance;
+    });
+
+    /** Lets the pending `FormFactory.create` promise callbacks run. */
+    async function settle(): Promise<void> {
+      await new Promise((resolve) => setTimeout(resolve));
+      fixture.detectChanges();
+    }
+
+    function renderedBody(): TestCustomFormComponent {
+      const body = fixture.debugElement.query(
+        By.directive(TestCustomFormComponent),
+      );
+
+      if (!body) throw new Error('no form body rendered');
+
+      return body.componentInstance as TestCustomFormComponent;
+    }
+
+    it('should render the group built for the latest options', async () => {
+      fixture.componentRef.setInput('options', buildFactoryOptions());
+      fixture.detectChanges();
+      factory.resolveBuild(0);
+      await settle();
+
+      fixture.componentRef.setInput('options', buildFactoryOptions());
+      fixture.detectChanges();
+      factory.resolveBuild(1);
+      await settle();
+
+      expect(renderedBody().form()).toBe(component.form);
+    });
+
+    it('should keep the latest group when an earlier build settles last', async () => {
+      fixture.componentRef.setInput('options', buildFactoryOptions());
+      fixture.detectChanges();
+      fixture.componentRef.setInput('options', buildFactoryOptions());
+      fixture.detectChanges();
+
+      factory.resolveBuild(1);
+      await settle();
+      factory.resolveBuild(0);
+      await settle();
+
+      expect(component.form).toBe(factory.groups[1]);
+      expect(renderedBody().form()).toBe(factory.groups[1]);
+    });
+
+    it('should emit valueChange for the rendered group only', async () => {
+      fixture.componentRef.setInput('options', buildFactoryOptions());
+      fixture.detectChanges();
+      factory.resolveBuild(0);
+      await settle();
+
+      fixture.componentRef.setInput('options', buildFactoryOptions());
+      fixture.detectChanges();
+      factory.resolveBuild(1);
+      await settle();
+
+      const emitted: TestModel[] = [];
+      component.valueChange.subscribe((val) => emitted.push(val));
+
+      factory.groups[0].controls['firstName'].setValue('stale');
+      component.form?.controls['firstName'].setValue('current');
+
+      expect(emitted).toEqual([
+        expect.objectContaining({ firstName: 'current' }),
+      ]);
     });
   });
 });

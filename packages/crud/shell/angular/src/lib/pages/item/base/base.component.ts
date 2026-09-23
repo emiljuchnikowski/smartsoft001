@@ -55,9 +55,10 @@ export abstract class CrudItemPageBaseComponent<
 
   /**
    * The reactive form of the first rendered `<smart-form>`, or `undefined`
-   * until the form factory has built it. A method rather than a `computed`:
-   * `FormComponent.form` is a plain field assigned asynchronously, so a
-   * computed would cache `undefined` from the first read.
+   * until the form factory has built it. `FormComponent.form` is a getter over
+   * a signal, so it always reports the group currently rendered; a method is
+   * kept here so the page button handlers read that group at call time rather
+   * than through a `computed` captured when the form did not exist yet.
    */
   getForm(): SmartFormGroup | undefined {
     return this.formComponents()[0]?.form;

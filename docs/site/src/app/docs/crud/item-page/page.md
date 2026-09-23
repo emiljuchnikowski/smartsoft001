@@ -26,8 +26,8 @@ Outside create mode the page subscribes to the route parameters and selects the 
 
 With `routing: true` these routes already exist. The feature module maps `add` and `:id` to this page, and the empty path to the [list page](/docs/crud/list-page).
 
-{% callout type="note" title="Two earlier defects on this page are fixed" %}
-An earlier release declared the signals that feed the template without creating them, so the first change detection failed in every mode. The release after it rendered the page but could not submit it: the add and save buttons read the form through a `viewChildren` signal as if it were an array and threw `TypeError: Cannot read properties of undefined (reading 'valid')` before the facade was called. Both are repaired. The page now reaches the form through `getForm()` on the base component, `create` and `updatePartial` are called with the form value, and the `crud-item-page` dynamic component key is honoured, so an application can register its own body for this page.
+{% callout type="note" title="Three earlier defects on this page are fixed" %}
+An earlier release declared the signals that feed the template without creating them, so the first change detection failed in every mode. The release after it rendered the page but could not submit it: the add and save buttons read the form through a `viewChildren` signal as if it were an array and threw `TypeError: Cannot read properties of undefined (reading 'valid')` before the facade was called. The release after that could submit but created nothing in create mode: the page handed the unique-value provider over after the first render, the form component built a second group, and the rendered inputs stayed bound to the first one while the add button validated the second, empty one. All three are repaired. The page now reaches the form through `getForm()` on the base component, `create` and `updatePartial` are called with the value of the group the inputs write to, and the `crud-item-page` dynamic component key is honoured, so an application can register its own body for this page.
 {% /callout %}
 
 ---
@@ -36,7 +36,9 @@ An earlier release declared the signals that feed the template without creating 
 
 Nothing about the form is written by hand. The page passes the mode, the model class, the unique-value provider and any `inputComponents` overrides to the form component, and the form factory builds the reactive controls from the field metadata: one control per field whose block for that mode is present and permitted, with the validators that the metadata implies. Required, email, phone number and national-identifier checks come from the field type and the `required` flag; minimum and maximum, length limits and the confirmation companion control come from the same options; and a field with an `enabled` specification is enabled or disabled reactively as the rest of the form changes.
 
-Uniqueness is asynchronous. For a field declared unique the page asks the backend whether any other record already carries that value, excluding the record being edited, and the control stays invalid while one does.
+Uniqueness is asynchronous. For a field declared unique the page asks the backend whether any other record already carries that value, excluding the record being edited, and the control stays invalid while one does. The page puts that provider in place before its first render, so in create mode the group is built exactly once.
+
+The group is rebuilt whenever the form options change, which in update mode happens when the selected record arrives from the store. The form component keeps the current group in a signal, so the rendered inputs, the `valueChange`, `valuePartialChange` and `validChange` outputs, and the group the buttons validate through `getForm()` always refer to the same build. A build that finishes after a newer one has started is discarded.
 
 When the form is not valid the page does not submit. It collects the invalid controls, translates their labels through the `MODEL.<key>` keys, and shows the first three in a toast, walking into nested groups and arrays so a bad value deep in an object is still named.
 
