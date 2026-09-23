@@ -51,6 +51,18 @@ interface Mounted {
  * drives the page the way a user does, through the rendered input.
  */
 describe('crud-shell-angular: ItemComponent with the real form engine (FRA-388)', () => {
+  // The first case pays for compiling the whole form engine, which on a
+  // machine that is also running the rest of the workspace's suites took
+  // longer than Jest's default five seconds (FRA-390). The budget matches
+  // what the spec mounts; the assertions themselves settle in milliseconds.
+  jest.setTimeout(30_000);
+
+  const fixtures: ComponentFixture<ItemComponent<any>>[] = [];
+
+  afterEach(() => {
+    fixtures.splice(0).forEach((fixture) => fixture.destroy());
+  });
+
   function setup(
     config: Partial<CrudFullConfig<any>>,
     {
@@ -119,11 +131,10 @@ describe('crud-shell-angular: ItemComponent with the real form engine (FRA-388)'
       ],
     });
 
-    return {
-      fixture: TestBed.createComponent(ItemComponent<any>),
-      facadeMock,
-      toastMock,
-    };
+    const fixture = TestBed.createComponent(ItemComponent<any>);
+    fixtures.push(fixture);
+
+    return { fixture, facadeMock, toastMock };
   }
 
   /**
