@@ -166,6 +166,20 @@ describe('nx release: the current version comes from git, not from a write-back'
     );
   });
 
+  it('should rebase the write-back over a dirty tree without failing on the abort', () => {
+    // `npm version` leaves the root manifest modified and nothing commits it
+    // before the rebase, so a plain `git rebase` refuses to run. The first real
+    // collision (v2.154.0) died there, and then again on `git rebase --abort`
+    // for a rebase that had never started.
+    const step = workflow.slice(
+      workflow.indexOf('name: Bring the release commit onto the current main'),
+      workflow.indexOf('name: Commit'),
+    );
+
+    assert.match(step, /git rebase --autostash origin\/main/);
+    assert.match(step, /git rebase --abort 2>\/dev\/null \|\| true/);
+  });
+
   it('should push the release tag before the write-back to main', () => {
     const tagPush = workflow.indexOf('name: Push the release tag');
     const publish = workflow.indexOf('name: Publish to NPM');

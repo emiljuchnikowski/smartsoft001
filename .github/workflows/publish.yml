@@ -89,6 +89,11 @@ jobs:
       # Ten minutes have passed since checkout. If main moved, the write-back
       # below is not a fast-forward and is rejected. Move the release commit on
       # top of the current main first, keeping the tag on the moved commit.
+      # The tree is dirty here on purpose: `npm version` changed the root
+      # manifest and only the write-back step commits it, so the rebase has to
+      # autostash. Without that the first real collision (v2.154.0) failed on
+      # "cannot rebase: You have unstaged changes", and the abort of a rebase
+      # that never started failed the step a second time.
       - name: Bring the release commit onto the current main
         run: |
           git fetch origin main
@@ -97,12 +102,12 @@ jobs:
             exit 0
           fi
           tag="v${{ steps.package.outputs.version }}"
-          if git rebase origin/main; then
+          if git rebase --autostash origin/main; then
             git tag -f -a "$tag" -m "$tag" HEAD
             git push --force origin "refs/tags/$tag"
             echo "rebased onto origin/main and moved $tag"
           else
-            git rebase --abort
+            git rebase --abort 2>/dev/null || true
             echo "::warning::main moved and the release commit does not rebase cleanly; the write-back will be rejected. The tag is already pushed, so the next release is unaffected."
           fi
       - name: Commit
