@@ -115,3 +115,13 @@ import { BaseModel } from '@smartsoft001/domain-core';
 // 3. Relative imports (with blank line)
 import { LocalComponent } from './local.component';
 ```
+
+## Reference implementation
+
+The example application under `docs/examples/app` is written in these patterns end to end; its login page is the smallest complete example.
+
+- `docs/examples/app/apps/web/src/app/auth/login.page.ts`: a standalone component with `ChangeDetectionStrategy.OnPush`, `inject()` assigned to `readonly` fields, `signal()` state for the pending and error flags and `@if` in the template.
+- `docs/examples/app/apps/web/src/app/app.ts`: `toSignal()` bridging the router events into a signal with an `initialValue`.
+- `docs/examples/app/apps/web/src/app/app.html`: `@if` around the sign-out button, the new control flow in an external template.
+- `docs/examples/app/apps/web/src/app/auth/auth.guard.ts`: `inject()` inside a functional guard, outside any class.
+- `docs/examples/app/apps/web/src/app/app.config.ts`: `provideZonelessChangeDetection()` and `provideAppInitializer()` calling `inject()` in an injection context.

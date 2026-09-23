@@ -230,3 +230,14 @@ nx test <project-name> --testFile=feature.service.spec.ts
 4. **Mock external dependencies** - isolate unit under test
 5. **Test edge cases** - empty arrays, null values, boundaries
 6. **Keep tests fast** - avoid real HTTP calls or timers
+
+## Reference implementation
+
+The spec files of the example application under `docs/examples/app` are AAA tests against the real framework packages, one per kind of unit this skill covers.
+
+- `docs/examples/app/apps/web/src/app/auth/login.service.spec.ts`: an Angular service on `provideHttpClient()` and `provideHttpClientTesting()`, with `HttpTestingController.verify()` in `afterEach` and the arrange, act and assert blocks separated by blank lines.
+- `docs/examples/app/apps/web/src/app/auth/login.page.spec.ts`: a component driven through the DOM of the rendered `<smart-sign-in-form>`, with `LoginService` replaced by a `jest.fn()` mock and the router spied on.
+- `docs/examples/app/apps/web/src/app/auth/auth.guard.spec.ts`: a functional guard run through `TestBed.runInInjectionContext` with a stubbed `AuthService`.
+- `docs/examples/app/apps/api/src/app/users.seed.spec.ts`: a NestJS provider constructed by hand with a repository mock, no `TestingModule` needed.
+- `docs/examples/app/apps/api/src/config.spec.ts`: a pure function asserted against its documented defaults and each override.
+- `docs/examples/app/libs/model/src/lib/note.model.spec.ts`: model metadata asserted through the `@smartsoft001/models` helpers, with the project name as the describe prefix because the app is not a package.
