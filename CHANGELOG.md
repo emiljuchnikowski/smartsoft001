@@ -1,3 +1,18 @@
+## 2.155.0 (2026-09-23)
+
+### 🚀 Features
+
+- **shared:** render a real confirm dialog from AlertService ([#78](https://github.com/emiljuchnikowski/smartsoft001/pull/78))
+
+### 🩹 Fixes
+
+- **crud:** let the item page submit and honour the crud-item-page extension point ([#76](https://github.com/emiljuchnikowski/smartsoft001/pull/76))
+
+### ❤️ Thank You
+
+- Claude Fable 5.1
+- Emil Juchnikowski
+
 ## 2.153.0 (2026-09-22)
 
 ### 🩹 Fixes
