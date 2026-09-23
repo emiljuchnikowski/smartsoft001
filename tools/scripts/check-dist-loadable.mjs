@@ -57,10 +57,13 @@ const DECORATED_CLASSES = [
   {
     package: '@smartsoft001/crud-shell-app-services',
     export: 'CrudService',
+    // The fourth parameter is the CRUD config carrying the model type the
+    // service validates request bodies against (FRA-386).
     paramTypes: [
       'PermissionService',
       'IItemRepository',
       'IAttachmentRepository',
+      'SharedConfig',
     ],
   },
 ];
