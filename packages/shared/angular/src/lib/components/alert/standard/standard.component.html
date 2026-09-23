@@ -1,0 +1,57 @@
+<div
+  class="smart:fixed smart:inset-0 smart:z-[90] smart:flex smart:items-center smart:justify-center smart:p-4 smart:bg-gray-900/50 smart:dark:bg-gray-900/80"
+  role="presentation"
+  (click)="onBackdropClick($event)"
+>
+  <div
+    #panel
+    role="alertdialog"
+    aria-modal="true"
+    tabindex="-1"
+    [attr.aria-labelledby]="options().header ? headerId : null"
+    [attr.aria-describedby]="options().message ? messageId : null"
+    [class]="
+      'smart:w-full smart:max-w-md smart:rounded-xl smart:bg-white smart:dark:bg-gray-800 smart:border smart:border-gray-200 smart:dark:border-gray-700 smart:shadow-xl smart:p-5 smart:focus:outline-none ' +
+      cssClass()
+    "
+    (keydown)="trapFocus($event, panel)"
+  >
+    @if (options().header) {
+      <h2
+        [id]="headerId"
+        class="smart:text-lg smart:font-semibold smart:text-gray-900 smart:dark:text-white"
+      >
+        {{ options().header }}
+      </h2>
+    }
+    @if (options().subHeader) {
+      <h3
+        class="smart:mt-1 smart:text-sm smart:font-medium smart:text-gray-700 smart:dark:text-gray-300"
+      >
+        {{ options().subHeader }}
+      </h3>
+    }
+    @if (options().message) {
+      <p
+        [id]="messageId"
+        class="smart:mt-2 smart:text-sm smart:text-gray-600 smart:dark:text-gray-400"
+      >
+        {{ options().message }}
+      </p>
+    }
+    @if (buttons().length > 0) {
+      <div class="smart:mt-5 smart:flex smart:justify-end smart:gap-x-2">
+        @for (button of buttons(); track $index) {
+          <button
+            type="button"
+            [attr.data-role]="button.role ?? null"
+            [class]="buttonClasses(button)"
+            (click)="invoke(button)"
+          >
+            {{ button.text }}
+          </button>
+        }
+      </div>
+    }
+  </div>
+</div>

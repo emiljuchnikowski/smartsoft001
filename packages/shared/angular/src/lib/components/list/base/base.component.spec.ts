@@ -126,6 +126,94 @@ describe('@smartsoft001/shared-angular: ListBaseComponent', () => {
 
     expect(list.removeHandler).not.toBeNull();
   });
+
+  describe('remove', () => {
+    let removeFixture: ComponentFixture<TestHostComponent>;
+    let removeList: TestListComponent;
+    let invoke: jest.Mock;
+
+    function dialog(): HTMLElement | null {
+      return document.body.querySelector('[role="alertdialog"]');
+    }
+
+    async function flush(): Promise<void> {
+      await new Promise<void>((resolve) => setTimeout(resolve));
+    }
+
+    beforeEach(async () => {
+      invoke = jest.fn();
+      TestBed.resetTestingModule();
+
+      await TestBed.configureTestingModule({
+        imports: [TestHostComponent],
+        providers: [
+          provideRouter([]),
+          { provide: AuthService, useValue: { expectPermissions: () => true } },
+          AlertService,
+          {
+            provide: TranslateService,
+            useValue: { instant: (k: string) => k },
+          },
+        ],
+      }).compileComponents();
+
+      removeFixture = TestBed.createComponent(TestHostComponent);
+      removeFixture.componentInstance.options = {
+        provider: createProvider(),
+        type: TestItemModel,
+        fields: [{ key: 'firstName', options: { list: true } }],
+        remove: { provider: { invoke } },
+      } as IListInternalOptions<TestItemModel>;
+      removeFixture.detectChanges();
+      removeList = removeFixture.debugElement.children[0].componentInstance;
+    });
+
+    afterEach(async () => {
+      document.body
+        .querySelector<HTMLButtonElement>(
+          '[role="alertdialog"] [data-role="cancel"]',
+        )
+        ?.click();
+      await flush();
+      document.body.innerHTML = '';
+    });
+
+    it('should open a confirm dialog when removeHandler is called', () => {
+      removeList.removeHandler?.({ id: 'test-id' } as TestItemModel);
+
+      expect(dialog()).toBeTruthy();
+      expect(dialog()?.textContent).toContain('OBJECT.confirmDelete');
+    });
+
+    it('should invoke the remove provider and close the dialog on confirm', async () => {
+      removeList.removeHandler?.({ id: 'test-id' } as TestItemModel);
+
+      document.body
+        .querySelector<HTMLButtonElement>(
+          '[role="alertdialog"] button:not([data-role])',
+        )
+        ?.click();
+      await flush();
+
+      expect(invoke).toHaveBeenCalledWith('test-id');
+      expect(dialog()).toBeNull();
+    });
+
+    it('should close the dialog without invoking the remove provider on cancel', async () => {
+      removeList.removeHandler?.({ id: 'test-id' } as TestItemModel);
+
+      document.body
+        .querySelector<HTMLButtonElement>(
+          '[role="alertdialog"] [data-role="cancel"]',
+        )
+        ?.click();
+      await flush();
+
+      expect(invoke).not.toHaveBeenCalled();
+      expect(dialog()).toBeNull();
+    });
+  });
+
   describe('details options', () => {
     function createFixtureWithDetails(
       details: IListInternalOptions<TestItemModel>['details'],

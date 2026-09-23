@@ -5,10 +5,11 @@ import {
   PipeTransform,
   signal,
   ChangeDetectionStrategy,
+  WritableSignal,
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { IEntity } from '@smartsoft001/domain-core';
 import { Field, Model } from '@smartsoft001/models';
@@ -35,6 +36,13 @@ class MockListCellPipe implements PipeTransform {
 
 @Pipe({ name: 'smartFileUrl' })
 class MockFileUrlPipe implements PipeTransform {
+  transform(v: unknown): unknown {
+    return v;
+  }
+}
+
+@Pipe({ name: 'translate' })
+class MockTranslatePipe implements PipeTransform {
   transform(v: unknown): unknown {
     return v;
   }
@@ -149,6 +157,85 @@ describe('@smartsoft001/shared-angular: ListDesktopComponent', () => {
     await fixture.whenStable();
 
     expect(desktop.containerClasses()).toContain('my-extra-class');
+  });
+
+  describe('remove action', () => {
+    let invoke: jest.Mock;
+
+    afterEach(() => {
+      document.body.innerHTML = '';
+    });
+
+    it('should confirm with an alert dialog and invoke the remove provider', async () => {
+      invoke = jest.fn();
+      const provider = createProvider();
+      (provider.list as WritableSignal<TestItemModel[]>).set([
+        { id: 'test-id', firstName: 'Jane' } as TestItemModel,
+      ]);
+      TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [TestHostComponent],
+        providers: [
+          provideRouter([]),
+          { provide: AuthService, useValue: { expectPermissions: () => true } },
+          AlertService,
+          {
+            provide: TranslateService,
+            useValue: {
+              instant: (k: string) => k,
+              get: () => ({
+                subscribe: () => ({ unsubscribe: () => undefined }),
+              }),
+            },
+          },
+        ],
+      })
+        .overrideComponent(ListDesktopComponent, {
+          remove: {
+            imports: [
+              PagingComponent,
+              ListHeaderPipe,
+              ListCellPipe,
+              FileUrlPipe,
+              TranslatePipe,
+            ],
+          },
+          add: {
+            imports: [
+              MockPagingComponent,
+              MockListHeaderPipe,
+              MockListCellPipe,
+              MockFileUrlPipe,
+              MockTranslatePipe,
+            ],
+          },
+        })
+        .compileComponents();
+
+      const removeFixture = TestBed.createComponent(TestHostComponent);
+      removeFixture.componentInstance.options = {
+        provider,
+        type: TestItemModel,
+        fields: [{ key: 'firstName', options: { list: true } }],
+        remove: { provider: { invoke } },
+      } as IListInternalOptions<TestItemModel>;
+      removeFixture.detectChanges();
+
+      const host = removeFixture.nativeElement as HTMLElement;
+      host.querySelectorAll<HTMLButtonElement>('table td button')[0].click();
+
+      expect(document.body.querySelector('[role="alertdialog"]')).toBeTruthy();
+
+      document.body
+        .querySelector<HTMLButtonElement>(
+          '[role="alertdialog"] button:not([data-role])',
+        )
+        ?.click();
+      await new Promise<void>((resolve) => setTimeout(resolve));
+
+      expect(invoke).toHaveBeenCalledWith('test-id');
+      expect(document.body.querySelector('[role="alertdialog"]')).toBeNull();
+    });
   });
 
   it('should order desktopKeys: keys + removeAction + itemAction', () => {

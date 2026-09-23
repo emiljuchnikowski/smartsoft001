@@ -39,6 +39,7 @@ These render a default standard implementation and accept a custom implementatio
 | Component           | Skill                                    | Selector                      | Token                                          |
 | ------------------- | ---------------------------------------- | ----------------------------- | ---------------------------------------------- |
 | Action Panel        | `angular-components-action-panel`        | `<smart-action-panel>`        | `ACTION_PANEL_STANDARD_COMPONENT_TOKEN`        |
+| Alert               | `angular-components-alert`               | `<smart-alert>`               | `ALERT_STANDARD_COMPONENT_TOKEN`               |
 | Avatar              | `angular-components-avatar`              | `<smart-avatar>`              | `AVATAR_STANDARD_COMPONENT_TOKEN`              |
 | Badge               | `angular-components-badge`               | `<smart-badge>`               | `BADGE_STANDARD_COMPONENT_TOKEN`               |
 | Breadcrumbs         | `angular-components-breadcrumbs`         | `<smart-breadcrumbs>`         | `BREADCRUMBS_STANDARD_COMPONENT_TOKEN`         |
@@ -99,7 +100,7 @@ These provide abstract base classes (`@Directive()`) that can be extended to cre
 When a developer asks about a component:
 
 1. **Wants to use `<smart-date-edit>`, `<smart-date-range>`, `<smart-detail>`, or `<smart-input>`** → delegate to the corresponding skill for usage API
-2. **Wants to use `<smart-action-panel>`, `<smart-avatar>`, `<smart-badge>`, `<smart-breadcrumbs>`, `<smart-button-group>`, `<smart-calendar>`, `<smart-card-heading>`, `<smart-command-palette>`, `<smart-container>`, `<smart-description-list>`, `<smart-details>`, `<smart-divider>`, `<smart-drawer>`, `<smart-dropdown>`, `<smart-empty-state>`, `<smart-feed>`, `<smart-form>`, `<smart-grid-list>`, `<smart-info>`, `<smart-list>`, `<smart-list-container>`, `<smart-media-object>`, `<smart-modal>`, `<smart-multi-column-layout>`, `<smart-navbar>`, `<smart-notification>`, `<smart-page-heading>`, `<smart-password-strength>`, `<smart-progress-bars>`, `<smart-searchbar>`, `<smart-section-heading>`, `<smart-select-menu>`, `<smart-sidebar-layout>`, `<smart-sidebar-navigation>`, `<smart-sign-in-form>`, `<smart-stacked-layout>`, `<smart-stacked-list>`, `<smart-stats>`, `<smart-table>`, `<smart-tabs>`, `<smart-textarea>`, `<smart-toggle>`, or `<smart-vertical-navigation>`** → delegate to the skill to explain usage, token override pattern, and how to extend the base class with a custom implementation
+2. **Wants to use `<smart-action-panel>`, `<smart-alert>` (or `AlertService`), `<smart-avatar>`, `<smart-badge>`, `<smart-breadcrumbs>`, `<smart-button-group>`, `<smart-calendar>`, `<smart-card-heading>`, `<smart-command-palette>`, `<smart-container>`, `<smart-description-list>`, `<smart-details>`, `<smart-divider>`, `<smart-drawer>`, `<smart-dropdown>`, `<smart-empty-state>`, `<smart-feed>`, `<smart-form>`, `<smart-grid-list>`, `<smart-info>`, `<smart-list>`, `<smart-list-container>`, `<smart-media-object>`, `<smart-modal>`, `<smart-multi-column-layout>`, `<smart-navbar>`, `<smart-notification>`, `<smart-page-heading>`, `<smart-password-strength>`, `<smart-progress-bars>`, `<smart-searchbar>`, `<smart-section-heading>`, `<smart-select-menu>`, `<smart-sidebar-layout>`, `<smart-sidebar-navigation>`, `<smart-sign-in-form>`, `<smart-stacked-layout>`, `<smart-stacked-list>`, `<smart-stats>`, `<smart-table>`, `<smart-tabs>`, `<smart-textarea>`, `<smart-toggle>`, or `<smart-vertical-navigation>`** → delegate to the skill to explain usage, token override pattern, and how to extend the base class with a custom implementation
 3. **Wants to use `<smart-button>`, `<smart-card>`, `<smart-accordion>`, `<smart-page>`, or `<smart-paging>`** → delegate to the skill to explain how to extend the base class and create a custom implementation
 4. **Wants to create a custom component** → delegate to the base-only skill for extension patterns and API
 
@@ -111,6 +112,7 @@ Always delegate to the per-component skill for detailed API, usage examples, and
 - **Date Range** → use skill `angular-components-date-range`
 - **Accordion** (base only) → use skill `angular-components-accordion`
 - **Action Panel** (with extension token) → use skill `angular-components-action-panel`
+- **Alert** (with extension token; also `AlertService.show()`) → use skill `angular-components-alert`
 - **Avatar** (with extension token) → use skill `angular-components-avatar`
 - **Badge** (with extension token) → use skill `angular-components-badge`
 - **Breadcrumbs** (with extension token) → use skill `angular-components-breadcrumbs`
@@ -191,6 +193,11 @@ import {
 import {
   ActionPanelBaseComponent,
   ACTION_PANEL_STANDARD_COMPONENT_TOKEN,
+  AlertBaseComponent,
+  ALERT_STANDARD_COMPONENT_TOKEN,
+  AlertService,
+  IAlertOptions,
+  IAlertButton,
   AvatarBaseComponent,
   AVATAR_STANDARD_COMPONENT_TOKEN,
   BadgeBaseComponent,
