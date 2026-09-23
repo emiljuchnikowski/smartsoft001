@@ -1,3 +1,15 @@
+## 2.157.0 (2026-09-23)
+
+### 🩹 Fixes
+
+- **crud,shared:** bind the rendered inputs to the group the page validates ([#81](https://github.com/emiljuchnikowski/smartsoft001/pull/81))
+- **release:** let the write-back rebase run on the dirty tree it is given ([#79](https://github.com/emiljuchnikowski/smartsoft001/pull/79))
+
+### ❤️ Thank You
+
+- Claude Fable 5.1
+- Emil Juchnikowski
+
 ## 2.155.0 (2026-09-23)
 
 ### 🚀 Features
