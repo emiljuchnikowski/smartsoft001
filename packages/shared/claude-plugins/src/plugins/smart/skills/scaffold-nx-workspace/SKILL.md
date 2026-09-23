@@ -82,3 +82,14 @@ components. Stop at the buildable shell and defer those to the feature-module sk
   (`.nvmrc` ← `<NODE_VERSION>`), not fixed by this skill.
 - Bundled `references/` + `scripts/` ship automatically (the whole `src/plugins/**` tree is copied to dist).
   Do NOT hand-edit `plugin.json` version — it is auto-synced at build time.
+
+## Reference implementation
+
+This skill scaffolds an SSR shell, while the example application under `docs/examples/app` is a non-SSR consumer, so it shows the finished shape of a workspace's apps and libs and not the SSR runtime pieces.
+
+- `docs/examples/app/apps/web/project.json`: an Angular application project on `@angular/build:application` with `build`, `serve`, `lint` and `test` targets and `scope` and `type` tags.
+- `docs/examples/app/apps/api/project.json`: the NestJS application beside it, built with `@nx/webpack:webpack` into `dist/` and served from that build.
+- `docs/examples/app/libs/model/project.json`: a shared library project with `build`, `test` and `lint` targets, the role `libs/shared/angular` plays in a scaffolded workspace.
+- `docs/examples/app/libs/model/src/index.ts`: the barrel the workspace alias `@app/model` in `tsconfig.base.json` points at, the same mechanism as the `@<prefix>/angular` alias this skill sets up.
+- `docs/examples/app/apps/web/eslint.config.mjs`: the flat ESLint config of one app, extending the workspace config and giving the app's own alias the position the `@<prefix>/**` path group takes in a scaffolded workspace.
+- `docs/examples/app/apps/web/jest.config.ts`: Jest on `jest-preset-angular` with a `test-setup.ts`, the unit test setup this skill configures.

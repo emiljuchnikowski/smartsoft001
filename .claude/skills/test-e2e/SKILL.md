@@ -89,3 +89,15 @@ npx nx e2e {app-name}-e2e
 2. **Always inject testids first** — ensure selectors exist before writing tests
 3. **Run tests after writing** — verify tests pass
 4. **Report comprehensively** — include injection summary and execution status
+
+## Reference implementation
+
+The Playwright suite of the example application under `docs/examples/app` runs against the real stack; it keeps its helpers as functions in one support module and uses the selectors the framework components render, because the generated pages carry no `data-testid` of their own.
+
+- `docs/examples/app/apps/web-e2e/playwright.config.ts`: the API and the dev server as `webServer` entries, so that one command builds, starts and tests the whole loop.
+- `docs/examples/app/apps/web-e2e/src/support/app.ts`: the page helpers: sign-in through the UI or through a token written to `localStorage` before boot, note creation through the API and the row and button locators.
+- `docs/examples/app/apps/web-e2e/src/login.spec.ts`: form submission, the error state and the redirects around the login page.
+- `docs/examples/app/apps/web-e2e/src/list.spec.ts`: the add form and the confirm dialog on the generated list, with a unique title per run.
+- `docs/examples/app/apps/web-e2e/src/item.spec.ts`: serial specs carrying one note through details, edit and reload.
+- `docs/examples/app/apps/web-e2e/src/api.spec.ts`: the API on its own through Playwright's `request` fixture.
+- `docs/examples/app/apps/web-e2e/project.json`: the `e2e` target and a gated `test` target, so that a plain `nx run-many -t test` does not need MongoDB.

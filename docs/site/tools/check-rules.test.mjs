@@ -21,6 +21,7 @@ import {
   rule11,
   rule12,
   rule13,
+  rule14,
   runAllRules,
   skillInventory,
   storyInventory,
@@ -33,6 +34,7 @@ const skillRoot = path.join(here, '__fixtures__', 'check-r10')
 const fenceRoot = path.join(here, '__fixtures__', 'check-r11')
 const metaRoot = path.join(here, '__fixtures__', 'check-r12')
 const tabsRoot = path.join(here, '__fixtures__', 'check-r13')
+const citedRoot = path.join(here, '__fixtures__', 'check-r14')
 const quotedRoot = path.join(here, '__fixtures__', 'check-fenced')
 
 function context(overrides = {}) {
@@ -100,6 +102,16 @@ function tabsContext(overrides = {}) {
     repoRoot: tabsRoot,
     docsAppDir: path.join(tabsRoot, 'docs', 'site', 'src', 'app'),
     examplesRoot: path.join(tabsRoot, 'docs', 'examples'),
+    strict: false,
+    ...overrides,
+  }
+}
+
+function citedContext(overrides = {}) {
+  return {
+    repoRoot: citedRoot,
+    docsAppDir: path.join(citedRoot, 'docs', 'site', 'src', 'app'),
+    examplesRoot: path.join(citedRoot, 'docs', 'examples'),
     strict: false,
     ...overrides,
   }
@@ -1027,6 +1039,81 @@ describe('rule13 (usage tabs)', () => {
   })
 })
 
+describe('rule14 (example app paths cited by skills)', () => {
+  const pluginSkills = 'packages/shared/claude-plugins/src/plugins/smart/skills'
+
+  test('accepts a cited file that exists, the app root and a directory with or without a trailing slash', () => {
+    const findings = rule14(citedContext())
+
+    assert.ok(
+      !findings.some((finding) => /skills\/good\//.test(finding.message)),
+    )
+  })
+
+  test('ignores backticked paths outside docs/examples/app', () => {
+    const findings = rule14(citedContext())
+
+    assert.ok(!findings.some((finding) => /nothing\.ts/.test(finding.message)))
+  })
+
+  test('reports a cited file that no longer exists, naming the skill file, the line and the path', () => {
+    const finding = rule14(citedContext()).find((item) =>
+      /moved\.ts/.test(item.message),
+    )
+
+    assert.ok(finding)
+    assert.equal(finding.rule, 'R14')
+    assert.equal(finding.level, 'error')
+    assert.equal(
+      finding.message,
+      `${pluginSkills}/moved/SKILL.md:10: cited path ` +
+        '"docs/examples/app/apps/web/src/app/moved.ts" does not exist ' +
+        'under docs/examples/app',
+    )
+    assert.ok(finding.file.endsWith(path.join('moved', 'SKILL.md')))
+  })
+
+  test('scans the repository skills as well and strips the trailing slash', () => {
+    const finding = rule14(citedContext()).find((item) =>
+      /repo-skill/.test(item.message),
+    )
+
+    assert.ok(finding)
+    assert.equal(
+      finding.message,
+      '.claude/skills/repo-skill/SKILL.md:8: cited path ' +
+        '"docs/examples/app/libs/model" does not exist under docs/examples/app',
+    )
+  })
+
+  test('reports every missing path exactly once', () => {
+    const findings = rule14(citedContext())
+
+    assert.equal(findings.length, 2)
+    assert.ok(findings.every((finding) => finding.rule === 'R14'))
+  })
+
+  test('is an error whether or not the run is strict', () => {
+    for (const strict of [false, true, new Set(['R1'])]) {
+      const findings = rule14(citedContext({ strict }))
+
+      assert.ok(findings.every((finding) => finding.level === 'error'))
+    }
+  })
+
+  test('reports nothing for the workspace skills of this repository', () => {
+    const repoRoot = path.resolve(here, '..', '..', '..')
+    const findings = rule14({
+      repoRoot,
+      docsAppDir: path.join(repoRoot, 'docs', 'site', 'src', 'app'),
+      examplesRoot: path.join(repoRoot, 'docs', 'examples'),
+      strict: false,
+    })
+
+    assert.deepEqual(findings, [])
+  })
+})
+
 describe('tags inside a fenced code block', () => {
   test('R4 ignores a quoted {% snippet %} tag and reports the real one', () => {
     const findings = rule4(quotedContext())
@@ -1111,6 +1198,16 @@ describe('runAllRules', () => {
       ['R13'],
     )
     assert.equal(findings.length, 3)
+  })
+
+  test('runs R14 after R13', () => {
+    const findings = runAllRules(citedContext())
+
+    assert.deepEqual(
+      [...new Set(findings.map((finding) => finding.rule))],
+      ['R14'],
+    )
+    assert.equal(findings.length, 2)
   })
 
   test('turns parity warnings into errors in strict mode', () => {

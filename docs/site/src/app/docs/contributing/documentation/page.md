@@ -63,6 +63,9 @@ what follows is what it does, and what to do when you write a page by hand.
 | R9   | Every UI component has a story with a `usage` region.                                   |
 | R10  | Every skill reference points at an existing skill and the page title is the skill name. |
 | R11  | Every fenced code block declares a language.                                            |
+| R12  | Every package belongs to exactly one meta package.                                      |
+| R13  | Every component page documents its usage in a tabs block.                               |
+| R14  | Every `docs/examples/app` path a `SKILL.md` cites exists in the workspace.              |
 
 Locally, `nx run-many -t check test build lint -p docs docs-examples-angular docs-examples-node` is the same set the workflows run. `nx run docs:serve` starts the site on port 3000 without the Storybook builds, so story embeds show an empty frame there.
 

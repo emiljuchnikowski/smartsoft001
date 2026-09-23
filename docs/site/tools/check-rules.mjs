@@ -14,9 +14,12 @@
  * - R11: every fenced code block declares a language.
  * - R12: every package belongs to exactly one meta package.
  * - R13: every component page documents its usage in a tabs block.
+ * - R14: every example app path a skill cites exists in the workspace.
  *
  * R1-R3, R9, R10, R12 and R13 are the parity rules: they compare the workspace
- * with the site and only warn until `--strict` names them.
+ * with the site and only warn until `--strict` names them. R14 is an error
+ * from the start, like R4: a skill citing a file that moved sends the agent to
+ * the wrong place, which is worse than no citation at all.
  */
 
 import { load as parseYaml } from 'js-yaml'
@@ -1014,6 +1017,57 @@ export function rule13(ctx) {
   return findings
 }
 
+/**
+ * The example application the skills cite as their reference implementation,
+ * and a backticked path into it. A bare `docs/examples/app` names the app as
+ * a whole; a trailing `/` is how prose points at a directory.
+ */
+const EXAMPLE_APP_DIR = 'docs/examples/app'
+const EXAMPLE_APP_PATH = /`(docs\/examples\/app(?:\/[^`\s]*)?)`/g
+
+/** Every `SKILL.md` of both skill sources, relative to the repo root. */
+function skillFiles(repoRoot) {
+  const files = []
+
+  for (const dir of Object.values(SKILL_DIRS)) {
+    for (const name of listDirectories(path.join(repoRoot, dir))) {
+      const file = `${dir}/${name}/SKILL.md`
+
+      if (fs.existsSync(path.join(repoRoot, file))) files.push(file)
+    }
+  }
+
+  return files
+}
+
+/** R14: every example app path a skill cites exists in the workspace. */
+export function rule14(ctx) {
+  const findings = []
+
+  for (const file of skillFiles(ctx.repoRoot)) {
+    const resolved = path.join(ctx.repoRoot, file)
+    const source = fs.readFileSync(resolved, 'utf8')
+
+    // A path inside a fenced block is not skipped on purpose: the agent reads
+    // a code block as readily as prose, so a stale path there misleads it too.
+    for (const match of source.matchAll(EXAMPLE_APP_PATH)) {
+      const cited = match[1].replace(/\/$/, '')
+
+      // A directory is as good a reference as a file: `existsSync` accepts both.
+      if (fs.existsSync(path.join(ctx.repoRoot, cited))) continue
+
+      findings.push({
+        rule: 'R14',
+        level: 'error',
+        message: `${file}:${lineOf(source, match.index)}: cited path "${cited}" does not exist under ${EXAMPLE_APP_DIR}`,
+        file: resolved,
+      })
+    }
+  }
+
+  return findings
+}
+
 /** Every rule, in order. */
 export function runAllRules(ctx) {
   return [
@@ -1030,5 +1084,6 @@ export function runAllRules(ctx) {
     rule11,
     rule12,
     rule13,
+    rule14,
   ].flatMap((rule) => rule(ctx))
 }

@@ -99,3 +99,12 @@ import { BaseModel } from '@smartsoft001/domain-core';
 // 3. Relative imports (with blank line)
 import { LocalService } from './local.service';
 ```
+
+## Reference implementation
+
+The example application under `docs/examples/app` is a set of Nx projects outside `packages/`, named after their path and tagged so that the workspace can tell them from the packages.
+
+- `docs/examples/app/apps/web/project.json`: an application project named `docs-examples-app-web` after its path, tagged `scope:docs` and `type:example-app`, with `build`, `serve`, `lint` and `test` targets.
+- `docs/examples/app/apps/api/project.json`: the NestJS application beside it, with `serve` depending on its own `build`.
+- `docs/examples/app/libs/model/project.json`: a library project reached through the `@app/model` alias in `tsconfig.base.json`, the same mechanism as `@smartsoft001/{package-name}`.
+- `docs/examples/app/apps/web-e2e/project.json`: an e2e project declaring `implicitDependencies` on the app projects it drives, so that `nx affected` picks it up when either changes.
