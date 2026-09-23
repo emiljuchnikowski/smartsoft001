@@ -1,5 +1,6 @@
 import { TranslateService, TranslationObject } from '@ngx-translate/core';
 
+// #region translations
 /**
  * Labels the generated screens look up: the page title from `notesConfig.title`
  * and `MODEL.<field>` for every decorated field of `Note`. The framework ships
@@ -21,3 +22,4 @@ export function registerAppTranslations(translate: TranslateService): void {
     translate.setTranslation(lang, data, true);
   });
 }
+// #endregion

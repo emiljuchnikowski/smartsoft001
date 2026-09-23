@@ -14,7 +14,8 @@ framework is tried on it.
 
 ## Run it
 
-Three commands. The first two run from the repository root.
+Three commands. The first two run from the repository root, and each is also a subcommand of
+`docs/examples/app/run.sh`, the script the documentation's Example application page cuts them from.
 
 ```bash
 # 1. MongoDB and the API on http://localhost:3000/api

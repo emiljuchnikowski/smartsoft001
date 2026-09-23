@@ -31,6 +31,7 @@ export class UsersSeed implements OnApplicationBootstrap {
     );
   }
 
+  // #region seed
   /** Inserts the admin user when it is missing. Returns true when a user was inserted. */
   async seed(): Promise<boolean> {
     const username = this.config.admin.username;
@@ -52,4 +53,5 @@ export class UsersSeed implements OnApplicationBootstrap {
 
     return true;
   }
+  // #endregion
 }

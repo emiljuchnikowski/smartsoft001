@@ -1,7 +1,7 @@
 ---
 title: Architecture
 section: Getting started
-order: 3
+order: 4
 nextjs:
   metadata:
     title: Architecture

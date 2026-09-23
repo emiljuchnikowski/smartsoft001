@@ -14,6 +14,7 @@ import {
 
 import { LoginService } from './login.service';
 
+// #region page
 @Component({
   selector: 'app-login',
   imports: [SignInFormComponent],
@@ -61,3 +62,4 @@ export class LoginPage {
     }
   }
 }
+// #endregion

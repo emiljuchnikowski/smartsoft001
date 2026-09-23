@@ -12,6 +12,7 @@ import { Note } from '@app/model';
 import { UsersSeed } from './users.seed';
 import { API_CONFIG, apiConfig } from '../config';
 
+// #region module
 const config = apiConfig();
 
 // The JWT settings are shared by the module that issues tokens (auth) and the
@@ -70,3 +71,4 @@ const tokenConfig = {
   ],
 })
 export class AppModule {}
+// #endregion

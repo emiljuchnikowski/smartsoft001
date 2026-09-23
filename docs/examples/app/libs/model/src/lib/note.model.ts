@@ -1,6 +1,7 @@
 import { IEntity } from '@smartsoft001/domain-core';
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
+// #region model
 /** The one entity of the example app: a note with a title and a body. */
 @Model({ titleKey: 'title' })
 export class Note implements IEntity<string> {
@@ -30,3 +31,4 @@ export class Note implements IEntity<string> {
   })
   content?: string;
 }
+// #endregion
