@@ -1,0 +1,73 @@
+{
+  "name": "docs-examples-app-api",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "docs/examples/app/apps/api/src",
+  "projectType": "application",
+  "tags": ["scope:docs", "type:example-app"],
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/docs/examples/app/apps/api",
+        "main": "docs/examples/app/apps/api/src/main.ts",
+        "tsConfig": "docs/examples/app/apps/api/tsconfig.app.json",
+        "webpackConfig": "docs/examples/app/apps/api/webpack.config.js",
+        "generatePackageJson": true
+      },
+      "configurations": {
+        "development": {
+          "outputHashing": "none"
+        },
+        "production": {}
+      }
+    },
+    "prune-lockfile": {
+      "dependsOn": ["build"],
+      "cache": true,
+      "executor": "@nx/js:prune-lockfile",
+      "outputs": [
+        "{workspaceRoot}/dist/docs/examples/app/apps/api/package.json",
+        "{workspaceRoot}/dist/docs/examples/app/apps/api/package-lock.json"
+      ],
+      "options": {
+        "buildTarget": "build"
+      }
+    },
+    "serve": {
+      "continuous": true,
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "dependsOn": ["build"],
+      "options": {
+        "buildTarget": "docs-examples-app-api:build",
+        "runBuildTargetDependencies": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "docs-examples-app-api:build:development"
+        },
+        "production": {
+          "buildTarget": "docs-examples-app-api:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": ["docs/examples/app/apps/api/**/*.{ts,js}"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "docs/examples/app/apps/api/jest.config.ts",
+        "tsConfig": "docs/examples/app/apps/api/tsconfig.spec.json"
+      }
+    }
+  }
+}
