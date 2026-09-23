@@ -180,6 +180,27 @@ describe('nx release: the current version comes from git, not from a write-back'
     assert.match(step, /git rebase --abort 2>\/dev\/null \|\| true/);
   });
 
+  it('should run the example application on the release before publishing', () => {
+    // `verify:dist` proves the packages load. The example application is the
+    // first consumer: it installs from the tarballs and migrates from the
+    // previous release, so a package that loads and does not work, or a
+    // migration that does not do its job, stops the release here.
+    const dist = workflow.indexOf('npm run verify:dist');
+    const app = workflow.indexOf('npm run verify:example-app');
+    const publish = workflow.indexOf('nx-release-publish');
+
+    assert.ok(dist > 0, 'publish.yml must run "npm run verify:dist"');
+    assert.ok(app > 0, 'publish.yml must run "npm run verify:example-app"');
+    assert.ok(
+      dist < app && app < publish,
+      'the example application runs after verify:dist and before nx-release-publish',
+    );
+    assert.match(
+      readJson('package.json').scripts['verify:example-app'],
+      /verify-example-app\.mjs/,
+    );
+  });
+
   it('should push the release tag before the write-back to main', () => {
     const tagPush = workflow.indexOf('name: Push the release tag');
     const publish = workflow.indexOf('name: Publish to NPM');

@@ -4,7 +4,10 @@ One entity, the whole loop: an Angular frontend on `@smartsoft001/crud-shell-ang
 page, an item page and a login, and a NestJS API on `@smartsoft001/crud-shell-nestjs`,
 `@smartsoft001/mongo` and `@smartsoft001/auth-shell-nestjs`. It is the smallest application that
 still uses the framework end to end, and it lives in this repository so that every change to the
-framework is tried on it.
+framework is tried on it. It is also the first consumer of every release: before anything reaches
+npm, the `Publish` workflow installs a standalone copy of the app from the packed tarballs, builds
+and tests it, then migrates the same copy from the previous version and does it again. The same
+two checks run locally with `npm run verify:example-app`.
 
 ## Prerequisites
 

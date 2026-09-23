@@ -92,6 +92,12 @@ An entry is one of two kinds:
 
 Both accept a `documentation` file, shown to whoever reads the migration and given to the agent as context. The `version` of an entry is the release it first applies to, so it must be higher than the version already published.
 
+## The example application is the definition of working
+
+A change to a package is not finished until the example application in `docs/examples/app` builds, tests and migrates on it. The app is the smallest consumer that uses the framework end to end, and it is the first consumer of every release: the `Publish` workflow packs the built packages into tarballs, installs a standalone copy of the app from them and runs its build and its tests, then installs the same copy at the previous release from npm, switches it to the tarballs the way `nx migrate @smartsoft001/core@latest` does and runs the migrations between the two versions before building and testing again. A failure at either step stops the release before anything reaches npm.
+
+`npm run verify:example-app` runs the same two checks locally after `nx run-many -t build`, and `--previous <version>` picks the release to migrate from. The standalone copy comes from `tools/scripts/example-app-standalone.mjs`, which is also how to reproduce a consumer's workspace by hand.
+
 ## Formatting
 
 Prettier with single quotes and ESLint's flat config (`eslint.config.mjs`) with import ordering. `npm run format` (or [`/smart:format-code`](/docs/skills/format-code)) formats and auto-fixes the whole workspace; `nx format:check` is what CI runs.
