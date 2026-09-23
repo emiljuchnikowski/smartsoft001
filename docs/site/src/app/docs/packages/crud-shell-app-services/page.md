@@ -29,7 +29,11 @@ The service depends on the abstract `IItemRepository` and `IAttachmentRepository
 
 The CRUD family keeps the rules in one place and the transports around it. `CrudService` is that place. A REST controller, a websocket gateway or a scheduled job all call the same methods, so a record reaches storage having passed the same checks no matter how it arrived.
 
-Each write follows a fixed order. The permission service is asked whether the caller may perform the operation, and throws `DomainForbiddenError` if not. `castModel` then deletes every property the model does not open for that operation, so an unexpected field in a request body cannot be stored. `getInvalidFields` reports the required fields still empty after the trim, and a non-empty answer becomes a `DomainValidationError` whose message lists them. Only then is the password hashed and the record handed to the repository. Reads run the permission check and then delete `password` from whatever comes back.
+Each write follows a fixed order. The permission service is asked whether the caller may perform the operation, and throws `DomainForbiddenError` if not. The service then turns the payload into an instance of the model class it was configured with, `SharedConfig.type`, carrying exactly the keys the payload carried. This step is what makes the two checks that follow see anything: `castModel` and `getInvalidFields` read the `@Field` metadata from the class prototype, so a plain object parsed from a JSON body has no fields to check, while an instance of the model has all of them. `castModel` then deletes every property the model does not open for that operation, so an unexpected field in a request body cannot be stored. `getInvalidFields` reports the required fields still empty after the trim, and a non-empty answer becomes a `DomainValidationError` whose message lists them. Only then is the password hashed and the record handed to the repository. Reads run the permission check and then delete `password` from whatever comes back.
+
+{% callout type="warning" title="Validation needs the model type" %}
+Without `SharedConfig.type` the service checks the payload as it arrives. A model instance built by application code is still validated, but a plain object from a request body passes through untouched, because it carries no field metadata. The service logs a warning at startup when the type is missing. `CrudShellNestjsModule` fills it from the `db.type` option, as described on the [`@smartsoft001/crud-shell-nestjs`](/docs/packages/crud-shell-nestjs) page.
+{% /callout %}
 
 The generic parameter is bounded by `IEntity<string>`, so any entity the service handles has an `id`, and the service assigns it: every insert gets a fresh GUID rather than trusting the one in the payload.
 
@@ -43,6 +47,8 @@ The region does three things. It declares a `Note` model whose `title` is requir
 
 The spec proves the four rules on one call. The id the method returns is the id of the stored note, so the generated GUID is what the caller gets back. The repository received exactly one create. The stored `password` equals `PasswordService.hash('secret')`, not the plain text. The stored record has no `passwordConfirm` key, because that property carries no `@Field` and `castModel` removed it. And a note whose title is blank makes the call reject with `DomainValidationError('Required fields: title')`, the exact message assembled from the invalid-field list.
 
+The example builds the service without a `SharedConfig` and passes `Note` instances, so the metadata is already there. An application that receives plain JSON has to configure the type, otherwise the same blank title would be stored.
+
 ### Import a batch
 
 {% snippet file="node/src/crud/create-many.example.ts" region="usage" /%}
@@ -53,28 +59,29 @@ The spec proves the four rules on one call. The id the method returns is the id 
 
 ### Constructor
 
-`new CrudService<T>(permissionService, repository, attachmentRepository)`. In an application all three arrive through the Nest injector; the module in [`@smartsoft001/crud-shell-nestjs`](/docs/packages/crud-shell-nestjs) binds them.
+`new CrudService<T>(permissionService, repository, attachmentRepository, config?)`. In an application all four arrive through the Nest injector; the module in [`@smartsoft001/crud-shell-nestjs`](/docs/packages/crud-shell-nestjs) binds them.
 
-| Parameter              | Type                       | Provided by                                                                    |
-| ---------------------- | -------------------------- | ------------------------------------------------------------------------------ |
-| `permissionService`    | `PermissionService`        | [`@smartsoft001/nestjs`](/docs/packages/nestjs), configured by `SharedModule`. |
-| `repository`           | `IItemRepository<T>`       | [`@smartsoft001/mongo`](/docs/packages/mongo) in a normal application.         |
-| `attachmentRepository` | `IAttachmentRepository<T>` | The same package, backed by GridFS.                                            |
+| Parameter              | Type                       | Provided by                                                                                                                                                                   |
+| ---------------------- | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `permissionService`    | `PermissionService`        | [`@smartsoft001/nestjs`](/docs/packages/nestjs), configured by `SharedModule`.                                                                                                |
+| `repository`           | `IItemRepository<T>`       | [`@smartsoft001/mongo`](/docs/packages/mongo) in a normal application.                                                                                                        |
+| `attachmentRepository` | `IAttachmentRepository<T>` | The same package, backed by GridFS.                                                                                                                                           |
+| `config`               | `SharedConfig`             | The same `SharedModule`, marked `@Optional()`. Its `type` is the model class every write payload is turned into before validation. Omit it and payloads are checked as given. |
 
-All three are `protected readonly`, so a subclass can reach them.
+All four are `protected readonly`, so a subclass can reach them. The conversion itself is the protected method `toModel(data)`: it returns `data` unchanged when no type is configured or `data` is already an instance of it, and otherwise copies the payload onto a fresh instance and removes every key the payload did not carry, so class field initialisers never leak into a partial update.
 
 ### Records
 
-| Method                            | Returns                                      | What it does                                                                                                                                                         |
-| --------------------------------- | -------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `create(data, user)`              | `Promise<string>`                            | Assigns a fresh GUID, checks the `create` permission, trims and validates for the `create` mode, hashes `password`, drops `passwordConfirm`, stores, returns the id. |
-| `createMany(data, user, options)` | `Promise<T[]>`                               | The same per element. With `options.mode === 'replace'` it clears the collection first. Returns the input array, now carrying ids.                                   |
-| `readById(id, user)`              | `Promise<T>`                                 | Checks the `read` permission, fetches by id, deletes `password` from the result.                                                                                     |
-| `read(criteria, options, user)`   | `Promise<{ data: T[]; totalCount: number }>` | Checks the `read` permission and queries by criteria. Deletes `password` from every row.                                                                             |
-| `readBySpec(spec, options, user)` | `Promise<{ data: T[]; totalCount: number }>` | `read` with `spec.criteria`, for callers holding an `ISpecification`.                                                                                                |
-| `update(id, data, user)`          | `Promise<void>`                              | A full replace. Forces `data.id = id`, checks the `update` permission, trims and validates for the `update` mode, hashes `password`, drops `passwordConfirm`.        |
-| `updatePartial(id, data, user)`   | `Promise<void>`                              | The same, except the required-field check only covers keys actually present on the payload, and a payload that is not a decorated model skips validation entirely.   |
-| `delete(id, user)`                | `Promise<void>`                              | Checks the `delete` permission and removes the record.                                                                                                               |
+| Method                            | Returns                                      | What it does                                                                                                                                                                                                             |
+| --------------------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `create(data, user)`              | `Promise<string>`                            | Assigns a fresh GUID, checks the `create` permission, trims and validates for the `create` mode, hashes `password`, drops `passwordConfirm`, stores, returns the id.                                                     |
+| `createMany(data, user, options)` | `Promise<T[]>`                               | The same per element. With `options.mode === 'replace'` it clears the collection first. Returns the input array, now carrying ids.                                                                                       |
+| `readById(id, user)`              | `Promise<T>`                                 | Checks the `read` permission, fetches by id, deletes `password` from the result.                                                                                                                                         |
+| `read(criteria, options, user)`   | `Promise<{ data: T[]; totalCount: number }>` | Checks the `read` permission and queries by criteria. Deletes `password` from every row.                                                                                                                                 |
+| `readBySpec(spec, options, user)` | `Promise<{ data: T[]; totalCount: number }>` | `read` with `spec.criteria`, for callers holding an `ISpecification`.                                                                                                                                                    |
+| `update(id, data, user)`          | `Promise<void>`                              | A full replace. Forces `data.id = id`, checks the `update` permission, trims and validates for the `update` mode, hashes `password`, drops `passwordConfirm`.                                                            |
+| `updatePartial(id, data, user)`   | `Promise<void>`                              | The same, except the required-field check only covers keys actually present on the payload. A payload that reaches the check as a plain object, which only happens without a configured type, skips validation entirely. |
+| `delete(id, user)`                | `Promise<void>`                              | Checks the `delete` permission and removes the record.                                                                                                                                                                   |
 
 Every method wraps its body in a try/catch that logs through a `Logger` named after the class and rethrows unchanged, so a caller sees the original error and the server log keeps the stack.
 

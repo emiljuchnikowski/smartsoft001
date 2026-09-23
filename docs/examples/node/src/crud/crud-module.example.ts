@@ -3,6 +3,8 @@ import { Module } from '@nestjs/common';
 
 import { CrudShellNestjsModule } from '@smartsoft001/crud-shell-nestjs';
 
+import { Note } from './crud-service.example';
+
 @Module({
   imports: [
     CrudShellNestjsModule.forRoot({
@@ -24,6 +26,10 @@ import { CrudShellNestjsModule } from '@smartsoft001/crud-shell-nestjs';
         port: 27017,
         database: 'my-app',
         collection: 'notes',
+        // The model class. `CrudService` turns every request body into an
+        // instance of it before validating, so without it a body missing a
+        // required field would be stored as sent.
+        type: Note,
       },
       restApi: true,
       socket: false,

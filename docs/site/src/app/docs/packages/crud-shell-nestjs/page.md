@@ -37,7 +37,7 @@ Nothing connects eagerly. `MongoModule.forRoot` registers providers whose client
 
 {% snippet file="node/src/crud/crud-module.example.ts" region="usage" /%}
 
-The region imports the dynamic module into a feature module. The options object is the shared configuration from [`@smartsoft001/nestjs`](/docs/packages/nestjs), which is the signing key and the roles allowed per operation, plus the database settings and the two flags. `restApi: true` registers the controller, `socket: false` keeps the websocket gateway and its socket.io dependency out.
+The region imports the dynamic module into a feature module. The options object is the shared configuration from [`@smartsoft001/nestjs`](/docs/packages/nestjs), which is the signing key and the roles allowed per operation, plus the database settings and the two flags. `db.type` names the `Note` model from the service example, which is what the service validates request bodies against. `restApi: true` registers the controller, `socket: false` keeps the websocket gateway and its socket.io dependency out.
 
 Its spec compiles the module with `Test.createTestingModule` and resolves three tokens: `CrudService`, which proves the service providers are registered, `CrudController`, which proves the `restApi` flag reached the controller list, and `IItemRepository`, which comes back as a `MongoItemRepository` and proves the abstract contract is bound to the Mongo implementation. The whole spec runs offline, with no database and no network.
 
@@ -55,18 +55,23 @@ The spec drives it against a stubbed `CrudService` and a fake response whose req
 
 The options are `SharedConfig` from [`@smartsoft001/nestjs`](/docs/packages/nestjs) intersected with the database settings and the two flags.
 
-| Option                              | Type                                                | What it does                                                                                          |
-| ----------------------------------- | --------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `tokenConfig`                       | `{ secretOrPrivateKey: string; expiredIn: number }` | The key the guards verify bearer tokens with, and the lifetime the registered `JwtModule` signs with. |
-| `permissions`                       | `ISharedPermissions`                                | Role names allowed to create, read, update and delete. What `PermissionService` checks on every call. |
-| `db.host`, `db.port`, `db.database` | `string`, `number`, `string`                        | Passed straight to `MongoModule.forRoot`. The connection opens on the first query.                    |
-| `db.username`, `db.password`        | `string`                                            | Optional credentials for the connection.                                                              |
-| `db.collection`                     | `string`                                            | The collection this module instance serves.                                                           |
-| `db.type`                           | `T`                                                 | Optional model type carried with the connection settings.                                             |
-| `restApi`                           | `boolean`                                           | Registers `CrudController` when true, and no controllers at all when false.                           |
-| `socket`                            | `boolean`                                           | Registers `CrudGateway` when true. Leave it false to keep socket.io out of the process.               |
+| Option                              | Type                                                | What it does                                                                                                                                                                                                       |
+| ----------------------------------- | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `tokenConfig`                       | `{ secretOrPrivateKey: string; expiredIn: number }` | The key the guards verify bearer tokens with, and the lifetime the registered `JwtModule` signs with.                                                                                                              |
+| `permissions`                       | `ISharedPermissions`                                | Role names allowed to create, read, update and delete. What `PermissionService` checks on every call.                                                                                                              |
+| `db.host`, `db.port`, `db.database` | `string`, `number`, `string`                        | Passed straight to `MongoModule.forRoot`. The connection opens on the first query.                                                                                                                                 |
+| `db.username`, `db.password`        | `string`                                            | Optional credentials for the connection.                                                                                                                                                                           |
+| `db.collection`                     | `string`                                            | The collection this module instance serves.                                                                                                                                                                        |
+| `db.type`                           | `T`                                                 | The `@Model` class of the collection. The repository reads its `search` fields, and the module copies it into `SharedConfig.type`, which is what `CrudService` turns every request body into before validating it. |
+| `type`                              | `any`                                               | The same class as a `SharedConfig` field. When both are given this one wins.                                                                                                                                       |
+| `restApi`                           | `boolean`                                           | Registers `CrudController` when true, and no controllers at all when false.                                                                                                                                        |
+| `socket`                            | `boolean`                                           | Registers `CrudGateway` when true. Leave it false to keep socket.io out of the process.                                                                                                                            |
 
-The module provides the CRUD service and `AuthJwtGuard`, and imports `SharedModule.forFeature(options)` and `MongoModule.forRoot(options.db)`. It exports the service, the guard and the Mongo module, so an importing module can inject the repositories too. Passport and `JwtModule` are only registered when `restApi` is true **and** `tokenConfig.secretOrPrivateKey` is set; the strategy itself comes from `SharedModule` and is constructed eagerly, so an empty key fails at startup rather than on the first request.
+{% callout type="warning" title="Set the model type" %}
+A request body is a plain object with no field metadata. `CrudService` validates it only after turning it into an instance of the configured class, so a module registered without `db.type` or `type` stores whatever it is sent, required fields or not, and logs a warning at startup. The model example above sets `db.type` for that reason.
+{% /callout %}
+
+The module provides the CRUD service and `AuthJwtGuard`, and imports `SharedModule.forFeature(options)` with `type` filled from `db.type`, and `MongoModule.forRoot(options.db)`. It exports the service, the guard and the Mongo module, so an importing module can inject the repositories too. Passport and `JwtModule` are only registered when `restApi` is true **and** `tokenConfig.secretOrPrivateKey` is set; the strategy itself comes from `SharedModule` and is constructed eagerly, so an empty key fails at startup rather than on the first request.
 
 ### `CrudShellNestjsCoreModule.forRoot(options)`
 
