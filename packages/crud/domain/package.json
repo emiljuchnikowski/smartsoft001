@@ -1,6 +1,6 @@
 {
   "name": "@smartsoft001/crud-domain",
-  "version": "2.159.0",
+  "version": "2.160.0",
   "type": "commonjs",
   "main": "./src/index.js",
   "typings": "./src/index.d.ts",

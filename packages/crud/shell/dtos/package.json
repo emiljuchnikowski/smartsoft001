@@ -1,6 +1,6 @@
 {
   "name": "@smartsoft001/crud-shell-dtos",
-  "version": "2.159.0",
+  "version": "2.160.0",
   "description": "The wire types of the CRUD change feed and UserDto, the decorated credentials model the framework renders as a form.",
   "publishConfig": {
     "access": "public"
@@ -16,6 +16,6 @@
   },
   "homepage": "https://github.com/emiljuchnikowski/smartsoft#readme",
   "dependencies": {
-    "@smartsoft001/models": "2.159.0"
+    "@smartsoft001/models": "2.160.0"
   }
 }
