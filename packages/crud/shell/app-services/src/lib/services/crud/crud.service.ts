@@ -1,5 +1,5 @@
 import { Injectable, Logger, Optional } from '@nestjs/common';
-import * as CombinedStream from 'combined-stream';
+import CombinedStream from 'combined-stream';
 import { Guid } from 'guid-typescript';
 import { Memoize } from 'lodash-decorators';
 import { Observable } from 'rxjs';
@@ -221,7 +221,9 @@ export class CrudService<T extends IEntity<string>> {
 
       const combinedStream = CombinedStream.create();
       combinedStream.append(stream);
-      combinedStream.append(data.stream);
+      // The upload payload keeps the wide Stream type the repository accepts,
+      // but what arrives here is the readable busboy hands over.
+      combinedStream.append(data.stream as Readable);
 
       data.stream = combinedStream;
       data.id = GuidService.create();
