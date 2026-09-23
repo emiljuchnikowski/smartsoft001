@@ -51,6 +51,7 @@ export type DynamicComponentType =
   | 'page'
   | 'page-heading'
   | 'action-panel'
+  | 'alert'
   | 'avatar'
   | 'badge'
   | 'breadcrumbs'
@@ -474,10 +475,7 @@ export interface ICommandPaletteOptions {
 }
 
 export type SmartModalVariant =
-  | 'centered'
-  | 'wide'
-  | 'alert'
-  | 'left-aligned-buttons';
+  'centered' | 'wide' | 'alert' | 'left-aligned-buttons';
 
 export type SmartModalActionVariant = 'primary' | 'secondary' | 'danger';
 
@@ -496,12 +494,24 @@ export interface IModalOptions {
   ariaLabel?: string;
 }
 
+export interface IAlertButton {
+  text: string;
+  role?: 'cancel' | 'destructive' | string;
+  cssClass?: string | string[];
+  handler?: (value?: unknown) => boolean | void | Record<string, unknown>;
+}
+
+export interface IAlertOptions {
+  header?: string;
+  subHeader?: string;
+  message?: string;
+  /** Click on the backdrop cancels the alert. Defaults to true. */
+  backdropDismiss?: boolean;
+  buttons?: IAlertButton[];
+}
+
 export type SmartDrawerVariant =
-  | 'empty'
-  | 'create-form'
-  | 'user-profile'
-  | 'contact-list'
-  | 'file-details';
+  'empty' | 'create-form' | 'user-profile' | 'contact-list' | 'file-details';
 
 export interface IDrawerOptions {
   position?: 'left' | 'right';
@@ -546,14 +556,7 @@ export interface IAvatarOptions {
 }
 
 export type SmartBadgeColor =
-  | 'gray'
-  | 'red'
-  | 'yellow'
-  | 'green'
-  | 'blue'
-  | 'indigo'
-  | 'purple'
-  | 'pink';
+  'gray' | 'red' | 'yellow' | 'green' | 'blue' | 'indigo' | 'purple' | 'pink';
 
 export interface IBadgeOptions {
   /**
@@ -579,11 +582,7 @@ export interface IDropdownItem {
 }
 
 export type SmartDropdownVariant =
-  | 'simple'
-  | 'with-dividers'
-  | 'with-icons'
-  | 'minimal'
-  | 'with-header';
+  'simple' | 'with-dividers' | 'with-icons' | 'minimal' | 'with-header';
 
 export interface IDropdownOptions {
   variant?: SmartDropdownVariant;
@@ -616,10 +615,7 @@ export interface IContainerOptions {
 }
 
 export type SmartListContainerVariant =
-  | 'simple-dividers'
-  | 'card-dividers'
-  | 'separate-cards'
-  | 'flat-card-dividers';
+  'simple-dividers' | 'card-dividers' | 'separate-cards' | 'flat-card-dividers';
 
 export interface IListContainerOptions {
   variant?: SmartListContainerVariant;
@@ -635,11 +631,7 @@ export interface IMediaObjectOptions {
 }
 
 export type SmartDividerVariant =
-  | 'with-label'
-  | 'with-icon'
-  | 'with-title'
-  | 'with-button'
-  | 'with-toolbar';
+  'with-label' | 'with-icon' | 'with-title' | 'with-button' | 'with-toolbar';
 
 export interface IDividerOptions {
   variant?: SmartDividerVariant;
@@ -647,11 +639,7 @@ export interface IDividerOptions {
 }
 
 export type SmartStackedLayoutContainerWidth =
-  | 'sm'
-  | 'md'
-  | 'lg'
-  | 'xl'
-  | 'full';
+  'sm' | 'md' | 'lg' | 'xl' | 'full';
 
 export interface IStackedLayoutOptions {
   title?: string;
@@ -834,10 +822,7 @@ export interface ITextareaOptions {
 export type SmartSignInFormMode = 'sign-in' | 'sign-up';
 
 export type SmartSignInFormLayout =
-  | 'simple'
-  | 'simple-no-labels'
-  | 'split-screen'
-  | 'card';
+  'simple' | 'simple-no-labels' | 'split-screen' | 'card';
 
 export interface ISocialProvider {
   id: string;

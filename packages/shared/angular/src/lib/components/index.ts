@@ -1,5 +1,6 @@
 export * from './accordion';
 export * from './action-panel';
+export * from './alert';
 export * from './app';
 export * from './avatar';
 export * from './badge';

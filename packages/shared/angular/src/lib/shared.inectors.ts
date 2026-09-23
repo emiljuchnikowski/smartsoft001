@@ -4,6 +4,7 @@ import { FieldTypeDef } from '@smartsoft001/models';
 
 import {
   ActionPanelBaseComponent,
+  AlertBaseComponent,
   AvatarBaseComponent,
   BadgeBaseComponent,
   BreadcrumbsBaseComponent,
@@ -63,6 +64,9 @@ export const DETAILS_COMPONENT_TOKEN = new InjectionToken<any>(
 export const ACTION_PANEL_STANDARD_COMPONENT_TOKEN = new InjectionToken<
   Type<ActionPanelBaseComponent>
 >('ACTION_PANEL_STANDARD_COMPONENT');
+export const ALERT_STANDARD_COMPONENT_TOKEN = new InjectionToken<
+  Type<AlertBaseComponent>
+>('ALERT_STANDARD_COMPONENT');
 export const BREADCRUMBS_STANDARD_COMPONENT_TOKEN = new InjectionToken<
   Type<BreadcrumbsBaseComponent>
 >('BREADCRUMBS_STANDARD_COMPONENT');

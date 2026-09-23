@@ -1068,6 +1068,75 @@ providers: [
 ];
 ```
 
+### AlertBaseComponent
+
+Abstract base class for confirm dialogs. Exposes a required `options` input (`IAlertOptions`), `cssClass` (alias `class`), a `dismissed` output (`IAlertButton | null`), the computed `buttons()` / `cancelButton()`, and the behaviour a template binds: `invoke(button)` runs the button handler and emits `dismissed` (a handler returning `false` keeps the dialog open), `cancel()` emits the cancel button or `null`, `onEscape()`, `onBackdropClick(event)` (honours `options.backdropDismiss`), `trapFocus(event, container)` and `buttonClasses(button)`.
+
+**Inputs:** `options` (`IAlertOptions`), `class` (`string`)
+**Outputs:** `dismissed` (`IAlertButton | null`)
+
+### Alert Component
+
+The `<smart-alert>` component renders a confirm dialog (`role="alertdialog"`, `aria-modal`, labelled by its header) with a header, optional sub-header and message, and one button per `options.buttons`. It is what `AlertService.show()` opens. It is a wrapper that delegates to `AlertStandardComponent` by default and supports an InjectionToken (`ALERT_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
+
+**Wrapper:** `AlertComponent` (selector: `smart-alert`)
+**Default:** `AlertStandardComponent` (selector: `smart-alert-standard`)
+**Token:** `ALERT_STANDARD_COMPONENT_TOKEN` — provide a `Type<AlertBaseComponent>` to override the default.
+
+#### Usage
+
+```typescript
+// From code, through AlertService (provided by SharedServicesModule).
+// The promise resolves with the chosen button after its handler ran.
+const button = await this.alertService.show({
+  header: 'Delete this record?',
+  message: 'This cannot be undone.',
+  backdropDismiss: false,
+  buttons: [
+    { text: 'Cancel', role: 'cancel' },
+    { text: 'Delete', role: 'destructive', handler: () => this.remove(id) },
+  ],
+});
+```
+
+```html
+<!-- Inline, when the alert belongs to a template -->
+<smart-alert [options]="options" (dismissed)="onDismissed($event)" />
+```
+
+`AlertService.show()` needs no host element: it creates the component with `createComponent`, attaches the view to `ApplicationRef`, appends it to `document.body`, moves focus into the dialog and returns focus to the trigger when the dialog closes. `Escape` cancels; a click on the backdrop cancels unless `backdropDismiss` is `false`.
+
+#### IAlertOptions
+
+| Property          | Type             | Default | Description                                       |
+| ----------------- | ---------------- | ------- | ------------------------------------------------- |
+| `header`          | `string`         | -       | Dialog heading (accessible name)                  |
+| `subHeader`       | `string`         | -       | Secondary heading                                 |
+| `message`         | `string`         | -       | Body text (accessible description)                |
+| `backdropDismiss` | `boolean`        | `true`  | Whether a click on the backdrop cancels the alert |
+| `buttons`         | `IAlertButton[]` | `[]`    | Buttons rendered in order                         |
+
+#### IAlertButton
+
+| Property   | Type                                                              | Default | Description                                                   |
+| ---------- | ----------------------------------------------------------------- | ------- | ------------------------------------------------------------- |
+| `text`     | `string`                                                          | -       | Visible label                                                 |
+| `role`     | `'cancel' \| 'destructive' \| string`                             | -       | `cancel` closes without a handler; `destructive` is red       |
+| `cssClass` | `string \| string[]`                                              | -       | Extra classes appended to the button                          |
+| `handler`  | `(value?: unknown) => boolean \| void \| Record<string, unknown>` | -       | Runs before the dialog closes; return `false` to keep it open |
+
+#### Overriding with Custom Implementation
+
+```typescript
+import { ALERT_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
+
+providers: [
+  { provide: ALERT_STANDARD_COMPONENT_TOKEN, useValue: MyAlertComponent },
+];
+```
+
+> Register the token at the application root (or in the module that provides `AlertService`) so `AlertService.show()` renders the custom implementation too; a token provided deeper in the tree only affects `<smart-alert>` instances there.
+
 ### ModalBaseComponent
 
 Abstract base class for modal/dialog components. Exposes two-way `open` (`ModelSignal<boolean>`), optional `title` / `description`, `actions` (`InputSignal<IModalAction[]>`), optional `IModalOptions`, `cssClass` (alias `class`), `actionClick` and `closed` outputs, plus `invokeAction(actionId)` (emits `actionClick`) and `close()` (sets `open` to `false` and emits `closed`).
