@@ -201,6 +201,20 @@ describe('nx release: the current version comes from git, not from a write-back'
     );
   });
 
+  it('should check out the current main, not the commit that triggered the run', () => {
+    // A queued run that starts from its trigger commit predates the previous
+    // run's write-back, so its release commit conflicts with it on every
+    // manifest version line (v2.161.0, FRA-391).
+    const checkout = workflow.match(
+      /- uses: actions\/checkout@v\d+\n\s+with:\n\s+ref: main\n\s+fetch-depth: 0/,
+    );
+
+    assert.ok(
+      checkout,
+      'the publish job checks out ref: main with full history',
+    );
+  });
+
   it('should push the release tag before the write-back to main', () => {
     const tagPush = workflow.indexOf('name: Push the release tag');
     const publish = workflow.indexOf('name: Publish to NPM');
