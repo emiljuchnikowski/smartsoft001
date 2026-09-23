@@ -7,8 +7,15 @@ import { resolve } from 'node:path';
  * MongoDB from `docker compose up`) and the Angular dev server on :4200, both
  * started here so a single command runs the whole loop. `reuseExistingServer`
  * lets a developer keep `nx serve` running between runs.
+ *
+ * With `E2E_BASE_URL` set, the same suite runs against an application that is
+ * already served at that address and starts nothing: the `demo` build, on
+ * GitHub Pages or from `nx run docs-examples-app-web:serve-static:demo`,
+ * which has no API to start (see support/app.ts).
  */
 const workspaceRoot = resolve(__dirname, '../../../../..');
+
+const baseURL = process.env['E2E_BASE_URL'];
 
 export default defineConfig({
   testDir: './src',
@@ -19,25 +26,27 @@ export default defineConfig({
   outputDir: resolve(workspaceRoot, 'dist/docs/examples/app/apps/web-e2e'),
   timeout: 60_000,
   use: {
-    baseURL: 'http://localhost:4200',
+    baseURL: baseURL ?? 'http://localhost:4200',
     trace: 'retain-on-failure',
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
-  webServer: [
-    {
-      command:
-        'npx nx run docs-examples-app-api:build:development && node dist/docs/examples/app/apps/api/main.js',
-      cwd: workspaceRoot,
-      url: 'http://localhost:3000/api/notes',
-      reuseExistingServer: !process.env['CI'],
-      timeout: 240_000,
-    },
-    {
-      command: 'npx nx serve docs-examples-app-web',
-      cwd: workspaceRoot,
-      url: 'http://localhost:4200',
-      reuseExistingServer: !process.env['CI'],
-      timeout: 240_000,
-    },
-  ],
+  webServer: baseURL
+    ? []
+    : [
+        {
+          command:
+            'npx nx run docs-examples-app-api:build:development && node dist/docs/examples/app/apps/api/main.js',
+          cwd: workspaceRoot,
+          url: 'http://localhost:3000/api/notes',
+          reuseExistingServer: !process.env['CI'],
+          timeout: 240_000,
+        },
+        {
+          command: 'npx nx serve docs-examples-app-web',
+          cwd: workspaceRoot,
+          url: 'http://localhost:4200',
+          reuseExistingServer: !process.env['CI'],
+          timeout: 240_000,
+        },
+      ],
 });

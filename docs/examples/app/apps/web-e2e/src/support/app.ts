@@ -4,7 +4,15 @@ import { APIRequestContext, expect, Locator, Page } from 'playwright/test';
  * Helpers shared by the specs: they know the few selectors the framework
  * components render (the sign-in form, the generated list and item pages) and
  * the one API call that replaces the login UI when a spec is not about login.
+ *
+ * In demo mode (`E2E_BASE_URL` set, see playwright.config.ts) the suite runs
+ * against the `demo` build: hash routing, and an in-memory double instead of
+ * the API. There is no server to call, so the shortcuts that go through the
+ * API take the UI path instead, and the specs about the API itself skip.
  */
+
+/** True when the suite runs against the hosted demo build. */
+export const demo = !!process.env['E2E_BASE_URL'];
 
 /** The API the dev server proxies /api to. */
 export const API_URL = 'http://localhost:3000/api';
@@ -28,12 +36,20 @@ export function credentials(): ICredentials {
   };
 }
 
+/**
+ * Opens an application route: `/notes` under path routing, `#/notes` under
+ * the hash routing of the demo build. Both resolve against `baseURL`.
+ */
+export async function visit(page: Page, path: string): Promise<void> {
+  await page.goto(demo ? `#${path}` : path);
+}
+
 /** Fills the framework's sign-in form and submits it, without waiting for the outcome. */
 export async function submitSignInForm(
   page: Page,
   { username, password }: ICredentials,
 ): Promise<void> {
-  await page.goto('/login');
+  await visit(page, '/login');
   await page.locator('#smart-sign-in-form-email').fill(username);
   await page.locator('#smart-sign-in-form-password').fill(password);
   await page.locator('button.submit[type="submit"]').click();
@@ -75,9 +91,15 @@ export async function accessToken(request: APIRequestContext): Promise<string> {
 
 /**
  * Puts a real token in localStorage before the application boots, so the specs
- * about the list and the item page do not depend on the login UI.
+ * about the list and the item page do not depend on the login UI. The demo
+ * has no token endpoint to call, so there the login UI is the only way in.
  */
 export async function signInFast(page: Page): Promise<void> {
+  if (demo) {
+    await signIn(page);
+    return;
+  }
+
   const token = JSON.stringify(await tokenResponse(page.request));
 
   await page.addInitScript(
@@ -104,11 +126,18 @@ export function noteRow(page: Page, title: string): Locator {
 }
 
 /**
- * Creates a note through the API, the way the add form's POST does, and
- * returns its id. The specs use it to get a note to list, open and edit;
- * `createNoteThroughForm` is the UI path.
+ * Creates a note the specs can list, open and edit: through the API, the way
+ * the add form's POST does, or through the add form itself in the demo, whose
+ * double is only reachable from the page. `createNoteThroughForm` is the UI
+ * path a spec takes on purpose.
  */
-export async function createNote(page: Page, title: string): Promise<string> {
+export async function createNote(page: Page, title: string): Promise<void> {
+  if (demo) {
+    await visit(page, '/notes');
+    await createNoteThroughForm(page, title);
+    return;
+  }
+
   const token = await accessToken(page.request);
 
   const response = await page.request.post(`${API_URL}/notes`, {
@@ -120,8 +149,6 @@ export async function createNote(page: Page, title: string): Promise<string> {
     response.ok(),
     `POST ${API_URL}/notes failed with ${response.status()}`,
   ).toBe(true);
-
-  return (await response.json()).id as string;
 }
 
 /** Creates a note through the add form and waits for its row in the list. */
