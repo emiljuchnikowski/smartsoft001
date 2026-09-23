@@ -204,6 +204,18 @@ Fields participate in filters via `@Field({ filter: true, fieldType: FieldType.*
 the engine renders the matching `smart-crud-filter-*` widget through the `smart-crud-filter`
 dispatcher inside `smart-crud-filters`.
 
+## Reference implementation
+
+The example application under `docs/examples/app` takes one `Note` entity through the module end to end; copy its shape instead of assembling the pieces from the sections above.
+
+- `docs/examples/app/libs/model/src/lib/note.model.ts`: the `@Model` and `@Field` metadata the list columns, the form fields and the details view are generated from, with `required` repeated per mode because the API validates create and update against the mode block.
+- `docs/examples/app/apps/web/src/app/notes/notes.config.ts`: a complete `CrudFullConfig` for one entity, with a relative `apiUrl` so that the dev-server proxy can route it.
+- `docs/examples/app/apps/web/src/app/notes/notes.module.ts`: `CrudModule.forFeature` with `routing: true`, which registers the NgRx slice and the list, add and item routes.
+- `docs/examples/app/apps/web/src/app/app.routes.ts`: the feature module mounted under `/notes` with `loadChildren` behind an auth guard.
+- `docs/examples/app/apps/web/src/app/app.config.ts`: the root providers the generated screens need: `provideStore`, `provideEffects`, `SharedModule`, `NgrxSharedModule`, the translations, an `HTTP_INTERCEPTORS` bearer interceptor and `MODEL_VALIDATORS_PROVIDER`.
+- `docs/examples/app/apps/web/src/app/translations.ts`: the `MODEL.<field>` labels and the page title the generated screens look up through the translate service.
+- `docs/examples/app/apps/api/src/app/app.module.ts`: the matching backend, `CrudShellNestjsModule.forRoot` for the same entity mounted under `/api/notes` with `RouterModule`, next to the auth module that issues the token.
+
 ## File Locations
 
 - Module / config: `packages/crud/shell/angular/src/lib/crud.module.ts`, `crud.config.ts`

@@ -88,3 +88,13 @@ Each domain's layers:
 - `@nx/jest` for Nx integration
 - `jest-preset-angular` for Angular tests
 - Storybook testing with `@storybook/test-runner`
+
+## Reference implementation
+
+The example application under `docs/examples/app` is a consumer of these conventions: a NestJS API and an Angular app on the published packages, laid out and tagged like a project of this workspace.
+
+- `docs/examples/app/apps/api/src/app/app.module.ts`: the `shell/nestjs` layer of two domains consumed together, `AuthShellNestjsModule` and `CrudShellNestjsModule`, next to the shared `AppExceptionFilter`, with the imports in the enforced order: external, `@smartsoft001/**`, then the app's own alias and the relative paths.
+- `docs/examples/app/apps/api/src/app/users.seed.ts`: the shared libraries in use, `User` from `auth-domain` and `PasswordService` from `utils`.
+- `docs/examples/app/apps/web/src/app/app.config.ts`: the NgRx root store and effects that `NgrxSharedModule` connects, which is where the CRUD shell adds its reducers.
+- `docs/examples/app/apps/web/project.json`: the project tags on a consumer project, `scope:docs` and `type:example-app`, in the same `scope:` and `type:` scheme as the domain tags.
+- `docs/examples/app/apps/web/jest.config.ts`: Jest through `@nx/jest` with `jest-preset-angular`, as listed under Testing.

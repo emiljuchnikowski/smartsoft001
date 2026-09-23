@@ -57,10 +57,7 @@ Abstract base directive. Exposes:
 ```typescript
 type SmartSignInFormMode = 'sign-in' | 'sign-up';
 type SmartSignInFormLayout =
-  | 'simple'
-  | 'simple-no-labels'
-  | 'split-screen'
-  | 'card';
+  'simple' | 'simple-no-labels' | 'split-screen' | 'card';
 
 interface ISignInFormOptions {
   socialProviders?: ISocialProvider[];
@@ -230,6 +227,15 @@ providers: [
 Gaps: `heroImageUrl` renders as a `smart:lg:block` cover image (hidden below the
 `lg` breakpoint); `submitLabel`, `emailPlaceholder`, `passwordPlaceholder`, and
 the `extraTpl` slot are all honored.
+
+## Reference implementation
+
+The example application under `docs/examples/app` signs in through this component against a real API; its login page is the pattern to copy.
+
+- `docs/examples/app/apps/web/src/app/auth/login.page.ts`: a login page on `<smart-sign-in-form>` with `ISignInFormOptions`, the `disabled` input bound to a pending signal and the `submit` output handled as `ISignInFormSubmit`.
+- `docs/examples/app/apps/web/src/app/auth/login.service.ts`: what the submit handler calls, the OAuth password grant against `/api/token` with the returned token stored through `AuthService.setToken`.
+- `docs/examples/app/apps/web/src/app/auth/login.page.spec.ts`: a Jest test that drives the rendered form through its `#smart-sign-in-form-email` and `#smart-sign-in-form-password` inputs and the `form` submit event.
+- `docs/examples/app/apps/web-e2e/src/support/app.ts`: the Playwright helper that fills the same form by those ids and clicks the `button.submit` element.
 
 ## File Locations
 

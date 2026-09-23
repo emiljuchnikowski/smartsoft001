@@ -177,6 +177,15 @@ providers: [
 
 Providing only `FORM_STANDARD_COMPONENT_TOKEN` restyles the form layout but leaves the inputs in their default look. The preset keeps the inherited `class` alias, so `<smart-form class="…">` still lands external classes on the form root.
 
+## Reference implementation
+
+The example application under `docs/examples/app` never places `<smart-form>` by hand: the CRUD item page renders it from the `@Field` metadata, and the pieces below are what the form reads in any application.
+
+- `docs/examples/app/libs/model/src/lib/note.model.ts`: the `@Field` decorators the form is generated from, with `create` and `update` flags per mode, `required` repeated per mode and `focused` on the first input.
+- `docs/examples/app/apps/web/src/app/app.config.ts`: `MODEL_VALIDATORS_PROVIDER` registered even though the app adds no validators of its own, because the form factory injects it without a default and the form does not render without it.
+- `docs/examples/app/apps/web/src/app/app.config.spec.ts`: the test that the provider hands the base validators implied by the metadata back to the factory.
+- `docs/examples/app/apps/web/src/app/translations.ts`: the `MODEL.<key>` labels the rendered inputs show.
+
 ## File Locations
 
 - Wrapper: `packages/shared/angular/src/lib/components/form/form.component.ts`
