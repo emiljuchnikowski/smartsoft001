@@ -27,6 +27,7 @@
     "@smartsoft001/paypal": "2.153.0",
     "@smartsoft001/payu": "2.153.0",
     "@smartsoft001/revolut": "2.153.0",
-    "@smartsoft001/trans-domain": "2.153.0"
+    "@smartsoft001/trans-domain": "2.153.0",
+    "rxjs": "^7.8.1"
   }
 }

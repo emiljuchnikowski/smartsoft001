@@ -1,0 +1,20 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "types": ["node"]
+  },
+  "include": ["../packages/*/**/src/**/*.ts"],
+  "exclude": [
+    "../node_modules",
+    "../tmp",
+    "../packages/**/node_modules/**",
+    "../packages/**/*.spec.ts",
+    "../packages/**/*.stories.ts",
+    "../packages/**/*.test.ts",
+    "../packages/**/test-setup.ts"
+  ]
+}

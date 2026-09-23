@@ -1,7 +1,11 @@
 import { MongoConfig } from './mongo.module';
 
 export function getMongoUrl(config: MongoConfig): string {
-  let url;
+  if (!config.host) {
+    throw new Error('MongoConfig.host is required to build the connection url');
+  }
+
+  let url: string;
   if (config.username && config.password)
     url = `mongodb://${config.username}:${config.password}@${config.host}:${config.port}`;
   else url = `mongodb://${config.host}:${config.port}`;

@@ -8,8 +8,10 @@ import {
   Query,
   Res,
   HttpStatus,
+  NotFoundException,
   Optional,
 } from '@nestjs/common';
+import type { Response } from 'express';
 
 import { PaypalConfig, PaypalService } from '@smartsoft001/paypal';
 import { TransService } from '@smartsoft001/trans-shell-app-services';
@@ -27,6 +29,13 @@ export class PaypalController {
   async refreshStatus(@Body() obj: { item_number1: string }): Promise<string> {
     try {
       const trans = await this.service.getById(obj.item_number1);
+
+      if (!trans) {
+        throw new NotFoundException(
+          'Transaction not found: ' + obj.item_number1,
+        );
+      }
+
       await this.service.refresh(trans.externalId, obj);
       return 'ok';
     } catch (e) {
@@ -38,13 +47,17 @@ export class PaypalController {
 
   @Get(':id/confirm')
   async confirm(
-    @Param('id') id,
-    @Query('PayerID') payerId,
-    @Query('paymentId') paymentId,
-    @Res() res,
+    @Param('id') id: string,
+    @Query('PayerID') payerId: string,
+    @Query('paymentId') paymentId: string,
+    @Res() res: Response,
   ) {
     try {
       const trans = await this.service.getById(id);
+
+      if (!trans) {
+        throw new NotFoundException('Transaction not found: ' + id);
+      }
 
       if (trans.externalId !== paymentId) {
         throw new Error('Invalid externaId');

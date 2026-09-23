@@ -190,5 +190,21 @@ describe('auth-domain: TokenFactory', () => {
         }),
       ).rejects.toThrow(DomainValidationError);
     });
+
+    it('should throw a domain error when a replacing validation provider passes a missing user through', async () => {
+      // A validation provider with `replace` skips the built-in user checks; the
+      // factory must still refuse to sign a token for a user that does not exist.
+      const userProvider = { get: jest.fn().mockResolvedValue(null) };
+      const validationProvider = { replace: true, check: jest.fn() };
+
+      await expect(
+        tokenFactory.create({
+          request: { grant_type: 'custom', device: 'abc' },
+          userProvider,
+          validationProvider,
+        }),
+      ).rejects.toThrow(DomainValidationError);
+      expect(repository.update).not.toHaveBeenCalled();
+    });
   });
 });

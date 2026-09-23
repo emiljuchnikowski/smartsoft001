@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 
+import { NotFoundException } from '@nestjs/common';
 import { Request } from 'express';
 import * as XLSX from 'xlsx';
 
@@ -12,6 +13,11 @@ jest.mock('xlsx');
 jest.mock('json2csv', () => ({
   Parser: jest.fn().mockImplementation(() => ({ parse: jest.fn(() => 'csv') })),
 }));
+
+// busboy 1.x exports a factory function (no class, no `default`), and its
+// 'file' event carries `(name, stream, info)`; the mock mirrors that shape.
+const busboyInstance = { on: jest.fn() };
+jest.mock('busboy', () => jest.fn(() => busboyInstance));
 
 describe('crud-nestjs: CrudController', () => {
   let service: jest.Mocked<CrudService<any>>;
@@ -57,6 +63,52 @@ describe('crud-nestjs: CrudController', () => {
       const result = { criteria: {}, options: {}, links: jest.fn() };
       jest.spyOn(q2mModule, 'q2m').mockReturnValue(result);
       expect(controller['getQueryObject'](query)).toBe(result);
+    });
+  });
+
+  describe('uploadAttachment', () => {
+    it('should take the file name and mime type from the busboy file info', () => {
+      const handlers: Record<string, (...args: any[]) => void> = {};
+      busboyInstance.on.mockImplementation((event: string, handler) => {
+        handlers[event] = handler;
+        return busboyInstance;
+      });
+      const request = {
+        headers: { 'content-type': 'multipart/form-data; boundary=x' },
+        pipe: jest.fn(),
+      } as unknown as Request;
+
+      controller.uploadAttachment(request, {} as any);
+      handlers['file'](
+        'file',
+        { on: jest.fn() },
+        {
+          filename: 'photo.png',
+          encoding: '7bit',
+          mimeType: 'image/png',
+        },
+      );
+
+      expect(service.uploadAttachment).toHaveBeenCalledWith(
+        expect.objectContaining({
+          fileName: 'photo.png',
+          encoding: '7bit',
+          mimeType: 'image/png',
+        }),
+      );
+    });
+  });
+
+  describe('downloadAttachment', () => {
+    it('should respond 404 when there is no attachment with that id', async () => {
+      service.getAttachmentInfo.mockResolvedValue(null);
+      const request = { headers: {} } as Request;
+      const response = { status: jest.fn(), set: jest.fn() } as any;
+
+      await expect(
+        controller.downloadAttachment('missing', request, response),
+      ).rejects.toThrow(NotFoundException);
+      expect(service.getAttachmentStream).not.toHaveBeenCalled();
     });
   });
 

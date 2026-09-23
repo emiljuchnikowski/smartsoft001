@@ -18,7 +18,7 @@ export class RefundService<T> extends TransBaseService<T> {
     paymentService: ITransPaymentService,
     comment = 'Refund',
   ): Promise<void> {
-    const trans: Trans<any> = await this.repository.getById(transId);
+    const trans = await this.repository.getById(transId);
 
     if (!trans) {
       throw new NotFoundException('Transaction not found: ' + transId);

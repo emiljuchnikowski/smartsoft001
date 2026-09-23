@@ -1,7 +1,7 @@
 import { Body, Controller, Post, Req } from '@nestjs/common';
-import { Request } from 'express';
+import type { Request } from 'express';
 
-import { IAuthToken, IAuthTokenRequest } from '@smartsoft001/auth-domain';
+import type { IAuthToken, IAuthTokenRequest } from '@smartsoft001/auth-domain';
 import { AuthService } from '@smartsoft001/auth-shell-app-services';
 
 @Controller('token')

@@ -4,6 +4,7 @@ import {
   Collection,
   Condition,
   Db,
+  Document,
   MongoClient,
   ObjectId,
 } from 'mongodb';
@@ -23,7 +24,7 @@ import { ObjectService } from '@smartsoft001/utils';
 import { MongoConfig } from '../mongo.config';
 import { IMongoTransaction } from '../mongo.unitofwork';
 import { getMongoUrl } from '../mongo.utils';
-import { ItemChangedData } from './interfaces';
+import { ItemChangedData, ItemChangedDataType } from './interfaces';
 
 @Injectable()
 export class MongoItemRepository<
@@ -238,8 +239,11 @@ export class MongoItemRepository<
     });
   }
 
-  async getById(id: string, repoOptions?: IItemRepositoryOptions): Promise<T> {
-    return await this.collectionContext<T>(async (collection) => {
+  async getById(
+    id: string,
+    repoOptions?: IItemRepositoryOptions,
+  ): Promise<T | null> {
+    return await this.collectionContext<T | null>(async (collection) => {
       const item = await collection.findOne<T>(
         { _id: id as any },
         {
@@ -255,58 +259,60 @@ export class MongoItemRepository<
     criteria: any,
     options: any = {},
   ): Promise<{ data: T[]; totalCount: number }> {
-    return await this.collectionContext<T>(async (collection) => {
-      this.convertIdInCriteria(criteria);
-      this.generateSearch(criteria);
+    return await this.collectionContext<{ data: T[]; totalCount: number }>(
+      async (collection) => {
+        this.convertIdInCriteria(criteria);
+        this.generateSearch(criteria);
 
-      const totalCount = await this.getCount(criteria, collection);
+        const totalCount = await this.getCount(criteria, collection);
 
-      const aggregate = [];
+        const aggregate: Document[] = [];
 
-      if (criteria) {
-        aggregate.push({ $match: criteria });
-      }
+        if (criteria) {
+          aggregate.push({ $match: criteria });
+        }
 
-      if (options?.sort) {
-        aggregate.push({ $sort: options.sort });
-      }
+        if (options?.sort) {
+          aggregate.push({ $sort: options.sort });
+        }
 
-      if (options?.skip) {
-        aggregate.push({ $skip: options.skip });
-      }
+        if (options?.skip) {
+          aggregate.push({ $skip: options.skip });
+        }
 
-      if (options?.limit) {
-        aggregate.push({ $limit: options.limit });
-      }
+        if (options?.limit) {
+          aggregate.push({ $limit: options.limit });
+        }
 
-      if (options?.project) {
-        aggregate.push({ $project: options.project });
-      }
+        if (options?.project) {
+          aggregate.push({ $project: options.project });
+        }
 
-      if (options?.min) {
-        aggregate.push({ $min: options.min });
-      }
+        if (options?.min) {
+          aggregate.push({ $min: options.min });
+        }
 
-      if (options?.max) {
-        aggregate.push({ $max: options.max });
-      }
+        if (options?.max) {
+          aggregate.push({ $max: options.max });
+        }
 
-      if (options?.group) {
-        aggregate.push({ $group: options.group });
-      }
+        if (options?.group) {
+          aggregate.push({ $group: options.group });
+        }
 
-      const list = await collection
-        .aggregate<T>(aggregate, {
-          allowDiskUse: options?.allowDiskUse,
-          session: options?.session,
-        })
-        .toArray();
+        const list = await collection
+          .aggregate<T>(aggregate, {
+            allowDiskUse: options?.allowDiskUse,
+            session: options?.session,
+          })
+          .toArray();
 
-      return {
-        data: list.map((item) => this.getModelToResult(item)),
-        totalCount,
-      };
-    });
+        return {
+          data: list.map((item) => this.getModelToResult(item)),
+          totalCount,
+        };
+      },
+    );
   }
 
   getBySpecification(
@@ -338,7 +344,7 @@ export class MongoItemRepository<
         try {
           client = await MongoClient.connect(this.getUrl());
           const db = client.db(this.config.database);
-          const collection = db.collection(this.config.collection);
+          const collection = db.collection(this.getCollectionName());
 
           const pipeline = criteria.id
             ? [
@@ -351,13 +357,21 @@ export class MongoItemRepository<
             : [];
 
           stream = collection.watch(pipeline).on('change', (result) => {
+            // Only events about a document are item changes; collection-level
+            // events (drop, rename, invalidate) carry no documentKey.
+            if (!('documentKey' in result)) return;
+
             observer.next({
-              id: result['documentKey']['_id'],
+              id: result.documentKey._id,
               type: this.mapChangeType(result.operationType),
               data:
                 result.operationType === 'update'
-                  ? result['updateDescription']
-                  : this.getModelToResult(result['fullDocument']),
+                  ? result.updateDescription
+                  : this.getModelToResult(
+                      'fullDocument' in result
+                        ? (result.fullDocument as T | undefined)
+                        : undefined,
+                    ),
             } as any);
           });
         } catch (err) {
@@ -423,8 +437,9 @@ export class MongoItemRepository<
     return result;
   }
 
-  protected mapChangeType(dbType: string) {
-    const map = {
+  /** Other operation types (e.g. `replace`) have no item-change equivalent and map to `undefined`, as before. */
+  protected mapChangeType(dbType: string): ItemChangedDataType | undefined {
+    const map: Partial<Record<string, ItemChangedDataType>> = {
       insert: 'create',
       update: 'update',
       delete: 'delete',
@@ -453,7 +468,10 @@ export class MongoItemRepository<
     return result;
   }
 
-  protected getModelToResult(item: T): T {
+  protected getModelToResult(item: T): T;
+  protected getModelToResult(item: T | null | undefined): T | null;
+  protected getModelToResult(item: T | null | undefined): T | null {
+    // No document (missing id, or a change event without one) maps to null.
     if (!item) return null;
 
     const result = ObjectService.removeTypes(item) as any;
@@ -506,10 +524,10 @@ export class MongoItemRepository<
       ).filter((i) => i.options.search);
 
       if (modelFields.length) {
-        const searchArray = [];
+        const searchArray: Array<Record<string, unknown>> = [];
 
         modelFields.forEach((val) => {
-          const res = {};
+          const res: Record<string, unknown> = {};
 
           res[val.key] = {
             $regex: this.convertRegex(criteria['$search']),
@@ -554,26 +572,33 @@ export class MongoItemRepository<
     return val.toString().replace(/\*/g, '[*]');
   }
 
-  protected async collectionContext<T>(
-    callback: (collection: Collection) => Promise<any>,
+  /** The collection is part of the connection config; a repository without one cannot address any document. */
+  protected getCollectionName(): string {
+    if (!this.config.collection) {
+      throw new Error(
+        'MongoConfig.collection is required by MongoItemRepository',
+      );
+    }
+
+    return this.config.collection;
+  }
+
+  protected async collectionContext<TResult>(
+    callback: (collection: Collection) => Promise<TResult>,
     repoOptions?: IItemRepositoryOptions,
-  ): Promise<any> {
-    const client: MongoClient = (repoOptions?.transaction as IMongoTransaction)
-      ?.connection
-      ? (repoOptions.transaction as IMongoTransaction).connection
-      : await MongoClient.connect(this.getUrl());
+  ): Promise<TResult> {
+    // Inside a unit of work the transaction owns the connection and its lifetime.
+    const transaction = repoOptions?.transaction as
+      IMongoTransaction | undefined;
+    const client: MongoClient =
+      transaction?.connection ?? (await MongoClient.connect(this.getUrl()));
 
     const db = client.db(this.config.database);
 
-    let result: T;
-
     try {
-      result = await callback(db.collection(this.config.collection));
+      return await callback(db.collection(this.getCollectionName()));
     } finally {
-      if (!(repoOptions?.transaction as IMongoTransaction))
-        await client.close();
+      if (!transaction) await client.close();
     }
-
-    return result;
   }
 }

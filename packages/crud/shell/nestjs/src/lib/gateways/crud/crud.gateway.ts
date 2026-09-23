@@ -9,7 +9,7 @@ import {
   WsResponse,
 } from '@nestjs/websockets';
 import { Observable, Subscription } from 'rxjs';
-import { Socket } from 'socket.io';
+import type { Socket } from 'socket.io';
 
 import { CrudService } from '@smartsoft001/crud-shell-app-services';
 import { ItemChangedData } from '@smartsoft001/crud-shell-dtos';
@@ -23,7 +23,7 @@ import { IEntity } from '@smartsoft001/domain-core';
 export class CrudGateway<T extends IEntity<string>>
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
-  private _clientsSubscriptions: Map<string, Subscription>;
+  private _clientsSubscriptions = new Map<string, Subscription>();
 
   constructor(private service: CrudService<T>) {}
 
@@ -60,9 +60,11 @@ export class CrudGateway<T extends IEntity<string>>
     console.log(`Client disconnected: ${client.id}`);
   }
 
-  private clearSubscription(client: any) {
-    if (this._clientsSubscriptions.has(client.id)) {
-      this._clientsSubscriptions.get(client.id).unsubscribe();
+  private clearSubscription(client: { id: string }) {
+    const subscription = this._clientsSubscriptions.get(client.id);
+
+    if (subscription) {
+      subscription.unsubscribe();
       this._clientsSubscriptions.delete(client.id);
     }
   }

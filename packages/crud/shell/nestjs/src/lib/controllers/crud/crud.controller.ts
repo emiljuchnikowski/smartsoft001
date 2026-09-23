@@ -14,23 +14,23 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import * as Busboy from 'busboy';
-import { Response, Request } from 'express';
+import busboy from 'busboy';
+import type { Response, Request } from 'express';
 import { Parser } from 'json2csv';
 import * as _ from 'lodash';
 import moment from 'moment-timezone';
 import * as XLSX from 'xlsx';
 
-import { CreateManyMode } from '@smartsoft001/crud-domain';
+import type { CreateManyMode } from '@smartsoft001/crud-domain';
 import { CrudService } from '@smartsoft001/crud-shell-app-services';
 import { IEntity } from '@smartsoft001/domain-core';
 import { User } from '@smartsoft001/nestjs';
-import { IUser } from '@smartsoft001/users';
+import type { IUser } from '@smartsoft001/users';
 import { GuidService } from '@smartsoft001/utils';
 
-import { Readable } from 'stream';
+import { Readable, Writable } from 'stream';
 
-import { q2m } from './query-to-mongo';
+import { IQ2mResult, q2m } from './query-to-mongo';
 import {
   AuthJwtGuard,
   AuthOrAnonymousJwtGuard,
@@ -165,8 +165,11 @@ export class CrudController<T extends IEntity<string>> {
   }
 
   @Post('attachments')
-  uploadAttachment(@Req() request: Request, @Res() response: Response) {
-    const busboy = new Busboy({
+  uploadAttachment(
+    @Req() request: Request,
+    @Res() response: Response,
+  ): Writable {
+    const parser = busboy({
       headers: request.headers,
     });
     const id = GuidService.create();
@@ -174,30 +177,28 @@ export class CrudController<T extends IEntity<string>> {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     readable._read = () => {};
 
-    let fileName, encoding, mimeType;
+    // Both stay undefined when the request carried no file part.
+    let fileName: string | undefined;
+    let mimeType: string | undefined;
 
-    busboy.on(
-      'file',
-      (field, file, resultFileName, resultEncoding, resultMimeType) => {
-        fileName = resultFileName;
-        encoding = resultEncoding;
-        mimeType = resultMimeType;
+    parser.on('file', (field, file, info) => {
+      fileName = info.filename;
+      mimeType = info.mimeType;
 
-        this.service.uploadAttachment({
-          id,
-          stream: readable,
-          fileName,
-          encoding,
-          mimeType,
-        });
+      this.service.uploadAttachment({
+        id,
+        stream: readable,
+        fileName: info.filename,
+        encoding: info.encoding,
+        mimeType: info.mimeType,
+      });
 
-        file.on('data', (data) => {
-          readable.push(data);
-        });
-      },
-    );
+      file.on('data', (data) => {
+        readable.push(data);
+      });
+    });
 
-    busboy.on('finish', function () {
+    parser.on('finish', function () {
       readable.push(null);
       response.set('Location', CrudController.getLink(response.req) + '/' + id);
       response.json({
@@ -209,7 +210,7 @@ export class CrudController<T extends IEntity<string>> {
       response.end();
     });
 
-    return request.pipe(busboy);
+    return request.pipe(parser);
   }
 
   @Get('attachments/:id')
@@ -220,10 +221,15 @@ export class CrudController<T extends IEntity<string>> {
   ) {
     const fileInfo = await this.service.getAttachmentInfo(id);
 
+    if (!fileInfo) {
+      throw new NotFoundException('Invalid id');
+    }
+
     if (request.headers.range) {
       const range = request.headers.range.substr(6).split('-');
       const start = parseInt(range[0], 10);
-      const end = parseInt(range[1], 10) || null;
+      // An open-ended range (`bytes=100-`) reads to the end of the file.
+      const end = parseInt(range[1], 10) || undefined;
 
       const readstream = await this.service.getAttachmentStream(id, {
         start,
@@ -270,7 +276,7 @@ export class CrudController<T extends IEntity<string>> {
     await this.service.deleteAttachment(id);
   }
 
-  protected getQueryObject(queryObject: any): { criteria; options; links } {
+  protected getQueryObject(queryObject: Record<string, unknown>): IQ2mResult {
     let q = '';
 
     Object.keys(queryObject).forEach((key) => {
@@ -304,20 +310,29 @@ export class CrudController<T extends IEntity<string>> {
 
     const { res, fields } = this.getDataWithFields(data);
 
-    return new Parser(fields).parse(data);
+    return new Parser({ fields }).parse(res);
   }
 
-  protected getDataWithFields(data: Array<T>): { res; fields } {
-    const fields = [];
+  protected getDataWithFields(data: Array<T>): { res: T[]; fields: string[] } {
+    const fields: string[] = [];
 
-    const execute = (item, baseKey, baseItem) => {
+    const execute = (
+      row: object,
+      baseKey: string,
+      baseRow: Record<string, unknown>,
+    ) => {
+      // The rows are flattened in place, whatever entity type they are.
+      const item = row as Record<string, unknown>;
+
       Object.keys(item).forEach((key) => {
-        if (item[key] && typeof item[key] === 'string') {
-          item[key] = item[key].replace(/<[^>]*>?/gm, '');
+        const current = item[key];
+
+        if (typeof current === 'string' && current) {
+          item[key] = current.replace(/<[^>]*>?/gm, '');
         }
 
-        if (item[key] && item[key] instanceof Date) {
-          item[key] = moment(item[key])
+        if (current instanceof Date) {
+          item[key] = moment(current)
             .tz('Europe/Warsaw')
             .format('YYYY-MM-DD HH:mm:ss');
         }
@@ -327,9 +342,9 @@ export class CrudController<T extends IEntity<string>> {
         if (_.isArray(val)) {
           return;
         } else if (_.isObject(val) && Object.keys(val).length) {
-          execute(val, baseKey + key + '_', baseItem);
+          execute(val, baseKey + key + '_', baseRow);
         } else if (baseKey) {
-          baseItem[baseKey + key] = val;
+          baseRow[baseKey + key] = val;
           if (!fields.some((f) => f === baseKey + key))
             fields.push(baseKey + key);
         } else {
@@ -339,13 +354,15 @@ export class CrudController<T extends IEntity<string>> {
     };
 
     data.forEach((item) => {
-      execute(item, '', item);
+      execute(item, '', item as Record<string, unknown>);
     });
 
     data.forEach((item) => {
-      Object.keys(item).forEach((key) => {
+      const row = item as Record<string, unknown>;
+
+      Object.keys(row).forEach((key) => {
         if (!fields.some((f) => f === key)) {
-          delete item[key];
+          delete row[key];
         }
       });
     });

@@ -28,6 +28,9 @@ export class CrudShellNestjsModule {
       socket: boolean;
     },
   ): DynamicModule {
+    // Without a token config the REST API is served without JWT auth, as before.
+    const tokenConfig = options.tokenConfig;
+
     return {
       module: CrudShellNestjsModule,
       controllers: options.restApi ? CONTROLLERS : [],
@@ -37,16 +40,16 @@ export class CrudShellNestjsModule {
         AuthJwtGuard,
       ],
       imports: [
-        ...(options.restApi && options.tokenConfig.secretOrPrivateKey
+        ...(options.restApi && tokenConfig?.secretOrPrivateKey
           ? [
               PassportModule.register({
                 defaultStrategy: 'jwt',
                 session: false,
               }),
               JwtModule.register({
-                secret: options.tokenConfig.secretOrPrivateKey,
+                secret: tokenConfig.secretOrPrivateKey,
                 signOptions: {
-                  expiresIn: options.tokenConfig.expiredIn,
+                  expiresIn: tokenConfig.expiredIn,
                 },
               }),
             ]
@@ -61,8 +64,13 @@ export class CrudShellNestjsModule {
 
 @Module({})
 export class CrudShellNestjsCoreModule {
+  /**
+   * The core module always registers JWT auth, so the token config is not
+   * optional here: a missing one used to fail at startup with a TypeError.
+   */
   static forRoot<T>(
     options: SharedConfig & {
+      tokenConfig: NonNullable<SharedConfig['tokenConfig']>;
       db: {
         host: string;
         port: number;

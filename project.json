@@ -9,6 +9,20 @@
         "config": ".verdaccio/config.yml",
         "storage": "tmp/local-registry/storage"
       }
+    },
+    "strict-typecheck": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": [
+        "{workspaceRoot}/packages/**/*.ts",
+        "{workspaceRoot}/packages/**/tsconfig*.json",
+        "{workspaceRoot}/tsconfig.base.json",
+        "{workspaceRoot}/tools/tsconfig.strict.json",
+        "{workspaceRoot}/tools/scripts/strict-typecheck.mjs"
+      ],
+      "options": {
+        "command": "node tools/scripts/strict-typecheck.mjs"
+      }
     }
   }
 }

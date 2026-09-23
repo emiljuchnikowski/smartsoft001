@@ -116,6 +116,17 @@ describe('paynow: PaynowService', () => {
         expect.objectContaining({ headers: expect.any(Object) }),
       );
     });
+
+    it('should reject a transaction without a started entry instead of asking for /null/', async () => {
+      mockModuleRef.get.mockReturnValue({
+        get: () => Promise.resolve({ apiKey: 'test-key', test: true }),
+      });
+
+      await expect(
+        service.getStatus({ data: {}, history: [] } as unknown as Trans<any>),
+      ).rejects.toThrow('Transaction without start status');
+      expect(mockHttpService.get).not.toHaveBeenCalled();
+    });
   });
 
   describe('refund', () => {

@@ -31,6 +31,11 @@ jobs:
           node-version: '26.5.1'
       - run: npx nx format:check --base=origin/${{ github.event.pull_request.base.ref }}
       - run: npx nx run-many -t lint --max-parallel=4
+      # An application built here against the path aliases compiles the
+      # framework sources with its own tsconfig, and a new Nx workspace enables
+      # strict and isolatedModules. The packages' own tsconfigs do not, so check
+      # the sources the way that consumer does (tools/tsconfig.strict.json).
+      - run: npx nx run smartsoft001:strict-typecheck
       - run: npx nx run docs:check
       - run: |
           export NODE_OPTIONS="--max-old-space-size=8192"

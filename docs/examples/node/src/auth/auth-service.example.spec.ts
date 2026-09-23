@@ -31,7 +31,7 @@ const issued: IAuthToken = {
 };
 
 describe('docs-examples-node: AuthService', () => {
-  it('should pass null for every provider that is not registered', async () => {
+  it('should leave every provider that is not registered undefined', async () => {
     const factory = { create: jest.fn().mockResolvedValue(issued) };
     const httpReq = {} as Request;
     const service = createAuthService(
@@ -44,9 +44,9 @@ describe('docs-examples-node: AuthService', () => {
     expect(factory.create).toHaveBeenCalledWith({
       httpReq,
       request,
-      payloadProvider: null,
-      validationProvider: null,
-      userProvider: null,
+      payloadProvider: undefined,
+      validationProvider: undefined,
+      userProvider: undefined,
     });
   });
   it('should thread a registered payload provider through to the factory', async () => {
@@ -81,7 +81,7 @@ describe('docs-examples-node: AuthService', () => {
     expect(factory.create.mock.calls[0][0]).toEqual({
       httpReq: undefined,
       request,
-      payloadProvider: null,
+      payloadProvider: undefined,
       validationProvider,
       userProvider,
     });

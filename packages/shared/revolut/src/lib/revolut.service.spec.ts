@@ -208,6 +208,13 @@ describe('revolut: RevolutService', () => {
       );
     });
 
+    it('should reject a transaction without a started entry instead of reading its data', async () => {
+      await expect(
+        service.getStatus({ data: {}, history: [] } as unknown as Trans<any>),
+      ).rejects.toThrow('Transaction without start status');
+      expect(mockHttpService.get).not.toHaveBeenCalled();
+    });
+
     it('should map different states to correct statuses', async () => {
       const testCases = [
         { state: 'pending', expectedStatus: 'pending' },

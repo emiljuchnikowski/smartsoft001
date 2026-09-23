@@ -2,6 +2,7 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import * as CryptoJS from 'crypto-js';
+import { firstValueFrom } from 'rxjs';
 
 import {
   ITransPaymentSingleService,
@@ -60,8 +61,8 @@ export class PaynowService implements ITransPaymentSingleService {
 
     const signature = this.getSignature(data, config);
 
-    const response = await this.httpService
-      .post(this.getBaseUrl(config) + '/v1/payments', data, {
+    const response = await firstValueFrom(
+      this.httpService.post(this.getBaseUrl(config) + '/v1/payments', data, {
         headers: {
           'Content-Type': 'application/json',
           'Api-Key': config.apiKey,
@@ -69,8 +70,8 @@ export class PaynowService implements ITransPaymentSingleService {
           Signature: signature,
         },
         maxRedirects: 0,
-      })
-      .toPromise();
+      }),
+    );
 
     return {
       redirectUrl: response.data.redirectUrl,
@@ -84,14 +85,17 @@ export class PaynowService implements ITransPaymentSingleService {
     const orderId = this.getOrderId(trans);
     const config = await this.getConfig(trans.data);
 
-    const response = await this.httpService
-      .get(this.getBaseUrl(config) + '/v1/payments/' + orderId + '/status', {
-        headers: {
-          'Content-Type': 'application/json',
-          'Api-Key': config.apiKey,
+    const response = await firstValueFrom(
+      this.httpService.get(
+        this.getBaseUrl(config) + '/v1/payments/' + orderId + '/status',
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Api-Key': config.apiKey,
+          },
         },
-      })
-      .toPromise();
+      ),
+    );
 
     return {
       status: this.getStatusFromExternal(response.data.status),
@@ -109,8 +113,8 @@ export class PaynowService implements ITransPaymentSingleService {
 
     const signature = this.getSignature(data, config);
 
-    const response = await this.httpService
-      .post(
+    const response = await firstValueFrom(
+      this.httpService.post(
         this.getBaseUrl(config) + '/v1/payments/' + orderId + '/refunds',
         data,
         {
@@ -121,8 +125,8 @@ export class PaynowService implements ITransPaymentSingleService {
             Signature: signature,
           },
         },
-      )
-      .toPromise();
+      ),
+    );
 
     return response.data;
   }
@@ -130,9 +134,10 @@ export class PaynowService implements ITransPaymentSingleService {
   private getOrderId(trans: Trans<any>): string {
     const historyItem = trans.history.find((x) => x.status === 'started');
 
+    // Without the `started` entry there is no Paynow payment to address: the
+    // request would go to `/v1/payments/null/...`, which Paynow rejects anyway.
     if (!historyItem) {
-      console.warn('Transaction without start status');
-      return null;
+      throw new Error('Transaction without start status');
     }
 
     return historyItem.data.orderId;

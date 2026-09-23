@@ -239,7 +239,8 @@ export class PaypalService implements ITransPaymentSingleService {
     };
   }
 
-  private getTransactionId(trans: Trans<any>): string {
+  // `null` when the transaction never completed a sale; `refund` reports it.
+  private getTransactionId(trans: Trans<any>): string | null {
     const historyItem = trans.history.find(
       (i) =>
         i.status === 'completed' &&

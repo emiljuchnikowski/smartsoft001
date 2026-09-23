@@ -25,7 +25,7 @@ export class MongoAttachmentRepository<
       mimeType: string;
       encoding: string;
     },
-    options?: { streamCallback?: (r) => void },
+    options?: { streamCallback?: (r: mongo.GridFSBucketWriteStream) => void },
   ): Promise<void> {
     const client = await MongoClient.connect(this.getUrl());
 
@@ -59,7 +59,7 @@ export class MongoAttachmentRepository<
 
   async getInfo(
     id: string,
-  ): Promise<{ fileName: string; contentType: string; length: number }> {
+  ): Promise<{ fileName: string; contentType: string; length: number } | null> {
     const client = await MongoClient.connect(this.getUrl());
 
     const db = client.db(this.config.database);
@@ -89,7 +89,7 @@ export class MongoAttachmentRepository<
 
   async getStream(
     id: string,
-    options: { start: number; end: number } | undefined,
+    options?: { start: number; end?: number },
   ): Promise<Readable> {
     const client = await MongoClient.connect(this.getUrl());
 

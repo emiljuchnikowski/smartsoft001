@@ -1,6 +1,7 @@
 import { HttpService } from '@nestjs/axios';
-import { Inject, Injectable, Logger, Optional } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
+import { firstValueFrom } from 'rxjs';
 
 import {
   ITransPaymentSingleService,
@@ -13,6 +14,41 @@ import {
   PAYU_CONFIG_PROVIDER,
   PayuConfig,
 } from './payu.config';
+
+interface PayuOrderRequest {
+  customerIp: string;
+  extOrderId: string;
+  merchantPosId: string;
+  description: string;
+  currencyCode: string;
+  totalAmount: number;
+  notifyUrl: string;
+  continueUrl: string;
+  products: Array<{ name: string; unitPrice: number; quantity: string }>;
+  payMethods?: { payMethod: unknown };
+  buyer?: {
+    email?: string;
+    phone?: string;
+    firstName?: string;
+    lastName?: string;
+  };
+}
+
+/**
+ * PayU answers a successful order with a 302 whose body carries the order;
+ * axios surfaces that as an error with the response attached.
+ */
+function isRedirectResponse(
+  e: unknown,
+): e is { response: { status: number; data: any } } {
+  return (
+    typeof e === 'object' &&
+    e !== null &&
+    'response' in e &&
+    typeof e.response === 'object' &&
+    e.response !== null
+  );
+}
 
 @Injectable()
 export class PayuService implements ITransPaymentSingleService {
@@ -37,7 +73,7 @@ export class PayuService implements ITransPaymentSingleService {
     const config = await this.getConfig(obj.data);
     const token = await this.getToken(config);
 
-    const data = {
+    const data: PayuOrderRequest = {
       customerIp: obj.clientIp,
       extOrderId: obj.id,
       merchantPosId: config.posId,
@@ -56,13 +92,13 @@ export class PayuService implements ITransPaymentSingleService {
     };
 
     if (obj.options && obj.options['payMethod']) {
-      data['payMethods'] = {
+      data.payMethods = {
         payMethod: obj.options['payMethod'],
       };
     }
 
     if (obj.contactPhone || obj.email || obj.firstName || obj.lastName) {
-      data['buyer'] = {
+      data.buyer = {
         email: obj.email,
         phone: obj.contactPhone,
         firstName: obj.firstName,
@@ -71,23 +107,27 @@ export class PayuService implements ITransPaymentSingleService {
     }
 
     try {
-      const response = await this.httpService
-        .post(this.getBaseUrl(config) + '/api/v2_1/orders', data, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: 'Bearer ' + token,
-            'X-Requested-With': 'XMLHttpRequest',
+      const response = await firstValueFrom(
+        this.httpService.post(
+          this.getBaseUrl(config) + '/api/v2_1/orders',
+          data,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: 'Bearer ' + token,
+              'X-Requested-With': 'XMLHttpRequest',
+            },
+            maxRedirects: 0,
           },
-          maxRedirects: 0,
-        })
-        .toPromise();
+        ),
+      );
 
       return {
         redirectUrl: response.data.redirectUri,
         orderId: response.data.orderId,
       };
     } catch (e) {
-      if (e.response && e.response.status === 302) {
+      if (isRedirectResponse(e) && e.response.status === 302) {
         return {
           redirectUrl: e.response.data.redirectUri,
           orderId: e.response.data.orderId,
@@ -106,18 +146,25 @@ export class PayuService implements ITransPaymentSingleService {
 
     const token = await this.getToken(config);
 
-    const response = await this.httpService
-      .get(this.getBaseUrl(config) + '/api/v2_1/orders/' + orderId, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + token,
-          'X-Requested-With': 'XMLHttpRequest',
+    const response = await firstValueFrom(
+      this.httpService.get(
+        this.getBaseUrl(config) + '/api/v2_1/orders/' + orderId,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + token,
+            'X-Requested-With': 'XMLHttpRequest',
+          },
+          maxRedirects: 0,
         },
-        maxRedirects: 0,
-      })
-      .toPromise();
+      ),
+    );
 
-    if (!response.data.orders) return null;
+    // The refresher destructures `{ status, data }` from this result, so an
+    // answer without orders cannot be reported as a status; say so instead.
+    if (!response.data.orders) {
+      throw new Error('PayU order not found: ' + orderId);
+    }
 
     const order = response.data.orders[0];
 
@@ -133,8 +180,8 @@ export class PayuService implements ITransPaymentSingleService {
 
     const token = await this.getToken(config);
 
-    const response = await this.httpService
-      .post(
+    const response = await firstValueFrom(
+      this.httpService.post(
         this.getBaseUrl(config) + '/api/v2_1/orders/' + orderId,
         {
           refund: {
@@ -149,8 +196,8 @@ export class PayuService implements ITransPaymentSingleService {
           },
           maxRedirects: 0,
         },
-      )
-      .toPromise();
+      ),
+    );
 
     return response.data;
   }
@@ -158,9 +205,10 @@ export class PayuService implements ITransPaymentSingleService {
   private getOrderId(trans: Trans<any>): string {
     const historyItem = trans.history.find((x) => x.status === 'started');
 
+    // Without the `started` entry there is no PayU order to address: the
+    // request would go to `/api/v2_1/orders/null`, which PayU rejects anyway.
     if (!historyItem) {
-      console.warn('Transaction without start status');
-      return null;
+      throw new Error('Transaction without start status');
     }
 
     return historyItem.data.orderId;
@@ -168,12 +216,12 @@ export class PayuService implements ITransPaymentSingleService {
 
   private async getToken(config: PayuConfig): Promise<string> {
     try {
-      const response = await this.httpService
-        .post(
+      const response = await firstValueFrom(
+        this.httpService.post(
           this.getBaseUrl(config) + '/pl/standard/user/oauth/authorize',
           `grant_type=client_credentials&client_id=${config.clientId}&client_secret=${config.clientSecret}`,
-        )
-        .toPromise();
+        ),
+      );
 
       return response.data['access_token'];
     } catch (e) {

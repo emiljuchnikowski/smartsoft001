@@ -30,6 +30,7 @@
     "@smartsoft001/payu": "2.153.0",
     "@smartsoft001/revolut": "2.153.0",
     "@smartsoft001/trans-domain": "2.153.0",
-    "@smartsoft001/trans-shell-app-services": "2.153.0"
+    "@smartsoft001/trans-shell-app-services": "2.153.0",
+    "express": "^5.2.1"
   }
 }

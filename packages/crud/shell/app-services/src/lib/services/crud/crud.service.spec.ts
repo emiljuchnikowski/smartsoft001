@@ -90,7 +90,11 @@ describe('crud-app-services: CrudService', () => {
   describe('readById', () => {
     it('should return result without password', async () => {
       const res = await service.readById('id', mockUser);
-      expect(res.password).toBeUndefined();
+      expect(res?.password).toBeUndefined();
+    });
+    it('should return null when the repository has no item with that id', async () => {
+      repository.getById.mockResolvedValue(null);
+      await expect(service.readById('missing', mockUser)).resolves.toBeNull();
     });
     it('should log and throw on error', async () => {
       repository.getById.mockImplementation(() => {

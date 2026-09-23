@@ -1,6 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger, Optional } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
+import { firstValueFrom } from 'rxjs';
 
 import {
   ITransPaymentSingleService,
@@ -57,12 +58,12 @@ export class RevolutService implements ITransPaymentSingleService {
       };
     }
 
-    const response = await this.httpService
-      .post(this.getBaseUrl(config) + '/api/orders', data, {
+    const response = await firstValueFrom(
+      this.httpService.post(this.getBaseUrl(config) + '/api/orders', data, {
         headers: this.getHeaders(config),
         maxRedirects: 0,
-      })
-      .toPromise();
+      }),
+    );
 
     return {
       redirectUrl: response.data.checkout_url,
@@ -78,8 +79,13 @@ export class RevolutService implements ITransPaymentSingleService {
 
     const historyItem = trans.history.find((h) => h.status === 'started');
 
-    const response = await this.httpService
-      .get(
+    // Without the `started` entry there is no Revolut order id to query.
+    if (!historyItem) {
+      throw new Error('Transaction without start status');
+    }
+
+    const response = await firstValueFrom(
+      this.httpService.get(
         this.getBaseUrl(config) +
           '/api/orders/' +
           (historyItem.data as any).responseData.id,
@@ -87,8 +93,8 @@ export class RevolutService implements ITransPaymentSingleService {
           headers: this.getHeaders(config),
           maxRedirects: 0,
         },
-      )
-      .toPromise();
+      ),
+    );
 
     return {
       data: response.data,
