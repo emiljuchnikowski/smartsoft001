@@ -26,6 +26,7 @@ import { appRoutes } from './app.routes';
 import { AUTH_INTERCEPTOR_PROVIDER } from './auth/auth.interceptor';
 import { registerAppTranslations } from './translations';
 
+// #region providers
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
@@ -68,3 +69,4 @@ export const appConfig: ApplicationConfig = {
     }),
   ],
 };
+// #endregion

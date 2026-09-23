@@ -4,6 +4,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { AuthService } from '@smartsoft001/angular';
 
+// #region service
 /** Client registered in the API's `tokenConfig.clients`. */
 export const AUTH_CLIENT_ID = 'example-app';
 export const TOKEN_URL = '/api/token';
@@ -53,3 +54,4 @@ export class LoginService {
     return typeof details === 'string' ? details : 'Sign-in failed';
   }
 }
+// #endregion

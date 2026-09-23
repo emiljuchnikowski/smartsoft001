@@ -3,6 +3,7 @@ import { CrudFullConfig } from '@smartsoft001/crud-shell-angular';
 
 import { Note } from '@app/model';
 
+// #region config
 /**
  * Everything the generated list and item pages need to know about notes.
  * The columns, the form fields and the details view come from the `@Field`
@@ -26,3 +27,4 @@ export const notesConfig: CrudFullConfig<Note> = {
     paginationMode: PaginationMode.singlePage,
   },
 };
+// #endregion

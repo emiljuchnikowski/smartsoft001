@@ -29,6 +29,7 @@ function withBearer<T>(
 export const authInterceptor: HttpInterceptorFn = (request, next) =>
   next(withBearer(request, inject(StorageService)));
 
+// #region provider
 /**
  * The same interceptor as a DI provider, which is the registration the app
  * uses. `CrudModule.forFeature` imports `SharedModule`, and `SharedModule`
@@ -54,3 +55,4 @@ export const AUTH_INTERCEPTOR_PROVIDER: Provider = {
   useClass: AuthInterceptor,
   multi: true,
 };
+// #endregion

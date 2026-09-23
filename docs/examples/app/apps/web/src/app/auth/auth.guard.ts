@@ -3,9 +3,11 @@ import { CanActivateFn, Router } from '@angular/router';
 
 import { AuthService } from '@smartsoft001/angular';
 
+// #region guard
 /** Lets authenticated users through and sends everybody else to the login page. */
 export const authGuard: CanActivateFn = () => {
   if (inject(AuthService).isAuthenticated()) return true;
 
   return inject(Router).createUrlTree(['/login']);
 };
+// #endregion

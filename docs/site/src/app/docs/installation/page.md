@@ -30,6 +30,10 @@ If you are starting from nothing, the `smart:scaffold-nx-workspace` skill from t
 
 In an existing Angular or NestJS project nothing needs to be restructured. Install the packages into the project that uses them and continue with the wiring below.
 
+### Something to compare against
+
+The [example application](/docs/example-app) is a complete Angular and NestJS pair on the framework, kept in the repository and tested on every pull request. When a step on this page raises a question, it shows the answer in running code.
+
 ## Create a project
 
 The commands on this page are the ones the smoke test runs, and it starts from an empty npm project.
@@ -116,5 +120,6 @@ There is nothing to take on trust here. The commands above are not transcribed i
 
 ## Where next
 
+- [Example application](/docs/example-app) is the smallest application that uses the framework end to end, with the commands to run it.
 - [Architecture](/docs/architecture) follows one entity from its decorators to a generated screen.
 - [Introduction](/docs/introduction) lists the packages and how they are layered.

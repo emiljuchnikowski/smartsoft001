@@ -4,6 +4,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
 import { apiConfig } from './config';
 
+// #region bootstrap
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
 
@@ -19,3 +20,4 @@ async function bootstrap(): Promise<void> {
 }
 
 bootstrap();
+// #endregion

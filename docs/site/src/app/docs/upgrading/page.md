@@ -1,7 +1,7 @@
 ---
 title: Upgrading
 section: Getting started
-order: 4
+order: 5
 nextjs:
   metadata:
     title: Upgrading
