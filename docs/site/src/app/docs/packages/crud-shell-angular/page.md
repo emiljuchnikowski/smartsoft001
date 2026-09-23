@@ -118,7 +118,7 @@ Extends `CrudConfig<T>` with everything the generated screens need.
 | `ItemComponent<T>`      | `smart-crud-item-page`          | The add and edit screen, keyed as `crud-item-page`.                                              |
 | `ItemStandardComponent` | `smart-crud-item-standard-page` | The default implementation behind it.                                                            |
 
-Both base classes, `CrudListPageBaseComponent` and `CrudItemPageBaseComponent`, are exported so an application can supply its own implementation for the dynamic key.
+Both base classes, `CrudListPageBaseComponent` and `CrudItemPageBaseComponent`, are exported so an application can supply its own implementation for the dynamic key. A subclass registered under the `DYNAMIC_COMPONENTS_STORE` token from [`@smartsoft001/angular`](/docs/packages/angular) is created inside the page in place of the standard body, on both pages. The item page reaches the form of whichever body is rendered through `getForm()` on `CrudItemPageBaseComponent`, so a custom body keeps the add and save buttons working.
 
 ### Components
 

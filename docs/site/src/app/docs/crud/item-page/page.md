@@ -26,8 +26,8 @@ Outside create mode the page subscribes to the route parameters and selects the 
 
 With `routing: true` these routes already exist. The feature module maps `add` and `:id` to this page, and the empty path to the [list page](/docs/crud/list-page).
 
-{% callout type="warning" title="The item page does not render in the current release" %}
-The component declares the signals that feed its template, the detail options and the unique-value provider, but never creates them. The first change detection therefore fails with `TypeError: ctx_r1.detailsOptions is not a function`, in every mode, before any of the behaviour below is reached. Treat this page as a description of the intended screen until the signals are initialised.
+{% callout type="note" title="Two earlier defects on this page are fixed" %}
+An earlier release declared the signals that feed the template without creating them, so the first change detection failed in every mode. The release after it rendered the page but could not submit it: the add and save buttons read the form through a `viewChildren` signal as if it were an array and threw `TypeError: Cannot read properties of undefined (reading 'valid')` before the facade was called. Both are repaired. The page now reaches the form through `getForm()` on the base component, `create` and `updatePartial` are called with the form value, and the `crud-item-page` dynamic component key is honoured, so an application can register its own body for this page.
 {% /callout %}
 
 ---

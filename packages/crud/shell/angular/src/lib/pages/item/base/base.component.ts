@@ -14,6 +14,7 @@ import {
   DynamicComponentType,
   FormComponent,
   IDetailsOptions,
+  SmartFormGroup,
 } from '@smartsoft001/angular';
 import { IEntity } from '@smartsoft001/domain-core';
 
@@ -50,5 +51,15 @@ export abstract class CrudItemPageBaseComponent<
   constructor() {
     super();
     this.selected = this.facade.selected;
+  }
+
+  /**
+   * The reactive form of the first rendered `<smart-form>`, or `undefined`
+   * until the form factory has built it. A method rather than a `computed`:
+   * `FormComponent.form` is a plain field assigned asynchronously, so a
+   * computed would cache `undefined` from the first read.
+   */
+  getForm(): SmartFormGroup | undefined {
+    return this.formComponents()[0]?.form;
   }
 }

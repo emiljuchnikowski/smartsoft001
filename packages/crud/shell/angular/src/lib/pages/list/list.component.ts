@@ -56,7 +56,12 @@ import { CrudSearchService } from '../../services/search/search.service';
 
 @Component({
   selector: 'smart-crud-list-page',
-  imports: [PageComponent, ListStandardComponent, NgTemplateOutlet],
+  imports: [
+    PageComponent,
+    ListStandardComponent,
+    NgTemplateOutlet,
+    DynamicContentDirective,
+  ],
   changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     @if (filter() && pageOptions()) {
