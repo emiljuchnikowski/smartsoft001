@@ -1,6 +1,6 @@
 {
   "name": "@smartsoft001/users",
-  "version": "2.159.0",
+  "version": "2.161.0",
   "description": "The two interfaces that describe who is acting: IUser, carried through every permission check and repository call, and IUserCredentials, the sign-in payload.",
   "publishConfig": {
     "access": "public"

@@ -1,6 +1,6 @@
 {
   "name": "@smartsoft001/auth-shell-app-services",
-  "version": "2.159.0",
+  "version": "2.161.0",
   "type": "commonjs",
   "main": "./src/index.js",
   "typings": "./src/index.d.ts",
@@ -22,7 +22,7 @@
   "peerDependencies": {
     "@nestjs/common": "^11.1.5",
     "@nestjs/core": "^11.2.1",
-    "@smartsoft001/auth-domain": "2.159.0",
+    "@smartsoft001/auth-domain": "2.161.0",
     "express": "^5.2.1"
   }
 }
