@@ -44,7 +44,7 @@ jobs:
           node-version: '26.5.1'
       - run: npx nx-cloud start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="build"
       - run: npx nx format:check
-      - run: npx nx affected -t lint test build postbuild check
+      - run: npx nx affected -t lint test build check
       # nx reads the current version from the latest release tag, not from the
       # manifests, so a write-back to main that failed on the previous run cannot
       # make this run compute a version that is already on npm. The root manifest
@@ -75,6 +75,13 @@ jobs:
       # is the last moment the artefacts can be checked before they reach npm.
       - name: Check the built packages can be loaded
         run: npm run verify:dist
+      # A package can load and still not work in an application: a missing peer,
+      # a broken export, a migration that does not do its job. Install the example
+      # app from these tarballs, then migrate it from the previous release. The
+      # previous release is the one the registry serves, not the latest tag on
+      # main: a release whose write-back was rejected is on npm and on no branch.
+      - name: Check the release on the example application
+        run: npm run verify:example-app -- --previous "$(npm view @smartsoft001/core version)"
       - name: Publish to NPM
         run: npx nx run-many -t nx-release-publish
         env:

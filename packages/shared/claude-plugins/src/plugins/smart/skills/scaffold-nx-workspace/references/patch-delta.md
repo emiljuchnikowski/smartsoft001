@@ -306,8 +306,6 @@ Initialize husky (`npx husky install`) then create:
 
 ### `.husky/commit-msg`
 
-> Reference runs `... lint test build postbuild`. **Drop `postbuild`** (no such target in a fresh scaffold).
-
 ```sh
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"

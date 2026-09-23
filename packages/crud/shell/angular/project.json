@@ -39,6 +39,15 @@
         "packageRoot": "dist/{projectRoot}"
       }
     },
+    "styles": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": ["default", "{workspaceRoot}/tailwind.config.js"],
+      "outputs": ["{projectRoot}/styles.css"],
+      "options": {
+        "command": "npx @tailwindcss/cli -i packages/crud/shell/angular/src/lib/styles.css -o packages/crud/shell/angular/styles.css"
+      }
+    },
     "build": {
       "executor": "@nx/angular:package",
       "options": {
@@ -50,15 +59,9 @@
           "tsConfig": "packages/crud/shell/angular/tsconfig.lib.prod.json"
         }
       },
-      "defaultConfiguration": "production"
-    },
-    "postbuild": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": [
-          "npx @tailwindcss/cli -i packages/crud/shell/angular/src/lib/styles.css -o dist/packages/crud/shell/angular/styles.css"
-        ]
-      }
+      "defaultConfiguration": "production",
+      "dependsOn": ["^build", "styles"],
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}"]
     },
     "storybook": {
       "executor": "@storybook/angular:start-storybook",

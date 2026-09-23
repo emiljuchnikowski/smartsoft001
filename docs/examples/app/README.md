@@ -4,7 +4,10 @@ One entity, the whole loop: an Angular frontend on `@smartsoft001/crud-shell-ang
 page, an item page and a login, and a NestJS API on `@smartsoft001/crud-shell-nestjs`,
 `@smartsoft001/mongo` and `@smartsoft001/auth-shell-nestjs`. It is the smallest application that
 still uses the framework end to end, and it lives in this repository so that every change to the
-framework is tried on it.
+framework is tried on it. It is also the first consumer of every release: before anything reaches
+npm, the `Publish` workflow installs a standalone copy of the app from the packed tarballs, builds
+and tests it, then migrates the same copy from the previous version and does it again. The same
+two checks run locally with `npm run verify:example-app`.
 
 ## Prerequisites
 
@@ -99,7 +102,7 @@ suite asserts each of those paths, so a regression in the framework fails this a
 - Writes require the `admin` permission, reads `admin` or `user`; the seeded user has `admin`.
 - The framework's stylesheets (Tailwind utilities under the `smart:` prefix) are the `styles.css` each
   UI package publishes. Inside the monorepo the web project's `styles` target compiles them from the
-  package sources with the same `@tailwindcss/cli` command the packages' `postbuild` uses, into
+  package sources with the same `@tailwindcss/cli` command the packages' `build` uses, into
   `dist/docs/examples/app/styles/`, and `build` and `serve` depend on it. This is the one place the
   app names a path under `packages/`: there is no alias for a stylesheet. A standalone copy points the
   same `styles` entries at `node_modules/@smartsoft001/angular/styles.css` and

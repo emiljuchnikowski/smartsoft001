@@ -10,5 +10,6 @@
     "lodash",
     "lodash-decorators",
     "moment"
-  ]
+  ],
+  "assets": ["styles.css"]
 }

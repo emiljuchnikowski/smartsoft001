@@ -24,6 +24,13 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import {
+  builtPackages,
+  missingBuilds,
+  notBuiltMessage,
+  packTarballs,
+} from './lib/dist-tarballs.mjs';
+
 const repoRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
   '..',
@@ -68,72 +75,18 @@ const DECORATED_CLASSES = [
   },
 ];
 
-function readJson(absolute) {
-  return JSON.parse(fs.readFileSync(absolute, 'utf8'));
-}
-
-/**
- * How a package has to be checked. Not every package is a Node module:
- *
- * - `load`   a Node library. Requiring it has to work, because that is how a
- *            NestJS application or a script consumes it.
- * - `resolve` an Angular library. Its entry points are ESM bundles meant for a
- *            bundler and executing one in bare Node proves nothing. Resolving
- *            the entry still proves the package is installable and complete.
- * - `skip`   a meta package. It carries dependencies and no code of its own,
- *            so it declares no entry point and there is nothing to load.
- */
-function classify(project) {
-  const executor = project?.targets?.build?.executor;
-
-  if (executor === '@nx/angular:package') return 'resolve';
-  if (executor === 'nx:run-commands') return 'skip';
-
-  return 'load';
-}
-
-/** Every publishable package, paired with the directory its build produced. */
-function builtPackages() {
-  const result = [];
-
-  for (const file of fs.globSync('packages/**/package.json', {
-    cwd: repoRoot,
-    exclude: (name) => name === 'node_modules',
-  })) {
-    const manifest = readJson(path.join(repoRoot, file));
-
-    if (!manifest.name?.startsWith('@smartsoft001/')) continue;
-
-    const projectRoot = path.dirname(file);
-    const projectFile = path.join(repoRoot, projectRoot, 'project.json');
-    const project = fs.existsSync(projectFile) ? readJson(projectFile) : null;
-
-    result.push({
-      name: manifest.name,
-      projectRoot,
-      distRoot: path.join(repoRoot, 'dist', projectRoot),
-      mode: classify(project),
-    });
-  }
-
-  return result.sort((a, b) => a.name.localeCompare(b.name));
-}
-
 function main() {
-  const packages = builtPackages();
+  const packages = builtPackages(repoRoot);
 
   assert.ok(
     packages.length > 0,
     'found no publishable package; this check has drifted from the workspace',
   );
 
-  const missing = packages.filter((entry) => !fs.existsSync(entry.distRoot));
+  const missing = missingBuilds(packages);
 
   if (missing.length) {
-    console.error(
-      `Not built: ${missing.map((entry) => entry.name).join(', ')}\n` +
-        'Run "npx nx run-many -t build" before this check.',
-    );
+    console.error(notBuiltMessage(missing));
     process.exit(1);
   }
 
@@ -141,7 +94,6 @@ function main() {
   const tarballs = path.join(workspace, 'tarballs');
 
   try {
-    fs.mkdirSync(tarballs, { recursive: true });
     fs.writeFileSync(
       path.join(workspace, 'package.json'),
       `${JSON.stringify({ name: 'dist-loadable-probe', private: true, type: 'commonjs' }, null, 2)}\n`,
@@ -154,13 +106,6 @@ function main() {
     // see a manifest missing a dependency the code imports. Four packages went
     // to npm unloadable while it reported them fine. Here npm resolves only
     // what the manifests declare, which is the whole point.
-    for (const entry of packages) {
-      execFileSync('npm', ['pack', entry.distRoot, '--silent'], {
-        cwd: tarballs,
-        stdio: 'pipe',
-      });
-    }
-
     execFileSync(
       'npm',
       [
@@ -168,7 +113,7 @@ function main() {
         '--no-audit',
         '--no-fund',
         '--silent',
-        ...fs.readdirSync(tarballs).map((name) => path.join(tarballs, name)),
+        ...packTarballs(packages, tarballs).values(),
       ],
       { cwd: workspace, stdio: 'pipe' },
     );
@@ -184,9 +129,15 @@ function main() {
         continue;
       }
 
+      // An Angular library also has to ship its compiled stylesheet as a
+      // subpath. The file was produced by a separate target for months and
+      // dropped whenever `build` was restored from the cache, so no published
+      // version carried it (FRA-389). Resolving it through the installed
+      // package proves both the file and the `exports` entry.
       const expression =
         entry.mode === 'resolve'
-          ? `require.resolve(${JSON.stringify(entry.name)})`
+          ? `require.resolve(${JSON.stringify(entry.name)});` +
+            `require.resolve(${JSON.stringify(`${entry.name}/styles.css`)})`
           : `require(${JSON.stringify(entry.name)})`;
 
       let error = null;
