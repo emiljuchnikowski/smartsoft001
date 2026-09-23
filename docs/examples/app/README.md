@@ -102,7 +102,7 @@ suite asserts each of those paths, so a regression in the framework fails this a
 - Writes require the `admin` permission, reads `admin` or `user`; the seeded user has `admin`.
 - The framework's stylesheets (Tailwind utilities under the `smart:` prefix) are the `styles.css` each
   UI package publishes. Inside the monorepo the web project's `styles` target compiles them from the
-  package sources with the same `@tailwindcss/cli` command the packages' `postbuild` uses, into
+  package sources with the same `@tailwindcss/cli` command the packages' `build` uses, into
   `dist/docs/examples/app/styles/`, and `build` and `serve` depend on it. This is the one place the
   app names a path under `packages/`: there is no alias for a stylesheet. A standalone copy points the
   same `styles` entries at `node_modules/@smartsoft001/angular/styles.css` and

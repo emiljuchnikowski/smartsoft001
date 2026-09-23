@@ -44,7 +44,7 @@ jobs:
           node-version: '26.5.1'
       - run: npx nx-cloud start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="build"
       - run: npx nx format:check
-      - run: npx nx affected -t lint test build postbuild check
+      - run: npx nx affected -t lint test build check
       # nx reads the current version from the latest release tag, not from the
       # manifests, so a write-back to main that failed on the previous run cannot
       # make this run compute a version that is already on npm. The root manifest

@@ -13,6 +13,15 @@
   },
   "tags": [],
   "targets": {
+    "styles": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": ["default", "{workspaceRoot}/tailwind.config.js"],
+      "outputs": ["{projectRoot}/styles.css"],
+      "options": {
+        "command": "npx @tailwindcss/cli -i packages/shared/angular/src/lib/styles.css -o packages/shared/angular/styles.css"
+      }
+    },
     "build": {
       "executor": "@nx/angular:package",
       "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
@@ -26,15 +35,8 @@
         },
         "development": {}
       },
-      "defaultConfiguration": "production"
-    },
-    "postbuild": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": [
-          "npx @tailwindcss/cli -i packages/shared/angular/src/lib/styles.css -o dist/packages/shared/angular/styles.css"
-        ]
-      }
+      "defaultConfiguration": "production",
+      "dependsOn": ["^build", "styles"]
     },
     "nx-release-publish": {
       "options": {

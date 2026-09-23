@@ -129,9 +129,15 @@ function main() {
         continue;
       }
 
+      // An Angular library also has to ship its compiled stylesheet as a
+      // subpath. The file was produced by a separate target for months and
+      // dropped whenever `build` was restored from the cache, so no published
+      // version carried it (FRA-389). Resolving it through the installed
+      // package proves both the file and the `exports` entry.
       const expression =
         entry.mode === 'resolve'
-          ? `require.resolve(${JSON.stringify(entry.name)})`
+          ? `require.resolve(${JSON.stringify(entry.name)});` +
+            `require.resolve(${JSON.stringify(`${entry.name}/styles.css`)})`
           : `require(${JSON.stringify(entry.name)})`;
 
       let error = null;

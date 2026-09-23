@@ -48,7 +48,7 @@ Refs: FRA-123
 
 Husky installs two hooks:
 
-- **`commit-msg`** runs commitlint on the message, then `nx run-many -t lint test build postbuild` across every project. It takes a few minutes and is the reason a commit that lands locally also passes CI.
+- **`commit-msg`** runs commitlint on the message, then `nx run-many -t lint test build` across every project. It takes a few minutes and is the reason a commit that lands locally also passes CI.
 - **`pre-push`** runs `nx format:check` and `nx affected` for `lint`, `test` and `build` against `origin/main`.
 
 The pull request pipeline repeats the affected targets plus `docs:check`, and `Publish` on `main` runs them again before versioning and publishing.

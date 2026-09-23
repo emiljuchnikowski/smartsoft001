@@ -38,7 +38,7 @@ Implementation starts by moving the issue to In Progress and saving an `orchestr
 
 {% skill name="commit" source="repo" /%}
 
-The commit message follows [Conventional Commits](/docs/contributing/conventions#commit-messages) with the scope chosen from the changed files and a `Refs: FRA-123` footer. Before committing, the skill runs `npm run format` and stages what the formatter changed. The `commit-msg` hook then runs commitlint and the full `lint`, `test`, `build` and `postbuild` targets of every project, so a commit that lands is one CI would accept.
+The commit message follows [Conventional Commits](/docs/contributing/conventions#commit-messages) with the scope chosen from the changed files and a `Refs: FRA-123` footer. Before committing, the skill runs `npm run format` and stages what the formatter changed. The `commit-msg` hook then runs commitlint and the full `lint`, `test` and `build` targets of every project, so a commit that lands is one CI would accept.
 
 ## Push
 

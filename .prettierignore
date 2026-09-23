@@ -17,3 +17,5 @@ packages/shared/utils/README.md
 docs/site/.next
 docs/site/out
 docs/site/next-env.d.ts
+packages/shared/angular/styles.css
+packages/crud/shell/angular/styles.css
