@@ -10,6 +10,7 @@ import {
   input,
   OnDestroy,
   output,
+  signal,
   Type,
   ViewEncapsulation,
 } from '@angular/core';
@@ -52,11 +53,11 @@ import { FormStandardComponent } from './standard/standard.component';
         }
       </div>
     }-->
-    @if (form) {
+    @if (form; as currentForm) {
       <form
-        [formGroup]="form"
-        (ngSubmit)="invokeSubmit.emit(form.value)"
-        (keyup.enter)="invokeSubmit.emit(form.value)"
+        [formGroup]="currentForm"
+        (ngSubmit)="invokeSubmit.emit(currentForm.value)"
+        (keyup.enter)="invokeSubmit.emit(currentForm.value)"
       >
         @if (componentType()) {
           <ng-container
@@ -65,7 +66,7 @@ import { FormStandardComponent } from './standard/standard.component';
         } @else {
           <smart-form-standard
             [options]="options()"
-            [form]="form"
+            [form]="currentForm"
             [class]="cssClass()"
           ></smart-form-standard>
         }
@@ -89,10 +90,22 @@ export class FormComponent<T> implements OnDestroy {
 
   private _options!: IFormOptions<T>;
   private _subscription = new Subscription();
+  private _formSubscription = new Subscription();
   private _mode!: 'create' | 'update' | string;
   private _uniqueProvider!: (values: Record<keyof T, any>) => Promise<boolean>;
+  // Counts the builds started so far, so a build that settles after a newer
+  // one has already won can recognise itself as stale and step aside.
+  private _build = 0;
 
-  form!: SmartFormGroup;
+  // The group lives in a signal: the body is rendered through
+  // `componentInputs()`, and a plain field would leave that computed - and so
+  // the rendered inputs - bound to the group of the previous build.
+  private readonly _form = signal<SmartFormGroup | undefined>(undefined);
+
+  get form(): SmartFormGroup | undefined {
+    return this._form();
+  }
+
   export!: boolean;
   exportHandler!: (val: any) => void;
   import!: boolean;
@@ -135,9 +148,11 @@ export class FormComponent<T> implements OnDestroy {
         this._uniqueProvider = options.uniqueProvider;
       }
 
+      const build = ++this._build;
+
       if (options.control) {
-        this.form = options.control as SmartFormGroup;
-        this.registerChanges();
+        this._form.set(options.control as SmartFormGroup);
+        this.registerChanges(options.control as SmartFormGroup);
         this.cd.detectChanges();
       } else {
         this.formFactory
@@ -148,8 +163,10 @@ export class FormComponent<T> implements OnDestroy {
             ) => Promise<boolean>,
           })
           .then((res) => {
-            this.form = res;
-            this.registerChanges();
+            if (build !== this._build) return;
+
+            this._form.set(res);
+            this.registerChanges(res);
             this.cd.detectChanges();
           });
       }
@@ -175,16 +192,18 @@ export class FormComponent<T> implements OnDestroy {
         ) => Promise<boolean>,
       })
       .then((res) => {
-        this.form.setForm(res);
-        this.registerChanges();
+        const current = this.form;
+        if (!current) return;
+
+        current.setForm(res);
+        this.registerChanges(current);
         this.cd.detectChanges();
       });
   }
 
   ngOnDestroy(): void {
-    if (this._subscription) {
-      this._subscription.unsubscribe();
-    }
+    this._subscription.unsubscribe();
+    this._formSubscription.unsubscribe();
   }
 
   private initLoading(): void {
@@ -194,35 +213,38 @@ export class FormComponent<T> implements OnDestroy {
           .pipe(filter(() => !!this.form))
           .subscribe((val) => {
             if (val) {
-              this.form.disable();
+              this.form?.disable();
             } else {
-              this.form.enable();
+              this.form?.enable();
             }
           }),
       );
     }
   }
 
-  private registerChanges(): void {
-    this._subscription.add(
-      this.form.valueChanges.subscribe(() => {
-        this.validChange.emit(this.form.valid);
-        this.valueChange.emit(this.form.value);
+  private registerChanges(form: SmartFormGroup): void {
+    // Only the group currently rendered may emit, so the previous
+    // subscription goes away before the new one is created.
+    this._formSubscription.unsubscribe();
+    this._formSubscription = new Subscription();
+
+    this._formSubscription.add(
+      form.valueChanges.subscribe(() => {
+        this.validChange.emit(form.valid);
+        this.valueChange.emit(form.value);
 
         const partialModel = {} as Partial<T>;
-        Object.keys(this.form.controls)
-          .filter(
-            (key) => !key.endsWith('Confirm') && this.form.controls[key].dirty,
-          )
+        Object.keys(form.controls)
+          .filter((key) => !key.endsWith('Confirm') && form.controls[key].dirty)
           .forEach((key: string) => {
-            (partialModel as any)[key] = this.form.controls[key].value;
+            (partialModel as any)[key] = form.controls[key].value;
           });
 
         this.valuePartialChange.emit(partialModel);
       }),
     );
 
-    this.form.updateValueAndValidity();
+    form.updateValueAndValidity();
   }
 
   private async initExportImport() {

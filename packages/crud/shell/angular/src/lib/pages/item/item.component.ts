@@ -188,6 +188,35 @@ export class ItemComponent<T extends IEntity<string>>
 
     this.pageService.checkPermissions();
 
+    // The provider has to be in place before the first render: it is part of
+    // the form options, so setting it later hands `smart-form` a new options
+    // object and the group is built a second time. The closure reads `this.id`
+    // lazily, so it can be installed before the route params arrive.
+    this.uniqueProvider.set(async (values) => {
+      const filter: ICrudFilter = {
+        query: [],
+      };
+
+      Object.keys(values).forEach((key) => {
+        filter.query!.push({
+          key: key,
+          value: (values as any)[key],
+          type: '=',
+        });
+      });
+
+      if (this.id) {
+        filter.query!.push({
+          key: 'id',
+          value: this.id,
+          type: '!=',
+        });
+      }
+      const { totalCount } = await this.service.getList(filter);
+
+      return !totalCount;
+    });
+
     if (this.router.routerState.snapshot.url.split('?')[0].endsWith('/add')) {
       this.mode = 'create';
       await this.generateComponents('add');
@@ -214,31 +243,6 @@ export class ItemComponent<T extends IEntity<string>>
           }
         });
     }
-
-    this.uniqueProvider.set(async (values) => {
-      const filter: ICrudFilter = {
-        query: [],
-      };
-
-      Object.keys(values).forEach((key) => {
-        filter.query!.push({
-          key: key,
-          value: (values as any)[key],
-          type: '=',
-        });
-      });
-
-      if (this.id) {
-        filter.query!.push({
-          key: 'id',
-          value: this.id,
-          type: '!=',
-        });
-      }
-      const { totalCount } = await this.service.getList(filter);
-
-      return !totalCount;
-    });
 
     if (this.config.details) {
       const compiledComponents: {
