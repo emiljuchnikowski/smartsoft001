@@ -1,14 +1,14 @@
 {
   "name": "@smartsoft001/full-stack",
-  "version": "2.155.0",
+  "version": "2.156.0",
   "publishConfig": {
     "access": "public"
   },
   "description": "Everything a project with an Angular frontend and a NestJS backend needs from @smartsoft001, in one install: the core packages and both runtime stacks.",
   "license": "MIT",
   "dependencies": {
-    "@smartsoft001/core": "2.155.0",
-    "@smartsoft001/angular-stack": "2.155.0",
-    "@smartsoft001/nestjs-stack": "2.155.0"
+    "@smartsoft001/core": "2.156.0",
+    "@smartsoft001/angular-stack": "2.156.0",
+    "@smartsoft001/nestjs-stack": "2.156.0"
   }
 }

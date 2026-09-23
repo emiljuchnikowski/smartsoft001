@@ -1,3 +1,14 @@
+## 2.156.0 (2026-09-23)
+
+### 🩹 Fixes
+
+- **crud,shared:** type the third-party modules the way a consumer sees them ([#80](https://github.com/emiljuchnikowski/smartsoft001/pull/80))
+
+### ❤️ Thank You
+
+- Claude Fable 5.1
+- Emil Juchnikowski
+
 ## 2.155.0 (2026-09-23)
 
 ### 🚀 Features

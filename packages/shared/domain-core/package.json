@@ -3,10 +3,10 @@
   "type": "commonjs",
   "dependencies": {
     "rxjs": "^7.8.1",
-    "@smartsoft001/models": "2.155.0",
-    "@smartsoft001/users": "2.155.0"
+    "@smartsoft001/models": "2.156.0",
+    "@smartsoft001/users": "2.156.0"
   },
-  "version": "2.155.0",
+  "version": "2.156.0",
   "description": "Storage-agnostic domain contracts: abstract repositories and unit of work, composable specifications, and the two domain errors the HTTP layer maps to status codes.",
   "publishConfig": {
     "access": "public"
