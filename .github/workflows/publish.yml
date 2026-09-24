@@ -15,6 +15,8 @@ jobs:
   main:
     if: github.repository_owner == 'emiljuchnikowski'
     runs-on: ubuntu-24.04
+    outputs:
+      version: ${{ steps.package.outputs.version }}
     steps:
       # A publish run releases main, not the commit that triggered it. The
       # concurrency group serialises the runs, so by the time a queued run
@@ -145,6 +147,62 @@ jobs:
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # The starter repository is the example application as something to clone,
+  # generated from docs/examples/app and pinned to the release just cut, so
+  # that it cannot drift from the framework. The job is gated on the
+  # STARTER_REPOSITORY repository variable (for example
+  # `emiljuchnikowski/smartsoft001-starter`) because a fork, or this
+  # repository before the variable is set, has nowhere to push to and must
+  # still release. STARTER_DEPLOY_TOKEN is a token with write access to that
+  # repository and is used only at push time. Marking the repository as a
+  # template, which puts "Use this template" on its page, is a one-time
+  # setting in its GitHub settings, not something this job can do.
+  starter:
+    needs: [main]
+    if: needs.main.result == 'success' && vars.STARTER_REPOSITORY != ''
+    runs-on: ubuntu-24.04
+    steps:
+      # The tag, not main: the write-back to main can be rejected when main
+      # moved, but the tag is always pushed, and it is the release the
+      # packages on npm were built from.
+      - uses: actions/checkout@v7
+        with:
+          ref: refs/tags/v${{ needs.main.outputs.version }}
+      # The two scripts below need Node and nothing from node_modules: the
+      # starter installs its own dependencies into a scratch directory.
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '26.5.1'
+      - name: Generate the starter from the example application
+        run: npm run build:starter -- --version "${{ needs.main.outputs.version }}" --target "$RUNNER_TEMP/starter"
+      # A clean clone of the generated commit has to install from the
+      # lockfile, build and test on its own. If it does not, nothing is pushed
+      # and the release fails here, with the packages already on npm.
+      - name: Check the starter from a clean clone
+        run: npm run verify:starter -- "$RUNNER_TEMP/starter"
+      # The generated repository has one commit on an unrelated history. To
+      # keep one commit per release on the starter's main, the release commit
+      # is re-parented on top of the current origin/main: `git reset --soft`
+      # moves HEAD there and leaves the index, which is the generated tree, so
+      # the new commit carries exactly that tree. An empty repository has no
+      # main to fetch, and the generated commit is pushed as it is.
+      - name: Push the release to the starter repository
+        working-directory: ${{ runner.temp }}/starter
+        env:
+          STARTER_REPOSITORY: ${{ vars.STARTER_REPOSITORY }}
+          STARTER_DEPLOY_TOKEN: ${{ secrets.STARTER_DEPLOY_TOKEN }}
+          VERSION: ${{ needs.main.outputs.version }}
+        run: |
+          git remote add origin "https://x-access-token:${STARTER_DEPLOY_TOKEN}@github.com/${STARTER_REPOSITORY}.git"
+          if git fetch origin main; then
+            git reset --soft origin/main
+            git -c user.name="smartsoft001 release" -c user.email="noreply@github.com" \
+              commit --quiet -m "chore: release ${VERSION}"
+          else
+            echo "the starter repository is empty; pushing the first release"
+          fi
+          git push origin main
 
   refresh-usage:
     needs: [main]
