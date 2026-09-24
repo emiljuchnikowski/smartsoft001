@@ -1,3 +1,14 @@
+## 2.162.0 (2026-09-24)
+
+### 🩹 Fixes
+
+- **release:** publish from the current main, not from the trigger commit ([#88](https://github.com/emiljuchnikowski/smartsoft001/pull/88))
+
+### ❤️ Thank You
+
+- Claude Fable 5.1
+- Emil Juchnikowski
+
 ## 2.160.0 (2026-09-23)
 
 This was a version bump only, there were no code changes.
