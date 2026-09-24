@@ -227,3 +227,72 @@ describe('nx release: the current version comes from git, not from a write-back'
     );
   });
 });
+
+/**
+ * The starter repository is generated from the example application on every
+ * release and pushed by a job of its own. That job must run after the
+ * release, prove the generated starter installs and works from a clean clone
+ * before it pushes anything, and stay out of the way on a checkout that has
+ * no starter repository to push to.
+ */
+describe('publish: the starter is generated, verified and pushed by its own job', () => {
+  const workflow = fs.readFileSync(
+    path.join(repoRoot, '.github/workflows/publish.yml'),
+    'utf8',
+  );
+  const start = workflow.indexOf('\n  starter:\n');
+  const job = workflow.slice(
+    start,
+    workflow.indexOf('\n  refresh-usage:\n', start),
+  );
+
+  it('should have a starter job that needs the release job', () => {
+    assert.ok(start > 0, 'publish.yml needs a "starter" job');
+    assert.match(job, /needs: \[main\]/);
+  });
+
+  it('should be gated on the STARTER_REPOSITORY variable', () => {
+    assert.match(
+      job,
+      /if: needs\.main\.result == 'success' && vars\.STARTER_REPOSITORY != ''/,
+    );
+  });
+
+  it('should check out the release tag from the version main exposes', () => {
+    assert.match(
+      workflow,
+      /outputs:\n\s+version: \$\{\{ steps\.package\.outputs\.version \}\}/,
+    );
+    assert.match(
+      job,
+      /ref: refs\/tags\/v\$\{\{ needs\.main\.outputs\.version \}\}/,
+    );
+  });
+
+  it('should verify the starter from a clean clone before any push', () => {
+    const build = job.indexOf('npm run build:starter');
+    const verify = job.indexOf('npm run verify:starter');
+    const push = job.indexOf('git push');
+
+    assert.ok(build > 0, 'the starter job must run "npm run build:starter"');
+    assert.ok(verify > 0, 'the starter job must run "npm run verify:starter"');
+    assert.ok(push > 0, 'the starter job must push the starter');
+    assert.ok(
+      build < verify && verify < push,
+      'the starter is built, then verified, then pushed',
+    );
+
+    const scripts = readJson('package.json').scripts;
+
+    assert.match(scripts['build:starter'], /build-starter\.mjs/);
+    assert.match(scripts['verify:starter'], /verify-starter\.mjs/);
+  });
+
+  it('should push with the deploy token and never force', () => {
+    assert.match(job, /x-access-token:\$\{STARTER_DEPLOY_TOKEN\}/);
+    assert.ok(
+      !/git push[^\n]*--force/.test(job),
+      'the starter push must not be forced: a rejected push is the signal that the history diverged',
+    );
+  });
+});
