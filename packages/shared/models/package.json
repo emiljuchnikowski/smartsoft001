@@ -2,10 +2,10 @@
   "name": "@smartsoft001/models",
   "type": "commonjs",
   "dependencies": {
-    "@smartsoft001/utils": "2.163.0",
+    "@smartsoft001/utils": "2.164.0",
     "reflect-metadata": "^0.2.1"
   },
-  "version": "2.163.0",
+  "version": "2.164.0",
   "description": "Decorators that record what an entity looks like, and the readers that let generic code build forms, lists and payloads from that description.",
   "publishConfig": {
     "access": "public"
