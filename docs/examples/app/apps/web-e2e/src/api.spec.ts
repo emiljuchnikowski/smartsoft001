@@ -1,6 +1,6 @@
 import { expect, test } from 'playwright/test';
 
-import { accessToken, API_URL } from './support/app';
+import { accessToken, API_URL, demo } from './support/app';
 
 /**
  * The API on its own: the model's `create: { required: true }` on `title` is
@@ -8,6 +8,8 @@ import { accessToken, API_URL } from './support/app';
  * framework's `AppExceptionFilter` maps that `DomainValidationError` to 400.
  */
 test.describe('notes API', () => {
+  test.skip(demo, 'the hosted demo has no API to call directly');
+
   test('rejects a note without a title with 400', async ({ request }) => {
     const token = await accessToken(request);
 

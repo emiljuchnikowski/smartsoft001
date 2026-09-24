@@ -66,7 +66,7 @@ The CRUD screens need a few things at the root of the application, and this is t
 
 {% snippet file="app/apps/web/src/app/app.config.ts" region="providers" /%}
 
-The feature registers its own reducer and effects when it loads, so `provideStore` and `provideEffects` have to exist before it. `SharedModule` brings the built-in translations and `NgrxSharedModule` connects the store the reducers are added to. `MODEL_VALIDATORS_PROVIDER` is asked for extra validators per field and has no default, so an application without custom rules still registers it and hands back the validators the field metadata already implies. The HTTP client is configured with interceptors from dependency injection, for a reason explained under [Login](#login).
+The feature registers its own reducer and effects when it loads, so `provideStore` and `provideEffects` have to exist before it. `SharedModule` brings the built-in translations and `NgrxSharedModule` connects the store the reducers are added to. `MODEL_VALIDATORS_PROVIDER` is asked for extra validators per field and has no default, so an application without custom rules still registers it and hands back the validators the field metadata already implies. The HTTP client is configured with interceptors from dependency injection, for a reason explained under [Login](#login). `ROUTER_FEATURES` and `IN_MEMORY_API_PROVIDERS` come from the two files the `demo` build replaces, as described under [Try it hosted](#try-it-hosted); in every other build they are the scrolling feature and an empty list.
 
 ### The notes feature
 
@@ -133,6 +133,14 @@ The Jest suites cover the model, the API configuration and seed, and the login s
 The Playwright suite drives the real stack: it builds and starts the API against MongoDB on `localhost:27017`, starts the dev server, and walks through login, the list with its confirm dialog, the item page and the API validation. The pull request workflow runs it with a MongoDB service.
 
 {% snippet file="app/run.sh" region="e2e" /%}
+
+---
+
+## Try it hosted
+
+The frontend is also published with this site, at [https://emiljuchnikowski.github.io/smartsoft001/demo/](https://emiljuchnikowski.github.io/smartsoft001/demo/). Sign in with the same `admin@example.com` and `change-me`, and click through the list, the form and the item page.
+
+Be clear about what you are looking at. GitHub Pages serves files only, so the demo does not run the API above. It runs against an in-memory double of the API that lives next to the application, in `apps/web/src/app/in-memory`: an HTTP interceptor that answers the requests the frontend makes, with the status codes and bodies the real API sends, and keeps the notes in the storage of your browser tab. Your notes never leave the browser, and a new tab starts from the seed again. Only the `demo` build registers the double, and the real backend is the `docker compose up` above. The Docs workflow runs the Playwright suite of this page against the hosted demo after every deploy.
 
 ---
 

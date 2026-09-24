@@ -7,12 +7,13 @@ import {
   noteRow,
   signInFast,
   uniqueTitle,
+  visit,
 } from './support/app';
 
 test.describe('notes list', () => {
   test.beforeEach(async ({ page }) => {
     await signInFast(page);
-    await page.goto('/notes');
+    await visit(page, '/notes');
   });
 
   test('shows the page title and the add button', async ({ page }) => {

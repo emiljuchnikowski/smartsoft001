@@ -43,6 +43,24 @@ seeded user, copy `.env.example` to `.env` next to `docker-compose.yml`; Compose
 the values to the container. Without Docker, start MongoDB yourself and run the API with the same
 variables in the shell: `npx nx serve docs-examples-app-api`.
 
+## The hosted demo
+
+The frontend is also published with the documentation site, at
+https://emiljuchnikowski.github.io/smartsoft001/demo/. GitHub Pages serves files only, so that copy
+is the `demo` build configuration: base href `/smartsoft001/demo/`, hash routing (Pages has no SPA
+fallback under `demo/`, its 404 page belongs to the docs) and, through `fileReplacements`, an
+in-memory double of the API from `apps/web/src/app/in-memory/`. The double is an `HttpInterceptor`
+registered under `HTTP_INTERCEPTORS` like the auth one; it answers only the requests the frontend
+makes (`POST /api/token` for the seeded credentials, and the list, item, create, update and delete
+calls under `/api/notes`) with the status codes and bodies the real API sends, and keeps the notes in
+the browser tab's `sessionStorage`. It is a test double, not a second backend, and the development
+and production builds do not contain it. The build writes to
+`dist/docs/examples/app/apps/web-demo/smartsoft001/demo`, the path the demo is served from, so
+`npx nx run docs-examples-app-web:serve-static:demo` serves it at
+`http://localhost:4200/smartsoft001/demo/`, and `E2E_BASE_URL=http://localhost:4200/smartsoft001/demo/`
+points the Playwright suite at it without starting the stack. The Docs workflow runs that suite
+against the deployed demo after every deploy.
+
 ## What is where
 
 | Path                                        | What it is                                                                                                                    |
@@ -55,6 +73,7 @@ variables in the shell: `npx nx serve docs-examples-app-api`.
 | `apps/web/src/app/notes/notes.config.ts`    | The `CrudFullConfig` that says what the notes screens can do.                                                                 |
 | `apps/web/src/app/notes/notes.module.ts`    | `CrudModule.forFeature({ routing: true })`: the list, add and item routes.                                                    |
 | `apps/web/src/app/auth/`                    | The login page on `<smart-sign-in-form>`, the login service, the route guard and the interceptor that sends the token.        |
+| `apps/web/src/app/in-memory/`               | The in-memory double of the API that the `demo` build registers instead of talking to a server.                              |
 | `apps/web-e2e/src/`                         | Playwright: login, list, item page, against the running stack.                                                                |
 | `docker-compose.yml`, `Dockerfile`          | MongoDB plus the API built from the monorepo sources.                                                                         |
 | `package.json`                              | What a standalone copy of the app installs. Inside the monorepo the framework resolves through the workspace aliases instead. |

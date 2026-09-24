@@ -11,6 +11,10 @@
 # copied into the static export under `storybook/<project>`, where the
 # `{% storybook %}` embeds of the component pages point; every embedded story
 # id is verified against the built `index.json` before the upload.
+# The example application's frontend is published under `demo/` as its `demo`
+# build, which runs against an in-memory double of the API because Pages
+# serves files only; after the deploy, the `verify-demo` job drives the live
+# demo with the application's Playwright suite.
 # The site deploys after a successful `Publish` run so that the installation
 # smoke test and the documented snippets match what is actually on npm. A
 # failed `Publish` therefore also blocks the docs deploy; `workflow_dispatch`
@@ -40,6 +44,8 @@ jobs:
       (github.event_name == 'workflow_dispatch' ||
       github.event.workflow_run.conclusion == 'success')
     runs-on: ubuntu-24.04
+    outputs:
+      demo-index-sha: ${{ steps.demo.outputs.index-sha }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -79,6 +85,21 @@ jobs:
           mkdir -p docs/site/out/storybook
           cp -r dist/storybook/angular docs/site/out/storybook/angular
           cp -r dist/storybook/crud-shell-angular docs/site/out/storybook/crud-shell-angular
+      - name: Publish the example application's demo next to the site
+        id: demo
+        # Pages serves files only, so the demo is the `demo` build of the
+        # example app's frontend: base href /smartsoft001/demo/, hash routing
+        # and an in-memory double of the API (see docs/examples/app/README.md).
+        # The build writes it under smartsoft001/demo, the path it is served
+        # from, and the copy comes after `next build` for the same reason as
+        # the Storybooks. The hash of index.html tells `verify-demo` when
+        # Pages serves this build.
+        run: |
+          npx nx run docs-examples-app-web:build:demo
+          cp -r dist/docs/examples/app/apps/web-demo/smartsoft001/demo docs/site/out/demo
+          echo "index-sha=$(sha256sum docs/site/out/demo/index.html | cut -d ' ' -f 1)" >> "$GITHUB_OUTPUT"
+        env:
+          NX_CLOUD_DISTRIBUTED_EXECUTION: false
       - name: Verify every embedded story exists
         run: npx nx run docs:verify-storybook
         env:
@@ -100,3 +121,51 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  verify-demo:
+    # The live demo, driven by the Playwright suite the pull request workflow
+    # runs against the real stack, pointed at Pages (E2E_BASE_URL makes the
+    # suite start no server and skip the API-only specs). Pages can keep
+    # serving the previous deployment for a while after `deploy-pages`
+    # returns, so the job first waits until the served index.html is the one
+    # the build job produced. Output hashing makes that file differ whenever
+    # the demo changed; when it did not, the previous deployment is the same
+    # demo and the wait ends at once.
+    needs: [build, deploy]
+    runs-on: ubuntu-24.04
+    env:
+      DEMO_URL: https://emiljuchnikowski.github.io/smartsoft001/demo/
+    steps:
+      - uses: actions/checkout@v7
+      - name: Load & cache dependencies
+        uses: ./.github/actions/cached-deps
+        with:
+          node-version: '26.5.1'
+      - name: Resolve Playwright version
+        id: playwright
+        run: echo "version=$(node -p "require('playwright/package.json').version")" >> "$GITHUB_OUTPUT"
+      - name: Cache Playwright browsers
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ steps.playwright.outputs.version }}
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Wait until Pages serves this build of the demo
+        run: |
+          expected='${{ needs.build.outputs.demo-index-sha }}'
+          # Up to 15 minutes: Pages caches a file for 10 minutes at its edge.
+          for attempt in $(seq 1 60); do
+            served="$(curl -fsSL "${DEMO_URL}index.html" | sha256sum | cut -d ' ' -f 1)"
+            if [ "$served" = "$expected" ]; then
+              echo "Pages serves this build (attempt $attempt)."
+              exit 0
+            fi
+            sleep 15
+          done
+          echo "::error::Pages still serves another build of the demo after 15 minutes (expected index.html $expected)."
+          exit 1
+      - name: Run the Playwright suite against the deployed demo
+        run: npx playwright test --config docs/examples/app/apps/web-e2e/playwright.config.ts
+        env:
+          E2E_BASE_URL: ${{ env.DEMO_URL }}

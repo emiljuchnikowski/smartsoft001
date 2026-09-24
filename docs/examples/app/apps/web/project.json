@@ -65,6 +65,36 @@
           ],
           "outputHashing": "all"
         },
+        "demo": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "3mb",
+              "maximumError": "5mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "8kb",
+              "maximumError": "16kb"
+            }
+          ],
+          "outputHashing": "all",
+          "baseHref": "/smartsoft001/demo/",
+          "outputPath": {
+            "base": "dist/docs/examples/app/apps/web-demo/smartsoft001",
+            "browser": "demo"
+          },
+          "fileReplacements": [
+            {
+              "replace": "docs/examples/app/apps/web/src/app/in-memory/in-memory-api.providers.ts",
+              "with": "docs/examples/app/apps/web/src/app/in-memory/in-memory-api.providers.demo.ts"
+            },
+            {
+              "replace": "docs/examples/app/apps/web/src/app/router.features.ts",
+              "with": "docs/examples/app/apps/web/src/app/router.features.demo.ts"
+            }
+          ]
+        },
         "development": {
           "optimization": false,
           "extractLicenses": false,
@@ -115,6 +145,13 @@
         "buildTarget": "docs-examples-app-web:build",
         "staticFilePath": "dist/docs/examples/app/apps/web/browser",
         "spa": true
+      },
+      "configurations": {
+        "demo": {
+          "buildTarget": "docs-examples-app-web:build:demo",
+          "staticFilePath": "dist/docs/examples/app/apps/web-demo",
+          "spa": false
+        }
       }
     }
   }

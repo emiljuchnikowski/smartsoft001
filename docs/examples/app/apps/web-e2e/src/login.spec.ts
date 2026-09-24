@@ -1,6 +1,6 @@
 import { expect, test } from 'playwright/test';
 
-import { credentials, signIn, submitSignInForm } from './support/app';
+import { credentials, signIn, submitSignInForm, visit } from './support/app';
 
 /** Deliberately not the seeded password, so the API rejects the grant. */
 const INVALID_PASSWORD = 'not-the-seeded-password';
@@ -9,7 +9,7 @@ test.describe('login', () => {
   test('sends an anonymous visitor from /notes to the login page', async ({
     page,
   }) => {
-    await page.goto('/notes');
+    await visit(page, '/notes');
 
     await expect(page).toHaveURL(/\/login$/);
     await expect(page.locator('#smart-sign-in-form-email')).toBeVisible();
