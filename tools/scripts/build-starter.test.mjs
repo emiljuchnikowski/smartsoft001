@@ -2,13 +2,14 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { after, describe, test } from 'node:test';
+import { after, describe, it, test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
 import {
   buildStarter,
   leftovers,
   parseArgs,
+  releasePackages,
   renameProjects,
   starterCompose,
   starterDockerfile,
@@ -20,6 +21,7 @@ import {
   starterWorkflow,
   stripMonorepoPaths,
   stripRegions,
+  waitForRelease,
 } from './build-starter.mjs';
 
 const repoRoot = path.resolve(
@@ -445,4 +447,81 @@ describe('buildStarter', () => {
   });
 
   after(() => fs.rmSync(root, { recursive: true, force: true }));
+});
+
+describe('build-starter: waiting for the release on the registry', () => {
+  const manifests = {
+    '@smartsoft001/full-stack@1.0.0': {
+      dependencies: {
+        '@smartsoft001/core': '1.0.0',
+        '@smartsoft001/angular-stack': '1.0.0',
+      },
+      version: '1.0.0',
+    },
+    '@smartsoft001/core@1.0.0': {
+      dependencies: { tslib: '^2' },
+      version: '1.0.0',
+    },
+    '@smartsoft001/angular-stack@1.0.0': {
+      dependencies: { '@smartsoft001/angular': '1.0.0' },
+      version: '1.0.0',
+    },
+    '@smartsoft001/angular@1.0.0': { dependencies: {}, version: '1.0.0' },
+  };
+
+  function viewFrom(available) {
+    return (spec, field) => {
+      if (!available.has(spec)) throw new Error(`npm error code E404 ${spec}`);
+
+      return manifests[spec][field];
+    };
+  }
+
+  it('should list the framework packages under the stack, transitively', () => {
+    const view = viewFrom(new Set(Object.keys(manifests)));
+
+    assert.deepEqual(releasePackages('1.0.0', view), [
+      '@smartsoft001/angular',
+      '@smartsoft001/angular-stack',
+      '@smartsoft001/core',
+      '@smartsoft001/full-stack',
+    ]);
+  });
+
+  it('should return as soon as every package resolves', () => {
+    const view = viewFrom(new Set(Object.keys(manifests)));
+    const naps = [];
+
+    waitForRelease('1.0.0', { view, sleep: (ms) => naps.push(ms) });
+
+    assert.deepEqual(naps, []);
+  });
+
+  it('should wait for a package that the registry does not serve yet', () => {
+    const available = new Set(
+      Object.keys(manifests).filter(
+        (spec) => !spec.startsWith('@smartsoft001/angular@'),
+      ),
+    );
+    const naps = [];
+    const sleep = (ms) => {
+      naps.push(ms);
+      // The missing package shows up after the first nap.
+      available.add('@smartsoft001/angular@1.0.0');
+    };
+
+    waitForRelease('1.0.0', { view: viewFrom(available), sleep, delayMs: 5 });
+
+    assert.deepEqual(naps, [5]);
+  });
+
+  it('should give up after the attempts and name what is missing', () => {
+    const view = viewFrom(new Set());
+
+    assert.throws(
+      () =>
+        waitForRelease('1.0.0', { view, sleep: () => undefined, attempts: 2 }),
+      /did not reach the registry in time; still missing: @smartsoft001\/full-stack/,
+    );
+  });
 });
