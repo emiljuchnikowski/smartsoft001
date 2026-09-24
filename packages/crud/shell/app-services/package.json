@@ -1,6 +1,6 @@
 {
   "name": "@smartsoft001/crud-shell-app-services",
-  "version": "2.162.0",
+  "version": "2.163.0",
   "type": "commonjs",
   "main": "./src/index.js",
   "typings": "./src/index.d.ts",
@@ -30,13 +30,13 @@
   },
   "peerDependencies": {
     "@nestjs/common": "^11.1.5",
-    "@smartsoft001/crud-domain": "2.162.0",
-    "@smartsoft001/crud-shell-dtos": "2.162.0",
-    "@smartsoft001/domain-core": "2.162.0",
-    "@smartsoft001/models": "2.162.0",
-    "@smartsoft001/nestjs": "2.162.0",
-    "@smartsoft001/users": "2.162.0",
-    "@smartsoft001/utils": "2.162.0",
+    "@smartsoft001/crud-domain": "2.163.0",
+    "@smartsoft001/crud-shell-dtos": "2.163.0",
+    "@smartsoft001/domain-core": "2.163.0",
+    "@smartsoft001/models": "2.163.0",
+    "@smartsoft001/nestjs": "2.163.0",
+    "@smartsoft001/users": "2.163.0",
+    "@smartsoft001/utils": "2.163.0",
     "rxjs": "^7.8.1"
   }
 }

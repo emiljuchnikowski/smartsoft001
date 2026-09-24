@@ -1,6 +1,6 @@
 {
   "name": "@smartsoft001/utils",
-  "version": "2.162.0",
+  "version": "2.163.0",
   "description": "Framework-free static helpers for identifiers, Polish document validation, arrays, objects, slugs and in-memory specification checks.",
   "publishConfig": {
     "access": "public"
