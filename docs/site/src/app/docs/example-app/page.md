@@ -144,6 +144,12 @@ Be clear about what you are looking at. GitHub Pages serves files only, so the d
 
 ---
 
+## Start from the template
+
+The starter repository at `https://github.com/emiljuchnikowski/smartsoft001-starter` is this application as a workspace of its own, with the framework installed from npm instead of resolved through the workspace aliases. It is generated from `docs/examples/app` on every release, pinned to the `@smartsoft001` packages of that release, and installed, built and tested from a clean clone before it is pushed, so it never drifts from the framework. Use "Use this template" on GitHub to create a repository of your own, or clone it and run `npm install` followed by `./run.sh up`.
+
+---
+
 ## Where next
 
 - [Architecture](/docs/architecture) explains the layers this application is built on and follows one entity from its decorators to a screen.

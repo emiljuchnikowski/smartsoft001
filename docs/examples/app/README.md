@@ -7,7 +7,10 @@ still uses the framework end to end, and it lives in this repository so that eve
 framework is tried on it. It is also the first consumer of every release: before anything reaches
 npm, the `Publish` workflow installs a standalone copy of the app from the packed tarballs, builds
 and tests it, then migrates the same copy from the previous version and does it again. The same
-two checks run locally with `npm run verify:example-app`.
+two checks run locally with `npm run verify:example-app`. The starter repository a newcomer clones,
+`smartsoft001-starter`, is generated from this app by the same workflow on every release
+(`npm run build:starter`), so it is this app on the published packages rather than a copy to keep
+in sync by hand.
 
 ## Prerequisites
 
