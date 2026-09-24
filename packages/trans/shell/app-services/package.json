@@ -1,6 +1,6 @@
 {
   "name": "@smartsoft001/trans-shell-app-services",
-  "version": "2.164.0",
+  "version": "2.165.0",
   "type": "commonjs",
   "main": "./src/index.js",
   "typings": "./src/index.d.ts",
@@ -22,12 +22,12 @@
     "@nestjs/axios": "^4.0.1",
     "@nestjs/common": "^11.1.5",
     "@nestjs/core": "^11.2.1",
-    "@smartsoft001/domain-core": "2.164.0",
-    "@smartsoft001/paynow": "2.164.0",
-    "@smartsoft001/paypal": "2.164.0",
-    "@smartsoft001/payu": "2.164.0",
-    "@smartsoft001/revolut": "2.164.0",
-    "@smartsoft001/trans-domain": "2.164.0",
+    "@smartsoft001/domain-core": "2.165.0",
+    "@smartsoft001/paynow": "2.165.0",
+    "@smartsoft001/paypal": "2.165.0",
+    "@smartsoft001/payu": "2.165.0",
+    "@smartsoft001/revolut": "2.165.0",
+    "@smartsoft001/trans-domain": "2.165.0",
     "rxjs": "^7.8.1"
   }
 }
