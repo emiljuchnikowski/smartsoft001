@@ -154,8 +154,11 @@ jobs:
   # STARTER_REPOSITORY repository variable (for example
   # `emiljuchnikowski/smartsoft001-starter`) because a fork, or this
   # repository before the variable is set, has nowhere to push to and must
-  # still release. STARTER_DEPLOY_TOKEN is a token with write access to that
-  # repository and is used only at push time. Marking the repository as a
+  # still release. STARTER_DEPLOY_TOKEN is a fine-grained token scoped to that
+  # repository with "Contents: read and write" and "Workflows: read and
+  # write"; the second one is easy to miss, and without it GitHub rejects
+  # the push because the starter carries its own .github/workflows/ci.yml.
+  # The token is used only at push time. Marking the repository as a
   # template, which puts "Use this template" on its page, is a one-time
   # setting in its GitHub settings, not something this job can do.
   starter:
