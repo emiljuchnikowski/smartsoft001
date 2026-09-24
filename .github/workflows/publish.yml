@@ -16,8 +16,17 @@ jobs:
     if: github.repository_owner == 'emiljuchnikowski'
     runs-on: ubuntu-24.04
     steps:
+      # A publish run releases main, not the commit that triggered it. The
+      # concurrency group serialises the runs, so by the time a queued run
+      # starts, the previous run has written its release commit back to main.
+      # Checking out the trigger commit instead starts from before that
+      # write-back: the version still resolves correctly from the tag, but the
+      # new release commit then changes the same manifest lines the previous
+      # write-back changed, the rebase below conflicts, and the write-back is
+      # rejected (v2.161.0, FRA-391).
       - uses: actions/checkout@v7
         with:
+          ref: main
           fetch-depth: 0
       - name: run trivy vulnerability scanner in repo mode
         uses: aquasecurity/trivy-action@master
