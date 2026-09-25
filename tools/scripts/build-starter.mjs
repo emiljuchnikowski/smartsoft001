@@ -470,6 +470,85 @@ function run(command, args, cwd) {
   execFileSync(command, args, { cwd, stdio: 'inherit' });
 }
 
+/** `npm view <spec> <field>`, parsed; throws when the registry has no such version. */
+function npmView(spec, field) {
+  const output = execFileSync('npm', ['view', spec, field, '--json'], {
+    stdio: 'pipe',
+  }).toString();
+
+  return output.trim() ? JSON.parse(output) : undefined;
+}
+
+function sleepSync(ms) {
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+}
+
+const STACK = '@smartsoft001/full-stack';
+const SCOPE = '@smartsoft001/';
+
+/**
+ * The framework packages the starter installs, read from the registry's own
+ * manifests: the stack and everything under it, transitively. Throws when a
+ * manifest is not there yet, which is how the wait below detects a release
+ * that has not finished propagating.
+ */
+export function releasePackages(version, view = npmView) {
+  const names = new Set();
+  const pending = [STACK];
+
+  while (pending.length) {
+    const name = pending.pop();
+
+    if (names.has(name)) continue;
+    names.add(name);
+
+    const dependencies = view(`${name}@${version}`, 'dependencies') ?? {};
+
+    for (const dependency of Object.keys(dependencies)) {
+      if (dependency.startsWith(SCOPE)) pending.push(dependency);
+    }
+  }
+
+  return [...names].sort();
+}
+
+/**
+ * Waits until every package of the release resolves from the registry.
+ *
+ * The starter job runs seconds after `nx-release-publish`, and the registry
+ * is not consistent that quickly: on 2.165.0 the install saw
+ * `@smartsoft001/angular@undefined` and failed, although the version was on
+ * npm a minute later. Polling the manifests first turns that into a wait
+ * instead of a red release.
+ */
+export function waitForRelease(
+  version,
+  { attempts = 30, delayMs = 20_000, view = npmView, sleep = sleepSync } = {},
+) {
+  let missing = [STACK];
+
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    try {
+      missing = releasePackages(version, view).filter(
+        (name) => view(`${name}@${version}`, 'version') !== version,
+      );
+    } catch (error) {
+      missing = [`${STACK} (${error.message.split('\n')[0]})`];
+    }
+
+    if (!missing.length) return;
+
+    console.log(
+      `waiting for ${version} on the registry (${attempt}/${attempts}): ${missing.join(', ')}`,
+    );
+    sleep(delayMs);
+  }
+
+  throw new Error(
+    `${version} did not reach the registry in time; still missing: ${missing.join(', ')}`,
+  );
+}
+
 /**
  * One commit on `main` with the release identity, so that a clone of the
  * directory is a clone of the starter and the workflow can push it. Signing
@@ -563,7 +642,10 @@ export function buildStarter({
     );
   }
 
-  if (install) run('npm', ['install', '--no-audit', '--no-fund'], target);
+  if (install) {
+    waitForRelease(version);
+    run('npm', ['install', '--no-audit', '--no-fund'], target);
+  }
   if (git) commit(target, version);
 }
 
