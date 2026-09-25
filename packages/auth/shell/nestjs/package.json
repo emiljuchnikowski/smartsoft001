@@ -1,6 +1,6 @@
 {
   "name": "@smartsoft001/auth-shell-nestjs",
-  "version": "2.165.0",
+  "version": "2.166.0",
   "type": "commonjs",
   "main": "./src/index.js",
   "typings": "./src/index.d.ts",
@@ -25,10 +25,10 @@
     "@nestjs/jwt": "^11.0.0",
     "@nestjs/passport": "^11.0.5",
     "@nestjs/typeorm": "^11.0.0",
-    "@smartsoft001/auth-domain": "2.165.0",
-    "@smartsoft001/auth-shell-app-services": "2.165.0",
-    "@smartsoft001/fb": "2.165.0",
-    "@smartsoft001/google": "2.165.0",
+    "@smartsoft001/auth-domain": "2.166.0",
+    "@smartsoft001/auth-shell-app-services": "2.166.0",
+    "@smartsoft001/fb": "2.166.0",
+    "@smartsoft001/google": "2.166.0",
     "express": "^5.2.1"
   }
 }

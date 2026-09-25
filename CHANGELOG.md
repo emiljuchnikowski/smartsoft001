@@ -1,3 +1,14 @@
+## 2.166.0 (2026-09-25)
+
+### 🩹 Fixes
+
+- **nx:** wait for the release on the registry before installing the starter ([#91](https://github.com/emiljuchnikowski/smartsoft001/pull/91))
+
+### ❤️ Thank You
+
+- Claude Fable 5.1
+- Emil Juchnikowski
+
 ## 2.165.0 (2026-09-24)
 
 This was a version bump only, there were no code changes.
