@@ -1,3 +1,7 @@
+## 2.168.0 (2026-09-26)
+
+This was a version bump only, there were no code changes.
+
 ## 2.167.0 (2026-09-26)
 
 ### 🩹 Fixes
