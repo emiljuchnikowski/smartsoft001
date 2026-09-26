@@ -15,7 +15,7 @@ import {
   starterDockerfile,
   starterDockerignore,
   starterManifest,
-  starterProject,
+  starterEslintConfig,
   starterReadme,
   starterRunScript,
   starterWorkflow,
@@ -140,20 +140,21 @@ describe('stripRegions', () => {
   });
 });
 
-describe('starterProject', () => {
-  test('drops the lint target and keeps the rest', () => {
-    const project = starterProject({
-      name: 'api',
-      targets: { build: {}, lint: {}, test: {} },
-    });
+describe('starterEslintConfig', () => {
+  const config = starterEslintConfig();
 
-    assert.deepEqual(Object.keys(project.targets), ['build', 'test']);
+  test('builds on the Nx flat configs and the import plugin', () => {
+    assert.match(config, /import nx from '@nx\/eslint-plugin';/);
+    assert.match(config, /import importPlugin from 'eslint-plugin-import';/);
+    assert.match(config, /\.\.\.nx\.configs\['flat\/typescript'\]/);
   });
 
-  test('leaves a project without a lint target alone', () => {
-    const project = { name: 'x', targets: { build: {} } };
+  test('orders the framework imports after the external ones', () => {
+    assert.match(config, /pattern: '@smartsoft001\/\*\*'/);
+  });
 
-    assert.equal(starterProject(project), project);
+  test('loads nothing the starter does not install', () => {
+    assert.ok(!config.includes('storybook'));
   });
 });
 
@@ -292,8 +293,9 @@ describe('starterReadme', () => {
 describe('starterWorkflow', () => {
   const workflow = starterWorkflow();
 
-  test('installs from the lockfile, builds and tests', () => {
+  test('installs from the lockfile, lints, builds and tests', () => {
     assert.match(workflow, /npm ci/);
+    assert.match(workflow, /npx nx run-many -t lint/);
     assert.match(workflow, /npx nx run-many -t build/);
     assert.match(workflow, /npx nx run-many -t test/);
   });
@@ -385,7 +387,7 @@ describe('buildStarter', () => {
     assert.ok(!read('apps/api/src/app/users.seed.ts').includes('#region'));
   });
 
-  test('has no lint target and no project ESLint config', () => {
+  test('keeps the lint targets and the project ESLint configs', () => {
     for (const file of [
       'apps/web/project.json',
       'apps/api/project.json',
@@ -393,14 +395,22 @@ describe('buildStarter', () => {
       'libs/model/project.json',
     ]) {
       assert.equal(
-        readJson(path.join(target, file)).targets.lint,
-        undefined,
-        `${file} still has a lint target`,
+        readJson(path.join(target, file)).targets.lint.executor,
+        '@nx/eslint:lint',
+        `${file} has no lint target`,
       );
     }
 
-    assert.ok(!fs.existsSync(path.join(target, 'apps/web/eslint.config.mjs')));
-    assert.ok(!fs.existsSync(path.join(target, 'apps/api/eslint.config.mjs')));
+    for (const file of ['apps/web', 'apps/api']) {
+      assert.match(
+        read(`${file}/eslint.config.mjs`),
+        /from '\.\.\/\.\.\/eslint\.config\.mjs'/,
+      );
+    }
+  });
+
+  test('writes the root ESLint config the projects extend', () => {
+    assert.equal(read('eslint.config.mjs'), starterEslintConfig());
   });
 
   test('keeps what the standalone copy already had', () => {

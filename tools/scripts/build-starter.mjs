@@ -18,10 +18,9 @@
  *   removed. They mean nothing outside the docs.
  * - The Docker files build with the starter root as context instead of the
  *   monorepo root, and `run.sh` runs from its own directory.
- * - The `lint` targets are dropped. The app's manifest installs neither
- *   `typescript-eslint` nor `@typescript-eslint/parser` (both are optional
- *   peers of `@nx/eslint-plugin`), so no root ESLint config could parse the
- *   sources, and a target that cannot pass is worse than no target.
+ * - The project ESLint configs extend the monorepo's root config, which
+ *   also loads Storybook. The starter gets a root config of its own with the
+ *   same rules and nothing it does not install.
  * - A CI workflow, a README written for the starter, a merged `.gitignore`
  *   and a lockfile are added, and the result is committed on `main` so that
  *   `verify-starter.mjs` can clone it and the workflow can push it.
@@ -128,15 +127,55 @@ export function stripRegions(text) {
   return text.replace(/^[ \t]*(\/\/|#) #(region\b.*|endregion\b.*)\r?\n/gm, '');
 }
 
-/** The starter has no ESLint parser for its sources, so it has no lint target. */
-export function starterProject(project) {
-  if (!project.targets?.lint) return project;
-
-  const targets = { ...project.targets };
-
-  delete targets.lint;
-
-  return { ...project, targets };
+/**
+ * The monorepo's root ESLint config without Storybook: the Nx flat configs
+ * and the import order every package follows. The web and API projects extend
+ * it and add the app's own `@app/**` alias.
+ */
+export function starterEslintConfig() {
+  return [
+    "import nx from '@nx/eslint-plugin';",
+    "import importPlugin from 'eslint-plugin-import';",
+    '',
+    'export default [',
+    "  ...nx.configs['flat/base'],",
+    "  ...nx.configs['flat/typescript'],",
+    "  ...nx.configs['flat/javascript'],",
+    '  {',
+    "    ignores: ['**/dist', '**/node_modules'],",
+    '  },',
+    '  {',
+    '    plugins: {',
+    '      import: importPlugin,',
+    '    },',
+    '  },',
+    '  {',
+    "    files: ['**/*.ts', '**/*.js'],",
+    '    rules: {',
+    "      'import/order': [",
+    "        'error',",
+    '        {',
+    "          'newlines-between': 'always',",
+    "          groups: ['external', 'builtin', 'internal'],",
+    '          pathGroups: [',
+    '            {',
+    "              pattern: '@smartsoft001/**',",
+    "              group: 'external',",
+    "              position: 'after',",
+    '            },',
+    '          ],',
+    '          pathGroupsExcludedImportTypes: [],',
+    '          alphabetize: {',
+    "            order: 'asc',",
+    '            caseInsensitive: true,',
+    '          },',
+    '        },',
+    '      ],',
+    '    },',
+    '  },',
+    '];',
+    '',
+  ].join('\n');
 }
 
 /**
@@ -306,6 +345,7 @@ export function starterWorkflow() {
     '          node-version: 26',
     '          cache: npm',
     '      - run: npm ci --no-audit --no-fund',
+    '      - run: npx nx run-many -t lint',
     '      - run: npx nx run-many -t build',
     '      - name: Install Chromium for the Playwright suite',
     '        run: npx playwright install --with-deps chromium',
@@ -379,6 +419,8 @@ export function starterReadme(version) {
     '`.github/workflows/ci.yml` sets it and provides the database. `npx nx e2e web-e2e` runs the suite',
     'unconditionally.',
     '',
+    '`npx nx run-many -t lint` runs ESLint on every project, with the rules in `eslint.config.mjs`.',
+    '',
     '## What is where',
     '',
     '| Path                                     | What it is                                                                                                                |',
@@ -394,7 +436,8 @@ export function starterReadme(version) {
     '| `apps/web-e2e/src/`                      | Playwright: login, list, item page, against the running stack.                                                            |',
     '| `docker-compose.yml`, `Dockerfile`       | MongoDB plus the API built from this repository.                                                                          |',
     '| `run.sh`                                 | `up`, `web`, `test` and `e2e`: the commands above, in one script.                                                         |',
-    '| `.github/workflows/ci.yml`               | Build, Jest and the Playwright suite against a MongoDB service, on every push and pull request.                           |',
+    '| `eslint.config.mjs`                      | The ESLint rules every project extends: the Nx configs and the import order.                                              |',
+    '| `.github/workflows/ci.yml`               | Lint, build, Jest and the Playwright suite against a MongoDB service, on every push and pull request.                     |',
     '',
     '## Upgrade',
     '',
@@ -590,15 +633,6 @@ export function buildStarter({
   createStandaloneApp({ repoRoot, target, packages: { version } });
 
   for (const file of walk(target)) {
-    const base = path.basename(file);
-
-    // The project configs import a root ESLint config the starter does not
-    // have, and the lint targets that would load them go with them.
-    if (base === 'eslint.config.mjs') {
-      fs.rmSync(file);
-      continue;
-    }
-
     const buffer = fs.readFileSync(file);
 
     if (!isText(buffer)) continue;
@@ -608,8 +642,6 @@ export function buildStarter({
 
     if (REGION_EXTENSIONS.has(path.extname(file))) next = stripRegions(next);
     if (next !== text) fs.writeFileSync(file, next);
-    if (base === 'project.json')
-      writeJson(file, starterProject(readJson(file)));
   }
 
   const rewrite = (relative, transform) => {
@@ -627,6 +659,10 @@ export function buildStarter({
     starterManifest(readJson(path.join(target, 'package.json')), version),
   );
   fs.writeFileSync(path.join(target, '.gitignore'), starterIgnore());
+  fs.writeFileSync(
+    path.join(target, 'eslint.config.mjs'),
+    starterEslintConfig(),
+  );
   fs.writeFileSync(path.join(target, 'README.md'), starterReadme(version));
   fs.mkdirSync(path.join(target, '.github', 'workflows'), { recursive: true });
   fs.writeFileSync(

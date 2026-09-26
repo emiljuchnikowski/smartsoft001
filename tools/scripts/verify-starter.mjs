@@ -6,9 +6,9 @@
  * `node_modules` and one commit. That directory passing is not the proof a
  * newcomer needs: they get the commit, not the directory. So the check clones
  * the commit into a fresh temp dir, the way `git clone` of the starter
- * repository would, installs from the lockfile with `npm ci`, and runs the
- * build and the Jest suites. Same discipline as `verify:dist`: the artefact
- * is tested, not the source.
+ * repository would, installs from the lockfile with `npm ci`, and runs
+ * ESLint, the build and the Jest suites. Same discipline as `verify:dist`:
+ * the artefact is tested, not the source.
  *
  * The `Publish` workflow runs it in the `starter` job between generating the
  * starter and pushing it, and fails the push when it fails.
@@ -64,15 +64,15 @@ function main(argv) {
     heading(step);
     run('npm', ['ci', '--no-audit', '--no-fund'], clone);
 
-    step = 'build and test the starter';
+    step = 'lint, build and test the starter';
     heading(step);
     run(
       'npx',
-      ['nx', 'run-many', '-t', 'build', 'test', '--skip-nx-cache'],
+      ['nx', 'run-many', '-t', 'lint', 'build', 'test', '--skip-nx-cache'],
       clone,
     );
 
-    heading('The starter installs, builds and tests from a clean clone');
+    heading('The starter installs, lints, builds and tests from a clean clone');
     return 0;
   } catch (error) {
     console.error(`\nFAILED: ${step}`);
