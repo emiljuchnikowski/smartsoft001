@@ -1,6 +1,6 @@
 {
   "name": "@smartsoft001/paynow",
-  "version": "2.166.0",
+  "version": "2.167.0",
   "type": "commonjs",
   "main": "./src/index.js",
   "typings": "./src/index.d.ts",
@@ -25,8 +25,8 @@
     "@nestjs/axios": "^4.0.1",
     "@nestjs/common": "^11.1.5",
     "@nestjs/core": "^11.2.1",
-    "@smartsoft001/trans-domain": "2.166.0",
-    "@smartsoft001/utils": "2.166.0",
+    "@smartsoft001/trans-domain": "2.167.0",
+    "@smartsoft001/utils": "2.167.0",
     "rxjs": "^7.8.1"
   }
 }

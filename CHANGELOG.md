@@ -1,3 +1,14 @@
+## 2.167.0 (2026-09-26)
+
+### 🩹 Fixes
+
+- **github:** download the review payload into review-payload/ ([#92](https://github.com/emiljuchnikowski/smartsoft001/pull/92))
+
+### ❤️ Thank You
+
+- Claude Opus 5.5 (1M context)
+- Emil Juchnikowski
+
 ## 2.166.0 (2026-09-25)
 
 ### 🩹 Fixes
