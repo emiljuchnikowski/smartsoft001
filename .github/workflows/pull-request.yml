@@ -7,9 +7,7 @@ on:
 # Untrusted stage: runs the contributor's code (lint/test/build) and so must
 # never have access to secrets or a write-scoped token. GitHub already enforces
 # a read-only GITHUB_TOKEN and withholds secrets for fork PRs; we mirror that
-# with least-privilege permissions here. The Claude review itself runs in the
-# trusted "Claude PR Review" workflow (claude-review.yml), triggered via
-# workflow_run after this one completes.
+# with least-privilege permissions here.
 jobs:
   main:
     runs-on: ubuntu-24.04
@@ -67,18 +65,3 @@ jobs:
       # the suites compile the sources, never the artefact. Load what the build
       # produced, the way a consumer would.
       - run: npm run verify:dist
-      # Produce the diff for the review. We deliberately do NOT run Claude or
-      # post comments here (no secrets / read-only token on fork PRs). Only the
-      # diff text is handed off; the PR number is re-derived from the trusted
-      # head SHA in the review workflow, so nothing here can target another PR.
-      - name: Prepare review payload
-        run: |
-          mkdir -p review-payload
-          git diff origin/${{ github.event.pull_request.base.ref }}...HEAD > review-payload/pr.diff
-
-      - name: Upload review payload
-        uses: actions/upload-artifact@v7
-        with:
-          name: review-payload
-          path: review-payload/
-          retention-days: 1
