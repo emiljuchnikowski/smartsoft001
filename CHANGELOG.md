@@ -1,3 +1,14 @@
+## 2.169.0 (2026-09-26)
+
+### 🩹 Fixes
+
+- **nx:** lint the generated starter ([#94](https://github.com/emiljuchnikowski/smartsoft001/pull/94))
+
+### ❤️ Thank You
+
+- Claude Opus 5.5 (1M context)
+- Emil Juchnikowski
+
 ## 2.168.0 (2026-09-26)
 
 This was a version bump only, there were no code changes.
