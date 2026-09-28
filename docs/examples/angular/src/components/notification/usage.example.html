@@ -1,0 +1,13 @@
+<!-- #region usage -->
+@if (visible()) {
+  <smart-notification
+    title="Successfully saved!"
+    description="Anyone with a link can now view this file."
+    [actions]="actions"
+    [dismissible]="true"
+    [options]="options"
+    (actionClick)="onActionClick($event)"
+    (dismissed)="onDismissed()"
+  />
+}
+<!-- #endregion -->

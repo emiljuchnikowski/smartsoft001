@@ -1,0 +1,6 @@
+<!-- #region usage -->
+<smart-searchbar [options]="options" [(text)]="query" [(show)]="expanded" />
+@if (query()) {
+  <p>Results for "{{ query() }}"</p>
+}
+<!-- #endregion -->

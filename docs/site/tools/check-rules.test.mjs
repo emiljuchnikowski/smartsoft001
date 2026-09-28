@@ -22,6 +22,7 @@ import {
   rule12,
   rule13,
   rule14,
+  rule15,
   runAllRules,
   skillInventory,
   storyInventory,
@@ -1149,15 +1150,58 @@ describe('tags inside a fenced code block', () => {
   })
 })
 
+describe('rule15 (usage examples)', () => {
+  test('accepts a component with a usage template and class', () => {
+    const findings = rule15(context())
+
+    assert.ok(!findings.some((finding) => /"button"/.test(finding.message)))
+  })
+
+  test('reports a component without a usage example, naming both files', () => {
+    const finding = rule15(context()).find((item) =>
+      item.message.includes('"loader"'),
+    )
+
+    assert.equal(finding.rule, 'R15')
+    assert.equal(finding.level, 'warn')
+    assert.equal(
+      finding.message,
+      'Component "loader" has no usage example (expected ' +
+        'docs/examples/angular/src/components/loader/usage.example.html and ' +
+        'docs/examples/angular/src/components/loader/usage.example.ts)',
+    )
+  })
+
+  test('raises the level to error in strict mode', () => {
+    const findings = rule15(context({ strict: new Set(['R15']) }))
+
+    assert.ok(findings.length > 0)
+    assert.ok(findings.every((finding) => finding.level === 'error'))
+  })
+})
+
 describe('runAllRules', () => {
   test('concatenates the findings of every rule, in rule order', () => {
     const findings = runAllRules(context())
 
     assert.deepEqual(
       [...new Set(findings.map((finding) => finding.rule))],
-      ['R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'R8', 'R9', 'R12', 'R13'],
+      [
+        'R1',
+        'R2',
+        'R3',
+        'R4',
+        'R5',
+        'R6',
+        'R7',
+        'R8',
+        'R9',
+        'R12',
+        'R13',
+        'R15',
+      ],
     )
-    assert.equal(findings.length, 25)
+    assert.equal(findings.length, 27)
   })
 
   test('runs R10 after R9', () => {

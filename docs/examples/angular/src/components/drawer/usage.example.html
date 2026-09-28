@@ -1,0 +1,15 @@
+<!-- #region usage -->
+<button type="button" (click)="open.set(true)">View cart</button>
+
+<smart-drawer
+  [(open)]="open"
+  title="Shopping cart"
+  [options]="options"
+  (closed)="onClosed()"
+>
+  <ul>
+    <li>Throwback Hip Bag, $90.00</li>
+    <li>Medium Stuff Satchel, $32.00</li>
+  </ul>
+</smart-drawer>
+<!-- #endregion -->

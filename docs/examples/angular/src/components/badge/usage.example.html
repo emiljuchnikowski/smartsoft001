@@ -1,0 +1,11 @@
+<!-- #region usage -->
+@if (visible()) {
+  <smart-badge
+    [text]="text"
+    [color]="color"
+    size="sm"
+    [options]="options"
+    (removed)="onRemoved()"
+  />
+}
+<!-- #endregion -->

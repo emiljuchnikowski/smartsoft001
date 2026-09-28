@@ -224,7 +224,11 @@ describe('docs-check CLI', () => {
     assert.match(result.stdout, /ERROR R8 .*bad-pkg\/page\.md/);
     assert.match(result.stdout, /WARN R12 Package "alpha"/);
     assert.match(result.stdout, /WARN R13 docs\/components\/button\/page\.md/);
-    assert.match(result.stdout, /docs-check: 16 errors, 9 warnings/);
+    assert.match(
+      result.stdout,
+      /WARN R15 Component "card" has no usage example/,
+    );
+    assert.match(result.stdout, /docs-check: 16 errors, 11 warnings/);
   });
 
   test('exits 1 when a rule fails and prints findings as JSON with --json', () => {
@@ -232,7 +236,7 @@ describe('docs-check CLI', () => {
     const findings = JSON.parse(result.stdout);
 
     assert.equal(result.status, 1);
-    assert.equal(findings.length, 25);
+    assert.equal(findings.length, 27);
     assert.ok(findings.every((finding) => finding.rule && finding.level));
   });
 });

@@ -1,0 +1,20 @@
+<!-- #region usage -->
+<smart-multi-column-layout [options]="options()">
+  <h2>Quarterly report is ready</h2>
+  <p>The Q3 numbers are in. Open the attachment for the full breakdown.</p>
+</smart-multi-column-layout>
+
+<ng-template #headerTpl>
+  <strong>Inbox</strong>
+</ng-template>
+
+<ng-template #navTpl>
+  <a href="/inbox">Inbox</a>
+  <a href="/drafts">Drafts</a>
+  <a href="/sent">Sent</a>
+</ng-template>
+
+<ng-template #secondaryTpl>
+  <span>Storage: 4.2 GB of 15 GB used</span>
+</ng-template>
+<!-- #endregion -->

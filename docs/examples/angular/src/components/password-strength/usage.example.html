@@ -1,0 +1,13 @@
+<!-- #region usage -->
+<input
+  type="password"
+  autocomplete="new-password"
+  [value]="password()"
+  (input)="onPasswordInput($event)"
+/>
+<smart-password-strength
+  [passwordToCheck]="password()"
+  [showHint]="showHint"
+  (passwordStrength)="onPasswordStrength($event)"
+/>
+<!-- #endregion -->

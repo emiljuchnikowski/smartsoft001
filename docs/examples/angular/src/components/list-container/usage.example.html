@@ -1,0 +1,10 @@
+<!-- #region usage -->
+<smart-list-container [options]="options">
+  @for (notification of notifications; track notification.id) {
+    <div role="listitem">
+      <p>{{ notification.text }}</p>
+      <small>{{ notification.time }}</small>
+    </div>
+  }
+</smart-list-container>
+<!-- #endregion -->

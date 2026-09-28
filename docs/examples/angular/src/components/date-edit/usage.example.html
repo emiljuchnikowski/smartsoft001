@@ -1,0 +1,8 @@
+<!-- #region usage -->
+<smart-date-edit
+  variant="standard"
+  [(ngModel)]="birthDate"
+  (validChange)="onValidChange($event)"
+/>
+<p [hidden]="isValid()">Enter a valid date of birth.</p>
+<!-- #endregion -->
