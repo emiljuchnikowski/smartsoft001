@@ -38,7 +38,7 @@
 The public documentation lives at **https://emiljuchnikowski.github.io/smartsoft001/**.
 It is built from `docs/site` and deployed automatically after every successful
 `Publish` run on `main` (see `.github/workflows/docs.yml`). How to add or change
-pages is described at https://emiljuchnikowski.github.io/smartsoft001/docs/contributing/documentation/.
+pages is described in the `docs` skill, `.claude/skills/docs/SKILL.md`.
 Run it locally with:
 
 ```
@@ -209,7 +209,7 @@ Contributions are welcome! 🎉
 4. Push to the branch: git push origin feature/my-new-feature.
    Submit a pull request.
 
-For more details, see our [Contributing Guidelines](./CONTRIBUTING.md) and the [Contributing section of the documentation](https://emiljuchnikowski.github.io/smartsoft001/docs/contributing/).
+For more details, see our [Contributing Guidelines](./CONTRIBUTING.md).
 
 ## 📝 Changelog
 

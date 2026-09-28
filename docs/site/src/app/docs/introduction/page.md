@@ -44,7 +44,6 @@ Every code sample in these docs is cut from a file in the repository that is com
 - [Example application](/docs/example-app) walks through the smallest application that uses the framework end to end and shows how to run it.
 - [Architecture](/docs/architecture) explains the layers and follows one entity from its decorators to a working screen.
 - [CRUD](/docs/crud/overview) documents the family that generates the screens and the endpoints from one model.
-- [Packages](/docs/packages) documents each library on its own page.
 - [Components](/docs/components) documents every `smart-*` UI component with its API, an executed usage example and the live Storybook story.
 - [Skills](/docs/skills) describes the `smart@smartsoft` Claude Code plugin: its hooks, the skills you can invoke and the components agent.
-- [Contributing](/docs/contributing) explains the Linear-driven workflow, the repository conventions, the agents and how this documentation is kept in sync with the code.
+- [Packages](/docs/packages) documents each library on its own page.

@@ -22,9 +22,6 @@ package or component page is hand-written code, and `docs-check` fails the pull 
 an example or a region is missing. This skill walks one of those three flows end to end and finishes
 by running the same checks CI runs.
 
-The human-readable version of the same process is the site's own page,
-`docs/site/src/app/docs/contributing/documentation/page.md` — keep the two in sync when either changes.
-
 ## Usage
 
 ```text
@@ -41,11 +38,11 @@ reports as missing.
 Templates live next to the tooling, in `docs/site/tools/templates/`, and are the single source for the
 page skeletons. Do **not** copy them into this skill.
 
-| Flow        | Template                                      | Destination                                                                                                            |
-| ----------- | --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| `package`   | `docs/site/tools/templates/package-page.md`   | `docs/site/src/app/docs/packages/<alias>/page.md`                                                                      |
-| `component` | `docs/site/tools/templates/component-page.md` | `docs/site/content/components/<name>.md` (only for a component without a skill)                                        |
-| `skill`     | `docs/site/tools/templates/skill-page.md`     | `docs/site/src/app/docs/skills/<name>/page.md` (plugin) or `docs/site/src/app/docs/contributing/<name>/page.md` (repo) |
+| Flow        | Template                                      | Destination                                                                     |
+| ----------- | --------------------------------------------- | ------------------------------------------------------------------------------- |
+| `package`   | `docs/site/tools/templates/package-page.md`   | `docs/site/src/app/docs/packages/<alias>/page.md`                               |
+| `component` | `docs/site/tools/templates/component-page.md` | `docs/site/content/components/<name>.md` (only for a component without a skill) |
+| `skill`     | `docs/site/tools/templates/skill-page.md`     | `docs/site/src/app/docs/skills/<name>/page.md`                                  |
 
 ## Flow: package
 
@@ -112,19 +109,19 @@ export const Playground: Story = {
 
 ## Flow: skill
 
-For a skill a user can invoke. Rule R3 requires a page for every skill whose frontmatter says
-`user-invocable: true`: a plugin skill under `docs/skills/`, a repository skill under `docs/contributing/`.
+For a plugin skill a user can invoke. Rule R3 requires a page under `docs/skills/` for every skill of the
+`smart@smartsoft` plugin whose frontmatter says `user-invocable: true`. The repository's own skills in
+`.claude/skills` are tooling for working on the framework and have no page on the public site.
 
 - [ ] **1. Copy the template** to the destination from the table above.
 - [ ] **2. Set `title` and `skill` to the skill name** exactly as in the skill's own frontmatter. Rule R10
       compares them and fails on a mismatch.
-- [ ] **3. Keep the header tag** — `{% skill name="<name>" /%}` (add `source="repo"` for a repository
-      skill). It is expanded at build time from the skill's frontmatter into the description, the
+- [ ] **3. Keep the header tag** — `{% skill name="<name>" /%}`. It is expanded at build time from the skill's frontmatter into the description, the
       invocation, the allowed tools and a source link, so that part of the page cannot drift.
 - [ ] **4. Write the body** — what it does, when to use it, invocation and arguments, what it produces,
       source. Rewrite the prose, do not paste the whole SKILL.md: the page is for a person deciding
       whether to run the command.
-- [ ] **5. Link it** — from the section index (`docs/skills/page.md` or `docs/contributing/page.md`).
+- [ ] **5. Link it** — from the section index (`docs/skills/page.md`).
 - [ ] **6. Verify** — see [Verification](#verification).
 
 ## Verification
@@ -196,6 +193,5 @@ undefined (reading 'toLowerCase')` and names the page but not the line. Use `tex
 
 ## Related
 
-- `docs/site/src/app/docs/contributing/documentation/page.md` — the same process, written for people.
 - `angular-components` skill — creating or changing a component; its last step calls this skill.
 - `nx-conventions`, `test-unit` — the repository conventions the examples follow.

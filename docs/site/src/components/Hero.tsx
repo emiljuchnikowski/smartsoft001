@@ -13,7 +13,7 @@ const code = `import { Model, Field, FieldType } from '@smartsoft001/models';
 
 @Model({ name: 'user' })
 export class User {
-  @Field({ type: FieldType.text, required: true })
+  @Field({ type: FieldType.email, required: true })
   email: string;
 }`
 

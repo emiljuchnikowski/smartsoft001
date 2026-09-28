@@ -199,13 +199,12 @@ export function componentInventory(repoRoot) {
 }
 
 /**
- * Every user-invocable skill, from the plugin and from `.claude/skills`.
+ * Every user-invocable skill of the plugin. The repository's own skills in
+ * `.claude/skills` are tooling for working on the framework, not part of
+ * what it ships, so the public site does not document them.
  */
 export function skillInventory(repoRoot) {
-  const sources = [
-    { dir: PLUGIN_SKILLS_DIR, source: 'plugin' },
-    { dir: REPO_SKILLS_DIR, source: 'repo' },
-  ]
+  const sources = [{ dir: PLUGIN_SKILLS_DIR, source: 'plugin' }]
   const skills = []
 
   for (const { dir, source } of sources) {
@@ -376,17 +375,10 @@ export function rule2(ctx) {
     )
 }
 
-/** R3: every user-invocable skill has a page, per its source. */
+/** R3: every user-invocable plugin skill has a page under `docs/skills`. */
 export function rule3(ctx) {
   return skillInventory(ctx.repoRoot)
-    .map(({ name, source }) => ({
-      name,
-      page: docsPage(
-        ctx,
-        source === 'plugin' ? 'skills' : 'contributing',
-        name,
-      ),
-    }))
+    .map(({ name }) => ({ name, page: docsPage(ctx, 'skills', name) }))
     .filter(({ page }) => !fs.existsSync(page))
     .map(({ name, page }) => missingPageFinding(ctx, 'R3', 'Skill', name, page))
 }
@@ -745,10 +737,7 @@ const SKILL_DIRS = { plugin: PLUGIN_SKILLS_DIR, repo: REPO_SKILLS_DIR }
  * The directories whose pages document a skill, with the source their
  * `skill:` frontmatter resolves against.
  */
-const SKILL_PAGE_DIRS = [
-  { dir: 'docs/skills/', source: 'plugin' },
-  { dir: 'docs/contributing/', source: 'repo' },
-]
+const SKILL_PAGE_DIRS = [{ dir: 'docs/skills/', source: 'plugin' }]
 
 /**
  * The `SKILL.md` of `name` relative to the repo root, or `null` when `source`

@@ -1,5 +1,5 @@
 ---
-section: Contributing
+section: Getting started
 ---
 
 No title here.

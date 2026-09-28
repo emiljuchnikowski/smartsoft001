@@ -1,6 +1,6 @@
 ---
 title: Bad story
-section: Contributing
+section: Getting started
 ---
 
 {% storybook project="angular" story="components-button--nope" /%}

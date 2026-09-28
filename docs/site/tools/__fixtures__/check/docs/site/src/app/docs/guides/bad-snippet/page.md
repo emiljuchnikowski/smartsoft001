@@ -1,6 +1,6 @@
 ---
 title: Bad snippet
-section: Contributing
+section: Getting started
 ---
 
 {% snippet file="angular/button/missing.example.ts" region="basic" /%}
