@@ -23,10 +23,7 @@ describe('docs-examples-angular: SignInFormUsageExampleComponent', () => {
     expect(element.textContent).toContain('Continue with Google');
   });
 
-  // The output is named like the native DOM `submit` event, so the bubbling
-  // SubmitEvent from the inner <form> reaches the same (submit) binding after
-  // the typed payload. Assert on the payload call rather than the last call.
-  it('should hand the credentials to the submit handler', () => {
+  it('should hand the credentials to the submit handler once', () => {
     const onSubmit = jest.spyOn(fixture.componentInstance, 'onSubmit');
     const element = fixture.debugElement.nativeElement;
     const email: HTMLInputElement = element.querySelector(
@@ -45,6 +42,7 @@ describe('docs-examples-angular: SignInFormUsageExampleComponent', () => {
     password.dispatchEvent(new Event('input'));
     submit.click();
 
+    expect(onSubmit).toHaveBeenCalledTimes(1);
     expect(onSubmit).toHaveBeenCalledWith({
       email: 'anna@example.com',
       password: 'Sunrise#2026',
