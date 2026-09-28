@@ -11,9 +11,15 @@ nextjs:
 
 {% skill name="audit-log" /%}
 
+This command requires the [`smart@smartsoft` plugin](/docs/skills/installing-the-plugin). Install it and reload Claude Code before invoking the skill.
+
 ## What it does
 
-Every hook event of a session lands in `.claude/audit_logs/YYYYMMDD_audit.jsonl`, one JSON object per line with a timestamp, the event type, the session id and the full event payload. The skill reads the file for one day and turns it into a readable summary instead of raw JSON: the total number of events, a breakdown by event type, every action a safety hook blocked, and a chronological list of the key actions.
+The skill looks for `.claude/audit_logs/YYYYMMDD_audit.jsonl`, then turns one day's JSON objects into a readable summary: the total number of events, a breakdown by event type, blocked actions and a chronological list of key actions. Each entry contains a timestamp, event type, session id and the full hook payload.
+
+{% callout title="Current plugin limitation" %}
+The installed `audit_logger.py` writes under `${CLAUDE_PLUGIN_ROOT}/audit_logs`, rather than to the project path this skill reads. With the documented local marketplace install, that is normally `node_modules/@smartsoft001/claude-plugins/plugins/smart/audit_logs`. `/smart:audit-log` can therefore report no file even after hooks ran; this needs a plugin fix, not a different skill argument.
+{% /callout %}
 
 ## When to use it
 
@@ -28,11 +34,11 @@ Every hook event of a session lands in `.claude/audit_logs/YYYYMMDD_audit.jsonl`
 /smart:audit-log [today|yesterday|YYYYMMDD]
 ```
 
-Without an argument the skill reads today's file. `yesterday` and an explicit `YYYYMMDD` date select another day. The skill reports when no file exists for the requested date, which means no Claude Code session ran in the project that day or the plugin was not installed yet.
+Without an argument the skill reads today's project-local file. `yesterday` and an explicit `YYYYMMDD` date select another day. A missing file can mean no session ran that day, the plugin was not installed, or the hook wrote only to its current cache-relative location described above.
 
 ## What it produces
 
-A summary table in the conversation, grouped chronologically, with safety blocks and errors highlighted. Nothing is written to disk. For ad-hoc questions the log files are plain JSONL, so `grep` on `"tool_name":"Bash"`, `"event_type":"PreToolUse"` or `BLOCKED` works as well.
+A summary table in the conversation, grouped chronologically, with safety blocks and errors highlighted. The skill does not write anything. For ad-hoc questions, any log file you locate is plain JSONL, so `grep` on `"tool_name":"Bash"`, `"event_type":"PreToolUse"` or `BLOCKED` works as well.
 
 ## Source
 

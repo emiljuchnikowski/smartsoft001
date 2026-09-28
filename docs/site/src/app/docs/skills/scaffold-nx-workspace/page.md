@@ -11,6 +11,8 @@ nextjs:
 
 {% skill name="scaffold-nx-workspace" /%}
 
+This command requires the [`smart@smartsoft` plugin](/docs/skills/installing-the-plugin). Install it and reload Claude Code before invoking the skill.
+
 ## What it does
 
 Creates a new Nx monorepo the way the framework's own projects are laid out: it wraps `create-nx-workspace`, then patches the generated configuration to the conventions below. The result is a buildable empty shell with one Angular SSR application (`apps/web`) and one shared library (`libs/shared/angular`), ready for feature modules to be added later. It deliberately stops there: no feature libraries, no feature packages, no components tied to a module.
@@ -36,7 +38,7 @@ Not for adding a feature library to an existing workspace, for changing lint or 
 /smart:scaffold-nx-workspace
 ```
 
-The skill asks before every decision that shapes the workspace:
+The skill declares no positional arguments. Run it in the context of an empty target directory, or state the target folder in the prompt, and it confirms the decisions that shape the workspace:
 
 1. **Angular version.** It reads the version `@smartsoft001/angular` targets from npm and proposes it; you confirm or type another. Nx and Node are derived from it (Nx major = Angular major + 1, Node = an LTS the Angular release supports). Nothing else is pinned.
 2. **Workspace prefix.** A candidate derived from the target folder name, used in tsconfig paths, ESLint, imports and package names.
@@ -47,7 +49,7 @@ Prerequisites: nvm with npm, and an empty target directory.
 
 ## What it produces
 
-A directory with the workspace configuration (Nx, tsconfig, ESLint, Jest, Prettier, husky, commitlint, `.nvmrc`), the `apps/web` SSR shell, the `libs/shared/angular` skeleton, a `.claude` baseline for Claude Code and the toolchain dependencies in `package.json`. The last step runs the skill's own verification script and fixes what it reports until the workspace builds.
+A directory with the workspace configuration (Nx, tsconfig, ESLint, Jest, Prettier, husky, commitlint, `.nvmrc`), the `apps/web` SSR shell, the `libs/shared/angular` skeleton, a `.claude` baseline for Claude Code and the toolchain dependencies in `package.json`. The last step runs the skill's read-only structural verification script and fixes its checklist failures. That script validates files and configuration; it does not run lint, tests or a build.
 
 ## Source
 
