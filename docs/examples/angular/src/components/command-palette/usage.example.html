@@ -1,0 +1,11 @@
+<!-- #region usage -->
+<button type="button" (click)="open.set(true)">Open command palette</button>
+
+<smart-command-palette
+  [commands]="commands"
+  [options]="options"
+  [(open)]="open"
+  [(query)]="query"
+  (runCommand)="onRunCommand($event)"
+/>
+<!-- #endregion -->

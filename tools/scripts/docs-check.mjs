@@ -23,7 +23,7 @@ import { fileURLToPath } from 'node:url';
 import { runAllRules } from '../../docs/site/tools/check-rules.mjs';
 
 /** The parity rules `--strict` covers when it names no rule of its own. */
-const PARITY_RULES = ['R1', 'R2', 'R3', 'R9', 'R10', 'R12', 'R13'];
+const PARITY_RULES = ['R1', 'R2', 'R3', 'R9', 'R10', 'R12', 'R13', 'R15'];
 
 /**
  * The set of rule ids to report as errors: empty without `--strict`, every

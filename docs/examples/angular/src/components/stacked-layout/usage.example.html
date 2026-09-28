@@ -1,0 +1,15 @@
+<!-- #region usage -->
+<ng-template #navTpl>
+  <a href="#dashboard">Dashboard</a>
+  <a href="#projects">Projects</a>
+  <a href="#reports">Reports</a>
+</ng-template>
+
+<ng-template #headerTpl>
+  <h1>Projects</h1>
+</ng-template>
+
+<smart-stacked-layout [options]="options()">
+  <p>You have 3 active projects this sprint.</p>
+</smart-stacked-layout>
+<!-- #endregion -->

@@ -12,6 +12,7 @@ import {
   deriveTitle,
   findExample,
   findStory,
+  findUsage,
   renderIndexPage,
   transformContentToPage,
   transformSkillToPage,
@@ -245,6 +246,38 @@ describe('transformSkillToPage body', () => {
     )
     assert.match(usage, /\{% tab title="Claude Code" %\}/)
     assert.match(usage, /\{% \/tabs %\}/)
+    assert.match(
+      usage,
+      /\{% storybook project="angular" story="components-button--playground" height=320 \/%\}/,
+    )
+  })
+
+  test('cuts the code tabs from the usage example when there is one', () => {
+    const { content: page } = transformSkillToPage({
+      name: 'button',
+      order: 1,
+      source: skill('button'),
+      story: storyOf('button', 'components-button--playground'),
+      usage: {
+        html: 'angular/src/components/button/usage.example.html',
+        ts: 'angular/src/components/button/usage.example.ts',
+      },
+      example: null,
+    })
+    const usage = page.slice(
+      page.indexOf('## Usage'),
+      page.indexOf('## Components'),
+    )
+
+    assert.match(
+      usage,
+      /\{% tab title="HTML" %\}\n\n\{% snippet file="angular\/src\/components\/button\/usage\.example\.html" region="usage" \/%\}/,
+    )
+    assert.match(
+      usage,
+      /\{% tab title="TypeScript" %\}\n\n\{% snippet file="angular\/src\/components\/button\/usage\.example\.ts" region="usage" \/%\}/,
+    )
+    assert.ok(!usage.includes('story-template'))
     assert.match(
       usage,
       /\{% storybook project="angular" story="components-button--playground" height=320 \/%\}/,
@@ -558,6 +591,19 @@ describe('findExample', () => {
   })
 })
 
+describe('findUsage', () => {
+  test('returns the template and the class when both exist', () => {
+    assert.deepEqual(findUsage(fixtureRoot, 'button'), {
+      html: 'angular/src/components/button/usage.example.html',
+      ts: 'angular/src/components/button/usage.example.ts',
+    })
+  })
+
+  test('returns null while one of the two files is missing', () => {
+    assert.equal(findUsage(fixtureRoot, 'widget'), null)
+  })
+})
+
 describe('renderIndexPage', () => {
   const entries = [
     { name: 'button', description: 'Button component API.' },
@@ -580,7 +626,7 @@ describe('renderIndexPage', () => {
         '    description: Every smart-* UI component of @smartsoft001/angular, with a link to its reference page.',
         '---',
         '',
-        "The `@smartsoft001/angular` package ships 2 `smart-*` components. Each page shows the component's API, an executed usage example taken from its Storybook story, and the live story itself. {% .lead %}",
+        "The `@smartsoft001/angular` package ships 2 `smart-*` components. Each page shows the component's API, an executed usage example with the template and the TypeScript you write, and the live Storybook story. {% .lead %}",
         '',
         '---',
         '',

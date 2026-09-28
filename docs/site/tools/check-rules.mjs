@@ -15,8 +15,10 @@
  * - R12: every package belongs to exactly one meta package.
  * - R13: every component page documents its usage in a tabs block.
  * - R14: every example app path a skill cites exists in the workspace.
+ * - R15: every UI component has a compiled usage example, its template and
+ *   its class, in `docs/examples/angular`.
  *
- * R1-R3, R9, R10, R12 and R13 are the parity rules: they compare the workspace
+ * R1-R3, R9, R10, R12, R13 and R15 are the parity rules: they compare the workspace
  * with the site and only warn until `--strict` names them. R14 is an error
  * from the start, like R4: a skill citing a file that moved sends the agent to
  * the wrong place, which is worse than no citation at all.
@@ -1057,6 +1059,37 @@ export function rule14(ctx) {
   return findings
 }
 
+/** Where the usage example of a component lives, relative to the repo root. */
+const USAGE_EXAMPLES_DIR = 'docs/examples/angular/src/components'
+
+/**
+ * R15: every component has a usage example. Its template and its class are
+ * the HTML and TypeScript tabs of the component page, the code a consumer
+ * writes, so a component without one falls back to its Storybook story.
+ */
+export function rule15(ctx) {
+  const level = isStrict(ctx, 'R15') ? 'error' : 'warn'
+  const findings = []
+
+  for (const name of componentInventory(ctx.repoRoot)) {
+    const base = `${USAGE_EXAMPLES_DIR}/${name}/usage.example`
+    const missing = ['html', 'ts']
+      .map((extension) => `${base}.${extension}`)
+      .filter((file) => !fs.existsSync(path.join(ctx.repoRoot, file)))
+
+    if (!missing.length) continue
+
+    findings.push({
+      rule: 'R15',
+      level,
+      message: `Component "${name}" has no usage example (expected ${missing.join(' and ')})`,
+      file: path.join(ctx.repoRoot, missing[0]),
+    })
+  }
+
+  return findings
+}
+
 /** Every rule, in order. */
 export function runAllRules(ctx) {
   return [
@@ -1074,5 +1107,6 @@ export function runAllRules(ctx) {
     rule12,
     rule13,
     rule14,
+    rule15,
   ].flatMap((rule) => rule(ctx))
 }

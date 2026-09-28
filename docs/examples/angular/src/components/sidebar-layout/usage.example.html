@@ -1,0 +1,14 @@
+<!-- #region usage -->
+<ng-template #sidebar>
+  <nav aria-label="Main">
+    <a href="/dashboard">Dashboard</a>
+    <a href="/projects">Projects</a>
+    <a href="/team">Team</a>
+  </nav>
+</ng-template>
+
+<smart-sidebar-layout [options]="options()">
+  <h1>Dashboard</h1>
+  <p>Welcome back. Here is what changed since yesterday.</p>
+</smart-sidebar-layout>
+<!-- #endregion -->

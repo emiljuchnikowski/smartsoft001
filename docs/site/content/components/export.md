@@ -18,13 +18,13 @@ nextjs:
 
 {% tab title="HTML" %}
 
-{% story-template file="packages/shared/angular/src/lib/components/export/export.component.stories.ts" region="usage" /%}
+{% snippet file="angular/src/components/export/usage.example.html" region="usage" /%}
 
 {% /tab %}
 
 {% tab title="TypeScript" %}
 
-{% snippet file="packages/shared/angular/src/lib/components/export/export.component.stories.ts" region="usage" /%}
+{% snippet file="angular/src/components/export/usage.example.ts" region="usage" /%}
 
 {% /tab %}
 

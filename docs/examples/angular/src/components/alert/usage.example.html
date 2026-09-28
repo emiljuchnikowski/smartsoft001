@@ -1,0 +1,7 @@
+<!-- #region usage -->
+<button type="button" (click)="isOpen.set(true)">Delete file</button>
+
+@if (isOpen()) {
+  <smart-alert [options]="options" (dismissed)="onDismissed($event)" />
+}
+<!-- #endregion -->

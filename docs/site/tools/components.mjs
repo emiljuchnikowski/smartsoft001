@@ -354,24 +354,33 @@ function storyHeight(name) {
 /**
  * The same example in the shape each reader needs it: the markup to paste into
  * a template, the TypeScript behind it, and the way to ask Claude Code for it.
- * Both code tabs are cut from the story at build time, so neither can drift
- * from what Storybook renders below them.
+ *
+ * The code tabs show what a consumer writes: the template and the component
+ * class of a compiled, tested example in `docs/examples/angular`, with the
+ * typed `options` and the output handlers. The story stays the source of the
+ * live embed below the tabs; its `render`/`args` plumbing is Storybook's, not
+ * the reader's, so it is only the fallback for a component that has no usage
+ * example yet.
  *
  * A fourth tab, the Nx generator that scaffolds a usage of the component, is
  * part of this contract but stays out until such a generator exists: see
  * `generatorTab`.
  */
-function usageBlock(name, story) {
+function usageBlock(name, story, usage) {
   const tabs = [
     {
       title: 'HTML',
       lines: [
-        `{% story-template file="${story.file}" region="${USAGE_REGION}" /%}`,
+        usage
+          ? `{% snippet file="${usage.html}" region="${USAGE_REGION}" /%}`
+          : `{% story-template file="${story.file}" region="${USAGE_REGION}" /%}`,
       ],
     },
     {
       title: 'TypeScript',
-      lines: [`{% snippet file="${story.file}" region="${USAGE_REGION}" /%}`],
+      lines: [
+        `{% snippet file="${usage ? usage.ts : story.file}" region="${USAGE_REGION}" /%}`,
+      ],
     },
     { title: 'Claude Code', lines: skillTabLines(name) },
   ]
@@ -458,11 +467,18 @@ function renderIntro(intro) {
 }
 
 /**
- * Turns one `SKILL.md` into a component page. `story` and `example` are the
- * resolved references (or `null`), so the transformation itself touches no
- * file system.
+ * Turns one `SKILL.md` into a component page. `story`, `usage` and `example`
+ * are the resolved references (or `null`), so the transformation itself
+ * touches no file system.
  */
-export function transformSkillToPage({ name, order, source, story, example }) {
+export function transformSkillToPage({
+  name,
+  order,
+  source,
+  story,
+  usage = null,
+  example,
+}) {
   const { data, body } = parseFrontmatter(source)
   const title = deriveTitle(body, name)
   const description = data.description ?? `${title} component.`
@@ -478,7 +494,7 @@ export function transformSkillToPage({ name, order, source, story, example }) {
   ]
 
   if (story) {
-    lines.push(...usageBlock(name, story))
+    lines.push(...usageBlock(name, story, usage))
   } else {
     report.push({ component: name, missing: 'usage-region' })
   }
@@ -540,8 +556,8 @@ export function transformContentToPage({ name, order, source }) {
 }
 
 const INDEX_LEAD =
-  "Each page shows the component's API, an executed usage example taken from " +
-  'its Storybook story, and the live story itself.'
+  "Each page shows the component's API, an executed usage example with the " +
+  'template and the TypeScript you write, and the live Storybook story.'
 
 /** A description is prose from a skill: it may hold a `|` or a `{%`. */
 function cell(description) {
@@ -627,6 +643,19 @@ export function findStory(repoRoot, name) {
   return null
 }
 
+/**
+ * The compiled usage example of a component: the template and the component
+ * class a consumer writes. `null` until both files exist.
+ */
+export function findUsage(repoRoot, name) {
+  const base = `angular/src/components/${name}/usage.example`
+  const usage = { html: `${base}.html`, ts: `${base}.ts` }
+  const exists = (file) =>
+    fs.existsSync(path.join(repoRoot, EXAMPLES_DIR, file))
+
+  return exists(usage.html) && exists(usage.ts) ? usage : null
+}
+
 /** The compiled "extend the base class" example of a component, if any. */
 export function findExample(repoRoot, name) {
   const file = `angular/src/components/${name}/custom.example.ts`
@@ -673,6 +702,7 @@ export function collectComponents(
           order,
           source: skill,
           story: findStory(repoRoot, name),
+          usage: findUsage(repoRoot, name),
           example: findExample(repoRoot, name),
         })
 
