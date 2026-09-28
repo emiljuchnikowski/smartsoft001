@@ -26,6 +26,8 @@ nextjs:
 
 {% skill name="{{name}}" /%}
 
+This command requires the [`smart@smartsoft` plugin](/docs/skills/installing-the-plugin). Install it and reload Claude Code before invoking the skill.
+
 ## What it does
 
 {{two or three sentences on the outcome, rewritten from the SKILL.md body}}

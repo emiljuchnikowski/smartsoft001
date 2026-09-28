@@ -12,12 +12,14 @@ The framework ships a Claude Code plugin, `smart@smartsoft`, published as `@smar
 
 ---
 
+Start with [Installing the plugin](/docs/skills/installing-the-plugin). A project-scoped entry enables the plugin for the repository, but every developer still installs the plugin on their own machine before its skills, agent and hooks are available.
+
 ## What you get
 
 | Part                           | What it does                                                                                                                                                      |
 | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Hooks                          | Block destructive commands and sensitive files, log every action, format files after every edit. See [Installing the plugin](/docs/skills/installing-the-plugin). |
-| User-invocable skills          | Commands you type as `/smart:<name>`; one page each below.                                                                                                        |
+| User-invocable skills          | Three commands you can type as `/smart:<name>`; one page each below.                                                                                              |
 | Background skills              | Knowledge Claude loads on its own when the topic comes up; no command to type.                                                                                    |
 | The `angular-components` agent | Picks the right `@smartsoft001/angular` component and delegates to its skill. See [Angular components agent](/docs/skills/angular-components-agent).              |
 
@@ -31,14 +33,14 @@ The framework ships a Claude Code plugin, `smart@smartsoft`, published as `@smar
 
 ## Background skills
 
-These have `user-invocable: false` in their frontmatter. Claude reads them when a prompt touches their subject.
+These have `user-invocable: false` in their frontmatter. Claude reads them when a prompt matches their description; they are not slash commands.
 
 | Skill                  | Subject                                                                                                                 |
 | ---------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | `project-conventions`  | The monorepo layout, naming and architecture rules Claude follows when it edits this repository.                        |
 | `safety-check`         | The list of blocked commands and sensitive paths that `safety_validator` and `sensitive_file_blocker` enforce.          |
 | `smart-crud`           | The `crud` family's configuration API. Its content is documented for people in the [CRUD](/docs/crud/overview) section. |
-| `angular-components-*` | One skill per UI component, the source of the [Components](/docs/components) pages.                                     |
+| `angular-components-*` | 54 component skills, the source of the generated [Components](/docs/components) pages.                                  |
 
 ## Where the plugin lives
 

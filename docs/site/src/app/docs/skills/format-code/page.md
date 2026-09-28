@@ -11,9 +11,11 @@ nextjs:
 
 {% skill name="format-code" /%}
 
+This command requires the [`smart@smartsoft` plugin](/docs/skills/installing-the-plugin). Install it and reload Claude Code before invoking the skill.
+
 ## What it does
 
-Runs the project's formatting command, `npm run format`, which executes `nx format` (Prettier through Nx) and then `nx run-many -t lint --fix` (ESLint auto-fix in every project). The result is the same formatting the `commit-msg` hook and the pull request pipeline expect, so a change that passes here passes `nx format:check` in CI.
+Runs the project's formatting command, `npm run format`, which executes `nx format` (Prettier through Nx) and then `nx run-many --target=lint --fix` (ESLint auto-fix in every project). This changes files to the format checked by `nx format:check`; it does not run the repository's tests or build.
 
 ## When to use it
 

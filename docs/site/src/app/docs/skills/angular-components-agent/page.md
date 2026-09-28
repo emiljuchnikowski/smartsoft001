@@ -8,20 +8,17 @@ nextjs:
     description: The smart:angular-components agent that picks the right @smartsoft001/angular component for a UI task and delegates to that component's skill.
 ---
 
-The plugin ships one agent, `smart:angular-components`, for building screens in an application that uses `@smartsoft001/angular`. It knows the whole component catalogue and hands the details to one skill per component. {% .lead %}
+The plugin ships one agent, `smart:angular-components`, for building screens in an application that uses `@smartsoft001/angular`. It selects a component and delegates its API details to a background skill. {% .lead %}
 
 ---
 
 ## What it does
 
-When a developer describes a piece of UI, the agent decides which `smart-*` component fits, then delegates to the matching `angular-components-<name>` skill for the API, the options object and the usage pattern. The delegation follows the component's shape:
+When a developer describes a piece of UI, the agent chooses a `smart-*` component and delegates to an `angular-components-<name>` skill for its API, options and usage pattern. The plugin contains 54 such background skills, and those skill files also feed the generated [Components](/docs/components) section of this site.
 
-- **Ready-to-use components** such as `date-edit`, `date-range`, `detail` and `input` have a concrete selector; the skill explains the inputs and outputs.
-- **Components with an extension token**, the majority, render a default implementation that can be replaced through `<NAME>_STANDARD_COMPONENT_TOKEN`; the skill covers usage, the token override and how to extend the base class.
-- **Base-only components** such as `button`, `card`, `accordion`, `page` and `paging` are extended rather than replaced; the skill shows the base class and what a custom implementation must provide.
-- A request for a brand-new component goes to the base-only pattern.
-
-The same 53 skills are the source of the [Components](/docs/components) section of this site, so what the agent tells Claude and what a person reads here come from the same files.
+{% callout title="Current catalogue gap" %}
+The agent definition explicitly delegates to 53 skills. It lists `<smart-icon>` without a skill even though `angular-components-icon` exists, and it still labels `button`, `card`, `page` and `paging` as base-only although their current skills document concrete wrappers and extension mechanisms. For those components, the component page or matching skill is more current than the agent's summary table.
+{% /callout %}
 
 ## When to use it
 
@@ -29,7 +26,7 @@ Ask for it, or let Claude pick it, when you want to build a page or feature with
 
 ## How it is invoked
 
-The agent is available in Claude Code once the plugin is installed. Claude selects it for UI work on its own; you can also name it explicitly, for example "use the angular-components agent to build the settings page". It needs `@smartsoft001/angular` in the project (`npm install @smartsoft001/angular`) and uses the styling and import conventions from the [`angular`](/docs/packages/angular) package page.
+The agent is available after you [install the plugin](/docs/skills/installing-the-plugin) and reload Claude Code. Claude can select it for matching UI work; you can also ask explicitly, for example "use the `smart:angular-components` agent to build the settings page". The target project needs `@smartsoft001/angular` (`npm install @smartsoft001/angular`), whose styling and import conventions are on the [`angular`](/docs/packages/angular) package page.
 
 ## Source
 
