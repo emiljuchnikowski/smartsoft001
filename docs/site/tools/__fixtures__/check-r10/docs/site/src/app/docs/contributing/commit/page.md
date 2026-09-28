@@ -1,6 +1,6 @@
 ---
 title: commit
-section: Contributing
+section: Getting started
 skill: commit
 ---
 

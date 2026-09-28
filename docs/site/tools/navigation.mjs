@@ -81,6 +81,15 @@ export function collectPages(appDir) {
     })
 }
 
+/**
+ * The menu label of a page. A section's index page carries the section's own
+ * name as its title, which would print "Components" under "Components", so
+ * the menu calls it "Overview". The page keeps its title.
+ */
+function linkTitle(page) {
+  return page.title === page.section ? 'Overview' : page.title
+}
+
 export function buildNavigation(pages) {
   return SECTION_ORDER.filter((section) =>
     pages.some((page) => page.section === section),
@@ -89,7 +98,7 @@ export function buildNavigation(pages) {
     links: pages
       .filter((page) => page.section === section)
       .sort((a, b) => a.order - b.order || a.title.localeCompare(b.title))
-      .map(({ title, href }) => ({ title, href })),
+      .map((page) => ({ title: linkTitle(page), href: page.href })),
   }))
 }
 

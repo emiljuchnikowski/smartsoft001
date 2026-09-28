@@ -102,7 +102,7 @@ test('buildNavigation orders sections by SECTION_ORDER, not alphabetically', () 
 
   assert.deepEqual(
     sections.map((section) => section.title),
-    ['Getting started', 'Packages', 'Skills'],
+    ['Getting started', 'Skills', 'Packages'],
   )
 })
 
@@ -119,8 +119,30 @@ test('buildNavigation drops sections without pages', () => {
   assert.deepEqual(sections, [
     {
       title: 'Getting started',
-      links: [{ title: 'Getting started', href: '/' }],
+      links: [{ title: 'Overview', href: '/' }],
     },
+  ])
+})
+
+test('buildNavigation labels the page named after its section "Overview"', () => {
+  const sections = buildNavigation([
+    {
+      href: '/docs/packages',
+      title: 'Packages',
+      section: 'Packages',
+      order: 0,
+    },
+    {
+      href: '/docs/packages/utils',
+      title: 'Utils',
+      section: 'Packages',
+      order: 1,
+    },
+  ])
+
+  assert.deepEqual(sections[0].links, [
+    { title: 'Overview', href: '/docs/packages' },
+    { title: 'Utils', href: '/docs/packages/utils' },
   ])
 })
 

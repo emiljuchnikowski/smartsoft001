@@ -1,6 +1,6 @@
 ---
 title: Docs: overview
-section: Contributing
+section: Getting started
 ---
 
 The title above is not valid YAML.

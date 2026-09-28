@@ -5,9 +5,8 @@
  */
 export const SECTION_ORDER = [
   'Getting started',
-  'Packages',
   'Components',
   'CRUD',
   'Skills',
-  'Contributing',
+  'Packages',
 ]

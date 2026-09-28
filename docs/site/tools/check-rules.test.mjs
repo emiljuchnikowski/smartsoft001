@@ -154,12 +154,11 @@ describe('componentInventory', () => {
 })
 
 describe('skillInventory', () => {
-  test('keeps only skills marked user-invocable and tags their source', () => {
+  test('keeps only plugin skills marked user-invocable', () => {
     const skills = skillInventory(fixtureRoot)
 
     assert.deepEqual(skills, [
       { name: 'audit-log', source: 'plugin' },
-      { name: 'commit', source: 'repo' },
       { name: 'format-code', source: 'plugin' },
     ])
   })
@@ -274,7 +273,7 @@ describe('rule3 (skill pages)', () => {
     )
   })
 
-  test('accepts a repo skill documented under docs/contributing', () => {
+  test('asks for no page for a repo skill', () => {
     const findings = rule3(context())
 
     assert.ok(!findings.some((finding) => finding.message.includes('commit')))

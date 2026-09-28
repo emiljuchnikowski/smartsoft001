@@ -1,6 +1,6 @@
 ---
 title: Quoting
-section: Contributing
+section: Getting started
 ---
 
 A tag quoted in a code block is documentation, not an instruction:
