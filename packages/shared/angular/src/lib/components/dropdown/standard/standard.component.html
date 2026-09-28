@@ -5,7 +5,11 @@
     [attr.aria-expanded]="open()"
     (click)="toggle()"
   >
-    <ng-content>{{ triggerLabel() }}</ng-content>
+    @if (triggerLabel()) {
+      {{ triggerLabel() }}
+    } @else {
+      <ng-content />
+    }
   </button>
   @if (open()) {
     <ul role="menu">

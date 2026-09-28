@@ -22,7 +22,7 @@ describe('docs-examples-angular: DropdownUsageExampleComponent', () => {
     fixture.detectChanges();
   }
 
-  it('should render the projected trigger label', () => {
+  it('should render the trigger label', () => {
     const trigger: HTMLButtonElement = fixture.nativeElement.querySelector(
       '.smart-dropdown-trigger',
     );
