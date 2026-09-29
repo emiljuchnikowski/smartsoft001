@@ -112,5 +112,24 @@ describe('@smartsoft001/shared-angular: CalendarComponent', () => {
 
       expect(standard).toBeNull();
     });
+
+    describe('outputs of the injected component', () => {
+      let injected: MockInjectedComponent;
+
+      beforeEach(async () => {
+        await fixture.whenStable();
+        injected = fixture.debugElement.query(
+          (el) => el.componentInstance instanceof MockInjectedComponent,
+        ).componentInstance;
+      });
+
+      it('should write value back to the wrapper model', () => {
+        injected.value.set(new Date(2026, 0, 15));
+
+        expect(fixture.componentInstance.value()).toEqual(
+          new Date(2026, 0, 15),
+        );
+      });
+    });
   });
 });

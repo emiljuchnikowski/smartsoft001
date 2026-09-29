@@ -169,5 +169,33 @@ describe('@smartsoft001/shared-angular: DropdownComponent', () => {
 
       expect(standard).toBeNull();
     });
+
+    describe('outputs of the injected component', () => {
+      let injected: MockInjectedComponent;
+
+      beforeEach(async () => {
+        await fixture.whenStable();
+        injected = fixture.debugElement.query(
+          (el) => el.componentInstance instanceof MockInjectedComponent,
+        ).componentInstance;
+      });
+
+      it('should re-emit selectedItem through the wrapper', () => {
+        const emitted: { itemId: string }[] = [];
+        fixture.componentInstance.selectedItem.subscribe((event) =>
+          emitted.push(event),
+        );
+
+        injected.selectedItem.emit({ itemId: 'a' });
+
+        expect(emitted).toEqual([{ itemId: 'a' }]);
+      });
+
+      it('should write open back to the wrapper model', () => {
+        injected.open.set(true);
+
+        expect(fixture.componentInstance.open()).toBe(true);
+      });
+    });
   });
 });

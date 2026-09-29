@@ -106,5 +106,37 @@ describe('@smartsoft001/shared-angular: CommandPaletteComponent', () => {
 
       expect(standard).toBeNull();
     });
+
+    describe('outputs of the injected component', () => {
+      let injected: MockInjectedComponent;
+
+      beforeEach(async () => {
+        await fixture.whenStable();
+        injected = fixture.debugElement.query(
+          (el) => el.componentInstance instanceof MockInjectedComponent,
+        ).componentInstance;
+      });
+
+      it('should write open back to the wrapper model', () => {
+        injected.open.set(true);
+
+        expect(fixture.componentInstance.open()).toEqual(true);
+      });
+
+      it('should write query back to the wrapper model', () => {
+        injected.query.set('find');
+
+        expect(fixture.componentInstance.query()).toEqual('find');
+      });
+
+      it('should re-emit runCommand through the wrapper', () => {
+        const spy = jest.fn();
+        fixture.componentInstance.runCommand.subscribe(spy);
+
+        injected.runCommand.emit({ commandId: 'c' });
+
+        expect(spy).toHaveBeenCalledWith({ commandId: 'c' });
+      });
+    });
   });
 });

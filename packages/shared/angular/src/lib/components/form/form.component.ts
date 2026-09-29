@@ -12,6 +12,7 @@ import {
   output,
   signal,
   Type,
+  viewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -27,6 +28,7 @@ import { MODEL_EXPORT_PROVIDER } from '../../providers';
 import { MODEL_IMPORT_PROVIDER } from '../../providers';
 import { SmartFormGroup } from '../../services';
 import { FORM_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 // TODO: ExportComponent moved to @smartsoft001-pro/angular (FRA-113)
 // import { ExportDefaultComponent } from '../export';
 // TODO: ImportComponent moved to @smartsoft001-pro/angular (FRA-116)
@@ -127,7 +129,13 @@ export class FormComponent<T> implements OnDestroy {
     class: this.cssClass(),
   }));
 
+  private readonly outlet = viewChild(NgComponentOutlet);
+
   constructor() {
+    // Only invokeSubmit comes from the rendered body: the value/valid outputs
+    // are driven by the wrapper's own form group subscription.
+    forwardOutletOutputs(this.outlet, { invokeSubmit: this.invokeSubmit });
+
     effect(() => {
       const options = this.options();
       if (!options) return;

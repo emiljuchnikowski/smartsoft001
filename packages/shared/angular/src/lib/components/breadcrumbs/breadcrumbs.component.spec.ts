@@ -82,5 +82,25 @@ describe('@smartsoft001/shared-angular: BreadcrumbsComponent', () => {
 
       expect(standard).toBeNull();
     });
+
+    describe('outputs of the injected component', () => {
+      let injected: MockInjectedComponent;
+
+      beforeEach(async () => {
+        await fixture.whenStable();
+        injected = fixture.debugElement.query(
+          (el) => el.componentInstance instanceof MockInjectedComponent,
+        ).componentInstance;
+      });
+
+      it('should re-emit itemClick through the wrapper', () => {
+        const spy = jest.fn();
+        fixture.componentInstance.itemClick.subscribe(spy);
+
+        injected.itemClick.emit({ itemId: 'a' });
+
+        expect(spy).toHaveBeenCalledWith({ itemId: 'a' });
+      });
+    });
   });
 });

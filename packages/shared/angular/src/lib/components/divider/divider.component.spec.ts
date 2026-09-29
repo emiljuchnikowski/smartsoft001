@@ -135,5 +135,25 @@ describe('@smartsoft001/shared-angular: DividerComponent', () => {
 
       expect(standard).toBeNull();
     });
+
+    describe('outputs of the injected component', () => {
+      let injected: MockInjectedComponent;
+
+      beforeEach(async () => {
+        await fixture.whenStable();
+        injected = fixture.debugElement.query(
+          (el) => el.componentInstance instanceof MockInjectedComponent,
+        ).componentInstance;
+      });
+
+      it('should re-emit actionClick through the wrapper', () => {
+        const spy = jest.fn();
+        fixture.componentInstance.actionClick.subscribe(spy);
+
+        injected.actionClick.emit();
+
+        expect(spy).toHaveBeenCalledTimes(1);
+      });
+    });
   });
 });

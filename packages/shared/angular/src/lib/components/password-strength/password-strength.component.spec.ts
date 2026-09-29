@@ -145,5 +145,29 @@ describe('@smartsoft001/shared-angular: PasswordStrengthComponent', () => {
 
       expect(emissions).toContain(true);
     });
+
+    describe('outputs of the injected component', () => {
+      let injected: MockInjectedPasswordStrengthComponent;
+
+      beforeEach(async () => {
+        await fixture.whenStable();
+        injected = fixture.debugElement.query(
+          (el) =>
+            el.componentInstance instanceof
+            MockInjectedPasswordStrengthComponent,
+        ).componentInstance;
+      });
+
+      it('should re-emit passwordStrength through the wrapper', () => {
+        const emitted: unknown[] = [];
+        fixture.componentInstance.passwordStrength.subscribe((event: unknown) =>
+          emitted.push(event),
+        );
+
+        injected.passwordStrength.emit(true);
+
+        expect(emitted).toEqual([true]);
+      });
+    });
   });
 });

@@ -7,6 +7,7 @@ import {
   input,
   model,
   output,
+  viewChild,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -14,6 +15,7 @@ import { ITabChange } from './base/base.component';
 import { TabsStandardComponent } from './standard';
 import { ITabsOptions } from '../../models';
 import { TABS_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 
 @Component({
   selector: 'smart-tabs',
@@ -54,4 +56,13 @@ export class TabsComponent {
     selectedId: this.selectedId(),
     cssClass: this.cssClass(),
   }));
+
+  private readonly outlet = viewChild(NgComponentOutlet);
+
+  constructor() {
+    forwardOutletOutputs(this.outlet, {
+      tabChange: this.tabChange,
+      selectedId: this.selectedId,
+    });
+  }
 }

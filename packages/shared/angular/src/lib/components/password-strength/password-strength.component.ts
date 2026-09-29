@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  effect,
   inject,
   input,
   output,
@@ -11,9 +10,9 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { PasswordStrengthBaseComponent } from './base';
 import { PasswordStrengthStandardComponent } from './standard';
 import { PASSWORD_STRENGTH_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 
 @Component({
   selector: 'smart-password-strength',
@@ -56,30 +55,11 @@ export class PasswordStrengthComponent {
     cssClass: this.cssClass(),
   }));
 
-  private outlet = viewChild(NgComponentOutlet);
+  private readonly outlet = viewChild(NgComponentOutlet);
 
   constructor() {
-    let subscription: { unsubscribe(): void } | null = null;
-
-    effect((onCleanup) => {
-      const instance = this.outlet()?.componentInstance as
-        | PasswordStrengthBaseComponent
-        | null
-        | undefined;
-
-      subscription?.unsubscribe();
-      subscription = null;
-
-      if (instance) {
-        subscription = instance.passwordStrength.subscribe((value: boolean) =>
-          this.passwordStrength.emit(value),
-        );
-      }
-
-      onCleanup(() => {
-        subscription?.unsubscribe();
-        subscription = null;
-      });
+    forwardOutletOutputs(this.outlet, {
+      passwordStrength: this.passwordStrength,
     });
   }
 }

@@ -112,5 +112,42 @@ describe('@smartsoft001/shared-angular: ModalComponent', () => {
 
       expect(standard).toBeNull();
     });
+
+    describe('outputs of the injected component', () => {
+      let injected: MockInjectedComponent;
+
+      beforeEach(async () => {
+        await fixture.whenStable();
+        injected = fixture.debugElement.query(
+          (el) => el.componentInstance instanceof MockInjectedComponent,
+        ).componentInstance;
+      });
+
+      it('should re-emit actionClick through the wrapper', () => {
+        const emitted: unknown[] = [];
+        fixture.componentInstance.actionClick.subscribe((event: unknown) =>
+          emitted.push(event),
+        );
+
+        injected.actionClick.emit({ actionId: 'ok' });
+
+        expect(emitted).toEqual([{ actionId: 'ok' }]);
+      });
+
+      it('should re-emit closed through the wrapper', () => {
+        let emissions = 0;
+        fixture.componentInstance.closed.subscribe(() => emissions++);
+
+        injected.closed.emit();
+
+        expect(emissions).toBe(1);
+      });
+
+      it('should write open back to the wrapper model', () => {
+        injected.open.set(true);
+
+        expect(fixture.componentInstance.open()).toEqual(true);
+      });
+    });
   });
 });

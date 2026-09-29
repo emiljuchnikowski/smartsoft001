@@ -84,5 +84,33 @@ describe('@smartsoft001/shared-angular: TextareaComponent', () => {
 
       expect(standard).toBeNull();
     });
+
+    describe('outputs of the injected component', () => {
+      let injected: MockInjectedComponent;
+
+      beforeEach(async () => {
+        await fixture.whenStable();
+        injected = fixture.debugElement.query(
+          (el) => el.componentInstance instanceof MockInjectedComponent,
+        ).componentInstance;
+      });
+
+      it('should re-emit actionClick through the wrapper', () => {
+        const emitted: { actionId: string; value: string }[] = [];
+        fixture.componentInstance.actionClick.subscribe((event) =>
+          emitted.push(event),
+        );
+
+        injected.actionClick.emit({ actionId: 'send', value: 'hi' });
+
+        expect(emitted).toEqual([{ actionId: 'send', value: 'hi' }]);
+      });
+
+      it('should write value back to the wrapper model', () => {
+        injected.value.set('typed');
+
+        expect(fixture.componentInstance.value()).toBe('typed');
+      });
+    });
   });
 });

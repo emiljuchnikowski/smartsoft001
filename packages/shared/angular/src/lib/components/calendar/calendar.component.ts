@@ -6,12 +6,14 @@ import {
   inject,
   input,
   model,
+  viewChild,
   ViewEncapsulation,
 } from '@angular/core';
 
 import { CalendarStandardComponent } from './standard';
 import { ICalendarEvent, ICalendarOptions } from '../../models';
 import { CALENDAR_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 
 @Component({
   selector: 'smart-calendar',
@@ -56,4 +58,12 @@ export class CalendarComponent {
     referenceDate: this.referenceDate() ?? this.today,
     events: this.events(),
   }));
+
+  private readonly outlet = viewChild(NgComponentOutlet);
+
+  constructor() {
+    forwardOutletOutputs(this.outlet, {
+      value: this.value,
+    });
+  }
 }

@@ -6,6 +6,7 @@ import {
   inject,
   input,
   output,
+  viewChild,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -16,6 +17,7 @@ import {
 import { SidebarNavigationStandardComponent } from './standard';
 import { ISidebarNavOptions } from '../../models';
 import { SIDEBAR_NAVIGATION_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 
 @Component({
   selector: 'smart-sidebar-navigation',
@@ -58,4 +60,13 @@ export class SidebarNavigationComponent {
     options: this.options(),
     cssClass: this.cssClass(),
   }));
+
+  private readonly outlet = viewChild(NgComponentOutlet);
+
+  constructor() {
+    forwardOutletOutputs(this.outlet, {
+      itemClick: this.itemClick,
+      itemToggle: this.itemToggle,
+    });
+  }
 }

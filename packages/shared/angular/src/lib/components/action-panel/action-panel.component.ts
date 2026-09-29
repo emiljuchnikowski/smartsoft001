@@ -6,6 +6,7 @@ import {
   inject,
   input,
   output,
+  viewChild,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -13,6 +14,7 @@ import { IActionPanelActionClick } from './base/base.component';
 import { ActionPanelStandardComponent } from './standard';
 import { IActionPanelOptions } from '../../models';
 import { ACTION_PANEL_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 
 @Component({
   selector: 'smart-action-panel',
@@ -50,4 +52,12 @@ export class ActionPanelComponent {
     options: this.options(),
     cssClass: this.cssClass(),
   }));
+
+  private readonly outlet = viewChild(NgComponentOutlet);
+
+  constructor() {
+    forwardOutletOutputs(this.outlet, {
+      actionClick: this.actionClick,
+    });
+  }
 }

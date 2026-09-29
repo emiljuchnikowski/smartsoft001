@@ -176,5 +176,20 @@ describe('@smartsoft001/shared-angular: PagingComponent', () => {
 
       expect(standard).toBeFalsy();
     });
+
+    it('should re-emit pageChange of the injected component through the wrapper', async () => {
+      await fixture.whenStable();
+      const injected = fixture.debugElement.query(
+        (el) => el.componentInstance instanceof MockInjectedPagingComponent,
+      ).componentInstance as MockInjectedPagingComponent;
+      const emitted: number[] = [];
+      fixture.componentInstance.pageChange.subscribe((page) =>
+        emitted.push(page),
+      );
+
+      injected.pageChange.emit(3);
+
+      expect(emitted).toEqual([3]);
+    });
   });
 });

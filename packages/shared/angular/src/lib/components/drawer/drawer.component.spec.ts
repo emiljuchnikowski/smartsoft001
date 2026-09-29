@@ -106,5 +106,31 @@ describe('@smartsoft001/shared-angular: DrawerComponent', () => {
 
       expect(standard).toBeNull();
     });
+
+    describe('outputs of the injected component', () => {
+      let injected: MockInjectedComponent;
+
+      beforeEach(async () => {
+        await fixture.whenStable();
+        injected = fixture.debugElement.query(
+          (el) => el.componentInstance instanceof MockInjectedComponent,
+        ).componentInstance;
+      });
+
+      it('should write open back to the wrapper model', () => {
+        injected.open.set(true);
+
+        expect(fixture.componentInstance.open()).toEqual(true);
+      });
+
+      it('should re-emit closed through the wrapper', () => {
+        const spy = jest.fn();
+        fixture.componentInstance.closed.subscribe(spy);
+
+        injected.closed.emit();
+
+        expect(spy).toHaveBeenCalledTimes(1);
+      });
+    });
   });
 });

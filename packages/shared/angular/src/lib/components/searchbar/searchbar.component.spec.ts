@@ -122,5 +122,28 @@ describe('@smartsoft001/shared-angular: SearchbarComponent', () => {
 
       expect(standard).toBeNull();
     });
+
+    describe('outputs of the injected component', () => {
+      let injected: MockInjectedComponent;
+
+      beforeEach(async () => {
+        await fixture.whenStable();
+        injected = fixture.debugElement.query(
+          (el) => el.componentInstance instanceof MockInjectedComponent,
+        ).componentInstance;
+      });
+
+      it('should write show back to the wrapper model', () => {
+        injected.show.set(false);
+
+        expect(fixture.componentInstance.show()).toEqual(false);
+      });
+
+      it('should write text back to the wrapper model', () => {
+        injected.text.set('query');
+
+        expect(fixture.componentInstance.text()).toEqual('query');
+      });
+    });
   });
 });

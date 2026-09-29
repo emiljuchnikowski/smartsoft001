@@ -6,6 +6,7 @@ import {
   inject,
   input,
   output,
+  viewChild,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -13,6 +14,7 @@ import { IProgressStepClick } from './base/base.component';
 import { ProgressBarsStandardComponent } from './standard';
 import { IProgressBarsOptions } from '../../models';
 import { PROGRESS_BARS_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 
 @Component({
   selector: 'smart-progress-bars',
@@ -50,4 +52,12 @@ export class ProgressBarsComponent {
     options: this.options(),
     cssClass: this.cssClass(),
   }));
+
+  private readonly outlet = viewChild(NgComponentOutlet);
+
+  constructor() {
+    forwardOutletOutputs(this.outlet, {
+      stepClick: this.stepClick,
+    });
+  }
 }

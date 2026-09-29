@@ -7,6 +7,7 @@ import {
   input,
   model,
   output,
+  viewChild,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -14,6 +15,7 @@ import { IModalActionClick } from './base/base.component';
 import { ModalStandardComponent } from './standard/standard.component';
 import { IModalAction, IModalOptions } from '../../models';
 import { MODAL_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 
 @Component({
   selector: 'smart-modal',
@@ -67,4 +69,14 @@ export class ModalComponent {
     options: this.options(),
     cssClass: this.cssClass(),
   }));
+
+  private readonly outlet = viewChild(NgComponentOutlet);
+
+  constructor() {
+    forwardOutletOutputs(this.outlet, {
+      actionClick: this.actionClick,
+      closed: this.closed,
+      open: this.open,
+    });
+  }
 }
