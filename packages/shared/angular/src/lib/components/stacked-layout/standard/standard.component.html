@@ -1,4 +1,4 @@
-<div [class]="cssClass()">
+<div [class]="cssClass()" [attr.data-container-width]="containerWidth()">
   <header>
     <nav>
       @if (options()?.navTpl) {
@@ -9,6 +9,10 @@
   @if (options()?.headerTpl) {
     <header>
       <ng-container [ngTemplateOutlet]="options()!.headerTpl!" />
+    </header>
+  } @else if (options()?.title) {
+    <header>
+      <h1 data-role="title">{{ options()?.title }}</h1>
     </header>
   }
   <main>

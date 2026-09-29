@@ -21,7 +21,7 @@ Main wrapper component. Renders `StackedLayoutStandardComponent` by default. Whe
 
 ### StackedLayoutStandardComponent (`<smart-stacked-layout-standard>`)
 
-Barebones placeholder concrete implementation. Renders a wrapper `<div>` with a top `<header>` containing a `<nav>`, an optional second `<header>` for the page heading section (rendered when `options.headerTpl` is provided), and a `<main>` element that projects `<ng-content>`. The external `cssClass` is applied to the wrapper. It does not include Tailwind UI styling — it exists solely as the default structural placeholder until a custom implementation is registered through the token.
+Barebones native-HTML implementation. Renders a wrapper `<div data-container-width="…">` with a top `<header>` containing a `<nav>`, an optional second `<header>` for the page heading section (`options.headerTpl` when provided, otherwise `<h1 data-role="title">{{ options.title }}</h1>` when `options.title` is set), and a `<main>` element that projects `<ng-content>`. The external `cssClass` is applied to the wrapper. It does not include Tailwind UI styling.
 
 ### StackedLayoutBaseComponent (abstract)
 
@@ -49,7 +49,7 @@ interface IStackedLayoutOptions {
 }
 ```
 
-The default `StackedLayoutStandardComponent` consumes `navTpl` (rendered inside the top `<nav>`) and `headerTpl` (rendered as a secondary `<header>` block beneath the navigation). `title` and `containerWidth` are reserved for custom implementations registered via `STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN` and are ignored by `StackedLayoutStandardComponent`.
+The default `StackedLayoutStandardComponent` consumes `navTpl` (rendered inside the top `<nav>`), `headerTpl` (rendered as a secondary `<header>` block beneath the navigation) and `title` (rendered as `<header><h1 data-role="title">` when there is no `headerTpl`, the same precedence as the preset). `containerWidth` is purely visual: the standard only exposes it as `data-container-width` on the root (default `'xl'`), and the max-width is styled by `StackedLayoutPresetComponent`.
 
 ## STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN
 

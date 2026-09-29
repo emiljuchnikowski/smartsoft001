@@ -5,6 +5,7 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { IModalActionClick } from '..';
 import { ModalBaseComponent } from './base.component';
 import { IModalAction, IModalOptions } from '../../../models';
 
@@ -122,5 +123,16 @@ describe('@smartsoft001/shared-angular: ModalBaseComponent', () => {
 
       expect(spy).toHaveBeenCalled();
     });
+  });
+
+  it('should emit a IModalActionClick payload exported from the component barrel', () => {
+    let received: IModalActionClick | undefined;
+    directive.actionClick.subscribe(
+      (event: IModalActionClick) => (received = event),
+    );
+
+    directive.invokeAction('confirm');
+
+    expect(received).toEqual({ actionId: 'confirm' });
   });
 });

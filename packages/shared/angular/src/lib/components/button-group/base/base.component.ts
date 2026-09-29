@@ -14,6 +14,10 @@ import {
   IButtonGroupOptions,
 } from '../../../models';
 
+export interface IButtonGroupButtonClick {
+  buttonId: string;
+}
+
 @Directive()
 export abstract class ButtonGroupBaseComponent {
   static smartType: DynamicComponentType = 'button-group';
@@ -26,9 +30,8 @@ export abstract class ButtonGroupBaseComponent {
   );
   cssClass: InputSignal<string> = input<string>('', { alias: 'class' });
 
-  buttonClick: OutputEmitterRef<{ buttonId: string }> = output<{
-    buttonId: string;
-  }>();
+  buttonClick: OutputEmitterRef<IButtonGroupButtonClick> =
+    output<IButtonGroupButtonClick>();
 
   select(id: string): void {
     this.selected.set(id);

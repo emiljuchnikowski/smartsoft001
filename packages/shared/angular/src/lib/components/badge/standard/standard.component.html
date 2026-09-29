@@ -2,6 +2,8 @@
   [class]="cssClass()"
   [attr.data-color]="color()"
   [attr.data-size]="size()"
+  [attr.data-variant]="options()?.variant ?? 'soft'"
+  [attr.data-pill]="options()?.pill !== false"
 >
   @if (options()?.withDot) {
     <span aria-hidden="true" class="smart-badge-dot">&bull;</span>

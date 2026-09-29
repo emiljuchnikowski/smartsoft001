@@ -14,7 +14,6 @@ export class ToggleUsageExampleComponent {
     label: 'Email notifications',
     description: 'Get an email when someone comments on your post.',
     labelPosition: 'right',
-    ariaLabel: 'Email notifications',
   };
 
   readonly emailNotifications = signal(true);

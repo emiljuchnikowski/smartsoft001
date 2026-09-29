@@ -30,6 +30,16 @@ describe('docs-examples-angular: CalendarUsageExampleComponent', () => {
     );
   });
 
+  it('should mark the days that have events', () => {
+    const planning = new Date(2026, 8, 3);
+    const cell: HTMLButtonElement = fixture.nativeElement.querySelector(
+      `button[aria-label="${planning.toDateString()}, 1 event"]`,
+    );
+
+    expect(cell.getAttribute('data-events')).toBe('1');
+    expect(cell.querySelector('[data-role="event-dot"]')).not.toBeNull();
+  });
+
   it('should write the clicked day into the bound signal', () => {
     const target = new Date(2026, 8, 15);
 

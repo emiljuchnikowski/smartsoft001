@@ -2,6 +2,10 @@
   [class]="cssClass()"
   [attr.data-size]="size()"
   [attr.data-shape]="shape()"
+  [attr.data-placeholder-type]="options()?.placeholderType ?? 'icon'"
+  [attr.data-stack-direction]="
+    isGroup() ? (options()?.stackDirection ?? 'top-to-bottom') : null
+  "
 >
   @if (isGroup()) {
     @for (item of group(); track item.id) {

@@ -4,6 +4,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import {
   ButtonGroupComponent,
   IButtonGroupButton,
+  IButtonGroupButtonClick,
   IButtonGroupOptions,
 } from '@smartsoft001/angular';
 
@@ -24,7 +25,7 @@ export class ButtonGroupUsageExampleComponent {
 
   readonly view = signal('week');
 
-  onButtonClick({ buttonId }: { buttonId: string }): void {
+  onButtonClick({ buttonId }: IButtonGroupButtonClick): void {
     this.view.set(buttonId);
   }
 }

@@ -45,7 +45,7 @@ describe('ExportComponent (pro)', () => {
     fixture.detectChanges();
 
     await component.buttonOptions.click();
-    expect(handler).toHaveBeenCalledWith({ data: 'test' });
+    expect(handler).toHaveBeenCalledWith({ data: 'test' }, undefined);
   });
 
   it('should not call handler when value is undefined', async () => {
@@ -55,5 +55,50 @@ describe('ExportComponent (pro)', () => {
 
     await component.buttonOptions.click();
     expect(handler).not.toHaveBeenCalled();
+  });
+
+  it('should pass fileName to the handler on button click', async () => {
+    const handler = jest.fn();
+    fixture.componentRef.setInput('handler', handler);
+    fixture.componentRef.setInput('value', { data: 'test' });
+    fixture.componentRef.setInput('fileName', 'report.csv');
+    fixture.detectChanges();
+
+    await component.buttonOptions.click();
+
+    expect(handler).toHaveBeenCalledWith({ data: 'test' }, 'report.csv');
+  });
+
+  it('should hide the icon from assistive technology', () => {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    fixture.componentRef.setInput('handler', () => {});
+    fixture.detectChanges();
+
+    const svg = fixture.nativeElement.querySelector('svg');
+
+    expect(svg.getAttribute('aria-hidden')).toBe('true');
+  });
+
+  it('should give the button a visually hidden accessible name', () => {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    fixture.componentRef.setInput('handler', () => {});
+    fixture.detectChanges();
+
+    const label = fixture.nativeElement.querySelector(
+      'button .smart\\:sr-only',
+    ) as HTMLElement;
+
+    expect(label.textContent?.trim()).toBe('Export');
+  });
+
+  it('should apply cssClass to the rendered button', () => {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    fixture.componentRef.setInput('handler', () => {});
+    fixture.componentRef.setInput('class', 'my-export');
+    fixture.detectChanges();
+
+    const button = fixture.nativeElement.querySelector('button');
+
+    expect(button.classList).toContain('my-export');
   });
 });

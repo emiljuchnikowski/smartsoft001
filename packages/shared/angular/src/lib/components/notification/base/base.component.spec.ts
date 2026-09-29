@@ -5,6 +5,7 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { INotificationActionClick } from '..';
 import { NotificationBaseComponent } from './base.component';
 import { INotificationAction, INotificationOptions } from '../../../models';
 
@@ -121,5 +122,16 @@ describe('@smartsoft001/shared-angular: NotificationBaseComponent', () => {
     directive.invokeAction('confirm');
 
     expect(host.lastActionEvent).toEqual({ actionId: 'confirm' });
+  });
+
+  it('should emit a INotificationActionClick payload exported from the component barrel', () => {
+    let received: INotificationActionClick | undefined;
+    directive.actionClick.subscribe(
+      (event: INotificationActionClick) => (received = event),
+    );
+
+    directive.invokeAction('confirm');
+
+    expect(received).toEqual({ actionId: 'confirm' });
   });
 });

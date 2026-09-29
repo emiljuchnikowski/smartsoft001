@@ -21,7 +21,7 @@ Main wrapper component. Renders `ToggleStandardComponent` by default. When `TOGG
 
 ### ToggleStandardComponent (`<smart-toggle-standard>`)
 
-Barebones placeholder concrete implementation. Renders a minimal `<input type="checkbox">` bound to `value` and `disabled`, with an optional `aria-label` from `options.ariaLabel`, and the external `cssClass` applied to the input element. It does not include Tailwind UI styling — it exists solely as the default structural placeholder until a custom implementation is registered through the token.
+Barebones native-HTML implementation. Renders a `<span class="smart-toggle" data-label-position="…">` containing a minimal `<input type="checkbox">` bound to `value` and `disabled`, with the external `cssClass` applied to the input element. `options.label` renders in a `<label class="smart-toggle-label" for="…">` associated with the checkbox (so it is the accessible name), and `options.description` in a `<span class="smart-toggle-description">` referenced by the checkbox's `aria-describedby`. Both live in a `<span class="smart-toggle-text" data-role="text">` placed after the checkbox, or before it when `options.labelPosition === 'left'` (default `'right'`). `options.ariaLabel` is applied as the checkbox's `aria-label` only when there is no `label`. It does not include Tailwind UI styling.
 
 ### TogglePresetComponent (`<smart-toggle-preset>`)
 
@@ -55,7 +55,7 @@ interface IToggleOptions {
 }
 ```
 
-The standard component only consumes `ariaLabel` (placeholder behavior — it is applied directly as the `aria-label` attribute on the checkbox input). The remaining properties — `label`, `description`, and `labelPosition` — are reserved for custom implementations registered through `TOGGLE_STANDARD_COMPONENT_TOKEN` and are ignored by `ToggleStandardComponent`.
+Both `ToggleStandardComponent` and `TogglePresetComponent` honour every property: `label` (the checkbox's accessible name — a `<label for>` in the standard), `description` (referenced by `aria-describedby` in the standard), `labelPosition` (`'left'` puts the text before the switch, otherwise it goes after — default `'right'`) and `ariaLabel` (the standard uses it only when there is no visible `label`; set it for label-less toggles).
 
 ## TOGGLE_STANDARD_COMPONENT_TOKEN
 

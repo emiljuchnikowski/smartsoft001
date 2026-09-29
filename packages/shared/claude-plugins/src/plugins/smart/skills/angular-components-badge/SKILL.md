@@ -55,14 +55,7 @@ Abstract base directive for extending custom badge implementations. Exposes `tex
 
 ```typescript
 type SmartBadgeColor =
-  | 'gray'
-  | 'red'
-  | 'yellow'
-  | 'green'
-  | 'blue'
-  | 'indigo'
-  | 'purple'
-  | 'pink';
+  'gray' | 'red' | 'yellow' | 'green' | 'blue' | 'indigo' | 'purple' | 'pink';
 ```
 
 ### IBadgeOptions
@@ -78,7 +71,7 @@ interface IBadgeOptions {
 }
 ```
 
-`BadgeStandardComponent` only consumes `withDot` (renders a leading bullet) and `withRemove` (renders a remove button that emits `removed`); it ignores `variant` and `pill`. `BadgePresetComponent` consumes **all** of `variant`, `pill`, `withDot`, and `withRemove`.
+`BadgeStandardComponent` renders `withDot` (a leading bullet) and `withRemove` (a remove button that emits `removed`). `variant` and `pill` are purely visual and styled only by the preset; the standard exposes them as `data-variant` (default `"soft"`) and `data-pill` (`"true"` unless `pill === false`) on the same root `<span>` that carries `data-color` and `data-size`, so you can target them with plain CSS. `BadgePresetComponent` styles **all** of `variant`, `pill`, `withDot`, and `withRemove`.
 
 ## BADGE_STANDARD_COMPONENT_TOKEN
 

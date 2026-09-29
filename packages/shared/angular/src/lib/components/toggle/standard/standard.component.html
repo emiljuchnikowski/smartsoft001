@@ -1,8 +1,33 @@
-<input
-  type="checkbox"
-  [checked]="value()"
-  [disabled]="disabled()"
-  [attr.aria-label]="options()?.ariaLabel ?? null"
-  [class]="cssClass()"
-  (change)="onChange($event)"
-/>
+<span class="smart-toggle" [attr.data-label-position]="labelPosition()">
+  @if (hasText() && labelPosition() === 'left') {
+    <ng-container [ngTemplateOutlet]="text" />
+  }
+
+  <input
+    type="checkbox"
+    [id]="inputId"
+    [checked]="value()"
+    [disabled]="disabled()"
+    [attr.aria-label]="label() ? null : (options()?.ariaLabel ?? null)"
+    [attr.aria-describedby]="description() ? descriptionId : null"
+    [class]="cssClass()"
+    (change)="onChange($event)"
+  />
+
+  @if (hasText() && labelPosition() === 'right') {
+    <ng-container [ngTemplateOutlet]="text" />
+  }
+</span>
+
+<ng-template #text>
+  <span class="smart-toggle-text" data-role="text">
+    @if (label()) {
+      <label class="smart-toggle-label" [for]="inputId">{{ label() }}</label>
+    }
+    @if (description()) {
+      <span class="smart-toggle-description" [id]="descriptionId">{{
+        description()
+      }}</span>
+    }
+  </span>
+</ng-template>

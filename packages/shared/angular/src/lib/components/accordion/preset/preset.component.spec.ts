@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AccordionPresetComponent } from './preset.component';
@@ -176,5 +176,40 @@ describe('AccordionPresetComponent', () => {
 
     // Assert
     expect(host.isOpen).toBe(true);
+  });
+});
+
+@Component({
+  selector: 'smart-test-open-host',
+  template: `
+    <ng-template #headerTpl>Test Header</ng-template>
+    <ng-template #bodyTpl>Test Body Content</ng-template>
+    <smart-accordion-preset
+      [headerTpl]="headerTpl"
+      [bodyTpl]="bodyTpl"
+      [(show)]="isOpen"
+      [options]="{ open: true }"
+    />
+  `,
+  imports: [AccordionPresetComponent],
+})
+class TestOpenHostComponent {
+  isOpen = signal(false);
+}
+
+describe('AccordionPresetComponent: options.open', () => {
+  it('should start open and sync [(show)] when options.open is true', async () => {
+    // Arrange
+    await TestBed.configureTestingModule({
+      imports: [TestOpenHostComponent],
+    }).compileComponents();
+    const fixture = TestBed.createComponent(TestOpenHostComponent);
+
+    // Act
+    fixture.detectChanges();
+
+    // Assert
+    expect(fixture.nativeElement.textContent).toContain('Test Body Content');
+    expect(fixture.componentInstance.isOpen()).toBe(true);
   });
 });

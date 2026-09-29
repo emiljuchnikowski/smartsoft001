@@ -82,7 +82,7 @@
                 [disabled]="!cell.isCurrentMonth"
                 [attr.data-today]="cell.isToday ? 'true' : null"
                 [attr.data-selected]="cell.isSelected ? 'true' : null"
-                [attr.aria-label]="cell.date.toDateString()"
+                [attr.aria-label]="dayAriaLabel(cell.date)"
                 [attr.aria-pressed]="cell.isSelected"
                 (click)="selectDay(cell.date)"
               >

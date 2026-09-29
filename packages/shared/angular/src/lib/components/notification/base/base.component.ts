@@ -12,6 +12,10 @@ import {
   INotificationOptions,
 } from '../../../models';
 
+export interface INotificationActionClick {
+  actionId: string;
+}
+
 @Directive()
 export abstract class NotificationBaseComponent {
   static smartType: DynamicComponentType = 'notification';
@@ -29,9 +33,8 @@ export abstract class NotificationBaseComponent {
   cssClass: InputSignal<string> = input<string>('', { alias: 'class' });
 
   dismissed: OutputEmitterRef<void> = output<void>();
-  actionClick: OutputEmitterRef<{ actionId: string }> = output<{
-    actionId: string;
-  }>();
+  actionClick: OutputEmitterRef<INotificationActionClick> =
+    output<INotificationActionClick>();
 
   dismiss(): void {
     this.dismissed.emit();

@@ -24,11 +24,13 @@ export class ExportUsageExampleComponent {
   readonly fileName = 'orders.csv';
 
   readonly exported = signal<Order[] | null>(null);
+  readonly exportedFileName = signal<string | undefined>(undefined);
 
-  // Receives the bound `value` when the button is clicked. Build the file
-  // (CSV, XLSX, ...) and start the download here.
-  readonly exportOrders = (orders: Order[]): void => {
+  // Receives the bound `value` and `fileName` when the button is clicked.
+  // Build the file (CSV, XLSX, ...) and start the download under that name.
+  readonly exportOrders = (orders: Order[], fileName?: string): void => {
     this.exported.set(orders);
+    this.exportedFileName.set(fileName);
   };
 }
 // #endregion

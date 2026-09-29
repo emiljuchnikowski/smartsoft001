@@ -18,7 +18,7 @@ import {
 } from '@angular/core/rxjs-interop';
 
 import { PAGING_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
-import { PagingBaseComponent } from './base/base.component';
+import { PagingBaseComponent, PagingVariant } from './base/base.component';
 import { PagingStandardComponent } from './standard/standard.component';
 
 @Component({
@@ -43,6 +43,12 @@ export class PagingComponent {
   readonly totalPages = input<number>(1);
   readonly pageSize = input<number>(10);
   readonly totalItems = input<number>(0);
+  /**
+   * Layout variant forwarded to the rendered paging component. Purely
+   * visual: styled by the preset, the standard only exposes it as
+   * `data-variant`.
+   */
+  readonly variant = input<PagingVariant>('card-footer');
   readonly cssClass = input<string>('', { alias: 'class' });
 
   readonly pageChange = output<number>();
@@ -70,6 +76,7 @@ export class PagingComponent {
       this.componentRef.setInput('totalPages', this.totalPages());
       this.componentRef.setInput('pageSize', this.pageSize());
       this.componentRef.setInput('totalItems', this.totalItems());
+      this.componentRef.setInput('variant', this.variant());
       this.componentRef.setInput('class', this.cssClass());
     });
   }

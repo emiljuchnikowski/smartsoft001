@@ -14,13 +14,19 @@ describe('docs-examples-angular: StackedLayoutUsageExampleComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should render the navigation and header templates from the options', () => {
+  it('should render the navigation template and the title from the options', () => {
     const layout: HTMLElement = fixture.nativeElement;
 
     expect(layout.querySelector('nav')?.textContent).toContain('Dashboard');
-    expect(layout.querySelector('header h1')?.textContent).toContain(
-      'Projects',
-    );
+    expect(
+      layout.querySelector('header h1[data-role="title"]')?.textContent,
+    ).toContain('Projects');
+  });
+
+  it('should expose the container width on the layout root', () => {
+    const root = fixture.nativeElement.querySelector('[data-container-width]');
+
+    expect(root.getAttribute('data-container-width')).toBe('xl');
   });
 
   it('should project the page content into the main area', () => {

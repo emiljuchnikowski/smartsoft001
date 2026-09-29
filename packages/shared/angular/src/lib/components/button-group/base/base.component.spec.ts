@@ -5,6 +5,7 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { IButtonGroupButtonClick } from '..';
 import { ButtonGroupBaseComponent } from './base.component';
 import { IButtonGroupButton, IButtonGroupOptions } from '../../../models';
 
@@ -100,5 +101,16 @@ describe('@smartsoft001/shared-angular: ButtonGroupBaseComponent', () => {
     directive.select('btn-2');
 
     expect(spy).toHaveBeenCalledWith({ buttonId: 'btn-2' });
+  });
+
+  it('should emit a IButtonGroupButtonClick payload exported from the component barrel', () => {
+    let received: IButtonGroupButtonClick | undefined;
+    directive.buttonClick.subscribe(
+      (event: IButtonGroupButtonClick) => (received = event),
+    );
+
+    directive.select('btn-2');
+
+    expect(received).toEqual({ buttonId: 'btn-2' });
   });
 });

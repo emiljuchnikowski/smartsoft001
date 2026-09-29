@@ -85,7 +85,8 @@ interface IAvatarOptions {
 }
 ```
 
-The standard placeholder component does not consume these options — they are reserved for custom implementations registered through `AVATAR_STANDARD_COMPONENT_TOKEN` (e.g. to choose between an icon glyph and initials as the empty fallback, or to control z-index ordering when avatars in a group are stacked/overlapped).
+- **`placeholderType`** (default `'icon'`) — the fallback when there is no `imageUrl`. Both variants follow the same rule: `initials` are shown whenever they are set. Without initials, `AvatarPresetComponent` renders an SVG icon (`'icon'`) or an empty initials chip (`'initials'`), while `AvatarStandardComponent` renders a `·` placeholder. The standard also exposes the value as `data-placeholder-type` on its root `<span>`.
+- **`stackDirection`** (default `'top-to-bottom'`) — purely visual, styled by the preset (`'bottom-to-top'` reverses the overlapping stack). The standard exposes it as `data-stack-direction` on the group container (the root `<span>`, only in group mode), so plain CSS can target it.
 
 ### Single vs Group Mode
 

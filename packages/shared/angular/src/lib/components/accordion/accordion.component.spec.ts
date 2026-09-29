@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AccordionComponent } from './accordion.component';
@@ -19,6 +19,22 @@ import { AccordionHeaderComponent } from './header/header.component';
 class TestHostComponent {
   isOpen = false;
   options: any = undefined;
+}
+
+@Component({
+  selector: 'smart-test-signal-host',
+  template: `
+    <smart-accordion [(show)]="isOpen" [options]="options">
+      <div accordionHeader>Test Header</div>
+      <div accordionBody>Test Body Content</div>
+    </smart-accordion>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AccordionComponent],
+})
+class TestSignalHostComponent {
+  isOpen = signal(false);
+  options = { open: true };
 }
 
 describe('AccordionComponent', () => {
@@ -88,6 +104,29 @@ describe('AccordionComponent', () => {
   it('should show chevron-down icon when closed', () => {
     const svg = fixture.nativeElement.querySelector('smart-icon svg');
     expect(svg).toBeTruthy();
+  });
+
+  it('should start open and sync a signal-bound [(show)] when options.open is true', () => {
+    const signalFixture = TestBed.createComponent(TestSignalHostComponent);
+    signalFixture.detectChanges();
+
+    expect(
+      signalFixture.nativeElement.querySelector('[accordionBody]'),
+    ).toBeTruthy();
+    expect(signalFixture.componentInstance.isOpen()).toBe(true);
+  });
+
+  it('should close on header click after starting open from options.open', () => {
+    const signalFixture = TestBed.createComponent(TestSignalHostComponent);
+    signalFixture.detectChanges();
+
+    signalFixture.nativeElement.querySelector('button').click();
+    signalFixture.detectChanges();
+
+    expect(
+      signalFixture.nativeElement.querySelector('[accordionBody]'),
+    ).toBeNull();
+    expect(signalFixture.componentInstance.isOpen()).toBe(false);
   });
 
   it('should update two-way binding on toggle', () => {

@@ -35,7 +35,7 @@ The per-variant class recipes live in `preset/preset-classes.util.ts` (`getPagin
 
 > Unlike most preset components, `PagingPresetComponent` keeps the inherited `cssClass` **with** its `class` alias. `PagingComponent` instantiates the injected component with `ViewContainerRef.createComponent` and forwards inputs via `setInput('class', …)` (the public alias) — not `NgComponentOutlet` — so dropping the alias would break the forwarded class binding. Bind `class` on either `<smart-paging>` or `<smart-paging-preset>`.
 >
-> Note: `PagingComponent` does **not** forward the `variant` input, so selecting a variant requires using the `<smart-paging-preset>` selector directly (or another wrapper that forwards `variant`).
+> `PagingComponent` forwards the `variant` input (via `setInput('variant', …)`, including later changes), so `<smart-paging variant="centered">` selects the preset layout when the preset is registered. The standard component ignores it visually and only exposes it as a `data-variant` attribute on its `<nav>`.
 
 ### PagingBaseComponent (abstract)
 
@@ -45,14 +45,14 @@ Abstract base directive for extending custom paging implementations. Provides si
 
 ### Inputs
 
-| Input         | Type                         | Default         | Description                                 |
-| ------------- | ---------------------------- | --------------- | ------------------------------------------- |
-| `currentPage` | `InputSignal<number>`        | `1`             | Current active page                         |
-| `totalPages`  | `InputSignal<number>`        | `1`             | Total number of pages                       |
-| `pageSize`    | `InputSignal<number>`        | `10`            | Items per page                              |
-| `totalItems`  | `InputSignal<number>`        | `0`             | Total number of items                       |
-| `variant`     | `InputSignal<PagingVariant>` | `'card-footer'` | Variant hint for extensions                 |
-| `class`       | `InputSignal<string>`        | `''`            | External CSS classes (alias for `cssClass`) |
+| Input         | Type                         | Default         | Description                                                                     |
+| ------------- | ---------------------------- | --------------- | ------------------------------------------------------------------------------- |
+| `currentPage` | `InputSignal<number>`        | `1`             | Current active page                                                             |
+| `totalPages`  | `InputSignal<number>`        | `1`             | Total number of pages                                                           |
+| `pageSize`    | `InputSignal<number>`        | `10`            | Items per page                                                                  |
+| `totalItems`  | `InputSignal<number>`        | `0`             | Total number of items                                                           |
+| `variant`     | `InputSignal<PagingVariant>` | `'card-footer'` | Layout variant, styled by the preset; the standard exposes it as `data-variant` |
+| `class`       | `InputSignal<string>`        | `''`            | External CSS classes (alias for `cssClass`)                                     |
 
 ### Outputs
 
@@ -153,7 +153,15 @@ providers: [
 ```
 
 ```html
-<!-- Use the variation selector directly to pick a variant -->
+<!-- With the preset registered, pick a variant through the wrapper -->
+<smart-paging
+  variant="centered"
+  [currentPage]="page()"
+  [totalPages]="totalPages()"
+  (pageChange)="onPageChange($event)"
+></smart-paging>
+
+<!-- Or use the variation selector directly -->
 <smart-paging-preset
   variant="card-footer"
   [currentPage]="page()"

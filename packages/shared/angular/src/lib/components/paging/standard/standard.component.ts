@@ -11,7 +11,11 @@ import { PagingBaseComponent } from '../base/base.component';
 @Component({
   selector: 'smart-paging-standard',
   template: `
-    <nav aria-label="Pagination" [class]="wrapperClasses()">
+    <nav
+      aria-label="Pagination"
+      [class]="wrapperClasses()"
+      [attr.data-variant]="variant()"
+    >
       <button
         type="button"
         [disabled]="!canGoBack()"

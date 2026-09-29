@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 
 import {
   IModalAction,
+  IModalActionClick,
   IModalOptions,
   ModalComponent,
 } from '@smartsoft001/angular';
@@ -30,7 +31,7 @@ export class ModalUsageExampleComponent {
   readonly lastAction = signal<string | null>(null);
   readonly closedCount = signal(0);
 
-  onActionClick({ actionId }: { actionId: string }): void {
+  onActionClick({ actionId }: IModalActionClick): void {
     this.lastAction.set(actionId);
     this.open.set(false);
   }

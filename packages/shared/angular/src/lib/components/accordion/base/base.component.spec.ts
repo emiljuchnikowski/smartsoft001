@@ -89,3 +89,38 @@ describe('AccordionBaseComponent', () => {
     expect(classes).toContain('smart:dark:border-white/10');
   });
 });
+
+describe('AccordionBaseComponent: options.open', () => {
+  let fixture: ComponentFixture<TestHostComponent>;
+  let accordion: TestAccordionComponent;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [TestHostComponent],
+    }).compileComponents();
+    fixture = TestBed.createComponent(TestHostComponent);
+    fixture.componentInstance.options = { open: true };
+    fixture.detectChanges();
+    accordion = fixture.debugElement.children[0].componentInstance;
+  });
+
+  it('should start open when options.open is true on first render', () => {
+    expect(accordion.show()).toBe(true);
+  });
+
+  it('should not reopen after the user closes it', () => {
+    accordion.toggle();
+    fixture.detectChanges();
+
+    expect(accordion.show()).toBe(false);
+  });
+
+  it('should not react to options.open changing after the first render', () => {
+    accordion.toggle();
+    fixture.componentInstance.options = { open: true, disabled: false };
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
+    fixture.detectChanges();
+
+    expect(accordion.show()).toBe(false);
+  });
+});
