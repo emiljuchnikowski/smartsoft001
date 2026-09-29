@@ -1,3 +1,14 @@
+## 2.179.0 (2026-09-29)
+
+### 🩹 Fixes
+
+- **nx:** render inline code and code headings properly on the docs site ([#107](https://github.com/emiljuchnikowski/smartsoft001/pull/107))
+
+### ❤️ Thank You
+
+- Claude Opus 5.5 (1M context)
+- Emil Juchnikowski
+
 ## 2.178.0 (2026-09-29)
 
 This was a version bump only, there were no code changes.
