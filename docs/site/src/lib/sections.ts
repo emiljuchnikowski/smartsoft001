@@ -39,10 +39,16 @@ function isH3Node(node: Node): node is H3Node {
   return isHeadingNode(node) && node.attributes.level === 3
 }
 
+/**
+ * The text of a heading, inline code included, so that
+ * "TableComponent (`<smart-table>`)" does not read "TableComponent ()" and
+ * "### `PayuService`" is not dropped. The heading node in `markdoc/nodes.js`
+ * builds its id from the same text, so the entry and the anchor agree.
+ */
 function getNodeText(node: Node) {
   let text = ''
   for (let child of node.children ?? []) {
-    if (child.type === 'text') {
+    if (child.type === 'text' || child.type === 'code') {
       text += child.attributes.content
     }
     text += getNodeText(child)

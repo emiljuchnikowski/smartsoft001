@@ -9,6 +9,12 @@ import { MarkdocLink } from '@/components/MarkdocLink'
 
 let documentSlugifyMap = new Map()
 
+/** The text of a transformed child: a string, or the strings inside a tag. */
+function textOf(child) {
+  if (typeof child === 'string') return child
+  return (child?.children ?? []).map(textOf).join('')
+}
+
 const nodes = {
   document: {
     ...defaultNodes.document,
@@ -32,7 +38,10 @@ const nodes = {
       let slugify = documentSlugifyMap.get(config)
       let attributes = node.transformAttributes(config)
       let children = node.transformChildren(config)
-      let text = children.filter((child) => typeof child === 'string').join(' ')
+      // Inline code counts: an id built from the plain text alone left
+      // "### `PayuService`" without one, and the table of contents
+      // (lib/sections.ts, same rule) without the entry.
+      let text = children.map(textOf).join(' ')
       let id = attributes.id ?? slugify(text)
 
       return new Tag(

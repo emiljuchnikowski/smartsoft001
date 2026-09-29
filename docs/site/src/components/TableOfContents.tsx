@@ -72,7 +72,10 @@ export function TableOfContents({
             >
               On this page
             </h2>
-            <ol role="list" className="mt-4 space-y-3 text-sm">
+            <ol
+              role="list"
+              className="mt-4 space-y-3 text-sm [overflow-wrap:anywhere]"
+            >
               {tableOfContents.map((section) => (
                 <li key={section.id}>
                   <h3>
