@@ -82,5 +82,33 @@ describe('@smartsoft001/shared-angular: TabsComponent', () => {
 
       expect(standard).toBeNull();
     });
+
+    describe('outputs of the injected component', () => {
+      let injected: MockInjectedComponent;
+
+      beforeEach(async () => {
+        await fixture.whenStable();
+        injected = fixture.debugElement.query(
+          (el) => el.componentInstance instanceof MockInjectedComponent,
+        ).componentInstance;
+      });
+
+      it('should re-emit tabChange through the wrapper', () => {
+        const emitted: { tabId: string }[] = [];
+        fixture.componentInstance.tabChange.subscribe((event) =>
+          emitted.push(event),
+        );
+
+        injected.tabChange.emit({ tabId: 'b' });
+
+        expect(emitted).toEqual([{ tabId: 'b' }]);
+      });
+
+      it('should write selectedId back to the wrapper model', () => {
+        injected.selectedId.set('b');
+
+        expect(fixture.componentInstance.selectedId()).toBe('b');
+      });
+    });
   });
 });

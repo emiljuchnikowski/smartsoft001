@@ -82,5 +82,27 @@ describe('@smartsoft001/shared-angular: ProgressBarsComponent', () => {
 
       expect(standard).toBeNull();
     });
+
+    describe('outputs of the injected component', () => {
+      let injected: MockInjectedComponent;
+
+      beforeEach(async () => {
+        await fixture.whenStable();
+        injected = fixture.debugElement.query(
+          (el) => el.componentInstance instanceof MockInjectedComponent,
+        ).componentInstance;
+      });
+
+      it('should re-emit stepClick through the wrapper', () => {
+        const emitted: unknown[] = [];
+        fixture.componentInstance.stepClick.subscribe((event: unknown) =>
+          emitted.push(event),
+        );
+
+        injected.stepClick.emit({ stepId: 's1' });
+
+        expect(emitted).toEqual([{ stepId: 's1' }]);
+      });
+    });
   });
 });

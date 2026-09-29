@@ -80,5 +80,33 @@ describe('@smartsoft001/shared-angular: NavbarComponent', () => {
 
       expect(standard).toBeNull();
     });
+
+    describe('outputs of the injected component', () => {
+      let injected: MockInjectedComponent;
+
+      beforeEach(async () => {
+        await fixture.whenStable();
+        injected = fixture.debugElement.query(
+          (el) => el.componentInstance instanceof MockInjectedComponent,
+        ).componentInstance;
+      });
+
+      it('should re-emit itemClick through the wrapper', () => {
+        const emitted: unknown[] = [];
+        fixture.componentInstance.itemClick.subscribe((event: unknown) =>
+          emitted.push(event),
+        );
+
+        injected.itemClick.emit({ itemId: 'home' });
+
+        expect(emitted).toEqual([{ itemId: 'home' }]);
+      });
+
+      it('should write mobileMenuOpen back to the wrapper model', () => {
+        injected.mobileMenuOpen.set(true);
+
+        expect(fixture.componentInstance.mobileMenuOpen()).toEqual(true);
+      });
+    });
   });
 });

@@ -7,12 +7,14 @@ import {
   input,
   model,
   output,
+  viewChild,
   ViewEncapsulation,
 } from '@angular/core';
 
 import { CommandPaletteStandardComponent } from './standard/standard.component';
 import { ICommand, ICommandPaletteOptions } from '../../models';
 import { COMMAND_PALETTE_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 
 @Component({
   selector: 'smart-command-palette',
@@ -59,4 +61,14 @@ export class CommandPaletteComponent {
     options: this.options(),
     cssClass: this.cssClass(),
   }));
+
+  private readonly outlet = viewChild(NgComponentOutlet);
+
+  constructor() {
+    forwardOutletOutputs(this.outlet, {
+      open: this.open,
+      query: this.query,
+      runCommand: this.runCommand,
+    });
+  }
 }

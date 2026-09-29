@@ -6,12 +6,14 @@ import {
   inject,
   input,
   model,
+  viewChild,
   ViewEncapsulation,
 } from '@angular/core';
 
 import { SearchbarStandardComponent } from './standard';
 import { ISearchbarOptions } from '../../models';
 import { SEARCHBAR_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 
 @Component({
   selector: 'smart-searchbar',
@@ -52,4 +54,13 @@ export class SearchbarComponent {
     text: this.text(),
     cssClass: this.cssClass(),
   }));
+
+  private readonly outlet = viewChild(NgComponentOutlet);
+
+  constructor() {
+    forwardOutletOutputs(this.outlet, {
+      show: this.show,
+      text: this.text,
+    });
+  }
 }

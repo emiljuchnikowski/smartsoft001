@@ -136,5 +136,44 @@ describe('@smartsoft001/shared-angular: SignInFormComponent', () => {
 
       expect(standard).toBeNull();
     });
+
+    describe('outputs of the injected component', () => {
+      let injected: MockInjectedComponent;
+
+      beforeEach(async () => {
+        await fixture.whenStable();
+        injected = fixture.debugElement.query(
+          (el) => el.componentInstance instanceof MockInjectedComponent,
+        ).componentInstance;
+      });
+
+      it('should re-emit submit through the wrapper', () => {
+        const emitted: unknown[] = [];
+        fixture.componentInstance.submit.subscribe((event: unknown) =>
+          emitted.push(event),
+        );
+
+        injected.submit.emit({
+          email: 'a@b.c',
+          password: 'x',
+          mode: 'sign-in',
+        });
+
+        expect(emitted).toEqual([
+          { email: 'a@b.c', password: 'x', mode: 'sign-in' },
+        ]);
+      });
+
+      it('should re-emit socialClick through the wrapper', () => {
+        const emitted: unknown[] = [];
+        fixture.componentInstance.socialClick.subscribe((event: unknown) =>
+          emitted.push(event),
+        );
+
+        injected.socialClick.emit({ providerId: 'google', mode: 'sign-in' });
+
+        expect(emitted).toEqual([{ providerId: 'google', mode: 'sign-in' }]);
+      });
+    });
   });
 });

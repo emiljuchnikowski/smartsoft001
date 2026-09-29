@@ -6,6 +6,7 @@ import {
   inject,
   input,
   output,
+  viewChild,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -16,6 +17,7 @@ import {
 import { EmptyStateStandardComponent } from './standard';
 import { IEmptyStateOptions } from '../../models';
 import { EMPTY_STATE_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 
 @Component({
   selector: 'smart-empty-state',
@@ -55,4 +57,13 @@ export class EmptyStateComponent {
     options: this.options(),
     cssClass: this.cssClass(),
   }));
+
+  private readonly outlet = viewChild(NgComponentOutlet);
+
+  constructor() {
+    forwardOutletOutputs(this.outlet, {
+      actionClick: this.actionClick,
+      itemClick: this.itemClick,
+    });
+  }
 }

@@ -6,6 +6,7 @@ import {
   inject,
   input,
   output,
+  viewChild,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -13,6 +14,7 @@ import { INotificationActionClick } from './base/base.component';
 import { NotificationStandardComponent } from './standard/standard.component';
 import { INotificationAction, INotificationOptions } from '../../models';
 import { NOTIFICATION_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 
 @Component({
   selector: 'smart-notification',
@@ -70,4 +72,13 @@ export class NotificationComponent {
     options: this.options(),
     cssClass: this.cssClass(),
   }));
+
+  private readonly outlet = viewChild(NgComponentOutlet);
+
+  constructor() {
+    forwardOutletOutputs(this.outlet, {
+      dismissed: this.dismissed,
+      actionClick: this.actionClick,
+    });
+  }
 }

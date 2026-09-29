@@ -191,6 +191,28 @@ describe('@smartsoft001/shared-angular: FormComponent', () => {
       );
       expect(inputs['class']).toBe('my-extra');
     });
+
+    describe('outputs of the injected component', () => {
+      let injected: TestCustomFormComponent;
+
+      beforeEach(async () => {
+        await fixture.whenStable();
+        injected = fixture.debugElement.query(
+          (el) => el.componentInstance instanceof TestCustomFormComponent,
+        ).componentInstance;
+      });
+
+      it('should re-emit invokeSubmit through the wrapper', () => {
+        const emitted: unknown[] = [];
+        component.invokeSubmit.subscribe((event: unknown) =>
+          emitted.push(event),
+        );
+
+        injected.invokeSubmit.emit({ firstName: 'Jan' });
+
+        expect(emitted).toEqual([{ firstName: 'Jan' }]);
+      });
+    });
   });
 
   describe('rebuilding the group when options change', () => {

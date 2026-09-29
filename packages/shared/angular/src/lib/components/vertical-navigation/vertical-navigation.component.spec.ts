@@ -80,5 +80,27 @@ describe('@smartsoft001/shared-angular: VerticalNavigationComponent', () => {
 
       expect(standard).toBeNull();
     });
+
+    describe('outputs of the injected component', () => {
+      let injected: MockInjectedComponent;
+
+      beforeEach(async () => {
+        await fixture.whenStable();
+        injected = fixture.debugElement.query(
+          (el) => el.componentInstance instanceof MockInjectedComponent,
+        ).componentInstance;
+      });
+
+      it('should re-emit itemClick through the wrapper', () => {
+        const emitted: { itemId: string }[] = [];
+        fixture.componentInstance.itemClick.subscribe((event) =>
+          emitted.push(event),
+        );
+
+        injected.itemClick.emit({ itemId: 'a' });
+
+        expect(emitted).toEqual([{ itemId: 'a' }]);
+      });
+    });
   });
 });

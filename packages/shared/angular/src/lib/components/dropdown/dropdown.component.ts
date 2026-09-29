@@ -7,12 +7,14 @@ import {
   input,
   model,
   output,
+  viewChild,
   ViewEncapsulation,
 } from '@angular/core';
 
 import { DropdownStandardComponent } from './standard/standard.component';
 import { IDropdownItem, IDropdownOptions } from '../../models';
 import { DROPDOWN_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 
 @Component({
   selector: 'smart-dropdown',
@@ -61,4 +63,13 @@ export class DropdownComponent {
     options: this.options(),
     cssClass: this.cssClass(),
   }));
+
+  private readonly outlet = viewChild(NgComponentOutlet);
+
+  constructor() {
+    forwardOutletOutputs(this.outlet, {
+      selectedItem: this.selectedItem,
+      open: this.open,
+    });
+  }
 }

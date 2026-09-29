@@ -6,12 +6,14 @@ import {
   inject,
   input,
   output,
+  viewChild,
   ViewEncapsulation,
 } from '@angular/core';
 
 import { BadgeStandardComponent } from './standard/standard.component';
 import { IBadgeOptions, SmartBadgeColor } from '../../models';
 import { BADGE_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 
 @Component({
   selector: 'smart-badge',
@@ -58,4 +60,12 @@ export class BadgeComponent {
     options: this.options(),
     cssClass: this.cssClass(),
   }));
+
+  private readonly outlet = viewChild(NgComponentOutlet);
+
+  constructor() {
+    forwardOutletOutputs(this.outlet, {
+      removed: this.removed,
+    });
+  }
 }

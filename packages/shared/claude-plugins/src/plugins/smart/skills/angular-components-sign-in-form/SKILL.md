@@ -17,7 +17,7 @@ The `<smart-sign-in-form>` component renders a single form that supports both **
 
 ### SignInFormComponent (`<smart-sign-in-form>`)
 
-Main wrapper component. Renders `SignInFormStandardComponent` by default. When `SIGN_IN_FORM_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`. The wrapper re-emits `submit` and `socialClick` from the standard child.
+Main wrapper component. Renders `SignInFormStandardComponent` by default. When `SIGN_IN_FORM_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`. The wrapper re-emits `submit` and `socialClick` from the standard child, or from the custom implementation registered through the token.
 
 ### SignInFormStandardComponent (`<smart-sign-in-form-standard>`)
 

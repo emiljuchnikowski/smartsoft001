@@ -111,5 +111,31 @@ describe('@smartsoft001/shared-angular: ButtonGroupComponent', () => {
 
       expect(standard).toBeNull();
     });
+
+    describe('outputs of the injected component', () => {
+      let injected: MockInjectedComponent;
+
+      beforeEach(async () => {
+        await fixture.whenStable();
+        injected = fixture.debugElement.query(
+          (el) => el.componentInstance instanceof MockInjectedComponent,
+        ).componentInstance;
+      });
+
+      it('should write selected back to the wrapper model', () => {
+        injected.selected.set('b');
+
+        expect(fixture.componentInstance.selected()).toEqual('b');
+      });
+
+      it('should re-emit buttonClick through the wrapper', () => {
+        const spy = jest.fn();
+        fixture.componentInstance.buttonClick.subscribe(spy);
+
+        injected.buttonClick.emit({ buttonId: 'b' });
+
+        expect(spy).toHaveBeenCalledWith({ buttonId: 'b' });
+      });
+    });
   });
 });

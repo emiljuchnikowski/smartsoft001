@@ -6,12 +6,14 @@ import {
   inject,
   input,
   model,
+  viewChild,
   ViewEncapsulation,
 } from '@angular/core';
 
 import { ToggleStandardComponent } from './standard/standard.component';
 import { IToggleOptions } from '../../models';
 import { TOGGLE_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 
 @Component({
   selector: 'smart-toggle',
@@ -52,4 +54,12 @@ export class ToggleComponent {
     options: this.options(),
     cssClass: this.cssClass(),
   }));
+
+  private readonly outlet = viewChild(NgComponentOutlet);
+
+  constructor() {
+    forwardOutletOutputs(this.outlet, {
+      value: this.value,
+    });
+  }
 }

@@ -100,5 +100,25 @@ describe('@smartsoft001/shared-angular: AlertComponent', () => {
 
       expect(standard).toBeNull();
     });
+
+    describe('outputs of the injected component', () => {
+      let injected: MockInjectedComponent;
+
+      beforeEach(async () => {
+        await fixture.whenStable();
+        injected = fixture.debugElement.query(
+          (el) => el.componentInstance instanceof MockInjectedComponent,
+        ).componentInstance;
+      });
+
+      it('should re-emit dismissed through the wrapper', () => {
+        const spy = jest.fn();
+        fixture.componentInstance.dismissed.subscribe(spy);
+
+        injected.dismissed.emit({ text: 'Confirm' });
+
+        expect(spy).toHaveBeenCalledWith({ text: 'Confirm' });
+      });
+    });
   });
 });

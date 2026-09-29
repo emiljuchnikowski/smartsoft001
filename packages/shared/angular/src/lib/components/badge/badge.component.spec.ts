@@ -108,5 +108,25 @@ describe('@smartsoft001/shared-angular: BadgeComponent', () => {
 
       expect(standard).toBeNull();
     });
+
+    describe('outputs of the injected component', () => {
+      let injected: MockInjectedComponent;
+
+      beforeEach(async () => {
+        await fixture.whenStable();
+        injected = fixture.debugElement.query(
+          (el) => el.componentInstance instanceof MockInjectedComponent,
+        ).componentInstance;
+      });
+
+      it('should re-emit removed through the wrapper', () => {
+        const spy = jest.fn();
+        fixture.componentInstance.removed.subscribe(spy);
+
+        injected.removed.emit();
+
+        expect(spy).toHaveBeenCalledTimes(1);
+      });
+    });
   });
 });

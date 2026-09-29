@@ -100,5 +100,22 @@ describe('@smartsoft001/shared-angular: ToggleComponent', () => {
 
       expect(standard).toBeNull();
     });
+
+    describe('outputs of the injected component', () => {
+      let injected: MockInjectedComponent;
+
+      beforeEach(async () => {
+        await fixture.whenStable();
+        injected = fixture.debugElement.query(
+          (el) => el.componentInstance instanceof MockInjectedComponent,
+        ).componentInstance;
+      });
+
+      it('should write value back to the wrapper model', () => {
+        injected.value.set(true);
+
+        expect(fixture.componentInstance.value()).toBe(true);
+      });
+    });
   });
 });

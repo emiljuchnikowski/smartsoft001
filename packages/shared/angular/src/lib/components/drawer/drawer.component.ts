@@ -7,12 +7,14 @@ import {
   input,
   model,
   output,
+  viewChild,
   ViewEncapsulation,
 } from '@angular/core';
 
 import { DrawerStandardComponent } from './standard/standard.component';
 import { IDrawerOptions } from '../../models';
 import { DRAWER_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 
 @Component({
   selector: 'smart-drawer',
@@ -58,4 +60,13 @@ export class DrawerComponent {
     options: this.options(),
     cssClass: this.cssClass(),
   }));
+
+  private readonly outlet = viewChild(NgComponentOutlet);
+
+  constructor() {
+    forwardOutletOutputs(this.outlet, {
+      open: this.open,
+      closed: this.closed,
+    });
+  }
 }

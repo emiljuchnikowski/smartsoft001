@@ -7,6 +7,7 @@ import {
   input,
   model,
   output,
+  viewChild,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -14,6 +15,7 @@ import { IButtonGroupButtonClick } from './base/base.component';
 import { ButtonGroupStandardComponent } from './standard/standard.component';
 import { IButtonGroupButton, IButtonGroupOptions } from '../../models';
 import { BUTTON_GROUP_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 
 @Component({
   selector: 'smart-button-group',
@@ -57,4 +59,13 @@ export class ButtonGroupComponent {
     selected: this.selected(),
     cssClass: this.cssClass(),
   }));
+
+  private readonly outlet = viewChild(NgComponentOutlet);
+
+  constructor() {
+    forwardOutletOutputs(this.outlet, {
+      selected: this.selected,
+      buttonClick: this.buttonClick,
+    });
+  }
 }
