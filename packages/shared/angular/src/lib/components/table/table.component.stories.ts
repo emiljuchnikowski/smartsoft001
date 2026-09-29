@@ -1,8 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
+import { TablePresetComponent } from './preset/preset.component';
 import { TableComponent } from './table.component';
 import { ITableColumn, ITableOptions, TableRow } from '../../models';
+import { TABLE_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 const COLUMNS: ITableColumn[] = [
   { key: 'name', label: 'Name' },
@@ -11,7 +13,18 @@ const COLUMNS: ITableColumn[] = [
   { key: 'seats', label: 'Seats', align: 'right' },
 ];
 
+const SORTABLE_COLUMNS: ITableColumn[] = COLUMNS.map((col) => ({
+  ...col,
+  sortable: col.key !== 'email',
+}));
+
 const ROWS: TableRow[] = [
+  {
+    name: 'Whitney Francis',
+    role: 'Copywriter',
+    email: 'whitney.francis@example.com',
+    seats: 2,
+  },
   {
     name: 'Lindsay Walton',
     role: 'Front-end Developer',
@@ -47,9 +60,15 @@ const meta: Meta<TableArgs> = {
   tags: ['autodocs'],
   decorators: [
     moduleMetadata({
-      // No token is registered, so <smart-table> falls back to
-      // TableStandardComponent, which renders a plain <table>.
-      imports: [TableComponent],
+      imports: [TableComponent, TablePresetComponent],
+      // Register the preset variation as the replacement for the standard
+      // table, so every <smart-table> renders TablePresetComponent.
+      providers: [
+        {
+          provide: TABLE_STANDARD_COMPONENT_TOKEN,
+          useValue: TablePresetComponent,
+        },
+      ],
     }),
   ],
   argTypes: {
@@ -65,17 +84,17 @@ const meta: Meta<TableArgs> = {
     withBorder: {
       control: 'boolean',
       description:
-        'Styling hint for implementations registered through TABLE_STANDARD_COMPONENT_TOKEN; ignored by the standard component.',
+        'Frames the table in a rounded card with a gray header (honoured by the preset; ignored by the standard component).',
     },
     striped: {
       control: 'boolean',
       description:
-        'Styling hint for custom implementations; ignored by the standard component.',
+        'Zebra-stripes the rows (honoured by the preset; ignored by the standard component).',
     },
     stickyHeader: {
       control: 'boolean',
       description:
-        'Styling hint for custom implementations; ignored by the standard component.',
+        'Pins the header row while the body scrolls (honoured by the preset; ignored by the standard component).',
     },
     cssClass: {
       control: 'text',
@@ -110,20 +129,23 @@ export const Playground: Story = {
         striped: args.striped,
         stickyHeader: args.stickyHeader,
         columns: [
-          { key: 'name', label: 'Name' },
+          { key: 'name', label: 'Name', sortable: true },
           { key: 'role', label: 'Role' },
           { key: 'email', label: 'Email' },
+          { key: 'seats', label: 'Seats', align: 'right', sortable: true },
         ],
         rows: [
           {
             name: 'Lindsay Walton',
             role: 'Front-end Developer',
             email: 'lindsay.walton@example.com',
+            seats: 3,
           },
           {
             name: 'Courtney Henry',
             role: 'Designer',
             email: 'courtney.henry@example.com',
+            seats: 1,
           },
         ],
       } satisfies ITableOptions,
@@ -162,14 +184,47 @@ export const AllVariants: Story = {
         rows: ROWS,
         withCheckboxes: true,
       } satisfies ITableOptions,
+      striped: {
+        columns: COLUMNS,
+        rows: ROWS,
+        striped: true,
+      } satisfies ITableOptions,
+      bordered: {
+        columns: COLUMNS,
+        rows: ROWS,
+        withBorder: true,
+      } satisfies ITableOptions,
+      stickyHeader: {
+        columns: COLUMNS,
+        rows: [...ROWS, ...ROWS, ...ROWS].map((row) => ({ ...row })),
+        stickyHeader: true,
+        withBorder: true,
+      } satisfies ITableOptions,
+      sortable: {
+        columns: SORTABLE_COLUMNS,
+        rows: ROWS,
+      } satisfies ITableOptions,
+      combined: {
+        title: 'Users',
+        description: 'Striped, bordered, sortable and selectable at once.',
+        columns: SORTABLE_COLUMNS,
+        rows: ROWS,
+        striped: true,
+        withBorder: true,
+        withCheckboxes: true,
+      } satisfies ITableOptions,
     },
     template: `
       <ng-template #emailCell let-row>
-        <a [attr.href]="'mailto:' + row.email">{{ row.email }}</a>
+        <a class="smart:text-indigo-600 smart:hover:text-indigo-900 smart:dark:text-indigo-400 smart:dark:hover:text-indigo-300" [attr.href]="'mailto:' + row.email">{{ row.email }}</a>
       </ng-template>
       <ng-template #emptyTpl><span>No users found</span></ng-template>
-      <ng-template #toolbarTpl><button type="button">Add user</button></ng-template>
-      <ng-template #footerTpl><a href="#">Load more →</a></ng-template>
+      <ng-template #toolbarTpl>
+        <button type="button" class="smart:block smart:rounded-md smart:bg-indigo-600 smart:px-3 smart:py-2 smart:text-center smart:text-sm smart:font-semibold smart:text-white smart:shadow-xs smart:hover:bg-indigo-500 smart:dark:bg-indigo-500 smart:dark:hover:bg-indigo-400">Add user</button>
+      </ng-template>
+      <ng-template #footerTpl>
+        <a href="#" class="smart:font-semibold smart:text-indigo-600 smart:hover:text-indigo-500 smart:dark:text-indigo-400">Load more →</a>
+      </ng-template>
 
       <div style="display: flex; flex-direction: column; gap: 32px; padding: 24px;">
 
@@ -184,6 +239,32 @@ export const AllVariants: Story = {
           'With a checkbox column',
           `<smart-table [options]="withCheckboxes" />`,
         )}
+
+        ${section(
+          'Striped rows',
+          `<smart-table [options]="striped" />`,
+          'striped alternates row backgrounds instead of dividing rows.',
+        )}
+
+        ${section(
+          'Bordered card',
+          `<smart-table [options]="bordered" />`,
+          'withBorder frames the table in a rounded card with a gray header.',
+        )}
+
+        ${section(
+          'Sticky header',
+          `<smart-table [options]="stickyHeader" />`,
+          'stickyHeader caps the height and keeps the header pinned while the body scrolls.',
+        )}
+
+        ${section(
+          'Sortable columns',
+          `<smart-table [options]="sortable" />`,
+          'Click a sortable heading to sort ascending, again for descending. Seats is right-aligned.',
+        )}
+
+        ${section('All flags combined', `<smart-table [options]="combined" />`)}
 
         ${section(
           'With a cell template',

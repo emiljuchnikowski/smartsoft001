@@ -75,6 +75,14 @@ describe('@smartsoft001/shared-angular: InfoPresetComponent', () => {
     expect(tooltip()?.textContent?.trim()).toBe('test info text');
   });
 
+  it('should size the tooltip to its text instead of its anchor', () => {
+    component.open();
+    fixture.detectChanges();
+
+    expect(tooltip()?.className).toContain('smart:w-max');
+    expect(tooltip()?.className).toContain('smart:max-w-xs');
+  });
+
   it('should hide the tooltip on close', () => {
     component.open();
     fixture.detectChanges();

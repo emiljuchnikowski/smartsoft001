@@ -6,12 +6,12 @@ user-invocable: false
 
 # Stacked List Component
 
-The `<smart-stacked-list>` component renders a vertical list of records with optional title, description, per-item icon/avatar, link, badge, action template, and bottom footer slot. It follows the Base + Standard + Wrapper pattern with an InjectionToken-based extension mechanism. The abstract `StackedListBaseComponent` defines the shared API — optional `IStackedListOptions` and `cssClass` (alias `class`). `StackedListStandardComponent` is a barebones placeholder concrete implementation. `StackedListComponent` is the public wrapper that renders `StackedListStandardComponent` by default and accepts a custom replacement via `STACKED_LIST_STANDARD_COMPONENT_TOKEN`.
+The `<smart-stacked-list>` component renders a vertical list of records with optional title, description, per-item icon/avatar, link, badge, action template, and bottom footer slot. It follows the Base + Standard + Wrapper pattern with an InjectionToken-based extension mechanism. The abstract `StackedListBaseComponent` defines the shared API — optional `IStackedListOptions` and `cssClass` (alias `class`). `StackedListStandardComponent` is a barebones placeholder concrete implementation. `StackedListPresetComponent` is a styled Tailwind drop-in replacement. `StackedListComponent` is the public wrapper that renders `StackedListStandardComponent` by default and accepts a custom replacement (such as the preset) via `STACKED_LIST_STANDARD_COMPONENT_TOKEN`.
 
 ## When to Use This Skill
 
 - Developer wants to use or customize the stacked list component
-- Developer asks about `<smart-stacked-list>`, `StackedListComponent`, `StackedListStandardComponent`, or `StackedListBaseComponent`
+- Developer asks about `<smart-stacked-list>`, `StackedListComponent`, `StackedListStandardComponent`, `StackedListPresetComponent`, or `StackedListBaseComponent`
 
 ## Components
 
@@ -22,6 +22,10 @@ Main wrapper component. Renders `StackedListStandardComponent` by default. When 
 ### StackedListStandardComponent (`<smart-stacked-list-standard>`)
 
 Barebones placeholder concrete implementation. Renders a wrapper `<div>` containing an optional `<h3 class="title">`, optional `<p class="description">`, and a `<ul role="list">` with one `<li class="item">` per item. Each item renders the icon/avatar (icon template wins over avatar URL), a body group with the title (rendered as `<a class="title">` if `href` is provided, otherwise `<span class="title">`) and optional description/meta, and optional badge/action template slots. When the item list is empty, the optional `emptyTpl` is rendered inside `<div class="empty">`. A bottom `footerTpl` renders inside `<div class="footer">`. The external `cssClass` is applied to the root wrapper. It does not include any visual styling — it exists solely as the default structural placeholder until a custom implementation is registered through the token.
+
+### StackedListPresetComponent (`<smart-stacked-list-preset>`)
+
+Styled variation that extends `StackedListBaseComponent` and is a drop-in replacement for `StackedListStandardComponent`. See [Preset](#preset).
 
 ### StackedListBaseComponent (abstract)
 
@@ -63,7 +67,46 @@ interface IStackedListItem {
 }
 ```
 
-All properties are optional except `IStackedListItem.title`. The default `StackedListStandardComponent` consumes every property; a section is rendered only when its template/string is provided. Within an item, `iconTpl` wins over `avatarUrl` when both are set.
+All properties are optional except `IStackedListItem.title`. The default `StackedListStandardComponent` renders every content property but ignores the `withDividers` and `fullWidthOnMobile` layout hints; `StackedListPresetComponent` honours them (see [Preset](#preset)). A section is rendered only when its template/string is provided. Within an item, `iconTpl` wins over `avatarUrl` when both are set.
+
+## Preset
+
+`StackedListPresetComponent` (selector `smart-stacked-list-preset`) is the styled skin used by the Storybook stories and the docs site. It extends `StackedListBaseComponent`, so it takes the same `options` and `cssClass` inputs.
+
+It renders the Tailwind UI stacked list look in `smart:`-prefixed Tailwind v4 classes with a `smart:dark:` variant on every colour:
+
+- **Header**: `text-base font-semibold` gray-900 / white title and a `text-sm` gray-500 / gray-400 description.
+- **Rows**: `flex items-center justify-between gap-x-6 py-5`. The leading media is a `size-12` rounded-full avatar (`avatarUrl`) or a gray-100 / gray-800 rounded-full tile wrapping `iconTpl` (the icon template wins). The body shows the title (`text-sm/6 font-semibold`, rendered as a link with hover underline when `href` is set), a truncated `text-xs/5` description and a meta line. `badgeTpl` and `actionTpl` render in a trailing group.
+- **Empty state**: `emptyTpl` renders in a dashed gray-200 / white-10 rounded-lg box when `items` is empty.
+- **Footer**: `footerTpl` renders under the list.
+- **External class**: `cssClass` is appended to the root wrapper.
+
+It honours both layout hints that the standard component ignores:
+
+| Option              | Preset behaviour                                                                                                                                                                                            |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `withDividers`      | `true` draws `divide-y` gray-100 / white-10 hairlines between rows. Unset or `false` separates rows by spacing only.                                                                                        |
+| `fullWidthOnMobile` | `true` renders the list as a white / gray-900 card with a ring. Below `sm` it bleeds to the screen edge (`-mx-4`, square corners); from `sm` up it is a `rounded-xl` card. Rows get `px-4 sm:px-6` padding. |
+
+Register it on the token to restyle every `<smart-stacked-list>`:
+
+```typescript
+import {
+  STACKED_LIST_STANDARD_COMPONENT_TOKEN,
+  StackedListPresetComponent,
+} from '@smartsoft001/angular';
+
+providers: [
+  {
+    provide: STACKED_LIST_STANDARD_COMPONENT_TOKEN,
+    useValue: StackedListPresetComponent,
+  },
+];
+```
+
+> `StackedListComponent` renders injected components through `NgComponentOutlet`, which passes inputs by canonical name. For that reason `StackedListPresetComponent` declares `cssClass` as `input<string>('')` **without** the `class` alias. When you use the `<smart-stacked-list-preset>` selector directly, bind `[cssClass]`. On `<smart-stacked-list>` just pass `class` and the wrapper forwards it.
+
+The class recipes live in `preset/preset-classes.util.ts`.
 
 ## STACKED_LIST_STANDARD_COMPONENT_TOKEN
 
@@ -208,6 +251,8 @@ export class MyCustomStackedListComponent extends StackedListBaseComponent {
 
 - Wrapper: `packages/shared/angular/src/lib/components/stacked-list/stacked-list.component.ts`
 - Standard: `packages/shared/angular/src/lib/components/stacked-list/standard/standard.component.ts`
+- Preset: `packages/shared/angular/src/lib/components/stacked-list/preset/preset.component.ts`
+- Preset class recipes: `packages/shared/angular/src/lib/components/stacked-list/preset/preset-classes.util.ts`
 - Base class: `packages/shared/angular/src/lib/components/stacked-list/base/base.component.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`STACKED_LIST_STANDARD_COMPONENT_TOKEN`)
 - Interfaces: `packages/shared/angular/src/lib/models/interfaces.ts` (`IStackedListOptions`, `IStackedListItem`)

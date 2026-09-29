@@ -1,0 +1,67 @@
+<div [class]="rootClasses()">
+  @if (title() || description()) {
+    <div [class]="headerClasses">
+      @if (title()) {
+        <h3 [class]="titleClasses">{{ title() }}</h3>
+      }
+      @if (description()) {
+        <p [class]="descriptionClasses">{{ description() }}</p>
+      }
+    </div>
+  }
+
+  @if (items().length > 0) {
+    <ul role="list" [class]="listClasses()">
+      @for (item of items(); track item.id ?? $index) {
+        <li [class]="itemClasses()" [attr.aria-label]="item.ariaLabel ?? null">
+          <div [class]="leadClasses">
+            @if (item.iconTpl) {
+              <span [class]="iconClasses">
+                <ng-container [ngTemplateOutlet]="item.iconTpl" />
+              </span>
+            } @else if (item.avatarUrl) {
+              <img [class]="avatarClasses" [src]="item.avatarUrl" alt="" />
+            }
+            <div [class]="bodyClasses">
+              @if (item.href) {
+                <a [class]="itemTitleLinkClasses" [attr.href]="item.href">{{
+                  item.title
+                }}</a>
+              } @else {
+                <span [class]="itemTitleClasses">{{ item.title }}</span>
+              }
+              @if (item.description) {
+                <span [class]="itemDescriptionClasses">{{
+                  item.description
+                }}</span>
+              }
+              @if (item.meta) {
+                <span [class]="itemMetaClasses">{{ item.meta }}</span>
+              }
+            </div>
+          </div>
+          @if (item.badgeTpl || item.actionTpl) {
+            <div [class]="trailClasses">
+              @if (item.badgeTpl) {
+                <ng-container [ngTemplateOutlet]="item.badgeTpl" />
+              }
+              @if (item.actionTpl) {
+                <ng-container [ngTemplateOutlet]="item.actionTpl" />
+              }
+            </div>
+          }
+        </li>
+      }
+    </ul>
+  } @else if (emptyTpl()) {
+    <div [class]="emptyClasses">
+      <ng-container [ngTemplateOutlet]="emptyTpl()!" />
+    </div>
+  }
+
+  @if (footerTpl()) {
+    <div [class]="footerClasses">
+      <ng-container [ngTemplateOutlet]="footerTpl()!" />
+    </div>
+  }
+</div>

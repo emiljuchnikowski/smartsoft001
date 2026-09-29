@@ -1,0 +1,123 @@
+<div [class]="rootClasses()" [attr.data-variant]="variant()">
+  @if (options()?.avatarTpl) {
+    <div [class]="avatarClasses">
+      <ng-container [ngTemplateOutlet]="options()!.avatarTpl!" />
+    </div>
+  }
+
+  <div [class]="bodyClasses">
+    @if (options()?.label) {
+      <label [class]="labelClasses" [for]="fieldId">
+        {{ options()!.label }}
+        @if (options()?.required) {
+          <span [class]="requiredClasses" aria-hidden="true">*</span>
+        }
+      </label>
+    }
+
+    @if (hasTabs()) {
+      <div [class]="tabsClasses" role="tablist">
+        <button
+          type="button"
+          role="tab"
+          [class]="tabClasses(mode() === 'write')"
+          [attr.aria-selected]="mode() === 'write'"
+          (click)="mode.set('write')"
+        >
+          Write
+        </button>
+        <button
+          type="button"
+          role="tab"
+          [class]="tabClasses(mode() === 'preview')"
+          [attr.aria-selected]="mode() === 'preview'"
+          (click)="mode.set('preview')"
+        >
+          Preview
+        </button>
+      </div>
+    }
+
+    @if (showPreviewPane()) {
+      <div [class]="previewPaneClasses">
+        <ng-container [ngTemplateOutlet]="options()!.previewTpl!" />
+      </div>
+    } @else {
+      <div [class]="frameClasses()">
+        <textarea
+          #field
+          [id]="fieldId"
+          [class]="fieldClasses()"
+          [attr.name]="options()?.name ?? null"
+          [attr.placeholder]="placeholder() || null"
+          [attr.aria-label]="options()?.ariaLabel ?? null"
+          [attr.maxlength]="options()?.maxLength ?? null"
+          [attr.autofocus]="options()?.autoFocus ? '' : null"
+          [rows]="options()?.rows ?? 3"
+          [disabled]="disabled()"
+          [required]="!!options()?.required"
+          [value]="value()"
+          (input)="onInput($event)"
+        ></textarea>
+        @if (hasBar() && barInside()) {
+          <ng-container [ngTemplateOutlet]="bar" />
+        }
+      </div>
+    }
+
+    @if (hasBar() && !barInside()) {
+      <ng-container [ngTemplateOutlet]="bar" />
+    }
+
+    @if (options()?.maxLength) {
+      <p [class]="counterClasses" aria-live="polite">
+        {{ value().length }}/{{ options()!.maxLength }}
+      </p>
+    }
+
+    @if (options()?.previewTpl && !hasTabs()) {
+      <div [class]="previewBelowClasses">
+        <ng-container [ngTemplateOutlet]="options()!.previewTpl!" />
+      </div>
+    }
+
+    @if (options()?.footerTpl) {
+      <div [class]="footerClasses">
+        <ng-container [ngTemplateOutlet]="options()!.footerTpl!" />
+      </div>
+    }
+  </div>
+</div>
+
+<ng-template #bar>
+  <div [class]="barClasses()">
+    @if (options()?.toolbarTpl) {
+      <div [class]="toolbarClasses">
+        <ng-container [ngTemplateOutlet]="options()!.toolbarTpl!" />
+      </div>
+    }
+    @if (actions().length > 0) {
+      <div [class]="actionsClasses">
+        @for (action of actions(); track action.id) {
+          <button
+            type="button"
+            [class]="actionClasses(action)"
+            [attr.data-action-id]="action.id"
+            [attr.aria-label]="action.label ? null : action.id"
+            [disabled]="disabled()"
+            (click)="onActionClick(action.id)"
+          >
+            @if (action.iconTpl) {
+              <span class="smart:inline-flex smart:size-5" aria-hidden="true">
+                <ng-container [ngTemplateOutlet]="action.iconTpl" />
+              </span>
+            }
+            @if (action.label) {
+              {{ action.label }}
+            }
+          </button>
+        }
+      </div>
+    }
+  </div>
+</ng-template>
