@@ -1,3 +1,14 @@
+## 2.175.0 (2026-09-29)
+
+### 🩹 Fixes
+
+- **shared:** forward the outputs of token-registered components ([#103](https://github.com/emiljuchnikowski/smartsoft001/pull/103))
+
+### ❤️ Thank You
+
+- Claude Opus 5.5 (1M context)
+- Emil Juchnikowski
+
 ## 2.174.0 (2026-09-29)
 
 This was a version bump only, there were no code changes.
