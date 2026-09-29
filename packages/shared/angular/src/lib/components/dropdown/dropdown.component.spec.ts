@@ -15,7 +15,46 @@ class MockInjectedComponent extends DropdownBaseComponent {
   override cssClass = input<string>('');
 }
 
+@Component({
+  selector: 'smart-test-dropdown-label-host',
+  imports: [DropdownComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  template: `
+    <smart-dropdown class="by-label" triggerLabel="Options" />
+    <smart-dropdown class="by-content"><b>Projected</b></smart-dropdown>
+  `,
+})
+class TriggerLabelHostComponent {}
+
 describe('@smartsoft001/shared-angular: DropdownComponent', () => {
+  describe('trigger text', () => {
+    let fixture: ComponentFixture<TriggerLabelHostComponent>;
+
+    const trigger = (selector: string): HTMLButtonElement =>
+      fixture.nativeElement.querySelector(
+        `smart-dropdown.${selector} .smart-dropdown-trigger`,
+      );
+
+    beforeEach(async () => {
+      await TestBed.configureTestingModule({
+        imports: [TriggerLabelHostComponent],
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(TriggerLabelHostComponent);
+      fixture.detectChanges();
+    });
+
+    it('should show triggerLabel through the wrapper', () => {
+      expect(trigger('by-label').textContent?.trim()).toBe('Options');
+    });
+
+    it('should show the projected content when there is no triggerLabel', () => {
+      expect(trigger('by-content').querySelector('b')?.textContent).toBe(
+        'Projected',
+      );
+    });
+  });
+
   describe('without token', () => {
     let fixture: ComponentFixture<DropdownComponent>;
     let component: DropdownComponent;

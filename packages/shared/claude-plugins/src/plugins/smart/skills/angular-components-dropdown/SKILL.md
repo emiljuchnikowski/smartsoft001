@@ -37,13 +37,13 @@ Abstract base directive for extending custom dropdown implementations.
 
 ### Inputs
 
-| Input          | Type                            | Default     | Description                                   |
-| -------------- | ------------------------------- | ----------- | --------------------------------------------- |
-| `items`        | `InputSignal<IDropdownItem[]>`  | `[]`        | Menu items                                    |
-| `triggerLabel` | `InputSignal<string>`           | `undefined` | Default text rendered inside the trigger      |
-| `open`         | `ModelSignal<boolean>`          | `false`     | Two-way bindable open/closed state            |
-| `options`      | `InputSignal<IDropdownOptions>` | `undefined` | Dropdown configuration (variant, headerLabel) |
-| `class`        | `InputSignal<string>`           | `''`        | External CSS classes (alias for `cssClass`)   |
+| Input          | Type                            | Default     | Description                                                |
+| -------------- | ------------------------------- | ----------- | ---------------------------------------------------------- |
+| `items`        | `InputSignal<IDropdownItem[]>`  | `[]`        | Menu items                                                 |
+| `triggerLabel` | `InputSignal<string>`           | `undefined` | Trigger text; projected content is used when it is not set |
+| `open`         | `ModelSignal<boolean>`          | `false`     | Two-way bindable open/closed state                         |
+| `options`      | `InputSignal<IDropdownOptions>` | `undefined` | Dropdown configuration (variant, headerLabel)              |
+| `class`        | `InputSignal<string>`           | `''`        | External CSS classes (alias for `cssClass`)                |
 
 ### Outputs
 
@@ -68,11 +68,7 @@ interface IDropdownItem {
 
 ```typescript
 type SmartDropdownVariant =
-  | 'simple'
-  | 'with-dividers'
-  | 'with-icons'
-  | 'minimal'
-  | 'with-header';
+  'simple' | 'with-dividers' | 'with-icons' | 'minimal' | 'with-header';
 
 interface IDropdownOptions {
   variant?: SmartDropdownVariant;
