@@ -18,7 +18,7 @@ Use this agent when a developer needs to:
 
 ## Component Availability
 
-This package contains two categories of components:
+This package contains two categories of components. Every component also exports an abstract `*BaseComponent` that a custom implementation extends; the component's skill shows how.
 
 ### Ready-to-Use Components (base + default implementation)
 
@@ -30,7 +30,8 @@ These have concrete selectors and can be used directly in templates.
 | Date Range | `angular-components-date-range` | `<smart-date-range>` | Date range picker with modal calendar and quick filters                        |
 | Detail     | `angular-components-detail`     | `<smart-detail>`     | Renders a single model field by dispatching to a sub-component per `FieldType` |
 | Input      | `angular-components-input`      | `<smart-input>`      | Renders a form input by dispatching to a sub-component per `FieldType`         |
-| Icon       | —                               | `<smart-icon>`       | SVG icon component (spinner)                                                   |
+| Icon       | `angular-components-icon`       | `<smart-icon>`       | SVG icon by name (spinner, chevrons), with a custom `template` override        |
+| Accordion  | `angular-components-accordion`  | `<smart-accordion>`  | Collapsible section with projected `[accordionHeader]` / `[accordionBody]`     |
 
 ### Ready-to-Use with extension token
 
@@ -43,8 +44,10 @@ These render a default standard implementation and accept a custom implementatio
 | Avatar              | `angular-components-avatar`              | `<smart-avatar>`              | `AVATAR_STANDARD_COMPONENT_TOKEN`              |
 | Badge               | `angular-components-badge`               | `<smart-badge>`               | `BADGE_STANDARD_COMPONENT_TOKEN`               |
 | Breadcrumbs         | `angular-components-breadcrumbs`         | `<smart-breadcrumbs>`         | `BREADCRUMBS_STANDARD_COMPONENT_TOKEN`         |
+| Button              | `angular-components-button`              | `<smart-button>`              | `BUTTON_STANDARD_COMPONENT_TOKEN`              |
 | Button Group        | `angular-components-button-group`        | `<smart-button-group>`        | `BUTTON_GROUP_STANDARD_COMPONENT_TOKEN`        |
 | Calendar            | `angular-components-calendar`            | `<smart-calendar>`            | `CALENDAR_STANDARD_COMPONENT_TOKEN`            |
+| Card                | `angular-components-card`                | `<smart-card>`                | `CARD_STANDARD_COMPONENT_TOKEN`                |
 | Card Heading        | `angular-components-card-heading`        | `<smart-card-heading>`        | `CARD_HEADING_STANDARD_COMPONENT_TOKEN`        |
 | Command Palette     | `angular-components-command-palette`     | `<smart-command-palette>`     | `COMMAND_PALETTE_STANDARD_COMPONENT_TOKEN`     |
 | Container           | `angular-components-container`           | `<smart-container>`           | `CONTAINER_STANDARD_COMPONENT_TOKEN`           |
@@ -65,7 +68,9 @@ These render a default standard implementation and accept a custom implementatio
 | Modal               | `angular-components-modal`               | `<smart-modal>`               | `MODAL_STANDARD_COMPONENT_TOKEN`               |
 | Multi-Column Layout | `angular-components-multi-column-layout` | `<smart-multi-column-layout>` | `MULTI_COLUMN_LAYOUT_STANDARD_COMPONENT_TOKEN` |
 | Navbar              | `angular-components-navbar`              | `<smart-navbar>`              | `NAVBAR_STANDARD_COMPONENT_TOKEN`              |
+| Page                | `angular-components-page`                | `<smart-page>`                | `PAGE_VARIANT_COMPONENTS_TOKEN`                |
 | Page Heading        | `angular-components-page-heading`        | `<smart-page-heading>`        | `PAGE_HEADING_STANDARD_COMPONENT_TOKEN`        |
+| Paging              | `angular-components-paging`              | `<smart-paging>`              | `PAGING_STANDARD_COMPONENT_TOKEN`              |
 | Password Strength   | `angular-components-password-strength`   | `<smart-password-strength>`   | `PASSWORD_STRENGTH_STANDARD_COMPONENT_TOKEN`   |
 | Progress Bars       | `angular-components-progress-bars`       | `<smart-progress-bars>`       | `PROGRESS_BARS_STANDARD_COMPONENT_TOKEN`       |
 | Searchbar           | `angular-components-searchbar`           | `<smart-searchbar>`           | `SEARCHBAR_STANDARD_COMPONENT_TOKEN`           |
@@ -83,26 +88,13 @@ These render a default standard implementation and accept a custom implementatio
 | Toggle              | `angular-components-toggle`              | `<smart-toggle>`              | `TOGGLE_STANDARD_COMPONENT_TOKEN`              |
 | Vertical Navigation | `angular-components-vertical-navigation` | `<smart-vertical-navigation>` | `VERTICAL_NAVIGATION_STANDARD_COMPONENT_TOKEN` |
 
-### Base-Only Components (abstract classes for extension)
-
-These provide abstract base classes (`@Directive()`) that can be extended to create custom implementations.
-
-| Component | Skill                          | Base Class               | Description                                                       |
-| --------- | ------------------------------ | ------------------------ | ----------------------------------------------------------------- |
-| Button    | `angular-components-button`    | `ButtonBaseComponent`    | Variant/color computation, confirm mode, disabled state           |
-| Card      | `angular-components-card`      | `CardBaseComponent`      | Container classes, header/body/footer layout, gray backgrounds    |
-| Accordion | `angular-components-accordion` | `AccordionBaseComponent` | Toggle logic, disabled state, container classes                   |
-| Page      | `angular-components-page`      | `PageBaseComponent`      | Header with title, back button, search, end buttons, content slot |
-| Paging    | `angular-components-paging`    | `PagingBaseComponent`    | Page state, ellipsized page list, `pageChange` output             |
-
 ## Decision Logic
 
 When a developer asks about a component:
 
-1. **Wants to use `<smart-date-edit>`, `<smart-date-range>`, `<smart-detail>`, or `<smart-input>`** → delegate to the corresponding skill for usage API
-2. **Wants to use `<smart-action-panel>`, `<smart-alert>` (or `AlertService`), `<smart-avatar>`, `<smart-badge>`, `<smart-breadcrumbs>`, `<smart-button-group>`, `<smart-calendar>`, `<smart-card-heading>`, `<smart-command-palette>`, `<smart-container>`, `<smart-description-list>`, `<smart-details>`, `<smart-divider>`, `<smart-drawer>`, `<smart-dropdown>`, `<smart-empty-state>`, `<smart-feed>`, `<smart-form>`, `<smart-grid-list>`, `<smart-info>`, `<smart-list>`, `<smart-list-container>`, `<smart-media-object>`, `<smart-modal>`, `<smart-multi-column-layout>`, `<smart-navbar>`, `<smart-notification>`, `<smart-page-heading>`, `<smart-password-strength>`, `<smart-progress-bars>`, `<smart-searchbar>`, `<smart-section-heading>`, `<smart-select-menu>`, `<smart-sidebar-layout>`, `<smart-sidebar-navigation>`, `<smart-sign-in-form>`, `<smart-stacked-layout>`, `<smart-stacked-list>`, `<smart-stats>`, `<smart-table>`, `<smart-tabs>`, `<smart-textarea>`, `<smart-toggle>`, or `<smart-vertical-navigation>`** → delegate to the skill to explain usage, token override pattern, and how to extend the base class with a custom implementation
-3. **Wants to use `<smart-button>`, `<smart-card>`, `<smart-accordion>`, `<smart-page>`, or `<smart-paging>`** → delegate to the skill to explain how to extend the base class and create a custom implementation
-4. **Wants to create a custom component** → delegate to the base-only skill for extension patterns and API
+1. **Wants to use `<smart-date-edit>`, `<smart-date-range>`, `<smart-detail>`, `<smart-input>`, `<smart-icon>` or `<smart-accordion>`** → delegate to the corresponding skill for usage API
+2. **Wants to use `<smart-action-panel>`, `<smart-alert>` (or `AlertService`), `<smart-avatar>`, `<smart-badge>`, `<smart-breadcrumbs>`, `<smart-button>`, `<smart-button-group>`, `<smart-calendar>`, `<smart-card>`, `<smart-card-heading>`, `<smart-command-palette>`, `<smart-container>`, `<smart-description-list>`, `<smart-details>`, `<smart-divider>`, `<smart-drawer>`, `<smart-dropdown>`, `<smart-empty-state>`, `<smart-feed>`, `<smart-form>`, `<smart-grid-list>`, `<smart-info>`, `<smart-list>`, `<smart-list-container>`, `<smart-media-object>`, `<smart-modal>`, `<smart-multi-column-layout>`, `<smart-navbar>`, `<smart-notification>`, `<smart-page>`, `<smart-page-heading>`, `<smart-paging>`, `<smart-password-strength>`, `<smart-progress-bars>`, `<smart-searchbar>`, `<smart-section-heading>`, `<smart-select-menu>`, `<smart-sidebar-layout>`, `<smart-sidebar-navigation>`, `<smart-sign-in-form>`, `<smart-stacked-layout>`, `<smart-stacked-list>`, `<smart-stats>`, `<smart-table>`, `<smart-tabs>`, `<smart-textarea>`, `<smart-toggle>`, or `<smart-vertical-navigation>`** → delegate to the skill to explain usage, token override pattern, and how to extend the base class with a custom implementation
+3. **Wants a custom implementation of a component** → delegate to that component's skill: it shows the base class to extend and, where there is one, the token to register it with
 
 ## Skills to Use
 
@@ -110,7 +102,7 @@ Always delegate to the per-component skill for detailed API, usage examples, and
 
 - **Date Edit** → use skill `angular-components-date-edit`
 - **Date Range** → use skill `angular-components-date-range`
-- **Accordion** (base only) → use skill `angular-components-accordion`
+- **Accordion** → use skill `angular-components-accordion`
 - **Action Panel** (with extension token) → use skill `angular-components-action-panel`
 - **Alert** (with extension token; also `AlertService.show()`) → use skill `angular-components-alert`
 - **Avatar** (with extension token) → use skill `angular-components-avatar`
@@ -157,10 +149,11 @@ Always delegate to the per-component skill for detailed API, usage examples, and
 - **Textarea** (with extension token) → use skill `angular-components-textarea`
 - **Toggle** (with extension token) → use skill `angular-components-toggle`
 - **Vertical Navigation** (with extension token) → use skill `angular-components-vertical-navigation`
-- **Button** (base only) → use skill `angular-components-button`
-- **Card** (base only) → use skill `angular-components-card`
-- **Page** (base only) → use skill `angular-components-page`
-- **Paging** (base only) → use skill `angular-components-paging`
+- **Button** (with extension token) → use skill `angular-components-button`
+- **Card** (with extension token) → use skill `angular-components-card`
+- **Icon** → use skill `angular-components-icon`
+- **Page** (with extension token map) → use skill `angular-components-page`
+- **Paging** (with extension token) → use skill `angular-components-paging`
 
 ## Installation
 
@@ -171,8 +164,8 @@ npm i @smartsoft001/angular
 ## Public documentation
 
 Every component in the tables above also has a public page at
-https://emiljuchnikowski.github.io/smartsoft001/docs/components/ with its API, a usage example taken from
-the component's Storybook story and the live story itself. The pages are generated from these same skills,
+https://emiljuchnikowski.github.io/smartsoft001/docs/components/ with its API, a compiled usage example
+(the template and the TypeScript a consumer writes) and the live Storybook story. The pages are generated from these same skills,
 so they never disagree with what this agent tells you; point a developer there when they want to browse the
 catalogue rather than ask for one component.
 

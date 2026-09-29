@@ -23,6 +23,7 @@ import {
   rule13,
   rule14,
   rule15,
+  rule16,
   runAllRules,
   skillInventory,
   storyInventory,
@@ -36,6 +37,7 @@ const fenceRoot = path.join(here, '__fixtures__', 'check-r11')
 const metaRoot = path.join(here, '__fixtures__', 'check-r12')
 const tabsRoot = path.join(here, '__fixtures__', 'check-r13')
 const citedRoot = path.join(here, '__fixtures__', 'check-r14')
+const agentRoot = path.join(here, '__fixtures__', 'check-r16')
 const quotedRoot = path.join(here, '__fixtures__', 'check-fenced')
 
 function context(overrides = {}) {
@@ -1146,6 +1148,37 @@ describe('tags inside a fenced code block', () => {
       'docs/guides/quoting/page.md:20: unknown skill "quoted" ' +
         '(source "plugin")',
     )
+  })
+})
+
+describe('rule16 (components agent catalogue)', () => {
+  const agentContext = () => ({
+    repoRoot: agentRoot,
+    docsAppDir: path.join(agentRoot, 'docs', 'site', 'src', 'app'),
+    strict: false,
+  })
+
+  test('accepts a component skill the agent names', () => {
+    const findings = rule16(agentContext())
+
+    assert.ok(!findings.some((finding) => /button/.test(finding.message)))
+  })
+
+  test('reports a component skill the agent never names, as an error', () => {
+    const findings = rule16(agentContext())
+
+    assert.equal(findings.length, 1)
+    assert.equal(findings[0].rule, 'R16')
+    assert.equal(findings[0].level, 'error')
+    assert.equal(
+      findings[0].message,
+      'Skill "angular-components-icon" is not named in the angular-components agent ' +
+        '(packages/shared/claude-plugins/src/plugins/smart/agents/angular-components/AGENT.md)',
+    )
+  })
+
+  test('has nothing to check without the agent', () => {
+    assert.deepEqual(rule16(context()), [])
   })
 })
 
