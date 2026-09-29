@@ -164,7 +164,7 @@ npm i @smartsoft001/angular
 ## Public documentation
 
 Every component in the tables above also has a public page at
-https://emiljuchnikowski.github.io/smartsoft001/docs/components/ with its API, a compiled usage example
+https://framework.smartflow.biz.pl/docs/components/ with its API, a compiled usage example
 (the template and the TypeScript a consumer writes) and the live Storybook story. The pages are generated from these same skills,
 so they never disagree with what this agent tells you; point a developer there when they want to browse the
 catalogue rather than ask for one component.

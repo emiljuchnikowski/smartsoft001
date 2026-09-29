@@ -36,8 +36,7 @@ import { createStandaloneApp } from './example-app-standalone.mjs';
 
 const APP_ROOT = 'docs/examples/app';
 const PROJECT_PREFIX = 'docs-examples-app-';
-const DOCS_PAGE =
-  'https://emiljuchnikowski.github.io/smartsoft001/docs/example-app';
+const DOCS_PAGE = 'https://framework.smartflow.biz.pl/docs/example-app';
 
 /** The identity of the release commits, the same one the workflow pushes with. */
 export const RELEASE_IDENTITY = {

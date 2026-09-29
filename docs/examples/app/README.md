@@ -49,8 +49,8 @@ variables in the shell: `npx nx serve docs-examples-app-api`.
 ## The hosted demo
 
 The frontend is also published with the documentation site, at
-https://emiljuchnikowski.github.io/smartsoft001/demo/. GitHub Pages serves files only, so that copy
-is the `demo` build configuration: base href `/smartsoft001/demo/`, hash routing (Pages has no SPA
+https://framework.smartflow.biz.pl/demo/. GitHub Pages serves files only, so that copy
+is the `demo` build configuration: base href `/demo/`, hash routing (Pages has no SPA
 fallback under `demo/`, its 404 page belongs to the docs) and, through `fileReplacements`, an
 in-memory double of the API from `apps/web/src/app/in-memory/`. The double is an `HttpInterceptor`
 registered under `HTTP_INTERCEPTORS` like the auth one; it answers only the requests the frontend
@@ -58,9 +58,9 @@ makes (`POST /api/token` for the seeded credentials, and the list, item, create,
 calls under `/api/notes`) with the status codes and bodies the real API sends, and keeps the notes in
 the browser tab's `sessionStorage`. It is a test double, not a second backend, and the development
 and production builds do not contain it. The build writes to
-`dist/docs/examples/app/apps/web-demo/smartsoft001/demo`, the path the demo is served from, so
+`dist/docs/examples/app/apps/web-demo/demo`, the path the demo is served from, so
 `npx nx run docs-examples-app-web:serve-static:demo` serves it at
-`http://localhost:4200/smartsoft001/demo/`, and `E2E_BASE_URL=http://localhost:4200/smartsoft001/demo/`
+`http://localhost:4200/demo/`, and `E2E_BASE_URL=http://localhost:4200/demo/`
 points the Playwright suite at it without starting the stack. The Docs workflow runs that suite
 against the deployed demo after every deploy.
 

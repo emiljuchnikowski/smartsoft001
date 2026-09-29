@@ -20,4 +20,4 @@ installs the whole set at a single version instead of resolving them one by one:
 - [`@smartsoft001/crud-shell-app-services`](https://www.npmjs.com/package/@smartsoft001/crud-shell-app-services)
 - [`@smartsoft001/auth-shell-app-services`](https://www.npmjs.com/package/@smartsoft001/auth-shell-app-services)
 
-The full documentation is at https://emiljuchnikowski.github.io/smartsoft001/docs/installation/.
+The full documentation is at https://framework.smartflow.biz.pl/docs/installation/.

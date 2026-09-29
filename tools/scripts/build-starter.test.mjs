@@ -273,7 +273,7 @@ describe('starterReadme', () => {
     assert.match(readme, /docs\/examples\/app/);
     assert.match(
       readme,
-      /https:\/\/emiljuchnikowski\.github\.io\/smartsoft001\/docs\/example-app/,
+      /https:\/\/framework\.smartflow\.biz\.pl\/docs\/example-app/,
     );
   });
 

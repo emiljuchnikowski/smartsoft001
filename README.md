@@ -35,7 +35,7 @@
 
 ## Documentation
 
-The public documentation lives at **https://emiljuchnikowski.github.io/smartsoft001/**.
+The public documentation lives at **https://framework.smartflow.biz.pl/**.
 It is built from `docs/site` and deployed automatically after every successful
 `Publish` run on `main` (see `.github/workflows/docs.yml`). How to add or change
 pages is described in the `docs` skill, `.claude/skills/docs/SKILL.md`.

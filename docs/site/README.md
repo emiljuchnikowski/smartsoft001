@@ -1,7 +1,7 @@
 # @smartsoft001/docs
 
 Public documentation site for the `@smartsoft001/*` framework, published to GitHub Pages at
-https://emiljuchnikowski.github.io/smartsoft001/.
+https://framework.smartflow.biz.pl/.
 
 Built with [Next.js](https://nextjs.org) (static export), [Markdoc](https://markdoc.io) and
 [Tailwind CSS](https://tailwindcss.com) on top of the Tailwind Plus **Syntax** site template.

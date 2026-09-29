@@ -18,4 +18,4 @@ Payments are a separate opt-in: add
 [`@smartsoft001/payments-stack`](https://www.npmjs.com/package/@smartsoft001/payments-stack) when
 the backend takes them.
 
-The full documentation is at https://emiljuchnikowski.github.io/smartsoft001/docs/installation/.
+The full documentation is at https://framework.smartflow.biz.pl/docs/installation/.
