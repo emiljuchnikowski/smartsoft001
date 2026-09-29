@@ -530,9 +530,13 @@ const SCOPE = '@smartsoft001/';
 
 /**
  * The framework packages the starter installs, read from the registry's own
- * manifests: the stack and everything under it, transitively. Throws when a
- * manifest is not there yet, which is how the wait below detects a release
- * that has not finished propagating.
+ * manifests: the stack and everything under it, transitively, through both
+ * `dependencies` and `peerDependencies`. The packages reach each other mostly
+ * as peers (auth-domain peers google, fb, users, ...), and npm installs peers,
+ * so a closure over `dependencies` alone missed them: on 2.179.0 the wait saw
+ * everything it checked and the install still hit `@smartsoft001/google@undefined`.
+ * Throws when a manifest is not there yet, which is how the wait below detects
+ * a release that has not finished propagating.
  */
 export function releasePackages(version, view = npmView) {
   const names = new Set();
@@ -544,7 +548,11 @@ export function releasePackages(version, view = npmView) {
     if (names.has(name)) continue;
     names.add(name);
 
-    const dependencies = view(`${name}@${version}`, 'dependencies') ?? {};
+    const spec = `${name}@${version}`;
+    const dependencies = {
+      ...(view(spec, 'dependencies') ?? {}),
+      ...(view(spec, 'peerDependencies') ?? {}),
+    };
 
     for (const dependency of Object.keys(dependencies)) {
       if (dependency.startsWith(SCOPE)) pending.push(dependency);
