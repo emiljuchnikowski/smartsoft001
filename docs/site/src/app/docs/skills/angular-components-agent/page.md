@@ -14,11 +14,7 @@ The plugin ships one agent, `smart:angular-components`, for building screens in 
 
 ## What it does
 
-When a developer describes a piece of UI, the agent chooses a `smart-*` component and delegates to an `angular-components-<name>` skill for its API, options and usage pattern. The plugin contains 54 such background skills, and those skill files also feed the generated [Components](/docs/components) section of this site.
-
-{% callout title="Current catalogue gap" %}
-The agent definition explicitly delegates to 53 skills. It lists `<smart-icon>` without a skill even though `angular-components-icon` exists, and it still labels `button`, `card`, `page` and `paging` as base-only although their current skills document concrete wrappers and extension mechanisms. For those components, the component page or matching skill is more current than the agent's summary table.
-{% /callout %}
+When a developer describes a piece of UI, the agent chooses a `smart-*` component and delegates to an `angular-components-<name>` skill for its API, options and usage pattern. The plugin contains 54 such background skills, one per component, and the agent's catalogue names every one of them (docs-check fails when it doesn't). The same skill files feed the generated [Components](/docs/components) section of this site.
 
 ## When to use it
 

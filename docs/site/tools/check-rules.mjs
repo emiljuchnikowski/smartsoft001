@@ -18,6 +18,8 @@
  * - R15: every UI component has a compiled usage example, its template and
  *   its class, in `docs/examples/angular`.
  *
+ * - R16: every component skill is named in the angular-components agent.
+ *
  * R1-R3, R9, R10, R12, R13 and R15 are the parity rules: they compare the workspace
  * with the site and only warn until `--strict` names them. R14 is an error
  * from the start, like R4: a skill citing a file that moved sends the agent to
@@ -1090,6 +1092,33 @@ export function rule15(ctx) {
   return findings
 }
 
+/** The agent that delegates UI work to the component skills. */
+const COMPONENTS_AGENT =
+  'packages/shared/claude-plugins/src/plugins/smart/agents/angular-components/AGENT.md'
+
+/**
+ * R16: every component skill is named in the angular-components agent. The
+ * agent only delegates to the skills its catalogue lists, so a skill missing
+ * there is never used, however complete. An error from the start, like R14.
+ */
+export function rule16(ctx) {
+  const agent = path.join(ctx.repoRoot, COMPONENTS_AGENT)
+
+  if (!fs.existsSync(agent)) return []
+
+  const source = fs.readFileSync(agent, 'utf8')
+
+  return listDirectories(path.join(ctx.repoRoot, PLUGIN_SKILLS_DIR))
+    .filter((name) => name.startsWith(COMPONENT_SKILL_PREFIX))
+    .filter((name) => !source.includes(`\`${name}\``))
+    .map((name) => ({
+      rule: 'R16',
+      level: 'error',
+      message: `Skill "${name}" is not named in the angular-components agent (${COMPONENTS_AGENT})`,
+      file: agent,
+    }))
+}
+
 /** Every rule, in order. */
 export function runAllRules(ctx) {
   return [
@@ -1108,5 +1137,6 @@ export function runAllRules(ctx) {
     rule13,
     rule14,
     rule15,
+    rule16,
   ].flatMap((rule) => rule(ctx))
 }
