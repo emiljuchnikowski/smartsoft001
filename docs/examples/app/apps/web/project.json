@@ -79,9 +79,9 @@
             }
           ],
           "outputHashing": "all",
-          "baseHref": "/smartsoft001/demo/",
+          "baseHref": "/demo/",
           "outputPath": {
-            "base": "dist/docs/examples/app/apps/web-demo/smartsoft001",
+            "base": "dist/docs/examples/app/apps/web-demo",
             "browser": "demo"
           },
           "fileReplacements": [

@@ -3,9 +3,10 @@
  * Fails the docs build when the static export references anything by an
  * absolute path that does not carry the site's base path.
  *
- * The site is served from `https://emiljuchnikowski.github.io/smartsoft001/`,
- * so an `href="/docs/x"` in the exported HTML does not point at this site at
- * all: it points at the user site one level up, which answers 404. Next adds
+ * When the site is served under a path, as it was from
+ * `https://emiljuchnikowski.github.io/smartsoft001/`, an `href="/docs/x"` in
+ * the exported HTML does not point at this site at all: it points at the site
+ * one level up, which answers 404. Next adds
  * the base path to everything that goes through `next/link` and the router,
  * and to nothing else, so a plain anchor slips through unchanged. Four hundred
  * and sixty of them did, on the live site, until a reader sent one around.
@@ -58,11 +59,10 @@ async function main() {
   )
   const basePath = config.basePath
 
+  // At the root of its own domain every absolute path is on this site.
   if (!basePath) {
-    console.error(
-      'next.config.mjs declares no basePath; nothing to check against',
-    )
-    process.exit(1)
+    console.log('check-export: the site has no basePath; nothing to check')
+    return
   }
 
   const out = path.join(siteRoot, 'out')

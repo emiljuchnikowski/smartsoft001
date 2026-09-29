@@ -138,7 +138,7 @@ The Playwright suite drives the real stack: it builds and starts the API against
 
 ## Try it hosted
 
-The frontend is also published with this site, at [https://emiljuchnikowski.github.io/smartsoft001/demo/](https://emiljuchnikowski.github.io/smartsoft001/demo/). Sign in with the same `admin@example.com` and `change-me`, and click through the list, the form and the item page.
+The frontend is also published with this site, at [https://framework.smartflow.biz.pl/demo/](https://framework.smartflow.biz.pl/demo/). Sign in with the same `admin@example.com` and `change-me`, and click through the list, the form and the item page.
 
 Be clear about what you are looking at. GitHub Pages serves files only, so the demo does not run the API above. It runs against an in-memory double of the API that lives next to the application, in `apps/web/src/app/in-memory`: an HTTP interceptor that answers the requests the frontend makes, with the status codes and bodies the real API sends, and keeps the notes in the storage of your browser tab. Your notes never leave the browser, and a new tab starts from the seed again. Only the `demo` build registers the double, and the real backend is the `docker compose up` above. The Docs workflow runs the Playwright suite of this page against the hosted demo after every deploy.
 

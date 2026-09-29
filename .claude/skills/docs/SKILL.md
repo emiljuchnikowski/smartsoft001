@@ -15,7 +15,7 @@ allowed-tools:
 # Docs Skill
 
 Add a page to the public documentation site (`docs/site`, deployed to
-https://emiljuchnikowski.github.io/smartsoft001/) and the executed example its code comes from.
+https://framework.smartflow.biz.pl/) and the executed example its code comes from.
 
 Every code sample on a reference page is a region of a file that CI compiles and tests. Nothing on a
 package or component page is hand-written code, and `docs-check` fails the pull request when a page,

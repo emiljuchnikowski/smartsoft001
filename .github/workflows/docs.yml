@@ -1,7 +1,8 @@
 # Builds and deploys the documentation site (Nx project `docs`) to GitHub
-# Pages. The site is served under https://emiljuchnikowski.github.io/smartsoft001/
-# (see the `basePath` in docs/site/next.config.mjs), so the GitHub Pages
-# settings for this repository must have the source set to "GitHub Actions".
+# Pages. The site is served at the root of https://framework.smartflow.biz.pl/:
+# the GitHub Pages settings for this repository have the source set to
+# "GitHub Actions" and the custom domain set to framework.smartflow.biz.pl
+# (a CNAME record at home.pl points it at emiljuchnikowski.github.io).
 # `.nojekyll` is required because Next.js emits a `_next` directory, and
 # GitHub Pages' default Jekyll processing ignores underscore-prefixed
 # directories, which would break the deployed site's assets.
@@ -88,15 +89,15 @@ jobs:
       - name: Publish the example application's demo next to the site
         id: demo
         # Pages serves files only, so the demo is the `demo` build of the
-        # example app's frontend: base href /smartsoft001/demo/, hash routing
+        # example app's frontend: base href /demo/, hash routing
         # and an in-memory double of the API (see docs/examples/app/README.md).
-        # The build writes it under smartsoft001/demo, the path it is served
-        # from, and the copy comes after `next build` for the same reason as
-        # the Storybooks. The hash of index.html tells `verify-demo` when
+        # The build writes it under demo, the path it is served from, and
+        # the copy comes after `next build` for the same reason as the
+        # Storybooks. The hash of index.html tells `verify-demo` when
         # Pages serves this build.
         run: |
           npx nx run docs-examples-app-web:build:demo
-          cp -r dist/docs/examples/app/apps/web-demo/smartsoft001/demo docs/site/out/demo
+          cp -r dist/docs/examples/app/apps/web-demo/demo docs/site/out/demo
           echo "index-sha=$(sha256sum docs/site/out/demo/index.html | cut -d ' ' -f 1)" >> "$GITHUB_OUTPUT"
         env:
           NX_CLOUD_DISTRIBUTED_EXECUTION: false
@@ -134,7 +135,7 @@ jobs:
     needs: [build, deploy]
     runs-on: ubuntu-24.04
     env:
-      DEMO_URL: https://emiljuchnikowski.github.io/smartsoft001/demo/
+      DEMO_URL: https://framework.smartflow.biz.pl/demo/
     steps:
       - uses: actions/checkout@v7
       - name: Load & cache dependencies

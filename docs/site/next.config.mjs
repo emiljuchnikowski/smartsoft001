@@ -4,11 +4,12 @@ import withSearch from './src/markdoc/search.mjs'
 import withSnippets from './src/markdoc/snippets-plugin.mjs'
 
 /**
- * Served from GitHub Pages under https://emiljuchnikowski.github.io/smartsoft001/,
- * hence the basePath. Static export: no server, trailing slashes so that
- * /docs/x/ resolves to /docs/x/index.html on Pages.
+ * Served from GitHub Pages at the root of its own domain,
+ * https://framework.smartflow.biz.pl/, so there is no basePath. Static
+ * export: no server, trailing slashes so that /docs/x/ resolves to
+ * /docs/x/index.html on Pages.
  */
-const basePath = '/smartsoft001'
+const basePath = ''
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {

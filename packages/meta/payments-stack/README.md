@@ -17,4 +17,4 @@ installs the whole set at a single version instead of resolving them one by one:
 - [`@smartsoft001/paynow`](https://www.npmjs.com/package/@smartsoft001/paynow)
 - [`@smartsoft001/revolut`](https://www.npmjs.com/package/@smartsoft001/revolut)
 
-The full documentation is at https://emiljuchnikowski.github.io/smartsoft001/docs/installation/.
+The full documentation is at https://framework.smartflow.biz.pl/docs/installation/.

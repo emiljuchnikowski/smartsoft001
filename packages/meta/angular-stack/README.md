@@ -13,4 +13,4 @@ installs the whole set at a single version instead of resolving them one by one:
 - [`@smartsoft001/angular`](https://www.npmjs.com/package/@smartsoft001/angular)
 - [`@smartsoft001/crud-shell-angular`](https://www.npmjs.com/package/@smartsoft001/crud-shell-angular)
 
-The full documentation is at https://emiljuchnikowski.github.io/smartsoft001/docs/installation/.
+The full documentation is at https://framework.smartflow.biz.pl/docs/installation/.
