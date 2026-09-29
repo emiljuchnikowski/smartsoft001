@@ -1,3 +1,14 @@
+## 2.180.0 (2026-09-29)
+
+### 🩹 Fixes
+
+- **nx:** wait for the peers of the release too before installing the starter ([#108](https://github.com/emiljuchnikowski/smartsoft001/pull/108))
+
+### ❤️ Thank You
+
+- Claude Opus 5.5 (1M context)
+- Emil Juchnikowski
+
 ## 2.179.0 (2026-09-29)
 
 ### 🩹 Fixes
