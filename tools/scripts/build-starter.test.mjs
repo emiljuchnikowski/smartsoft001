@@ -476,7 +476,14 @@ describe('build-starter: waiting for the release on the registry', () => {
       dependencies: { '@smartsoft001/angular': '1.0.0' },
       version: '1.0.0',
     },
-    '@smartsoft001/angular@1.0.0': { dependencies: {}, version: '1.0.0' },
+    '@smartsoft001/angular@1.0.0': {
+      dependencies: {},
+      // The framework packages reach each other as peers, like auth-domain
+      // and google on 2.179.0.
+      peerDependencies: { '@smartsoft001/google': '1.0.0', rxjs: '^7' },
+      version: '1.0.0',
+    },
+    '@smartsoft001/google@1.0.0': { dependencies: {}, version: '1.0.0' },
   };
 
   function viewFrom(available) {
@@ -495,7 +502,25 @@ describe('build-starter: waiting for the release on the registry', () => {
       '@smartsoft001/angular-stack',
       '@smartsoft001/core',
       '@smartsoft001/full-stack',
+      '@smartsoft001/google',
     ]);
+  });
+
+  it('should wait for a framework package that is only a peer', () => {
+    const available = new Set(
+      Object.keys(manifests).filter(
+        (spec) => !spec.startsWith('@smartsoft001/google@'),
+      ),
+    );
+    const naps = [];
+    const sleep = (ms) => {
+      naps.push(ms);
+      available.add('@smartsoft001/google@1.0.0');
+    };
+
+    waitForRelease('1.0.0', { view: viewFrom(available), sleep, delayMs: 5 });
+
+    assert.deepEqual(naps, [5]);
   });
 
   it('should return as soon as every package resolves', () => {
