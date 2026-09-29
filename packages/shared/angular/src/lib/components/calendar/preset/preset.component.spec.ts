@@ -134,6 +134,19 @@ describe('@smartsoft001/shared-angular: CalendarPresetComponent', () => {
     expect(host().querySelector('[data-role="event-dot"]')).toBeTruthy();
   });
 
+  it('should mention the event count in the day aria-label', () => {
+    fixture.componentRef.setInput('events', [
+      { id: 1, start: new Date(2023, 6, 10) },
+      { id: 2, start: new Date(2023, 6, 10) },
+    ]);
+    fixture.detectChanges();
+
+    const date = new Date(2023, 6, 10).toDateString();
+    const day = host().querySelector(`[aria-label^="${date}"]`);
+
+    expect(day?.getAttribute('aria-label')).toBe(`${date}, 2 events`);
+  });
+
   it('should apply cssClass on the host (canonical name for NgComponentOutlet)', () => {
     fixture.componentRef.setInput('cssClass', 'my-extra-class');
     fixture.detectChanges();

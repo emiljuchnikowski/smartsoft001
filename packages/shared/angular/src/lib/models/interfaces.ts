@@ -31,6 +31,13 @@ export interface IAppOptions {
 
 export interface ICardOptions {
   title?: string;
+  /**
+   * @deprecated Has never been rendered by any card variant (standard or
+   * preset). Put actions in the header or footer instead: project them with
+   * the `[cardHeader]` / `[cardFooter]` slots of `<smart-card>` (set
+   * `hasHeader` / `hasFooter`), which reach the variant as `headerTpl` /
+   * `footerTpl`.
+   */
   buttons?: Array<IIconButtonOptions>;
   grayFooter?: boolean;
   grayBody?: boolean;
@@ -191,8 +198,21 @@ export type SmartColor =
   | 'rose';
 
 export interface IAccordionOptions {
+  /**
+   * Initial open state. When `true` on first render and `show` has not been
+   * set to `true` by the consumer, the accordion sets `show` to `true` once
+   * (in `AccordionBaseComponent.ngOnInit`, so every variant gets it) and
+   * emits `showChange`. Later changes to this flag are ignored, and later
+   * toggles or a bound `[(show)]` take over. Bind `[(show)]` to a signal when
+   * combining it with `open`.
+   */
   open?: boolean;
+  /** Prevents `toggle()` from changing `show` (the header ignores clicks). */
   disabled?: boolean;
+  /**
+   * @deprecated No accordion variant (default or preset) animates anything;
+   * this flag has no effect.
+   */
   animated?: boolean;
 }
 
@@ -551,7 +571,21 @@ export interface IAvatarItem {
 }
 
 export interface IAvatarOptions {
+  /**
+   * Fallback shown when there is no `imageUrl` (default `'icon'`).
+   * Initials are shown whenever `initials` is set; otherwise
+   * `AvatarPresetComponent` renders an SVG icon (`'icon'`) or an empty
+   * initials chip (`'initials'`), and `AvatarStandardComponent` renders a `·`
+   * placeholder. The standard also exposes the value as the
+   * `data-placeholder-type` attribute on its root element.
+   */
   placeholderType?: 'icon' | 'initials';
+  /**
+   * Stacking order of a `group` (default `'top-to-bottom'`). Purely visual:
+   * styled by `AvatarPresetComponent` (`'bottom-to-top'` reverses the stack);
+   * `AvatarStandardComponent` exposes it as the `data-stack-direction`
+   * attribute on the group container.
+   */
   stackDirection?: 'top-to-bottom' | 'bottom-to-top';
 }
 
@@ -560,13 +594,20 @@ export type SmartBadgeColor =
 
 export interface IBadgeOptions {
   /**
-   * Visual style variant (consumed by `BadgePresetComponent`):
+   * Visual style variant (default `'soft'`). Styled by `BadgePresetComponent`:
    * - `solid` — filled background with inverse text
    * - `soft` — tinted background with same-hue text
    * - `outline` — transparent background with colored border + text
+   *
+   * `BadgeStandardComponent` does not style it; it exposes the value as the
+   * `data-variant` attribute on its root element.
    */
   variant?: 'solid' | 'soft' | 'outline';
-  /** Fully rounded pill shape (default `true`); `false` renders `rounded-md` corners. */
+  /**
+   * Fully rounded pill shape (default `true`); `false` renders `rounded-md`
+   * corners. Styled by `BadgePresetComponent`; `BadgeStandardComponent`
+   * exposes it as `data-pill="true" | "false"` on its root element.
+   */
   pill?: boolean;
   withDot?: boolean;
   withRemove?: boolean;

@@ -97,6 +97,38 @@ describe('@smartsoft001/shared-angular: PagingComponent', () => {
       expect(component.cssClass()).toBe('passed-class');
     });
 
+    it('should forward variant to the standard component', () => {
+      fixture.componentRef.setInput('variant', 'centered');
+      fixture.detectChanges();
+
+      const nav = fixture.nativeElement.querySelector(
+        'smart-paging-standard nav',
+      ) as HTMLElement;
+
+      expect(nav.getAttribute('data-variant')).toBe('centered');
+    });
+
+    it('should forward the default variant when none is set', () => {
+      const nav = fixture.nativeElement.querySelector(
+        'smart-paging-standard nav',
+      ) as HTMLElement;
+
+      expect(nav.getAttribute('data-variant')).toBe('card-footer');
+    });
+
+    it('should forward variant changes to the standard component', () => {
+      fixture.componentRef.setInput('variant', 'centered');
+      fixture.detectChanges();
+
+      fixture.componentRef.setInput('variant', 'simple');
+      fixture.detectChanges();
+
+      const nav = fixture.nativeElement.querySelector(
+        'smart-paging-standard nav',
+      ) as HTMLElement;
+      expect(nav.getAttribute('data-variant')).toBe('simple');
+    });
+
     it('should propagate pageChange from standard component', () => {
       const emitSpy = jest.spyOn(component.pageChange, 'emit');
       fixture.componentRef.setInput('currentPage', 1);

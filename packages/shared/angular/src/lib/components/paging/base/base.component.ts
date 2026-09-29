@@ -8,6 +8,12 @@ export abstract class PagingBaseComponent {
   readonly totalPages = input<number>(1);
   readonly pageSize = input<number>(10);
   readonly totalItems = input<number>(0);
+  /**
+   * Layout variant: `'card-footer'` (results summary alongside the nav),
+   * `'centered'` or `'simple'`. Purely visual, styled by the preset
+   * (`PagingPresetComponent`); the standard component only exposes it as a
+   * `data-variant` attribute on its `<nav>`. Forwarded by `<smart-paging>`.
+   */
   readonly variant = input<PagingVariant>('card-footer');
   readonly cssClass = input<string>('', { alias: 'class' });
 

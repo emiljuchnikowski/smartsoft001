@@ -126,6 +126,21 @@ describe('@smartsoft001/shared-angular: PagingStandardComponent', () => {
     expect(ellipsis?.textContent).toContain('...');
   });
 
+  it('should expose the default variant as data-variant on the nav', () => {
+    const nav = fixture.nativeElement.querySelector('nav') as HTMLElement;
+
+    expect(nav.getAttribute('data-variant')).toBe('card-footer');
+  });
+
+  it('should reflect variant() in the data-variant attribute', () => {
+    fixture.componentRef.setInput('variant', 'simple');
+    fixture.detectChanges();
+
+    const nav = fixture.nativeElement.querySelector('nav') as HTMLElement;
+
+    expect(nav.getAttribute('data-variant')).toBe('simple');
+  });
+
   it('should apply external cssClass via [class] alias', () => {
     fixture.componentRef.setInput('class', 'my-extra-class');
     fixture.detectChanges();

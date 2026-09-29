@@ -49,6 +49,40 @@ describe('@smartsoft001/shared-angular: StackedLayoutStandardComponent', () => {
 
       expect(wrapper.className).toContain('my-extra-class');
     });
+
+    it('should expose data-container-width="xl" on the root by default', () => {
+      const root = fixture.nativeElement.firstElementChild as HTMLElement;
+
+      expect(root.getAttribute('data-container-width')).toBe('xl');
+    });
+
+    it('should expose options.containerWidth as data-container-width', () => {
+      fixture.componentRef.setInput('options', { containerWidth: 'sm' });
+      fixture.detectChanges();
+
+      const root = fixture.nativeElement.firstElementChild as HTMLElement;
+
+      expect(root.getAttribute('data-container-width')).toBe('sm');
+    });
+
+    it('should render options.title as an <h1> in its own <header>', () => {
+      fixture.componentRef.setInput('options', { title: 'Dashboard' });
+      fixture.detectChanges();
+
+      const headers = fixture.nativeElement.querySelectorAll('header');
+      const title = fixture.nativeElement.querySelector(
+        'header > h1[data-role="title"]',
+      );
+
+      expect(headers.length).toBe(2);
+      expect(title.textContent.trim()).toBe('Dashboard');
+    });
+
+    it('should not render a title <h1> when options.title is missing', () => {
+      const title = fixture.nativeElement.querySelector('h1');
+
+      expect(title).toBeNull();
+    });
   });
 
   describe('with templates', () => {
@@ -118,6 +152,20 @@ describe('@smartsoft001/shared-angular: StackedLayoutStandardComponent', () => {
 
       expect(headers.length).toBe(2);
       expect(title).toBeTruthy();
+    });
+
+    it('should prefer options.headerTpl over options.title', async () => {
+      host.options = { headerTpl: host.headerContent, title: 'Ignored' };
+      fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      const headers = fixture.nativeElement.querySelectorAll('header');
+      const title = fixture.nativeElement.querySelector('[data-role="title"]');
+
+      expect(headers.length).toBe(2);
+      expect(title).toBeNull();
+      expect(fixture.nativeElement.textContent).not.toContain('Ignored');
     });
   });
 });

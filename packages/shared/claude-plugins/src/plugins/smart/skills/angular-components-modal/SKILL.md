@@ -33,7 +33,7 @@ Styled variation that extends `ModalBaseComponent` and is a drop-in replacement 
 
 ### ModalBaseComponent (abstract)
 
-Abstract base directive for extending custom modal implementations. Exposes `open` as a two-way `ModelSignal<boolean>`, `title` / `description` as optional `InputSignal<string | undefined>`, `actions` as `InputSignal<IModalAction[]>` (default `[]`), `options` as `InputSignal<IModalOptions | undefined>`, `cssClass` as `InputSignal<string>` (with alias `class`), `actionClick` and `closed` outputs, plus `invokeAction(actionId)` (emits `actionClick`) and `close()` (sets `open` to `false` and emits `closed`).
+Abstract base directive for extending custom modal implementations. Exposes `open` as a two-way `ModelSignal<boolean>`, `title` / `description` as optional `InputSignal<string | undefined>`, `actions` as `InputSignal<IModalAction[]>` (default `[]`), `options` as `InputSignal<IModalOptions | undefined>`, `cssClass` as `InputSignal<string>` (with alias `class`), `actionClick` (payload `IModalActionClick`, exported from `@smartsoft001/angular`) and `closed` outputs, plus `invokeAction(actionId)` (emits `actionClick`) and `close()` (sets `open` to `false` and emits `closed`).
 
 ## API
 
@@ -50,10 +50,10 @@ Abstract base directive for extending custom modal implementations. Exposes `ope
 
 ### Outputs
 
-| Output        | Payload                | Description                               |
-| ------------- | ---------------------- | ----------------------------------------- |
-| `actionClick` | `{ actionId: string }` | Fired when a footer action is clicked     |
-| `closed`      | `void`                 | Fired when the dialog is dismissed/closed |
+| Output        | Payload                                      | Description                               |
+| ------------- | -------------------------------------------- | ----------------------------------------- |
+| `actionClick` | `IModalActionClick` (`{ actionId: string }`) | Fired when a footer action is clicked     |
+| `closed`      | `void`                                       | Fired when the dialog is dismissed/closed |
 
 ### IModalAction
 

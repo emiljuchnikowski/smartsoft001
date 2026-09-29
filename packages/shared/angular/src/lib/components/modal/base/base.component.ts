@@ -14,6 +14,10 @@ import {
   IModalOptions,
 } from '../../../models';
 
+export interface IModalActionClick {
+  actionId: string;
+}
+
 @Directive()
 export abstract class ModalBaseComponent {
   static smartType: DynamicComponentType = 'modal';
@@ -25,9 +29,8 @@ export abstract class ModalBaseComponent {
   options: InputSignal<IModalOptions | undefined> = input<IModalOptions>();
   cssClass: InputSignal<string> = input<string>('', { alias: 'class' });
 
-  actionClick: OutputEmitterRef<{ actionId: string }> = output<{
-    actionId: string;
-  }>();
+  actionClick: OutputEmitterRef<IModalActionClick> =
+    output<IModalActionClick>();
   closed: OutputEmitterRef<void> = output<void>();
 
   invokeAction(actionId: string): void {

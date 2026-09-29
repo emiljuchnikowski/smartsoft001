@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
+import { IModalActionClick } from '@smartsoft001/angular';
+
 import {
   CustomModalComponent,
   ModalCustomExampleComponent,
@@ -48,7 +50,7 @@ describe('docs-examples-angular: ModalCustomExampleComponent', () => {
       By.directive(CustomModalComponent),
     ).componentInstance;
     const emitted: string[] = [];
-    modal.actionClick.subscribe(({ actionId }: { actionId: string }) =>
+    modal.actionClick.subscribe(({ actionId }: IModalActionClick) =>
       emitted.push(actionId),
     );
 

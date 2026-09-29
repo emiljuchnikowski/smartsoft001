@@ -24,7 +24,8 @@
               [attr.data-current-month]="cell.isCurrentMonth ? 'true' : null"
               [attr.data-today]="cell.isToday ? 'true' : null"
               [attr.data-selected]="cell.isSelected ? 'true' : null"
-              [attr.aria-label]="cell.date.toDateString()"
+              [attr.data-events]="eventsForDay(cell.date).length || null"
+              [attr.aria-label]="dayAriaLabel(cell.date)"
               (click)="selectDay(cell.date)"
             >
               @if (options()?.dayCellTpl) {
@@ -37,6 +38,13 @@
                 />
               } @else {
                 {{ cell.date.getDate() }}
+                @if (eventsForDay(cell.date).length) {
+                  <span
+                    class="smart-calendar-event"
+                    data-role="event-dot"
+                    aria-hidden="true"
+                  ></span>
+                }
               }
             </button>
           }

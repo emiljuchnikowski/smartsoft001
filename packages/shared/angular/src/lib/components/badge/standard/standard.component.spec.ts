@@ -86,6 +86,36 @@ describe('@smartsoft001/shared-angular: BadgeStandardComponent', () => {
     expect(span.getAttribute('data-size')).toBe('sm');
   });
 
+  it('should expose data-variant="soft" by default', () => {
+    const span = fixture.nativeElement.querySelector('span');
+
+    expect(span.getAttribute('data-variant')).toBe('soft');
+  });
+
+  it('should reflect options.variant in the data-variant attribute', () => {
+    fixture.componentRef.setInput('options', { variant: 'outline' });
+    fixture.detectChanges();
+
+    const span = fixture.nativeElement.querySelector('span');
+
+    expect(span.getAttribute('data-variant')).toBe('outline');
+  });
+
+  it('should expose data-pill="true" by default', () => {
+    const span = fixture.nativeElement.querySelector('span');
+
+    expect(span.getAttribute('data-pill')).toBe('true');
+  });
+
+  it('should expose data-pill="false" when options.pill is false', () => {
+    fixture.componentRef.setInput('options', { pill: false });
+    fixture.detectChanges();
+
+    const span = fixture.nativeElement.querySelector('span');
+
+    expect(span.getAttribute('data-pill')).toBe('false');
+  });
+
   it('should include external cssClass on the host span when provided', () => {
     fixture.componentRef.setInput('class', 'my-extra-class');
     fixture.detectChanges();

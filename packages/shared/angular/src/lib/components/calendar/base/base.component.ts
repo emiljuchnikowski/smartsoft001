@@ -128,6 +128,17 @@ export abstract class CalendarBaseComponent {
     });
   }
 
+  /**
+   * Accessible name for a day cell: the date string, followed by the number of
+   * events on that day when there are any (e.g. `"Sat Jan 10 2026, 2 events"`).
+   */
+  dayAriaLabel(day: Date): string {
+    const label = day.toDateString();
+    const count = this.eventsForDay(day).length;
+    if (!count) return label;
+    return `${label}, ${count} ${count === 1 ? 'event' : 'events'}`;
+  }
+
   selectDay(date: Date): void {
     this.value.set(date);
   }

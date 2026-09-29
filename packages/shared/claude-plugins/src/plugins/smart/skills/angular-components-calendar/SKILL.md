@@ -21,7 +21,7 @@ Main wrapper component. Renders `CalendarStandardComponent` by default. When `CA
 
 ### CalendarStandardComponent (`<smart-calendar-standard>`)
 
-Barebones placeholder concrete implementation. Renders a wrapper `<div>` containing an optional toolbar (`<button.prev>`, `<button.today-btn>`, `<button.next>`, optional `toolbarActionsTpl` slot) and a `<div class="view-grid">` with one `<div class="week">` per week and one `<button class="day">` per day. Each day exposes `data-current-month`, `data-today`, and `data-selected` attributes plus an `aria-label` of the date string. If `dayCellTpl` is provided in options, it replaces the default day-number content. The external `cssClass` is applied to the root wrapper. It does not include any visual styling — it exists solely as the default structural placeholder until a custom implementation is registered through the token.
+Barebones placeholder concrete implementation. Renders a wrapper `<div>` containing an optional toolbar (`<button.prev>`, `<button.today-btn>`, `<button.next>`, optional `toolbarActionsTpl` slot) and a `<div class="view-grid">` with one `<div class="week">` per week and one `<button class="day">` per day. Each day exposes `data-current-month`, `data-today`, and `data-selected` attributes plus an `aria-label` of the date string. The standard marks event days: a day with `eventsForDay(date).length > 0` gets `data-events="<count>"`, its `aria-label` gains the count (e.g. `"Thu Sep 03 2026, 1 event"`, `", 2 events"`; built by the base's `dayAriaLabel(date)`, which the preset uses too), and — without `dayCellTpl` — a `<span class="smart-calendar-event" data-role="event-dot" aria-hidden="true">` marker after the day number. If `dayCellTpl` is provided in options, it replaces the default day content (day number and marker). The external `cssClass` is applied to the root wrapper. It does not include any visual styling — it exists solely as the default structural placeholder until a custom implementation is registered through the token.
 
 ### CalendarPresetComponent (`<smart-calendar-preset>`)
 
@@ -37,7 +37,7 @@ Abstract base directive containing the shared calendar logic. Exposes inputs and
 
 **Computed signals:** `view` (current view from options, default `'month'`), `weekStart` (`0 | 1`, default `1`), `showToolbar` (default `true`), `reference` (effective reference date — internal writable, seeded from `referenceDate` input), `monthGrid` (current 6×7 grid).
 
-**Methods:** `selectDay(date)`, `goToToday()`, `prevPeriod()`, `nextPeriod()`, `eventsForDay(day)`.
+**Methods:** `selectDay(date)`, `goToToday()`, `prevPeriod()`, `nextPeriod()`, `eventsForDay(day)`, `dayAriaLabel(day)` (date string plus `", N event(s)"` when the day has events).
 
 **Static method:** `buildMonthGrid(reference, weekStart, selected): ICalendarDayCell[][]` — pure function returning a 6×7 grid suitable for rendering.
 
@@ -50,7 +50,7 @@ Abstract base directive containing the shared calendar logic. Exposes inputs and
 | `options`       | `InputSignal<ICalendarOptions \| undefined>` | -       | Configuration (view, weekStart, slot templates, …)                                              |
 | `value`         | `ModelSignal<Date \| null>`                  | `null`  | Selected day (two-way binding)                                                                  |
 | `referenceDate` | `InputSignal<Date \| undefined>`             | -       | Initial reference date (current month focus). Defaults to today inside the wrapper if undefined |
-| `events`        | `InputSignal<ICalendarEvent[]>`              | `[]`    | Events available for `eventsForDay()` filtering                                                 |
+| `events`        | `InputSignal<ICalendarEvent[]>`              | `[]`    | Events for `eventsForDay()`; the standard and preset mark days that have events                 |
 | `class`         | `InputSignal<string>`                        | `''`    | External CSS classes (alias for `cssClass`)                                                     |
 
 ### ICalendarOptions

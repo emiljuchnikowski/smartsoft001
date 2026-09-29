@@ -18,8 +18,20 @@ describe('docs-examples-angular: ToggleUsageExampleComponent', () => {
     const input: HTMLInputElement =
       fixture.nativeElement.querySelector('input');
 
-    expect(input.getAttribute('aria-label')).toBe('Email notifications');
+    expect(input.labels?.[0]?.textContent?.trim()).toBe('Email notifications');
     expect(input.checked).toBe(true);
+  });
+
+  it('should describe the switch with the description text', () => {
+    const input: HTMLInputElement =
+      fixture.nativeElement.querySelector('input');
+    const description = fixture.nativeElement.querySelector(
+      `#${input.getAttribute('aria-describedby')}`,
+    );
+
+    expect(description.textContent.trim()).toBe(
+      'Get an email when someone comments on your post.',
+    );
   });
 
   it('should write the new state back to the component', () => {

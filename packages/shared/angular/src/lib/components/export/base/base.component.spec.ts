@@ -81,7 +81,21 @@ describe('ExportBaseComponent', () => {
 
     await exportComp.onClick();
 
-    expect(handlerFn).toHaveBeenCalledWith({ data: 'test' });
+    expect(handlerFn).toHaveBeenCalledWith({ data: 'test' }, undefined);
+  });
+
+  it('should pass fileName as the second handler argument', async () => {
+    const handlerFn = jest.fn();
+    fixture.componentInstance.handler = handlerFn;
+    fixture.componentInstance.value = { data: 'test' };
+    fixture.componentInstance.fileName = 'report.csv';
+    fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    await exportComp.onClick();
+
+    expect(handlerFn).toHaveBeenCalledWith({ data: 'test' }, 'report.csv');
   });
 
   it('should not call handler when onClick is called and value is undefined', async () => {

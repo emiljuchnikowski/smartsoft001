@@ -195,6 +195,66 @@ describe('@smartsoft001/shared-angular: CalendarStandardComponent', () => {
       expect(selected.length).toBe(1);
       expect(selected[0].textContent.trim()).toContain('20');
     });
+
+    describe('events', () => {
+      // Jan 1, 2026 is at index 3 (weekStart=1), so Jan 10 is at index 12.
+      const JAN_10_INDEX = 12;
+
+      function days(): HTMLButtonElement[] {
+        return Array.from(
+          fixture.nativeElement.querySelectorAll('.view-grid .day'),
+        );
+      }
+
+      beforeEach(() => {
+        fixture.componentRef.setInput('events', [
+          { id: 1, start: new Date(2026, 0, 10, 9) },
+          { id: 2, start: new Date(2026, 0, 10, 14) },
+          { id: 3, start: new Date(2026, 0, 12) },
+        ]);
+        fixture.detectChanges();
+      });
+
+      it('should render an aria-hidden event marker only on days with events', () => {
+        const markers = fixture.nativeElement.querySelectorAll(
+          '.day span.smart-calendar-event[data-role="event-dot"]',
+        );
+
+        expect(markers.length).toBe(2);
+        expect(markers[0].getAttribute('aria-hidden')).toBe('true');
+        expect(days()[JAN_10_INDEX].contains(markers[0])).toBe(true);
+      });
+
+      it('should set data-events to the event count on days with events', () => {
+        const withEvents =
+          fixture.nativeElement.querySelectorAll('.day[data-events]');
+
+        expect(withEvents.length).toBe(2);
+        expect(days()[JAN_10_INDEX].getAttribute('data-events')).toBe('2');
+        expect(days()[JAN_10_INDEX + 2].getAttribute('data-events')).toBe('1');
+      });
+
+      it('should mention the event count in the day aria-label', () => {
+        const jan10 = new Date(2026, 0, 10).toDateString();
+        const jan12 = new Date(2026, 0, 12).toDateString();
+
+        expect(days()[JAN_10_INDEX].getAttribute('aria-label')).toBe(
+          `${jan10}, 2 events`,
+        );
+        expect(days()[JAN_10_INDEX + 2].getAttribute('aria-label')).toBe(
+          `${jan12}, 1 event`,
+        );
+      });
+
+      it('should keep the plain date as aria-label on days without events', () => {
+        const jan11 = new Date(2026, 0, 11).toDateString();
+
+        expect(days()[JAN_10_INDEX + 1].getAttribute('aria-label')).toBe(jan11);
+        expect(days()[JAN_10_INDEX + 1].hasAttribute('data-events')).toBe(
+          false,
+        );
+      });
+    });
   });
 
   describe('templates', () => {

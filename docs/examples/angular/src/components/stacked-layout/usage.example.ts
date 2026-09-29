@@ -20,14 +20,11 @@ import {
 })
 export class StackedLayoutUsageExampleComponent {
   private readonly navTpl = viewChild.required<TemplateRef<unknown>>('navTpl');
-  private readonly headerTpl =
-    viewChild.required<TemplateRef<unknown>>('headerTpl');
 
   readonly options = computed<IStackedLayoutOptions>(() => ({
     title: 'Projects',
     containerWidth: 'xl',
     navTpl: this.navTpl(),
-    headerTpl: this.headerTpl(),
   }));
 }
 // #endregion

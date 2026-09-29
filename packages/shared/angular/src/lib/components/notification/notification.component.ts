@@ -9,6 +9,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
+import { INotificationActionClick } from './base/base.component';
 import { NotificationStandardComponent } from './standard/standard.component';
 import { INotificationAction, INotificationOptions } from '../../models';
 import { NOTIFICATION_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
@@ -55,7 +56,7 @@ export class NotificationComponent {
   cssClass = input<string>('', { alias: 'class' });
 
   dismissed = output<void>();
-  actionClick = output<{ actionId: string }>();
+  actionClick = output<INotificationActionClick>();
 
   componentType = computed(() => this.injectedComponent ?? null);
 

@@ -30,11 +30,14 @@ Flexible card container with injectable standard rendering. The `<smart-card>` w
 ```typescript
 interface ICardOptions {
   title?: string;
+  /** @deprecated Never rendered by any variant; use the [cardHeader] / [cardFooter] slots. */
   buttons?: Array<IIconButtonOptions>;
   grayFooter?: boolean;
   grayBody?: boolean;
 }
 ```
+
+`buttons` is **deprecated**: no card variant (standard or preset) has ever rendered it. Put actions in the header or footer instead, by projecting them into the `[cardHeader]` / `[cardFooter]` slots (with `hasHeader` / `hasFooter` set); the wrapper hands those to the variant as `headerTpl` / `footerTpl`.
 
 ### Content Projection
 

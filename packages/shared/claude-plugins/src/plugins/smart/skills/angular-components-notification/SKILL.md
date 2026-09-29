@@ -38,7 +38,7 @@ Styled toast variation that extends `NotificationBaseComponent` and is a drop-in
 
 ### NotificationBaseComponent (abstract)
 
-Abstract base directive for extending custom notification implementations. Exposes the inputs/outputs listed below and provides `dismiss()` (emits `dismissed`) and `invokeAction(actionId)` (emits `actionClick` with `{ actionId }`) helper methods.
+Abstract base directive for extending custom notification implementations. Exposes the inputs/outputs listed below and provides `dismiss()` (emits `dismissed`) and `invokeAction(actionId)` (emits `actionClick` with an `INotificationActionClick` payload `{ actionId }`, exported from `@smartsoft001/angular`) helper methods.
 
 ## API
 
@@ -57,10 +57,10 @@ Abstract base directive for extending custom notification implementations. Expos
 
 ### Outputs
 
-| Output        | Payload                | Description                              |
-| ------------- | ---------------------- | ---------------------------------------- |
-| `dismissed`   | `void`                 | Emitted when the user dismisses          |
-| `actionClick` | `{ actionId: string }` | Emitted when an action button is clicked |
+| Output        | Payload                                             | Description                              |
+| ------------- | --------------------------------------------------- | ---------------------------------------- |
+| `dismissed`   | `void`                                              | Emitted when the user dismisses          |
+| `actionClick` | `INotificationActionClick` (`{ actionId: string }`) | Emitted when an action button is clicked |
 
 ### INotificationAction
 

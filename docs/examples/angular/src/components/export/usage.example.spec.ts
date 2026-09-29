@@ -31,4 +31,20 @@ describe('docs-examples-angular: ExportUsageExampleComponent', () => {
       fixture.componentInstance.orders,
     );
   });
+
+  it('should hand the file name to the handler when clicked', () => {
+    const button: HTMLButtonElement =
+      fixture.nativeElement.querySelector('button');
+
+    button.click();
+
+    expect(fixture.componentInstance.exportedFileName()).toBe('orders.csv');
+  });
+
+  it('should give the icon-only button an accessible name', () => {
+    const button: HTMLButtonElement =
+      fixture.nativeElement.querySelector('button');
+
+    expect(button.textContent?.trim()).toBe('Export');
+  });
 });

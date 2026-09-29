@@ -85,4 +85,69 @@ describe('@smartsoft001/shared-angular: AvatarStandardComponent', () => {
 
     expect(span.className).toContain('my-extra-class');
   });
+
+  it('should render initials when placeholderType is initials and initials are set', () => {
+    fixture.componentRef.setInput('initials', 'AB');
+    fixture.componentRef.setInput('options', { placeholderType: 'initials' });
+    fixture.detectChanges();
+
+    const initials = fixture.nativeElement.querySelector(
+      '.smart-avatar-initials',
+    );
+
+    expect(initials.textContent.trim()).toBe('AB');
+  });
+
+  it('should keep the placeholder when placeholderType is initials but no initials are set', () => {
+    fixture.componentRef.setInput('options', { placeholderType: 'initials' });
+    fixture.detectChanges();
+
+    const placeholder = fixture.nativeElement.querySelector(
+      '.smart-avatar-placeholder',
+    );
+
+    expect(placeholder).toBeTruthy();
+  });
+
+  it('should expose data-placeholder-type="icon" by default', () => {
+    const span = fixture.nativeElement.querySelector('span');
+
+    expect(span.getAttribute('data-placeholder-type')).toBe('icon');
+  });
+
+  it('should reflect options.placeholderType in data-placeholder-type', () => {
+    fixture.componentRef.setInput('options', { placeholderType: 'initials' });
+    fixture.detectChanges();
+
+    const span = fixture.nativeElement.querySelector('span');
+
+    expect(span.getAttribute('data-placeholder-type')).toBe('initials');
+  });
+
+  it('should expose data-stack-direction="top-to-bottom" on the group container by default', () => {
+    fixture.componentRef.setInput('group', [{ id: '1', initials: 'AB' }]);
+    fixture.detectChanges();
+
+    const span = fixture.nativeElement.querySelector('span');
+
+    expect(span.getAttribute('data-stack-direction')).toBe('top-to-bottom');
+  });
+
+  it('should reflect options.stackDirection in data-stack-direction on the group container', () => {
+    fixture.componentRef.setInput('group', [{ id: '1', initials: 'AB' }]);
+    fixture.componentRef.setInput('options', {
+      stackDirection: 'bottom-to-top',
+    });
+    fixture.detectChanges();
+
+    const span = fixture.nativeElement.querySelector('span');
+
+    expect(span.getAttribute('data-stack-direction')).toBe('bottom-to-top');
+  });
+
+  it('should NOT expose data-stack-direction when not rendering a group', () => {
+    const span = fixture.nativeElement.querySelector('span');
+
+    expect(span.hasAttribute('data-stack-direction')).toBe(false);
+  });
 });

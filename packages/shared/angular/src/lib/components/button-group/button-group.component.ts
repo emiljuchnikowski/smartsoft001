@@ -10,6 +10,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
+import { IButtonGroupButtonClick } from './base/base.component';
 import { ButtonGroupStandardComponent } from './standard/standard.component';
 import { IButtonGroupButton, IButtonGroupOptions } from '../../models';
 import { BUTTON_GROUP_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
@@ -46,7 +47,7 @@ export class ButtonGroupComponent {
   selected = model<string | undefined>(undefined);
   cssClass = input<string>('', { alias: 'class' });
 
-  buttonClick = output<{ buttonId: string }>();
+  buttonClick = output<IButtonGroupButtonClick>();
 
   componentType = computed(() => this.injectedComponent ?? null);
 

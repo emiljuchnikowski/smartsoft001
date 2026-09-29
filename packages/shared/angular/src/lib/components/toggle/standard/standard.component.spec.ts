@@ -72,4 +72,118 @@ describe('@smartsoft001/shared-angular: ToggleStandardComponent', () => {
 
     expect(input.className).toContain('my-extra-class');
   });
+  describe('label / description / labelPosition', () => {
+    it('should render options.label in a <label> associated with the input', () => {
+      fixture.componentRef.setInput('options', { label: 'Notifications' });
+      fixture.detectChanges();
+
+      const input: HTMLInputElement = fixture.nativeElement.querySelector(
+        'input[type="checkbox"]',
+      );
+      const label: HTMLLabelElement =
+        fixture.nativeElement.querySelector('label');
+
+      expect(label.textContent?.trim()).toBe('Notifications');
+      expect(label.control).toBe(input);
+    });
+
+    it('should not render a <label> when options.label is absent', () => {
+      fixture.componentRef.setInput('options', { ariaLabel: 'Use setting' });
+      fixture.detectChanges();
+
+      const label = fixture.nativeElement.querySelector('label');
+
+      expect(label).toBeNull();
+    });
+
+    it('should drop aria-label when a visible label is rendered', () => {
+      fixture.componentRef.setInput('options', {
+        label: 'Notifications',
+        ariaLabel: 'Use setting',
+      });
+      fixture.detectChanges();
+
+      const input = fixture.nativeElement.querySelector(
+        'input[type="checkbox"]',
+      );
+
+      expect(input.hasAttribute('aria-label')).toBe(false);
+    });
+
+    it('should render the description referenced by aria-describedby', () => {
+      fixture.componentRef.setInput('options', {
+        label: 'Notifications',
+        description: 'Get notified about updates.',
+      });
+      fixture.detectChanges();
+
+      const input = fixture.nativeElement.querySelector(
+        'input[type="checkbox"]',
+      );
+      const describedBy = input.getAttribute('aria-describedby');
+      const description = fixture.nativeElement.querySelector(
+        `#${describedBy}`,
+      );
+
+      expect(description.textContent.trim()).toBe(
+        'Get notified about updates.',
+      );
+    });
+
+    it('should not set aria-describedby without a description', () => {
+      fixture.componentRef.setInput('options', { label: 'Notifications' });
+      fixture.detectChanges();
+
+      const input = fixture.nativeElement.querySelector(
+        'input[type="checkbox"]',
+      );
+
+      expect(input.hasAttribute('aria-describedby')).toBe(false);
+    });
+
+    it('should place the text after the switch by default (right)', () => {
+      fixture.componentRef.setInput('options', { label: 'Notifications' });
+      fixture.detectChanges();
+
+      const input = fixture.nativeElement.querySelector(
+        'input[type="checkbox"]',
+      );
+      const text = fixture.nativeElement.querySelector('[data-role="text"]');
+
+      expect(
+        input.compareDocumentPosition(text) & Node.DOCUMENT_POSITION_FOLLOWING,
+      ).toBeTruthy();
+    });
+
+    it('should place the text before the switch when labelPosition is left', () => {
+      fixture.componentRef.setInput('options', {
+        label: 'Notifications',
+        labelPosition: 'left',
+      });
+      fixture.detectChanges();
+
+      const input = fixture.nativeElement.querySelector(
+        'input[type="checkbox"]',
+      );
+      const text = fixture.nativeElement.querySelector('[data-role="text"]');
+
+      expect(
+        input.compareDocumentPosition(text) & Node.DOCUMENT_POSITION_PRECEDING,
+      ).toBeTruthy();
+    });
+
+    it('should give each instance a unique input id', () => {
+      const other = TestBed.createComponent(ToggleStandardComponent);
+      fixture.componentRef.setInput('options', { label: 'A' });
+      other.componentRef.setInput('options', { label: 'B' });
+      fixture.detectChanges();
+      other.detectChanges();
+
+      const firstId = fixture.nativeElement.querySelector('input').id;
+      const secondId = other.nativeElement.querySelector('input').id;
+
+      expect(firstId).toBeTruthy();
+      expect(firstId).not.toBe(secondId);
+    });
+  });
 });

@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 
 import {
   INotificationAction,
+  INotificationActionClick,
   INotificationOptions,
   NotificationComponent,
 } from '@smartsoft001/angular';
@@ -26,7 +27,7 @@ export class NotificationUsageExampleComponent {
   readonly visible = signal(true);
   readonly lastAction = signal<string | null>(null);
 
-  onActionClick({ actionId }: { actionId: string }): void {
+  onActionClick({ actionId }: INotificationActionClick): void {
     this.lastAction.set(actionId);
   }
 

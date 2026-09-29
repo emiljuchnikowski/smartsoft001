@@ -10,6 +10,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
+import { IModalActionClick } from './base/base.component';
 import { ModalStandardComponent } from './standard/standard.component';
 import { IModalAction, IModalOptions } from '../../models';
 import { MODAL_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
@@ -53,7 +54,7 @@ export class ModalComponent {
   options = input<IModalOptions>();
   cssClass = input<string>('', { alias: 'class' });
 
-  actionClick = output<{ actionId: string }>();
+  actionClick = output<IModalActionClick>();
   closed = output<void>();
 
   componentType = computed(() => this.injectedComponent ?? null);

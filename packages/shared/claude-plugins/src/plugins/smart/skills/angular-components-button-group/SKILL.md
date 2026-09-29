@@ -40,13 +40,13 @@ Abstract base directive (`@Directive()`) for extending custom button-group imple
 
 ### Inputs / Models / Outputs
 
-| Name          | Kind   | Type                               | Default     | Description                                       |
-| ------------- | ------ | ---------------------------------- | ----------- | ------------------------------------------------- |
-| `buttons`     | input  | `IButtonGroupButton[]`             | `[]`        | Array of button definitions                       |
-| `options`     | input  | `IButtonGroupOptions \| undefined` | `undefined` | Group-wide options (variant, etc.)                |
-| `selected`    | model  | `string \| undefined`              | `undefined` | Two-way bound id of the currently selected button |
-| `class`       | input  | `string`                           | `''`        | External CSS classes (alias for `cssClass`)       |
-| `buttonClick` | output | `{ buttonId: string }`             | -           | Emitted when a button is clicked                  |
+| Name          | Kind   | Type                                                                                      | Default     | Description                                       |
+| ------------- | ------ | ----------------------------------------------------------------------------------------- | ----------- | ------------------------------------------------- |
+| `buttons`     | input  | `IButtonGroupButton[]`                                                                    | `[]`        | Array of button definitions                       |
+| `options`     | input  | `IButtonGroupOptions \| undefined`                                                        | `undefined` | Group-wide options (variant, etc.)                |
+| `selected`    | model  | `string \| undefined`                                                                     | `undefined` | Two-way bound id of the currently selected button |
+| `class`       | input  | `string`                                                                                  | `''`        | External CSS classes (alias for `cssClass`)       |
+| `buttonClick` | output | `IButtonGroupButtonClick` (`{ buttonId: string }`, exported from `@smartsoft001/angular`) | -           | Emitted when a button is clicked                  |
 
 ### IButtonGroupButton
 

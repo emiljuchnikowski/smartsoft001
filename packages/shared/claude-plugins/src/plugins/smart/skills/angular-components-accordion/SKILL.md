@@ -36,11 +36,25 @@ import { AccordionBaseComponent } from '@smartsoft001/angular';
 
 ```typescript
 interface IAccordionOptions {
-  open?: boolean; // Initial open state
+  open?: boolean; // Initial open state (applied once, on first render)
   disabled?: boolean; // Prevents toggle when true
-  animated?: boolean; // Enable/disable CSS transitions
+  /** @deprecated No variant animates anything; has no effect. */
+  animated?: boolean;
 }
 ```
+
+- **`open`** is the initial state. When it is `true` on first render and `show`
+  has not been set to `true` by the consumer, `AccordionBaseComponent.ngOnInit`
+  sets `show` to `true` once and emits `showChange`, so both
+  `<smart-accordion>` (default) and `<smart-accordion-preset>` start expanded
+  and a bound `[(show)]` is updated to `true`. It is applied only once: later
+  changes to `options.open` are ignored and later toggles / `[(show)]` writes
+  are never overridden. Bind `[(show)]` to a **signal** when combining it with
+  `open`; a plain class field updated during the first change detection raises
+  `NG0100` (ExpressionChangedAfterItHasBeenChecked) in dev mode.
+- **`disabled`** makes `toggle()` a no-op.
+- **`animated`** is **deprecated**: no variant (default or preset) animates
+  expand/collapse.
 
 ### Computed Properties
 
@@ -50,9 +64,10 @@ interface IAccordionOptions {
 
 ### Methods
 
-| Method     | Description                                 |
-| ---------- | ------------------------------------------- |
-| `toggle()` | Toggles `show` signal (no-op if `disabled`) |
+| Method       | Description                                                              |
+| ------------ | ------------------------------------------------------------------------ |
+| `toggle()`   | Toggles `show` signal (no-op if `disabled`)                              |
+| `ngOnInit()` | Applies `options.open` as the initial state (sets `show` to `true` once) |
 
 ## Extending the Base Class
 
@@ -78,6 +93,9 @@ import { AccordionBaseComponent } from '@smartsoft001/angular';
 })
 export class MyAccordionComponent extends AccordionBaseComponent {}
 ```
+
+If a subclass implements its own `ngOnInit`, call `super.ngOnInit()` so
+`options.open` keeps working.
 
 ## AccordionPresetComponent (`<smart-accordion-preset>`)
 
