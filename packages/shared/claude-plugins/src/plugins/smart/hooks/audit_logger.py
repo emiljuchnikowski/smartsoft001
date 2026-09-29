@@ -11,7 +11,8 @@ Features:
 - Automatic cleanup of logs older than 90 days
 - Captures all hook events: PreToolUse, PostToolUse, Stop, UserPromptSubmit
 
-Log location: .claude/audit_logs/ (local to repository)
+Log location: <project>/.claude/audit_logs/, where <project> is
+CLAUDE_PROJECT_DIR (set by Claude Code for hooks) or the working directory
 Log format: JSONL (one JSON object per line)
 
 Each log entry contains:
@@ -33,11 +34,14 @@ from pathlib import Path
 
 
 def get_log_directory() -> Path:
-    """Get or create the audit logs directory in the local .claude folder."""
-    # Get the directory where this script is located (.claude/hooks/)
-    script_dir = Path(__file__).resolve().parent
-    # Go up to .claude/ and then into audit_logs/
-    log_dir = script_dir.parent / "audit_logs"
+    """Get or create the project's .claude/audit_logs directory.
+
+    The log belongs to the project, where the audit-log skill reads it, not
+    to the plugin: the script itself lives in the installed plugin, usually
+    under node_modules, so a path relative to it lands where nobody looks.
+    """
+    project_dir = os.environ.get("CLAUDE_PROJECT_DIR") or os.getcwd()
+    log_dir = Path(project_dir) / ".claude" / "audit_logs"
     log_dir.mkdir(parents=True, exist_ok=True)
     return log_dir
 
@@ -86,12 +90,19 @@ def main() -> None:
     """Main entry point for audit logging."""
     log_dir = get_log_directory()
 
-    # Build audit entry
+    event_data = parse_event_data()
+    if not isinstance(event_data, dict):
+        event_data = {"payload": event_data}
+
+    # Claude Code sends the event name and the session id in the stdin payload;
+    # the environment variables are a fallback for other callers.
     audit_entry = {
         "timestamp": get_iso_timestamp(),
-        "event_type": os.environ.get("CLAUDE_HOOK_EVENT", "unknown"),
-        "session_id": os.environ.get("CLAUDE_SESSION_ID", "unknown"),
-        "event_data": parse_event_data()
+        "event_type": event_data.get("hook_event_name")
+        or os.environ.get("CLAUDE_HOOK_EVENT", "unknown"),
+        "session_id": event_data.get("session_id")
+        or os.environ.get("CLAUDE_SESSION_ID", "unknown"),
+        "event_data": event_data,
     }
 
     # Write to log file

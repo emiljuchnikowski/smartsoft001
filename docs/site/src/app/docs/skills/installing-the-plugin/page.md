@@ -62,13 +62,9 @@ Hooks are declared in `plugins/smart/hooks/hooks.json` and referenced with `${CL
 | `sensitive_file_blocker.py` | PreToolUse                                | `Read\|Edit\|Write` | Refuses paths matching `.env`, `secrets` or `credentials`; files ending in `.example` are allowed.                                                                                                                  |
 | `skill_validator.py`        | PreToolUse                                | `Write\|Edit`       | Warns about structure problems only when Claude writes a file below `.claude/skills/`. Warnings never block.                                                                                                        |
 | `auto_format.sh`            | PostToolUse                               | `Write\|Edit`       | Runs the project's complete `npm run format` pipeline after every matching tool call, not only on the changed file.                                                                                                 |
-| `audit_logger.py`           | PreToolUse, PostToolUse, UserPromptSubmit | any                 | Appends one JSON line per event beneath the installed plugin root and removes log files older than 90 days.                                                                                                         |
+| `audit_logger.py`           | PreToolUse, PostToolUse, UserPromptSubmit | any                 | Appends one JSON line per event to the project's `.claude/audit_logs/YYYYMMDD_audit.jsonl` and removes files older than 90 days.                                                                                    |
 
-A blocking hook exits with code 2 and a message that Claude shows in the conversation.
-
-{% callout title="Audit-log path limitation" %}
-`audit_logger.py` currently derives its output from its installed script path, so it writes under `${CLAUDE_PLUGIN_ROOT}/audit_logs`. With the local marketplace above, that is normally `node_modules/@smartsoft001/claude-plugins/plugins/smart/audit_logs`. The [`audit-log`](/docs/skills/audit-log) skill instead looks in the project's `.claude/audit_logs`. Until the plugin aligns those paths, the skill can report that no log exists even though the hook has logged events.
-{% /callout %}
+A blocking hook exits with code 2 and a message that Claude shows in the conversation. The [`audit-log`](/docs/skills/audit-log) skill reads the files the last hook writes; add `.claude/audit_logs` to the project's `.gitignore`.
 
 ## Customising
 
