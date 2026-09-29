@@ -70,13 +70,20 @@ SENSITIVE_PATTERNS = [
 
 **Change log location:**
 
+`get_log_directory()` decides where the log goes:
+
 ```python
-# Default: .claude/audit_logs/YYYYMMDD_audit.jsonl
-LOG_DIR = Path(__file__).resolve().parent.parent / "audit_logs"
+# Default: <project>/.claude/audit_logs/YYYYMMDD_audit.jsonl, where <project>
+# is CLAUDE_PROJECT_DIR (set by Claude Code) or the working directory.
+project_dir = os.environ.get("CLAUDE_PROJECT_DIR") or os.getcwd()
+log_dir = Path(project_dir) / ".claude" / "audit_logs"
 
 # Custom location:
-LOG_DIR = Path("/var/log/claude-audit")
+log_dir = Path("/var/log/claude-audit")
 ```
+
+The `audit-log` skill reads `.claude/audit_logs/`, so a custom location also
+needs the skill changed.
 
 ---
 

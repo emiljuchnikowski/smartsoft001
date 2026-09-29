@@ -105,7 +105,7 @@ All hooks are configured in `hooks.json` in this directory. Claude Code reads th
 
 **Purpose:** Logs all Claude actions for audit trail.
 
-**Log location:** `.claude/audit_logs/YYYYMMDD_audit.jsonl`
+**Log location:** `.claude/audit_logs/YYYYMMDD_audit.jsonl` in the project (`CLAUDE_PROJECT_DIR`, or the working directory). Add `.claude/audit_logs` to the project's `.gitignore`.
 
 **Logged events:**
 - PreToolUse (tool name, inputs)

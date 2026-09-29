@@ -15,11 +15,7 @@ This command requires the [`smart@smartsoft` plugin](/docs/skills/installing-the
 
 ## What it does
 
-The skill looks for `.claude/audit_logs/YYYYMMDD_audit.jsonl`, then turns one day's JSON objects into a readable summary: the total number of events, a breakdown by event type, blocked actions and a chronological list of key actions. Each entry contains a timestamp, event type, session id and the full hook payload.
-
-{% callout title="Current plugin limitation" %}
-The installed `audit_logger.py` writes under `${CLAUDE_PLUGIN_ROOT}/audit_logs`, rather than to the project path this skill reads. With the documented local marketplace install, that is normally `node_modules/@smartsoft001/claude-plugins/plugins/smart/audit_logs`. `/smart:audit-log` can therefore report no file even after hooks ran; this needs a plugin fix, not a different skill argument.
-{% /callout %}
+The `audit_logger` hook writes every hook event to the project's `.claude/audit_logs/YYYYMMDD_audit.jsonl`. The skill reads one day's file and turns its JSON objects into a readable summary: the total number of events, a breakdown by event type, blocked actions and a chronological list of key actions. Each entry contains a timestamp, event type, session id and the full hook payload.
 
 ## When to use it
 
@@ -34,11 +30,11 @@ The installed `audit_logger.py` writes under `${CLAUDE_PLUGIN_ROOT}/audit_logs`,
 /smart:audit-log [today|yesterday|YYYYMMDD]
 ```
 
-Without an argument the skill reads today's project-local file. `yesterday` and an explicit `YYYYMMDD` date select another day. A missing file can mean no session ran that day, the plugin was not installed, or the hook wrote only to its current cache-relative location described above.
+Without an argument the skill reads today's project-local file. `yesterday` and an explicit `YYYYMMDD` date select another day. A missing file means no session ran in the project that day or the plugin was not installed yet.
 
 ## What it produces
 
-A summary table in the conversation, grouped chronologically, with safety blocks and errors highlighted. The skill does not write anything. For ad-hoc questions, any log file you locate is plain JSONL, so `grep` on `"tool_name":"Bash"`, `"event_type":"PreToolUse"` or `BLOCKED` works as well.
+A summary table in the conversation, grouped chronologically, with safety blocks and errors highlighted. The skill does not write anything. For ad-hoc questions, the log files are plain JSONL, so `grep` on `"tool_name":"Bash"`, `"event_type":"PreToolUse"` or `BLOCKED` works as well.
 
 ## Source
 
