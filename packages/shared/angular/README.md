@@ -1510,6 +1510,17 @@ The `<smart-stacked-list>` component renders a vertical list of records with opt
 
 **Wrapper:** `StackedListComponent` (selector: `smart-stacked-list`)
 **Default:** `StackedListStandardComponent` (selector: `smart-stacked-list-standard`)
+**Preset variation:** `StackedListPresetComponent` (selector: `smart-stacked-list-preset`): a styled Tailwind drop-in replacement with avatar or icon tiles, title/description/meta lines, trailing badge and action slots, and `dark:` styling. It honours `withDividers` (hairlines between rows) and `fullWidthOnMobile` (a card that bleeds to the screen edge below `sm` and is rounded from `sm` up). Register it through the token to restyle every `<smart-stacked-list>`:
+
+```typescript
+providers: [
+  {
+    provide: STACKED_LIST_STANDARD_COMPONENT_TOKEN,
+    useValue: StackedListPresetComponent,
+  },
+];
+```
+
 **Token:** `STACKED_LIST_STANDARD_COMPONENT_TOKEN` — provide a `Type<StackedListBaseComponent>` to override the default.
 
 #### Usage
@@ -1587,8 +1598,8 @@ The `<smart-stacked-list>` component renders a vertical list of records with opt
 | `title`             | `string`                   | -       | Optional list title rendered as `<h3 class="title">`       |
 | `description`       | `string`                   | -       | Optional description rendered as `<p class="description">` |
 | `items`             | `IStackedListItem[]`       | -       | List entries to render as `<li class="item">`              |
-| `withDividers`      | `boolean`                  | -       | Hint for custom impls: render dividers between items       |
-| `fullWidthOnMobile` | `boolean`                  | -       | Hint for custom impls: stretch the list edge-to-edge       |
+| `withDividers`      | `boolean`                  | -       | Render dividers between items (preset; ignored by standard) |
+| `fullWidthOnMobile` | `boolean`                  | -       | Stretch the list edge-to-edge on mobile (preset; ignored by standard) |
 | `emptyTpl`          | `TemplateRef<unknown>`     | -       | Template rendered when items is empty                      |
 | `footerTpl`         | `TemplateRef<unknown>`     | -       | Bottom footer slot                                         |
 
@@ -1607,7 +1618,7 @@ The `<smart-stacked-list>` component renders a vertical list of records with opt
 | `actionTpl`   | `TemplateRef<unknown>` | -       | Trailing action slot (e.g. button)                       |
 | `ariaLabel`   | `string`               | -       | Accessible label rendered on the `<li>`                  |
 
-The default `StackedListStandardComponent` consumes every property; a section is rendered only when its template/string is provided. Within an item, `iconTpl` takes precedence over `avatarUrl` when both are set.
+The default `StackedListStandardComponent` renders every content property but ignores the `withDividers` / `fullWidthOnMobile` layout hints, which `StackedListPresetComponent` honours. A section is rendered only when its template/string is provided. Within an item, `iconTpl` takes precedence over `avatarUrl` when both are set.
 
 #### Overriding with Custom Implementation
 
@@ -1734,6 +1745,14 @@ The `<smart-table>` component renders a tabular data view with optional title, d
 
 **Wrapper:** `TableComponent` (selector: `smart-table`)
 **Default:** `TableStandardComponent` (selector: `smart-table-standard`)
+**Preset variation:** `TablePresetComponent` (selector: `smart-table-preset`) — styled Tailwind UI drop-in replacement that honours every layout hint the standard ignores: `striped` zebra rows, a `withBorder` card frame, a `stickyHeader`, per-column `align`, and `sortable` columns (client-side sort with `aria-sort`). It also adds select-all and a selected-row highlight to the checkbox column, and `dark:` styling throughout. Register it on the token to restyle every `<smart-table>`:
+
+```typescript
+providers: [
+  { provide: TABLE_STANDARD_COMPONENT_TOKEN, useValue: TablePresetComponent },
+];
+```
+
 **Token:** `TABLE_STANDARD_COMPONENT_TOKEN` — provide a `Type<TableBaseComponent>` to override the default.
 
 #### Usage
@@ -1808,10 +1827,10 @@ The `<smart-table>` component renders a tabular data view with optional title, d
 | `description`    | `string`               | -       | Optional description rendered as `<p class="description">` |
 | `columns`        | `ITableColumn[]`       | -       | Column definitions (rendered as `<thead><th>`)           |
 | `rows`           | `TableRow[]`           | -       | Row data (each row read via `row[col.key]`)              |
-| `striped`        | `boolean`              | -       | Hint for custom impls: zebra-stripe rows                 |
-| `stickyHeader`   | `boolean`              | -       | Hint for custom impls: sticky `<thead>`                  |
+| `striped`        | `boolean`              | -       | Zebra-stripe rows (preset; ignored by standard)          |
+| `stickyHeader`   | `boolean`              | -       | Sticky `<thead>` (preset; ignored by standard)           |
 | `withCheckboxes` | `boolean`              | -       | Render an extra checkbox column                          |
-| `withBorder`     | `boolean`              | -       | Hint for custom impls: bordered table                    |
+| `withBorder`     | `boolean`              | -       | Bordered card (preset; ignored by standard)              |
 | `emptyTpl`       | `TemplateRef<unknown>` | -       | Template rendered when `rows` is empty                   |
 | `footerTpl`      | `TemplateRef<unknown>` | -       | Bottom footer slot                                       |
 | `toolbarTpl`     | `TemplateRef<unknown>` | -       | Top toolbar slot rendered above `<table>`                |
@@ -1823,7 +1842,7 @@ The `<smart-table>` component renders a tabular data view with optional title, d
 | `key`       | `string`                          | -        | **Required** key used to read `row[key]`                 |
 | `label`     | `string`                          | -        | Header label (falls back to `key` if missing)            |
 | `align`     | `'left' \| 'center' \| 'right'`   | `'left'` | Alignment hint (set on `data-align` attribute)           |
-| `sortable`  | `boolean`                         | -        | Hint for custom impls: column is sortable                |
+| `sortable`  | `boolean`                         | -        | Client-side sortable heading (preset; ignored by standard) |
 | `cellTpl`   | `TemplateRef<unknown>`            | -        | Custom cell template (`{ $implicit: row, column: col }`) |
 | `headerTpl` | `TemplateRef<unknown>`            | -        | Custom header template                                   |
 | `ariaLabel` | `string`                          | -        | Accessible label rendered on `<th>`                      |
@@ -1853,6 +1872,14 @@ The `<smart-textarea>` component renders a multi-line text input with optional l
 
 **Wrapper:** `TextareaComponent` (selector: `smart-textarea`)
 **Default:** `TextareaStandardComponent` (selector: `smart-textarea-standard`)
+**Preset variation:** `TextareaPresetComponent` (selector: `smart-textarea-preset`) — styled drop-in replacement that honours `options.variant` (**simple / with-avatar-actions / with-underline / with-pill-actions / with-preview**, default `'simple'`), `autoFocus`, a `maxLength` character counter and per-variant `primary` / `secondary` / `ghost` action buttons, with `dark:` styling. Register through the token to restyle every `<smart-textarea>`:
+
+```typescript
+providers: [
+  { provide: TEXTAREA_STANDARD_COMPONENT_TOKEN, useValue: TextareaPresetComponent },
+];
+```
+
 **Token:** `TEXTAREA_STANDARD_COMPONENT_TOKEN` — provide a `Type<TextareaBaseComponent>` to override the default.
 
 #### Usage
@@ -1884,11 +1911,11 @@ The `<smart-textarea>` component renders a multi-line text input with optional l
 | ------------- | -------------------------- | ------- | -------------------------------------------------------- |
 | `rows`        | `number`                   | `3`     | Number of `<textarea>` rows                              |
 | `maxLength`   | `number`                   | -       | Max characters (`maxlength` attr)                        |
-| `variant`     | `SmartTextareaVariant`     | -       | Hint for custom impls                                    |
+| `variant`     | `SmartTextareaVariant`     | -       | Layout; honoured by the preset, ignored by the standard  |
 | `label`       | `string`                   | -       | Render `<label>` above textarea                          |
 | `name`        | `string`                   | -       | Form `name` attribute                                    |
 | `required`    | `boolean`                  | -       | Set `required` attribute                                 |
-| `autoFocus`   | `boolean`                  | -       | Hint for custom impls                                    |
+| `autoFocus`   | `boolean`                  | -       | Focus on render; honoured by the preset                  |
 | `ariaLabel`   | `string`                   | -       | Accessible label                                         |
 | `actions`     | `ITextareaAction[]`        | -       | Render action buttons below textarea                     |
 | `avatarTpl`   | `TemplateRef<unknown>`     | -       | Avatar slot                                              |

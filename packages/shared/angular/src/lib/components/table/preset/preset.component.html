@@ -1,0 +1,144 @@
+<div [class]="rootClasses()">
+  @if (hasHeader()) {
+    <div data-role="header" [class]="headerClasses">
+      <div [class]="headerTextClasses">
+        @if (options()?.title) {
+          <h3 data-role="title" [class]="titleClasses">
+            {{ options()!.title }}
+          </h3>
+        }
+        @if (options()?.description) {
+          <p data-role="description" [class]="descriptionClasses">
+            {{ options()!.description }}
+          </p>
+        }
+      </div>
+      @if (options()?.toolbarTpl) {
+        <div data-role="toolbar" [class]="toolbarClasses">
+          <ng-container [ngTemplateOutlet]="options()!.toolbarTpl!" />
+        </div>
+      }
+    </div>
+  }
+
+  @if (columns().length > 0) {
+    <div data-role="frame" [class]="frameClasses()">
+      <div data-role="scroll" [class]="scrollClasses()">
+        <table [class]="tableClasses">
+          <thead [class]="headClasses()">
+            <tr>
+              @if (withCheckboxes()) {
+                <th scope="col" [class]="checkboxHeaderClasses()">
+                  <input
+                    type="checkbox"
+                    aria-label="Select all rows"
+                    [class]="checkboxClasses"
+                    [checked]="allSelected()"
+                    [indeterminate]="someSelected()"
+                    (change)="toggleAll()"
+                  />
+                </th>
+              }
+              @for (col of columns(); track col.key) {
+                <th
+                  scope="col"
+                  [class]="headerCellClasses(col)"
+                  [attr.aria-label]="col.ariaLabel ?? null"
+                  [attr.aria-sort]="ariaSort(col)"
+                  [attr.data-align]="col.align ?? null"
+                >
+                  @if (col.sortable) {
+                    <button
+                      type="button"
+                      [class]="sortButtonClasses"
+                      (click)="toggleSort(col)"
+                    >
+                      @if (col.headerTpl) {
+                        <ng-container [ngTemplateOutlet]="col.headerTpl" />
+                      } @else {
+                        {{ col.label ?? col.key }}
+                      }
+                      <svg
+                        data-role="sort-icon"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        aria-hidden="true"
+                        [attr.class]="
+                          sortIconClasses(col) +
+                          (isDescending(col) ? ' smart:rotate-180' : '')
+                        "
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M14.77 12.79a.75.75 0 0 1-1.06-.02L10 8.832 6.29 12.77a.75.75 0 1 1-1.08-1.04l4.25-4.5a.75.75 0 0 1 1.08 0l4.25 4.5a.75.75 0 0 1-.02 1.06Z"
+                        />
+                      </svg>
+                    </button>
+                  } @else if (col.headerTpl) {
+                    <ng-container [ngTemplateOutlet]="col.headerTpl" />
+                  } @else {
+                    {{ col.label ?? col.key }}
+                  }
+                </th>
+              }
+            </tr>
+          </thead>
+          <tbody [class]="bodyClasses()">
+            @for (row of rows(); track row) {
+              <tr [class]="rowClasses(row)">
+                @if (withCheckboxes()) {
+                  <td [class]="checkboxCellClasses">
+                    <input
+                      type="checkbox"
+                      aria-label="Select row"
+                      [class]="checkboxClasses"
+                      [checked]="isSelected(row)"
+                      (change)="toggleRow(row)"
+                    />
+                  </td>
+                }
+                @for (col of columns(); track col.key; let first = $first) {
+                  <td
+                    [class]="cellClasses(col, first)"
+                    [attr.data-align]="col.align ?? null"
+                  >
+                    @if (col.cellTpl) {
+                      <ng-container
+                        [ngTemplateOutlet]="col.cellTpl"
+                        [ngTemplateOutletContext]="{
+                          $implicit: row,
+                          column: col,
+                        }"
+                      />
+                    } @else {
+                      {{ readCell(row, col.key) }}
+                    }
+                  </td>
+                }
+              </tr>
+            } @empty {
+              @if (options()?.emptyTpl) {
+                <tr>
+                  <td
+                    data-role="empty"
+                    [class]="emptyClasses"
+                    [attr.colspan]="emptyColspan()"
+                  >
+                    <ng-container [ngTemplateOutlet]="options()!.emptyTpl!" />
+                  </td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+
+  @if (options()?.footerTpl) {
+    <div data-role="footer" [class]="footerClasses">
+      <ng-container [ngTemplateOutlet]="options()!.footerTpl!" />
+    </div>
+  }
+</div>

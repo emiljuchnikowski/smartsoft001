@@ -42,6 +42,10 @@ const TOOLTIP_BASE = [
   'smart:absolute',
   'smart:z-10',
   'smart:inline-block',
+  // An absolutely positioned bubble takes the width of its tiny anchor and
+  // wraps after every word; size it to its text, up to a readable line.
+  'smart:w-max',
+  'smart:max-w-xs',
   'smart:py-1',
   'smart:px-2',
   'smart:rounded-md',
