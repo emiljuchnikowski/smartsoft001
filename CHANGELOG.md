@@ -1,3 +1,14 @@
+## 2.173.0 (2026-09-29)
+
+### 🩹 Fixes
+
+- **shared:** call the sign-in form's submit handler once ([#98](https://github.com/emiljuchnikowski/smartsoft001/pull/98))
+
+### ❤️ Thank You
+
+- Claude Opus 5.5 (1M context)
+- Emil Juchnikowski
+
 ## 2.172.0 (2026-09-29)
 
 ### 🩹 Fixes
