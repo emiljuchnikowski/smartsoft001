@@ -1,3 +1,14 @@
+## 2.172.0 (2026-09-29)
+
+### 🩹 Fixes
+
+- **shared:** show the dropdown's triggerLabel through the wrapper ([#99](https://github.com/emiljuchnikowski/smartsoft001/pull/99))
+
+### ❤️ Thank You
+
+- Claude Opus 5.5 (1M context)
+- Emil Juchnikowski
+
 ## 2.171.0 (2026-09-28)
 
 This was a version bump only, there were no code changes.
