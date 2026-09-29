@@ -21,7 +21,7 @@ Main wrapper component. Renders `SignInFormStandardComponent` by default. When `
 
 ### SignInFormStandardComponent (`<smart-sign-in-form-standard>`)
 
-Barebones placeholder concrete implementation using a native `<form>`. Renders an outer wrapper, the form with optional `<label>`s (toggle via `options.showLabels`), `<input type="email">`, `<input type="password">` (with `autocomplete="new-password"` in `sign-up` mode), an optional forgot-password link (sign-in mode only), an optional submit-label override, optional social provider buttons, optional alt-link (sign-up href in sign-in mode, sign-in href in sign-up mode), and an optional `extraTpl` slot. The submit handler emits `{ email, password, mode }` via the inherited `submit` output unless `disabled` is `true`. Each social provider button emits `{ providerId, mode }` via `socialClick`.
+Barebones placeholder concrete implementation using a native `<form>`. Renders an outer wrapper, the form with optional `<label>`s (toggle via `options.showLabels`), `<input type="email">`, `<input type="password">` (with `autocomplete="new-password"` in `sign-up` mode), an optional forgot-password link (sign-in mode only), an optional submit-label override, optional social provider buttons, optional alt-link (sign-up href in sign-in mode, sign-in href in sign-up mode), and an optional `extraTpl` slot. The submit handler emits `{ email, password, mode }` via the inherited `submit` output unless `disabled` is `true`. It stops the native `submit` event from bubbling, because the output shares its name with the DOM event: without that, a `(submit)` listener on the host would also receive the raw `SubmitEvent`. A custom implementation must do the same. Each social provider button emits `{ providerId, mode }` via `socialClick`.
 
 ### SignInFormBaseComponent (abstract)
 
@@ -153,6 +153,9 @@ export class MyCustomSignInFormComponent extends SignInFormBaseComponent {
 
   onSubmit(event: Event): void {
     event.preventDefault();
+    // Keep the native submit event inside: it would reach every (submit)
+    // listener on the host next to the typed output.
+    event.stopPropagation();
     if (this.disabled()) return;
     this.submit.emit({
       email: this.email(),

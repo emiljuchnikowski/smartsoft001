@@ -110,6 +110,9 @@ export class CustomSignInFormComponent extends SignInFormBaseComponent {
 
   onSubmit(event: Event): void {
     event.preventDefault();
+    // Keep the native submit event inside the component: only the typed
+    // `submit` output should reach a `(submit)` listener on the host.
+    event.stopPropagation();
     if (this.disabled()) return;
 
     this.submit.emit({

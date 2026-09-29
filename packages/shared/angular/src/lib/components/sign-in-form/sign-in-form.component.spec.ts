@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SignInFormBaseComponent } from './base/base.component';
 import { SignInFormComponent } from './sign-in-form.component';
+import { ISignInFormSubmit } from '../../models';
 import { SIGN_IN_FORM_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
@@ -14,7 +15,58 @@ class MockInjectedComponent extends SignInFormBaseComponent {
   override cssClass = input<string>('');
 }
 
+@Component({
+  selector: 'smart-test-sign-in-form-host',
+  imports: [SignInFormComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  template: '<smart-sign-in-form (submit)="submitted.push($event)" />',
+})
+class SubmitHostComponent {
+  submitted: unknown[] = [];
+}
+
 describe('@smartsoft001/shared-angular: SignInFormComponent', () => {
+  describe('submit', () => {
+    let fixture: ComponentFixture<SubmitHostComponent>;
+
+    beforeEach(async () => {
+      await TestBed.configureTestingModule({
+        imports: [SubmitHostComponent],
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(SubmitHostComponent);
+      fixture.detectChanges();
+    });
+
+    it('should call the (submit) handler once, with the credentials', () => {
+      const element: HTMLElement = fixture.nativeElement;
+      const type = (selector: string, value: string) => {
+        const input = element.querySelector<HTMLInputElement>(selector)!;
+        input.value = value;
+        input.dispatchEvent(new Event('input'));
+      };
+
+      type('input[type="email"]', 'ada@example.com');
+      type('input[type="password"]', 'secret');
+      element
+        .querySelector<HTMLButtonElement>('button[type="submit"]')!
+        .click();
+
+      // A native SubmitEvent reaching the handler shows up as 'native event'.
+      const received = fixture.componentInstance.submitted.map((value) =>
+        value instanceof Event ? 'native event' : value,
+      );
+
+      expect(received).toEqual([
+        {
+          email: 'ada@example.com',
+          password: 'secret',
+          mode: 'sign-in',
+        } satisfies ISignInFormSubmit,
+      ]);
+    });
+  });
+
   describe('without token', () => {
     let fixture: ComponentFixture<SignInFormComponent>;
     let component: SignInFormComponent;

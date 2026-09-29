@@ -29,6 +29,10 @@ export class SignInFormStandardComponent extends SignInFormBaseComponent {
 
   protected onSubmit(event: Event): void {
     event.preventDefault();
+    // The native submit event bubbles up to the host elements, where it would
+    // reach every `(submit)` listener next to the `submit` output: the
+    // wrapper's and the consumer's. Only the output leaves the component.
+    event.stopPropagation();
     if (this.disabled()) return;
     this.submit.emit({
       email: this.email(),
