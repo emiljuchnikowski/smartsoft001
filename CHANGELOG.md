@@ -1,3 +1,14 @@
+## 2.176.0 (2026-09-29)
+
+### 🩹 Fixes
+
+- **nx:** size the docs' Storybook frames to their stories ([#104](https://github.com/emiljuchnikowski/smartsoft001/pull/104))
+
+### ❤️ Thank You
+
+- Claude Opus 5.5 (1M context)
+- Emil Juchnikowski
+
 ## 2.175.0 (2026-09-29)
 
 ### 🩹 Fixes
