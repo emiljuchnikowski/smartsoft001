@@ -33,11 +33,18 @@ export class CreatorService<T> extends TransBaseService<T> {
       .then(() => {
         return this.setAsStarted(trans!, paymentService);
       })
-      .catch((e) => {
+      .catch(async (e) => {
         if (trans) {
-          this.setError(trans, e);
+          try {
+            // Error objects can contain credentials, functions or circular
+            // request data. Store a safe event and await the error-state write.
+            await this.setError(trans, {
+              message: 'Transaction creation failed',
+            });
+          } catch {
+            console.error('Failed to persist transaction creation failure');
+          }
         }
-        console.error(e);
         throw e;
       });
   }
@@ -74,9 +81,15 @@ export class CreatorService<T> extends TransBaseService<T> {
     internalService: ITransInternalService<T>,
   ): Promise<void> {
     const internalResult = await internalService.create(trans);
-    if (internalResult.amount) {
-      trans.amount = internalResult.amount;
+    if (
+      !Number.isSafeInteger(internalResult?.amount) ||
+      internalResult.amount < 1
+    ) {
+      throw new DomainValidationError(
+        'Internal service must approve a positive integer amount',
+      );
     }
+    trans.amount = internalResult.amount;
     trans.status = 'new';
     trans.modifyDate = new Date();
     this.addHistory(trans, internalResult);
