@@ -2,13 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request } from 'express';
-import { Guid } from 'guid-typescript';
 import { Repository } from 'typeorm';
 
 import { DomainValidationError, IFactory } from '@smartsoft001/domain-core';
 import { FbService } from '@smartsoft001/fb';
 import { GoogleService } from '@smartsoft001/google';
 import { PasswordService } from '@smartsoft001/utils';
+
+import { randomBytes } from 'node:crypto';
 
 import { User } from '../entities';
 import { IAuthToken, IAuthTokenRequest } from './interfaces';
@@ -111,10 +112,13 @@ export class TokenFactory implements IFactory<
     // no token is ever signed for nobody.
     this.checkUser(options.request, user);
 
-    const refreshToken = Guid.raw();
-    await this.repository.update(
+    if (!user.username) throw new DomainValidationError('Invalid token user');
+
+    const refreshToken = randomBytes(32).toString('hex');
+    const updated = await this.repository.update(
       {
         ...query,
+        username: user.username,
         disabled: { $ne: true },
       } as any,
       {
@@ -122,6 +126,12 @@ export class TokenFactory implements IFactory<
         authRefreshToken: refreshToken,
       },
     );
+
+    // A concurrent refresh or account change may have invalidated the lookup.
+    // Never sign a token unless this exact account was successfully updated.
+    if (updated?.affected !== 1) {
+      throw new DomainValidationError('Invalid token');
+    }
 
     const payload = {
       permissions: user.permissions,
