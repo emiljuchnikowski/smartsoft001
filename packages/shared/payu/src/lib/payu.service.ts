@@ -225,13 +225,10 @@ export class PayuService implements ITransPaymentSingleService {
 
       return response.data['access_token'];
     } catch (e) {
-      console.error({
-        url: this.getBaseUrl(config) + '/pl/standard/user/oauth/authorize',
-        data: `grant_type=client_credentials&client_id=${config.clientId}&client_secret=${config.clientSecret}`,
-        ex: e,
-      });
-
-      throw e;
+      // HTTP errors can retain credentials in request bodies, headers and
+      // messages. Do not pass them to a logger or an upstream error handler.
+      Logger.error('PayU authentication failed', PayuService.name);
+      throw new Error('PayU authentication failed');
     }
   }
 
