@@ -28,6 +28,7 @@ describe('auth-domain: TokenFactory', () => {
           useValue: {
             expiredIn: 3600,
             clients: ['test-client'],
+            googleClientIds: ['google-client'],
           },
         },
         {
