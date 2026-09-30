@@ -164,11 +164,24 @@ export class TokenFactory implements IFactory<
     config: IAuthTokenRequest,
     user: User,
   ): Promise<void> {
-    if (
-      config.grant_type === 'password' &&
-      !(await PasswordService.compare(config.password, user.password))
-    )
+    if (config.grant_type !== 'password') return;
+    if (!(await PasswordService.compare(config.password, user.password))) {
       throw new DomainValidationError(this._invalidUsernameOrPasswordMessage);
+    }
+
+    if (PasswordService.needsRehash(user.password)) {
+      const upgraded = await this.repository.update(
+        {
+          username: user.username,
+          password: user.password,
+          disabled: { $ne: true },
+        } as any,
+        { password: await PasswordService.hash(config.password) },
+      );
+      if (upgraded?.affected !== 1) {
+        throw new DomainValidationError(this._invalidUsernameOrPasswordMessage);
+      }
+    }
   }
 
   private valid(req: NonNullable<IAuthTokenRequest>): void {

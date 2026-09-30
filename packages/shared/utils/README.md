@@ -70,6 +70,23 @@ Methods:
 
 ### PasswordService
 
+New hashes use Web Crypto PBKDF2-HMAC-SHA256 (600,000 iterations), a random
+128-bit salt and a 256-bit derived key. The self-describing value is 118 ASCII
+characters: ensure password columns can store it before upgrading. Web Crypto
+must be available (supported Node runtime or a browser secure context); there
+is no fallback to weak hashing. No Node-only import is added to the browser entrypoint.
+
+`compare` still accepts existing lowercase MD5 digests for migration.
+The standard TokenFactory upgrades a legacy digest after successful password
+verification using a conditional write; failed verification never rewrites it.
+Custom authentication/validation providers must implement equivalent migration
+or require a password reset. Accounts that never log in retain the old digest;
+set a reset deadline. Keep support for the new format when rolling back:
+an old MD5-only application cannot verify migrated passwords. Rate-limit login
+attempts and size capacity for the intentionally higher hashing cost.
+
+See [OWASP password storage guidance](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html).
+
 Methods:
 
 <table>
