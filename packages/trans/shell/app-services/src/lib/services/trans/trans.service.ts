@@ -3,7 +3,10 @@ import { Injectable, Optional } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { firstValueFrom } from 'rxjs';
 
-import { IItemRepository } from '@smartsoft001/domain-core';
+import {
+  DomainValidationError,
+  IItemRepository,
+} from '@smartsoft001/domain-core';
 import { PaynowService } from '@smartsoft001/paynow';
 import { PaypalService } from '@smartsoft001/paypal';
 import { PayuService } from '@smartsoft001/payu';
@@ -35,6 +38,23 @@ export class TransService {
   }
 
   private _internalService = {
+    refreshOnce: (trans: Trans<any>, idempotencyKey: string) => {
+      if (
+        !this.config.internalApiUrl ||
+        this.config.idempotentInternalApi !== true
+      ) {
+        throw new DomainValidationError(
+          'An idempotent internal API must be configured',
+        );
+      }
+      return firstValueFrom(
+        this.httpService.put(
+          this.config.internalApiUrl + '/' + encodeURIComponent(trans.id),
+          trans,
+          { headers: { 'Idempotency-Key': idempotencyKey } },
+        ),
+      ).then((res) => res.data);
+    },
     create: (trans: Trans<any>) => {
       if (!this.config.internalApiUrl)
         return Promise.resolve({

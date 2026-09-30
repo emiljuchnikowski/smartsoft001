@@ -1,6 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { IItemRepository } from '@smartsoft001/domain-core';
+import {
+  DomainValidationError,
+  IItemRepository,
+} from '@smartsoft001/domain-core';
+
+import { createHash } from 'node:crypto';
 
 import { Trans } from '../entities';
 import { ITransInternalService, ITransPaymentService } from '../interfaces';
@@ -18,15 +23,16 @@ export class RefresherService<T> extends TransBaseService<T> {
     paymentService: ITransPaymentService,
     customData = {},
   ): Promise<void> {
-    const trans: Trans<any> = (
+    const stored: Trans<any> = (
       await this.repository.getByCriteria({
         externalId: transId,
       })
     ).data[0];
 
-    if (!trans) {
+    if (!stored) {
       throw new NotFoundException('Transaction not found: ' + transId);
     }
+    const trans = { ...stored, history: [...(stored.history ?? [])] };
 
     try {
       const { status, data } =
@@ -34,12 +40,30 @@ export class RefresherService<T> extends TransBaseService<T> {
 
       if (status === trans.status) return;
 
+      if (!internalService.refreshOnce) {
+        throw new DomainValidationError(
+          'An idempotent refreshOnce handler is required',
+        );
+      }
+      // Independent of prior status or retry count, including retries after
+      // fulfillment succeeded but the local status write failed.
+      const idempotencyKey =
+        'smartsoft-trans-' +
+        createHash('sha256')
+          .update(
+            JSON.stringify([trans.id, trans.system, trans.externalId, status]),
+          )
+          .digest('hex');
+
       trans.modifyDate = new Date();
       trans.status = status;
       data['customData'] = customData;
       this.addHistory(trans, data);
 
-      const internalRes = await internalService.refresh(trans);
+      const internalRes = await internalService.refreshOnce(
+        trans,
+        idempotencyKey,
+      );
 
       if (!internalRes) return;
 
@@ -55,10 +79,9 @@ export class RefresherService<T> extends TransBaseService<T> {
         null,
       );
     } catch (err) {
-      console.error(err);
-
-      await this.setError(trans, err);
-
+      // Keep the last persisted status for retries. Raw provider errors may
+      // carry request credentials and must not be logged or stored here.
+      console.error('Transaction refresh failed');
       throw err;
     }
   }

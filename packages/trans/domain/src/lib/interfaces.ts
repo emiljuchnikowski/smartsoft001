@@ -4,6 +4,9 @@ export interface ITransInternalService<T> {
   create(trans: Trans<T>): Promise<any>;
 
   refresh(trans: Trans<any>): Promise<any>;
+
+  /** Atomically deduplicate the business effect and replay its receipt by key. */
+  refreshOnce?(trans: Trans<any>, idempotencyKey: string): Promise<any>;
 }
 
 export interface ITransPaymentService {

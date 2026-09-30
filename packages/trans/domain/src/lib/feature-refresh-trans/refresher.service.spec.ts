@@ -49,7 +49,7 @@ describe('trans-domain: RefresherService', () => {
     } as any;
 
     mockInternalService = {
-      refresh: jest
+      refreshOnce: jest
         .fn()
         .mockResolvedValue({ status: 'completed' as TransStatus }),
     } as any;

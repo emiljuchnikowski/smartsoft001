@@ -1,6 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { ModuleRef } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
+import { of } from 'rxjs';
 
 import { IItemRepository } from '@smartsoft001/domain-core';
 import { PaynowService } from '@smartsoft001/paynow';
@@ -235,6 +236,36 @@ describe('trans: TransService', () => {
   });
 
   describe('getInternalService', () => {
+    it('refuses HTTP fulfillment without an explicit idempotency contract', () => {
+      mockModuleRef.get.mockImplementation(() => {
+        throw new Error('No custom provider');
+      });
+      const internal = (service as any).getInternalService();
+      expect(() => internal.refreshOnce({ id: 'order' }, 'stable-key')).toThrow(
+        'idempotent internal API',
+      );
+      expect(mockHttpService.put).not.toHaveBeenCalled();
+    });
+
+    it('forwards the stable key to an explicitly configured internal API', async () => {
+      mockModuleRef.get.mockImplementation(() => {
+        throw new Error('No custom provider');
+      });
+      mockConfig.idempotentInternalApi = true;
+      mockHttpService.put.mockReturnValue(
+        of({ data: { receipt: 'done' } }) as any,
+      );
+      const trans = { id: 'order/1' };
+      const internal = (service as any).getInternalService();
+      await expect(internal.refreshOnce(trans, 'stable-key')).resolves.toEqual({
+        receipt: 'done',
+      });
+      expect(mockHttpService.put).toHaveBeenCalledWith(
+        'http://test-api.com/order%2F1',
+        trans,
+        { headers: { 'Idempotency-Key': 'stable-key' } },
+      );
+    });
     it('should return internal service from module ref when available', () => {
       mockModuleRef.get.mockReturnValue(mockInternalService);
 
