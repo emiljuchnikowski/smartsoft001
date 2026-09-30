@@ -30,7 +30,8 @@ import { GuidService } from '@smartsoft001/utils';
 
 import { Readable, Writable } from 'stream';
 
-import { IQ2mResult, q2m } from './query-to-mongo';
+import { parseHttpQuery } from './http-query';
+import { IQ2mResult } from './query-to-mongo';
 import {
   AuthJwtGuard,
   AuthOrAnonymousJwtGuard,
@@ -277,15 +278,7 @@ export class CrudController<T extends IEntity<string>> {
   }
 
   protected getQueryObject(queryObject: Record<string, unknown>): IQ2mResult {
-    let q = '';
-
-    Object.keys(queryObject).forEach((key) => {
-      q += `&${key}=${queryObject[key]}`;
-    });
-
-    const result = q2m(q);
-
-    return result;
+    return parseHttpQuery(queryObject);
   }
 
   protected parseToXlsx(data: T[]) {
@@ -310,7 +303,18 @@ export class CrudController<T extends IEntity<string>> {
 
     const { res, fields } = this.getDataWithFields(data);
 
-    return new Parser({ fields }).parse(res);
+    const safeRows = res.map((row) =>
+      Object.fromEntries(
+        Object.entries(row).map(([key, value]) => [
+          key,
+          typeof value === 'string' &&
+          (/^\s*[=+\-@]/.test(value) || /^[\t\r\n]/.test(value))
+            ? "'" + value
+            : value,
+        ]),
+      ),
+    );
+    return new Parser({ fields }).parse(safeRows);
   }
 
   protected getDataWithFields(data: Array<T>): { res: T[]; fields: string[] } {
