@@ -14,7 +14,6 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import busboy from 'busboy';
 import type { Response, Request } from 'express';
 import { Parser } from 'json2csv';
 import * as _ from 'lodash';
@@ -28,9 +27,10 @@ import { User } from '@smartsoft001/nestjs';
 import type { IUser } from '@smartsoft001/users';
 import { GuidService } from '@smartsoft001/utils';
 
-import { Readable, Writable } from 'stream';
+import { Readable } from 'stream';
 
 import { IQ2mResult, q2m } from './query-to-mongo';
+import { readAttachment } from './read-attachment';
 import {
   AuthJwtGuard,
   AuthOrAnonymousJwtGuard,
@@ -164,61 +164,41 @@ export class CrudController<T extends IEntity<string>> {
     await this.service.delete(params.id, user);
   }
 
+  @UseGuards(AuthJwtGuard)
   @Post('attachments')
-  uploadAttachment(
+  async uploadAttachment(
     @Req() request: Request,
     @Res() response: Response,
-  ): Writable {
-    const parser = busboy({
-      headers: request.headers,
-    });
+    @User() user?: IUser,
+  ): Promise<void> {
     const id = GuidService.create();
-    const readable = new Readable();
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    readable._read = () => {};
-
-    // Both stay undefined when the request carried no file part.
-    let fileName: string | undefined;
-    let mimeType: string | undefined;
-
-    parser.on('file', (field, file, info) => {
-      fileName = info.filename;
-      mimeType = info.mimeType;
-
-      this.service.uploadAttachment({
-        id,
-        stream: readable,
-        fileName: info.filename,
-        encoding: info.encoding,
-        mimeType: info.mimeType,
-      });
-
-      file.on('data', (data) => {
-        readable.push(data);
-      });
+    await this.service.authorizeAttachment('create', id, user);
+    const file = await readAttachment(request);
+    await this.service.uploadAttachment({
+      id,
+      stream: Readable.from(file.data),
+      fileName: file.fileName,
+      encoding: file.encoding,
+      mimeType: file.mimeType,
     });
-
-    parser.on('finish', function () {
-      readable.push(null);
-      response.set('Location', CrudController.getLink(response.req) + '/' + id);
-      response.json({
-        id,
-        fileName,
-        contentType: mimeType,
-        length: readable.readableLength,
-      });
-      response.end();
+    response.set('Location', CrudController.getLink(request) + '/' + id);
+    response.json({
+      id,
+      fileName: file.fileName,
+      contentType: file.mimeType,
+      length: file.data.length,
     });
-
-    return request.pipe(parser);
   }
 
+  @UseGuards(AuthOrAnonymousJwtGuard)
   @Get('attachments/:id')
   async downloadAttachment(
     @Param('id') id: string,
     @Req() request: Request,
     @Res() response: Response,
+    @User() user?: IUser,
   ) {
+    await this.service.authorizeAttachment('read', id, user);
     const fileInfo = await this.service.getAttachmentInfo(id);
 
     if (!fileInfo) {
@@ -271,8 +251,13 @@ export class CrudController<T extends IEntity<string>> {
     }
   }
 
+  @UseGuards(AuthJwtGuard)
   @Delete('attachments/:id')
-  async deleteAttachment(@Param('id') id: string): Promise<void> {
+  async deleteAttachment(
+    @Param('id') id: string,
+    @User() user?: IUser,
+  ): Promise<void> {
+    await this.service.authorizeAttachment('delete', id, user);
     await this.service.deleteAttachment(id);
   }
 

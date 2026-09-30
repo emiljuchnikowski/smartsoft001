@@ -8,6 +8,7 @@ import { ICreateManyOptions } from '@smartsoft001/crud-domain';
 import { ItemChangedData } from '@smartsoft001/crud-shell-dtos';
 import {
   DomainValidationError,
+  DomainForbiddenError,
   IAttachmentRepository,
   IEntity,
   IItemRepository,
@@ -229,7 +230,7 @@ export class CrudService<T extends IEntity<string>> {
       data.id = GuidService.create();
     }
 
-    this.attachmentRepository.upload(data, options);
+    await this.attachmentRepository.upload(data, options);
 
     if (oldId) await this.attachmentRepository.delete(data.id);
 
@@ -252,6 +253,19 @@ export class CrudService<T extends IEntity<string>> {
 
   async deleteAttachment(id: string): Promise<void> {
     return this.attachmentRepository.delete(id);
+  }
+
+  async authorizeAttachment(
+    operation: 'create' | 'read' | 'delete',
+    id: string,
+    user?: IUser,
+  ): Promise<void> {
+    if (
+      !this.config?.attachmentPolicy ||
+      (await this.config.attachmentPolicy({ operation, id, user })) !== true
+    ) {
+      throw new DomainForbiddenError('Attachment access denied');
+    }
   }
 
   changes(criteria: { id?: string }): Observable<ItemChangedData> {

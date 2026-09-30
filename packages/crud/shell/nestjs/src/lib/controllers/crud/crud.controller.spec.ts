@@ -8,6 +8,7 @@ import { CrudService } from '@smartsoft001/crud-shell-app-services';
 
 import { CrudController } from './crud.controller';
 import * as q2mModule from './query-to-mongo';
+import * as attachmentModule from './read-attachment';
 
 jest.mock('xlsx');
 jest.mock('json2csv', () => ({
@@ -36,6 +37,7 @@ describe('crud-nestjs: CrudController', () => {
       getAttachmentInfo: jest.fn(),
       getAttachmentStream: jest.fn(),
       deleteAttachment: jest.fn(),
+      authorizeAttachment: jest.fn(),
     } as any;
     controller = new CrudController(service);
   });
@@ -67,7 +69,7 @@ describe('crud-nestjs: CrudController', () => {
   });
 
   describe('uploadAttachment', () => {
-    it('should take the file name and mime type from the busboy file info', () => {
+    it('should preserve parsed file metadata after authorizing the upload', async () => {
       const handlers: Record<string, (...args: any[]) => void> = {};
       busboyInstance.on.mockImplementation((event: string, handler) => {
         handlers[event] = handler;
@@ -78,16 +80,25 @@ describe('crud-nestjs: CrudController', () => {
         pipe: jest.fn(),
       } as unknown as Request;
 
-      controller.uploadAttachment(request, {} as any);
-      handlers['file'](
-        'file',
-        { on: jest.fn() },
-        {
-          filename: 'photo.png',
+      const parsed = jest
+        .spyOn(attachmentModule, 'readAttachment')
+        .mockResolvedValue({
+          data: Buffer.from('image'),
+          fileName: 'photo.png',
           encoding: '7bit',
           mimeType: 'image/png',
-        },
+        });
+      const response = { set: jest.fn(), json: jest.fn() };
+      await controller.uploadAttachment(request, response as any);
+      expect(service.authorizeAttachment).toHaveBeenCalledWith(
+        'create',
+        expect.any(String),
+        undefined,
       );
+      expect(response.json).toHaveBeenCalledWith(
+        expect.objectContaining({ length: 5 }),
+      );
+      parsed.mockRestore();
 
       expect(service.uploadAttachment).toHaveBeenCalledWith(
         expect.objectContaining({
