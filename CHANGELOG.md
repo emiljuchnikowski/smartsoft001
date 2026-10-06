@@ -1,3 +1,7 @@
+## 2.182.0 (2026-10-06)
+
+This was a version bump only, there were no code changes.
+
 ## 2.180.0 (2026-09-29)
 
 ### 🩹 Fixes
