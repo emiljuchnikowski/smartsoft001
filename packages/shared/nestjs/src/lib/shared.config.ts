@@ -18,10 +18,15 @@ export class SharedConfig {
   };
   permissions?: ISharedPermissions;
   type?: any;
-  /** Rechecked before each change notification; no policy means no subscription. */
+  /**
+   * Decides change subscriptions; no policy means no subscription. Called once when a client
+   * subscribes, without `type`, and again before each event with the change `type`. On a
+   * `'delete'` event the resource is already gone, so do not load it to decide.
+   */
   changePolicy?: (context: {
     id: string;
     user: IUser;
+    type?: 'create' | 'update' | 'delete';
   }) => boolean | Promise<boolean>;
 }
 

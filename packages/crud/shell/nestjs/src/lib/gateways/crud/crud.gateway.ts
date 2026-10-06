@@ -58,7 +58,7 @@ export class CrudGateway<T extends IEntity<string>>
             switchMap(() => this.service.changes({ id: data.id })),
             filter((change) => change.id === data.id),
             concatMap((change) =>
-              from(this.authorize(data, client)).pipe(
+              from(this.authorize(data, client, change.type)).pipe(
                 map(() => ({
                   event,
                   data: { id: change.id, type: change.type },
@@ -78,9 +78,15 @@ export class CrudGateway<T extends IEntity<string>>
     );
   }
 
+  /**
+   * Verifies the token and asks `changePolicy`. `type` is absent when the subscription opens and
+   * carries the change type before each event, so a policy can allow a delete without loading
+   * a resource that no longer exists.
+   */
   private async authorize(
     data: { id?: string },
     client: Socket,
+    type?: ItemChangedData['type'],
   ): Promise<void> {
     try {
       const token = client.handshake?.auth?.['token'];
@@ -105,7 +111,9 @@ export class CrudGateway<T extends IEntity<string>>
           ? payload.permissions.filter((p: unknown) => typeof p === 'string')
           : [],
       };
-      if ((await this.config.changePolicy({ id: data.id, user })) !== true)
+      if (
+        (await this.config.changePolicy({ id: data.id, user, type })) !== true
+      )
         throw new Error('Denied');
     } catch {
       throw new WsException('Change subscription denied');

@@ -122,4 +122,45 @@ describe('crud-nestjs: change subscription authorization', () => {
     ).rejects.toThrow();
     expect(changes).not.toHaveBeenCalled();
   });
+  it('passes the change type so a resource-loading policy can still authorize a delete', async () => {
+    const stored = new Map([['alice-file', { owner: 'alice' }]]);
+    const stream = new Subject<any>();
+    const seenTypes: Array<string | undefined> = [];
+    const gateway = new CrudGateway(
+      { changes: () => stream } as any,
+      {
+        changePolicy: async ({ id, user, type }) => {
+          seenTypes.push(type);
+          // The document is gone when Mongo emits the delete, so a lookup would deny it.
+          if (type === 'delete') return true;
+          return stored.get(id)?.owner === user.username;
+        },
+      },
+      jwt,
+    );
+    const received: unknown[] = [];
+    let error: unknown;
+    const settle = () => new Promise((resolve) => setTimeout(resolve, 20));
+    const subscription = gateway
+      .handleFilter({ id: 'alice-file' }, client)
+      .subscribe({
+        next: (event) => received.push(event),
+        error: (e) => (error = e),
+      });
+    await settle();
+
+    stream.next(change);
+    await settle();
+    stored.delete('alice-file');
+    stream.next({ id: 'alice-file', type: 'delete' });
+    await settle();
+    subscription.unsubscribe();
+
+    expect(error).toBeUndefined();
+    expect(received).toEqual([
+      { event: 'changes', data: { id: 'alice-file', type: 'update' } },
+      { event: 'changes', data: { id: 'alice-file', type: 'delete' } },
+    ]);
+    expect(seenTypes).toEqual([undefined, 'update', 'delete']);
+  });
 });
