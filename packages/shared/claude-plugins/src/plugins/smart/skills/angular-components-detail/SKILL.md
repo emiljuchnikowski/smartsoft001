@@ -31,23 +31,23 @@ Abstract base directive for all detail sub-components. Provides:
 
 ### Default Sub-Components
 
-| FieldType       | Sub-component                  | Selector                       | Description                                                           |
-| --------------- | ------------------------------ | ------------------------------ | --------------------------------------------------------------------- |
-| `text`          | `DetailTextComponent`          | `smart-detail-text`            | Text via `ListCellPipe` + `TrustHtmlPipe`, fallback for unknown types |
-| `email`         | `DetailEmailComponent`         | `smart-detail-email`           | Link `mailto:`                                                        |
-| `enum`          | `DetailEnumComponent`          | `smart-detail-enum`            | Single value or array with `translate`                                |
-| `flag`          | `DetailFlagComponent`          | `smart-detail-flag`            | Inline SVG ✓ / ✗                                                      |
-| `color`         | `DetailColorComponent`         | `smart-detail-color`           | Rectangle with `background-color`                                     |
-| `address`       | `DetailAddressComponent`       | `smart-detail-address`         | `IAddress` (street, number, zip, city)                                |
-| `object`        | `DetailObjectComponent`        | `smart-detail-object`          | Nested model via `DETAILS_COMPONENT_TOKEN`                            |
-| `array`         | `DetailArrayComponent`         | `smart-detail-array`           | Array of nested models                                                |
-| `dateRange`     | `DetailDateRangeComponent`     | `smart-detail-date-range`      | `start – end`                                                         |
-| `phoneNumberPl` | `DetailPhoneNumberPlComponent` | `smart-detail-phone-number-pl` | Link `tel:48...` as badge                                             |
-| `image`         | `DetailImageComponent`         | `smart-detail-image`           | `<img>` via `FileService.getUrl(item[key].id)`                        |
-| `logo`          | `DetailLogoComponent`          | `smart-detail-logo`            | `<img>` with `item[key]` as URL                                       |
-| `video`         | `DetailVideoComponent`         | `smart-detail-video`           | `<video controls>` via `FileService`                                  |
-| `attachment`    | `DetailAttachmentComponent`    | `smart-detail-attachment`      | Native `<button>` Tailwind — download via `FileService`               |
-| `pdf`           | `DetailPdfComponent`           | `smart-detail-pdf`             | Native `<button>` Tailwind — show via `FileService`                   |
+| FieldType       | Sub-component                  | Selector                       | Description                                                   |
+| --------------- | ------------------------------ | ------------------------------ | ------------------------------------------------------------- |
+| `text`          | `DetailTextComponent`          | `smart-detail-text`            | Sanitized HTML via `ListCellPipe`, fallback for unknown types |
+| `email`         | `DetailEmailComponent`         | `smart-detail-email`           | Link `mailto:`                                                |
+| `enum`          | `DetailEnumComponent`          | `smart-detail-enum`            | Single value or array with `translate`                        |
+| `flag`          | `DetailFlagComponent`          | `smart-detail-flag`            | Inline SVG ✓ / ✗                                              |
+| `color`         | `DetailColorComponent`         | `smart-detail-color`           | Rectangle with `background-color`                             |
+| `address`       | `DetailAddressComponent`       | `smart-detail-address`         | `IAddress` (street, number, zip, city)                        |
+| `object`        | `DetailObjectComponent`        | `smart-detail-object`          | Nested model via `DETAILS_COMPONENT_TOKEN`                    |
+| `array`         | `DetailArrayComponent`         | `smart-detail-array`           | Array of nested models                                        |
+| `dateRange`     | `DetailDateRangeComponent`     | `smart-detail-date-range`      | `start – end`                                                 |
+| `phoneNumberPl` | `DetailPhoneNumberPlComponent` | `smart-detail-phone-number-pl` | Link `tel:48...` as badge                                     |
+| `image`         | `DetailImageComponent`         | `smart-detail-image`           | `<img>` via `FileService.getUrl(item[key].id)`                |
+| `logo`          | `DetailLogoComponent`          | `smart-detail-logo`            | `<img>` with `item[key]` as URL                               |
+| `video`         | `DetailVideoComponent`         | `smart-detail-video`           | `<video controls>` via `FileService`                          |
+| `attachment`    | `DetailAttachmentComponent`    | `smart-detail-attachment`      | Native `<button>` Tailwind — download via `FileService`       |
+| `pdf`           | `DetailPdfComponent`           | `smart-detail-pdf`             | Native `<button>` Tailwind — show via `FileService`           |
 
 ## API
 
@@ -94,6 +94,33 @@ providers: [
 ```
 
 Maps are merged (`{ ...baseMap, ...extendMap }`), so only selected types need to be overridden.
+
+### HTML in text fields
+
+The `text` sub-component and its preset bind the value through `[innerHTML]` WITHOUT
+`TrustHtmlPipe`, so Angular's sanitizer runs on every value, including one returned by a
+`cellPipe`. Scripts, event handlers (`onerror`, `onload`), `<iframe>`, `<svg>` and `javascript:`
+URLs are removed, while basic formatting (`<b>`, `<em>`, `<a href="https://...">`) survives.
+
+The sanitizer also strips inline `style` attributes, for example the colours and alignment the
+rich-text editor writes. A consumer who needs raw HTML for a field it trusts can return `SafeHtml`
+from its own `cellPipe` (`ICellPipe.transform` is typed as `string`, so cast the result). A
+tested version lives in `docs/examples/angular/src/components/detail/trusted-html.example.ts`:
+
+```typescript
+@Injectable()
+export class TrustedDescriptionCellPipe implements ICellPipe<Product> {
+  private readonly sanitizer = inject(DomSanitizer);
+
+  transform(item: Product, key: string): string {
+    if (key !== 'description') return item[key];
+    // Only for HTML you produce or have sanitized yourself.
+    return this.sanitizer.bypassSecurityTrustHtml(
+      item.description,
+    ) as unknown as string;
+  }
+}
+```
 
 ## Preline field presets
 
