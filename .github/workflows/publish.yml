@@ -102,8 +102,13 @@ jobs:
       # push is never rejected as non-fast-forward, and the next run reads the
       # latest tag across all branches, so a failed write-back below cannot make
       # it reuse this number.
+      # --no-verify: the husky pre-push hook runs nx-cloud affected targets, and
+      # with the CI run already stopped after build it fails with "No additional
+      # tasks detected" (v2.181.0: packages on npm, tag never pushed).
       - name: Push the release tag
-        run: git push origin "refs/tags/v${{ steps.package.outputs.version }}"
+        run: git push --no-verify origin "refs/tags/v${{ steps.package.outputs.version }}"
+        env:
+          NX_CLOUD_DISTRIBUTED_EXECUTION: false
       # Ten minutes have passed since checkout. If main moved, the write-back
       # below is not a fast-forward and is rejected. Move the release commit on
       # top of the current main first, keeping the tag on the moved commit.
@@ -122,7 +127,7 @@ jobs:
           tag="v${{ steps.package.outputs.version }}"
           if git rebase --autostash origin/main; then
             git tag -f -a "$tag" -m "$tag" HEAD
-            git push --force origin "refs/tags/$tag"
+            git push --no-verify --force origin "refs/tags/$tag"
             echo "rebased onto origin/main and moved $tag"
           else
             git rebase --abort 2>/dev/null || true
