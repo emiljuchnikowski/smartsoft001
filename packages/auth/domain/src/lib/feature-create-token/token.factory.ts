@@ -8,7 +8,7 @@ import { Repository } from 'typeorm';
 import { DomainValidationError, IFactory } from '@smartsoft001/domain-core';
 import { FbService } from '@smartsoft001/fb';
 import { GoogleService } from '@smartsoft001/google';
-import { PasswordService } from '@smartsoft001/utils';
+import { IPasswordHasher, Md5PasswordHasher } from '@smartsoft001/utils';
 
 import { User } from '../entities';
 import { IAuthToken, IAuthTokenRequest } from './interfaces';
@@ -26,8 +26,12 @@ export class TokenFactory implements IFactory<
     payloadProvider?: ITokenPayloadProvider;
     validationProvider?: ITokenValidationProvider;
     userProvider?: ITokenUserProvider;
+    passwordHasher?: IPasswordHasher;
   }
 > {
+  private static readonly defaultPasswordHasher: IPasswordHasher =
+    new Md5PasswordHasher();
+
   private _invalidUsernameOrPasswordMessage = 'Invalid username or password';
 
   constructor(
@@ -70,7 +74,11 @@ export class TokenFactory implements IFactory<
     payloadProvider?: ITokenPayloadProvider;
     validationProvider?: ITokenValidationProvider;
     userProvider?: ITokenUserProvider;
+    /** Verifies the password grant; MD5 when not given. */
+    passwordHasher?: IPasswordHasher;
   }): Promise<IAuthToken> {
+    const hasher = options.passwordHasher ?? TokenFactory.defaultPasswordHasher;
+
     if (options.request.grant_type === 'fb') {
       options.request.fb_user_id = await this.fbService.getUserId(
         options.request.fb_token,
@@ -95,9 +103,13 @@ export class TokenFactory implements IFactory<
       : await this.repository.findOne(query as any);
 
     if (!options.validationProvider || !options.validationProvider.replace) {
+      await this.hashForMissingUser(options.request, user, hasher);
       this.checkUser(options.request, user);
       TokenFactory.checkDisabled(user);
-      await this.checkPassword(options.request, user);
+      await this.checkPassword(options.request, user, hasher, {
+        // A custom user provider may load users from elsewhere; it owns their hashes.
+        upgrade: !options.userProvider,
+      });
     }
 
     if (options.validationProvider) {
@@ -160,28 +172,65 @@ export class TokenFactory implements IFactory<
       );
   }
 
+  /**
+   * A missing user would answer much faster than a slow hasher verifying a
+   * real one, so the password is hashed anyway before rejecting.
+   */
+  private async hashForMissingUser(
+    config: IAuthTokenRequest,
+    user: User | null,
+    hasher: IPasswordHasher,
+  ): Promise<void> {
+    if (!user && config.grant_type === 'password') {
+      await hasher.hash(config.password);
+    }
+  }
+
   private async checkPassword(
     config: IAuthTokenRequest,
     user: User,
+    hasher: IPasswordHasher,
+    options: { upgrade: boolean },
   ): Promise<void> {
     if (config.grant_type !== 'password') return;
-    if (!(await PasswordService.compare(config.password, user.password))) {
+    if (!(await hasher.compare(config.password, user.password))) {
       throw new DomainValidationError(this._invalidUsernameOrPasswordMessage);
     }
 
-    if (PasswordService.needsRehash(user.password)) {
-      const upgraded = await this.repository.update(
-        {
-          username: user.username,
-          password: user.password,
-          disabled: { $ne: true },
-        } as any,
-        { password: await PasswordService.hash(config.password) },
-      );
-      if (upgraded?.affected !== 1) {
-        throw new DomainValidationError(this._invalidUsernameOrPasswordMessage);
-      }
+    if (options.upgrade && hasher.needsRehash?.(user.password)) {
+      await this.upgradePassword(config.password, user, hasher);
     }
+  }
+
+  /**
+   * Replaces a verified hash the hasher reports as outdated. The write is
+   * conditional on the old hash, so a concurrent password change is never
+   * overwritten.
+   */
+  private async upgradePassword(
+    password: string,
+    user: User,
+    hasher: IPasswordHasher,
+  ): Promise<void> {
+    const result = await this.repository.update(
+      {
+        username: user.username,
+        password: user.password,
+        disabled: { $ne: true },
+      } as any,
+      { password: await hasher.hash(password) },
+    );
+    if (result?.affected === 1) return;
+
+    // Lost a race, usually to a concurrent login that upgraded first: accept
+    // only if the hash stored now still verifies.
+    const current = await this.repository.findOne({
+      username: user.username,
+    } as any);
+    if (!current || !(await hasher.compare(password, current.password))) {
+      throw new DomainValidationError(this._invalidUsernameOrPasswordMessage);
+    }
+    TokenFactory.checkDisabled(current);
   }
 
   private valid(req: NonNullable<IAuthTokenRequest>): void {

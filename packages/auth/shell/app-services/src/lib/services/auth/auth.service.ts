@@ -13,6 +13,7 @@ import {
   ITokenValidationProvider,
   TokenFactory,
 } from '@smartsoft001/auth-domain';
+import { IPasswordHasher, PASSWORD_HASHER } from '@smartsoft001/utils';
 
 @Injectable()
 export class AuthService {
@@ -34,6 +35,7 @@ export class AuthService {
       userProvider: this.getProvider<ITokenUserProvider>(
         AUTH_TOKEN_USER_PROVIDER,
       ),
+      passwordHasher: this.getProvider<IPasswordHasher>(PASSWORD_HASHER),
     });
   }
 

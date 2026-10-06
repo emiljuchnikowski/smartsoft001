@@ -26,10 +26,14 @@ export class InMemoryUserRepository {
     return this.users.find((user) => matches(user, criteria)) ?? null;
   }
 
-  async update(criteria: Partial<User>, patch: Partial<User>): Promise<void> {
-    this.users
-      .filter((user) => matches(user, criteria))
-      .forEach((user) => Object.assign(user, patch));
+  async update(
+    criteria: Partial<User>,
+    patch: Partial<User>,
+  ): Promise<{ affected: number }> {
+    const found = this.users.filter((user) => matches(user, criteria));
+    found.forEach((user) => Object.assign(user, patch));
+
+    return { affected: found.length };
   }
 }
 

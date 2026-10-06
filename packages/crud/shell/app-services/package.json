@@ -30,6 +30,7 @@
   },
   "peerDependencies": {
     "@nestjs/common": "^11.1.5",
+    "@nestjs/core": "^11.2.1",
     "@smartsoft001/crud-domain": "2.182.0",
     "@smartsoft001/crud-shell-dtos": "2.182.0",
     "@smartsoft001/domain-core": "2.182.0",

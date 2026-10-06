@@ -6,7 +6,7 @@ import { Repository } from 'typeorm';
 import { DomainValidationError } from '@smartsoft001/domain-core';
 import { FbService } from '@smartsoft001/fb';
 import { GoogleService } from '@smartsoft001/google';
-import { PasswordService } from '@smartsoft001/utils';
+import { Md5PasswordHasher } from '@smartsoft001/utils';
 
 import { User } from '../entities';
 import { TokenConfig } from './token.config';
@@ -116,7 +116,9 @@ describe('auth-domain: TokenFactory', () => {
 
   describe('create', () => {
     beforeEach(() => {
-      jest.spyOn(PasswordService, 'compare').mockResolvedValue(true);
+      jest
+        .spyOn(Md5PasswordHasher.prototype, 'compare')
+        .mockResolvedValue(true);
     });
 
     it('should create token for valid password credentials', async () => {

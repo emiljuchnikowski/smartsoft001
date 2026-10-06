@@ -8,7 +8,10 @@ import { Field, Model } from '@smartsoft001/models';
 import { CrudService } from './crud.service';
 
 jest.mock('@smartsoft001/utils', () => ({
-  PasswordService: { hash: jest.fn(async (v) => 'hashed-' + v) },
+  Md5PasswordHasher: jest.fn(() => ({
+    hash: jest.fn(async (v) => 'hashed-' + v),
+  })),
+  PASSWORD_HASHER: 'PASSWORD_HASHER',
   GuidService: { create: jest.fn(() => 'guid') },
 }));
 
@@ -66,6 +69,60 @@ describe('crud-app-services: CrudService', () => {
       await expect(service.create({ ...mockData }, mockUser)).rejects.toThrow(
         'fail',
       );
+    });
+  });
+
+  describe('password hashing', () => {
+    const customHasher = {
+      hash: jest.fn(async (v: string) => 'custom-' + v),
+      compare: jest.fn(),
+    };
+
+    it('should hash with the default hasher when none is registered', async () => {
+      await service.create({ ...mockData }, mockUser);
+
+      const item = repository.create.mock.calls[0][0];
+      expect(item.password).toBe('hashed-pw');
+      expect(item.passwordConfirm).toBeUndefined();
+    });
+
+    it('should hash with the hasher registered under PASSWORD_HASHER', async () => {
+      const moduleRef = { get: jest.fn(() => customHasher) };
+      const withHasher = new CrudService<any>(
+        permissionService,
+        repository,
+        attachmentRepository,
+        undefined,
+        moduleRef as any,
+      );
+
+      await withHasher.create({ ...mockData }, mockUser);
+      await withHasher.update('id', { ...mockData }, mockUser);
+
+      expect(moduleRef.get).toHaveBeenCalledWith('PASSWORD_HASHER', {
+        strict: false,
+      });
+      expect(repository.create.mock.calls[0][0].password).toBe('custom-pw');
+      expect(repository.update.mock.calls[0][0].password).toBe('custom-pw');
+    });
+
+    it('should fall back to the default when the lookup throws', async () => {
+      const moduleRef = {
+        get: jest.fn(() => {
+          throw new Error('Nest could not find PASSWORD_HASHER');
+        }),
+      };
+      const withoutHasher = new CrudService<any>(
+        permissionService,
+        repository,
+        attachmentRepository,
+        undefined,
+        moduleRef as any,
+      );
+
+      await withoutHasher.create({ ...mockData }, mockUser);
+
+      expect(repository.create.mock.calls[0][0].password).toBe('hashed-pw');
     });
   });
 

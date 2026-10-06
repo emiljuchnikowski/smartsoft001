@@ -68,35 +68,61 @@ Methods:
     </tr>
 </table>
 
-### PasswordService
+### Password hashing
 
-New hashes use Web Crypto PBKDF2-HMAC-SHA256 (600,000 iterations), a random
-128-bit salt and a 256-bit derived key. The self-describing value is 118 ASCII
-characters: ensure password columns can store it before upgrading. Web Crypto
-must be available (supported Node runtime or a browser secure context); there
-is no fallback to weak hashing. No Node-only import is added to the browser entrypoint.
+`PasswordService` hashes with an unsalted MD5 digest. That is the framework default and stays
+so for compatibility with stored hashes, but MD5 is not a password hash: replace it for any
+credentials that matter.
 
-`compare` still accepts existing lowercase MD5 digests for migration.
-The standard TokenFactory upgrades a legacy digest after successful password
-verification using a conditional write; failed verification never rewrites it.
-Custom authentication/validation providers must implement equivalent migration
-or require a password reset. Accounts that never log in retain the old digest;
-set a reset deadline. Keep support for the new format when rolling back:
-an old MD5-only application cannot verify migrated passwords. Rate-limit login
-attempts and size capacity for the intentionally higher hashing cost.
+The framework never calls `PasswordService` directly. Login (`@smartsoft001/auth-*`) and the
+`password` field of CRUD records (`@smartsoft001/crud-*`) use the `IPasswordHasher` registered
+under the `PASSWORD_HASHER` token, and fall back to `Md5PasswordHasher` when there is none.
+Register one provider anywhere in the Nest application to replace it everywhere:
 
-See [OWASP password storage guidance](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html).
+```ts
+{ provide: PASSWORD_HASHER, useClass: Pbkdf2PasswordHasher }
+```
 
-Methods:
+`Pbkdf2PasswordHasher` is the ready-made replacement: PBKDF2-HMAC-SHA256 through Web Crypto,
+600,000 iterations by default, a random 128-bit salt and a 256-bit key, compared in constant
+time. Before switching:
+
+- the stored value is 118 characters (`pbkdf2-sha256$600000$<salt>$<key>`), so the password
+  column must hold at least that;
+- it still verifies MD5 hashes, and `needsRehash` reports them and hashes with fewer iterations
+  than configured, so the built-in login upgrades them on the next successful login, with a
+  conditional write; accounts that never log in keep the old hash, so set a reset deadline;
+- a rollback to a version, or a hasher, that only knows MD5 cannot verify upgraded hashes;
+- hashing is deliberately slow: rate-limit the login endpoint and size capacity for it.
+
+For bcrypt, argon2 or anything else, implement `IPasswordHasher` (`hash`, `compare` and the
+optional `needsRehash`). The guide with executed examples:
+https://framework.smartflow.biz.pl/docs/password-hashing/.
 
 <table>
     <tr>
-        <td>hash(p: string): Promise<string></td>
-        <td>hash password text</td>
+        <td>PasswordService.hash(p: string): Promise&lt;string&gt;</td>
+        <td>hash password text with the default MD5 hasher</td>
     </tr>
     <tr>
-        <td>compare(p: string, h: string): Promise<boolean></td>
-        <td>compare password text with hashed text</td>
+        <td>PasswordService.compare(p: string, h: string): Promise&lt;boolean&gt;</td>
+        <td>compare password text with an MD5 hash</td>
+    </tr>
+    <tr>
+        <td>IPasswordHasher</td>
+        <td>hash(password), compare(password, hash), needsRehash?(hash)</td>
+    </tr>
+    <tr>
+        <td>PASSWORD_HASHER</td>
+        <td>injection token of the hasher the framework uses</td>
+    </tr>
+    <tr>
+        <td>Md5PasswordHasher</td>
+        <td>the default, unsalted MD5</td>
+    </tr>
+    <tr>
+        <td>Pbkdf2PasswordHasher</td>
+        <td>salted PBKDF2-SHA256; new Pbkdf2PasswordHasher({ iterations? })</td>
     </tr>
 </table>
 
