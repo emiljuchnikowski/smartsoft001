@@ -35,14 +35,37 @@ export class InMemoryTransRepository {
   }
 }
 
+/** Orders your back end has shipped, in the order it shipped them. */
+export const fulfilledOrders: string[] = [];
+
+/**
+ * Receipts by idempotency key. In an application this is a table with a
+ * unique key, written in the same database transaction as the fulfilment.
+ */
+const receipts = new Map<string, { shipped: string }>();
+
 /**
  * Your own back end. `CreatorService` calls `create` between the `prepare` and
  * `started` steps, and an `amount` in the answer overrides the requested one,
  * which is how a server-side price check corrects a tampered request.
+ *
+ * `RefresherService` calls `refreshOnce` when the provider reports a new
+ * status, with a key derived from the transaction and that status. The same
+ * key comes back on every retry and from every instance, so the effect runs
+ * once and a replay gets the stored receipt.
  */
 export const internalService: ITransInternalService<OrderData> = {
   create: async () => ({}),
-  refresh: async () => ({}),
+  refreshOnce: async (trans, idempotencyKey) => {
+    const known = receipts.get(idempotencyKey);
+    if (known) return known;
+
+    fulfilledOrders.push(trans.data.orderNumber);
+    const receipt = { shipped: trans.data.orderNumber };
+    receipts.set(idempotencyKey, receipt);
+
+    return receipt;
+  },
 };
 
 /**

@@ -3,10 +3,19 @@ import { Trans, TransStatus } from './entities';
 export interface ITransInternalService<T> {
   create(trans: Trans<T>): Promise<any>;
 
-  refresh(trans: Trans<any>): Promise<any>;
+  /**
+   * @deprecated Never called: `RefresherService` uses `refreshOnce`, and
+   * `RefundService` calls no internal method. Move its logic to `refreshOnce`.
+   */
+  refresh?(trans: Trans<any>): Promise<any>;
 
-  /** Atomically deduplicate the business effect and replay its receipt by key. */
-  refreshOnce?(trans: Trans<any>, idempotencyKey: string): Promise<any>;
+  /**
+   * Applies the business effect of a status change (fulfil, cancel) exactly
+   * once per `idempotencyKey`: deduplicate atomically in durable storage and
+   * resolve the same receipt when the key is replayed. A falsy answer leaves
+   * the status change unsaved.
+   */
+  refreshOnce(trans: Trans<any>, idempotencyKey: string): Promise<any>;
 }
 
 export interface ITransPaymentService {

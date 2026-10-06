@@ -2,7 +2,9 @@ import { TransStatus } from '@smartsoft001/trans-domain';
 
 import {
   createTransCreator,
+  fulfilledOrders,
   InMemoryTransRepository,
+  internalService,
   newOrder,
   startPayment,
 } from './creator-service.example';
@@ -63,5 +65,18 @@ describe('docs-examples-node: CreatorService over an in-memory repository', () =
     await startPayment(creator, newOrder());
 
     expect(repository.items[0].externalId).toBe('ORD-1');
+  });
+
+  it('should fulfil an order once however often the same key is replayed', async () => {
+    const creator = createTransCreator(repository);
+    await startPayment(creator, newOrder());
+    const trans = { ...repository.items[0], status: 'completed' as const };
+    fulfilledOrders.length = 0;
+
+    const first = await internalService.refreshOnce(trans, 'key-1');
+    const replay = await internalService.refreshOnce(trans, 'key-1');
+
+    expect(fulfilledOrders).toEqual(['2026/09/15']);
+    expect(replay).toBe(first);
   });
 });

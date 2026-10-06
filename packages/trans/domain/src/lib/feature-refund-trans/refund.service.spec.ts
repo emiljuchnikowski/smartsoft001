@@ -20,7 +20,7 @@ describe('trans-domain: RefundService', () => {
     } as any;
 
     mockInternalService = {
-      refresh: jest.fn(),
+      refreshOnce: jest.fn(),
     } as any;
 
     mockPaymentService = {

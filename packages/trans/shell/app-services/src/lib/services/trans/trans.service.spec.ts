@@ -3,7 +3,10 @@ import { ModuleRef } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
 import { of } from 'rxjs';
 
-import { IItemRepository } from '@smartsoft001/domain-core';
+import {
+  DomainValidationError,
+  IItemRepository,
+} from '@smartsoft001/domain-core';
 import { PaynowService } from '@smartsoft001/paynow';
 import { PaypalService } from '@smartsoft001/paypal';
 import { PayuService } from '@smartsoft001/payu';
@@ -103,7 +106,7 @@ describe('trans: TransService', () => {
 
     mockInternalService = {
       create: jest.fn(),
-      refresh: jest.fn(),
+      refreshOnce: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -236,14 +239,34 @@ describe('trans: TransService', () => {
   });
 
   describe('getInternalService', () => {
-    it('refuses HTTP fulfillment without an explicit idempotency contract', () => {
+    it('rejects HTTP fulfillment without an explicit idempotency contract', async () => {
       mockModuleRef.get.mockImplementation(() => {
         throw new Error('No custom provider');
       });
       const internal = (service as any).getInternalService();
-      expect(() => internal.refreshOnce({ id: 'order' }, 'stable-key')).toThrow(
-        'idempotent internal API',
+
+      const result = internal.refreshOnce({ id: 'order' }, 'stable-key');
+
+      expect(result).toBeInstanceOf(Promise);
+      await expect(result).rejects.toThrow(
+        new DomainValidationError(
+          'An idempotent internal API must be configured',
+        ),
       );
+      expect(mockHttpService.put).not.toHaveBeenCalled();
+    });
+
+    it('rejects fulfillment in offline mode even with the idempotency flag', async () => {
+      mockModuleRef.get.mockImplementation(() => {
+        throw new Error('No custom provider');
+      });
+      mockConfig.internalApiUrl = '';
+      mockConfig.idempotentInternalApi = true;
+      const internal = (service as any).getInternalService();
+
+      await expect(
+        internal.refreshOnce({ id: 'order' }, 'stable-key'),
+      ).rejects.toThrow('An idempotent internal API must be configured');
       expect(mockHttpService.put).not.toHaveBeenCalled();
     });
 
@@ -284,14 +307,15 @@ describe('trans: TransService', () => {
       expect(result).toHaveProperty('create');
     });
 
-    it('should return fallback internal service with refresh method when module ref fails', () => {
+    it('should return a fallback internal service without the deprecated refresh', () => {
       mockModuleRef.get.mockImplementation(() => {
         throw new Error('Service not found');
       });
 
       const result = (service as any).getInternalService();
 
-      expect(result).toHaveProperty('refresh');
+      expect(result).toHaveProperty('refreshOnce');
+      expect(result).not.toHaveProperty('refresh');
     });
   });
 });

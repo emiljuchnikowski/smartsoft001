@@ -39,9 +39,9 @@ The other two services work on a transaction that already exists. `RefresherServ
 
 {% snippet file="node/src/trans/creator-service.example.ts" region="usage" /%}
 
-The region assembles the four things `CreatorService.create` needs. An array-backed repository stands in for the Mongo one the NestJS module binds. `internalService` is the two-method contract your own back end implements. `paymentService` is a map keyed by `TransSystem`, here holding a single `payu` entry that fulfils `ITransPaymentSingleService` without touching the network. `newOrder` is the request a checkout page would build.
+The region assembles the four things `CreatorService.create` needs. An array-backed repository stands in for the Mongo one the NestJS module binds. `internalService` is the two-method contract your own back end implements, and its `refreshOnce` keeps a receipt per idempotency key so an order is fulfilled once. `paymentService` is a map keyed by `TransSystem`, here holding a single `payu` entry that fulfils `ITransPaymentSingleService` without touching the network. `newOrder` is the request a checkout page would build.
 
-Its spec follows one order through. The call returns the provider's `ORD-1` and the redirect url the buyer has to follow. Exactly one transaction is stored. Its history reads `['prepare', 'new', 'started']`, in that order, which is the status walk made visible. The stored record ends in `started` and carries `ORD-1` as its `externalId`, which is the key the refresh flow later looks it up by.
+Its spec follows one order through. The call returns the provider's `ORD-1` and the redirect url the buyer has to follow. Exactly one transaction is stored. Its history reads `['prepare', 'new', 'started']`, in that order, which is the status walk made visible. The stored record ends in `started` and carries `ORD-1` as its `externalId`, which is the key the refresh flow later looks it up by. The last case calls `refreshOnce` twice with the same key: the order is fulfilled once and the replay resolves the same receipt.
 
 ### Reject a bad request
 
@@ -84,7 +84,9 @@ On failure after the first write, the record is updated with status `error` and 
 
 It then asks the provider for the current status. A status equal to the stored one returns immediately and writes nothing, which is what makes a webhook safe to deliver twice. Otherwise the new status and `modifyDate` are set, `customData` is attached to the provider payload under `customData`, and the entry is appended to the history.
 
-`internalService.refresh(trans)` runs next, and its answer decides the ending. A falsy answer returns early, so the status change is **not** persisted at all. Any other answer is appended as a second history entry and the record is saved through `updatePartial` with only `modifyDate`, `status` and `history`. An error anywhere after the lookup records status `error` and rethrows.
+`internalService.refreshOnce(trans, idempotencyKey)` runs next, and its answer decides the ending. The key is `smartsoft-trans-` plus a SHA-256 of the transaction id, the provider, the provider's order id and the **target** status, so it is the same on every retry and on every instance, and different for a different status. A falsy answer returns early, so the status change is **not** persisted at all. Any other answer is appended as a second history entry and the record is saved through `updatePartial` with only `modifyDate`, `status` and `history`.
+
+The service works on a copy of the stored record, so the record it read is not changed until that write succeeds. A failure anywhere after the lookup, including in `refreshOnce` or in the final write, logs the fixed line `Transaction refresh failed`, persists nothing and rethrows. The previous status stays in place, so the next webhook or a manual refresh retries the transition with the same key, and a handler that already fulfilled the order only replays its receipt. A service without a `refreshOnce` function, such as one written against the old contract, is refused with `DomainValidationError('An idempotent refreshOnce handler is required')` before anything runs. The legacy `refresh` is never called.
 
 ### `RefundService<T>`
 
@@ -124,13 +126,15 @@ A `TransHistory<T>` entry snapshots `amount`, `system`, `status` and `modifyDate
 
 `ITransCreate<T>` is the request: `amount`, `name`, `system`, `firstName`, `lastName`, `email`, `contactPhone`, `data`, `options` and `clientIp`, all required by the type even though only five are checked at runtime.
 
-`ITransInternalService<T>` is what your back end implements: `create(trans)` and `refresh(trans)`, both returning a promise. Returning an object with an `amount` from `create` reprices the transaction; returning a falsy value from `refresh` stops the refresh from being persisted.
+`ITransInternalService<T>` is what your back end implements: `create(trans)` and `refreshOnce(trans, idempotencyKey)`, both returning a promise and both required. Returning an object with an `amount` from `create` reprices the transaction; returning a falsy value from `refreshOnce` stops the refresh from being persisted. `refresh(trans)` is optional and `@deprecated`: nothing in the library calls it, `RefundService` included. See [Idempotent fulfilment](#idempotent-fulfilment) for what `refreshOnce` must guarantee.
 
 `ITransPaymentSingleService` is what a payment integration implements: `create(obj)` returning `{ orderId, redirectUrl?, responseData? }`, `getStatus(trans)` returning `{ status, data }`, and `refund(trans, comment)`. `ITransPaymentService` is the map from a provider name to one of those, and `trans.system` is the key used to index it.
 
 ### `TransConfig`
 
-A class with a positional constructor, `new TransConfig(internalApiUrl, tokenConfig)`, where `tokenConfig` is `{ secretOrPrivateKey: string; expiredIn: number }`. It is declared here and consumed by [`@smartsoft001/trans-shell-app-services`](/docs/packages/trans-shell-app-services), which reads `internalApiUrl`, and by the NestJS module, which signs tokens with `tokenConfig`. An empty `internalApiUrl` is meaningful: it turns the built-in calls to your back end off.
+A class with a positional constructor, `new TransConfig(internalApiUrl, tokenConfig)`, where `tokenConfig` is `{ secretOrPrivateKey: string; expiredIn: number }`. It is declared here and consumed by [`@smartsoft001/trans-shell-app-services`](/docs/packages/trans-shell-app-services), which reads `internalApiUrl` and `idempotentInternalApi`, and by the NestJS module, which signs tokens with `tokenConfig`. An empty `internalApiUrl` is meaningful: it turns the built-in calls to your back end off, and with them the only built-in way to fulfil an order, so no status change can be completed until you register your own internal service.
+
+`idempotentInternalApi?: boolean` is a plain property, not a constructor argument. Set it to `true` only when the API at `internalApiUrl` durably honours the `Idempotency-Key` header. Without it the built-in internal service refuses every status change.
 
 ### `DOMAIN_SERVICES`
 
@@ -139,6 +143,26 @@ A class with a positional constructor, `new TransConfig(internalApiUrl, tokenCon
 ### `TransBaseService`
 
 The abstract parent holding `addHistory` and `setError` lives at `src/lib/trans.service.ts` and is exported from the package entry point. The three services extend it, and a fourth service of your own can do the same and inherit the history handling rather than reimplement it.
+
+## Idempotent fulfilment
+
+A provider can report the same payment more than once, and two instances of your application can process those reports at the same time. So the business effect of a status change, such as shipping an order, goes through `refreshOnce(trans, idempotencyKey)`, and the library never falls back to `refresh`.
+
+Your `refreshOnce` must deduplicate the effect **atomically, in durable storage**, by that key, and resolve the same receipt whenever the key is replayed. Write the effect and a row under a unique key in one database transaction, or use an outbox. External effects need the same idempotency at their own boundary. Renaming `refresh` to `refreshOnce` without deduplication doesn't meet the contract, and neither does a mutex inside one Node process or marking the order paid before fulfilling it.
+
+The key is derived from the transaction id, the provider, the provider's order id and the target status, so every instance and every retry uses the same one, including a retry after fulfilment succeeded but the status write failed. A failure keeps the previously persisted status, so retries can recover. The provider is still asked for the actual status. The content of a notification is never trusted.
+
+The library can't make arbitrary external effects exactly-once. Test your handler with independent processes, database transactions, crashes and replayed receipts before production.
+
+{% callout type="warning" title="Upgrading: refreshOnce is required" %}
+Earlier versions called `refresh(trans)` on every status change. Now:
+
+- Implement `refreshOnce(trans, idempotencyKey)` with durable deduplication. TypeScript flags services that don't, and at runtime a service without it is refused before any effect runs.
+- Move any logic out of `refresh`. It is optional, `@deprecated` and never called. Refunds don't call the internal service either.
+- If your back end is the built-in HTTP call to `internalApiUrl`, make it honour `Idempotency-Key` on `PUT {internalApiUrl}/{id}`, then set `idempotentInternalApi: true`. Setting the flag alone provides no deduplication.
+- With an empty `internalApiUrl` and no `TRANS_TOKEN_INTERNAL_SERVICE` provider (offline or development mode), a payment can still be created but its status can't advance. Register an internal service to complete payments.
+- A failed refresh no longer stores status `error`. The record keeps its last persisted status until a retry succeeds.
+  {% /callout %}
 
 ## Related packages
 

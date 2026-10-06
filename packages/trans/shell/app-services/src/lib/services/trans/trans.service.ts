@@ -37,8 +37,11 @@ export class TransService {
     };
   }
 
-  private _internalService = {
-    refreshOnce: (trans: Trans<any>, idempotencyKey: string) => {
+  private _internalService: ITransInternalService<any> = {
+    // Offline (no internalApiUrl) or without a declared idempotent API there
+    // is nothing that can fulfil an order exactly once, so refuse. Async, so
+    // the refusal is a rejected promise like every other failure.
+    refreshOnce: async (trans: Trans<any>, idempotencyKey: string) => {
       if (
         !this.config.internalApiUrl ||
         this.config.idempotentInternalApi !== true
@@ -64,22 +67,6 @@ export class TransService {
 
       return firstValueFrom(
         this.httpService.post(this.config.internalApiUrl, trans),
-      ).then((res) => res.data);
-    },
-
-    refresh: (trans: Trans<any>) => {
-      if (!this.config.internalApiUrl)
-        return Promise.resolve({
-          date: new Date(),
-          req: trans,
-          id: trans.id,
-        });
-
-      return firstValueFrom(
-        this.httpService.put(
-          this.config.internalApiUrl + '/' + trans.id,
-          trans,
-        ),
       ).then((res) => res.data);
     },
   };

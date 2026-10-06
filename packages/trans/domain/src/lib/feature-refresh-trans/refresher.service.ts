@@ -40,7 +40,9 @@ export class RefresherService<T> extends TransBaseService<T> {
 
       if (status === trans.status) return;
 
-      if (!internalService.refreshOnce) {
+      // Required by the type; still checked for JavaScript callers and for
+      // services written against the old contract, which only had refresh.
+      if (typeof internalService.refreshOnce !== 'function') {
         throw new DomainValidationError(
           'An idempotent refreshOnce handler is required',
         );

@@ -45,18 +45,19 @@ Its spec compiles both with `Test.createTestingModule` and resolves tokens out o
 
 The options are `SharedConfig` from [`@smartsoft001/nestjs`](/docs/packages/nestjs) intersected with `TransConfig` from [`@smartsoft001/trans-domain`](/docs/packages/trans-domain), the four optional provider configs, and the database settings.
 
-| Option                              | Type                                                | What it does                                                                                                       |
-| ----------------------------------- | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| `tokenConfig`                       | `{ secretOrPrivateKey: string; expiredIn: number }` | Registers `JwtModule` with this key and lifetime. The strategy is built eagerly, so an empty key fails at startup. |
-| `permissions`                       | `ISharedPermissions`                                | Role names per operation, carried down into the CRUD module. No route in this package consults them.               |
-| `internalApiUrl`                    | `string`                                            | Your own back end. Empty turns the built-in calls off entirely.                                                    |
-| `db.host`, `db.port`, `db.database` | `string`, `number`, `string`                        | Passed to the CRUD module, and from there to `MongoModule.forRoot`.                                                |
-| `db.username`, `db.password`        | `string`                                            | Optional credentials.                                                                                              |
-| `db.collection`                     | `string`                                            | Accepted and then **overwritten with `trans`**, so transactions always land in that collection.                    |
-| `payuConfig`                        | `PayuConfig`                                        | Registers `PayuConfig` and `PayuService` when present.                                                             |
-| `paypalConfig`                      | `PaypalConfig`                                      | Registers `PaypalConfig` and `PaypalService` when present.                                                         |
-| `revolutConfig`                     | `RevolutConfig`                                     | Registers `RevolutConfig` and `RevolutService` when present.                                                       |
-| `paynowConfig`                      | `PaynowConfig`                                      | Registers `PaynowConfig` and `PaynowService` when present.                                                         |
+| Option                              | Type                                                | What it does                                                                                                                |
+| ----------------------------------- | --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `tokenConfig`                       | `{ secretOrPrivateKey: string; expiredIn: number }` | Registers `JwtModule` with this key and lifetime. The strategy is built eagerly, so an empty key fails at startup.          |
+| `permissions`                       | `ISharedPermissions`                                | Role names per operation, carried down into the CRUD module. No route in this package consults them.                        |
+| `internalApiUrl`                    | `string`                                            | Your own back end. Empty turns the built-in calls off entirely.                                                             |
+| `idempotentInternalApi`             | `boolean`, optional                                 | Declares that `internalApiUrl` honours `Idempotency-Key`. Without it, and with an empty url, no status change can complete. |
+| `db.host`, `db.port`, `db.database` | `string`, `number`, `string`                        | Passed to the CRUD module, and from there to `MongoModule.forRoot`.                                                         |
+| `db.username`, `db.password`        | `string`                                            | Optional credentials.                                                                                                       |
+| `db.collection`                     | `string`                                            | Accepted and then **overwritten with `trans`**, so transactions always land in that collection.                             |
+| `payuConfig`                        | `PayuConfig`                                        | Registers `PayuConfig` and `PayuService` when present.                                                                      |
+| `paypalConfig`                      | `PaypalConfig`                                      | Registers `PaypalConfig` and `PaypalService` when present.                                                                  |
+| `revolutConfig`                     | `RevolutConfig`                                     | Registers `RevolutConfig` and `RevolutService` when present.                                                                |
+| `paynowConfig`                      | `PaynowConfig`                                      | Registers `PaynowConfig` and `PaynowService` when present.                                                                  |
 
 The dynamic module provides `TransService`, the three domain services, `TransConfig` as a value provider holding the whole options object, and the gated provider pairs. It registers all four controllers. It imports `HttpModule`, `CrudShellNestjsModule.forRoot({ ...options, db: { ...options.db, collection: 'trans' }, restApi: false, socket: false })`, `PassportModule` with the `jwt` default strategy and sessions off, and `JwtModule`. It exports `TransService`, `TransConfig` and every provider pair it registered, so a module importing this one can inject any payment service it configured.
 

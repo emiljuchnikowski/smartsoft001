@@ -30,3 +30,11 @@ Methods:
         <td>Retrieves a transaction by its ID from the repository.</td>
     </tr>
 </table>
+
+## ⚠️ Completing payments
+
+Status changes go through `ITransInternalService.refreshOnce`, which must be idempotent. Register a
+provider under `TRANS_TOKEN_INTERNAL_SERVICE` that implements it, or point `internalApiUrl` at an API
+that honours the `Idempotency-Key` header and set `idempotentInternalApi: true`. Otherwise the
+built-in fallback rejects every status change, so in offline mode (empty `internalApiUrl`) payments
+can be created but not completed.
