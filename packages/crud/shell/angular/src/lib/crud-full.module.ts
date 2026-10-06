@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { Store } from '@ngrx/store';
 
 import { NgrxStoreService, SharedModule } from '@smartsoft001/angular';
 import { IEntity } from '@smartsoft001/domain-core';
@@ -52,12 +53,17 @@ export const PAGES = [
   ],
 })
 export class CrudFullModule<T extends IEntity<string>> {
-  constructor(config: CrudConfig<T>, effects: CrudEffects<any>) {
+  constructor(
+    config: CrudConfig<T>,
+    effects: CrudEffects<any>,
+    store: Store<any>,
+  ) {
     NgrxStoreService.addReducer(
       config.entity,
       config.reducerFactory
         ? config.reducerFactory()
         : getReducer(config.entity),
+      store,
     );
     effects.init();
   }
