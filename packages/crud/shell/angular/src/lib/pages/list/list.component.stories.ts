@@ -56,8 +56,9 @@ export class StorybookTestModule {}
  * APPLICATION injector (not in `moduleMetadata` imports): `Actions`,
  * `EffectSources` and `EffectsRunner` are `providedIn: 'root'`, so they are
  * created in the root injector and must find `Store` there. `NgrxSharedModule`
- * connects the static `NgrxStoreService.store` that `CrudModule.forFeature`
- * uses to register the entity reducer. The real router replaces
+ * connects the static `NgrxStoreService.store` used by `@Select`;
+ * `CrudModule.forFeature` registers the entity reducer in the injected `Store`
+ * (provided here by `StoreModule.forRoot`). The real router replaces
  * `RouterTestingModule` (the `@angular/router/testing` entrypoint is not
  * bundleable in the Storybook preview); hash routing keeps `router.navigate`
  * from touching the iframe URL's story params.
