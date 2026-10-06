@@ -1339,6 +1339,29 @@ describe('shared-mongo: MongoItemRepository generateSearch function', () => {
     });
   });
 
+  it('should match regex metacharacters in $search literally', () => {
+    const repository = createRepository(SearchableModel);
+    const criteria: any = { $search: 'john.doe (a+)+ what? *' };
+
+    repository.callGenerateSearch(criteria);
+
+    expect(criteria['$or'][0]).toEqual({
+      name: {
+        $regex: 'john\\.doe \\(a\\+\\)\\+ what\\? \\*',
+        $options: 'i',
+      },
+    });
+  });
+
+  it('should drop double quotes from the $text phrase so it stays one phrase', () => {
+    const repository = createRepository(NotSearchableModel);
+    const criteria: any = { $search: 'say "hi" a.b*' };
+
+    repository.callGenerateSearch(criteria);
+
+    expect(criteria['$text']).toEqual({ $search: ' "say hi a.b*" ' });
+  });
+
   it('should leave criteria untouched when there is no $search', () => {
     const repository = createRepository(NotSearchableModel);
     const criteria: any = { code: '123' };

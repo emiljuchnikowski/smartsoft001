@@ -101,7 +101,7 @@ A plain class used both as the shape of the argument and as the injection token.
     <tr>
         <td>type: any</td>
         <td>no</td>
-        <td>The model class of the stored entity. Its @Field metadata is read to expand a $search criterion into a case insensitive regex query.</td>
+        <td>The model class of the stored entity. Its @Field metadata is read to expand a $search criterion into a case insensitive regex query. The term is escaped, so it matches literally; without searchable fields it becomes a $text phrase search, which needs a text index.</td>
     </tr>
     <tr>
         <td>url: string</td>

@@ -1,10 +1,13 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
   HttpCode,
+  Inject,
   NotFoundException,
+  Optional,
   Param,
   Patch,
   Post,
@@ -24,7 +27,7 @@ import * as XLSX from 'xlsx';
 import type { CreateManyMode } from '@smartsoft001/crud-domain';
 import { CrudService } from '@smartsoft001/crud-shell-app-services';
 import { IEntity } from '@smartsoft001/domain-core';
-import { User } from '@smartsoft001/nestjs';
+import { SharedConfig, User } from '@smartsoft001/nestjs';
 import type { IUser } from '@smartsoft001/users';
 import { GuidService } from '@smartsoft001/utils';
 
@@ -33,13 +36,23 @@ import { Readable, Writable } from 'stream';
 import { parseHttpQuery } from './http-query';
 import { IQ2mResult } from './query-to-mongo';
 import {
+  DEFAULT_MAX_EXPORT_LIMIT,
+  DEFAULT_MAX_QUERY_LIMIT,
+} from '../../crud-query.config';
+import type { ICrudQueryConfig } from '../../crud-query.config';
+import {
   AuthJwtGuard,
   AuthOrAnonymousJwtGuard,
 } from '../../guards/auth/auth.guard';
 
 @Controller('')
 export class CrudController<T extends IEntity<string>> {
-  constructor(protected readonly service: CrudService<T>) {}
+  constructor(
+    protected readonly service: CrudService<T>,
+    @Optional()
+    @Inject(SharedConfig)
+    protected readonly queryConfig?: ICrudQueryConfig,
+  ) {}
 
   static getLink(req: Request): string {
     return req.protocol + '://' + req.headers.host + req.url;
@@ -94,36 +107,44 @@ export class CrudController<T extends IEntity<string>> {
     @Req() req: Request,
     @Res() res: Response,
   ): Promise<void> {
-    const object = this.getQueryObject(req.query);
+    const contentType = req.headers['content-type'];
+    const isExport =
+      contentType === 'text/csv' ||
+      contentType ===
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+    const object = this.getQueryObject(req.query, isExport);
 
     const { data, totalCount } = await this.service.read(
       object.criteria,
       {
         ...object.options,
-        allowDiskUse:
-          req.headers['content-type'] === 'text/csv' ||
-          req.headers['content-type'] ===
-            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        allowDiskUse: isExport,
       },
       user,
     );
 
-    if (req.headers['content-type'] === 'text/csv') {
-      res.set({
-        'Content-Type': 'text/csv',
-      });
-      res.send(this.parseToCsv(data));
-    }
+    if (isExport) {
+      // An export without an explicit page must contain every matching row.
+      if (
+        !req.query['limit'] &&
+        (object.options.skip ?? 0) + data.length < totalCount
+      ) {
+        throw new BadRequestException(
+          `The export matches ${totalCount} rows, more than maxExportLimit ` +
+            `(${object.options.limit}); narrow the filters or page with limit and offset`,
+        );
+      }
 
-    if (
-      req.headers['content-type'] ===
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    ) {
       res.set({
-        'Content-Type':
-          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'Content-Type': contentType,
+        'X-Total-Count': String(totalCount),
       });
-      res.send(this.parseToXlsx(data));
+      res.send(
+        contentType === 'text/csv'
+          ? this.parseToCsv(data)
+          : this.parseToXlsx(data),
+      );
+      return;
     }
 
     res.send({
@@ -277,8 +298,15 @@ export class CrudController<T extends IEntity<string>> {
     await this.service.deleteAttachment(id);
   }
 
-  protected getQueryObject(queryObject: Record<string, unknown>): IQ2mResult {
-    return parseHttpQuery(queryObject);
+  protected getQueryObject(
+    queryObject: Record<string, unknown>,
+    isExport = false,
+  ): IQ2mResult {
+    const maxLimit = isExport
+      ? (this.queryConfig?.maxExportLimit ?? DEFAULT_MAX_EXPORT_LIMIT)
+      : (this.queryConfig?.maxQueryLimit ?? DEFAULT_MAX_QUERY_LIMIT);
+
+    return parseHttpQuery(queryObject, { maxLimit });
   }
 
   protected parseToXlsx(data: T[]) {

@@ -2,6 +2,7 @@ import { DynamicModule } from '@nestjs/common';
 
 import { SharedConfig } from '@smartsoft001/nestjs';
 
+import { CrudController } from './controllers';
 import {
   CrudShellNestjsCoreModule,
   CrudShellNestjsModule,
@@ -92,5 +93,23 @@ describe('crud-nestjs: CrudShellNestjsModule', () => {
     });
 
     expect(findSharedConfig(dynamicModule)?.type).toBe(OtherNote);
+  });
+
+  it('should hand the query limits to CrudController through SharedConfig', () => {
+    const dynamicModule = CrudShellNestjsModule.forRoot({
+      ...options,
+      restApi: true,
+      socket: false,
+      maxQueryLimit: 500,
+      maxExportLimit: 50000,
+    });
+
+    const deps = Reflect.getMetadata('self:paramtypes', CrudController);
+
+    expect(findSharedConfig(dynamicModule)).toMatchObject({
+      maxQueryLimit: 500,
+      maxExportLimit: 50000,
+    });
+    expect(deps).toContainEqual({ index: 1, param: SharedConfig });
   });
 });
