@@ -31,7 +31,9 @@ export class CrudFacade<T extends IEntity<string>> {
     private readonly store: Store<any>,
     private config: CrudConfig<T>,
   ) {
-    if (NgrxStoreService.store) {
+    // Prefer the app's own Store (SSR renders many apps in one process);
+    // fall back to the static store only when none was injected.
+    if (!this.store && NgrxStoreService.store) {
       this.store = NgrxStoreService.store;
     }
 
@@ -149,8 +151,6 @@ export class CrudFacade<T extends IEntity<string>> {
   }
 
   private getStore(): Store {
-    if (NgrxStoreService.store) return NgrxStoreService.store;
-
-    return this.store;
+    return this.store ?? (NgrxStoreService.store as Store);
   }
 }
