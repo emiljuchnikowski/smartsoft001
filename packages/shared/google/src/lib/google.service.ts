@@ -8,7 +8,7 @@ export class GoogleService {
 
   async getUserId(
     token: string,
-    clientIds: readonly string[] = [],
+    clientIds: readonly string[],
   ): Promise<string> {
     const data = await this.verify(token, clientIds);
     return data.user_id;
@@ -16,7 +16,7 @@ export class GoogleService {
 
   async getData(
     token: string,
-    clientIds: readonly string[] = [],
+    clientIds: readonly string[],
   ): Promise<{ email: string; id: string }> {
     const data = await this.verify(token, clientIds);
     return {

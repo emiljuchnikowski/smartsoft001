@@ -4,7 +4,6 @@ import { of } from 'rxjs';
 
 import { GoogleService } from './google.service';
 
-
 describe('GoogleService', () => {
   let service: GoogleService;
   let httpService: HttpService;

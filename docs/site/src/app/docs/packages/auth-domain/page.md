@@ -27,7 +27,7 @@ From outside the workspace it needs `typeorm` for the entity decorators and the 
 
 This is the whole authentication decision, with no transport attached. `TokenFactory.create` receives a request object shaped like an OAuth token request, finds the matching user, checks that the user may log in, rotates the refresh token and returns a signed access token. A REST controller, a scheduled job or a test can all call it the same way, and [`@smartsoft001/auth-shell-nestjs`](/docs/packages/auth-shell-nestjs) is only the HTTP wrapper around it.
 
-Four grant types are built in. `password` matches a username and a hashed password, `refresh_token` matches a previously issued refresh token, and `fb` and `google` exchange a social access token for the provider's user id and match on that. Only the two social grants leave the process, and only to ask Facebook or Google who the token belongs to. The password and refresh-token grants are entirely offline, which is why the examples below run with nothing but an array and a stub.
+Four grant types are built in. `password` matches a username and a hashed password, `refresh_token` matches a previously issued refresh token, and `fb` and `google` exchange a social access token for the provider's user id and match on that. The `google` grant accepts only tokens issued to one of the OAuth clients listed in `TokenConfig.googleClientIds`. Only the two social grants leave the process, and only to ask Facebook or Google who the token belongs to. The password and refresh-token grants are entirely offline, which is why the examples below run with nothing but an array and a stub.
 
 Anything the built-in flow does not cover is an extension point rather than a fork. Three abstract classes, each with a string injection token, let an application supply the user itself, add claims to the payload, or replace the validation altogether. The factory resolves none of them; it takes whichever ones the caller passes, and [`@smartsoft001/auth-shell-app-services`](/docs/packages/auth-shell-app-services) is what looks them up in the injector.
 
@@ -91,15 +91,15 @@ A TypeORM `@Entity('users')` implementing `IEntity<string>` from `@smartsoft001/
 
 `options` is `{ httpReq?, request, payloadProvider?, validationProvider?, userProvider? }`, and the method runs in a fixed order.
 
-| Step | What happens                                                                                                                                                            |
-| ---- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1    | For `fb` and `google`, the social token is exchanged for a user id, which is written back onto the request. This is the only outbound call.                             |
-| 2    | The request is validated by shape. An empty request, a missing `grant_type`, a missing field of the grant, or a `client_id` outside `config.clients` throws.            |
-| 3    | `getQuery` builds the lookup, and the user is fetched from `userProvider.get(...)` when one was passed and from the repository otherwise.                               |
-| 4    | Unless a validation provider sets `replace`, the user must exist, must not be disabled, and for the password grant must match the stored digest.                        |
-| 5    | A validation provider, if present, runs its own `check({ request, user })`.                                                                                             |
-| 6    | A fresh GUID becomes the refresh token, and the matching row is updated with it and with `lastLoginDate`.                                                               |
-| 7    | The payload `{ permissions, scope }` is built, handed to a payload provider if one was passed, and signed with `expiresIn` from the config and the username as subject. |
+| Step | What happens                                                                                                                                                                                                                                         |
+| ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1    | For `fb` and `google`, the social token is exchanged for a user id, which is written back onto the request. This is the only outbound call. `google` first requires a non-empty `config.googleClientIds` and passes it to `GoogleService.getUserId`. |
+| 2    | The request is validated by shape. An empty request, a missing `grant_type`, a missing field of the grant, or a `client_id` outside `config.clients` throws.                                                                                         |
+| 3    | `getQuery` builds the lookup, and the user is fetched from `userProvider.get(...)` when one was passed and from the repository otherwise.                                                                                                            |
+| 4    | Unless a validation provider sets `replace`, the user must exist, must not be disabled, and for the password grant must match the stored digest.                                                                                                     |
+| 5    | A validation provider, if present, runs its own `check({ request, user })`.                                                                                                                                                                          |
+| 6    | A fresh GUID becomes the refresh token, and the matching row is updated with it and with `lastLoginDate`.                                                                                                                                            |
+| 7    | The payload `{ permissions, scope }` is built, handed to a payload provider if one was passed, and signed with `expiresIn` from the config and the username as subject.                                                                              |
 
 The resolved value is `{ expired_in, token_type: 'bearer', access_token, refresh_token, username }`.
 
@@ -118,30 +118,32 @@ The first parameter of `getQuery` is declared as `config: IAuthTokenRequest`. Th
 
 Every failure is a `DomainValidationError` from `@smartsoft001/domain-core`.
 
-| Message                                                                                        | When                                                                              |
-| ---------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| `config is empty`                                                                              | No request at all.                                                                |
-| `grant_type is empty`                                                                          | A request without a grant type.                                                   |
-| `username is empty`, `password is empty`, `client_id is empty`                                 | The password grant with that field missing.                                       |
-| `client_id is incorrect`                                                                       | The client id is not in `TokenConfig.clients`.                                    |
-| `refresh_token is empty`                                                                       | The refresh-token grant without its token.                                        |
-| `fb_token is empty`, `fb_user_id is empty`, `google_token is empty`, `google_user_id is empty` | The social grants, checked after the provider lookup.                             |
-| `Invalid grand type`                                                                           | An unrecognised grant type with no user provider.                                 |
-| `Invalid username or password`                                                                 | The password grant with no matching user, or with a password that does not match. |
-| `Invalid token`                                                                                | Any other grant whose lookup found no user.                                       |
-| `user disabled`                                                                                | The user exists but is flagged disabled.                                          |
+| Message                                                                                        | When                                                                                                      |
+| ---------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `config is empty`                                                                              | No request at all.                                                                                        |
+| `grant_type is empty`                                                                          | A request without a grant type.                                                                           |
+| `username is empty`, `password is empty`, `client_id is empty`                                 | The password grant with that field missing.                                                               |
+| `client_id is incorrect`                                                                       | The client id is not in `TokenConfig.clients`.                                                            |
+| `refresh_token is empty`                                                                       | The refresh-token grant without its token.                                                                |
+| `fb_token is empty`, `fb_user_id is empty`, `google_token is empty`, `google_user_id is empty` | The social grants, checked after the provider lookup.                                                     |
+| `Google client IDs must be configured`                                                         | The `google` grant while `TokenConfig.googleClientIds` is missing or empty, before any request to Google. |
+| `Invalid grand type`                                                                           | An unrecognised grant type with no user provider.                                                         |
+| `Invalid username or password`                                                                 | The password grant with no matching user, or with a password that does not match.                         |
+| `Invalid token`                                                                                | Any other grant whose lookup found no user.                                                               |
+| `user disabled`                                                                                | The user exists but is flagged disabled.                                                                  |
 
-A wrong password and an unknown username are deliberately indistinguishable.
+A wrong password and an unknown username are deliberately indistinguishable. A Google token that fails the checks of [`GoogleService`](/docs/packages/google), including one issued to a client outside `googleClientIds`, rejects with that service's `UnauthorizedException('Invalid Google token')` rather than a `DomainValidationError`.
 
 ### `TokenConfig`
 
-An `@Injectable()` class with three fields, registered by the shell module as a value provider.
+An `@Injectable()` class with four fields, registered by the shell module as a value provider.
 
-| Field                | Type            | What it does                                                                     |
-| -------------------- | --------------- | -------------------------------------------------------------------------------- |
-| `secretOrPrivateKey` | `string`        | The JWT signing key. The module also hands it to `JwtModule.register`.           |
-| `expiredIn`          | `number`        | The lifetime, reported as `expired_in` and passed to the signer as `expiresIn`.  |
-| `clients`            | `Array<string>` | Accepted client ids, empty by default. Only the password grant checks this list. |
+| Field                | Type            | What it does                                                                                                                                                                          |
+| -------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `secretOrPrivateKey` | `string`        | The JWT signing key. The module also hands it to `JwtModule.register`.                                                                                                                |
+| `expiredIn`          | `number`        | The lifetime, reported as `expired_in` and passed to the signer as `expiresIn`.                                                                                                       |
+| `clients`            | `Array<string>` | Accepted client ids, empty by default. Only the password grant checks this list.                                                                                                      |
+| `googleClientIds`    | `string[]?`     | The Google OAuth client ids whose access tokens the `google` grant accepts. Unset or empty, the `google` grant is refused. Load it from server configuration, never from the request. |
 
 ### Extension points
 

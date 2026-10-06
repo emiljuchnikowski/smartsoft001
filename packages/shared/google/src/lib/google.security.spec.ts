@@ -27,9 +27,16 @@ describe('google: access token client binding', () => {
   it('fails closed with no configured client before making a request', async () => {
     const get = jest.fn();
     await expect(
-      new GoogleService({ get } as any).getUserId('synthetic-token'),
+      new GoogleService({ get } as any).getUserId('synthetic-token', []),
     ).rejects.toThrow();
     expect(get).not.toHaveBeenCalled();
+  });
+  it('requires the allowlist at compile time', async () => {
+    const service = new GoogleService({ get: jest.fn() } as any);
+    // @ts-expect-error clientIds is a required parameter
+    await expect(service.getUserId('synthetic-token')).rejects.toThrow();
+    // @ts-expect-error clientIds is a required parameter
+    await expect(service.getData('synthetic-token')).rejects.toThrow();
   });
   it('accepts trusted metadata and encodes the token as one URL parameter', async () => {
     const get = jest.fn(() => of({ data: good }));
