@@ -73,6 +73,8 @@ describe('crud-nestjs: attachment security over HTTP', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     config.attachmentPolicy = undefined;
+    config.attachmentMaxBytes = undefined;
+    config.attachmentMaxFields = undefined;
   });
   function form(size = 4) {
     const body = new FormData();
@@ -208,5 +210,51 @@ describe('crud-nestjs: attachment security over HTTP', () => {
       ).status,
     ).toBe(400);
     expect(storage.upload).not.toHaveBeenCalled();
+  });
+  it('applies the size limit configured in attachmentMaxBytes', async () => {
+    config.attachmentPolicy = () => true;
+    config.attachmentMaxBytes = 8;
+    const upload = (size: number) =>
+      fetch(base + '/attachments', {
+        method: 'POST',
+        headers,
+        body: form(size),
+      });
+
+    const tooLarge = await upload(9);
+    const atLimit = await upload(8);
+
+    expect(tooLarge.status).toBe(413);
+    expect(atLimit.status).toBe(201);
+    expect(storage.upload).toHaveBeenCalledTimes(1);
+  });
+  it('rejects extra form fields by default', async () => {
+    config.attachmentPolicy = () => true;
+    const body = form();
+    body.append('description', 'holiday photo');
+
+    const response = await fetch(base + '/attachments', {
+      method: 'POST',
+      headers,
+      body,
+    });
+
+    expect(response.status).toBe(413);
+    expect(storage.upload).not.toHaveBeenCalled();
+  });
+  it('accepts as many extra form fields as attachmentMaxFields allows', async () => {
+    config.attachmentPolicy = () => true;
+    config.attachmentMaxFields = 1;
+    const body = form();
+    body.append('description', 'holiday photo');
+
+    const response = await fetch(base + '/attachments', {
+      method: 'POST',
+      headers,
+      body,
+    });
+
+    expect(response.status).toBe(201);
+    expect(storage.upload).toHaveBeenCalledTimes(1);
   });
 });

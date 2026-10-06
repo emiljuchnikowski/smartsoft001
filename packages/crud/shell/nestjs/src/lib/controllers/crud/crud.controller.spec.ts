@@ -38,6 +38,7 @@ describe('crud-nestjs: CrudController', () => {
       getAttachmentStream: jest.fn(),
       deleteAttachment: jest.fn(),
       authorizeAttachment: jest.fn(),
+      getAttachmentLimits: jest.fn(() => ({ maxBytes: 1024, maxFields: 0 })),
     } as any;
     controller = new CrudController(service);
   });

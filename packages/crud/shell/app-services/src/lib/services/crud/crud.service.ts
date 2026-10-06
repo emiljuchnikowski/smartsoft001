@@ -28,6 +28,9 @@ import { Readable, Stream } from 'stream';
  */
 type WithCredentials = { password?: string; passwordConfirm?: string };
 
+/** One file of up to 10 MiB, unless `SharedConfig.attachmentMaxBytes` says otherwise. */
+const DEFAULT_ATTACHMENT_MAX_BYTES = 10 * 1024 * 1024;
+
 @Injectable()
 export class CrudService<T extends IEntity<string>> {
   private _logger = new Logger(CrudService.name, { timestamp: true });
@@ -232,7 +235,7 @@ export class CrudService<T extends IEntity<string>> {
 
     await this.attachmentRepository.upload(data, options);
 
-    if (oldId) await this.attachmentRepository.delete(data.id);
+    if (oldId) await this.attachmentRepository.delete(oldId);
 
     return data.id;
   }
@@ -253,6 +256,14 @@ export class CrudService<T extends IEntity<string>> {
 
   async deleteAttachment(id: string): Promise<void> {
     return this.attachmentRepository.delete(id);
+  }
+
+  /** Upload limits for the HTTP attachment route, from `SharedConfig` or the defaults. */
+  getAttachmentLimits(): { maxBytes: number; maxFields: number } {
+    return {
+      maxBytes: this.config?.attachmentMaxBytes ?? DEFAULT_ATTACHMENT_MAX_BYTES,
+      maxFields: this.config?.attachmentMaxFields ?? 0,
+    };
   }
 
   async authorizeAttachment(

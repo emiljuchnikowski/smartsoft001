@@ -4,13 +4,15 @@ import { PassThrough } from 'stream';
 
 import { readAttachment } from './read-attachment';
 
+const limits = { maxBytes: 10 * 1024 * 1024, maxFields: 0 };
+
 describe('crud-nestjs: multipart failure handling', () => {
   it('rejects malformed content types with a client error', async () => {
     const request = Object.assign(new PassThrough(), {
       headers: { 'content-type': 'text/plain' },
     });
     await expect(
-      readAttachment(request as unknown as Request),
+      readAttachment(request as unknown as Request, limits),
     ).rejects.toMatchObject({ status: 400 });
   });
 
@@ -18,7 +20,7 @@ describe('crud-nestjs: multipart failure handling', () => {
     const request = Object.assign(new PassThrough(), {
       headers: { 'content-type': 'multipart/form-data; boundary=test' },
     });
-    const result = readAttachment(request as unknown as Request);
+    const result = readAttachment(request as unknown as Request, limits);
     const rejection = expect(result).rejects.toMatchObject({ status: 400 });
     request.write(
       '--test\r\nContent-Disposition: form-data; name="file"; filename="test.txt"\r\n\r\nx',

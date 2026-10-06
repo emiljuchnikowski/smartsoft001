@@ -173,7 +173,10 @@ export class CrudController<T extends IEntity<string>> {
   ): Promise<void> {
     const id = GuidService.create();
     await this.service.authorizeAttachment('create', id, user);
-    const file = await readAttachment(request);
+    const file = await readAttachment(
+      request,
+      this.service.getAttachmentLimits(),
+    );
     await this.service.uploadAttachment({
       id,
       stream: Readable.from(file.data),

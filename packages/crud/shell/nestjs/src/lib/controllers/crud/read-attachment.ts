@@ -3,7 +3,10 @@ import busboy from 'busboy';
 import type { Request } from 'express';
 
 /** Buffer a single bounded file so rejected multipart requests never reach storage. */
-export function readAttachment(request: Request): Promise<{
+export function readAttachment(
+  request: Request,
+  limits: { maxBytes: number; maxFields: number },
+): Promise<{
   data: Buffer;
   fileName: string;
   mimeType: string;
@@ -15,10 +18,12 @@ export function readAttachment(request: Request): Promise<{
       parser = busboy({
         headers: request.headers,
         limits: {
-          fileSize: 10 * 1024 * 1024 + 1,
+          fileSize: limits.maxBytes + 1,
           files: 1,
-          fields: 0,
-          parts: 2,
+          fields: limits.maxFields,
+          // busboy emits partsLimit on reaching the count, so allow one spare part:
+          // the file plus the fields stay under it and anything more is rejected.
+          parts: 2 + limits.maxFields,
         },
       });
     } catch {
@@ -45,7 +50,11 @@ export function readAttachment(request: Request): Promise<{
       reject(error);
     };
     const limit = () =>
-      fail(new PayloadTooLargeException('One file up to 10 MiB is allowed'));
+      fail(
+        new PayloadTooLargeException(
+          `One file up to ${limits.maxBytes} bytes and ${limits.maxFields} form fields are allowed`,
+        ),
+      );
     parser.on('file', (_field, file, metadata) => {
       info = metadata;
       file.on('error', fail);

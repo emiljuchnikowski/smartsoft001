@@ -24,6 +24,10 @@ export class SharedConfig {
     id: string;
     user: IUser | undefined;
   }) => boolean | Promise<boolean>;
+  /** Largest file the HTTP attachment upload accepts, in bytes. Defaults to 10 MiB. */
+  attachmentMaxBytes?: number;
+  /** How many non-file form fields an attachment upload may carry. Defaults to 0. */
+  attachmentMaxFields?: number;
 }
 
 export type PermissionType = 'create' | 'read' | 'update' | 'delete' | string;
