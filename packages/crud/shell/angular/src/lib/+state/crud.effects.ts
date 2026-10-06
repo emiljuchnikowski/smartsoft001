@@ -11,6 +11,14 @@ import { CrudConfig } from '../crud.config';
 import { getCrudFilter } from './crud.selectors';
 import { CrudService } from '../services/crud/crud.service';
 
+/**
+ * Entities whose effects are already subscribed, per `ActionsSubject`.
+ * Keyed by the app's own `ActionsSubject` so each app instance (e.g. every SSR
+ * render in one Node process) gets its own effects, while repeated module
+ * instances within one app still subscribe only once per entity.
+ */
+const initializedEntities = new WeakMap<ActionsSubject, Set<string>>();
+
 @Injectable()
 export class CrudEffects<T extends IEntity<string>> {
   constructor(
@@ -22,11 +30,15 @@ export class CrudEffects<T extends IEntity<string>> {
   ) {}
 
   init(): void {
-    const metadata = Reflect.getMetadata(this.config.entity, CrudEffects);
+    let entities = initializedEntities.get(this.actions$);
+    if (!entities) {
+      entities = new Set<string>();
+      initializedEntities.set(this.actions$, entities);
+    }
 
-    if (metadata) return;
+    if (entities.has(this.config.entity)) return;
 
-    Reflect.defineMetadata(this.config.entity, true, CrudEffects);
+    entities.add(this.config.entity);
 
     this.actions$.subscribe((action: Action & any) => {
       switch (action.type) {
