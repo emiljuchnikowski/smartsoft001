@@ -7,6 +7,11 @@ import { Field, FieldType, Model } from '@smartsoft001/models';
  */
 @Model({})
 export class TransCreateDto<T> {
+  /**
+   * Required and checked to be at least `1`, but never charged: the payment
+   * amount comes from the server's `ITransInternalService.create` answer.
+   * Kept for compatibility with existing clients.
+   */
   @Field({ required: true, type: FieldType.currency }) amount!: number;
   @Field({ required: true, type: FieldType.text }) system!: 'payu';
   @Field({ required: true }) data!: T;

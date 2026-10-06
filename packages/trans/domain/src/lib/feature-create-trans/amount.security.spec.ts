@@ -1,5 +1,6 @@
 import { CreatorService } from './creator.service';
 import { ITransCreate } from './interfaces';
+import { ITransInternalService } from '../interfaces';
 
 describe('trans-domain: authoritative payment amount', () => {
   const request: ITransCreate<unknown> = {
@@ -52,5 +53,21 @@ describe('trans-domain: authoritative payment amount', () => {
     expect(payment.create).toHaveBeenCalledWith(
       expect.objectContaining({ amount: 1500 }),
     );
+  });
+});
+
+describe('trans-domain: ITransInternalService.create contract', () => {
+  it('requires create to resolve a numeric amount at compile time', () => {
+    const missing: ITransInternalService<unknown> = {
+      // @ts-expect-error -- an answer without `amount` must not compile
+      create: async () => ({}),
+      refresh: async () => ({}),
+    };
+    const approved: ITransInternalService<unknown> = {
+      create: async () => ({ amount: 1500, orderNumber: 'A-1' }),
+      refresh: async () => ({}),
+    };
+
+    expect([missing, approved]).toHaveLength(2);
   });
 });

@@ -36,11 +36,9 @@ export class CreatorService<T> extends TransBaseService<T> {
       .catch(async (e) => {
         if (trans) {
           try {
-            // Error objects can contain credentials, functions or circular
-            // request data. Store a safe event and await the error-state write.
-            await this.setError(trans, {
-              message: 'Transaction creation failed',
-            });
+            // setError stores only the error name, a safe message and the HTTP
+            // status. Await it so the error state lands before the rejection.
+            await this.setError(trans, e, 'Transaction creation failed');
           } catch {
             console.error('Failed to persist transaction creation failure');
           }
@@ -121,6 +119,8 @@ export class CreatorService<T> extends TransBaseService<T> {
 
     if (!req.name) throw new DomainValidationError('name is empty');
     if (!req.clientIp) throw new DomainValidationError('client ip is empty');
+    // Kept for compatibility only: the client amount is never charged, the
+    // internal service's approved amount replaces it in setAsNew.
     if (!req.amount || req.amount < 1)
       throw new DomainValidationError('amount is empty');
     if (!req.data) throw new DomainValidationError('data is empty');
