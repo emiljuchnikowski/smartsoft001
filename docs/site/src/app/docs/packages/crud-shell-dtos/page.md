@@ -48,7 +48,7 @@ A `@Model({})` class with two properties, both `string`.
 | `username` | `@Field({ required: true, focused: true })` | Mandatory in every mode. `focused` marks it as the control the generated form focuses first.                          |
 | `password` | `@Field({ required: true })`                | Mandatory in every mode. A property named `password` defaults to `FieldType.password`, so no explicit type is needed. |
 
-`CrudService` treats a `password` property specially wherever it appears: it hashes the value on write and deletes it from every record it reads back.
+`CrudService` treats a `password` property specially wherever it appears: it hashes the value on write and leaves it out of every record it returns, together with `passwordConfirm` and `authRefreshToken`.
 
 ### The change feed
 

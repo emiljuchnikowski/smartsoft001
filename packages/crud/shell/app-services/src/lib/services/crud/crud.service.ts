@@ -275,7 +275,8 @@ export class CrudService<T extends IEntity<string>> {
   }
 
   private withoutCredentials(item: T): T {
-    // Do not mutate objects retained by a repository or returned by a bulk write.
+    // Removes the credential fields (password, passwordConfirm, authRefreshToken) from a copy,
+    // so objects retained by a repository or passed to a bulk write are never mutated.
     const credentials: T & WithCredentials = Object.assign(
       Object.create(Object.getPrototypeOf(item)),
       item,
