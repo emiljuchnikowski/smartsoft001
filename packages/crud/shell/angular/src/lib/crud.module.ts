@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Store } from '@ngrx/store';
 
 import {
   FILE_SERVICE_CONFIG,
@@ -49,12 +50,17 @@ import {
   ],
 })
 export class CrudCoreModule<T extends IEntity<string>> {
-  constructor(config: CrudConfig<T>, effects: CrudEffects<any>) {
+  constructor(
+    config: CrudConfig<T>,
+    effects: CrudEffects<any>,
+    store: Store<any>,
+  ) {
     NgrxStoreService.addReducer(
       config.entity,
       config.reducerFactory
         ? config.reducerFactory()
         : getReducer(config.entity),
+      store,
     );
     effects.init();
   }
@@ -73,8 +79,7 @@ export class CrudCoreModule<T extends IEntity<string>> {
 export class CrudModule<T extends IEntity<string>> {
   static forFeature<T extends IEntity<string>>(
     options:
-      | ICrudModuleOptionsWithRoutng<T>
-      | ICrudModuleOptionsWithoutRoutng<T>,
+      ICrudModuleOptionsWithRoutng<T> | ICrudModuleOptionsWithoutRoutng<T>,
   ): ModuleWithProviders<CrudModule<any>> {
     return {
       ngModule: options.routing ? CrudFullModule : CrudCoreModule,
@@ -92,12 +97,17 @@ export class CrudModule<T extends IEntity<string>> {
     };
   }
 
-  constructor(config: CrudConfig<T>, effects: CrudEffects<any>) {
+  constructor(
+    config: CrudConfig<T>,
+    effects: CrudEffects<any>,
+    store: Store<any>,
+  ) {
     NgrxStoreService.addReducer(
       config.entity,
       config.reducerFactory
         ? config.reducerFactory()
         : getReducer(config.entity),
+      store,
     );
     effects.init();
   }
