@@ -31,10 +31,14 @@ Methods:
     </tr>
 </table>
 
-## ⚠️ Internal service and payment amounts
+## ⚠️ Internal service, payment amounts and completing payments
 
-`TransService.create` charges only the `amount` your internal service approves. Register a provider
-under `TRANS_TOKEN_INTERNAL_SERVICE` whose `create` returns `{ amount }` (a positive integer in minor
-units), or set `internalApiUrl` to a back end whose response contains `amount`. With neither, the
-built-in fallback makes no request and `create` rejects with `DomainValidationError`, so no payment
-can be created in that offline mode. Refreshes still work.
+`TransService.create` charges only the `amount` your internal service approves, and status changes
+go through `ITransInternalService.refreshOnce`, which must be idempotent. Register a provider under
+`TRANS_TOKEN_INTERNAL_SERVICE` whose `create` returns `{ amount }` (a positive integer in minor
+units) and whose `refreshOnce` deduplicates by its idempotency key. Or set `internalApiUrl` to a back
+end whose `POST` response contains `amount` and whose `PUT` honours the `Idempotency-Key` header, and
+set `idempotentInternalApi: true`. Without the flag the built-in fallback rejects every status
+change. With neither a provider nor a url (offline mode), the built-in fallback makes no request:
+`create` rejects with `DomainValidationError` and so does every status change, so no payment can be
+created or completed.

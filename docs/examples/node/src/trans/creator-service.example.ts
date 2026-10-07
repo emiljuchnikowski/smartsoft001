@@ -35,6 +35,15 @@ export class InMemoryTransRepository {
   }
 }
 
+/** Orders your back end has shipped, in the order it shipped them. */
+export const fulfilledOrders: string[] = [];
+
+/**
+ * Receipts by idempotency key. In an application this is a table with a
+ * unique key, written in the same database transaction as the fulfilment.
+ */
+const receipts = new Map<string, { shipped: string }>();
+
 /**
  * Your trusted price list, in grosze. In an application this is the order in
  * your database, with its discounts, shipping and tax already applied.
@@ -47,13 +56,27 @@ const ORDER_TOTALS: Record<string, number> = { '2026/09/15': 14999 };
  * provider is asked to charge: a positive integer in minor units, computed
  * here from trusted data. The `amount` the client sent is never used, so never
  * echo it back. An order this service cannot price ends in `error`.
+ *
+ * `RefresherService` calls `refreshOnce` when the provider reports a new
+ * status, with a key derived from the transaction and that status. The same
+ * key comes back on every retry and from every instance, so the effect runs
+ * once and a replay gets the stored receipt.
  */
 export const internalService: ITransInternalService<OrderData> = {
   create: async (trans) => ({
     amount: ORDER_TOTALS[trans.data.orderNumber],
     pricedAt: new Date().toISOString(),
   }),
-  refresh: async () => ({}),
+  refreshOnce: async (trans, idempotencyKey) => {
+    const known = receipts.get(idempotencyKey);
+    if (known) return known;
+
+    fulfilledOrders.push(trans.data.orderNumber);
+    const receipt = { shipped: trans.data.orderNumber };
+    receipts.set(idempotencyKey, receipt);
+
+    return receipt;
+  },
 };
 
 /**
