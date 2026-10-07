@@ -24,7 +24,9 @@ import { TransShellNestjsModule } from '@smartsoft001/trans-shell-nestjs';
         delete: ['admin'],
       },
       // Your own back end, called when a transaction is created or refreshed.
-      // An empty url turns those calls off instead of pointing them anywhere.
+      // It must answer a new transaction with the `amount` to charge. An empty
+      // url turns those calls off, and then no payment can be created until a
+      // provider under TRANS_TOKEN_INTERNAL_SERVICE prices the orders.
       internalApiUrl: '',
       // Transactions land in the `trans` collection, which the module names
       // itself. The connection is opened lazily, on the first query.

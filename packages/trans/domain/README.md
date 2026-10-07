@@ -53,6 +53,30 @@ Constructor:
 </table>
 
 
+## 💰 Payment amounts
+
+The amount the payment provider charges comes from your server, never from the client.
+`ITransInternalService.create` must resolve `{ amount }`, computed from trusted order data: a
+positive safe integer in the provider's smallest currency unit (grosze for PLN, so `14999` for
+149.99 PLN). Missing, zero, fractional, non-finite, string or unsafe integer values are rejected
+with `DomainValidationError` before the provider is called. The client's `amount` is never a
+fallback. It stays in `ITransCreate` and must still be at least `1`, only for compatibility.
+
+Check customer and order access, stock, currency, discounts, tax and shipping in that service, and
+never echo the request amount back. Compare the settled payment with the order before fulfilment.
+This package does not calculate prices or authenticate the checkout.
+
+### Upgrading
+
+- Return `{ amount }` from `ITransInternalService.create`. The return type is now
+  `Promise<ITransInternalCreateResult>`, so TypeScript flags implementations that don't.
+- With the built-in HTTP internal service, the response of `POST internalApiUrl` must contain
+  `amount`.
+- With an empty `internalApiUrl` and no `TRANS_TOKEN_INTERNAL_SERVICE` provider, payments can no
+  longer be created. Register an internal service first, also in development.
+- `error` history entries now hold `{ name, message, status? }` (`TransErrorEvent`) instead of the
+  raw error, so credentials in provider errors are never stored.
+
 ## 🔁 Idempotent fulfilment
 
 `RefresherService` applies the business effect of a status change through
@@ -80,5 +104,7 @@ database transactions, crashes and replayed receipts.
   `Idempotency-Key` header, then set `TransConfig.idempotentInternalApi = true`. Without the flag
   every status change is refused; the flag alone provides no deduplication.
 - With an empty `internalApiUrl` and no `TRANS_TOKEN_INTERNAL_SERVICE` provider (offline/dev mode),
-  payments can be created but never completed.
+  nothing can fulfil an order, so status changes are refused as well (creating a payment already
+  rejects there, see Payment amounts above).
 - A failed refresh no longer stores status `error`; the record keeps its last persisted status.
+  Failed creates and refunds still record `error` with a `TransErrorEvent`.

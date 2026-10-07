@@ -67,6 +67,44 @@ describe('@smartsoft001/shared-angular: DetailTextPresetComponent', () => {
     expect(text.textContent).toContain('Bold text');
   });
 
+  it('should strip event handlers and scripts from the value', () => {
+    host.options = {
+      key: 'name',
+      item: signal({
+        name: '<img src="x" onerror="void(0)"><script>void(0)</script><b>Product</b>',
+      } as any),
+      options: { type: FieldType.text },
+    };
+    fixture.detectChanges();
+
+    const text = (fixture.nativeElement as HTMLElement).querySelector(
+      '[data-role="text"]',
+    ) as HTMLElement;
+
+    expect(text.querySelector('[onerror]')).toBeNull();
+    expect(text.querySelector('script')).toBeNull();
+    expect(text.querySelector('b')?.textContent).toBe('Product');
+  });
+
+  it('should sanitize html returned by a custom cellPipe', () => {
+    host.options = {
+      key: 'name',
+      item: signal({ name: 'Raw value' } as any),
+      options: { type: FieldType.text },
+      cellPipe: {
+        transform: () => '<a href="javascript:void(0)">Product</a>',
+      },
+    };
+    fixture.detectChanges();
+
+    const link = (fixture.nativeElement as HTMLElement).querySelector(
+      '[data-role="text"] a',
+    ) as HTMLElement;
+
+    expect(link.textContent).toBe('Product');
+    expect(link.getAttribute('href')).not.toMatch(/^\s*javascript:/i);
+  });
+
   it('should render an em dash placeholder when the value is empty', () => {
     host.options = {
       key: 'name',

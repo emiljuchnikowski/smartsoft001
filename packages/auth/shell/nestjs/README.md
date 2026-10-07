@@ -38,6 +38,10 @@
         <td>tokenConfig.expiredIn</td>
         <td>Token expiration time</td>
     </tr>
+    <tr>
+        <td>tokenConfig.googleClientIds</td>
+        <td>Google OAuth client ids whose access tokens the google grant accepts. Required for the google grant (it fails with "Google client IDs must be configured" when unset). Load from server configuration, never from the request.</td>
+    </tr>
 </table>
 
 ## Controllers

@@ -45,9 +45,17 @@ export const fulfilledOrders: string[] = [];
 const receipts = new Map<string, { shipped: string }>();
 
 /**
+ * Your trusted price list, in grosze. In an application this is the order in
+ * your database, with its discounts, shipping and tax already applied.
+ */
+const ORDER_TOTALS: Record<string, number> = { '2026/09/15': 14999 };
+
+/**
  * Your own back end. `CreatorService` calls `create` between the `prepare` and
- * `started` steps, and an `amount` in the answer overrides the requested one,
- * which is how a server-side price check corrects a tampered request.
+ * `started` steps, and the `amount` in the answer is the only amount the
+ * provider is asked to charge: a positive integer in minor units, computed
+ * here from trusted data. The `amount` the client sent is never used, so never
+ * echo it back. An order this service cannot price ends in `error`.
  *
  * `RefresherService` calls `refreshOnce` when the provider reports a new
  * status, with a key derived from the transaction and that status. The same
@@ -55,7 +63,10 @@ const receipts = new Map<string, { shipped: string }>();
  * once and a replay gets the stored receipt.
  */
 export const internalService: ITransInternalService<OrderData> = {
-  create: async () => ({}),
+  create: async (trans) => ({
+    amount: ORDER_TOTALS[trans.data.orderNumber],
+    pricedAt: new Date().toISOString(),
+  }),
   refreshOnce: async (trans, idempotencyKey) => {
     const known = receipts.get(idempotencyKey);
     if (known) return known;
@@ -84,10 +95,13 @@ export const paymentService: ITransPaymentService = {
   },
 };
 
-/** The request a checkout page would build. */
+/**
+ * The request a checkout page would build. `amount` still has to be at least
+ * `1` to pass validation, but the internal service decides what is charged.
+ */
 export function newOrder(): ITransCreate<OrderData> {
   return {
-    amount: 149.99,
+    amount: 14999,
     name: 'Order 2026/09/15',
     system: 'payu',
     firstName: 'Anna',

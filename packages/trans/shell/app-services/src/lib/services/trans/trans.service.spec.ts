@@ -289,6 +289,7 @@ describe('trans: TransService', () => {
         { headers: { 'Idempotency-Key': 'stable-key' } },
       );
     });
+
     it('should return internal service from module ref when available', () => {
       mockModuleRef.get.mockReturnValue(mockInternalService);
 
@@ -305,6 +306,21 @@ describe('trans: TransService', () => {
       const result = (service as any).getInternalService();
 
       expect(result).toHaveProperty('create');
+    });
+
+    it('should refuse to approve an amount without an internal api url', async () => {
+      mockModuleRef.get.mockImplementation(() => {
+        throw new Error('Service not found');
+      });
+      mockConfig.internalApiUrl = '';
+      const fallback = (service as any).getInternalService();
+
+      await expect(fallback.create({ id: 'trans-1' })).rejects.toThrow(
+        new DomainValidationError(
+          'No internal service approves the payment amount: set internalApiUrl or provide TRANS_TOKEN_INTERNAL_SERVICE',
+        ),
+      );
+      expect(mockHttpService.post).not.toHaveBeenCalled();
     });
 
     it('should return a fallback internal service without the deprecated refresh', () => {

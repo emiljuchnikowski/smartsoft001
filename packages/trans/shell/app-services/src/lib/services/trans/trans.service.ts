@@ -59,11 +59,14 @@ export class TransService {
       ).then((res) => res.data);
     },
     create: (trans: Trans<any>) => {
+      // Only a back end can price an order. Without one there is no amount
+      // to charge, so a payment cannot start.
       if (!this.config.internalApiUrl)
-        return Promise.resolve({
-          date: new Date(),
-          req: trans,
-        });
+        return Promise.reject(
+          new DomainValidationError(
+            'No internal service approves the payment amount: set internalApiUrl or provide TRANS_TOKEN_INTERNAL_SERVICE',
+          ),
+        );
 
       return firstValueFrom(
         this.httpService.post(this.config.internalApiUrl, trans),

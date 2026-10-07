@@ -50,6 +50,32 @@ function isRedirectResponse(
   );
 }
 
+function httpStatusOf(e: unknown): number | undefined {
+  if (isRedirectResponse(e) && typeof e.response.status === 'number') {
+    return e.response.status;
+  }
+
+  return undefined;
+}
+
+/**
+ * HTTP errors retain the request: the OAuth body carries the client secret and
+ * every other call carries `Authorization: Bearer <token>`. Neither the raw
+ * error nor its message may reach a log or an upstream handler, so only the
+ * operation and the HTTP status survive.
+ */
+function payuFailure(operation: string, e: unknown): Error {
+  const status = httpStatusOf(e);
+  const message =
+    status === undefined
+      ? `PayU ${operation} failed`
+      : `PayU ${operation} failed (HTTP ${status})`;
+
+  Logger.error(message, PayuService.name);
+
+  return new Error(message);
+}
+
 @Injectable()
 export class PayuService implements ITransPaymentSingleService {
   constructor(
@@ -133,8 +159,7 @@ export class PayuService implements ITransPaymentSingleService {
           orderId: e.response.data.orderId,
         };
       }
-      console.error(e);
-      throw e;
+      throw payuFailure('order creation', e);
     }
   }
 
@@ -146,19 +171,24 @@ export class PayuService implements ITransPaymentSingleService {
 
     const token = await this.getToken(config);
 
-    const response = await firstValueFrom(
-      this.httpService.get(
-        this.getBaseUrl(config) + '/api/v2_1/orders/' + orderId,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: 'Bearer ' + token,
-            'X-Requested-With': 'XMLHttpRequest',
+    let response;
+    try {
+      response = await firstValueFrom(
+        this.httpService.get(
+          this.getBaseUrl(config) + '/api/v2_1/orders/' + orderId,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: 'Bearer ' + token,
+              'X-Requested-With': 'XMLHttpRequest',
+            },
+            maxRedirects: 0,
           },
-          maxRedirects: 0,
-        },
-      ),
-    );
+        ),
+      );
+    } catch (e) {
+      throw payuFailure('status lookup', e);
+    }
 
     // The refresher destructures `{ status, data }` from this result, so an
     // answer without orders cannot be reported as a status; say so instead.
@@ -180,26 +210,30 @@ export class PayuService implements ITransPaymentSingleService {
 
     const token = await this.getToken(config);
 
-    const response = await firstValueFrom(
-      this.httpService.post(
-        this.getBaseUrl(config) + '/api/v2_1/orders/' + orderId,
-        {
-          refund: {
-            description: comment,
+    try {
+      const response = await firstValueFrom(
+        this.httpService.post(
+          this.getBaseUrl(config) + '/api/v2_1/orders/' + orderId,
+          {
+            refund: {
+              description: comment,
+            },
           },
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: 'Bearer ' + token,
-            'X-Requested-With': 'XMLHttpRequest',
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: 'Bearer ' + token,
+              'X-Requested-With': 'XMLHttpRequest',
+            },
+            maxRedirects: 0,
           },
-          maxRedirects: 0,
-        },
-      ),
-    );
+        ),
+      );
 
-    return response.data;
+      return response.data;
+    } catch (e) {
+      throw payuFailure('refund', e);
+    }
   }
 
   private getOrderId(trans: Trans<any>): string {
@@ -225,13 +259,7 @@ export class PayuService implements ITransPaymentSingleService {
 
       return response.data['access_token'];
     } catch (e) {
-      console.error({
-        url: this.getBaseUrl(config) + '/pl/standard/user/oauth/authorize',
-        data: `grant_type=client_credentials&client_id=${config.clientId}&client_secret=${config.clientSecret}`,
-        ex: e,
-      });
-
-      throw e;
+      throw payuFailure('authentication', e);
     }
   }
 

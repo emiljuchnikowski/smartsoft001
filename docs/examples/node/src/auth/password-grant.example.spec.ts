@@ -53,6 +53,15 @@ describe('docs-examples-node: TokenFactory password grant', () => {
     expect(repository.users[0].authRefreshToken).toBe(token.refresh_token);
   });
 
+  it('should report the updated row count the way TypeORM does', async () => {
+    const result = await repository.update(
+      { username: 'anna' },
+      { authRefreshToken: 'rotated' },
+    );
+
+    expect(result).toEqual({ affected: 1 });
+  });
+
   it('should stamp the login date on the user', async () => {
     const factory = createTokenFactory(repository);
 

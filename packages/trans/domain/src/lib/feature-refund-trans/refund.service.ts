@@ -42,9 +42,9 @@ export class RefundService<T> extends TransBaseService<T> {
 
       await this.repository.update(trans, null);
     } catch (err) {
-      console.error(err);
-
-      await this.setError(trans, err);
+      // Provider errors can carry request credentials: never log them raw.
+      // setError stores only the error name, a safe message and the status.
+      await this.setError(trans, err, 'Transaction refund failed');
 
       throw err;
     }

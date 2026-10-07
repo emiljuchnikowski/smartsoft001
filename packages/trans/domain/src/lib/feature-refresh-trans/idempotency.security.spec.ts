@@ -40,11 +40,11 @@ describe('trans-domain: fulfillment idempotency contract', () => {
   it('requires refreshOnce and leaves refresh optional at compile time', () => {
     // @ts-expect-error -- a handler without refreshOnce must not compile
     const legacy: ITransInternalService<unknown> = {
-      create: async () => ({}),
+      create: async () => ({ amount: 1500 }),
       refresh: async () => ({}),
     };
     const current: ITransInternalService<unknown> = {
-      create: async () => ({}),
+      create: async () => ({ amount: 1500 }),
       refreshOnce: async () => ({ receipt: 'done' }),
     };
 

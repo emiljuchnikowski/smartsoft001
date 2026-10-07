@@ -28,13 +28,14 @@ describe('auth-domain: TokenFactory', () => {
           useValue: {
             expiredIn: 3600,
             clients: ['test-client'],
+            googleClientIds: ['google-client'],
           },
         },
         {
           provide: getRepositoryToken(User),
           useValue: {
             findOne: jest.fn(),
-            update: jest.fn(),
+            update: jest.fn().mockResolvedValue({ affected: 1 }),
           },
         },
         {
@@ -167,6 +168,36 @@ describe('auth-domain: TokenFactory', () => {
 
       expect(result.token_type).toBe('bearer');
     });
+
+    it('should pass the configured google client ids to GoogleService', async () => {
+      const user = { username: 'google-user', permissions: ['read'] };
+      (googleService.getUserId as jest.Mock).mockResolvedValue('g123');
+      (repository.findOne as jest.Mock).mockResolvedValue(user);
+
+      await tokenFactory.create({
+        request: { grant_type: 'google', google_token: 'token' },
+      });
+
+      expect(googleService.getUserId).toHaveBeenCalledWith('token', [
+        'google-client',
+      ]);
+    });
+
+    it.each<{ googleClientIds?: string[] }>([{}, { googleClientIds: [] }])(
+      'should refuse the google grant when googleClientIds is $googleClientIds',
+      async ({ googleClientIds }) => {
+        const config = (tokenFactory as unknown as { config: TokenConfig })
+          .config;
+        config.googleClientIds = googleClientIds;
+
+        await expect(
+          tokenFactory.create({
+            request: { grant_type: 'google', google_token: 'token' },
+          }),
+        ).rejects.toThrow('Google client IDs must be configured');
+        expect(googleService.getUserId).not.toHaveBeenCalled();
+      },
+    );
 
     it('should throw error for invalid request', async () => {
       await expect(

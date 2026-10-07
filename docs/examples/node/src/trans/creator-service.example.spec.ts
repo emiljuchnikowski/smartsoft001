@@ -59,6 +59,25 @@ describe('docs-examples-node: CreatorService over an in-memory repository', () =
     expect(repository.items[0].status).toBe('started');
   });
 
+  it('should charge the amount priced by the internal service', async () => {
+    const creator = createTransCreator(repository);
+    const tampered = { ...newOrder(), amount: 1 };
+
+    await startPayment(creator, tampered);
+
+    expect(repository.items[0].amount).toBe(14999);
+  });
+
+  it('should refuse an order the internal service cannot price', async () => {
+    const creator = createTransCreator(repository);
+    const unknown = { ...newOrder(), data: { orderNumber: 'unknown' } };
+
+    await expect(startPayment(creator, unknown)).rejects.toThrow(
+      'Internal service must approve a positive integer amount',
+    );
+    expect(repository.items[0].status).toBe('error');
+  });
+
   it('should keep the payment order id as the external id', async () => {
     const creator = createTransCreator(repository);
 

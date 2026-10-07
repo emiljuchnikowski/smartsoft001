@@ -54,11 +54,11 @@ A plain class with no decorators, used as both the injection token and the type.
 
 ### `PayuService`
 
-| Method                   | Returns                                             | What it does                                                                                                                              |
-| ------------------------ | --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| `create(obj)`            | `Promise<{ orderId: string; redirectUrl: string }>` | Creates an order with `maxRedirects: 0` and reads the redirect out of the answer, whether it arrives as a 302 or as a 2xx.                |
-| `getStatus<T>(trans)`    | `Promise<{ status: TransStatus; data: any }>`       | Reads the order by the id stored on the `started` history entry, maps its status, and returns `null` when the answer carries no `orders`. |
-| `refund(trans, comment)` | `Promise<any>`                                      | Posts a refund for the whole order with `comment` as its description, and resolves the PayU response body.                                |
+| Method                   | Returns                                             | What it does                                                                                                                                    |
+| ------------------------ | --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `create(obj)`            | `Promise<{ orderId: string; redirectUrl: string }>` | Creates an order with `maxRedirects: 0` and reads the redirect out of the answer, whether it arrives as a 302 or as a 2xx.                      |
+| `getStatus<T>(trans)`    | `Promise<{ status: TransStatus; data: any }>`       | Reads the order by the id stored on the `started` history entry, maps its status, and throws `PayU order not found` when there are no `orders`. |
+| `refund(trans, comment)` | `Promise<any>`                                      | Posts a refund for the whole order with `comment` as its description, and resolves the PayU response body.                                      |
 
 `create` takes `{ id, name, amount, firstName?, lastName?, email?, contactPhone?, clientIp, data, options? }`, which is the shared `ITransPaymentSingleService` shape with `options` made optional. Three things about the order it builds are worth knowing. The currency is hard-coded to `PLN`, so `amount` is read as grosze and sent unchanged as `totalAmount`. A `buyer` block is added only when at least one of the email, phone, first name and last name is present. And `options.payMethod`, when present, becomes `payMethods.payMethod`, which is how a single payment method is preselected for the buyer.
 
@@ -85,6 +85,23 @@ Base url is `https://secure.snd.payu.com` when `test` is true and `https://secur
 | `create`    | `POST {base}/api/v2_1/orders`                  | `maxRedirects: 0`, bearer token from the call above.                       |
 | `getStatus` | `GET {base}/api/v2_1/orders/{orderId}`         | `orderId` comes from the `started` history entry.                          |
 | `refund`    | `POST {base}/api/v2_1/orders/{orderId}`        | Body is `{ refund: { description: comment } }`.                            |
+
+### Failures
+
+A failed HTTP call never leaves the service as the raw axios error. That error keeps the request it was made with: the OAuth body holds the client secret, and every other call carries `Authorization: Bearer <token>`. So each method catches it, logs one line at error level under the `PayuService` context, and throws a new `Error` that has no `cause`, `config` or `response`.
+
+| Failing call      | Message                                      |
+| ----------------- | -------------------------------------------- |
+| OAuth token       | `PayU authentication failed (HTTP {status})` |
+| `create` order    | `PayU order creation failed (HTTP {status})` |
+| `getStatus` order | `PayU status lookup failed (HTTP {status})`  |
+| `refund` order    | `PayU refund failed (HTTP {status})`         |
+
+The logged line and the thrown message are the same. The ` (HTTP {status})` suffix is there only when PayU answered, so a rejected credential (`401`) and a PayU outage (`5xx`) stay distinguishable, and a network failure with no answer ends at `failed`. The PayU response body is not kept. Look it up in the PayU panel by the order id when you need the details. The 302 that answers a successful order is not a failure and still resolves normally.
+
+{% callout type="warning" title="Upgrading from versions that rethrew the axios error" %}
+Code that read `e.response.status` or `e.response.data` from an error thrown by `PayuService` gets `undefined` now. Read the status from the message instead, or log the message as it is. Nothing else about the calls has changed.
+{% /callout %}
 
 ### Status mapping
 
