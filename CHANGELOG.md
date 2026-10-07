@@ -1,3 +1,19 @@
+## 2.186.0 (2026-10-07)
+
+### 🩹 Fixes
+
+- ⚠️  **trans:** require idempotent fulfillment handlers ([#116](https://github.com/emiljuchnikowski/smartsoft001/pull/116))
+
+### ⚠️  Breaking Changes
+
+- **trans:** require idempotent fulfillment handlers  ([#116](https://github.com/emiljuchnikowski/smartsoft001/pull/116))
+
+### ❤️ Thank You
+
+- Claude Opus 5.5 (1M context)
+- Emil Juchnikowski
+- krzysztofciura @krzysztofciura
+
 ## 2.184.0 (2026-10-07)
 
 ### 🩹 Fixes
