@@ -29,6 +29,8 @@ describe('auth-domain: TokenFactory', () => {
             expiredIn: 3600,
             clients: ['test-client'],
             googleClientIds: ['google-client'],
+            fbAppIds: ['fb-app'],
+            fbAppCredentials: { appId: 'fb-app', appSecret: 'fb-secret' },
           },
         },
         {
@@ -170,6 +172,49 @@ describe('auth-domain: TokenFactory', () => {
 
       expect(result.token_type).toBe('bearer');
     });
+
+    it('should pass the configured facebook app ids and credentials to FbService', async () => {
+      const user = { username: 'fb-user', permissions: ['read'] };
+      (fbService.getUserId as jest.Mock).mockResolvedValue('fb123');
+      (repository.findOne as jest.Mock).mockResolvedValue(user);
+
+      await tokenFactory.create({
+        request: { grant_type: 'fb', fb_token: 'token' },
+      });
+
+      expect(fbService.getUserId).toHaveBeenCalledWith('token', ['fb-app'], {
+        appId: 'fb-app',
+        appSecret: 'fb-secret',
+      });
+    });
+
+    it.each<Pick<TokenConfig, 'fbAppIds' | 'fbAppCredentials'>>([
+      { fbAppCredentials: { appId: 'fb-app', appSecret: 'fb-secret' } },
+      {
+        fbAppIds: [],
+        fbAppCredentials: { appId: 'fb-app', appSecret: 'fb-secret' },
+      },
+      { fbAppIds: ['fb-app'] },
+      { fbAppIds: ['fb-app'], fbAppCredentials: { appId: '', appSecret: 's' } },
+      { fbAppIds: ['fb-app'], fbAppCredentials: { appId: 'a', appSecret: '' } },
+    ])(
+      'should refuse the fb grant when the facebook config is incomplete: %j',
+      async (fbConfig) => {
+        const config = (tokenFactory as unknown as { config: TokenConfig })
+          .config;
+        config.fbAppIds = fbConfig.fbAppIds;
+        config.fbAppCredentials = fbConfig.fbAppCredentials;
+
+        await expect(
+          tokenFactory.create({
+            request: { grant_type: 'fb', fb_token: 'token' },
+          }),
+        ).rejects.toThrow(
+          'Facebook app IDs and credentials must be configured',
+        );
+        expect(fbService.getUserId).not.toHaveBeenCalled();
+      },
+    );
 
     it('should pass the configured google client ids to GoogleService', async () => {
       const user = { username: 'google-user', permissions: ['read'] };

@@ -42,6 +42,14 @@
         <td>tokenConfig.googleClientIds</td>
         <td>Google OAuth client ids whose access tokens the google grant accepts. Required for the google grant (it fails with "Google client IDs must be configured" when unset). Load from server configuration, never from the request.</td>
     </tr>
+    <tr>
+        <td>tokenConfig.fbAppIds</td>
+        <td>Facebook app ids whose access tokens the fb grant accepts. Required for the fb grant, together with tokenConfig.fbAppCredentials (it fails with "Facebook app IDs and credentials must be configured" when either is unset). Load from server configuration, never from the request.</td>
+    </tr>
+    <tr>
+        <td>tokenConfig.fbAppCredentials</td>
+        <td>{ appId, appSecret } of the Facebook app whose app access token asks Graph's debug_token endpoint to inspect fb tokens. Keep the secret in server configuration.</td>
+    </tr>
 </table>
 
 ## Controllers
