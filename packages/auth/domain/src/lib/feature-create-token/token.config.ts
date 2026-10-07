@@ -9,5 +9,7 @@ import { Injectable } from '@nestjs/common';
 export class TokenConfig {
   expiredIn!: number;
   clients: Array<string> = [];
+  /** Trusted OAuth clients for Google access-token login. Never taken from a request. */
+  googleClientIds?: string[];
   secretOrPrivateKey!: string;
 }

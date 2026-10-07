@@ -109,7 +109,7 @@ describe('crud-nestjs: CrudGateway', () => {
       expect(unsub).toHaveBeenCalled();
     });
 
-    it('should store new subscription in _clientsSubscriptions', () => {
+    it('should remove the subscription when the consumer unsubscribes', () => {
       service.changes.mockReturnValue(
         of({
           type: 'update',
@@ -118,7 +118,7 @@ describe('crud-nestjs: CrudGateway', () => {
         }),
       );
       gateway.handleFilter({}, client).subscribe().unsubscribe();
-      expect(gateway['_clientsSubscriptions'].has(client.id)).toBe(true);
+      expect(gateway['_clientsSubscriptions'].has(client.id)).toBe(false);
     });
   });
 });

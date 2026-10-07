@@ -93,6 +93,8 @@ Abstract base class for details components. Computes `fields` from model decorat
 
 The `<smart-details>` component renders a list of model fields decorated with `@Field({ details: true })`. It is a wrapper that delegates to `DetailsStandardComponent` by default and supports an InjectionToken (`DETAILS_STANDARD_COMPONENT_TOKEN`) to replace the default rendering with a custom implementation.
 
+Text fields (`DetailTextComponent` and `DetailTextPresetComponent`) render their HTML through Angular's sanitizer: scripts, event handlers, iframes, SVG, `javascript:` links and inline `style` attributes (for example from the rich-text editor) are removed. To render raw HTML for a field you trust, return `SafeHtml` from your own `cellPipe` (`DomSanitizer.bypassSecurityTrustHtml(html) as unknown as string`, since `ICellPipe.transform` is typed as `string`).
+
 **Wrapper:** `DetailsComponent` (selector: `smart-details`)
 **Default:** `DetailsStandardComponent` (selector: `smart-details-standard`)
 **Token:** `DETAILS_STANDARD_COMPONENT_TOKEN` — provide a `Type<DetailsBaseComponent<T>>` to override the default.

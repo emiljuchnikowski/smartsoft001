@@ -66,5 +66,32 @@ ownership records; the policy decides how to treat them.
 
 ### CrudGateway
 <table>
-    <tr><td>changes (WebSocket)</td><td>handleFilter — Subscribes to changes for entities and streams updates to the client.</td></tr>
+    <tr><td>changes (WebSocket)</td><td>handleFilter — Subscribes to the changes of one entity, <code>{ id }</code>, and emits <code>{ id, type }</code> per change. Requires a JWT and a <code>changePolicy</code>.</td></tr>
 </table>
+
+### Change subscriptions
+
+A subscription is refused unless the socket handshake carries a valid JWT in `auth.token`
+(`io(url, { auth: { token } })`), the message names one entity with `{ id }`, and
+`SharedConfig.changePolicy` returns exactly `true`. The policy receives `{ id, user, type }`. It runs
+once on subscribe without `type`, and again before every event, with a fresh token check, with the
+change `type` (`create`, `update` or `delete`). A refusal on an event ends the subscription. Decide
+from server-side ownership or tenant data, never from the id alone.
+
+- **Events carry no document fields.** Clients receive `{ id, type }` and refetch the entity through
+  an authorized endpoint.
+- **Deletes.** Mongo emits a `delete` after the document is gone, so a policy that loads the
+  document would deny it and the client would never learn about the delete. Branch on
+  `type === 'delete'` and decide without loading the document.
+- **Cost.** The policy runs per event and per subscriber; keep it cheap or cache it.
+- **Token expiry.** The token from the handshake is rechecked on every event. After it expires the
+  next event ends the subscription; the client must reconnect with a fresh `auth.token`.
+- **Core module.** `CrudShellNestjsCoreModule` always registers the gateway, so every subscription
+  is refused until `changePolicy` is set.
+
+#### Migration
+
+Subscriptions used to be open to anyone, accepted an empty filter and carried the full change,
+including the inserted document or the update delta. After upgrading: configure `changePolicy`,
+connect with the JWT in `auth.token` (and reconnect after it expires), always subscribe with an
+`id`, and refetch the entity on each event instead of applying a payload.

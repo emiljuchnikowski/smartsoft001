@@ -38,6 +38,18 @@ Creates a new authentication token based on the provided credentials and grant t
     </tr>
 </table>
 
+### Repository contract
+
+`TokenFactory` rotates the refresh token with `repository.update(criteria, patch)` and signs a
+token only when that call resolves to `{ affected: 1 }`, like TypeORM's `UpdateResult`. The
+criteria always include the user's `username`, so every user (also one returned by an
+`ITokenUserProvider`) must carry it.
+
+Migrating from 2.182.0 or earlier: a custom repository or test double whose `update` resolves to
+`void` now fails every grant with `Invalid token`; return `{ affected }` instead. A user without a
+`username` fails with `Invalid token user`. Refresh tokens are now 32 random bytes from
+`node:crypto` (hex), and the package no longer depends on `guid-typescript`.
+
 ## Interfaces
 
 ### IAuthTokenRequest

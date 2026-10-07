@@ -205,6 +205,14 @@ All 56 are standalone, all follow the `smart-<name>` / `<Name>Component` naming,
 
 Three of them fan out into families that are the real metadata engine. `smart-input` dispatches to about 35 field editors, one per `FieldType`, from address and currency through NIP, PESEL and phone number to the file, image, PDF and video uploads. `smart-detail` dispatches to about 17 read-only renderers over the same types. `smart-list` has three modes, desktop, mobile and masonry grid. Each of those has a Preline-styled `preset` twin, and the preset maps in the substitution table are how an application switches the whole family over at once.
 
+#### HTML in detail text fields
+
+The `text` renderer of `smart-detail`, and its preset, bind the value through `[innerHTML]` without `TrustHtmlPipe`, so Angular's sanitizer runs on every value, including one a `cellPipe` returns. Scripts, event handlers, iframes, SVG and `javascript:` links are removed. Basic formatting such as `<b>`, `<em>` and HTTPS links survives.
+
+The sanitizer also strips inline `style` attributes, so colours and alignment written by the rich-text editor do not appear in the read-only view. Releases up to 2.182.0 trusted the value as is. An application that needs the raw HTML for a field it trusts can return `SafeHtml` from its own `cellPipe`. `ICellPipe.transform` is typed as returning `string`, so the result needs a cast:
+
+{% snippet file="angular/src/components/detail/trusted-html.example.ts" region="usage" /%}
+
 ### Design tokens and styling
 
 | Export                                                                                                            | Kind       | What it is                                                                                                                                                                                                                                    |
