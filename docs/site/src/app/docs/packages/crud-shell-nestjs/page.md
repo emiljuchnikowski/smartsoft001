@@ -71,11 +71,13 @@ The options are `SharedConfig` from [`@smartsoft001/nestjs`](/docs/packages/nest
 A request body is a plain object with no field metadata. `CrudService` validates it only after turning it into an instance of the configured class, so a module registered without `db.type` or `type` stores whatever it is sent, required fields or not, and logs a warning at startup. The model example above sets `db.type` for that reason.
 {% /callout %}
 
-The module provides the CRUD service and `AuthJwtGuard`, and imports `SharedModule.forFeature(options)` with `type` filled from `db.type`, and `MongoModule.forRoot(options.db)`. It exports the service, the guard and the Mongo module, so an importing module can inject the repositories too. Passport and `JwtModule` are only registered when `restApi` is true **and** `tokenConfig.secretOrPrivateKey` is set; the strategy itself comes from `SharedModule` and is constructed eagerly, so an empty key fails at startup rather than on the first request.
+The module provides the CRUD service and `AuthJwtGuard`, and imports `SharedModule.forFeature(options)` with `type` filled from `db.type`, and `MongoModule.forRoot(options.db)`. It exports the service, the guard and the Mongo module, so an importing module can inject the repositories too. Passport and `JwtModule` are only registered when `restApi` or `socket` is true **and** `tokenConfig.secretOrPrivateKey` is set, the gateway needing `JwtService` to verify subscription tokens; the strategy itself comes from `SharedModule` and is constructed eagerly, so an empty key fails at startup rather than on the first request.
 
 ### `CrudShellNestjsCoreModule.forRoot(options)`
 
 The same options without `restApi` and `socket`. It never registers controllers, always registers the gateway and the guard, always registers Passport and `JwtModule`, and imports `SharedModule.forRoot(options)` rather than `forFeature`, so it also carries the root configuration. The `DynamicModule` it returns sets `module: CrudShellNestjsCoreModule`, its own class, so the two variants are separate modules and an application can import either one.
+
+Because it always registers the gateway, an application on the core module gets every change subscription refused until it sets `changePolicy`, described under `CrudGateway` below.
 
 {% callout type="warning" title="The core module exports nothing" %}
 Its `exports` list is empty, which means an importing module sees none of its providers. Import `CrudShellNestjsModule` with `restApi: false` and `socket: false` when the importing module has to inject the CRUD service or the repositories.
@@ -115,7 +117,21 @@ Both extend `AuthGuard('jwt')` from `@nestjs/passport` and rely on the strategy 
 
 ### `CrudGateway`
 
-A `@WebSocketGateway` over the websocket transport, registered only when `socket: true`. It subscribes clients to the change feed: a client emits `changes` with `{ id? }` and receives one `changes` event per change, taken from `CrudService.changes(...)` and shaped as the union in [`@smartsoft001/crud-shell-dtos`](/docs/packages/crud-shell-dtos). One subscription is kept per socket id, replaced when the same client subscribes again and unsubscribed on disconnect.
+A `@WebSocketGateway` over the websocket transport, registered only when `socket: true` (and always by the core module). It subscribes clients to the changes of one record: a client emits `changes` with `{ id }` and receives one `changes` event per change, shaped as `{ id, type }`. The event carries no document fields, neither the inserted record nor the update delta, so a client that wants the new state refetches the record through an authorized route. One subscription is kept per socket id, replaced when the same client subscribes again and unsubscribed on disconnect.
+
+Every subscription is refused unless three things hold. The socket handshake carries a valid JWT in `auth.token`, signed with `tokenConfig.secretOrPrivateKey`; socket.io clients pass it as `io(url, { auth: { token } })`. The message names exactly one record with a non-empty `id`, so a client can no longer watch the whole collection. And `SharedConfig.changePolicy` is configured and returns exactly `true`. A refusal is a `WsException('Change subscription denied')`, and the repository is not opened.
+
+The policy is called with `{ id, user, type }`, where `user` is built from the token's `sub` and `permissions`. It runs once when the client subscribes, with no `type`, and again before every event, together with a fresh token check, with the event's `type`: `'create'`, `'update'` or `'delete'`. A refusal on an event ends the subscription with the same error, so revoked access stops the stream.
+
+{% snippet file="node/src/crud/change-policy.example.ts" region="usage" /%}
+
+The region shows why `type` is passed. A policy that decides by loading the record and comparing its owner cannot decide a `'delete'` event: Mongo emits it after the document is gone, the lookup finds nothing and the client would never learn about the delete. The example allows a delete without a lookup, relying on the check made when the subscription opened; the event reveals only the id and the word `delete`. Its spec asserts the owner may subscribe, another user may not, and a delete event is allowed without the lookup being called.
+
+Three costs follow from the design. The policy runs on every event, so whatever it loads is loaded per change, per subscriber; keep it cheap or cache it. The token is checked on every event too, so once it expires the next event ends the subscription, and the client has to reconnect with a fresh `auth.token`, since the handshake is the only place the gateway reads it. And an application on `CrudShellNestjsCoreModule` gets every subscription refused until it sets `changePolicy`.
+
+{% callout type="warning" title="Migrating from the open change feed" %}
+This is a breaking change. Before it, any client could subscribe without a token, with or without an id, and received the full change object, including the inserted record or the update delta. After upgrading: configure `changePolicy`, connect with the JWT in `auth.token` and reconnect with a fresh one after it expires, always subscribe with an `id`, and treat each event as a signal to refetch rather than a payload to apply.
+{% /callout %}
 
 Its path and namespace are built from the `URL_PREFIX` environment variable when the class is loaded, as `/${URL_PREFIX}/_socket` and `/${URL_PREFIX}`. The variable is read at module load, so it has to be set before the process imports the package, and an unset variable produces the literal segment `undefined` in both strings.
 
@@ -129,7 +145,7 @@ The class is not exported under its own name. The package barrel re-exports `./l
 
 - [`@smartsoft001/crud-shell-app-services`](/docs/packages/crud-shell-app-services) holds the rules every route here delegates to.
 - [`@smartsoft001/crud-domain`](/docs/packages/crud-domain) defines the mode the bulk route reads from the query string.
-- [`@smartsoft001/crud-shell-dtos`](/docs/packages/crud-shell-dtos) defines the payloads the gateway forwards.
+- [`@smartsoft001/crud-shell-dtos`](/docs/packages/crud-shell-dtos) defines the change feed the gateway reduces to `{ id, type }`.
 - [`@smartsoft001/nestjs`](/docs/packages/nestjs) supplies the shared configuration, the JWT strategy and the permission service.
 - [`@smartsoft001/mongo`](/docs/packages/mongo) implements the repositories the module binds.
 - [`@smartsoft001/crud-shell-angular`](/docs/packages/crud-shell-angular) is the client that consumes these routes.

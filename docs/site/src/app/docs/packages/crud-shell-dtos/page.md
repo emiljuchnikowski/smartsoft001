@@ -27,7 +27,7 @@ Two unrelated things share the package because both are the vocabulary the CRUD 
 
 `UserDto` is the credentials model. It is not a validation schema in the class-validator sense and there is no `ValidationPipe` involved anywhere in this family. It is an ordinary class whose two properties carry `@Field({ required: true })`, which means the framework can do three things with it: render a form from it, report which required fields are still empty, and strip it down to the fields a given operation may touch. `username` also carries `focused: true`, which tells the generated form which control takes the cursor.
 
-The change-feed types describe what `CrudService.changes(...)` emits. A repository that supports change streams, `MongoItemRepository` in [`@smartsoft001/mongo`](/docs/packages/mongo), turns each database change into one of these objects, and the websocket gateway in [`@smartsoft001/crud-shell-nestjs`](/docs/packages/crud-shell-nestjs) forwards them to subscribed clients under the `changes` event. They form a discriminated union on `type`, so a consumer narrows the payload by switching on that one field rather than probing for properties.
+The change-feed types describe what `CrudService.changes(...)` emits. A repository that supports change streams, `MongoItemRepository` in [`@smartsoft001/mongo`](/docs/packages/mongo), turns each database change into one of these objects, and the websocket gateway in [`@smartsoft001/crud-shell-nestjs`](/docs/packages/crud-shell-nestjs) tells authorized subscribers about them under the `changes` event. The gateway does not forward these objects whole: a client receives only `{ id, type }` and refetches the record, and it has to subscribe to one record with a JWT in the socket's `auth.token`, which an application's `changePolicy` checks once on subscribe and again before every event. The full objects stay on the server, for code that calls `CrudService.changes(...)` directly. They form a discriminated union on `type`, so a consumer narrows the payload by switching on that one field rather than probing for properties.
 
 ## Usage
 
@@ -73,5 +73,5 @@ Whatever you learn here about reading, validating and trimming `UserDto` applies
 
 - [`@smartsoft001/models`](/docs/packages/models) supplies the decorators and the reader functions the example calls.
 - [`@smartsoft001/crud-shell-app-services`](/docs/packages/crud-shell-app-services) produces the change feed and runs the same required-field check before every write.
-- [`@smartsoft001/crud-shell-nestjs`](/docs/packages/crud-shell-nestjs) pushes the feed to clients over its websocket gateway.
+- [`@smartsoft001/crud-shell-nestjs`](/docs/packages/crud-shell-nestjs) notifies authorized clients of changes over its websocket gateway, as `{ id, type }`.
 - [`@smartsoft001/mongo`](/docs/packages/mongo) is the repository that turns database change streams into these payloads.
