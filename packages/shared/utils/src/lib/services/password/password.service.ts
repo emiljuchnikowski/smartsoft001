@@ -1,5 +1,13 @@
-import md5 from 'md5';
+import { Md5PasswordHasher } from './md5-password.hasher';
+import { IPasswordHasher } from './password-hasher';
 
+const defaultHasher: IPasswordHasher = new Md5PasswordHasher();
+
+/**
+ * Static shortcut to the default {@link Md5PasswordHasher}. The framework
+ * itself uses the hasher registered under `PASSWORD_HASHER`, so code that
+ * must follow an application's override should inject that instead.
+ */
 // @dynamic
 export class PasswordService {
   /**
@@ -8,7 +16,7 @@ export class PasswordService {
    * @return - hashed text
    */
   static hash(p: string): Promise<string> {
-    return Promise.resolve(md5(p));
+    return defaultHasher.hash(p);
   }
 
   /**
@@ -16,8 +24,7 @@ export class PasswordService {
    * @param p {string} - password text
    * @param h {string} - hashed text
    */
-  static async compare(p: string, h: string): Promise<boolean> {
-    const hp = await PasswordService.hash(p);
-    return hp === h;
+  static compare(p: string, h: string): Promise<boolean> {
+    return defaultHasher.compare(p, h);
   }
 }

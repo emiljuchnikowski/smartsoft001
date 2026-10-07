@@ -9,7 +9,7 @@ nextjs:
     description: 'Framework-free static helpers for identifiers, Polish document validation, arrays, objects, slugs and in-memory specification checks.'
 ---
 
-A set of static helper services with no framework attached: identifiers, Polish document validation, array and object handling, slugs and in-memory specification checks. {% .lead %}
+A set of static helper services with no framework attached: identifiers, Polish document validation, array and object handling, slugs, in-memory specification checks and the password hashers the framework uses. {% .lead %}
 
 ---
 
@@ -19,15 +19,15 @@ A set of static helper services with no framework attached: identifiers, Polish 
 npm install @smartsoft001/utils
 ```
 
-Everything it needs comes with it: `lodash`, `guid-typescript`, `md5`, `flatted` and `tslib` are declared as dependencies. Nothing else is required, and the package imports neither Angular nor NestJS, so it runs the same in a browser bundle, in a Node process and in a test. The specification example below also uses [`@smartsoft001/domain-core`](/docs/packages/domain-core) to build the specification it evaluates.
+Everything it needs comes with it: `lodash`, `guid-typescript`, `md5`, `flatted` and `tslib` are declared as dependencies. Nothing else is required, and the package imports neither Angular nor NestJS, so it runs the same in a browser bundle, in a Node process and in a test. `Pbkdf2PasswordHasher` uses the global Web Crypto API, which Node provides and a browser provides in a secure context. The specification example below also uses [`@smartsoft001/domain-core`](/docs/packages/domain-core) to build the specification it evaluates.
 
 ## What it is
 
 This is the bottom of the internal dependency graph. Every other `@smartsoft001` package is free to depend on it, and it depends on none of them, which is why the helpers are written as static methods on classes rather than as injectable services. There is nothing to register and nothing to construct: import the class and call the method.
 
-The contents fall into four groups. Identifier and text helpers cover GUID creation, capitalisation, HTML stripping and slug generation. Validators cover the Polish tax number, the national identity number and the postal code, each exposing a matching `isValid` and `isInvalid` so a caller can read the condition in whichever direction suits the code. Data helpers cover arrays and the conversion of plain data into class instances, which is what makes the `classType` option of `@Field` in [`@smartsoft001/models`](/docs/packages/models) work. Finally `SpecificationService` evaluates a specification against an object in memory, which is how the same business rule can be checked on the client and used as a query on the server.
+The contents fall into five groups. Identifier and text helpers cover GUID creation, capitalisation, HTML stripping and slug generation. Validators cover the Polish tax number, the national identity number and the postal code, each exposing a matching `isValid` and `isInvalid` so a caller can read the condition in whichever direction suits the code. Data helpers cover arrays and the conversion of plain data into class instances, which is what makes the `classType` option of `@Field` in [`@smartsoft001/models`](/docs/packages/models) work. `SpecificationService` evaluates a specification against an object in memory, which is how the same business rule can be checked on the client and used as a query on the server. Finally the password hashers: the `IPasswordHasher` contract, the `PASSWORD_HASHER` token the auth and CRUD packages resolve it by, the default `Md5PasswordHasher` and the salted `Pbkdf2PasswordHasher`. The token is a plain string, so this package still needs no Nest.
 
-Two behaviours are easy to get wrong from the signatures alone. `ArrayService.addItem` and `removeItem` return a new array, but they reach that result by mutating the array they were given first, so the argument changes too. And `PasswordService` is md5-based, which the warning below spells out.
+Two behaviours are easy to get wrong from the signatures alone. `ArrayService.addItem` and `removeItem` return a new array, but they reach that result by mutating the array they were given first, so the argument changes too. And `PasswordService`, like the framework's default hasher, is md5-based, which the warning below spells out.
 
 ## Usage
 
@@ -53,8 +53,14 @@ The spec checks both directions: an account whose status matches the criteria re
 `SpecificationService.valid` walks the keys of the criteria object and compares each one with the matching property of the value, treating an array property as a match when any element equals the criteria. It does not interpret the `$and` and `$or` keys that `AndSpecification` and `OrSpecification` produce, so composed specifications are for repositories. A key prefixed with `$root.` is resolved against the `custom.$root` object passed as the third argument instead of against the value.
 {% /callout %}
 
-{% callout type="warning" title="PasswordService is not a password hash" %}
-`PasswordService.hash` returns an unsalted md5 digest, and `compare` simply hashes the candidate again and compares the two strings. md5 is fast and broken for this purpose, and without a salt identical passwords produce identical digests, so it must not be treated as a modern password hash. Use a memory-hard algorithm such as argon2 or bcrypt for credentials that matter, and keep this service for legacy digests you still have to read.
+The password hasher the framework uses is replaced with one provider in the Nest application.
+
+{% snippet file="node/src/utils/password-hasher.example.ts" region="usage" /%}
+
+The spec compiles that module with the real auth and CRUD modules: a user still stored with an md5 digest logs in and the stored value becomes a PBKDF2 hash, and a record created through `CrudService` is hashed with PBKDF2 as well. The [password hashing guide](/docs/password-hashing) covers the column length, the rollback caveat and writing your own hasher.
+
+{% callout type="warning" title="MD5 is the default, not a password hash" %}
+`PasswordService.hash` and `Md5PasswordHasher` return an unsalted md5 digest, and `compare` simply hashes the candidate again and compares the two strings. md5 is fast and broken for this purpose, and without a salt identical passwords produce identical digests. It stays the framework default only so that existing hashes keep working. Register `Pbkdf2PasswordHasher`, or your own bcrypt or argon2 implementation, under `PASSWORD_HASHER`, as the [password hashing guide](/docs/password-hashing) shows with executed examples, and keep `PasswordService` for legacy digests you still have to read.
 {% /callout %}
 
 ## API
@@ -98,12 +104,25 @@ The spec checks both directions: an account whose status matches the criteria re
 | `SpecificationService.getSqlCriteria(spec)`          | Static method | The criteria as a SQL `where` body, one `key = value` per criteria joined with `and`, quoting everything that is not a number. Values are interpolated as they are, with no escaping, so it must not be fed values that came from a user. |
 | `SPECIFICATION_ROOT_KEY`                             | Constant      | The `'$root.'` prefix that sends a criteria key to the custom root object.                                                                                                                                                                |
 | `ISpecificationCustom`                               | Interface     | The third argument of `valid` and `invalid`: an optional `$root` object.                                                                                                                                                                  |
-| `PasswordService.hash(p)`                            | Static method | A promise of the unsalted md5 digest of the text. See the warning above.                                                                                                                                                                  |
+| `PasswordService.hash(p)`                            | Static method | A promise of the unsalted md5 digest of the text, through `Md5PasswordHasher`. It ignores `PASSWORD_HASHER`. See the warning above.                                                                                                       |
 | `PasswordService.compare(p, h)`                      | Static method | A promise of whether hashing the text yields exactly the given digest.                                                                                                                                                                    |
+
+### Password hashers
+
+See the [password hashing guide](/docs/password-hashing) for how to register one and what happens to existing hashes.
+
+| Export                                     | Kind      | Description                                                                                                                                                                                                                                              |
+| ------------------------------------------ | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `IPasswordHasher`                          | Interface | `hash(password): Promise<string>`, `compare(password, hash): Promise<boolean>` and the optional `needsRehash(hash): boolean`, which tells the login to replace a verified hash with a fresh one.                                                         |
+| `PASSWORD_HASHER`                          | Constant  | The string token `'PASSWORD_HASHER'`. Login and `CrudService` resolve the hasher by it, non-strictly, and use `Md5PasswordHasher` when nothing is registered.                                                                                            |
+| `Md5PasswordHasher`                        | Class     | The default: unsalted md5, byte for byte what `PasswordService` produces. No `needsRehash`, so nothing is ever upgraded.                                                                                                                                 |
+| `Pbkdf2PasswordHasher`                     | Class     | Salted PBKDF2-HMAC-SHA256 through Web Crypto, stored as `pbkdf2-sha256$<iterations>$<salt hex>$<key hex>`, 118 characters by default. Verifies md5 digests too, compares in constant time, and `needsRehash` is `true` for md5 and for fewer iterations. |
+| `new Pbkdf2PasswordHasher({ iterations })` | Option    | The work factor, 600,000 by default. Throws outside 10,000 to 10,000,000. A stored hash outside those bounds never verifies.                                                                                                                             |
 
 ## Related packages
 
 - [`@smartsoft001/models`](/docs/packages/models) calls the object service from its field decorator to rehydrate `classType` fields.
 - [`@smartsoft001/domain-core`](/docs/packages/domain-core) builds the specifications this package evaluates.
-- [`@smartsoft001/auth-domain`](/docs/packages/auth-domain) calls `PasswordService.compare` when it issues a token for the password grant, which is what the warning above is about.
+- [`@smartsoft001/auth-domain`](/docs/packages/auth-domain) verifies the password grant with the hasher registered under `PASSWORD_HASHER`, md5 unless you register another.
+- [`@smartsoft001/crud-shell-app-services`](/docs/packages/crud-shell-app-services) hashes the `password` field of stored records with the same hasher.
 - [`@smartsoft001/angular`](/docs/packages/angular) wraps the slug and HTML-stripping services as template pipes, and its form factory turns the identity and postal code validators into form validators for the matching field types.

@@ -1,4 +1,5 @@
 import { Injectable, Logger, Optional } from '@nestjs/common';
+import { ModuleRef } from '@nestjs/core';
 import CombinedStream from 'combined-stream';
 import { Guid } from 'guid-typescript';
 import { Memoize } from 'lodash-decorators';
@@ -17,7 +18,12 @@ import {
 import { castModel, getInvalidFields, isModel } from '@smartsoft001/models';
 import { PermissionService, SharedConfig } from '@smartsoft001/nestjs';
 import { IUser } from '@smartsoft001/users';
-import { GuidService, PasswordService } from '@smartsoft001/utils';
+import {
+  GuidService,
+  IPasswordHasher,
+  Md5PasswordHasher,
+  PASSWORD_HASHER,
+} from '@smartsoft001/utils';
 
 import { Readable, Stream } from 'stream';
 
@@ -39,12 +45,14 @@ const DEFAULT_ATTACHMENT_MAX_BYTES = 10 * 1024 * 1024;
 @Injectable()
 export class CrudService<T extends IEntity<string>> {
   private _logger = new Logger(CrudService.name, { timestamp: true });
+  private _passwordHasher?: IPasswordHasher;
 
   constructor(
     protected readonly permissionService: PermissionService,
     protected readonly repository: IItemRepository<T>,
     protected readonly attachmentRepository: IAttachmentRepository<T>,
     @Optional() protected readonly config?: SharedConfig,
+    @Optional() protected readonly moduleRef?: ModuleRef,
   ) {
     if (!config?.type) {
       this._logger.warn(
@@ -292,11 +300,34 @@ export class CrudService<T extends IEntity<string>> {
     const credentials = item as Partial<T> & WithCredentials;
 
     if (credentials.password) {
-      credentials.password = await PasswordService.hash(credentials.password);
+      credentials.password = await this.passwordHasher.hash(
+        credentials.password,
+      );
     }
     if (credentials.passwordConfirm) {
       delete credentials.passwordConfirm;
     }
+  }
+
+  /**
+   * The hasher registered under `PASSWORD_HASHER` anywhere in the
+   * application, the same one login verifies with; MD5 when there is none.
+   */
+  protected get passwordHasher(): IPasswordHasher {
+    this._passwordHasher ??= this.resolvePasswordHasher();
+    return this._passwordHasher;
+  }
+
+  private resolvePasswordHasher(): IPasswordHasher {
+    try {
+      const hasher = this.moduleRef?.get<IPasswordHasher>(PASSWORD_HASHER, {
+        strict: false,
+      });
+      if (hasher) return hasher;
+    } catch (e) {
+      this._logger.debug(e instanceof Error ? e.message : String(e));
+    }
+    return new Md5PasswordHasher();
   }
 
   private withoutCredentials(item: T): T {

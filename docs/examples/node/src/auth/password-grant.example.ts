@@ -28,8 +28,9 @@ export class InMemoryUserRepository {
 
   /**
    * Resolves like TypeORM's `UpdateResult`: `TokenFactory` signs a token only
-   * when `affected` is exactly 1, so a double that returns nothing fails every
-   * grant.
+   * when the refresh-token rotation reports `affected` exactly 1, so a double
+   * that returns nothing fails every grant. The conditional password-hash
+   * upgrade on login reads `affected` too, and re-reads the user when it is 0.
    */
   async update(
     criteria: Partial<User>,

@@ -9,6 +9,7 @@ import {
   IAuthToken,
   TokenFactory,
 } from '@smartsoft001/auth-domain';
+import { PASSWORD_HASHER } from '@smartsoft001/utils';
 
 import { AuthService } from './auth.service';
 
@@ -109,6 +110,24 @@ describe('auth-shell-app-services: AuthService', () => {
       expect(
         (tokenFactory.create as jest.Mock).mock.calls[0][0].userProvider,
       ).toBe(userProvider);
+    });
+
+    it('should include the password hasher when one is registered', async () => {
+      const request = { grant_type: 'password' };
+      const passwordHasher = { hash: jest.fn(), compare: jest.fn() };
+
+      (moduleRef.get as jest.Mock).mockImplementation((token) => {
+        if (token === PASSWORD_HASHER) {
+          return passwordHasher;
+        }
+        throw new Error('Not found');
+      });
+
+      await service.create(request);
+
+      expect(
+        (tokenFactory.create as jest.Mock).mock.calls[0][0].passwordHasher,
+      ).toBe(passwordHasher);
     });
   });
 });

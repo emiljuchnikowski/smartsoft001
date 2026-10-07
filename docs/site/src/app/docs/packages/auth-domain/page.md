@@ -19,7 +19,7 @@ One factory that turns a token request into a signed bearer token, across four g
 npm install @smartsoft001/auth-domain @smartsoft001/domain-core @smartsoft001/fb @smartsoft001/google @smartsoft001/users @smartsoft001/utils
 ```
 
-The manifest declares the five workspace packages above as peer dependencies, pinned to its own version, so a package manager warns when one of them is missing instead of letting the failure surface at import time. They are all reached directly: `domain-core` for the factory contract and the validation error, [`@smartsoft001/users`](/docs/packages/users) for the two interfaces the entity implements, [`@smartsoft001/utils`](/docs/packages/utils) for the password comparison, and the Facebook and Google services for the two social grants.
+The manifest declares the five workspace packages above as peer dependencies, pinned to its own version, so a package manager warns when one of them is missing instead of letting the failure surface at import time. They are all reached directly: `domain-core` for the factory contract and the validation error, [`@smartsoft001/users`](/docs/packages/users) for the two interfaces the entity implements, [`@smartsoft001/utils`](/docs/packages/utils) for the password hasher contract and its md5 default, and the Facebook and Google services for the two social grants.
 
 From outside the workspace it needs `typeorm` for the entity decorators and the repository type, `@nestjs/typeorm` for `@InjectRepository`, `@nestjs/common` for `@Injectable`, `@nestjs/jwt` for the service that signs the access token, and the `express` types for the optional request object. `FbService` and `GoogleService` are built on `@nestjs/axios`, so that comes along with them. The refresh token comes from `randomBytes` in `node:crypto`, so nothing extra is needed for it.
 
@@ -47,14 +47,14 @@ The two social cases in the spec also show a wrinkle of the types. `IAuthTokenRe
 
 {% snippet file="node/src/auth/password-grant.example.ts" region="usage" /%}
 
-The region builds a working factory by hand: a `TokenConfig` whose `clients` list holds the one client id, an array-backed stand-in for the TypeORM repository, a `JwtService` stub that always signs `'signed.jwt'`, and empty objects for the Facebook and Google services, which the password grant never touches. The stored user's password is put through `PasswordService.hash`, so the comparison the factory runs is the real one.
+The region builds a working factory by hand: a `TokenConfig` whose `clients` list holds the one client id, an array-backed stand-in for the TypeORM repository, a `JwtService` stub that always signs `'signed.jwt'`, and empty objects for the Facebook and Google services, which the password grant never touches. The stored user's password is put through `PasswordService.hash`, the md5 digest the factory's default hasher verifies, so the comparison it runs is the real one.
 
 The fake repository has to understand two query shapes, and that is a fact about the factory rather than about the example. Lookups arrive as a plain entity partial, but the update criteria arrive as `{ ...query, username, disabled: { $ne: true } }`, a Mongo operator mixed into what TypeORM types as a `Partial<User>`. Its `update` also has to resolve like TypeORM's `UpdateResult`, with `{ affected }` holding the number of rows it changed, because the factory signs nothing unless exactly one row was rotated. See [the repository contract](#the-repository-contract) below.
 
 Its spec covers the happy path and every refusal. A valid request comes back with `token_type: 'bearer'`, the `expired_in` from the config, and the `access_token` the stub signed. The stored user ends up carrying the refresh token that was returned and a `lastLoginDate`, which proves the rotation was persisted rather than only reported, and the fake's `update` reports `{ affected: 1 }` for it. The returned object has no `password` key. And four requests are rejected with the exact messages the factory raises: a wrong password and an unknown username both produce `Invalid username or password`, an unregistered client id produces `client_id is incorrect`, and a user flagged `disabled` produces `user disabled`.
 
-{% callout type="warning" title="The password check is md5" %}
-`checkPassword` calls `PasswordService.compare` from [`@smartsoft001/utils`](/docs/packages/utils), which hashes the candidate with unsalted md5 and compares the strings. That is the warning on that package's page, and it applies to every credential this factory verifies.
+{% callout type="warning" title="The password check is md5 unless you replace it" %}
+`checkPassword` verifies with the `passwordHasher` it is given, and without one with `Md5PasswordHasher` from [`@smartsoft001/utils`](/docs/packages/utils), which hashes the candidate with unsalted md5 and compares the strings. `AuthService` passes whatever is registered under `PASSWORD_HASHER`, so one provider replaces it; the [password hashing guide](/docs/password-hashing) shows how, and how stored hashes are upgraded on login.
 {% /callout %}
 
 ## API
@@ -89,17 +89,18 @@ A TypeORM `@Entity('users')` implementing `IEntity<string>` from `@smartsoft001/
 
 #### `create(options): Promise<IAuthToken>`
 
-`options` is `{ httpReq?, request, payloadProvider?, validationProvider?, userProvider? }`, and the method runs in a fixed order.
+`options` is `{ httpReq?, request, payloadProvider?, validationProvider?, userProvider?, passwordHasher? }`, and the method runs in a fixed order. `passwordHasher` is an `IPasswordHasher` from [`@smartsoft001/utils`](/docs/packages/utils), `Md5PasswordHasher` when omitted.
 
-| Step | What happens                                                                                                                                                                                                                                         |
-| ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1    | For `fb` and `google`, the social token is exchanged for a user id, which is written back onto the request. This is the only outbound call. `google` first requires a non-empty `config.googleClientIds` and passes it to `GoogleService.getUserId`. |
-| 2    | The request is validated by shape. An empty request, a missing `grant_type`, a missing field of the grant, or a `client_id` outside `config.clients` throws.                                                                                         |
-| 3    | `getQuery` builds the lookup, and the user is fetched from `userProvider.get(...)` when one was passed and from the repository otherwise.                                                                                                            |
-| 4    | Unless a validation provider sets `replace`, the user must exist, must not be disabled, and for the password grant must match the stored digest.                                                                                                     |
-| 5    | A validation provider, if present, runs its own `check({ request, user })`.                                                                                                                                                                          |
-| 6    | 32 random bytes from `node:crypto`, hex-encoded, become the refresh token. The row matching the query and the user's `username` is updated with it and `lastLoginDate`.                                                                              |
-| 7    | The payload `{ permissions, scope }` is built, handed to a payload provider if one was passed, and signed with `expiresIn` from the config and the username as subject.                                                                              |
+| Step | What happens                                                                                                                                                                                                                                                                                                                |
+| ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1    | For `fb` and `google`, the social token is exchanged for a user id, which is written back onto the request. This is the only outbound call. `google` first requires a non-empty `config.googleClientIds` and passes it to `GoogleService.getUserId`.                                                                        |
+| 2    | The request is validated by shape. An empty request, a missing `grant_type`, a missing field of the grant, or a `client_id` outside `config.clients` throws.                                                                                                                                                                |
+| 3    | `getQuery` builds the lookup, and the user is fetched from `userProvider.get(...)` when one was passed and from the repository otherwise.                                                                                                                                                                                   |
+| 4    | Unless a validation provider sets `replace`, the user must exist, must not be disabled, and for the password grant must match the stored digest by `passwordHasher.compare`. A missing user still costs one `hash`, so it is not answered measurably faster.                                                                |
+| 4a   | When the hasher's `needsRehash` says so and the user came from the repository, not a user provider, the stored hash is replaced, conditional on the old one. If that write matches nothing, the user is read again and the login goes on only if the new hash verifies. This write is separate from the rotation in step 6. |
+| 5    | A validation provider, if present, runs its own `check({ request, user })`.                                                                                                                                                                                                                                                 |
+| 6    | 32 random bytes from `node:crypto`, hex-encoded, become the refresh token. The row matching the query and the user's `username` is updated with it and `lastLoginDate`.                                                                                                                                                     |
+| 7    | The payload `{ permissions, scope }` is built, handed to a payload provider if one was passed, and signed with `expiresIn` from the config and the username as subject.                                                                                                                                                     |
 
 The resolved value is `{ expired_in, token_type: 'bearer', access_token, refresh_token, username }`.
 
@@ -128,7 +129,7 @@ Every failure is a `DomainValidationError` from `@smartsoft001/domain-core`.
 | `fb_token is empty`, `fb_user_id is empty`, `google_token is empty`, `google_user_id is empty` | The social grants, checked after the provider lookup.                                                             |
 | `Google client IDs must be configured`                                                         | The `google` grant while `TokenConfig.googleClientIds` is missing or empty, before any request to Google.         |
 | `Invalid grand type`                                                                           | An unrecognised grant type with no user provider.                                                                 |
-| `Invalid username or password`                                                                 | The password grant with no matching user, or with a password that does not match.                                 |
+| `Invalid username or password`                                                                 | The password grant with no matching user, or with a password that does not match, also after a lost hash upgrade. |
 | `Invalid token`                                                                                | Any other grant whose lookup found no user, or a rotation in step 6 that did not report exactly one affected row. |
 | `user disabled`                                                                                | The user exists but is flagged disabled.                                                                          |
 | `Invalid token user`                                                                           | The user that passed every check has no `username`.                                                               |
@@ -159,13 +160,14 @@ An `@Injectable()` class with four fields, registered by the shell module as a v
 
 ### Extension points
 
-Each is an abstract class plus a string constant used as an injection token. Implement the class, register it under the token, and `AuthService` finds it.
+Each is an abstract class (an interface for the hasher) plus a string constant used as an injection token. Implement the class, register it under the token, and `AuthService` finds it.
 
 | Token                            | Contract                                                                        | What it can change                                                                             |
 | -------------------------------- | ------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
 | `AUTH_TOKEN_USER_PROVIDER`       | `ITokenUserProvider.get(baseQuery, request, httpReq?): Promise<User>`           | Where the user comes from. Its presence also makes an unknown grant type legal.                |
 | `AUTH_TOKEN_PAYLOAD_PROVIDER`    | `ITokenPayloadProvider.change(basePayload, { request?, user?, httpReq? })`      | The JWT claims. It mutates the payload object in place before signing.                         |
 | `AUTH_TOKEN_VALIDATION_PROVIDER` | `ITokenValidationProvider.check({ request?, user? })`, plus `replace?: boolean` | Extra rules, or with `replace: true` the built-in user, disabled and password checks entirely. |
+| `PASSWORD_HASHER`                | `IPasswordHasher` from `@smartsoft001/utils`: `hash`, `compare`, `needsRehash?` | How the password grant is verified and stored hashes upgraded. It also reaches `CrudService`.  |
 
 ### Request and response types
 
@@ -191,5 +193,5 @@ The two social interfaces extend `IUserCredentials`, which means the compiler de
 - [`@smartsoft001/auth-shell-app-services`](/docs/packages/auth-shell-app-services) resolves the three extension points and calls `create`.
 - [`@smartsoft001/domain-core`](/docs/packages/domain-core) declares `IFactory`, `IEntity` and the error every refusal raises.
 - [`@smartsoft001/users`](/docs/packages/users) declares the two interfaces the `User` entity implements.
-- [`@smartsoft001/utils`](/docs/packages/utils) supplies the password hashing, and the warning that comes with it.
+- [`@smartsoft001/utils`](/docs/packages/utils) supplies the password hasher contract, the md5 default and `Pbkdf2PasswordHasher`.
 - [`@smartsoft001/auth-shell-dtos`](/docs/packages/auth-shell-dtos) is the login form model on the other side of the request.
