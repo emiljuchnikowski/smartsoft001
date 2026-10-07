@@ -22,6 +22,8 @@ export interface IQ2mOptions {
   /** Query keys that are not turned into criteria. */
   ignore?: string | string[];
   maxLimit?: number;
+  /** Paging links whose offset would exceed this are left out. */
+  maxOffset?: number;
   parser?: IQ2mParser;
 }
 
@@ -44,6 +46,7 @@ interface IResolvedOptions {
   keywords: Required<IQ2mKeywords>;
   ignore: string[];
   maxLimit?: number;
+  maxOffset: number;
   parser: IQ2mParser;
 }
 
@@ -68,8 +71,12 @@ function fieldsToMongo(fields: unknown): Record<string, 1> | null {
   return hash;
 }
 
+// Escape the `~=` text so the regex matches it literally (no ReDoS). A quoted
+// value (`'123'`, how the CRUD UI sends numeric-looking text) is unquoted first.
 function convertRegex(val: string): string {
-  return val.toString().replace(/\*/g, '[*]');
+  const quoted = val.match(/^(["'])(.*)\1$/);
+  const text = quoted ? quoted[2] : val;
+  return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 // Convert comma separated list to a mongo projection which specifies fields to omit.
@@ -191,10 +198,7 @@ function comparisonToMongo(
     else if (op === '<') result = { $lt: typed };
     else if (op === '<=') result = { $lte: typed };
     else if (op === '~=')
-      result = {
-        $regex: typed ? convertRegex(String(typed)) : '',
-        $options: 'i',
-      };
+      result = { $regex: convertRegex(parts[3]), $options: 'i' };
   }
 
   return { key, value: result };
@@ -317,6 +321,7 @@ function resolveOptions(options: IQ2mOptions | null): IResolvedOptions {
     keywords,
     ignore: ignore.concat(ignoreKeywords),
     maxLimit: given.maxLimit,
+    maxOffset: given.maxOffset ?? Number.MAX_SAFE_INTEGER,
     parser: given.parser || defaultParser,
   };
 }
@@ -352,10 +357,16 @@ export function q2m(
         const pages = Math.ceil(totalCount / limit);
         const lastOffset = (pages - 1) * limit;
 
-        parsed[offsetKey] = Math.min(offset + limit, lastOffset);
-        links['next'] = url + '?' + resolved.parser.stringify(parsed);
-        parsed[offsetKey] = lastOffset;
-        links['last'] = url + '?' + resolved.parser.stringify(parsed);
+        const nextOffset = Math.min(offset + limit, lastOffset);
+
+        if (nextOffset <= resolved.maxOffset) {
+          parsed[offsetKey] = nextOffset;
+          links['next'] = url + '?' + resolved.parser.stringify(parsed);
+        }
+        if (lastOffset <= resolved.maxOffset) {
+          parsed[offsetKey] = lastOffset;
+          links['last'] = url + '?' + resolved.parser.stringify(parsed);
+        }
       }
       return links;
     },

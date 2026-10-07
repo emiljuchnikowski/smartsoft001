@@ -66,7 +66,9 @@ registers the NgRx reducer (`NgrxStoreService.addReducer(config.entity, …)`) a
 - `details?` / `edit?` — `boolean | { cellPipe?; components?: { top?; bottom? } }`
 - `add?` — `boolean | { components?: { top?; bottom? } }`
 - `remove?` / `search?` / `export?` — `boolean`
-- `pagination?: { limit: number }`
+- `pagination?: { limit: number }` — the backend (`CrudShellNestjsModule.forRoot`) caps a page at
+  `maxQueryLimit` (default 100), so a list without `pagination` shows at most that many rows;
+  exports use `maxExportLimit` (default 10000) and are refused with 400 rather than truncated
 - `sort?` — `boolean | { default?: string; defaultDesc?: boolean }`
 - `list?` — `{ cellPipe?; components?: { top?; multi? }; mode?: ListMode; paginationMode?: PaginationMode; resetQuery?: 'beforeInit'; groups?: Array<ICrudListGroup> }`
 - `buttons?: Array<IIconButtonOptions>`

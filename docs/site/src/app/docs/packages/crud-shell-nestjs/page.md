@@ -53,7 +53,7 @@ The spec drives it against a stubbed `CrudService` and a fake response whose req
 
 ### `CrudShellNestjsModule.forRoot(options)`
 
-The options are `SharedConfig` from [`@smartsoft001/nestjs`](/docs/packages/nestjs) intersected with the database settings and the two flags.
+The options are `SharedConfig` from [`@smartsoft001/nestjs`](/docs/packages/nestjs) intersected with the database settings, the two flags and `ICrudQueryConfig`, the two query limits.
 
 | Option                              | Type                                                | What it does                                                                                                                                                                                                       |
 | ----------------------------------- | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -66,6 +66,8 @@ The options are `SharedConfig` from [`@smartsoft001/nestjs`](/docs/packages/nest
 | `type`                              | `any`                                               | The same class as a `SharedConfig` field. When both are given this one wins.                                                                                                                                       |
 | `restApi`                           | `boolean`                                           | Registers `CrudController` when true, and no controllers at all when false.                                                                                                                                        |
 | `socket`                            | `boolean`                                           | Registers `CrudGateway` when true. Leave it false to keep socket.io out of the process.                                                                                                                            |
+| `maxQueryLimit`                     | `number`                                            | The largest page `GET /` returns, and the page size when the request sends no `limit`. Default `100`.                                                                                                              |
+| `maxExportLimit`                    | `number`                                            | The largest CSV or XLSX export. An export without `limit` that matches more rows is refused with `400` rather than truncated. Default `10000`.                                                                     |
 
 {% callout type="warning" title="Set the model type" %}
 A request body is a plain object with no field metadata. `CrudService` validates it only after turning it into an instance of the configured class, so a module registered without `db.type` or `type` stores whatever it is sent, required fields or not, and logs a warning at startup. The model example above sets `db.type` for that reason.
@@ -133,7 +135,26 @@ This is a breaking change. Before it, the three routes had no guard and any call
 
 `CrudController.getLink(req)` is a static helper that rebuilds the request URL from `req.protocol`, the `Host` header and `req.url`. The create route and the upload route use it to build their `Location` headers.
 
-Two things about the list route are worth knowing before you rely on it. Export is selected by the request's `Content-Type` rather than by `Accept`: `text/csv` renders through `json2csv`, and the spreadsheet media type renders through `xlsx`, both with `allowDiskUse` turned on for the query. Neither branch returns, so after writing the export the handler continues into the JSON `res.send` at the end of the method.
+A few things about the list route are worth knowing before you rely on it. Export is selected by the request's `Content-Type` rather than by `Accept`: `text/csv` renders through `json2csv`, and the spreadsheet media type renders through `xlsx`, both with `allowDiskUse` turned on for the query. An export is capped by `maxExportLimit` instead of `maxQueryLimit`, is refused with `400` when it would be truncated, and reports the number of matching rows in `X-Total-Count`. CSV text cells that a spreadsheet would run as a formula are prefixed with an apostrophe, so a value such as `+48 600 000 000` shows that apostrophe; the [export page](/docs/crud/export-multiselect-groups) has the details.
+
+The query string is checked before it is parsed, and a request outside these bounds is answered with `400 Bad Request`:
+
+| Bound              | Value                                                                                                                             |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
+| Operators          | `=`, `!=`, `>`, `>=`, `<`, `<=`, `~=` and repeated keys. No `$` keys other than `$search`, and no `field:op=value` raw operators. |
+| Field names        | Letters, digits and underscores, dotted for nested fields, at most 128 characters. No `__proto__`, `prototype` or `constructor`.  |
+| Values             | Strings, numbers or booleans of at most 1024 characters. A `/regex/` value is refused.                                            |
+| `~=` and `$search` | At most 256 characters, matched literally: the value is escaped before it becomes a regular expression.                           |
+| Repeated keys      | Joined into one `$in`, at most 100 values.                                                                                        |
+| `limit`            | A positive integer, lowered to `maxQueryLimit` (or `maxExportLimit` for an export), which is also the default.                    |
+| `offset`           | An integer from `0` to `10000`. `next` and `last` links beyond it are left out of the response.                                   |
+| The whole query    | At most 4096 encoded characters.                                                                                                  |
+
+Raw operators are refused because they reach MongoDB as a `$match` stage, where an operator such as an unescaped `$regex` lets one request keep the database busy: the risk is denial of service. The bounds cap what one request asks for, not what it costs, so index the fields you filter and sort on, scope the data per customer, and set database timeouts and rate limits in the application; counting the matches still reads the whole filtered collection.
+
+{% callout type="warning" title="Upgrading from a version without these bounds" %}
+A client that relied on the old behaviour has to change in four places. A list request without `limit` returns at most `maxQueryLimit` rows (default `100`), and a larger `limit` is lowered to it, so page through the list or raise `maxQueryLimit`. An `offset` above `10000` is refused. Raw operators (`$where`, `field:regex=...`, `$`-keys) and `/regex/` values are refused; use `~=` for a "contains" match. Field names with `__proto__`, `prototype` or `constructor` are refused. A subclass of `CrudController` that calls `super(service)` gets the default limits; pass the injected `SharedConfig` as the second argument to honour the configured ones.
+{% /callout %}
 
 ### Guards
 
@@ -168,7 +189,7 @@ The class is not exported under its own name. The package barrel re-exports `./l
 
 ### Not part of the public API
 
-`q2m`, the query-to-Mongo parser behind the list route, lives in the controller directory and is not exported. It is what turns `?title=plan&limit=25&sort=-title` into criteria, options and the `links` object the list response carries, and it is covered by its own spec inside the package.
+`q2m`, the query-to-Mongo parser behind the list route, lives in the controller directory and is not exported. It is what turns `?title=plan&limit=25&sort=-title` into criteria, options and the `links` object the list response carries, and it is covered by its own spec inside the package. The list route never hands it the raw request: `parseHttpQuery` applies the bounds above first.
 
 ## Related packages
 

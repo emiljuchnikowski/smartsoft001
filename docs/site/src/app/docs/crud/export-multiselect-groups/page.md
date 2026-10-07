@@ -22,11 +22,15 @@ On the server the same reading route serves all three formats, and the content t
 
 | Request content type                                                | Response                                           |
 | ------------------------------------------------------------------- | -------------------------------------------------- |
-| `text/csv`                                                          | The page of records serialised to CSV.             |
+| `text/csv`                                                          | The matching records serialised to CSV.            |
 | `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet` | The same records as an XLSX workbook.              |
 | Anything else                                                       | JSON with the data, the total count and the links. |
 
 Before serialising, the controller flattens each record: nested objects become underscore-joined columns, arrays are skipped entirely, HTML tags are stripped out of strings, and dates are rendered in the Europe/Warsaw time zone. Columns are the union of the keys it found, and a key that never produced a value is dropped from the rows. An export also asks the database to allow disk use, because it is deliberately unpaged.
+
+An export is bounded by its own limit, `maxExportLimit` in the options of `CrudShellNestjsModule.forRoot()`, `10000` rows by default, instead of the list's `maxQueryLimit`. It is never cut short silently. An export without `limit`, which is what the button sends, that matches more rows than `maxExportLimit` is answered with `400 Bad Request` and a message naming the limit; narrow the filters, raise the limit, or fetch the file in pages with `limit` and `offset`. Every export carries the number of matching rows in the `X-Total-Count` header.
+
+The CSV is safe to open in a spreadsheet. A text cell that starts with `=`, `+`, `-` or `@`, also after leading spaces, or that starts with a tab or a line break, is prefixed with an apostrophe so that the spreadsheet shows it as text instead of running it as a formula. This follows the OWASP guidance on CSV injection, and it is visible: a phone number such as `+48 600 000 000` is exported as `'+48 600 000 000`. Numbers stay numbers, so a negative amount is not affected. Import text columns as text when the file feeds another system.
 
 ## Multiselect
 

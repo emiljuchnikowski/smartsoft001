@@ -553,7 +553,9 @@ export class MongoItemRepository<
     }
 
     const customCriteria = {
-      $text: { $search: ' "' + this.convertRegex(criteria['$search']) + '" ' },
+      $text: {
+        $search: ' "' + String(criteria['$search']).replace(/"/g, '') + '" ',
+      },
     };
 
     delete criteria['$search'];
@@ -568,8 +570,9 @@ export class MongoItemRepository<
     }
   }
 
+  /** Escapes the search text so the regex matches it literally (no ReDoS). */
   protected convertRegex(val: string): string {
-    return val.toString().replace(/\*/g, '[*]');
+    return val.toString().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 
   /** The collection is part of the connection config; a repository without one cannot address any document. */

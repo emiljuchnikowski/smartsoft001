@@ -7,6 +7,7 @@ import { MongoModule } from '@smartsoft001/mongo';
 import { SharedConfig, SharedModule } from '@smartsoft001/nestjs';
 
 import { CONTROLLERS } from './controllers';
+import { ICrudQueryConfig } from './crud-query.config';
 import { GATEWAYS } from './gateways';
 import { AuthJwtGuard } from './guards/auth/auth.guard';
 
@@ -26,7 +27,7 @@ export class CrudShellNestjsModule {
     } & {
       restApi: boolean;
       socket: boolean;
-    },
+    } & ICrudQueryConfig,
   ): DynamicModule {
     // Without a token config the REST API is served without JWT auth, as before.
     const tokenConfig = options.tokenConfig;
