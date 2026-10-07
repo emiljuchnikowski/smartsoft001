@@ -201,6 +201,44 @@ describe('trans-domain: CreatorService', () => {
         service.create(mockTrans, mockInternalService, mockPaymentService),
       ).rejects.toThrow('Test error');
     });
+
+    it('should record why the internal service rejected the amount', async () => {
+      mockInternalService.create.mockResolvedValueOnce({} as any);
+
+      await expect(
+        service.create(mockTrans, mockInternalService, mockPaymentService),
+      ).rejects.toThrow(
+        'Internal service must approve a positive integer amount',
+      );
+
+      const stored = mockRepository.update.mock.calls.at(-1)![0] as Trans<any>;
+      expect(stored.status).toBe('error');
+      expect(stored.history.at(-1)!.data).toEqual({
+        name: 'DomainValidationError',
+        message: 'Internal service must approve a positive integer amount',
+      });
+    });
+
+    it('should record a failed provider call without its message', async () => {
+      const error = Object.assign(new Error('Bearer secret-token'), {
+        name: 'AxiosError',
+        response: { status: 503 },
+      });
+      (mockPaymentService['payu'].create as jest.Mock).mockRejectedValueOnce(
+        error,
+      );
+
+      await expect(
+        service.create(mockTrans, mockInternalService, mockPaymentService),
+      ).rejects.toBe(error);
+
+      const stored = mockRepository.update.mock.calls.at(-1)![0] as Trans<any>;
+      expect(stored.history.at(-1)!.data).toEqual({
+        name: 'AxiosError',
+        message: 'Transaction creation failed (HTTP 503)',
+        status: 503,
+      });
+    });
   });
 
   describe('validation', () => {

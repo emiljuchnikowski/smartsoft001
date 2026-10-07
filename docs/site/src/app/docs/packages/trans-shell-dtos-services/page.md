@@ -47,16 +47,16 @@ The second function in the region, `toChangeMessage`, belongs to the CRUD change
 
 A `@Model({})` class with eight properties. The generic parameter is the shape of your own payload, the same `T` that ends up on `Trans<T>`.
 
-| Field          | Decorator                                              | Meaning                                                                              |
-| -------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------ |
-| `amount`       | `@Field({ required: true, type: FieldType.currency })` | The price. Rendered as a currency control. The domain rejects anything below `1`.    |
-| `system`       | `@Field({ required: true, type: FieldType.text })`     | Which provider handles the payment.                                                  |
-| `data`         | `@Field({ required: true })`                           | Your payload, typed `T`. No `FieldType`, because there is no general control for it. |
-| `name`         | `@Field({ required: true, type: FieldType.text })`     | The order description the buyer sees at the provider.                                |
-| `firstName`    | `@Field({ type: FieldType.text })`                     | Optional.                                                                            |
-| `lastName`     | `@Field({ type: FieldType.text })`                     | Optional.                                                                            |
-| `email`        | `@Field({ type: FieldType.email })`                    | Optional. The email control, not an email format check.                              |
-| `contactPhone` | `@Field({ type: FieldType.text })`                     | Optional.                                                                            |
+| Field          | Decorator                                              | Meaning                                                                                                                                       |
+| -------------- | ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `amount`       | `@Field({ required: true, type: FieldType.currency })` | Rendered as a currency control. The domain rejects anything below `1`, then ignores it and charges the amount your internal service approves. |
+| `system`       | `@Field({ required: true, type: FieldType.text })`     | Which provider handles the payment.                                                                                                           |
+| `data`         | `@Field({ required: true })`                           | Your payload, typed `T`. No `FieldType`, because there is no general control for it.                                                          |
+| `name`         | `@Field({ required: true, type: FieldType.text })`     | The order description the buyer sees at the provider.                                                                                         |
+| `firstName`    | `@Field({ type: FieldType.text })`                     | Optional.                                                                                                                                     |
+| `lastName`     | `@Field({ type: FieldType.text })`                     | Optional.                                                                                                                                     |
+| `email`        | `@Field({ type: FieldType.email })`                    | Optional. The email control, not an email format check.                                                                                       |
+| `contactPhone` | `@Field({ type: FieldType.text })`                     | Optional.                                                                                                                                     |
 
 Two things are worth knowing before you use the class as your contract.
 

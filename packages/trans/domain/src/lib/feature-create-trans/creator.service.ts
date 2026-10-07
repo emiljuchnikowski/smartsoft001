@@ -33,11 +33,16 @@ export class CreatorService<T> extends TransBaseService<T> {
       .then(() => {
         return this.setAsStarted(trans!, paymentService);
       })
-      .catch((e) => {
+      .catch(async (e) => {
         if (trans) {
-          this.setError(trans, e);
+          try {
+            // setError stores only the error name, a safe message and the HTTP
+            // status. Await it so the error state lands before the rejection.
+            await this.setError(trans, e, 'Transaction creation failed');
+          } catch {
+            console.error('Failed to persist transaction creation failure');
+          }
         }
-        console.error(e);
         throw e;
       });
   }
@@ -74,9 +79,15 @@ export class CreatorService<T> extends TransBaseService<T> {
     internalService: ITransInternalService<T>,
   ): Promise<void> {
     const internalResult = await internalService.create(trans);
-    if (internalResult.amount) {
-      trans.amount = internalResult.amount;
+    if (
+      !Number.isSafeInteger(internalResult?.amount) ||
+      internalResult.amount < 1
+    ) {
+      throw new DomainValidationError(
+        'Internal service must approve a positive integer amount',
+      );
     }
+    trans.amount = internalResult.amount;
     trans.status = 'new';
     trans.modifyDate = new Date();
     this.addHistory(trans, internalResult);
@@ -108,6 +119,8 @@ export class CreatorService<T> extends TransBaseService<T> {
 
     if (!req.name) throw new DomainValidationError('name is empty');
     if (!req.clientIp) throw new DomainValidationError('client ip is empty');
+    // Kept for compatibility only: the client amount is never charged, the
+    // internal service's approved amount replaces it in setAsNew.
     if (!req.amount || req.amount < 1)
       throw new DomainValidationError('amount is empty');
     if (!req.data) throw new DomainValidationError('data is empty');
