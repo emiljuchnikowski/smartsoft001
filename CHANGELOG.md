@@ -1,3 +1,19 @@
+## 2.183.0 (2026-10-07)
+
+### 🩹 Fixes
+
+- ⚠️  **auth:** require successful atomic refresh rotation ([#110](https://github.com/emiljuchnikowski/smartsoft001/pull/110))
+
+### ⚠️  Breaking Changes
+
+- **auth:** require successful atomic refresh rotation  ([#110](https://github.com/emiljuchnikowski/smartsoft001/pull/110))
+
+### ❤️ Thank You
+
+- Claude Opus 5.5 (1M context)
+- Emil Juchnikowski
+- krzysztofciura @krzysztofciura
+
 ## 2.182.0 (2026-10-06)
 
 This was a version bump only, there were no code changes.
