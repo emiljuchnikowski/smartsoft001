@@ -1,7 +1,68 @@
-import { IItemRepository } from '@smartsoft001/domain-core';
+import {
+  DomainValidationError,
+  IItemRepository,
+} from '@smartsoft001/domain-core';
 import { ObjectService } from '@smartsoft001/utils';
 
 import { Trans, TransHistory } from './entities/trans.entity';
+
+/**
+ * What `setError` stores as the history payload of a failed step. Errors can
+ * carry request credentials (headers, bodies, messages), functions and
+ * circular sockets, so only these three fields are ever kept.
+ */
+export interface TransErrorEvent {
+  name: string;
+  message: string;
+  status?: number;
+}
+
+function errorName(error: unknown): string {
+  if (error instanceof DomainValidationError) return 'DomainValidationError';
+  if (!(error instanceof Error)) return 'Error';
+  if (error.name && error.name !== 'Error') return error.name;
+
+  return error.constructor?.name || 'Error';
+}
+
+function httpStatus(error: unknown): number | undefined {
+  if (typeof error !== 'object' || error === null) return undefined;
+
+  const candidate = error as {
+    response?: { status?: unknown };
+    getStatus?: unknown;
+  };
+
+  if (typeof candidate.response?.status === 'number') {
+    return candidate.response.status;
+  }
+
+  if (typeof candidate.getStatus === 'function') {
+    const status = candidate.getStatus();
+    if (typeof status === 'number') return status;
+  }
+
+  return undefined;
+}
+
+function toTransErrorEvent(
+  error: unknown,
+  context = 'Transaction failed',
+): TransErrorEvent {
+  const name = errorName(error);
+
+  if (error instanceof DomainValidationError) {
+    return { name, message: error.message };
+  }
+
+  const status = httpStatus(error);
+
+  if (status !== undefined) {
+    return { name, message: `${context} (HTTP ${status})`, status };
+  }
+
+  return { name, message: context };
+}
 
 export abstract class TransBaseService<T> {
   protected constructor(protected repository: IItemRepository<Trans<T>>) {}
@@ -17,10 +78,18 @@ export abstract class TransBaseService<T> {
     trans.history.push(historyItem);
   }
 
-  protected async setError(trans: Trans<T>, error: any): Promise<void> {
+  /**
+   * Marks the transaction as failed and persists it. The error itself is never
+   * stored: only its name, a safe message and the HTTP status, if any.
+   */
+  protected async setError(
+    trans: Trans<T>,
+    error: unknown,
+    context?: string,
+  ): Promise<void> {
     trans.modifyDate = new Date();
     trans.status = 'error';
-    this.addHistory(trans, error);
+    this.addHistory(trans, toTransErrorEvent(error, context));
 
     await this.repository.update(trans as any, null);
   }

@@ -1,6 +1,6 @@
 import { Component, computed, ChangeDetectionStrategy } from '@angular/core';
 
-import { ListCellPipe, TrustHtmlPipe } from '../../../pipes';
+import { ListCellPipe } from '../../../pipes';
 import { DetailBaseComponent } from '../base/base.component';
 
 @Component({
@@ -19,13 +19,13 @@ import { DetailBaseComponent } from '../base/base.component';
                 : key
                 : $safeNavigationMigration(options()?.cellPipe)
             )?.value
-          ) | smartTrustHtml
+          )
         "
       ></p>
     }
   `,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [ListCellPipe, TrustHtmlPipe],
+  imports: [ListCellPipe],
 })
 export class DetailTextComponent<T> extends DetailBaseComponent<T> {
   textClasses = computed(() => {

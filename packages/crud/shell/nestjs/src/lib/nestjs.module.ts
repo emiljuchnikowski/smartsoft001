@@ -43,7 +43,8 @@ export class CrudShellNestjsModule {
         AuthJwtGuard,
       ],
       imports: [
-        ...(options.restApi && tokenConfig?.secretOrPrivateKey
+        ...((options.restApi || options.socket) &&
+        tokenConfig?.secretOrPrivateKey
           ? [
               PassportModule.register({
                 defaultStrategy: 'jwt',

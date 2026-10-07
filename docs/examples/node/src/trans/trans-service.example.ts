@@ -6,6 +6,7 @@ import { IItemRepository } from '@smartsoft001/domain-core';
 import { PayuService } from '@smartsoft001/payu';
 import {
   CreatorService,
+  ITransInternalService,
   RefresherService,
   RefundService,
   Trans,
@@ -16,10 +17,11 @@ import { TransService } from '@smartsoft001/trans-shell-app-services';
 import { InMemoryTransRepository, OrderData } from './creator-service.example';
 
 /**
- * `TransService` falls back to an HTTP internal service that posts every new
- * transaction to `TransConfig.internalApiUrl`. An empty url short-circuits
- * that fallback to a resolved promise, so nothing here ever reaches the
- * network. This stub records any call that would break that promise.
+ * Without a registered internal service, `TransService` falls back to an HTTP
+ * one that posts every new transaction to `TransConfig.internalApiUrl`. With
+ * an empty url that fallback makes no request, and its `create` rejects,
+ * because nothing has priced the order. This stub records any call that would
+ * reach the network.
  */
 export class OfflineHttpService {
   readonly calls: string[] = [];
@@ -60,9 +62,10 @@ export class StubPayuService {
  * hand shows exactly what it depends on.
  *
  * `moduleRef.get` is how `TransService` looks up a custom internal service
- * registered under `TRANS_TOKEN_INTERNAL_SERVICE`. A throwing stub reproduces
- * the common case where no such provider exists, and the built-in fallback
- * takes over.
+ * registered under `TRANS_TOKEN_INTERNAL_SERVICE`. Pass `internalService` to
+ * play that provider: it prices every order on the server. Leave it out and
+ * the stub throws, which is the case where no such provider exists: the
+ * built-in fallback takes over and, with an empty url, cannot start a payment.
  *
  * The three payment services left `undefined` are `@Optional()` injections.
  * Only the one named by `system` is ever called.
@@ -71,6 +74,7 @@ export function createTransService(
   repository: InMemoryTransRepository,
   httpService: OfflineHttpService,
   payuService: StubPayuService,
+  internalService?: ITransInternalService<OrderData>,
 ): TransService {
   const itemRepository = repository as unknown as IItemRepository<
     Trans<OrderData>
@@ -83,6 +87,8 @@ export function createTransService(
 
   const moduleRef = {
     get: () => {
+      if (internalService) return internalService;
+
       throw new Error('no internal service is registered');
     },
   } as unknown as ModuleRef;

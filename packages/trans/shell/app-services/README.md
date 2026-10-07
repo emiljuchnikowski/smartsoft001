@@ -30,3 +30,11 @@ Methods:
         <td>Retrieves a transaction by its ID from the repository.</td>
     </tr>
 </table>
+
+## ⚠️ Internal service and payment amounts
+
+`TransService.create` charges only the `amount` your internal service approves. Register a provider
+under `TRANS_TOKEN_INTERNAL_SERVICE` whose `create` returns `{ amount }` (a positive integer in minor
+units), or set `internalApiUrl` to a back end whose response contains `amount`. With neither, the
+built-in fallback makes no request and `create` rejects with `DomainValidationError`, so no payment
+can be created in that offline mode. Refreshes still work.

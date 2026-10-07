@@ -5,7 +5,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { ListCellPipe, TrustHtmlPipe } from '../../../../pipes';
+import { ListCellPipe } from '../../../../pipes';
 import { DetailTextComponent } from '../text.component';
 
 @Component({
@@ -16,17 +16,13 @@ import { DetailTextComponent } from '../text.component';
     @if (item && key) {
       @let value = (item | smartListCell: key : options()?.cellPipe)?.value;
       @if (value) {
-        <p
-          data-role="text"
-          [class]="textClasses()"
-          [innerHTML]="value | smartTrustHtml"
-        ></p>
+        <p data-role="text" [class]="textClasses()" [innerHTML]="value"></p>
       } @else {
         <p data-role="empty" [class]="emptyClasses()">—</p>
       }
     }
   `,
-  imports: [ListCellPipe, TrustHtmlPipe],
+  imports: [ListCellPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })

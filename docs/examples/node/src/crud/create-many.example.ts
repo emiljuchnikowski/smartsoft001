@@ -10,8 +10,9 @@ import { Note } from './crud-service.example';
  * the imported batch becomes the whole content. `mode: 'default'` appends to
  * whatever is already stored.
  *
- * Every note is validated and its password hashed, exactly as in `create`, and
- * the returned array carries the generated ids.
+ * Every note is validated and its password hashed, exactly as in `create`. The
+ * returned array holds copies carrying the generated ids, without credential
+ * fields; the notes passed in are not the ones returned.
  */
 export function importNotes(
   service: CrudService<Note>,

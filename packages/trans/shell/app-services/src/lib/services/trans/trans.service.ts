@@ -3,7 +3,10 @@ import { Injectable, Optional } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { firstValueFrom } from 'rxjs';
 
-import { IItemRepository } from '@smartsoft001/domain-core';
+import {
+  DomainValidationError,
+  IItemRepository,
+} from '@smartsoft001/domain-core';
 import { PaynowService } from '@smartsoft001/paynow';
 import { PaypalService } from '@smartsoft001/paypal';
 import { PayuService } from '@smartsoft001/payu';
@@ -34,13 +37,16 @@ export class TransService {
     };
   }
 
-  private _internalService = {
+  private _internalService: ITransInternalService<any> = {
     create: (trans: Trans<any>) => {
+      // Only a back end can price an order. Without one there is no amount
+      // to charge, so a payment cannot start.
       if (!this.config.internalApiUrl)
-        return Promise.resolve({
-          date: new Date(),
-          req: trans,
-        });
+        return Promise.reject(
+          new DomainValidationError(
+            'No internal service approves the payment amount: set internalApiUrl or provide TRANS_TOKEN_INTERNAL_SERVICE',
+          ),
+        );
 
       return firstValueFrom(
         this.httpService.post(this.config.internalApiUrl, trans),

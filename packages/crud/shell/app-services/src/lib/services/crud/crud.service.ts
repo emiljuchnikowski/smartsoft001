@@ -8,6 +8,7 @@ import { ICreateManyOptions } from '@smartsoft001/crud-domain';
 import { ItemChangedData } from '@smartsoft001/crud-shell-dtos';
 import {
   DomainValidationError,
+  DomainForbiddenError,
   IAttachmentRepository,
   IEntity,
   IItemRepository,
@@ -21,11 +22,19 @@ import { GuidService, PasswordService } from '@smartsoft001/utils';
 import { Readable, Stream } from 'stream';
 
 /**
- * The two credential fields the service treats specially on every entity:
+ * Credential fields the service treats specially on every entity:
  * `password` is hashed before it is stored and stripped before it is returned,
  * `passwordConfirm` is only ever a form helper and never stored.
+ * `authRefreshToken` must never be included in a CRUD response.
  */
-type WithCredentials = { password?: string; passwordConfirm?: string };
+type WithCredentials = {
+  password?: string;
+  passwordConfirm?: string;
+  authRefreshToken?: string;
+};
+
+/** One file of up to 10 MiB, unless `SharedConfig.attachmentMaxBytes` says otherwise. */
+const DEFAULT_ATTACHMENT_MAX_BYTES = 10 * 1024 * 1024;
 
 @Injectable()
 export class CrudService<T extends IEntity<string>> {
@@ -100,7 +109,7 @@ export class CrudService<T extends IEntity<string>> {
       throw e;
     }
 
-    return data;
+    return data.map((item) => this.withoutCredentials(item));
   }
 
   /** Resolves to `null` when no item has that id; the caller decides what that means (the controller answers 404). */
@@ -111,9 +120,7 @@ export class CrudService<T extends IEntity<string>> {
 
       if (!result) return null;
 
-      this.stripPassword(result);
-
-      return result;
+      return this.withoutCredentials(result);
     } catch (e) {
       this._logger.error(e);
       throw e;
@@ -128,9 +135,10 @@ export class CrudService<T extends IEntity<string>> {
     try {
       this.permissionService.valid('read', user);
       const result = await this.repository.getByCriteria(criteria, options);
-      result.data.forEach((item) => this.stripPassword(item));
-
-      return result;
+      return {
+        ...result,
+        data: result.data.map((item) => this.withoutCredentials(item)),
+      };
     } catch (e) {
       this._logger.error(e);
       throw e;
@@ -229,9 +237,9 @@ export class CrudService<T extends IEntity<string>> {
       data.id = GuidService.create();
     }
 
-    this.attachmentRepository.upload(data, options);
+    await this.attachmentRepository.upload(data, options);
 
-    if (oldId) await this.attachmentRepository.delete(data.id);
+    if (oldId) await this.attachmentRepository.delete(oldId);
 
     return data.id;
   }
@@ -254,6 +262,27 @@ export class CrudService<T extends IEntity<string>> {
     return this.attachmentRepository.delete(id);
   }
 
+  /** Upload limits for the HTTP attachment route, from `SharedConfig` or the defaults. */
+  getAttachmentLimits(): { maxBytes: number; maxFields: number } {
+    return {
+      maxBytes: this.config?.attachmentMaxBytes ?? DEFAULT_ATTACHMENT_MAX_BYTES,
+      maxFields: this.config?.attachmentMaxFields ?? 0,
+    };
+  }
+
+  async authorizeAttachment(
+    operation: 'create' | 'read' | 'delete',
+    id: string,
+    user?: IUser,
+  ): Promise<void> {
+    if (
+      !this.config?.attachmentPolicy ||
+      (await this.config.attachmentPolicy({ operation, id, user })) !== true
+    ) {
+      throw new DomainForbiddenError('Attachment access denied');
+    }
+  }
+
   changes(criteria: { id?: string }): Observable<ItemChangedData> {
     return this.repository.changesByCriteria(criteria);
   }
@@ -270,10 +299,17 @@ export class CrudService<T extends IEntity<string>> {
     }
   }
 
-  private stripPassword(item: T): void {
-    const credentials = item as T & WithCredentials;
-
+  private withoutCredentials(item: T): T {
+    // Removes the credential fields (password, passwordConfirm, authRefreshToken) from a copy,
+    // so objects retained by a repository or passed to a bulk write are never mutated.
+    const credentials: T & WithCredentials = Object.assign(
+      Object.create(Object.getPrototypeOf(item)),
+      item,
+    );
     delete credentials.password;
+    delete credentials.passwordConfirm;
+    delete credentials.authRefreshToken;
+    return credentials;
   }
 
   /**

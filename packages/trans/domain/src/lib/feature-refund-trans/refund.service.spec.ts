@@ -175,7 +175,34 @@ describe('trans-domain: RefundService', () => {
         expect((service as any).setError).toHaveBeenCalledWith(
           mockTrans,
           mockError,
+          'Transaction refund failed',
         );
+      });
+
+      it('should neither log nor store a credential-bearing provider error', async () => {
+        const secret = 'synthetic-private-secret';
+        const providerError = Object.assign(new Error(secret), {
+          config: { headers: { Authorization: `Bearer ${secret}` } },
+          response: { status: 500 },
+        });
+        (mockPaymentService.payu.refund as jest.Mock).mockRejectedValue(
+          providerError,
+        );
+        const log = jest.spyOn(console, 'error').mockImplementation();
+
+        await expect(
+          service.refund('test-id', mockInternalService, mockPaymentService),
+        ).rejects.toBe(providerError);
+
+        expect(
+          JSON.stringify([log.mock.calls, mockTrans.history]),
+        ).not.toContain(secret);
+        expect(mockTrans.history.at(-1)!.data).toEqual({
+          name: 'Error',
+          message: 'Transaction refund failed (HTTP 500)',
+          status: 500,
+        });
+        log.mockRestore();
       });
 
       it('should update transaction in repository', async () => {

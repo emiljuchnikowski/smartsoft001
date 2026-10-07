@@ -2,7 +2,10 @@ import { HttpService } from '@nestjs/axios';
 import { ModuleRef } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { IItemRepository } from '@smartsoft001/domain-core';
+import {
+  DomainValidationError,
+  IItemRepository,
+} from '@smartsoft001/domain-core';
 import { PaynowService } from '@smartsoft001/paynow';
 import { PaypalService } from '@smartsoft001/paypal';
 import { PayuService } from '@smartsoft001/payu';
@@ -251,6 +254,21 @@ describe('trans: TransService', () => {
       const result = (service as any).getInternalService();
 
       expect(result).toHaveProperty('create');
+    });
+
+    it('should refuse to approve an amount without an internal api url', async () => {
+      mockModuleRef.get.mockImplementation(() => {
+        throw new Error('Service not found');
+      });
+      mockConfig.internalApiUrl = '';
+      const fallback = (service as any).getInternalService();
+
+      await expect(fallback.create({ id: 'trans-1' })).rejects.toThrow(
+        new DomainValidationError(
+          'No internal service approves the payment amount: set internalApiUrl or provide TRANS_TOKEN_INTERNAL_SERVICE',
+        ),
+      );
+      expect(mockHttpService.post).not.toHaveBeenCalled();
     });
 
     it('should return fallback internal service with refresh method when module ref fails', () => {

@@ -13,7 +13,7 @@
 Methods:
 <table>
     <tr><td>create</td><td>Creates a new entity and returns its ID.</td></tr>
-    <tr><td>createMany</td><td>Creates multiple entities in bulk.</td></tr>
+    <tr><td>createMany</td><td>Creates multiple entities in bulk. Returns copies carrying the generated ids, not the objects passed in.</td></tr>
     <tr><td>readById</td><td>Retrieves an entity by its ID.</td></tr>
     <tr><td>read</td><td>Retrieves a list of entities with filtering support.</td></tr>
     <tr><td>readBySpec</td><td>Retrieves entities using a specification object.</td></tr>
@@ -26,3 +26,11 @@ Methods:
     <tr><td>deleteAttachment</td><td>Deletes an attachment by its ID.</td></tr>
     <tr><td>changes</td><td>Returns an observable for entity change events.</td></tr>
 </table>
+
+### Credential fields
+
+Every record `CrudService` returns (`readById`, `read`, `readBySpec` and `createMany`) is a copy
+without the credential fields `password`, `passwordConfirm` and `authRefreshToken`. The objects held
+by the repository, and the objects passed to `createMany`, are left untouched. Code that relied on
+`createMany` returning the same array it was given, or on reading those fields back, has to use the
+returned copies or load them through the repository instead.
