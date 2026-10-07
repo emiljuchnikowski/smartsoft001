@@ -8,6 +8,7 @@ import { ICreateManyOptions } from '@smartsoft001/crud-domain';
 import { ItemChangedData } from '@smartsoft001/crud-shell-dtos';
 import {
   DomainValidationError,
+  DomainForbiddenError,
   IAttachmentRepository,
   IEntity,
   IItemRepository,
@@ -31,6 +32,9 @@ type WithCredentials = {
   passwordConfirm?: string;
   authRefreshToken?: string;
 };
+
+/** One file of up to 10 MiB, unless `SharedConfig.attachmentMaxBytes` says otherwise. */
+const DEFAULT_ATTACHMENT_MAX_BYTES = 10 * 1024 * 1024;
 
 @Injectable()
 export class CrudService<T extends IEntity<string>> {
@@ -233,9 +237,9 @@ export class CrudService<T extends IEntity<string>> {
       data.id = GuidService.create();
     }
 
-    this.attachmentRepository.upload(data, options);
+    await this.attachmentRepository.upload(data, options);
 
-    if (oldId) await this.attachmentRepository.delete(data.id);
+    if (oldId) await this.attachmentRepository.delete(oldId);
 
     return data.id;
   }
@@ -256,6 +260,27 @@ export class CrudService<T extends IEntity<string>> {
 
   async deleteAttachment(id: string): Promise<void> {
     return this.attachmentRepository.delete(id);
+  }
+
+  /** Upload limits for the HTTP attachment route, from `SharedConfig` or the defaults. */
+  getAttachmentLimits(): { maxBytes: number; maxFields: number } {
+    return {
+      maxBytes: this.config?.attachmentMaxBytes ?? DEFAULT_ATTACHMENT_MAX_BYTES,
+      maxFields: this.config?.attachmentMaxFields ?? 0,
+    };
+  }
+
+  async authorizeAttachment(
+    operation: 'create' | 'read' | 'delete',
+    id: string,
+    user?: IUser,
+  ): Promise<void> {
+    if (
+      !this.config?.attachmentPolicy ||
+      (await this.config.attachmentPolicy({ operation, id, user })) !== true
+    ) {
+      throw new DomainForbiddenError('Attachment access denied');
+    }
   }
 
   changes(criteria: { id?: string }): Observable<ItemChangedData> {
