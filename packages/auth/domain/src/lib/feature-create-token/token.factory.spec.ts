@@ -35,7 +35,7 @@ describe('auth-domain: TokenFactory', () => {
           provide: getRepositoryToken(User),
           useValue: {
             findOne: jest.fn(),
-            update: jest.fn(),
+            update: jest.fn().mockResolvedValue({ affected: 1 }),
           },
         },
         {

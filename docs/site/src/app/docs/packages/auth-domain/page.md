@@ -21,7 +21,7 @@ npm install @smartsoft001/auth-domain @smartsoft001/domain-core @smartsoft001/fb
 
 The manifest declares the five workspace packages above as peer dependencies, pinned to its own version, so a package manager warns when one of them is missing instead of letting the failure surface at import time. They are all reached directly: `domain-core` for the factory contract and the validation error, [`@smartsoft001/users`](/docs/packages/users) for the two interfaces the entity implements, [`@smartsoft001/utils`](/docs/packages/utils) for the password comparison, and the Facebook and Google services for the two social grants.
 
-From outside the workspace it needs `typeorm` for the entity decorators and the repository type, `@nestjs/typeorm` for `@InjectRepository`, `@nestjs/common` for `@Injectable`, `@nestjs/jwt` for the service that signs the access token, `guid-typescript` for the refresh token, and the `express` types for the optional request object. `FbService` and `GoogleService` are built on `@nestjs/axios`, so that comes along with them.
+From outside the workspace it needs `typeorm` for the entity decorators and the repository type, `@nestjs/typeorm` for `@InjectRepository`, `@nestjs/common` for `@Injectable`, `@nestjs/jwt` for the service that signs the access token, and the `express` types for the optional request object. `FbService` and `GoogleService` are built on `@nestjs/axios`, so that comes along with them. The refresh token comes from `randomBytes` in `node:crypto`, so nothing extra is needed for it.
 
 ## What it is
 
@@ -49,9 +49,9 @@ The two social cases in the spec also show a wrinkle of the types. `IAuthTokenRe
 
 The region builds a working factory by hand: a `TokenConfig` whose `clients` list holds the one client id, an array-backed stand-in for the TypeORM repository, a `JwtService` stub that always signs `'signed.jwt'`, and empty objects for the Facebook and Google services, which the password grant never touches. The stored user's password is put through `PasswordService.hash`, so the comparison the factory runs is the real one.
 
-The fake repository has to understand two query shapes, and that is a fact about the factory rather than about the example. Lookups arrive as a plain entity partial, but the update criteria arrive as `{ ...query, disabled: { $ne: true } }`, a Mongo operator mixed into what TypeORM types as a `Partial<User>`.
+The fake repository has to understand two query shapes, and that is a fact about the factory rather than about the example. Lookups arrive as a plain entity partial, but the update criteria arrive as `{ ...query, username, disabled: { $ne: true } }`, a Mongo operator mixed into what TypeORM types as a `Partial<User>`. Its `update` also has to resolve like TypeORM's `UpdateResult`, with `{ affected }` holding the number of rows it changed, because the factory signs nothing unless exactly one row was rotated. See [the repository contract](#the-repository-contract) below.
 
-Its spec covers the happy path and every refusal. A valid request comes back with `token_type: 'bearer'`, the `expired_in` from the config, and the `access_token` the stub signed. The stored user ends up carrying the refresh token that was returned and a `lastLoginDate`, which proves the rotation was persisted rather than only reported. The returned object has no `password` key. And four requests are rejected with the exact messages the factory raises: a wrong password and an unknown username both produce `Invalid username or password`, an unregistered client id produces `client_id is incorrect`, and a user flagged `disabled` produces `user disabled`.
+Its spec covers the happy path and every refusal. A valid request comes back with `token_type: 'bearer'`, the `expired_in` from the config, and the `access_token` the stub signed. The stored user ends up carrying the refresh token that was returned and a `lastLoginDate`, which proves the rotation was persisted rather than only reported, and the fake's `update` reports `{ affected: 1 }` for it. The returned object has no `password` key. And four requests are rejected with the exact messages the factory raises: a wrong password and an unknown username both produce `Invalid username or password`, an unregistered client id produces `client_id is incorrect`, and a user flagged `disabled` produces `user disabled`.
 
 {% callout type="warning" title="The password check is md5" %}
 `checkPassword` calls `PasswordService.compare` from [`@smartsoft001/utils`](/docs/packages/utils), which hashes the candidate with unsalted md5 and compares the strings. That is the warning on that package's page, and it applies to every credential this factory verifies.
@@ -98,12 +98,12 @@ A TypeORM `@Entity('users')` implementing `IEntity<string>` from `@smartsoft001/
 | 3    | `getQuery` builds the lookup, and the user is fetched from `userProvider.get(...)` when one was passed and from the repository otherwise.                                                                                                            |
 | 4    | Unless a validation provider sets `replace`, the user must exist, must not be disabled, and for the password grant must match the stored digest.                                                                                                     |
 | 5    | A validation provider, if present, runs its own `check({ request, user })`.                                                                                                                                                                          |
-| 6    | A fresh GUID becomes the refresh token, and the matching row is updated with it and with `lastLoginDate`.                                                                                                                                            |
+| 6    | 32 random bytes from `node:crypto`, hex-encoded, become the refresh token. The row matching the query and the user's `username` is updated with it and `lastLoginDate`.                                                                              |
 | 7    | The payload `{ permissions, scope }` is built, handed to a payload provider if one was passed, and signed with `expiresIn` from the config and the username as subject.                                                                              |
 
 The resolved value is `{ expired_in, token_type: 'bearer', access_token, refresh_token, username }`.
 
-Two of those steps deserve a second look. A validation provider with `replace: true` skips step 4 entirely, and nothing else checks that a user was found, so a provider that takes the decision over must also guarantee a user. And the update in step 6 uses `{ ...query, disabled: { $ne: true } }`, so the criteria object the repository receives is a TypeORM entity partial with one Mongo operator inside it.
+Two of those steps deserve a second look. A validation provider with `replace: true` skips step 4 entirely, and nothing else checks that a user was found, so a provider that takes the decision over must also guarantee a user. And the update in step 6 uses `{ ...query, username: user.username, disabled: { $ne: true } }`, so the criteria object the repository receives is a TypeORM entity partial with one Mongo operator inside it. The update is the atomic part of the rotation: a refresh token that was already rotated by a concurrent request, or an account disabled in between, matches no row, and the factory throws instead of signing.
 
 #### Statics
 
@@ -118,21 +118,33 @@ The first parameter of `getQuery` is declared as `config: IAuthTokenRequest`. Th
 
 Every failure is a `DomainValidationError` from `@smartsoft001/domain-core`.
 
-| Message                                                                                        | When                                                                                                      |
-| ---------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| `config is empty`                                                                              | No request at all.                                                                                        |
-| `grant_type is empty`                                                                          | A request without a grant type.                                                                           |
-| `username is empty`, `password is empty`, `client_id is empty`                                 | The password grant with that field missing.                                                               |
-| `client_id is incorrect`                                                                       | The client id is not in `TokenConfig.clients`.                                                            |
-| `refresh_token is empty`                                                                       | The refresh-token grant without its token.                                                                |
-| `fb_token is empty`, `fb_user_id is empty`, `google_token is empty`, `google_user_id is empty` | The social grants, checked after the provider lookup.                                                     |
-| `Google client IDs must be configured`                                                         | The `google` grant while `TokenConfig.googleClientIds` is missing or empty, before any request to Google. |
-| `Invalid grand type`                                                                           | An unrecognised grant type with no user provider.                                                         |
-| `Invalid username or password`                                                                 | The password grant with no matching user, or with a password that does not match.                         |
-| `Invalid token`                                                                                | Any other grant whose lookup found no user.                                                               |
-| `user disabled`                                                                                | The user exists but is flagged disabled.                                                                  |
+| Message                                                                                        | When                                                                                                              |
+| ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `config is empty`                                                                              | No request at all.                                                                                                |
+| `grant_type is empty`                                                                          | A request without a grant type.                                                                                   |
+| `username is empty`, `password is empty`, `client_id is empty`                                 | The password grant with that field missing.                                                                       |
+| `client_id is incorrect`                                                                       | The client id is not in `TokenConfig.clients`.                                                                    |
+| `refresh_token is empty`                                                                       | The refresh-token grant without its token.                                                                        |
+| `fb_token is empty`, `fb_user_id is empty`, `google_token is empty`, `google_user_id is empty` | The social grants, checked after the provider lookup.                                                             |
+| `Google client IDs must be configured`                                                         | The `google` grant while `TokenConfig.googleClientIds` is missing or empty, before any request to Google.         |
+| `Invalid grand type`                                                                           | An unrecognised grant type with no user provider.                                                                 |
+| `Invalid username or password`                                                                 | The password grant with no matching user, or with a password that does not match.                                 |
+| `Invalid token`                                                                                | Any other grant whose lookup found no user, or a rotation in step 6 that did not report exactly one affected row. |
+| `user disabled`                                                                                | The user exists but is flagged disabled.                                                                          |
+| `Invalid token user`                                                                           | The user that passed every check has no `username`.                                                               |
 
 A wrong password and an unknown username are deliberately indistinguishable. A Google token that fails the checks of [`GoogleService`](/docs/packages/google), including one issued to a client outside `googleClientIds`, rejects with that service's `UnauthorizedException('Invalid Google token')` rather than a `DomainValidationError`.
+
+#### The repository contract
+
+The factory relies on two things from the `Repository<User>` it is given, and both matter for a custom repository and for a test double as much as for TypeORM.
+
+- `update(criteria, patch)` resolves to an object with `affected`, the number of rows it changed, the way TypeORM's `UpdateResult` does. Anything other than exactly `1`, including `undefined` from a double that returns nothing, makes the grant fail with `Invalid token`.
+- Every user carries its `username`, also the one an `ITokenUserProvider` returns. The rotation filters on it, and a user without one fails with `Invalid token user`.
+
+{% callout type="warning" title="Migrating a custom repository or test double" %}
+Up to 2.182.0 the factory ignored what `update` returned and did not add `username` to the criteria. A repository or double whose `update` resolves to `void` now rejects every grant, so make it return `{ affected }`. A user provider that returns users without a `username` must fill it in. The `username` filter fixes a real hole: a custom grant type resolved through an `ITokenUserProvider` has a `null` query, so the update criteria were only `{ disabled: { $ne: true } }` and one login overwrote the refresh token of every enabled user.
+{% /callout %}
 
 ### `TokenConfig`
 

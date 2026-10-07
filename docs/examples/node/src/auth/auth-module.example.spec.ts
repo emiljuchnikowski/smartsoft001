@@ -17,7 +17,7 @@ describe('docs-examples-node: AuthModule', () => {
       .overrideProvider(getRepositoryToken(User))
       .useValue({
         findOne: async () => null,
-        update: async () => undefined,
+        update: async () => ({ affected: 0 }),
       })
       .compile();
   });
