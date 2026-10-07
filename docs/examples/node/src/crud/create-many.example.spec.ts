@@ -57,4 +57,14 @@ describe('docs-examples-node: CrudService.createMany', () => {
       'string',
     ]);
   });
+
+  it('should return copies rather than the notes passed in', async () => {
+    const service = createNoteService(repository);
+    const notes = buildNotes();
+
+    const result = await importNotes(service, notes, admin, 'default');
+
+    expect(result[0]).not.toBe(notes[0]);
+    expect(result[0].title).toBe('Release plan');
+  });
 });

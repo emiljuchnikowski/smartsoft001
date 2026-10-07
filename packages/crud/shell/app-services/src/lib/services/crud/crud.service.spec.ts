@@ -5,6 +5,8 @@ import { of, Observable } from 'rxjs';
 import { DomainValidationError } from '@smartsoft001/domain-core';
 import { Field, Model } from '@smartsoft001/models';
 
+import { Readable } from 'stream';
+
 import { CrudService } from './crud.service';
 
 jest.mock('@smartsoft001/utils', () => ({
@@ -262,6 +264,50 @@ describe('crud-app-services: CrudService', () => {
         encoding: '',
       });
       expect(typeof id).toBe('string');
+    });
+
+    it('should delete the partial attachment, not the new one, when resuming', async () => {
+      attachmentRepository.getStream.mockResolvedValue(Readable.from(['abc']));
+
+      const id = await service.uploadAttachment(
+        {
+          id: 'partial-id',
+          fileName: 'f.txt',
+          stream: Readable.from(['def']),
+          mimeType: 'text/plain',
+          encoding: '7bit',
+        },
+        { start: 3 },
+      );
+
+      expect(id).toBe('guid');
+      expect(attachmentRepository.upload).toHaveBeenCalledWith(
+        expect.objectContaining({ id: 'guid' }),
+        { start: 3 },
+      );
+      expect(attachmentRepository.delete).toHaveBeenCalledWith('partial-id');
+      expect(attachmentRepository.delete).not.toHaveBeenCalledWith('guid');
+    });
+  });
+
+  describe('getAttachmentLimits', () => {
+    it('should default to one 10 MiB file and no form fields', () => {
+      const limits = service.getAttachmentLimits();
+
+      expect(limits).toEqual({ maxBytes: 10 * 1024 * 1024, maxFields: 0 });
+    });
+
+    it('should take the limits from SharedConfig', () => {
+      const configured = new CrudService(
+        permissionService,
+        repository,
+        attachmentRepository,
+        { type: class {}, attachmentMaxBytes: 1024, attachmentMaxFields: 3 },
+      );
+
+      const limits = configured.getAttachmentLimits();
+
+      expect(limits).toEqual({ maxBytes: 1024, maxFields: 3 });
     });
   });
 

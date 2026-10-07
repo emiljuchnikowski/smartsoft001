@@ -88,7 +88,10 @@ describe('auth-domain: password hashing on login', () => {
       .fn()
       .mockResolvedValueOnce({ username: 'alice', password: legacy })
       .mockResolvedValueOnce({ username: 'alice', password: upgraded });
-    const update = jest.fn(async () => ({ affected: 0 }));
+    // Only the migration write loses; the refresh-token rotation still lands.
+    const update = jest.fn(async (_criteria: unknown, patch: object) => ({
+      affected: 'password' in patch ? 0 : 1,
+    }));
 
     await factory({ findOne, update }).create({
       request,

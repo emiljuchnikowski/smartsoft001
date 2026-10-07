@@ -26,21 +26,28 @@ export class InMemoryUserRepository {
     return this.users.find((user) => matches(user, criteria)) ?? null;
   }
 
+  /**
+   * Resolves like TypeORM's `UpdateResult`: `TokenFactory` signs a token only
+   * when the refresh-token rotation reports `affected` exactly 1, so a double
+   * that returns nothing fails every grant. The conditional password-hash
+   * upgrade on login reads `affected` too, and re-reads the user when it is 0.
+   */
   async update(
     criteria: Partial<User>,
     patch: Partial<User>,
   ): Promise<{ affected: number }> {
-    const found = this.users.filter((user) => matches(user, criteria));
-    found.forEach((user) => Object.assign(user, patch));
+    const matched = this.users.filter((user) => matches(user, criteria));
+    matched.forEach((user) => Object.assign(user, patch));
 
-    return { affected: found.length };
+    return { affected: matched.length };
   }
 }
 
 /**
- * `TokenFactory` narrows its update criteria with `{ disabled: { $ne: true } }`,
- * a Mongo-style operator mixed into what is otherwise a TypeORM entity partial.
- * The fake therefore has to understand both shapes.
+ * `TokenFactory` narrows its update criteria to the user's `username` plus
+ * `{ disabled: { $ne: true } }`, a Mongo-style operator mixed into what is
+ * otherwise a TypeORM entity partial. The fake therefore has to understand
+ * both shapes.
  */
 function matches(user: User, criteria: Partial<User>): boolean {
   const record = user as unknown as Record<string, unknown>;

@@ -12,7 +12,7 @@
 
 Fields:
 <table>
-    <tr><td>amount</td><td>number (required, currency)</td></tr>
+    <tr><td>amount</td><td>number (required, currency). Must be at least 1, but is never charged: the server's internal service approves the amount.</td></tr>
     <tr><td>system</td><td>'payu' (required, text)</td></tr>
     <tr><td>data</td><td>T (required)</td></tr>
     <tr><td>name</td><td>string (required, text)</td></tr>

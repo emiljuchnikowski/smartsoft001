@@ -41,7 +41,7 @@ Neither module registers a guard, and the token endpoint is unauthenticated by n
 
 {% snippet file="node/src/auth/auth-module.example.ts" region="usage" /%}
 
-The region is the whole integration: import the dynamic module with a `tokenConfig` and the endpoint exists. The three fields are the signing key, the lifetime in seconds and the list of client ids the password grant will accept.
+The region is the whole integration: import the dynamic module with a `tokenConfig` and the endpoint exists. The three fields are the signing key, the lifetime in seconds and the list of client ids the password grant will accept. An application that offers the `google` grant also sets `googleClientIds` to its Google OAuth client ids. Without it that grant fails with `Google client IDs must be configured`, see [`TokenConfig`](/docs/packages/auth-domain).
 
 Its spec is where the interesting part is. It compiles the feature module with `Test.createTestingModule`, then calls `.overrideProvider(getRepositoryToken(User)).useValue({ findOne, update })` before `.compile()`, because the module asks for a `User` repository that no root connection provides. With the override in place, it resolves `TokenController` and `AuthService` and gets real instances of both, which proves the controller list and the provider list are wired as expected. The whole spec runs offline, with no database and no network.
 
