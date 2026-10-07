@@ -79,8 +79,12 @@ export class TokenFactory implements IFactory<
     }
 
     if (options.request.grant_type === 'google') {
+      if (!this.config.googleClientIds?.length) {
+        throw new DomainValidationError('Google client IDs must be configured');
+      }
       options.request.google_user_id = await this.googleService.getUserId(
         options.request.google_token,
+        this.config.googleClientIds,
       );
     }
 

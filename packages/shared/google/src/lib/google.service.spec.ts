@@ -1,7 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { HttpService } from '@nestjs/axios';
-import { GoogleService } from './google.service';
+import { Test, TestingModule } from '@nestjs/testing';
 import { of } from 'rxjs';
+
+import { GoogleService } from './google.service';
 
 describe('GoogleService', () => {
   let service: GoogleService;
@@ -40,12 +41,15 @@ describe('GoogleService', () => {
       const mockResponse = {
         data: {
           user_id: '123456789',
+          audience: 'test-client',
+          issued_to: 'test-client',
+          expires_in: 60,
         },
       };
 
       mockHttpService.get.mockReturnValue(of(mockResponse));
 
-      const result = await service.getUserId(mockToken);
+      const result = await service.getUserId(mockToken, ['test-client']);
 
       expect(result).toBe('123456789');
       expect(mockHttpService.get).toHaveBeenCalledWith(
@@ -60,7 +64,9 @@ describe('GoogleService', () => {
         throw new Error('API Error');
       });
 
-      await expect(service.getUserId(mockToken)).rejects.toThrow('API Error');
+      await expect(
+        service.getUserId(mockToken, ['test-client']),
+      ).rejects.toThrow('Invalid Google token');
     });
   });
 
@@ -70,13 +76,16 @@ describe('GoogleService', () => {
       const mockResponse = {
         data: {
           user_id: '123456789',
+          audience: 'test-client',
+          issued_to: 'test-client',
+          expires_in: 60,
           email: 'test@example.com',
         },
       };
 
       mockHttpService.get.mockReturnValue(of(mockResponse));
 
-      const result = await service.getData(mockToken);
+      const result = await service.getData(mockToken, ['test-client']);
 
       expect(result).toEqual({
         id: '123456789',
@@ -94,7 +103,9 @@ describe('GoogleService', () => {
         throw new Error('API Error');
       });
 
-      await expect(service.getData(mockToken)).rejects.toThrow('API Error');
+      await expect(service.getData(mockToken, ['test-client'])).rejects.toThrow(
+        'Invalid Google token',
+      );
     });
   });
 });
