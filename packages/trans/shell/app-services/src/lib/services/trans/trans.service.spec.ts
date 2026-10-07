@@ -1,6 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { ModuleRef } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
+import { of } from 'rxjs';
 
 import {
   DomainValidationError,
@@ -105,7 +106,7 @@ describe('trans: TransService', () => {
 
     mockInternalService = {
       create: jest.fn(),
-      refresh: jest.fn(),
+      refreshOnce: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -238,6 +239,57 @@ describe('trans: TransService', () => {
   });
 
   describe('getInternalService', () => {
+    it('rejects HTTP fulfillment without an explicit idempotency contract', async () => {
+      mockModuleRef.get.mockImplementation(() => {
+        throw new Error('No custom provider');
+      });
+      const internal = (service as any).getInternalService();
+
+      const result = internal.refreshOnce({ id: 'order' }, 'stable-key');
+
+      expect(result).toBeInstanceOf(Promise);
+      await expect(result).rejects.toThrow(
+        new DomainValidationError(
+          'An idempotent internal API must be configured',
+        ),
+      );
+      expect(mockHttpService.put).not.toHaveBeenCalled();
+    });
+
+    it('rejects fulfillment in offline mode even with the idempotency flag', async () => {
+      mockModuleRef.get.mockImplementation(() => {
+        throw new Error('No custom provider');
+      });
+      mockConfig.internalApiUrl = '';
+      mockConfig.idempotentInternalApi = true;
+      const internal = (service as any).getInternalService();
+
+      await expect(
+        internal.refreshOnce({ id: 'order' }, 'stable-key'),
+      ).rejects.toThrow('An idempotent internal API must be configured');
+      expect(mockHttpService.put).not.toHaveBeenCalled();
+    });
+
+    it('forwards the stable key to an explicitly configured internal API', async () => {
+      mockModuleRef.get.mockImplementation(() => {
+        throw new Error('No custom provider');
+      });
+      mockConfig.idempotentInternalApi = true;
+      mockHttpService.put.mockReturnValue(
+        of({ data: { receipt: 'done' } }) as any,
+      );
+      const trans = { id: 'order/1' };
+      const internal = (service as any).getInternalService();
+      await expect(internal.refreshOnce(trans, 'stable-key')).resolves.toEqual({
+        receipt: 'done',
+      });
+      expect(mockHttpService.put).toHaveBeenCalledWith(
+        'http://test-api.com/order%2F1',
+        trans,
+        { headers: { 'Idempotency-Key': 'stable-key' } },
+      );
+    });
+
     it('should return internal service from module ref when available', () => {
       mockModuleRef.get.mockReturnValue(mockInternalService);
 
@@ -271,14 +323,15 @@ describe('trans: TransService', () => {
       expect(mockHttpService.post).not.toHaveBeenCalled();
     });
 
-    it('should return fallback internal service with refresh method when module ref fails', () => {
+    it('should return a fallback internal service without the deprecated refresh', () => {
       mockModuleRef.get.mockImplementation(() => {
         throw new Error('Service not found');
       });
 
       const result = (service as any).getInternalService();
 
-      expect(result).toHaveProperty('refresh');
+      expect(result).toHaveProperty('refreshOnce');
+      expect(result).not.toHaveProperty('refresh');
     });
   });
 });

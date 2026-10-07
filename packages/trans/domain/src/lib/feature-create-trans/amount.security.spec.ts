@@ -61,11 +61,11 @@ describe('trans-domain: ITransInternalService.create contract', () => {
     const missing: ITransInternalService<unknown> = {
       // @ts-expect-error -- an answer without `amount` must not compile
       create: async () => ({}),
-      refresh: async () => ({}),
+      refreshOnce: async () => ({}),
     };
     const approved: ITransInternalService<unknown> = {
       create: async () => ({ amount: 1500, orderNumber: 'A-1' }),
-      refresh: async () => ({}),
+      refreshOnce: async () => ({}),
     };
 
     expect([missing, approved]).toHaveLength(2);

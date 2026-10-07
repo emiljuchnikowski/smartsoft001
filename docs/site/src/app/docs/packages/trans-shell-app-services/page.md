@@ -31,7 +31,7 @@ The domain services in [`@smartsoft001/trans-domain`](/docs/packages/trans-domai
 
 Two decisions make up almost the whole service. The first is which provider handles a transaction: a private getter builds the map `{ payu, paypal, paynow, revolut }` out of four `@Optional()` injections, and the domain indexes it with `trans.system`. A provider that was never registered is simply `undefined` in the map, and a transaction naming it fails when the domain reaches for it.
 
-The second is who your back end is. The service tries to resolve a provider registered under `TRANS_TOKEN_INTERNAL_SERVICE`, non-strictly, so it can come from anywhere in the application. If that lookup throws, for any reason, a built-in HTTP implementation takes over: it posts a new transaction to `TransConfig.internalApiUrl` and puts a refreshed one to that url plus the id. When `internalApiUrl` is empty, that implementation makes no request at all. Its `create` then rejects, because only a back end can price an order, so in that mode transactions can be refreshed but no payment can be created. A development setup that needs payments registers its own internal service, which is what the example below does.
+The second is who your back end is. The service tries to resolve a provider registered under `TRANS_TOKEN_INTERNAL_SERVICE`, non-strictly, so it can come from anywhere in the application. If that lookup throws, for any reason, a built-in HTTP implementation takes over: it posts a new transaction to `TransConfig.internalApiUrl` and, once `idempotentInternalApi` is set, puts a refreshed one to that url plus the id with an `Idempotency-Key` header. When `internalApiUrl` is empty, that implementation makes no request at all. Its `create` then rejects, because only a back end can price an order, and so does its `refreshOnce`, because nothing can fulfil the order exactly once, so in that mode no payment can be created or completed. A development setup that needs payments registers its own internal service, which is what the example below does.
 
 ## Usage
 
@@ -54,7 +54,7 @@ Its spec runs `create` with the internal service registered and checks six thing
 | 3        | `refresherService` | `RefresherService<any>`         | Backs `refresh`.                                                           |
 | 4        | `refundService`    | `RefundService<any>`            | Backs `refund`.                                                            |
 | 5        | `httpService`      | `HttpService`                   | Only used by the built-in internal service, and only with a non-empty url. |
-| 6        | `config`           | `TransConfig`                   | Read for `internalApiUrl`.                                                 |
+| 6        | `config`           | `TransConfig`                   | Read for `internalApiUrl` and `idempotentInternalApi`.                     |
 | 7        | `repository`       | `IItemRepository<Trans<any>>`   | Used directly by `getById`.                                                |
 | 8        | `payuService`      | `PayuService`, `@Optional()`    | Present only when the module was given a `payuConfig`.                     |
 | 9        | `paynowService`    | `PaynowService`, `@Optional()`  | Note the order: Paynow comes before Paypal.                                |
@@ -80,12 +80,14 @@ None of the four validates anything itself. Every rule, including the six valida
 
 The built-in implementation behaves as follows.
 
-| Call             | With an empty `internalApiUrl`                             | With a url                                                                |
-| ---------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------- |
-| `create(trans)`  | Rejects with `DomainValidationError`, no request.          | `POST` to the url with the transaction as the body, resolving `res.data`. |
-| `refresh(trans)` | Resolves `{ date, req: trans, id: trans.id }`, no request. | `PUT` to the url plus `/` and the id, resolving `res.data`.               |
+| Call                      | With an empty `internalApiUrl`                    | With a url                                                                                                                                                                       |
+| ------------------------- | ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `create(trans)`           | Rejects with `DomainValidationError`, no request. | `POST` to the url with the transaction as the body, resolving `res.data`.                                                                                                        |
+| `refreshOnce(trans, key)` | Rejects with `DomainValidationError`, no request. | With `idempotentInternalApi: true`, `PUT` to the url plus `/` and the URL-encoded id, with `Idempotency-Key: key`, resolving `res.data`. Without the flag, rejects like offline. |
 
-The domain charges only the `amount` in the internal answer to `create`, a positive integer in minor units, so with a url your back end's response body must carry it, computed from the order it holds rather than echoed from the request. Without a url there is nothing to price the order, so the offline `create` rejects with `No internal service approves the payment amount: set internalApiUrl or provide TRANS_TOKEN_INTERNAL_SERVICE`. To create payments without an HTTP back end, register a provider under `TRANS_TOKEN_INTERNAL_SERVICE` whose `create` returns `{ amount }`. The offline `refresh` still resolves a truthy answer, and the refresh path only persists a status change when it does.
+The domain charges only the `amount` in the internal answer to `create`, a positive integer in minor units, so with a url your back end's response body must carry it, computed from the order it holds rather than echoed from the request. Without a url there is nothing to price the order, so the offline `create` rejects with `No internal service approves the payment amount: set internalApiUrl or provide TRANS_TOKEN_INTERNAL_SERVICE`. To create payments without an HTTP back end, register a provider under `TRANS_TOKEN_INTERNAL_SERVICE` whose `create` returns `{ amount }`.
+
+The `refreshOnce` rejection reads `An idempotent internal API must be configured`. Both rejections are always rejected promises, never synchronous throws. A status change can't complete offline or against an API that hasn't declared idempotency: register a provider under `TRANS_TOKEN_INTERNAL_SERVICE` whose `refreshOnce` deduplicates by key, or make your API honour `Idempotency-Key` and set the flag. The built-in service no longer has a `refresh` method.
 
 ### `SERVICES`
 

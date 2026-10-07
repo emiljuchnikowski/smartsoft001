@@ -1,3 +1,24 @@
+## 2.184.0 (2026-10-07)
+
+### 🩹 Fixes
+
+- ⚠️  **auth:** bind Google access tokens to configured clients ([#118](https://github.com/emiljuchnikowski/smartsoft001/pull/118))
+- **crud:** omit credentials from read and bulk responses ([#112](https://github.com/emiljuchnikowski/smartsoft001/pull/112))
+- ⚠️  **crud:** authorize resource change subscriptions and omit document fields ([#119](https://github.com/emiljuchnikowski/smartsoft001/pull/119))
+- **shared:** sanitize HTML in standard text details ([#109](https://github.com/emiljuchnikowski/smartsoft001/pull/109))
+- **shared:** redact credential-bearing PayU authentication failures ([#111](https://github.com/emiljuchnikowski/smartsoft001/pull/111))
+
+### ⚠️  Breaking Changes
+
+- **crud:** authorize resource change subscriptions and omit document fields  ([#119](https://github.com/emiljuchnikowski/smartsoft001/pull/119))
+- **auth:** bind Google access tokens to configured clients  ([#118](https://github.com/emiljuchnikowski/smartsoft001/pull/118))
+
+### ❤️ Thank You
+
+- Claude Opus 5.5 (1M context)
+- Emil Juchnikowski
+- krzysztofciura @krzysztofciura
+
 ## 2.182.0 (2026-10-06)
 
 This was a version bump only, there were no code changes.
