@@ -49,3 +49,23 @@ export const revolutProviders: Provider[] = [
 })
 export class RevolutPaymentsModule {}
 // #endregion
+
+// #region failures
+/**
+ * A failed Revolut call never rejects with the raw axios error, because that
+ * error keeps the request and with it `Authorization: Bearer <merchant key>`.
+ * `create` and `getStatus` log one line under the `RevolutService` context and
+ * reject with a plain `Error` that has no `cause`, `config` or `response`:
+ * `Revolut order creation failed (HTTP 401)` or
+ * `Revolut status lookup failed (HTTP 503)`. The ` (HTTP {status})` suffix is
+ * there only when Revolut answered, so code that used to read
+ * `e.response.status` reads the status from the message instead.
+ */
+export function revolutFailureStatus(error: unknown): number | undefined {
+  if (!(error instanceof Error)) return undefined;
+
+  const match = / \(HTTP (\d{3})\)$/.exec(error.message);
+
+  return match ? Number(match[1]) : undefined;
+}
+// #endregion

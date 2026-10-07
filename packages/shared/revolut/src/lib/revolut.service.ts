@@ -16,6 +16,40 @@ import {
   RevolutConfig,
 } from './revolut.config';
 
+function httpStatusOf(e: unknown): number | undefined {
+  if (
+    typeof e === 'object' &&
+    e !== null &&
+    'response' in e &&
+    typeof e.response === 'object' &&
+    e.response !== null &&
+    'status' in e.response &&
+    typeof e.response.status === 'number'
+  ) {
+    return e.response.status;
+  }
+
+  return undefined;
+}
+
+/**
+ * HTTP errors retain the request, and every Revolut request carries the
+ * long-lived merchant secret key as `Authorization: Bearer <token>`. Neither
+ * the raw error nor its message may reach a log or an upstream handler, so
+ * only the operation and the HTTP status survive.
+ */
+function revolutFailure(operation: string, e: unknown): Error {
+  const status = httpStatusOf(e);
+  const message =
+    status === undefined
+      ? `Revolut ${operation} failed`
+      : `Revolut ${operation} failed (HTTP ${status})`;
+
+  Logger.error(message, RevolutService.name);
+
+  return new Error(message);
+}
+
 @Injectable()
 export class RevolutService implements ITransPaymentSingleService {
   constructor(
@@ -58,12 +92,17 @@ export class RevolutService implements ITransPaymentSingleService {
       };
     }
 
-    const response = await firstValueFrom(
-      this.httpService.post(this.getBaseUrl(config) + '/api/orders', data, {
-        headers: this.getHeaders(config),
-        maxRedirects: 0,
-      }),
-    );
+    let response;
+    try {
+      response = await firstValueFrom(
+        this.httpService.post(this.getBaseUrl(config) + '/api/orders', data, {
+          headers: this.getHeaders(config),
+          maxRedirects: 0,
+        }),
+      );
+    } catch (e) {
+      throw revolutFailure('order creation', e);
+    }
 
     return {
       redirectUrl: response.data.checkout_url,
@@ -84,17 +123,22 @@ export class RevolutService implements ITransPaymentSingleService {
       throw new Error('Transaction without start status');
     }
 
-    const response = await firstValueFrom(
-      this.httpService.get(
-        this.getBaseUrl(config) +
-          '/api/orders/' +
-          (historyItem.data as any).responseData.id,
-        {
-          headers: this.getHeaders(config),
-          maxRedirects: 0,
-        },
-      ),
-    );
+    let response;
+    try {
+      response = await firstValueFrom(
+        this.httpService.get(
+          this.getBaseUrl(config) +
+            '/api/orders/' +
+            (historyItem.data as any).responseData.id,
+          {
+            headers: this.getHeaders(config),
+            maxRedirects: 0,
+          },
+        ),
+      );
+    } catch (e) {
+      throw revolutFailure('status lookup', e);
+    }
 
     return {
       data: response.data,

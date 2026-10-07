@@ -28,3 +28,18 @@ Methods:
         <td>Refund handling (unsupported, the returned promise always rejects)</td>
     </tr>
 </table>
+
+## ⚠️ Errors
+
+A failed Revolut call is never rethrown as the raw axios error, because that error carries the
+merchant secret key as `Authorization: Bearer`. `create` and `getStatus` log one line through the
+NestJS `Logger` and throw a plain `Error` with no `cause`, `config` or `response`:
+
+- `Revolut order creation failed (HTTP {status})`
+- `Revolut status lookup failed (HTTP {status})`
+
+The ` (HTTP {status})` suffix is present only when Revolut answered, so `401` and `5xx` stay
+distinguishable. `refund` sends nothing and still rejects with `Revolut does not support refund`.
+
+Migration: code that read `e.response` from these errors must read the message instead. The
+`error` history entries written by `setError` for these failures no longer carry a `status`.
