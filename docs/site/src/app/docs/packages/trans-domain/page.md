@@ -92,9 +92,11 @@ On failure after the first write, the record is updated with status `error` and 
 
 It then asks the provider for the current status. A status equal to the stored one returns immediately and writes nothing, which is what makes a webhook safe to deliver twice. Otherwise the new status and `modifyDate` are set, `customData` is attached to the provider payload under `customData`, and the entry is appended to the history.
 
-`internalService.refreshOnce(trans, idempotencyKey)` runs next, and its answer decides the ending. The key is `smartsoft-trans-` plus a SHA-256 of the transaction id, the provider, the provider's order id and the **target** status, so it is the same on every retry and on every instance, and different for a different status. A falsy answer returns early, so the status change is **not** persisted at all. Any other answer is appended as a second history entry and the record is saved through `updatePartial` with only `modifyDate`, `status` and `history`.
+With a repository that implements `compareAndSet`, the service then claims the transition: it sets a short lease on the record only where `status` still equals the value it read and no other instance holds a live lease. A claim that matches nothing means another instance has already applied this transition or is applying it, so the call returns without calling your back end. See [Concurrent refreshes](#concurrent-refreshes) for the full order.
 
-The service works on a copy of the stored record, so the record it read is not changed until that write succeeds. A failure anywhere after the lookup, including in `refreshOnce` or in the final write, logs the fixed line `Transaction refresh failed`, persists nothing and rethrows. The previous status stays in place, so the next webhook or a manual refresh retries the transition with the same key, and a handler that already fulfilled the order only replays its receipt. A service without a `refreshOnce` function, such as one written against the old contract, is refused with `DomainValidationError('An idempotent refreshOnce handler is required')` before anything runs. The legacy `refresh` is never called.
+`internalService.refreshOnce(trans, idempotencyKey)` runs next, and its answer decides the ending. The key is `smartsoft-trans-` plus a SHA-256 of the transaction id, the provider, the provider's order id and the **target** status, so it is the same on every retry and on every instance, and different for a different status. A falsy answer drops the lease and returns early, so the status change is **not** persisted at all. Any other answer is appended as a second history entry and the record is saved with only `modifyDate`, `status` and `history`: through `compareAndSet`, conditioned on the old status and on still holding the lease, or through `updatePartial` when the repository has no `compareAndSet`.
+
+The service works on a copy of the stored record, so the record it read is not changed until that write succeeds. A failure anywhere after the lookup, including in `refreshOnce` or in the final write, drops the lease, logs the fixed line `Transaction refresh failed`, persists nothing else and rethrows. The previous status stays in place, so the next webhook or a manual refresh retries the transition with the same key, and a handler that already fulfilled the order only replays its receipt. A service without a `refreshOnce` function, such as one written against the old contract, is refused with `DomainValidationError('An idempotent refreshOnce handler is required')` before anything runs. The legacy `refresh` is never called.
 
 ### `RefundService<T>`
 
@@ -106,19 +108,20 @@ Only a transaction whose status is `completed` may be refunded. Anything else th
 
 `Trans<T>` is a TypeORM `@Entity('trans')` implementing `IEntity<string>`, with `@ObjectIdColumn({ generated: false })` on `id`, so ids come from the application rather than the database.
 
-| Column                                           | Type                | Notes                                                                  |
-| ------------------------------------------------ | ------------------- | ---------------------------------------------------------------------- |
-| `id`                                             | `string`            | A GUID assigned by `CreatorService`.                                   |
-| `externalId`                                     | `string`            | The provider's order id. The key `RefresherService` searches by.       |
-| `name`, `amount`                                 | `string`, `number`  | The order description and the price the provider is asked to charge.   |
-| `firstName`, `lastName`, `email`, `contactPhone` | `string`            | The buyer, as far as the provider needs it.                            |
-| `data`                                           | `T`                 | Your own payload. Opaque to this package.                              |
-| `system`                                         | `TransSystem`       | Which provider handles it, and which entry of the payment map is used. |
-| `options`                                        | `any`               | Passed through to the provider's `create`.                             |
-| `status`                                         | `TransStatus`       | Where in the lifecycle it sits.                                        |
-| `modifyDate`                                     | `Date`              | Set on every transition.                                               |
-| `clientIp`                                       | `string`            | Required by PayU, and required by the validation above.                |
-| `history`                                        | `TransHistory<T>[]` | An embedded column, appended to at every step.                         |
+| Column                                           | Type                             | Notes                                                                                                     |
+| ------------------------------------------------ | -------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `id`                                             | `string`                         | A GUID assigned by `CreatorService`.                                                                      |
+| `externalId`                                     | `string`                         | The provider's order id. The key `RefresherService` searches by.                                          |
+| `name`, `amount`                                 | `string`, `number`               | The order description and the price the provider is asked to charge.                                      |
+| `firstName`, `lastName`, `email`, `contactPhone` | `string`                         | The buyer, as far as the provider needs it.                                                               |
+| `data`                                           | `T`                              | Your own payload. Opaque to this package.                                                                 |
+| `system`                                         | `TransSystem`                    | Which provider handles it, and which entry of the payment map is used.                                    |
+| `options`                                        | `any`                            | Passed through to the provider's `create`.                                                                |
+| `status`                                         | `TransStatus`                    | Where in the lifecycle it sits.                                                                           |
+| `modifyDate`                                     | `Date`                           | Set on every transition.                                                                                  |
+| `clientIp`                                       | `string`                         | Required by PayU, and required by the validation above.                                                   |
+| `history`                                        | `TransHistory<T>[]`              | An embedded column, appended to at every step.                                                            |
+| `refreshLockId`, `refreshLockUntil`              | `string \| null`, `Date \| null` | The lease `RefresherService` holds while it applies a status change. Internal: never write them yourself. |
 
 A `TransHistory<T>` entry snapshots `amount`, `system`, `status` and `modifyDate` as they were at that moment, plus a `data` payload that differs per step: your `data` on `prepare`, the internal answer on `new`, the provider answer on `started`, a `TransErrorEvent` on `error`. The payload is passed through `ObjectService.removeTypes` from [`@smartsoft001/utils`](/docs/packages/utils) first, so what is stored is a plain object.
 
@@ -195,6 +198,28 @@ Earlier versions called `refresh(trans)` on every status change. Now:
 - If your back end is the built-in HTTP call to `internalApiUrl`, make it honour `Idempotency-Key` on `PUT {internalApiUrl}/{id}`, then set `idempotentInternalApi: true`. Setting the flag alone provides no deduplication.
 - With an empty `internalApiUrl` and no `TRANS_TOKEN_INTERNAL_SERVICE` provider (offline or development mode), status changes are refused too, on top of `create` rejecting. Register an internal service to take and complete payments.
 - A failed refresh no longer stores status `error`. The record keeps its last persisted status until a retry succeeds.
+  {% /callout %}
+
+## Concurrent refreshes
+
+A PayU notification and a manual `POST /:id/refresh`, or two notifications on two instances, can read the same `started` record at the same moment. Writing the new status unconditionally would let both call your back end and overwrite each other's history. So with a repository that implements the optional [`compareAndSet`](/docs/packages/domain-core) of the contract, which [`MongoItemRepository`](/docs/packages/mongo) does, a refresh runs in three steps:
+
+1. **Claim.** Compare-and-set `refreshLockId` and `refreshLockUntil` where `status` still equals the value read and the lock id is still the one read. A live lease, or a claim that matches nothing, means another instance won the transition or is applying it, and the refresh returns without calling `refreshOnce`.
+2. **Fulfil.** `refreshOnce` runs while the stored status is still the old one. When it throws or answers falsy, the lease is dropped and the status stays, so the next notification or a manual refresh retries with the same key. A crash leaves the lease in place until it expires, two minutes by default (`refreshLeaseMs`, a protected property a subclass can change); refreshes in that window return without effect.
+3. **Commit.** Compare-and-set the new status, the history and an empty lease where `status` is still the old one and the lease is still this instance's. If fulfilment outlived the lease and another instance took over, this write matches nothing and is dropped quietly. The other instance persists the status, and your idempotency key keeps the fulfilment both of them ran from happening twice.
+
+Fulfilling before the status write keeps a failed fulfilment retryable; claiming before fulfilling keeps concurrent winners from fulfilling twice. This is defence in depth on top of [idempotent fulfilment](#idempotent-fulfilment), not a replacement: an expired lease, or a repository without `compareAndSet`, still relies on the key.
+
+{% snippet file="node/src/trans/refresher-service.example.ts" region="usage" /%}
+
+The region pairs an array-backed repository whose `compareAndSet` checks every expected field before it writes, which is what one atomic `updateOne` gives MongoDB, with a back end that counts its `refreshOnce` calls. `refreshConcurrently` starts two services against the same record at once. Its spec shows that `refreshOnce` is called once, that the record ends in `completed` with the lease cleared, and that a fulfilment that fails is retried by the next refresh with the same key and then completes.
+
+{% callout type="warning" title="Upgrading: conditional status writes" %}
+Status changes are now written conditionally when the repository can compare and set. Nothing changes in your code if you use `MongoItemRepository`. Otherwise:
+
+- A custom `IItemRepository` keeps compiling and keeps working, because `compareAndSet` is optional and `RefresherService` falls back to `updatePartial`, the unconditional write of earlier versions. Implement `compareAndSet` (atomic, equality only, `null` matching a missing field, resolving whether a record matched) to get the protection.
+- `Trans` records gain `refreshLockId` and `refreshLockUntil`. Don't copy them into other records or expose them as editable.
+- A refresh that meets a live lease or loses the claim now resolves without effect, instead of fulfilling a second time. A crashed instance blocks refreshes of that one transaction until its lease expires.
   {% /callout %}
 
 ## Related packages

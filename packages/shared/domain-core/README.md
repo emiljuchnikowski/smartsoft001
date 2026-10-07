@@ -145,6 +145,54 @@ returns a `Promise<void>` that resolves when the entity is successfully updated.
 
 returns a `Promise<void>` that resolves when the entities are successfully updated.
 
+**compareAndSet?** - Optional. Atomically sets `set` on the entity with this `id`, but only while
+every field in `expected` still equals the given value (`null` matches a missing field). Values are
+compared for equality, never used as query operators.
+
+<table>
+    <thead>
+        <tr>
+            <td>Param</td>
+            <td>Description</td>
+        </tr>
+    </thead>
+    <tr>
+        <td>id: string</td>
+        <td>The ID of the entity to update.</td>
+    </tr>
+    <tr>
+        <td>expected:
+
+`Partial<T>`
+
+</td>
+        <td>Fields and the values they must still hold.</td>
+    </tr>
+    <tr>
+        <td>set:
+
+`Partial<T>`
+
+</td>
+        <td>The partial data to set when they do.</td>
+    </tr>
+    <tr>
+        <td>user: IUser | null</td>
+        <td>The user performing the operation.</td>
+    </tr>
+    <tr>
+        <td>options?: IItemRepositoryOptions</td>
+        <td>Optional parameters for the operation, including transaction context.</td>
+    </tr>
+</table>
+
+returns a `Promise<boolean>`: `true` when the entity matched and was updated, `false` when it is
+missing or another writer changed one of the `expected` fields first. The method is optional so that
+existing repositories keep compiling; callers fall back to an unconditional write without it, which
+keeps last-writer-wins. Implement it in any repository that several instances write to.
+`MongoItemRepository` from `@smartsoft001/mongo` implements it, and `RefresherService` from
+`@smartsoft001/trans-domain` uses it to apply each payment status change once.
+
 **updatePartialManyBySpecification** - Partially updates multiple entities that match the specified specification.
 
 <table>

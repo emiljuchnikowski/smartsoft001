@@ -164,6 +164,34 @@ export abstract class IItemRepository<T extends IEntity<string>> {
   ): Promise<void>;
 
   /**
+   * Atomically sets `set` on the entity with this `id`, but only while every
+   * field in `expected` still equals the given value (`null` matches a missing
+   * field). Use it for optimistic concurrency: read, decide, then write only if
+   * nobody changed the fields you decided on.
+   *
+   * Optional, so existing repositories keep compiling. Callers must fall back
+   * to an unconditional write when it is missing, which keeps last-writer-wins
+   * semantics, so implement it in any repository that backs concurrent writers.
+   * Equality only: values are compared as literals, never as query operators.
+   *
+   * @param {string} id - The ID of the entity to update.
+   * @param {Partial<T>} expected - Fields and the values they must still hold.
+   * @param {Partial<T>} set - The partial data to set when they do.
+   * @param {IUser} user - The user performing the operation.
+   * @param {IItemRepositoryOptions} [options] - Optional parameters, including transaction context.
+   *
+   * @returns {Promise<boolean>} - `true` when the entity matched and was updated, `false` when
+   * it is missing or another writer changed one of the `expected` fields first.
+   */
+  compareAndSet?(
+    id: string,
+    expected: Partial<T>,
+    set: Partial<T>,
+    user: IUser | null,
+    options?: IItemRepositoryOptions,
+  ): Promise<boolean>;
+
+  /**
    * Partially updates multiple entities that match the specified specification.
    *
    * @param {ISpecification} spec - The specification used to select the entities to be updated.

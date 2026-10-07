@@ -71,24 +71,27 @@ A plain class used as both the shape of the argument and the injection token.
 
 Extends `IItemRepository<T>` and takes a `MongoConfig` in its constructor. Inject it through the `IItemRepository` token rather than by name. It implements the full contract, which is documented in [@smartsoft001/domain-core](/docs/packages/domain-core); the table below says what each method does against MongoDB.
 
-| Method                                                        | Returns                                      | What it does                                                                 |
-| ------------------------------------------------------------- | -------------------------------------------- | ---------------------------------------------------------------------------- |
-| `create(item, user, options?)`                                | `Promise<void>`                              | Inserts one document, stamping the acting user and the date.                 |
-| `createMany(list, user, options?)`                            | `Promise<void>`                              | Inserts many documents in one call.                                          |
-| `update(item, user, options?)`                                | `Promise<void>`                              | Replaces the whole document, keeping the creation record.                    |
-| `updatePartial(item, user, options?)`                         | `Promise<void>`                              | Sets only the fields present on `item`.                                      |
-| `updatePartialManyByCriteria(criteria, set, user, options?)`  | `Promise<void>`                              | Applies one partial update to every document matching a raw criteria object. |
-| `updatePartialManyBySpecification(spec, set, user, options?)` | `Promise<void>`                              | The same, driven by a specification instead of a raw object.                 |
-| `delete(id, user, options?)`                                  | `Promise<void>`                              | Removes one document by its identifier.                                      |
-| `clear(user, options?)`                                       | `Promise<void>`                              | Empties the collection.                                                      |
-| `getById(id, options?)`                                       | `Promise<T>`                                 | Reads one document, with `_id` mapped back to `id`.                          |
-| `getByCriteria(criteria, options?)`                           | `Promise<{ data: T[]; totalCount: number }>` | Reads a filtered page together with the total number of matches.             |
-| `getBySpecification(spec, options?)`                          | `Promise<{ data: T[]; totalCount: number }>` | The same, from a specification.                                              |
-| `countByCriteria(criteria)`                                   | `Promise<number>`                            | Counts matches without loading them.                                         |
-| `countBySpecification(spec)`                                  | `Promise<number>`                            | The same, from a specification.                                              |
-| `changesByCriteria(criteria)`                                 | `Observable<ItemChangedData>`                | Watches a MongoDB change stream and emits create, update and delete events.  |
+| Method                                                        | Returns                                      | What it does                                                                                                                 |
+| ------------------------------------------------------------- | -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `create(item, user, options?)`                                | `Promise<void>`                              | Inserts one document, stamping the acting user and the date.                                                                 |
+| `createMany(list, user, options?)`                            | `Promise<void>`                              | Inserts many documents in one call.                                                                                          |
+| `update(item, user, options?)`                                | `Promise<void>`                              | Replaces the whole document, keeping the creation record.                                                                    |
+| `updatePartial(item, user, options?)`                         | `Promise<void>`                              | Sets only the fields present on `item`.                                                                                      |
+| `updatePartialManyByCriteria(criteria, set, user, options?)`  | `Promise<void>`                              | Applies one partial update to every document matching a raw criteria object.                                                 |
+| `updatePartialManyBySpecification(spec, set, user, options?)` | `Promise<void>`                              | The same, driven by a specification instead of a raw object.                                                                 |
+| `compareAndSet(id, expected, set, user, options?)`            | `Promise<boolean>`                           | One atomic `updateOne` filtered by `_id` and `{ field: { $eq: value } }` per expected field; `true` when a document matched. |
+| `delete(id, user, options?)`                                  | `Promise<void>`                              | Removes one document by its identifier.                                                                                      |
+| `clear(user, options?)`                                       | `Promise<void>`                              | Empties the collection.                                                                                                      |
+| `getById(id, options?)`                                       | `Promise<T>`                                 | Reads one document, with `_id` mapped back to `id`.                                                                          |
+| `getByCriteria(criteria, options?)`                           | `Promise<{ data: T[]; totalCount: number }>` | Reads a filtered page together with the total number of matches.                                                             |
+| `getBySpecification(spec, options?)`                          | `Promise<{ data: T[]; totalCount: number }>` | The same, from a specification.                                                                                              |
+| `countByCriteria(criteria)`                                   | `Promise<number>`                            | Counts matches without loading them.                                                                                         |
+| `countBySpecification(spec)`                                  | `Promise<number>`                            | The same, from a specification.                                                                                              |
+| `changesByCriteria(criteria)`                                 | `Observable<ItemChangedData>`                | Watches a MongoDB change stream and emits create, update and delete events.                                                  |
 
 Every write takes the acting `IUser` from [@smartsoft001/users](/docs/packages/users), and the optional last argument carries a transaction opened by the unit of work.
+
+`compareAndSet` is the optional conditional write of the contract. Each expected value is wrapped in `$eq`, so an object such as `{ $ne: null }` is compared literally rather than run as an operator, and `null` matches a missing field. An `id` key in either map is ignored: the document is chosen by the `id` argument only. The result is `matchedCount === 1`, so `false` means the document is gone or another writer got there first. Like the other writes it stamps `__info.update` and records the change.
 
 ### The rest of the surface
 

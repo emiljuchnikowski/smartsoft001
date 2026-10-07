@@ -48,6 +48,17 @@ export class Trans<T> implements IEntity<string> {
 
   @Column()
   clientIp!: string;
+
+  /**
+   * Set by `RefresherService` while one instance applies a status change, and
+   * cleared when it ends. Internal: do not write it yourself.
+   */
+  @Column()
+  refreshLockId?: string | null;
+
+  /** When the claim in `refreshLockId` may be taken over by another instance. */
+  @Column()
+  refreshLockUntil?: Date | null;
 }
 
 export class TransHistory<T> {
