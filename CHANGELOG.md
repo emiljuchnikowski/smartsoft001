@@ -1,3 +1,15 @@
+## 2.187.0 (2026-10-07)
+
+### 🚀 Features
+
+- **shared:** pluggable password hasher, PBKDF2 implementation included ([#113](https://github.com/emiljuchnikowski/smartsoft001/pull/113))
+
+### ❤️ Thank You
+
+- Claude Opus 5.5 (1M context)
+- Emil Juchnikowski
+- krzysztofciura @krzysztofciura
+
 ## 2.186.0 (2026-10-07)
 
 ### 🩹 Fixes
