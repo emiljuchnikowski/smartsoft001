@@ -79,3 +79,6 @@ docs/site/src/app/docs/components/
 # The compiled stylesheets ng-packagr copies into the Angular packages (the `styles` target).
 packages/shared/angular/styles.css
 packages/crud/shell/angular/styles.css
+
+packages/shared/react/styles.css
+packages/crud/shell/react/styles.css
