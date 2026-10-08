@@ -1,5 +1,5 @@
-import { StorageService } from '../storage/storage.service';
 import { AUTH_TOKEN, AuthService } from './auth.service';
+import { StorageService } from '../storage/storage.service';
 
 function token(payload: Record<string, unknown>): string {
   const encode = (value: unknown) =>

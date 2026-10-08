@@ -2,13 +2,13 @@ import { render, screen } from '@testing-library/react';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
+import { SMART_PRESET_COMPONENTS } from './presets';
 import { SmartFormControl } from '../../forms/form-control';
 import { SmartFormGroup } from '../../forms/form-group';
 import { SmartProvider } from '../../providers/smart-provider';
 import { SmartButton } from '../button/button';
 import { SmartButtonPreset } from '../button/preset/button-preset';
 import { SmartInput } from '../input/input';
-import { SMART_PRESET_COMPONENTS } from './presets';
 
 @Model({})
 class Person {

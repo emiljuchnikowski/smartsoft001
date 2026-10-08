@@ -75,6 +75,12 @@ describe('@smartsoft001/react: SmartExport', () => {
     expect(screen.getByRole('button')).toHaveClass('my-export');
   });
 
+  it('should apply className to the host element around the button', () => {
+    render(<SmartExport handler={jest.fn()} className="my-export" />);
+
+    expect(screen.getByRole('button').parentElement).toHaveClass('my-export');
+  });
+
   describe('useExport', () => {
     it('should call handler with value and fileName on onClick', async () => {
       const handler = jest.fn();

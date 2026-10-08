@@ -135,18 +135,32 @@ describe('@smartsoft001/react: SmartInputDateWithEdit', () => {
     );
   });
 
-  it('should forward the widget classes and className to the editor', () => {
+  it('should put the widget classes and className on a box around the editor', () => {
     const { container } = setup(SmartInputDateWithEdit, {
       className: 'extra-user-class',
     });
 
-    expect(container.querySelector('label + div')).toHaveClass(
-      'smart:inline-flex',
+    const box = container.querySelector('label + div');
+
+    expect(box).toHaveClass(
       'smart:mt-2',
       'smart:block',
       'smart:w-full',
       'extra-user-class',
     );
+    expect(box).not.toHaveClass('smart:inline-flex');
+  });
+
+  it('should keep the editor root free of the widget classes', () => {
+    const { container } = setup(SmartInputDateWithEdit, {
+      className: 'extra-user-class',
+    });
+
+    const editor = container.querySelector('label + div')?.firstElementChild;
+
+    expect(editor).toHaveClass('smart:inline-flex');
+    expect(editor).not.toHaveClass('smart:mt-2');
+    expect(editor).not.toHaveClass('extra-user-class');
   });
 
   it('should render nothing without a control', () => {
@@ -234,17 +248,32 @@ describe('@smartsoft001/react: SmartInputDateWithEditPreset', () => {
     );
   });
 
-  it('should forward the widget classes and className to the editor', () => {
+  it('should put the widget classes and className on a box around the editor', () => {
     const { container } = setup(SmartInputDateWithEditPreset, {
       className: 'extra-user-class',
     });
 
-    expect(container.querySelector('label + div')).toHaveClass(
+    const box = container.querySelector('label + div');
+
+    expect(box).toHaveClass(
       'smart:mt-2',
       'smart:block',
       'smart:w-full',
       'extra-user-class',
     );
+    expect(box).not.toHaveClass('smart:inline-block');
+  });
+
+  it('should keep the editor root free of the widget classes', () => {
+    const { container } = setup(SmartInputDateWithEditPreset, {
+      className: 'extra-user-class',
+    });
+
+    const editor = container.querySelector('label + div')?.firstElementChild;
+
+    expect(editor).toHaveClass('smart:inline-block');
+    expect(editor).not.toHaveClass('smart:mt-2');
+    expect(editor).not.toHaveClass('extra-user-class');
   });
 
   it('should render nothing without a control', () => {

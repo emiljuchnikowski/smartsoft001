@@ -8,7 +8,10 @@ import { SmartButton } from '../button/button';
 /**
  * `<smart-import>`: an upload-icon `SmartButton` that opens a hidden file
  * input and passes the picked file to `onSet` (the Angular `set` output).
- * React has no host element, so `className` goes on the button.
+ *
+ * The Angular `class` only styled the `<smart-import>` host element (the
+ * component never read it), an inline box around the button and the input;
+ * a `<span>` stands in for that host and gets `className`.
  */
 export function SmartImport(props: SmartImportProps) {
   const { accept = 'application/json', className } = props;
@@ -27,8 +30,8 @@ export function SmartImport(props: SmartImportProps) {
   );
 
   return (
-    <>
-      <SmartButton options={buttonOptions} className={className}>
+    <span className={className || undefined}>
+      <SmartButton options={buttonOptions}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
@@ -46,6 +49,6 @@ export function SmartImport(props: SmartImportProps) {
         onChange={onFileSelected}
         ref={inputRef}
       />
-    </>
+    </span>
   );
 }

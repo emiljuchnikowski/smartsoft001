@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { ReactNode } from 'react';
 
 import { IToggleOptions } from '../../models';
 import { SmartTogglePreset } from './preset/toggle-preset';
@@ -65,6 +66,12 @@ export const Playground: Story = {
 
 const sectionTitle = { fontSize: 16, fontWeight: 600, marginBottom: 12 };
 
+/**
+ * Stands in for the `<smart-toggle>` host element of the Angular story,
+ * whose inline `<smart-toggle-standard>` gives each toggle a line box.
+ */
+const Host = ({ children }: { children: ReactNode }) => <div>{children}</div>;
+
 export const AllVariants: Story = {
   name: 'All variants',
   parameters: { controls: { disable: true } },
@@ -80,49 +87,67 @@ export const AllVariants: Story = {
       <section>
         <h3 style={sectionTitle}>Default</h3>
         <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-          <SmartToggle defaultValue={false} />
-          <SmartToggle defaultValue={true} />
+          <Host>
+            <SmartToggle defaultValue={false} />
+          </Host>
+          <Host>
+            <SmartToggle defaultValue={true} />
+          </Host>
         </div>
       </section>
 
       <section>
         <h3 style={sectionTitle}>Disabled</h3>
         <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-          <SmartToggle defaultValue={false} disabled={true} />
-          <SmartToggle defaultValue={true} disabled={true} />
+          <Host>
+            <SmartToggle defaultValue={false} disabled={true} />
+          </Host>
+          <Host>
+            <SmartToggle defaultValue={true} disabled={true} />
+          </Host>
         </div>
       </section>
 
       <section>
         <h3 style={sectionTitle}>With label</h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          <SmartToggle defaultValue={false} options={{ label: 'Off' }} />
-          <SmartToggle defaultValue={true} options={{ label: 'On' }} />
+          <Host>
+            <SmartToggle defaultValue={false} options={{ label: 'Off' }} />
+          </Host>
+          <Host>
+            <SmartToggle defaultValue={true} options={{ label: 'On' }} />
+          </Host>
         </div>
       </section>
 
       <section>
         <h3 style={sectionTitle}>With description</h3>
-        <SmartToggle
-          defaultValue={true}
-          options={{
-            label: 'Notifications',
-            description: 'Receive push alerts on your device',
-          }}
-        />
+        <Host>
+          <SmartToggle
+            defaultValue={true}
+            options={{
+              label: 'Notifications',
+              description: 'Receive push alerts on your device',
+            }}
+          />
+        </Host>
       </section>
 
       <section>
         <h3 style={sectionTitle}>Label position</h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          <SmartToggle
-            defaultValue={true}
-            options={{ label: 'Label right', labelPosition: 'right' }}
-          />
-          <SmartToggle
-            defaultValue={true}
-            options={{ label: 'Label left', labelPosition: 'left' }}
-          />
+          <Host>
+            <SmartToggle
+              defaultValue={true}
+              options={{ label: 'Label right', labelPosition: 'right' }}
+            />
+          </Host>
+          <Host>
+            <SmartToggle
+              defaultValue={true}
+              options={{ label: 'Label left', labelPosition: 'left' }}
+            />
+          </Host>
         </div>
       </section>
     </div>

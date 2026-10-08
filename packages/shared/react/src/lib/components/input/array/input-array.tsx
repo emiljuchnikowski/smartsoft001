@@ -31,7 +31,7 @@ export function SmartInputArray<T>(props: SmartInputFieldProps<T>) {
   return (
     <>
       <label className="smart:block smart:text-sm/6 smart:font-medium smart:text-gray-900 smart:dark:text-white">
-        {label}
+        {label}{' '}
         {required && <span className="smart:text-red-500 smart:ml-0.5">*</span>}
       </label>
       <div className={cn('smart:mt-2 smart:space-y-2', className)}>

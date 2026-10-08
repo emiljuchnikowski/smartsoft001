@@ -79,6 +79,15 @@ describe('@smartsoft001/react: SmartListDesktopPreset', () => {
     );
   });
 
+  it('should end the table with a hidden footer group so the body gets a divider below it', () => {
+    const { query } = setup();
+
+    const table = query('table') as HTMLTableElement;
+
+    expect(table.lastElementChild?.tagName).toBe('TFOOT');
+    expect(table.lastElementChild).not.toBeVisible();
+  });
+
   it('should drop table dividers for the borderless variant', () => {
     const { query } = setup({ presentation: { variant: 'borderless' } });
 

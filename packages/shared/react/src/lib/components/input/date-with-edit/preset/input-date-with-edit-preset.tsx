@@ -21,7 +21,10 @@ const WIDGET_CLASSES = ['smart:mt-2', 'smart:block', 'smart:w-full'].join(' ');
  * the Preline label and the `<SmartDateEdit variant="preset">` editor (a
  * read-only trigger with a calendar popover) bound to the control. Register
  * it as `inputFieldComponents[FieldType.dateWithEdit]` on `SmartProvider`.
- * `className` is appended to the editor's classes.
+ *
+ * Angular set the widget classes and `className` on the editor's host
+ * element, a block box around the inline-block trigger; here a `<div>`
+ * around `SmartDateEdit` carries them, so the trigger keeps its own layout.
  */
 export function SmartInputDateWithEditPreset<T>(
   props: SmartInputFieldProps<T>,
@@ -34,14 +37,12 @@ export function SmartInputDateWithEditPreset<T>(
   return (
     <>
       <label className={LABEL_CLASSES}>
-        {label}
+        {label}{' '}
         {required && <span className="smart:text-red-500 smart:ml-0.5">*</span>}
       </label>
-      <SmartDateEdit
-        variant="preset"
-        className={cn(WIDGET_CLASSES, className)}
-        control={control}
-      />
+      <div className={cn(WIDGET_CLASSES, className)}>
+        <SmartDateEdit variant="preset" control={control} />
+      </div>
     </>
   );
 }

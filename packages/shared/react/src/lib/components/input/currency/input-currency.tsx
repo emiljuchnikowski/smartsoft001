@@ -58,7 +58,7 @@ export function SmartInputCurrency<T>(props: SmartInputFieldProps<T>) {
   return (
     <>
       <label htmlFor={id} className={LABEL_CLASSES}>
-        {label}
+        {label}{' '}
         {required && <span className="smart:text-red-500 smart:ml-0.5">*</span>}
       </label>
       <input

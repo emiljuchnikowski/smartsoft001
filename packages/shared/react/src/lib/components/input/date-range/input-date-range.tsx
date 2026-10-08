@@ -36,7 +36,7 @@ export function SmartInputDateRange<T>(props: SmartInputFieldProps<T>) {
   return (
     <>
       <label className={LABEL_CLASSES}>
-        {label}
+        {label}{' '}
         {required && <span className="smart:text-red-500 smart:ml-0.5">*</span>}
       </label>
       <div className="smart:contents" onClick={markAsTouched}>

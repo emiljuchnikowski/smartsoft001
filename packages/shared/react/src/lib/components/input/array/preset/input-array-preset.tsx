@@ -32,7 +32,7 @@ export function SmartInputArrayPreset<T>(props: SmartInputFieldProps<T>) {
         className="smart:block smart:text-sm/6 smart:font-medium smart:text-gray-900 smart:dark:text-white"
         data-role="label"
       >
-        {label}
+        {label}{' '}
         {required && <span className="smart:text-red-500 smart:ml-0.5">*</span>}
       </label>
       <div

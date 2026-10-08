@@ -46,7 +46,7 @@ export function SmartInputLongText<T>(props: SmartInputFieldProps<T>) {
   return (
     <>
       <label id={labelId} className={LABEL_CLASSES}>
-        {label}
+        {label}{' '}
         {required && <span className="smart:text-red-500 smart:ml-0.5">*</span>}
       </label>
       <div

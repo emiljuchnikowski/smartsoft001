@@ -24,7 +24,7 @@ export function SmartInputCheck<T>(props: SmartInputFieldProps<T>) {
   return (
     <fieldset>
       <legend className={LABEL_CLASSES}>
-        {label}
+        {label}{' '}
         {required && <span className="smart:text-red-500 smart:ml-0.5">*</span>}
       </legend>
       <div className={cn('smart:mt-2', 'smart:space-y-2', className)}>

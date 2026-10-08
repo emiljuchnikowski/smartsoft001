@@ -31,7 +31,7 @@ export function SmartInputTextPreset<T>(props: SmartInputFieldProps<T>) {
   return (
     <>
       <label htmlFor={id} className={getInputTextPresetLabelClasses()}>
-        {label}
+        {label}{' '}
         {required && <span className="smart:text-red-500 smart:ml-0.5">*</span>}
       </label>
       <input

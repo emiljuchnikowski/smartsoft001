@@ -31,7 +31,7 @@ export function SmartInputCheckPreset<T>(props: SmartInputFieldProps<T>) {
   return (
     <fieldset>
       <legend className={LABEL_CLASSES}>
-        {label}
+        {label}{' '}
         {required && <span className="smart:text-red-500 smart:ms-0.5">*</span>}
       </legend>
       <div

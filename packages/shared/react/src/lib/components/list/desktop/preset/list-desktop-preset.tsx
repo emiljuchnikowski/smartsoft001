@@ -35,6 +35,9 @@ import {
  * with the Preline table look, driven by `options.presentation`: `variant`
  * (default | striped | bordered | borderless), `hoverable` and `header`
  * (default | muted | none). `className` goes on the container.
+ *
+ * Like the CDK table, the table ends with an empty hidden `<tfoot>`, so the
+ * dividers also draw a line below the last body row.
  */
 export function SmartListDesktopPreset<T extends IEntity<string>>(
   props: SmartListModeProps<T>,
@@ -242,6 +245,7 @@ export function SmartListDesktopPreset<T extends IEntity<string>>(
               </tr>
             ))}
           </tbody>
+          <tfoot style={{ display: 'none' }}></tfoot>
         </table>
       </div>
 

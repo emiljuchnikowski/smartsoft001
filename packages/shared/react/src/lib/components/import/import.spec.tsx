@@ -69,10 +69,16 @@ describe('@smartsoft001/react: SmartImport', () => {
     expect(onSet).toHaveBeenCalledWith(file);
   });
 
-  it('should apply className to the rendered button', () => {
+  it('should apply className to the host element around the button', () => {
     render(<SmartImport className="my-import" />);
 
-    expect(screen.getByRole('button')).toHaveClass('my-import');
+    expect(screen.getByRole('button').parentElement).toHaveClass('my-import');
+  });
+
+  it('should not apply className to the button', () => {
+    render(<SmartImport className="my-import" />);
+
+    expect(screen.getByRole('button')).not.toHaveClass('my-import');
   });
 
   describe('useImport', () => {

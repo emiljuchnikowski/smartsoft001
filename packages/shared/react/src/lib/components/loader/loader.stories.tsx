@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { ReactNode } from 'react';
 
 import { SmartLoader } from './loader';
 import { SmartLoaderPreset } from './preset/loader-preset';
@@ -90,6 +91,12 @@ export const Playground: Story = {
 
 const sectionTitle = { fontSize: 16, fontWeight: 600, marginBottom: 12 };
 
+/**
+ * Stands in for the `<smart-loader>` host element of the Angular story: a
+ * flex item even when the loader renders nothing, so the row keeps its gap.
+ */
+const Host = ({ children }: { children: ReactNode }) => <div>{children}</div>;
+
 export const AllVariants: Story = {
   name: 'All variants',
   parameters: {
@@ -107,11 +114,21 @@ export const AllVariants: Story = {
       <section>
         <h3 style={sectionTitle}>Sizes (indigo)</h3>
         <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-          <SmartLoader show={true} size="xs" />
-          <SmartLoader show={true} size="sm" />
-          <SmartLoader show={true} size="md" />
-          <SmartLoader show={true} size="lg" />
-          <SmartLoader show={true} size="xl" />
+          <Host>
+            <SmartLoader show={true} size="xs" />
+          </Host>
+          <Host>
+            <SmartLoader show={true} size="sm" />
+          </Host>
+          <Host>
+            <SmartLoader show={true} size="md" />
+          </Host>
+          <Host>
+            <SmartLoader show={true} size="lg" />
+          </Host>
+          <Host>
+            <SmartLoader show={true} size="xl" />
+          </Host>
         </div>
       </section>
 
@@ -125,21 +142,51 @@ export const AllVariants: Story = {
             gap: 16,
           }}
         >
-          <SmartLoader show={true} color="slate" />
-          <SmartLoader show={true} color="red" />
-          <SmartLoader show={true} color="orange" />
-          <SmartLoader show={true} color="amber" />
-          <SmartLoader show={true} color="yellow" />
-          <SmartLoader show={true} color="green" />
-          <SmartLoader show={true} color="emerald" />
-          <SmartLoader show={true} color="teal" />
-          <SmartLoader show={true} color="sky" />
-          <SmartLoader show={true} color="blue" />
-          <SmartLoader show={true} color="indigo" />
-          <SmartLoader show={true} color="violet" />
-          <SmartLoader show={true} color="purple" />
-          <SmartLoader show={true} color="pink" />
-          <SmartLoader show={true} color="rose" />
+          <Host>
+            <SmartLoader show={true} color="slate" />
+          </Host>
+          <Host>
+            <SmartLoader show={true} color="red" />
+          </Host>
+          <Host>
+            <SmartLoader show={true} color="orange" />
+          </Host>
+          <Host>
+            <SmartLoader show={true} color="amber" />
+          </Host>
+          <Host>
+            <SmartLoader show={true} color="yellow" />
+          </Host>
+          <Host>
+            <SmartLoader show={true} color="green" />
+          </Host>
+          <Host>
+            <SmartLoader show={true} color="emerald" />
+          </Host>
+          <Host>
+            <SmartLoader show={true} color="teal" />
+          </Host>
+          <Host>
+            <SmartLoader show={true} color="sky" />
+          </Host>
+          <Host>
+            <SmartLoader show={true} color="blue" />
+          </Host>
+          <Host>
+            <SmartLoader show={true} color="indigo" />
+          </Host>
+          <Host>
+            <SmartLoader show={true} color="violet" />
+          </Host>
+          <Host>
+            <SmartLoader show={true} color="purple" />
+          </Host>
+          <Host>
+            <SmartLoader show={true} color="pink" />
+          </Host>
+          <Host>
+            <SmartLoader show={true} color="rose" />
+          </Host>
         </div>
       </section>
 
@@ -155,7 +202,9 @@ export const AllVariants: Story = {
             border: '1px dashed #d1d5db',
           }}
         >
-          <SmartLoader show={false} />
+          <Host>
+            <SmartLoader show={false} />
+          </Host>
           <span style={{ fontSize: 14, color: '#6b7280' }}>
             Nothing rendered above
           </span>
