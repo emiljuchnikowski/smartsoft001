@@ -1,7 +1,6 @@
 import { IEntity } from '@smartsoft001/domain-core';
 import { PaginationMode } from '@smartsoft001/react';
 
-
 import { ICrudFilter } from '../models';
 import { CrudAction } from './crud.actions';
 

@@ -1,7 +1,6 @@
 import { getModelOptions } from '@smartsoft001/models';
 import { AuthService } from '@smartsoft001/react';
 
-
 import { CrudFullConfig } from '../../crud.config';
 
 /**

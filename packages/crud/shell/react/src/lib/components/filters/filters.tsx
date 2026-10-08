@@ -36,7 +36,10 @@ export function SmartCrudFilters<T extends IEntity<string>>(
           </button>
         </header>
       )}
-      <div className="smart:flex-1 smart:space-y-4 smart:overflow-y-auto smart:px-4 smart:py-3">
+      {/* The Angular template has `space-y-4` here, but its margins land on
+          the inline `<smart-crud-filter>` hosts and do not move anything;
+          left out so the panel keeps the Angular spacing. */}
+      <div className="smart:flex-1 smart:overflow-y-auto smart:px-4 smart:py-3">
         {list.map((item, index) => (
           <SmartCrudFilter
             key={`${index}:${item.key}`}

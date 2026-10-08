@@ -1,7 +1,6 @@
 import { IEntity } from '@smartsoft001/domain-core';
 import { SmartHttpClient } from '@smartsoft001/react';
 
-
 import { CrudConfig } from '../../crud.config';
 import { ICrudCreateManyOptions, ICrudFilter } from '../../models';
 

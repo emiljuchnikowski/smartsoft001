@@ -7,7 +7,6 @@ import {
   useStore,
 } from '@smartsoft001/react';
 
-
 import { useCrud } from './crud.context';
 import { ICrudFilter } from './models';
 import { CrudState } from './state/crud.reducer';

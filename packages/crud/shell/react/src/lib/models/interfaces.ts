@@ -1,7 +1,6 @@
 import { IModelFilter } from '@smartsoft001/models';
 import { PaginationMode } from '@smartsoft001/react';
 
-
 export interface ICrudFilter {
   searchText?: string;
   sortBy?: string;

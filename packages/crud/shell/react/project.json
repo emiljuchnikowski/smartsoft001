@@ -48,6 +48,39 @@
         "jestConfig": "packages/crud/shell/react/jest.config.ts",
         "tsConfig": "packages/crud/shell/react/tsconfig.spec.json"
       }
+    },
+    "storybook": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "storybook dev -p 4403 -c packages/crud/shell/react/.storybook"
+      }
+    },
+    "build-storybook": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/storybook/crud-shell-react"],
+      "options": {
+        "command": "storybook build -c packages/crud/shell/react/.storybook -o dist/storybook/crud-shell-react"
+      },
+      "configurations": {
+        "ci": {
+          "command": "storybook build --quiet -c packages/crud/shell/react/.storybook -o dist/storybook/crud-shell-react"
+        }
+      }
+    },
+    "test-storybook": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build-storybook"],
+      "cache": true,
+      "inputs": [
+        "{workspaceRoot}/tools/scripts/storybook-smoke.mjs",
+        {
+          "dependentTasksOutputFiles": "**/*",
+          "transitive": false
+        }
+      ],
+      "options": {
+        "command": "node tools/scripts/storybook-smoke.mjs --dir dist/storybook/crud-shell-react"
+      }
     }
   }
 }

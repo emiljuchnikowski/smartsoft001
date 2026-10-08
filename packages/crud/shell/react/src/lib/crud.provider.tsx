@@ -9,7 +9,6 @@ import {
   useSmart,
 } from '@smartsoft001/react';
 
-
 import { CrudConfig, CrudFullConfig } from './crud.config';
 import { CrudContext, CrudContextValue } from './crud.context';
 import { CrudService } from './services/crud/crud.service';

@@ -16,6 +16,7 @@
     "@smartsoft001/domain-core": "2.191.0",
     "@smartsoft001/models": "2.191.0",
     "@smartsoft001/react": "2.191.0",
+    "@smartsoft001/utils": "2.191.0",
     "react": "^19.0.0"
   },
   "exports": {
