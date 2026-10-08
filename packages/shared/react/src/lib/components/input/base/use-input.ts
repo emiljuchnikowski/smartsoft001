@@ -27,8 +27,10 @@ export function useInput<T = any>({
     (value: unknown) => {
       if (!control) return;
 
-      control.setValue(value);
+      // Dirty first, as Angular's `formControl` directive does, so listeners
+      // of the value change already see the control as edited.
       control.markAsDirty();
+      control.setValue(value);
     },
     [control],
   );

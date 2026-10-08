@@ -21,6 +21,7 @@ export * from './dropdown';
 export * from './empty-state';
 export * from './export';
 export * from './feed';
+export * from './form';
 export * from './grid-list';
 export * from './icon';
 export * from './import';

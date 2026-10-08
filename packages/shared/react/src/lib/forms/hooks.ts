@@ -102,8 +102,10 @@ export function useControlBinding<TValue = any>(
   const state = useControlState(control);
   const onChange = useCallback(
     (value: TValue) => {
-      control.setValue(value);
+      // Dirty first, as Angular's `formControl` directive does, so listeners
+      // of the value change already see the control as edited.
       control.markAsDirty();
+      control.setValue(value);
     },
     [control],
   );
