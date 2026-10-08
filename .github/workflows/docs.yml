@@ -6,7 +6,7 @@
 # `.nojekyll` is required because Next.js emits a `_next` directory, and
 # GitHub Pages' default Jekyll processing ignores underscore-prefixed
 # directories, which would break the deployed site's assets.
-# The docs tooling projects (docs, docs-examples-angular, docs-examples-node)
+# The docs tooling projects (docs and the docs-examples-* projects)
 # are checked and tested before the site is built. Both Storybooks are built,
 # smoke-tested in Chromium (every story must render without throwing) and
 # copied into the static export under `storybook/<project>`, where the
@@ -77,7 +77,7 @@ jobs:
         env:
           NX_CLOUD_DISTRIBUTED_EXECUTION: false
       - name: Check, test and build documentation
-        run: npx nx run-many -t check test build -p docs docs-examples-angular docs-examples-node
+        run: npx nx run-many -t check test build -p docs docs-examples-angular docs-examples-node docs-examples-react
         env:
           NX_CLOUD_DISTRIBUTED_EXECUTION: false
       - name: Publish the Storybooks next to the site
