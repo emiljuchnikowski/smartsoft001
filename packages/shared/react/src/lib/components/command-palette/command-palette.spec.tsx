@@ -558,6 +558,15 @@ describe('@smartsoft001/react: SmartCommandPalette', () => {
       );
     });
 
+    it('should render the result count as one text node, like the Angular interpolation', () => {
+      const { container } = renderVariant('with-footer');
+
+      const count = zoneOrFail(container, 'footer').firstElementChild;
+
+      expect(count?.childNodes).toHaveLength(1);
+      expect(count?.textContent).toBe('3 results');
+    });
+
     it('should not render the footer for other variants', () => {
       const { container } = renderVariant('simple');
 

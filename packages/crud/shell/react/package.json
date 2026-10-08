@@ -9,7 +9,9 @@
   "license": "MIT",
   "main": "./src/index.js",
   "typings": "./src/index.d.ts",
-  "dependencies": {},
+  "dependencies": {
+    "moment": "^2.31.0"
+  },
   "peerDependencies": {
     "@smartsoft001/domain-core": "2.191.0",
     "@smartsoft001/models": "2.191.0",

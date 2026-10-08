@@ -197,7 +197,7 @@ export function SmartCommandPalettePreset(props: SmartCommandPaletteProps) {
 
       {variant === 'with-footer' && (
         <div data-role="footer" className={COMMAND_PALETTE_FOOTER}>
-          <span>{filteredCommands.length} results</span>
+          <span>{`${filteredCommands.length} results`}</span>
           <span>Enter to run &middot; Esc to close</span>
         </div>
       )}
