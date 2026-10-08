@@ -1,3 +1,13 @@
+## 2.192.0 (2026-10-08)
+
+### 🩹 Fixes
+
+- **shared:** drawer content with an injected implementation, calendar start month, CRUD add story ([#130](https://github.com/emiljuchnikowski/smartsoft001/pull/130))
+
+### ❤️ Thank You
+
+- Emil Juchnikowski
+
 ## 2.191.0 (2026-10-08)
 
 This was a version bump only, there were no code changes.
