@@ -1,3 +1,14 @@
+## 2.190.0 (2026-10-08)
+
+### 🩹 Fixes
+
+- **trans:** compare-and-set payment status transitions ([#124](https://github.com/emiljuchnikowski/smartsoft001/pull/124))
+
+### ❤️ Thank You
+
+- Claude Opus 5.5 (1M context)
+- Emil Juchnikowski
+
 ## 2.188.0 (2026-10-07)
 
 This was a version bump only, there were no code changes.
