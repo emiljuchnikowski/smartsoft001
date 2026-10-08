@@ -15,6 +15,41 @@ class MockInjectedComponent extends ListContainerBaseComponent {
   override cssClass = input<string>('');
 }
 
+@Component({
+  selector: 'smart-test-list-container-with-slot',
+  changeDetection: ChangeDetectionStrategy.Eager,
+  template: '<ul class="custom-list-container"><ng-content /></ul>',
+})
+class MockSlotComponent extends ListContainerBaseComponent {
+  override cssClass = input<string>('');
+}
+
+const PROJECTION_HOST_TEMPLATE = `
+  <smart-list-container>Projected text</smart-list-container>
+`;
+
+@Component({
+  selector: 'smart-test-list-container-standard-host',
+  imports: [ListContainerComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  template: PROJECTION_HOST_TEMPLATE,
+})
+class StandardHostComponent {}
+
+@Component({
+  selector: 'smart-test-list-container-host',
+  imports: [ListContainerComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  providers: [
+    {
+      provide: LIST_CONTAINER_STANDARD_COMPONENT_TOKEN,
+      useValue: MockSlotComponent,
+    },
+  ],
+  template: PROJECTION_HOST_TEMPLATE,
+})
+class InjectedHostComponent {}
+
 describe('@smartsoft001/shared-angular: ListContainerComponent', () => {
   describe('without token', () => {
     let fixture: ComponentFixture<ListContainerComponent>;
@@ -85,6 +120,30 @@ describe('@smartsoft001/shared-angular: ListContainerComponent', () => {
       );
 
       expect(standard).toBeNull();
+    });
+  });
+
+  describe('projected content', () => {
+    it('should render the projected content inside smart-list-container-standard', () => {
+      const fixture = TestBed.createComponent(StandardHostComponent);
+      fixture.detectChanges();
+
+      const slot = fixture.nativeElement.querySelector(
+        'smart-list-container-standard [role="list"]',
+      );
+
+      expect(slot?.textContent.trim()).toBe('Projected text');
+    });
+
+    it('should render the projected content inside the implementation registered through LIST_CONTAINER_STANDARD_COMPONENT_TOKEN', () => {
+      const fixture = TestBed.createComponent(InjectedHostComponent);
+      fixture.detectChanges();
+
+      const slot = fixture.nativeElement.querySelector(
+        'ul.custom-list-container',
+      );
+
+      expect(slot?.textContent.trim()).toBe('Projected text');
     });
   });
 });

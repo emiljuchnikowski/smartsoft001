@@ -17,9 +17,7 @@ const meta: Meta<ImportArgs> = {
   tags: ['autodocs'],
   decorators: [
     // <smart-button> translates its confirm-mode labels, so the story needs the
-    // real dictionaries. Note: do NOT register BUTTON_STANDARD_COMPONENT_TOKEN
-    // here; the button dispatches through NgComponentOutlet, which would drop
-    // the projected upload icon.
+    // real dictionaries.
     applicationConfig({
       providers: [...provideStorybookTranslations()],
     }),

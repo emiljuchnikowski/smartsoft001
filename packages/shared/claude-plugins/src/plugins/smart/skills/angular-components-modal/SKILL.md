@@ -97,7 +97,7 @@ providers: [
 
 ## Content projection
 
-`ModalStandardComponent` accepts arbitrary body content via `<ng-content>` and the wrapper forwards its own `<ng-content>` into the standard. **However, `NgComponentOutlet` does not propagate projected content** — when a custom component is registered via the token, the wrapper renders the custom component as a sibling and the consumer's `<ng-content>` is dropped. Custom implementations should rely on inputs (`title`, `description`, structured `data` extension) or expose their own template inputs rather than `<ng-content>`.
+`ModalStandardComponent` accepts arbitrary body content via `<ng-content>` and the wrapper forwards its own `<ng-content>` into the standard. When a custom component is registered via the token, the wrapper passes the same content to the custom component's default `<ng-content>` slot (`ModalPresetComponent` renders it in its body), wrapped in one `display: contents` element: selectors on the slot's parent that target its direct children (`space-y-*`, `divide-*`, `> *`) do not reach the projected nodes.
 
 ## Extending the Base Class
 

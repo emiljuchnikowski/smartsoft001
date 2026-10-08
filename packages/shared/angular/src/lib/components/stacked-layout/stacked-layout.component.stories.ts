@@ -19,9 +19,9 @@ const meta: Meta<StackedLayoutArgs> = {
   tags: ['autodocs'],
   decorators: [
     moduleMetadata({
-      // StackedLayoutPresetComponent is used through its own selector because
-      // <smart-stacked-layout> dispatches through NgComponentOutlet once the
-      // token is registered, which drops the projected main content.
+      // The stories render StackedLayoutPresetComponent through its own
+      // selector; the token registration makes every <smart-stacked-layout>
+      // render it too, projected main content included.
       imports: [StackedLayoutComponent, StackedLayoutPresetComponent],
       providers: [
         {

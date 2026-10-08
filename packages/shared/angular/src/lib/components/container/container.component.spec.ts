@@ -15,6 +15,41 @@ class MockInjectedComponent extends ContainerBaseComponent {
   override cssClass = input<string>('');
 }
 
+@Component({
+  selector: 'smart-test-container-with-slot',
+  changeDetection: ChangeDetectionStrategy.Eager,
+  template: '<div class="custom-container"><ng-content /></div>',
+})
+class MockSlotComponent extends ContainerBaseComponent {
+  override cssClass = input<string>('');
+}
+
+const PROJECTION_HOST_TEMPLATE = `
+  <smart-container>Projected text</smart-container>
+`;
+
+@Component({
+  selector: 'smart-test-container-standard-host',
+  imports: [ContainerComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  template: PROJECTION_HOST_TEMPLATE,
+})
+class StandardHostComponent {}
+
+@Component({
+  selector: 'smart-test-container-host',
+  imports: [ContainerComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  providers: [
+    {
+      provide: CONTAINER_STANDARD_COMPONENT_TOKEN,
+      useValue: MockSlotComponent,
+    },
+  ],
+  template: PROJECTION_HOST_TEMPLATE,
+})
+class InjectedHostComponent {}
+
 describe('@smartsoft001/shared-angular: ContainerComponent', () => {
   describe('without token', () => {
     let fixture: ComponentFixture<ContainerComponent>;
@@ -85,6 +120,28 @@ describe('@smartsoft001/shared-angular: ContainerComponent', () => {
       );
 
       expect(standard).toBeNull();
+    });
+  });
+
+  describe('projected content', () => {
+    it('should render the projected content inside smart-container-standard', () => {
+      const fixture = TestBed.createComponent(StandardHostComponent);
+      fixture.detectChanges();
+
+      const slot = fixture.nativeElement.querySelector(
+        'smart-container-standard div',
+      );
+
+      expect(slot?.textContent.trim()).toBe('Projected text');
+    });
+
+    it('should render the projected content inside the implementation registered through CONTAINER_STANDARD_COMPONENT_TOKEN', () => {
+      const fixture = TestBed.createComponent(InjectedHostComponent);
+      fixture.detectChanges();
+
+      const slot = fixture.nativeElement.querySelector('div.custom-container');
+
+      expect(slot?.textContent.trim()).toBe('Projected text');
     });
   });
 });
