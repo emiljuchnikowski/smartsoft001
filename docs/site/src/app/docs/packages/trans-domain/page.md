@@ -123,7 +123,7 @@ Only a transaction whose status is `completed` may be refunded. Anything else th
 | `history`                                        | `TransHistory<T>[]`              | An embedded column, appended to at every step.                                                            |
 | `refreshLockId`, `refreshLockUntil`              | `string \| null`, `Date \| null` | The lease `RefresherService` holds while it applies a status change. Internal: never write them yourself. |
 
-A `TransHistory<T>` entry snapshots `amount`, `system`, `status` and `modifyDate` as they were at that moment, plus a `data` payload that differs per step: your `data` on `prepare`, the internal answer on `new`, the provider answer on `started`, a `TransErrorEvent` on `error`. The payload is passed through `ObjectService.removeTypes` from [`@smartsoft001/utils`](/docs/packages/utils) first, so what is stored is a plain object.
+A `TransHistory<T>` entry snapshots `amount`, `system`, `status` and `modifyDate` as they were at that moment, plus a `data` payload that differs per step: your `data` on `prepare`, the internal answer on `new`, the provider answer on `started`, an `ITransErrorEvent` on `error`. The payload is passed through `ObjectService.removeTypes` from [`@smartsoft001/utils`](/docs/packages/utils) first, so what is stored is a plain object.
 
 ### Types and constants
 
@@ -155,7 +155,7 @@ A class with a positional constructor, `new TransConfig(internalApiUrl, tokenCon
 
 The abstract parent holding `addHistory` and `setError` lives at `src/lib/trans.service.ts` and is exported from the package entry point. The three services extend it, and a fourth service of your own can do the same and inherit the history handling rather than reimplement it.
 
-`setError(trans, error, context = 'Transaction failed')` sets status `error`, appends a history entry and awaits the update. `CreatorService` and `RefundService` call it when a step fails; `RefresherService` does not, see [Idempotent fulfilment](#idempotent-fulfilment). It never stores the error itself, because provider errors carry request headers, bodies and messages that can hold credentials, and sockets that cannot be serialized. What it stores is a `TransErrorEvent`:
+`setError(trans, error, context = 'Transaction failed')` sets status `error`, appends a history entry and awaits the update. `CreatorService` and `RefundService` call it when a step fails; `RefresherService` does not, see [Idempotent fulfilment](#idempotent-fulfilment). It never stores the error itself, because provider errors carry request headers, bodies and messages that can hold credentials, and sockets that cannot be serialized. What it stores is an `ITransErrorEvent`:
 
 | Field     | Value                                                                                                                        |
 | --------- | ---------------------------------------------------------------------------------------------------------------------------- |

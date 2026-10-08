@@ -74,7 +74,7 @@ This package does not calculate prices or authenticate the checkout.
   `amount`.
 - With an empty `internalApiUrl` and no `TRANS_TOKEN_INTERNAL_SERVICE` provider, payments can no
   longer be created. Register an internal service first, also in development.
-- `error` history entries now hold `{ name, message, status? }` (`TransErrorEvent`) instead of the
+- `error` history entries now hold `{ name, message, status? }` (`ITransErrorEvent`) instead of the
   raw error, so credentials in provider errors are never stored.
 
 ## 🔁 Idempotent fulfilment
@@ -107,7 +107,7 @@ database transactions, crashes and replayed receipts.
   nothing can fulfil an order, so status changes are refused as well (creating a payment already
   rejects there, see Payment amounts above).
 - A failed refresh no longer stores status `error`; the record keeps its last persisted status.
-  Failed creates and refunds still record `error` with a `TransErrorEvent`.
+  Failed creates and refunds still record `error` with an `ITransErrorEvent`.
 
 ## 🔒 Concurrent refreshes
 

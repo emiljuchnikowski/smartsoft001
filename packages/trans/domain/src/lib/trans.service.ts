@@ -11,11 +11,14 @@ import { Trans, TransHistory } from './entities/trans.entity';
  * carry request credentials (headers, bodies, messages), functions and
  * circular sockets, so only these three fields are ever kept.
  */
-export interface TransErrorEvent {
+export interface ITransErrorEvent {
   name: string;
   message: string;
   status?: number;
 }
+
+/** @deprecated Use {@link ITransErrorEvent}; interfaces start with `I`. */
+export type TransErrorEvent = ITransErrorEvent;
 
 function errorName(error: unknown): string {
   if (error instanceof DomainValidationError) return 'DomainValidationError';
@@ -48,7 +51,7 @@ function httpStatus(error: unknown): number | undefined {
 function toTransErrorEvent(
   error: unknown,
   context = 'Transaction failed',
-): TransErrorEvent {
+): ITransErrorEvent {
   const name = errorName(error);
 
   if (error instanceof DomainValidationError) {
