@@ -47,3 +47,24 @@ export const paynowProviders: Provider[] = [
 })
 export class PaynowPaymentsModule {}
 // #endregion
+
+// #region failures
+/**
+ * A failed Paynow call never rejects with the raw axios error, because that
+ * error keeps the request and with it the `Api-Key` header. `create`,
+ * `getStatus` and `refund` log one line under the `PaynowService` context and
+ * reject with a plain `Error` that has no `cause`, `config` or `response`:
+ * `Paynow payment creation failed (HTTP 401)`,
+ * `Paynow status lookup failed (HTTP 503)` or `Paynow refund failed (HTTP 400)`.
+ * The ` (HTTP {status})` suffix is there only when Paynow answered, so code
+ * that used to read `e.response.status` reads the status from the message
+ * instead.
+ */
+export function paynowFailureStatus(error: unknown): number | undefined {
+  if (!(error instanceof Error)) return undefined;
+
+  const match = / \(HTTP (\d{3})\)$/.exec(error.message);
+
+  return match ? Number(match[1]) : undefined;
+}
+// #endregion

@@ -39,7 +39,7 @@ What sets this provider apart from the other three is that authentication is spl
 
 The region registers the two providers the service needs and wraps them in a module that imports `HttpModule`. `PaynowConfig` declares its required fields without initialisers, so the config is supplied as an object literal to `useValue` rather than through `new PaynowConfig()`, with `satisfies` keeping the literal checked against the class.
 
-Its spec compiles that module with a stubbed `HttpService` that records a call and then throws. `PaynowService` resolves, so the three constructor dependencies are satisfiable from these providers alone. The `PaynowConfig` read back out of the injector equals the literal the example wrote, including `test: true` and both keys. And the stub recorded nothing after the service had been resolved, so registering the provider signs nothing and sends nothing.
+Its spec compiles that module with a stubbed `HttpService` that records a call and then throws. `PaynowService` resolves, so the three constructor dependencies are satisfiable from these providers alone. The `PaynowConfig` read back out of the injector equals the literal the example wrote, including `test: true` and both keys. And the stub recorded nothing after the service had been resolved, so registering the provider signs nothing and sends nothing. Two more specs cover the `failures` region shown under [Failures](#failures): one compiles the module against an HTTP stub that fails with a 401 carrying the `Api-Key` header, and checks that `create` rejects with `Paynow payment creation failed (HTTP 401)`, that neither the rejection nor the logged line contains the key, and that `paynowFailureStatus` reads `401` back; the other checks that a message without the suffix yields no status.
 
 ## API
 
@@ -92,6 +92,26 @@ Base url is `https://api.sandbox.paynow.pl` when `test` is true and `https://api
 | `create`    | `POST {base}/v1/payments`                   | `maxRedirects: 0`, signed, with an idempotency key.        |
 | `getStatus` | `GET {base}/v1/payments/{orderId}/status`   | `orderId` comes from the `started` history entry.          |
 | `refund`    | `POST {base}/v1/payments/{orderId}/refunds` | Body is `{ amount: trans.amount }`, signed and idempotent. |
+
+### Failures
+
+A failed HTTP call never leaves the service as the raw axios error. That error keeps the request it was made with, and every Paynow request carries the `Api-Key` header. So each method catches it, logs one line at error level under the `PaynowService` context, and throws a new `Error` that has no `cause`, `config` or `response`.
+
+| Failing call | Message                                          |
+| ------------ | ------------------------------------------------ |
+| `create`     | `Paynow payment creation failed (HTTP {status})` |
+| `getStatus`  | `Paynow status lookup failed (HTTP {status})`    |
+| `refund`     | `Paynow refund failed (HTTP {status})`           |
+
+The logged line and the thrown message are the same. The ` (HTTP {status})` suffix is there only when Paynow answered, so a rejected key (`401`) and a Paynow outage (`5xx`) stay distinguishable, and a network failure with no answer ends at `failed`. The Paynow response body is not kept. Look the payment up in the Paynow panel by its id when you need the details. The signature key was never on the wire, and it is not in the failure either.
+
+{% snippet file="node/src/paynow/paynow-service.example.ts" region="failures" /%}
+
+When the transaction domain records one of these failures through `setError`, the history entry is `{ name: 'Error', message: <context> }` with no `status`: `setError` stores its own context message rather than the error's, and reads the status only from `response.status`, which this error no longer has. The status of a Paynow failure is in the logged line.
+
+{% callout type="warning" title="Upgrading from versions that rethrew the axios error" %}
+Code that read `e.response.status` or `e.response.data` from an error thrown by `PaynowService` gets `undefined` now. Read the status from the message instead, as `paynowFailureStatus` does, or log the message as it is. For the same reason, the `error` history entries `setError` writes for these failures no longer carry a `status`. Nothing else about the calls has changed.
+{% /callout %}
 
 ### Status mapping
 

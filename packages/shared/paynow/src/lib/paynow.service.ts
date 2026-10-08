@@ -17,6 +17,39 @@ import {
   PaynowConfig,
 } from './paynow.config';
 
+function httpStatusOf(e: unknown): number | undefined {
+  if (
+    typeof e === 'object' &&
+    e !== null &&
+    'response' in e &&
+    typeof e.response === 'object' &&
+    e.response !== null &&
+    'status' in e.response &&
+    typeof e.response.status === 'number'
+  ) {
+    return e.response.status;
+  }
+
+  return undefined;
+}
+
+/**
+ * HTTP errors retain the request, and every Paynow request carries the
+ * `Api-Key` header. Neither the raw error nor its message may reach a log or
+ * an upstream handler, so only the operation and the HTTP status survive.
+ */
+function paynowFailure(operation: string, e: unknown): Error {
+  const status = httpStatusOf(e);
+  const message =
+    status === undefined
+      ? `Paynow ${operation} failed`
+      : `Paynow ${operation} failed (HTTP ${status})`;
+
+  Logger.error(message, PaynowService.name);
+
+  return new Error(message);
+}
+
 @Injectable()
 export class PaynowService implements ITransPaymentSingleService {
   constructor(
@@ -61,17 +94,22 @@ export class PaynowService implements ITransPaymentSingleService {
 
     const signature = this.getSignature(data, config);
 
-    const response = await firstValueFrom(
-      this.httpService.post(this.getBaseUrl(config) + '/v1/payments', data, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Api-Key': config.apiKey,
-          'Idempotency-Key': GuidService.create(),
-          Signature: signature,
-        },
-        maxRedirects: 0,
-      }),
-    );
+    let response;
+    try {
+      response = await firstValueFrom(
+        this.httpService.post(this.getBaseUrl(config) + '/v1/payments', data, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Api-Key': config.apiKey,
+            'Idempotency-Key': GuidService.create(),
+            Signature: signature,
+          },
+          maxRedirects: 0,
+        }),
+      );
+    } catch (e) {
+      throw paynowFailure('payment creation', e);
+    }
 
     return {
       redirectUrl: response.data.redirectUrl,
@@ -85,17 +123,22 @@ export class PaynowService implements ITransPaymentSingleService {
     const orderId = this.getOrderId(trans);
     const config = await this.getConfig(trans.data);
 
-    const response = await firstValueFrom(
-      this.httpService.get(
-        this.getBaseUrl(config) + '/v1/payments/' + orderId + '/status',
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Api-Key': config.apiKey,
+    let response;
+    try {
+      response = await firstValueFrom(
+        this.httpService.get(
+          this.getBaseUrl(config) + '/v1/payments/' + orderId + '/status',
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'Api-Key': config.apiKey,
+            },
           },
-        },
-      ),
-    );
+        ),
+      );
+    } catch (e) {
+      throw paynowFailure('status lookup', e);
+    }
 
     return {
       status: this.getStatusFromExternal(response.data.status),
@@ -113,22 +156,26 @@ export class PaynowService implements ITransPaymentSingleService {
 
     const signature = this.getSignature(data, config);
 
-    const response = await firstValueFrom(
-      this.httpService.post(
-        this.getBaseUrl(config) + '/v1/payments/' + orderId + '/refunds',
-        data,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Api-Key': config.apiKey,
-            'Idempotency-Key': GuidService.create(),
-            Signature: signature,
+    try {
+      const response = await firstValueFrom(
+        this.httpService.post(
+          this.getBaseUrl(config) + '/v1/payments/' + orderId + '/refunds',
+          data,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'Api-Key': config.apiKey,
+              'Idempotency-Key': GuidService.create(),
+              Signature: signature,
+            },
           },
-        },
-      ),
-    );
+        ),
+      );
 
-    return response.data;
+      return response.data;
+    } catch (e) {
+      throw paynowFailure('refund', e);
+    }
   }
 
   private getOrderId(trans: Trans<any>): string {

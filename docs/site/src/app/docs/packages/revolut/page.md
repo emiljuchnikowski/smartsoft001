@@ -39,7 +39,7 @@ Authentication is a single merchant secret key sent as a bearer token, with no t
 
 The region registers the two providers and wraps them in a module that imports `HttpModule`. `RevolutConfig` declares `token` without an initialiser, so the config is supplied as an object literal to `useValue` rather than through `new RevolutConfig()`, with `satisfies` keeping the literal checked against the class.
 
-Its spec compiles that module with a stubbed `HttpService` that records a call and then throws, and checks four things. `RevolutService` resolves. The `RevolutConfig` read back out of the injector equals the literal the example wrote, including `test: true`. The stub recorded nothing after the service had been resolved, so the merchant key never left the process. And a second testing module, built from the service and the HTTP stub alone, still resolves the service, which is the `@Optional()` config in action: the missing provider is not an error until a method needs the token.
+Its spec compiles that module with a stubbed `HttpService` that records a call and then throws, and checks four things. `RevolutService` resolves. The `RevolutConfig` read back out of the injector equals the literal the example wrote, including `test: true`. The stub recorded nothing after the service had been resolved, so the merchant key never left the process. And a second testing module, built from the service and the HTTP stub alone, still resolves the service, which is the `@Optional()` config in action: the missing provider is not an error until a method needs the token. Two more specs cover the `failures` region shown under [Failures](#failures): one compiles the module against an HTTP stub that fails with a 401 carrying the bearer header, and checks that `create` rejects with `Revolut order creation failed (HTTP 401)`, that neither the rejection nor the logged line contains the key, and that `revolutFailureStatus` reads `401` back; the other checks that a message without the suffix yields no status.
 
 ## API
 
@@ -86,6 +86,25 @@ Base url is `https://sandbox-merchant.revolut.com` when `test` is true and `http
 | `create`    | `POST {base}/api/orders`     | `maxRedirects: 0`.                                                           |
 | `getStatus` | `GET {base}/api/orders/{id}` | `{id}` is `responseData.id` from the `started` history entry, not `orderId`. |
 | `refund`    | none                         | Rejects before doing anything.                                               |
+
+### Failures
+
+A failed HTTP call never leaves the service as the raw axios error. That error keeps the request it was made with, and every Revolut request carries the long-lived merchant secret key as `Authorization: Bearer {token}`. So `create` and `getStatus` catch it, log one line at error level under the `RevolutService` context, and throw a new `Error` that has no `cause`, `config` or `response`.
+
+| Failing call | Message                                         |
+| ------------ | ----------------------------------------------- |
+| `create`     | `Revolut order creation failed (HTTP {status})` |
+| `getStatus`  | `Revolut status lookup failed (HTTP {status})`  |
+
+The logged line and the thrown message are the same. The ` (HTTP {status})` suffix is there only when Revolut answered, so a rejected key (`401`) and a Revolut outage (`5xx`) stay distinguishable, and a network failure with no answer ends at `failed`. The Revolut response body is not kept. Look the order up in the Revolut Business dashboard when you need the details. `refund` is unchanged: it sends nothing, so it still rejects with the string `Revolut does not support refund`.
+
+{% snippet file="node/src/revolut/revolut-service.example.ts" region="failures" /%}
+
+When the transaction domain records one of these failures through `setError`, the history entry is `{ name: 'Error', message: <context> }` with no `status`: `setError` stores its own context message rather than the error's, and reads the status only from `response.status`, which this error no longer has. The status of a Revolut failure is in the logged line.
+
+{% callout type="warning" title="Upgrading from versions that rethrew the axios error" %}
+Code that read `e.response.status` or `e.response.data` from an error thrown by `RevolutService` gets `undefined` now. Read the status from the message instead, as `revolutFailureStatus` does, or log the message as it is. For the same reason, the `error` history entries `setError` writes for these failures no longer carry a `status`. Nothing else about the calls has changed.
+{% /callout %}
 
 ### Status mapping
 
