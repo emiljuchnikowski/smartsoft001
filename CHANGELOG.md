@@ -1,3 +1,7 @@
+## 2.189.0 (2026-10-08)
+
+This was a version bump only, there were no code changes.
+
 ## 2.188.0 (2026-10-07)
 
 This was a version bump only, there were no code changes.
