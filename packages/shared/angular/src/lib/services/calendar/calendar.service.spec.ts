@@ -73,6 +73,41 @@ describe('angular: CalendarService', () => {
       calendarService['initCalendar']();
       expect(Array.isArray(calendarService.state.calendar)).toBe(true);
     });
+
+    describe('with a frozen clock', () => {
+      // A frozen clock makes every moment() call return the same millisecond,
+      // which is what used to add an extra month at the start.
+      afterEach(() => {
+        jest.useRealTimers();
+      });
+
+      it('starts the calendar exactly two years before the current month', () => {
+        jest.useFakeTimers({ now: new Date(2026, 9, 8, 12, 0, 0) });
+
+        const [firstMonth] = new CalendarService().getCalendar();
+
+        expect(`${firstMonth.year}-${firstMonth.number}`).toBe('2024-10');
+      });
+
+      // Month-end days: moment clamps the day while stepping back a month at
+      // a time (31st -> 30th -> 29th...), and adding / subtracting two years
+      // from 29 February lands on 28 February.
+      it.each([
+        { today: '2026-08-31', firstMonth: '2024-08' },
+        { today: '2027-02-28', firstMonth: '2025-02' },
+        { today: '2028-02-29', firstMonth: '2026-02' },
+      ])(
+        'starts the calendar at $firstMonth on $today',
+        ({ today, firstMonth }) => {
+          // A date-time without an offset is parsed as local time.
+          jest.useFakeTimers({ now: new Date(`${today}T12:00:00`) });
+
+          const [first] = new CalendarService().getCalendar();
+
+          expect(`${first.year}-${first.number}`).toBe(firstMonth);
+        },
+      );
+    });
   });
 
   describe('filterFutureDates', () => {

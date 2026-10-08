@@ -1,13 +1,23 @@
 import { CommonModule } from '@angular/common';
-import { Component, importProvidersFrom, NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import {
+  importProvidersFrom,
+  inject,
+  NgModule,
+  provideAppInitializer,
+} from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { applicationConfig, moduleMetadata } from '@storybook/angular';
 import type { Meta, StoryObj } from '@storybook/angular';
 
-import { NgrxSharedModule, SharedModule } from '@smartsoft001/angular';
+import {
+  IModelValidatorsOptions,
+  MODEL_VALIDATORS_PROVIDER,
+  NgrxSharedModule,
+  SharedModule,
+} from '@smartsoft001/angular';
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
 import { ItemComponent } from './item.component';
@@ -41,10 +51,10 @@ export class Article {
 }
 
 // Dedicated Storybook module mirroring the list story's `StorybookTestModule`.
-// `storyAppConfig` provides an `/add` route so the item page can
-// resolve its "create" mode from `router.routerState.snapshot.url` (it checks
-// for a URL ending in `/add`). The placeholder apiUrl renders chrome without a
-// live backend.
+// `storyAppConfig` puts the router on `/articles/add` before the story renders,
+// so the item page resolves its "create" mode from
+// `router.routerState.snapshot.url` (it checks for a URL ending in `/add`).
+// The placeholder apiUrl renders chrome without a live backend.
 @NgModule({
   imports: [
     CommonModule,
@@ -77,6 +87,14 @@ export class StorybookTestModule {}
  * `RouterTestingModule` (the `@angular/router/testing` entrypoint is not
  * bundleable in the Storybook preview); hash routing keeps `router.navigate`
  * from touching the iframe URL's story params.
+ *
+ * The item page reads the router URL once, in `ngOnInit`, but the Storybook
+ * iframe starts at `/`. The app initializer navigates to `/articles/add` before
+ * the story renders (bootstrap waits for the returned promise), and the
+ * router's own initial navigation is disabled so it does not sync the router
+ * back to the iframe's (empty) hash. `skipLocationChange` leaves that hash
+ * alone: Storybook keeps it when switching stories, so `#/articles/add` would
+ * otherwise reach the next story's router.
  */
 const storyAppConfig = applicationConfig({
   providers: [
@@ -87,9 +105,24 @@ const storyAppConfig = applicationConfig({
       TranslateModule.forRoot(),
       RouterModule.forRoot(
         [{ path: 'articles/add', component: ItemComponent }],
-        { useHash: true },
+        { useHash: true, initialNavigation: 'disabled' },
       ),
     ),
+    provideAppInitializer(() =>
+      inject(Router).navigateByUrl('/articles/add', {
+        skipLocationChange: true,
+      }),
+    ),
+    // The create form is built by FormFactory, which injects
+    // MODEL_VALIDATORS_PROVIDER with no library-side default (apps provide
+    // it); this one keeps each field's own validators.
+    {
+      provide: MODEL_VALIDATORS_PROVIDER,
+      useValue: {
+        get: (options: IModelValidatorsOptions) =>
+          Promise.resolve(options.base ?? {}),
+      },
+    },
   ],
 });
 
@@ -108,8 +141,9 @@ export default meta;
 type Story = StoryObj<ItemComponent<Article>>;
 
 /**
- * "Add" mode — the create form. The item page enters create mode when the route
- * URL ends in `/add`, which `storyAppConfig` provides.
+ * "Add" mode — the create form. The item page enters create mode when the
+ * router URL ends in `/add`: `storyAppConfig` navigates to `/articles/add`
+ * before the page initialises.
  */
 export const Add: Story = {
   name: 'Add (create form)',

@@ -77,7 +77,9 @@ export class CalendarService {
     const calendar = [firstMonth];
     const currentDate = moment().clone();
     const dateYearAgo = currentDate.clone().subtract(2, 'year');
-    while (date.isSameOrAfter(dateYearAgo)) {
+    // Compared by month: at millisecond precision the outcome depended on
+    // whether the two moment() calls landed in the same millisecond.
+    while (date.isAfter(dateYearAgo, 'month')) {
       // creating one year calendar
       calendar.unshift(this.previousMonth());
     }
