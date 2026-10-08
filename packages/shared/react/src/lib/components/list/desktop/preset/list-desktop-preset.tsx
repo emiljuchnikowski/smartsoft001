@@ -24,11 +24,10 @@ import {
 } from '../use-list-desktop';
 
 /**
- * Preline-styled desktop list variation (the Angular
- * `<smart-list-desktop-preset>`, `ListDesktopPresetComponent`). Drop-in
- * replacement for `SmartListDesktop`: register it for `ListMode.desktop`
- * through `listModeComponents` on `SmartProvider` (see
- * `LIST_PRESET_MODE_COMPONENTS`), or render it directly.
+ * Preline-styled desktop list variation. Drop-in replacement for
+ * `SmartListDesktop`: register it for `ListMode.desktop` through
+ * `listModeComponents` on `SmartProvider` (see `LIST_PRESET_MODE_COMPONENTS`),
+ * or render it directly.
  *
  * Keeps every functional branch of the desktop table (top slot, multi
  * select, remove / item actions, pagination, image cells) and restyles it
@@ -36,8 +35,8 @@ import {
  * (default | striped | bordered | borderless), `hoverable` and `header`
  * (default | muted | none). `className` goes on the container.
  *
- * Like the CDK table, the table ends with an empty hidden `<tfoot>`, so the
- * dividers also draw a line below the last body row.
+ * The table ends with an empty hidden `<tfoot>`, so the dividers also draw a
+ * line below the last body row.
  */
 export function SmartListDesktopPreset<T extends IEntity<string>>(
   props: SmartListModeProps<T>,

@@ -4,9 +4,8 @@ import { SmartSelectMenuProps } from '../select-menu.types';
 import { useSelectMenu } from '../use-select-menu';
 
 /**
- * The default select menu (`<smart-select-menu-standard>`): a native
- * `<select>`. The chosen option is matched back to its item, so a numeric
- * item value stays a number.
+ * The default select menu: a native `<select>`. The chosen option is matched
+ * back to its item, so a numeric item value stays a number.
  */
 export function SmartSelectMenuStandard(props: SmartSelectMenuProps) {
   const { disabled = false, options, className } = props;

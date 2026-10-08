@@ -37,9 +37,8 @@ const CLEAR_CLASSES =
   'smart:rounded-md smart:bg-red-600 smart:px-2 smart:py-1 smart:text-xs smart:font-semibold smart:text-white smart:hover:bg-red-500';
 
 /**
- * Preline-styled colour field (preset, Angular `InputColorPresetComponent`):
- * a framed swatch (white without a colour), the native colour picker, the
- * colour's hex code and a clear button.
+ * Preline-styled colour field (preset): a framed swatch (white without a
+ * colour), the native colour picker, the colour's hex code and a clear button.
  */
 export function SmartInputColorPreset<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

@@ -14,12 +14,11 @@ import { useListFileUrl } from '../../use-list';
 import { useListMasonryGrid } from '../use-list-masonry-grid';
 
 /**
- * Preline-styled masonry-grid list variation (the Angular
- * `<smart-list-masonry-grid-preset>`, `ListMasonryGridPresetComponent`):
- * keeps the masonry column layout and renders every item as a Preline card,
- * the image on a rounded top, the first non-image column as the title and the
- * others as text. Register it for `ListMode.masonryGrid` through
- * `listModeComponents` on `SmartProvider` (see `LIST_PRESET_MODE_COMPONENTS`).
+ * Preline-styled masonry-grid list variation: keeps the masonry column layout
+ * and renders every item as a Preline card, the image on a rounded top, the
+ * first non-image column as the title and the others as text. Register it for
+ * `ListMode.masonryGrid` through `listModeComponents` on `SmartProvider` (see
+ * `LIST_PRESET_MODE_COMPONENTS`).
  */
 export function SmartListMasonryGridPreset<T extends IEntity<string>>(
   props: SmartListModeProps<T>,

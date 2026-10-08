@@ -39,11 +39,10 @@ const INPUT_CLASSES = [
 ].join(' ');
 
 /**
- * The `password` field (the Angular `InputPasswordComponent`,
- * `<smart-input-password>`): the model label and a `type="password"` input
- * bound to the control. With `fieldOptions.possibilities.strength` it renders
- * `<SmartPasswordStrength>` under the input (hints while the input has
- * focus), whose rating sets the control's `passwordStrength` error (see
+ * The `password` field: the model label and a `type="password"` input bound to
+ * the control. With `fieldOptions.possibilities.strength` it renders
+ * `<SmartPasswordStrength>` under the input (hints while the input has focus),
+ * whose rating sets the control's `passwordStrength` error (see
  * {@link useInputPassword}).
  *
  * A `<key>Confirm` control (added by the form factory for `confirm: true`)

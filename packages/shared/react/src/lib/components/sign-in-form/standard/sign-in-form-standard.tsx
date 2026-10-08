@@ -1,7 +1,7 @@
 import { SmartSignInFormProps } from '../sign-in-form.types';
 import { useSignInForm } from '../use-sign-in-form';
 
-/** The default, unstyled sign-in form (`<smart-sign-in-form-standard>`). */
+/** The default, unstyled sign-in form. */
 export function SmartSignInFormStandard(props: SmartSignInFormProps) {
   const { mode = 'sign-in', disabled = false, options, className } = props;
   const { email, setEmail, password, setPassword, submit, socialClick } =

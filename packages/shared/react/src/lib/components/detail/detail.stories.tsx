@@ -177,11 +177,11 @@ const meta: Meta<DetailArgs> = {
       control: 'select',
       options: VARIANTS.map((x) => x.key),
       description:
-        'Field of the fixture model to render. The FieldType selects which component <smart-detail> dispatches to.',
+        'Field of the fixture model to render. The FieldType selects which component <SmartDetail> dispatches to.',
     },
     info: {
       control: 'text',
-      description: 'Renders the <smart-info> tooltip next to the value.',
+      description: 'Renders the <SmartInfo> tooltip next to the value.',
     },
     loading: {
       control: 'boolean',

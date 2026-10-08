@@ -5,11 +5,10 @@ import { useInput } from '../base/use-input';
 import { SmartInputFieldProps } from '../input.types';
 
 /**
- * {@link useInput} plus the strength check both Angular password inputs
- * shared: a validator on the control that reports `passwordStrength` while
- * the last rating was not strong, and `onChangePasswordStrength(valid)`, the
- * handler of that rating, which stores it and updates the control's errors
- * at once.
+ * {@link useInput} plus the strength check both password fields share: a
+ * validator on the control that reports `passwordStrength` while the last
+ * rating was not strong, and `onChangePasswordStrength(valid)`, the handler of
+ * that rating, which stores it and updates the control's errors at once.
  *
  * The validator reads this field's last rating, so it is removed again when
  * the field unmounts or gets another control. Until a rating arrives (or

@@ -4,8 +4,8 @@ import { SmartDetailFieldProps } from '../../detail.types';
 import { useDetail, useDetailCellValue } from '../../use-detail';
 
 /**
- * Styled text detail (preset, `DetailTextPresetComponent`): the sanitised HTML
- * of the value with Preline typography, an em dash when it is empty.
+ * Styled text detail (preset): the sanitised HTML of the value with Preline
+ * typography, an em dash when it is empty.
  */
 export function SmartDetailTextPreset<T>(props: SmartDetailFieldProps<T>) {
   const { className } = props;

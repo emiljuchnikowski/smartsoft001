@@ -6,7 +6,7 @@ import { TableRow } from '../../models';
 /**
  * The content of a body cell: the column's `cellTpl` (called with the
  * `{ row, column }` context when it is a function), otherwise `row[column.key]`
- * as text, empty for `null` / `undefined` (Angular's `{{ readCell(...) }}`).
+ * as text, empty for `null` / `undefined`.
  */
 export function renderTableCell(
   row: TableRow,

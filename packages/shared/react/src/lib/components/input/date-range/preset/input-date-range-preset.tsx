@@ -76,18 +76,16 @@ function toControlValue(value: DateRangeValue): DateRangeValue | null {
 }
 
 /**
- * Styled `dateRange` field (preset, the Angular
- * `InputDateRangePresetComponent`, `<smart-input-date-range-preset>`): the
- * Preline label and two native `type="date"` inputs (start – end). Register
- * it as `inputFieldComponents[FieldType.dateRange]` on `SmartProvider`.
+ * Styled `dateRange` field (preset): the Preline label and two native
+ * `type="date"` inputs (start – end). Register it as
+ * `inputFieldComponents[FieldType.dateRange]` on `SmartProvider`.
  *
  * The control value stays the `IDateRange` shape (`{ start, end }`,
  * `YYYY-MM-DD`): a changed input sets it and marks the control dirty, and
  * clearing both ends sets `null`; leaving either input marks the control
- * touched. `className` is appended to the classes of the inputs' row. As in
- * Angular the Preline range datepicker (Vanilla Calendar Pro and the Preline
- * JS plugin) is not used, and the inputs are not bound to the control's
- * disabled state.
+ * touched. `className` is appended to the classes of the inputs' row. The
+ * Preline range datepicker (Vanilla Calendar Pro and the Preline JS plugin) is
+ * not used, and the inputs are not bound to the control's disabled state.
  */
 export function SmartInputDateRangePreset<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

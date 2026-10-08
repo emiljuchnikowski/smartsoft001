@@ -5,6 +5,6 @@ import { IStackedLayoutOptions } from '../../models';
 export interface SmartStackedLayoutProps {
   options?: IStackedLayoutOptions;
   className?: string;
-  /** The main content (the Angular `<ng-content>`). */
+  /** The main content. */
   children?: ReactNode;
 }

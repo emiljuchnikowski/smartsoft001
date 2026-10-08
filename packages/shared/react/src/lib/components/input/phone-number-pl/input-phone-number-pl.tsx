@@ -38,9 +38,8 @@ const INPUT_CLASSES = [
 ].join(' ');
 
 /**
- * The `phoneNumberPl` field (the Angular `InputPhoneNumberPlComponent`,
- * `<smart-input-phone-number-pl>`): the model label and a `type="tel"` input
- * bound to the control, which must hold exactly 9 characters (see
+ * The `phoneNumberPl` field: the model label and a `type="tel"` input bound to
+ * the control, which must hold exactly 9 characters (see
  * {@link useInputPhoneNumberPl}). `className` is appended to the input's
  * classes.
  */

@@ -4,8 +4,8 @@ import { SmartDetailFieldProps } from '../../detail.types';
 import { useDetail } from '../../use-detail';
 
 /**
- * Styled flag detail (preset, `DetailFlagPresetComponent`): a soft green
- * `✓` badge when the flag is set, a soft red `✗` badge otherwise.
+ * Styled flag detail (preset): a soft green `✓` badge when the flag is set, a
+ * soft red `✗` badge otherwise.
  */
 export function SmartDetailFlagPreset<T>(props: SmartDetailFieldProps<T>) {
   const { className } = props;

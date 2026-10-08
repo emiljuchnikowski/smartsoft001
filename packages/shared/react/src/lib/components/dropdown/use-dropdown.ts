@@ -3,11 +3,10 @@ import { useCallback, useState } from 'react';
 import { SmartDropdownProps } from './dropdown.types';
 
 /**
- * The behaviour every dropdown variant shares (the Angular
- * `DropdownBaseComponent`): the `open` state, controlled through `open` /
- * `onOpenChange` or kept internally from `defaultOpen`; `toggle()`,
- * `close()`, and `selectItem(id)`, which reports `onSelectedItem` and closes
- * the menu.
+ * The behaviour every dropdown variant shares: the `open` state, controlled
+ * through `open` / `onOpenChange` or kept internally from `defaultOpen`;
+ * `toggle()`, `close()`, and `selectItem(id)`, which reports `onSelectedItem`
+ * and closes the menu.
  */
 export function useDropdown({
   open: openProp,

@@ -15,11 +15,11 @@ function setCharAt(str: string, index: number, chr: string | number): string {
 }
 
 /**
- * The Angular `ngModel` model: controlled while `value` is defined, otherwise
- * kept here. A new `value` from the parent always wins, as a `model()` input
- * does, so resetting the parent's state to `undefined` also clears the date.
+ * The date value: controlled while `value` is defined, otherwise kept here.
+ * A new `value` from the parent always wins, so resetting the parent's state
+ * to `undefined` also clears the date.
  */
-function useNgModel(
+function useControllableValue(
   value: DateEditValue,
   defaultValue: DateEditValue,
   onValueChange?: (value: string) => void,
@@ -34,19 +34,19 @@ function useNgModel(
     setInnerValue(value);
   }
 
-  const ngModel = value === undefined ? innerValue : value;
+  const currentValue = value === undefined ? innerValue : value;
 
-  const setNgModel = useCallback(
+  const setValue = useCallback(
     (next: string) => {
-      if (next === ngModel) return;
+      if (next === currentValue) return;
 
       setInnerValue(next);
       onValueChange?.(next);
     },
-    [ngModel, onValueChange],
+    [currentValue, onValueChange],
   );
 
-  return [ngModel ?? null, setNgModel] as const;
+  return [currentValue ?? null, setValue] as const;
 }
 
 const DIGIT_KEYS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
@@ -94,9 +94,8 @@ function moveTo(
 }
 
 /**
- * The behaviour every date-edit variant shares (the Angular
- * `DateEditBaseComponent`): the `YYYY-MM-DD` model, its single digits and
- * the validity of the edited date.
+ * The behaviour every date-edit variant shares: the `YYYY-MM-DD` value, its
+ * single digits and the validity of the edited date.
  */
 export function useDateEdit({
   value,
@@ -104,11 +103,15 @@ export function useDateEdit({
   onValueChange,
   onValidChange,
 }: SmartDateEditVariantProps) {
-  const [ngModel, setNgModel] = useNgModel(value, defaultValue, onValueChange);
+  const [currentValue, setValue] = useControllableValue(
+    value,
+    defaultValue,
+    onValueChange,
+  );
   const [validDate, setValidDate] = useState(true);
 
   const digitAt = (index: number): string | null =>
-    ngModel ? ngModel[index] : null;
+    currentValue ? currentValue[index] : null;
 
   /**
    * Replaces the digit at `index` with the first digit of `val` (`null`, an
@@ -119,7 +122,7 @@ export function useDateEdit({
       if (val === null) return;
 
       const digit = Number(val.toString().substring(0, 1));
-      let next = ngModel;
+      let next = currentValue;
 
       if (!next || digit > 9 || digit < 0) next = DATE_EDIT_DEFAULT_DATE;
       next = setCharAt(next, index, digit);
@@ -127,15 +130,15 @@ export function useDateEdit({
       const valid = moment(next).isValid();
 
       setValidDate(valid);
-      setNgModel(next);
+      setValue(next);
       onValidChange?.(valid);
     },
-    [ngModel, setNgModel, onValidChange],
+    [currentValue, setValue, onValidChange],
   );
 
   return {
-    ngModel,
-    setNgModel,
+    value: currentValue,
+    setValue,
     validDate,
     setValidDate,
     setValueAt,

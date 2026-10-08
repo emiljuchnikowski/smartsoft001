@@ -7,6 +7,6 @@ export interface SmartMediaObjectProps {
   mediaAlt: string;
   options?: IMediaObjectOptions;
   className?: string;
-  /** The body content, beside the media (the Angular `ng-content`). */
+  /** The body content, beside the media. */
   children?: ReactNode;
 }

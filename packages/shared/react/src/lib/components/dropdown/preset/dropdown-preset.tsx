@@ -47,13 +47,12 @@ function toGroups(
  * Styled dropdown variation (preset). Register it as `components.dropdown` on
  * `SmartProvider` to restyle every `<SmartDropdown>`, or render it directly.
  *
- * Open/close is driven by the shared `open` state and a click toggle;
- * Preline's JS plugin is NOT used, but its visual classes and ARIA
- * (`aria-haspopup` / `aria-expanded`) are preserved. Supports the shared
- * `SmartDropdownVariant` set: `simple`, `with-dividers`, `with-icons`,
- * `with-header` and a borderless `minimal` trigger (defaults to `simple`).
- * The trigger shows `triggerLabel` (`Actions` without it); `children` are not
- * rendered, as in Angular.
+ * Open/close is driven by the shared `open` state and a click toggle; Preline's
+ * JS plugin is NOT used, but its visual classes and ARIA (`aria-haspopup` /
+ * `aria-expanded`) are preserved. Supports the shared `SmartDropdownVariant`
+ * set: `simple`, `with-dividers`, `with-icons`, `with-header` and a borderless
+ * `minimal` trigger (defaults to `simple`). The trigger shows `triggerLabel`
+ * (`Actions` without it); `children` are not rendered.
  */
 export function SmartDropdownPreset(props: SmartDropdownProps) {
   const { items = [], triggerLabel, options, className } = props;

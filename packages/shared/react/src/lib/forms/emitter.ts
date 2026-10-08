@@ -3,9 +3,10 @@ export interface SmartSubscription {
 }
 
 /**
- * A minimal synchronous event source with the `subscribe` shape of an RxJS
- * observable, so code ported from the Angular library (`valueChanges`,
- * `statusChanges`) keeps reading the same way without pulling RxJS in.
+ * A minimal synchronous event source: `subscribe` returns a handle with
+ * `unsubscribe()`, and `emit` calls every listener in turn. The controls'
+ * `valueChanges`, `statusChanges` and `changes` are built on it, so the forms
+ * need no reactive-streams library.
  */
 export class SmartEmitter<T> {
   private readonly listeners = new Set<(value: T) => void>();

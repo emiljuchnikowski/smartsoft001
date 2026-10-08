@@ -1,9 +1,9 @@
 import { SmartSectionHeadingProps } from '../section-heading.types';
 
 /**
- * The default section heading rendering (`<smart-section-heading-standard>`):
- * an unstyled `<h3>` title (with its `label`), description and the badge /
- * input group / actions slots, and a tabs slot under the header.
+ * The default section heading rendering: an unstyled `<h3>` title (with its
+ * `label`), description and the badge / input group / actions slots, and a tabs
+ * slot under the header.
  */
 export function SmartSectionHeadingStandard({
   options,

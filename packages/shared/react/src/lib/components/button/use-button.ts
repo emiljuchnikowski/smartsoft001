@@ -4,10 +4,9 @@ import { SmartButtonProps } from './button.types';
 import { COMPONENT_COLORS, SmartVariant } from '../../models';
 
 /**
- * The behaviour every button variant shares (the Angular
- * `ButtonBaseComponent`): the colour classes of the variant, and the confirm
- * mode, where a first click asks for confirmation instead of running
- * `options.click`.
+ * The behaviour every button variant shares: the colour classes of the variant,
+ * and the confirm mode, where a first click asks for confirmation instead of
+ * running `options.click`.
  */
 export function useButton({ options, disabled = false }: SmartButtonProps) {
   const [mode, setMode] = useState<'default' | 'confirm'>('default');

@@ -2,7 +2,7 @@ import { cn } from '../../../utils/class-names';
 import { SmartLoaderProps } from '../loader.types';
 import { useLoader } from '../use-loader';
 
-/** The default loader rendering (`<smart-loader-standard>`): an SVG spinner. */
+/** The default loader rendering: an SVG spinner. */
 export function SmartLoaderStandard(props: SmartLoaderProps) {
   const { show = false } = props;
   const { spinnerClasses } = useLoader(props);

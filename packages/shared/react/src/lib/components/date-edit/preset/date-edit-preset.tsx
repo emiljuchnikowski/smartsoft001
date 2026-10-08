@@ -70,16 +70,15 @@ function getWeeks(
 }
 
 /**
- * Styled date-edit variation (preset) — a Preline single datepicker
- * (`<smart-date-edit-preset>`). Rendered by `<SmartDateEdit>` for
- * `variant="preset"`, or usable directly.
+ * Styled date-edit variation (preset) — a Preline single datepicker.
+ * Rendered by `<SmartDateEdit>` for `variant="preset"`, or usable directly.
  *
  * A read-only trigger shows the date and toggles a calendar popover (month
  * navigation, month / year selects, day grid); a click outside closes it.
  */
 export function SmartDateEditPreset(props: SmartDateEditVariantProps) {
   const { className, onValidChange } = props;
-  const { ngModel, setNgModel, setValidDate } = useDateEdit(props);
+  const { value, setValue, setValidDate } = useDateEdit(props);
   const rootRef = useRef<HTMLDivElement>(null);
 
   const [open, setOpen] = useState(false);
@@ -92,11 +91,11 @@ export function SmartDateEditPreset(props: SmartDateEditVariantProps) {
 
   // Validity is derived from the value, so a bad value written by a parent
   // shows at once. Picking a day always yields a valid date.
-  const isInvalid = !ngModel || !moment(ngModel, 'YYYY-MM-DD', true).isValid();
+  const isInvalid = !value || !moment(value, 'YYYY-MM-DD', true).isValid();
 
   const weeks = useMemo(
-    () => getWeeks(viewYear, viewMonth, ngModel),
-    [viewYear, viewMonth, ngModel],
+    () => getWeeks(viewYear, viewMonth, value),
+    [viewYear, viewMonth, value],
   );
 
   const years: number[] = [];
@@ -115,7 +114,7 @@ export function SmartDateEditPreset(props: SmartDateEditVariantProps) {
   }, [open]);
 
   const syncViewToModel = () => {
-    const parsed = moment(ngModel, 'YYYY-MM-DD');
+    const parsed = moment(value, 'YYYY-MM-DD');
     const base = parsed.isValid() ? parsed : moment();
     setViewYear(base.year());
     setViewMonth(base.month());
@@ -139,10 +138,9 @@ export function SmartDateEditPreset(props: SmartDateEditVariantProps) {
 
   const selectDay = (day: DateEditDay) => {
     const date = moment(day.date, 'YYYY-MM-DD');
-    const value = date.format('YYYY-MM-DD');
     const valid = date.isValid();
 
-    setNgModel(value);
+    setValue(date.format('YYYY-MM-DD'));
     setValidDate(valid);
     showMonth(date);
     onValidChange?.(valid);
@@ -173,7 +171,7 @@ export function SmartDateEditPreset(props: SmartDateEditVariantProps) {
       <input
         type="text"
         readOnly
-        value={ngModel ?? ''}
+        value={value ?? ''}
         className={cn(
           DATE_EDIT_TRIGGER_INPUT,
           isInvalid && DATE_EDIT_TRIGGER_INVALID,

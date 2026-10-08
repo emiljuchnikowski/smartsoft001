@@ -3,8 +3,8 @@ import { useCallback } from 'react';
 import { SmartExportProps } from './export.types';
 
 /**
- * The Angular `ExportBaseComponent`: `onClick` hands `value` and `fileName`
- * to `handler`, and does nothing while there is no value.
+ * The export button's logic: `onClick` hands `value` and `fileName` to
+ * `handler`, and does nothing while there is no value.
  */
 export function useExport({
   value,

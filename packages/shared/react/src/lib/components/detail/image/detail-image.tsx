@@ -2,7 +2,7 @@ import { cn } from '../../../utils/class-names';
 import { SmartDetailFieldProps } from '../detail.types';
 import { useDetailImage } from './use-detail-image';
 
-/** `<smart-detail-image>` (`DetailImageComponent`): the uploaded image. */
+/** The image detail: the uploaded image. */
 export function SmartDetailImage<T>(props: SmartDetailFieldProps<T>) {
   const { className } = props;
   const { imageUrl } = useDetailImage(props);

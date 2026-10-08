@@ -7,9 +7,9 @@ import { SmartDetailFieldProps } from '../detail.types';
 import { useDetail } from '../use-detail';
 
 /**
- * The object detail's logic (the Angular `DetailObjectComponent.childOptions`):
- * the options of the nested `<SmartDetails>`, the nested object typed by its
- * own class, `null` without an item or a nested object.
+ * The object detail's logic: the options of the nested `<SmartDetails>`, the
+ * nested object typed by its own class, `null` without an item or a nested
+ * object.
  */
 export function useDetailObject<T, TChild extends IEntity<string>>(
   props: SmartDetailFieldProps<T>,

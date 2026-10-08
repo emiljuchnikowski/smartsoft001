@@ -13,6 +13,6 @@ export interface SmartPagingProps {
   totalItems?: number;
   variant?: PagingVariant;
   className?: string;
-  /** The Angular `pageChange` output. */
+  /** Called with the requested page. */
   onPageChange?: (page: number) => void;
 }

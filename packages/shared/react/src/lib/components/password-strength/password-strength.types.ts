@@ -1,7 +1,4 @@
-/**
- * Props of `<SmartPasswordStrength>`, mirroring the Angular
- * `PasswordStrengthBaseComponent` inputs and output one to one.
- */
+/** Props of `<SmartPasswordStrength>`. */
 export interface SmartPasswordStrengthProps {
   /** The password to rate. */
   passwordToCheck: string;
@@ -9,7 +6,7 @@ export interface SmartPasswordStrengthProps {
   showHint: boolean;
   className?: string;
   /**
-   * The Angular `passwordStrength` output: `true` once the password is strong
+   * Called whenever the strength changes: `true` once the password is strong
    * (lower and upper letters, a symbol and more than 6 characters).
    */
   onPasswordStrength?: (strong: boolean) => void;

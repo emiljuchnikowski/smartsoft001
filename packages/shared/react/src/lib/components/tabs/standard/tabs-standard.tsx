@@ -5,8 +5,8 @@ import { SmartTabsProps } from '../tabs.types';
 import { useTabs } from '../use-tabs';
 
 /**
- * The default tabs rendering (`<smart-tabs-standard>`). As in Angular, a click
- * on a tab with an `href` follows the link without changing the selection.
+ * The default tabs rendering. A click on a tab with an `href` follows the link
+ * without changing the selection.
  */
 export function SmartTabsStandard(props: SmartTabsProps) {
   const { options, className } = props;

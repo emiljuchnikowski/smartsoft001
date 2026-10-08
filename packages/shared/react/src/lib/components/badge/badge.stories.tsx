@@ -80,10 +80,9 @@ export const Playground: Story = {
 
 const sectionTitle = { fontSize: 16, fontWeight: 600, marginBottom: 12 };
 
-// In Angular every badge renders inside its host element
-// (<smart-badge-preset>), and that element, not the badge, is the flex item:
-// the badge sits on a line box inside it, which sets its vertical position.
-// This <div> plays the part of the host element.
+// Every badge is wrapped in a <div>, and that wrapper, not the badge, is the
+// flex item: the badge sits on a line box inside it, which sets its vertical
+// position.
 const Host = ({ children }: { children: ReactNode }) => <div>{children}</div>;
 
 const VariantRow = ({ variant }: { variant: 'solid' | 'soft' | 'outline' }) => (

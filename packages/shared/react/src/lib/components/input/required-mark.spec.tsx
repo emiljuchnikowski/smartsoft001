@@ -88,8 +88,6 @@ const cases = (map: Partial<Record<FieldTypeDef, ComponentType<any>>>) =>
   Object.entries(map) as Array<[FieldTypeDef, ComponentType<any>]>;
 
 describe('@smartsoft001/react: required mark of the input fields', () => {
-  // The Angular templates put the label and the `@if (required)` block on
-  // separate lines, so a space separates the label from the asterisk.
   it.each(cases(getDefaultInputFieldComponents()))(
     'should separate the label of the %s field from its asterisk with a space',
     (type, Component) => {

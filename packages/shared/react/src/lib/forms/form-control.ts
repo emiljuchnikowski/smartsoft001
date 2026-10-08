@@ -10,9 +10,8 @@ export class SmartFormControl<
   TValue = any,
 > extends SmartAbstractControl<TValue> {
   /**
-   * What `reset()` falls back to. `null`, as for an Angular control that is not
-   * `nonNullable`: resetting clears the field rather than restoring the value
-   * it was created with.
+   * What `reset()` falls back to: always `null`, so resetting clears the field
+   * rather than restoring the value it was created with.
    */
   readonly defaultValue: TValue = null as TValue;
 

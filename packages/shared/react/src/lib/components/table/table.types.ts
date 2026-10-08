@@ -2,10 +2,7 @@ import type { ReactNode } from 'react';
 
 import { ITableColumn, ITableOptions, TableRow } from '../../models';
 
-/**
- * What a `cellTpl` render function receives: the Angular template context of
- * the cell (`$implicit` -> `row`, plus `column`).
- */
+/** What a `cellTpl` render function receives: the cell's `row` and `column`. */
 export interface SmartTableCellContext {
   row: TableRow;
   column: ISmartTableColumn;
@@ -16,9 +13,8 @@ export type SmartTableCellTpl =
   ReactNode | ((context: SmartTableCellContext) => ReactNode);
 
 /**
- * `ITableColumn` whose `cellTpl` may be a render function (the Angular
- * `TemplateRef` got the row and column as its context). `headerTpl` had no
- * context and stays a `ReactNode`.
+ * `ITableColumn` whose `cellTpl` may be a render function of the cell's row and
+ * column. `headerTpl` has no context and stays a `ReactNode`.
  */
 export interface ISmartTableColumn extends Omit<ITableColumn, 'cellTpl'> {
   cellTpl?: SmartTableCellTpl;

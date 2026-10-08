@@ -44,10 +44,10 @@ type SmartFormOutputs<T> = Pick<
 >;
 
 /**
- * The Angular `registerChanges`: after every change of `form` emits its
- * validity, its value and the values of its dirty controls (`*Confirm` left
- * out), then runs one update so the current state is emitted at once. Only the
- * form currently rendered emits; the callbacks of the latest render are used.
+ * After every change of `form` emits its validity, its value and the values of
+ * its dirty controls (`*Confirm` left out), then runs one update so the current
+ * state is emitted at once. Only the form currently rendered emits; the
+ * callbacks of the latest render are used.
  */
 function useRegisterChanges<T>(
   form: SmartFormGroup | null,
@@ -84,9 +84,8 @@ function useRegisterChanges<T>(
 }
 
 /**
- * The Angular `loading$` subscription: the form is disabled while `loading`
- * is `true` and enabled again once it is `false`. Without `loading` the form
- * is left alone.
+ * The form is disabled while `loading` is `true` and enabled again once it is
+ * `false`. Without `loading` the form is left alone.
  */
 function useLoading(
   form: SmartFormGroup | null,
@@ -101,21 +100,17 @@ function useLoading(
 }
 
 /**
- * `<smart-form>`: the form of `options.model`, built by the form factory for
- * `options.mode` (`'create'` by default) with `options.uniqueProvider`, or
- * `options.control` when given. Renders the body registered as
- * `components.form` on `SmartProvider` (the Angular
- * `FORM_STANDARD_COMPONENT_TOKEN`), `SmartFormStandard` by default.
+ * The form of `options.model`, built by the form factory for `options.mode`
+ * (`'create'` by default) with `options.uniqueProvider`, or `options.control`
+ * when given. Renders the body registered as `components.form` on
+ * `SmartProvider`, `SmartFormStandard` by default.
  *
- * Submitting the form or pressing Enter in one of its single-line inputs
- * emits `onInvokeSubmit` with the form value, once. `options.treeLevel` defaults to 1 and is set as the
- * `tree-level` / `data-tree-level` attribute of the root element. A form
- * rendered inside another one (an `object` or `array` field) renders a
- * `<div>` instead of a nested `<form>`; Enter in its inputs submits the
- * outer form.
- *
- * The export / import buttons of the Angular template are commented out
- * there and not ported.
+ * Submitting the form or pressing Enter in one of its single-line inputs emits
+ * `onInvokeSubmit` with the form value, once. `options.treeLevel` defaults to 1
+ * and is set as the `tree-level` / `data-tree-level` attribute of the root
+ * element. A form rendered inside another one (an `object` or `array` field)
+ * renders a `<div>` instead of a nested `<form>`; Enter in its inputs submits
+ * the outer form.
  */
 export function SmartForm<T>(props: SmartFormProps<T>) {
   const {
@@ -139,7 +134,7 @@ export function SmartForm<T>(props: SmartFormProps<T>) {
     SmartFormStandard,
   );
 
-  // The Angular wrapper set `options.treeLevel = 1` when it was not given.
+  // `options.treeLevel` defaults to 1.
   const bodyOptions = useMemo<IFormOptions<T>>(
     () => (options.treeLevel ? options : { ...options, treeLevel: 1 }),
     [options],
@@ -160,10 +155,9 @@ export function SmartForm<T>(props: SmartFormProps<T>) {
     onInvokeSubmit?.(form.value);
   };
 
-  // Angular submitted on `keyup.enter` anywhere in the form. Here Enter in a
-  // single-line input submits once, on keydown, and stops the browser's own
-  // implicit submission, which would submit a second time. Enter keeps its
-  // meaning in a textarea, a rich-text editor, a button or a select.
+  // Enter in a single-line input submits once, on keydown, and stops the
+  // browser's own implicit submission, which would submit a second time. Enter
+  // keeps its meaning in a textarea, a rich-text editor, a button or a select.
   const onKeyDown = (event: KeyboardEvent<HTMLElement>) => {
     if (event.key !== 'Enter' || !isSingleLineInput(event.target)) return;
 

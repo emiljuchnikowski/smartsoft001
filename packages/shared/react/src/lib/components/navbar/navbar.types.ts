@@ -8,8 +8,8 @@ export interface SmartNavbarProps {
   options?: INavbarOptions;
   className?: string;
   /**
-   * Whether the mobile menu is open (the Angular `mobileMenuOpen` model).
-   * Leave it `undefined` to let the component keep the state itself.
+   * Whether the mobile menu is open. Leave it `undefined` to let the component
+   * keep the state itself.
    */
   mobileMenuOpen?: boolean;
   /** The initial state of an uncontrolled mobile menu. */

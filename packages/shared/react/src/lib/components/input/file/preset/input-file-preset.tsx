@@ -60,11 +60,10 @@ const INPUT_CLASSES = [
 ].join(' ');
 
 /**
- * Styled `file` field (preset, the Angular `InputFilePresetComponent`): a
- * Preline native file input that uploads the picked file through the file
- * service ({@link useInputFile}), with download / delete buttons and the
- * attachment's file name once there is a value, and the upload progress.
- * `className` is appended to the input's classes.
+ * Styled `file` field (preset): a Preline native file input that uploads the
+ * picked file through the file service ({@link useInputFile}), with download /
+ * delete buttons and the attachment's file name once there is a value, and the
+ * upload progress. `className` is appended to the input's classes.
  */
 export function SmartInputFilePreset<T>(props: SmartInputFieldProps<T>) {
   const { className, fieldOptions } = props;

@@ -4,9 +4,8 @@ import { SmartDetailFieldProps } from '../detail.types';
 import { useDetailCellValue } from '../use-detail';
 
 /**
- * `<smart-detail-phone-number-pl>` (`DetailPhoneNumberPlComponent`): a
- * `tel:` link with the `48` country prefix, labelled with the (sanitised)
- * value of the cell.
+ * The Polish phone number detail: a `tel:` link with the `48` country prefix,
+ * labelled with the (sanitised) value of the cell.
  */
 export function SmartDetailPhoneNumberPl<T>(props: SmartDetailFieldProps<T>) {
   const { className } = props;

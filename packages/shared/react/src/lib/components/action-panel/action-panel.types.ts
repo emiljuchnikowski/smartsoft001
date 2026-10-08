@@ -1,6 +1,6 @@
 import { IActionPanelOptions } from '../../models';
 
-/** Emitted when a button action is clicked (the Angular `actionClick` output). */
+/** Passed to `onActionClick` when a button action is clicked. */
 export interface IActionPanelActionClick {
   actionId: string;
 }

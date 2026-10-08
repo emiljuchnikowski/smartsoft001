@@ -54,12 +54,10 @@ const peselValidator: SmartValidatorFn = (c) => {
 };
 
 /**
- * Styled `pesel` field (preset, the Angular `InputPeselPresetComponent`):
- * the Preline look of {@link SmartInputPesel}. Unlike the standard field it
- * adds the PESEL check to the control's validators (`invalidPesel`), as the
- * Angular preset did once its options were set. The validator is one shared
- * function, so it is never stacked, and it stays on the control after the
- * field unmounts, as in Angular. Register it as
+ * Styled `pesel` field (preset): the Preline look of {@link SmartInputPesel}.
+ * Unlike the standard field it adds the PESEL check to the control's validators
+ * (`invalidPesel`). The validator is one shared function, so it is never
+ * stacked, and it stays on the control after the field unmounts. Register it as
  * `inputFieldComponents[FieldType.pesel]` on `SmartProvider`.
  */
 export function SmartInputPeselPreset<T>(props: SmartInputFieldProps<T>) {

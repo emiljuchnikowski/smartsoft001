@@ -26,7 +26,7 @@ class TestItemModel {
   lastName = '';
 }
 
-/** A minimal text field: the real one is ported separately. */
+/** A minimal text field, standing in for the real one. */
 function TestText(props: SmartInputFieldProps) {
   const { value, setValue, markAsTouched, label, fieldKey, disabled } =
     useInput(props);
@@ -528,7 +528,7 @@ describe('@smartsoft001/react: SmartForm', () => {
       );
     });
 
-    describe('change outputs', () => {
+    describe('change callbacks', () => {
       it('should emit the value and the validity once registered', () => {
         const onValueChange = jest.fn();
         const onValidChange = jest.fn();

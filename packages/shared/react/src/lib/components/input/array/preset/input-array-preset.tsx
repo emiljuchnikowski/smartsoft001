@@ -5,9 +5,9 @@ import { SmartInputFieldProps } from '../../input.types';
 import { useInputArray } from '../use-input-array';
 
 /**
- * Styled array field variation (preset), `<smart-input-array-preset>`: every
- * item is a card with its nested `SmartForm` and a remove button, an empty
- * array shows a dash, and items are added with an outline button.
+ * Styled array field variation (preset): every item is a card with its nested
+ * `SmartForm` and a remove button, an empty array shows a dash, and items are
+ * added with an outline button.
  */
 export function SmartInputArrayPreset<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

@@ -9,6 +9,6 @@ export interface SmartIconGlyphProps {
 export interface SmartIconProps {
   name?: IconName;
   className?: string;
-  /** Rendered instead of the named glyph (the Angular `template` input). */
+  /** Rendered instead of the named glyph. */
   template?: ReactNode;
 }

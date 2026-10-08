@@ -5,7 +5,7 @@ import {
 } from './glyphs';
 import { SmartIconProps } from './icon.types';
 
-/** `<smart-icon>`: one of the library's glyphs, or a custom `template`. */
+/** One of the library's glyphs, or a custom `template`. */
 export function SmartIcon({ name, className, template }: SmartIconProps) {
   if (template) return <>{template}</>;
 

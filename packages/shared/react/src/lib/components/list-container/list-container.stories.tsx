@@ -31,7 +31,7 @@ const meta: Meta<ListContainerArgs> = {
     fullWidthOnMobile: {
       control: 'boolean',
       description:
-        'Reserved for implementations registered through LIST_CONTAINER_STANDARD_COMPONENT_TOKEN; ignored by the standard component.',
+        "Reserved for implementations registered as components['list-container']; ignored by the standard component.",
     },
     cssClass: {
       control: 'text',

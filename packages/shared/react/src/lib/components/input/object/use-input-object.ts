@@ -5,9 +5,9 @@ import { useInput } from '../base/use-input';
 import { SmartInputFieldProps } from '../input.types';
 
 /**
- * What the object field variants share (the Angular `InputObjectComponent`
- * logic): the input base and the options of the nested form, one tree level
- * deeper, bound to the field's group and to the field's value on the model.
+ * What the object field variants share: the input base and the options of the
+ * nested form, one tree level deeper, bound to the field's group and to the
+ * field's value on the model.
  */
 export function useInputObject<T, TChild = unknown>(
   props: SmartInputFieldProps<T>,

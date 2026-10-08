@@ -11,7 +11,7 @@ import { useInput } from '../input/base/use-input';
 import { SmartInputFieldProps } from '../input/input.types';
 import { SmartInputObject } from '../input/object/input-object';
 
-/** Minimal leaf fields: the real ones are ported separately. */
+/** Minimal leaf fields, standing in for the real ones. */
 function TestText(props: SmartInputFieldProps) {
   const { value, setValue, markAsTouched, label, fieldKey } = useInput(props);
   const id = useId();
@@ -172,9 +172,8 @@ describe('@smartsoft001/react: SmartForm (integration)', () => {
       onValuePartialChange,
     });
 
-    // `useInput.setValue` marks the control dirty only after setting the
-    // value (Angular's `formControl` directive marked it first), so the
-    // emission of the first keystroke does not include the field yet.
+    // `useInput.setValue` marks the control dirty before setting the value, so
+    // every keystroke emits the field; the last emission carries the full text.
     fireEvent.change(screen.getByTestId('field-name'), {
       target: { value: 'Gr' },
     });

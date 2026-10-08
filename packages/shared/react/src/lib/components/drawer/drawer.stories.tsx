@@ -41,9 +41,8 @@ const meta: Meta<DrawerArgs> = {
 export default meta;
 type Story = StoryObj<DrawerArgs>;
 
-// The Angular stories bind `[open]` one way into the drawer's `open` model,
-// so the drawer can still close itself: `defaultOpen` (re-mounted when the
-// control changes) is the React counterpart.
+// The `open` control sets `defaultOpen` (the drawer is re-mounted when the
+// control changes) rather than `open`, so the drawer can still close itself.
 
 // #region usage
 export const Playground: Story = {

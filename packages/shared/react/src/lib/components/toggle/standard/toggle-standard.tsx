@@ -4,14 +4,13 @@ import { SmartToggleProps } from '../toggle.types';
 import { useToggle } from '../use-toggle';
 
 /**
- * Barebones native-HTML toggle (checkbox), `<smart-toggle-standard>`.
+ * Barebones native-HTML toggle (checkbox).
  *
  * `options.label` renders in a `<label htmlFor>` bound to the checkbox (so it
  * is the accessible name), `options.description` in an element referenced by
  * `aria-describedby`; both sit after the checkbox, or before it when
  * `options.labelPosition === 'left'`. `options.ariaLabel` names the checkbox
- * only when there is no visible label. `className` goes on the checkbox, as
- * in Angular.
+ * only when there is no visible label. `className` goes on the checkbox.
  */
 export function SmartToggleStandard(props: SmartToggleProps) {
   const { disabled = false, options, className } = props;

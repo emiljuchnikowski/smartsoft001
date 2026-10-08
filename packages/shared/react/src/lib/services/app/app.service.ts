@@ -7,8 +7,9 @@ export type AppEndButton = IIconButtonOptions & { id?: string };
 
 /**
  * The buttons pages add to the end of the app toolbar, and the document title
- * built from the current route. The Angular service subscribed to the router;
- * here the navigation adapter calls `updateTitle` with each new URL.
+ * built from the current route. The service does not watch the route itself:
+ * the app shell calls `updateTitle` with the current URL and again after every
+ * navigation the navigation adapter reports.
  */
 export class AppService {
   readonly endButtons = new SmartStore<AppEndButton[]>([]);

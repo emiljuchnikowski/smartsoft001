@@ -12,16 +12,15 @@ import {
 } from './preset-classes';
 
 /**
- * Preset-styled description list (the Angular
- * `DescriptionListPresetComponent`). Register it as
+ * Preset-styled description list. Register it as
  * `components['description-list']` on `SmartProvider` to restyle every
  * `<SmartDescriptionList>`, or render it directly.
  *
  * Renders an optional header (title + description), a divided `<dl>` of
  * label/value rows, and optional attachments/footer sections. Within a row
  * `valueTpl` wins over `value`, and `actionTpl` renders right-aligned.
- * `className` is merged onto the `<dl>`. Like the Angular template it has no
- * wrapper element: the zones are rendered side by side.
+ * `className` is merged onto the `<dl>`. It has no wrapper element: the zones
+ * are rendered side by side.
  */
 export function SmartDescriptionListPreset({
   options,

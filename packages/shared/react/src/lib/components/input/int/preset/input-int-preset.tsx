@@ -35,8 +35,8 @@ const INPUT_CLASSES = [
 ];
 
 /**
- * Preline-styled integer field (preset, Angular `InputIntPresetComponent`):
- * the same number input with `step="1"` as `SmartInputInt`.
+ * Preline-styled integer field (preset): the same number input with `step="1"`
+ * as `SmartInputInt`.
  */
 export function SmartInputIntPreset<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

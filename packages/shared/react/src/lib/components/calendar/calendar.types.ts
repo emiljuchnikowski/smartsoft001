@@ -6,10 +6,7 @@ import {
   ICalendarOptions,
 } from '../../models';
 
-/**
- * The context `dayCellTpl` renders with: the Angular template context
- * `{ $implicit: cell, events }`, `$implicit` named `cell`.
- */
+/** The context `dayCellTpl` renders with: the day `cell` and its `events`. */
 export interface SmartCalendarDayCellContext {
   cell: ICalendarDayCell;
   /** The events starting on `cell.date` (`eventsForDay(cell.date)`). */
@@ -17,11 +14,10 @@ export interface SmartCalendarDayCellContext {
 }
 
 /**
- * `ICalendarOptions` with `dayCellTpl` as a render function: in Angular it was
- * a `TemplateRef` instantiated per day with {@link SmartCalendarDayCellContext}.
- * `toolbarActionsTpl` has no context, so it stays a `ReactNode`.
- * `eventListTpl`, `sidePanelTpl`, `eventTpl` and `monthsCount` are kept for
- * parity but, as in Angular, no variant renders them.
+ * `ICalendarOptions` with `dayCellTpl` as a render function, called for every
+ * day with {@link SmartCalendarDayCellContext}. `toolbarActionsTpl` has no
+ * context, so it stays a `ReactNode`. `eventListTpl`, `sidePanelTpl`,
+ * `eventTpl` and `monthsCount` are accepted, but no variant renders them.
  */
 export interface SmartCalendarOptions extends Omit<
   ICalendarOptions,
@@ -34,14 +30,14 @@ export interface SmartCalendarProps {
   options?: SmartCalendarOptions;
   className?: string;
   /**
-   * The selected day (the Angular `value` model). Controlled when defined
-   * (`null` = nothing selected); leave it `undefined` to let the calendar
-   * keep the selection itself, starting from `defaultValue`.
+   * The selected day. Controlled when defined (`null` = nothing selected);
+   * leave it `undefined` to let the calendar keep the selection itself,
+   * starting from `defaultValue`.
    */
   value?: Date | null;
   /** The initial selection of an uncontrolled calendar. */
   defaultValue?: Date | null;
-  /** Called with the day the user selects (the `valueChange` of `[(value)]`). */
+  /** Called with the day the user selects. */
   onValueChange?: (value: Date | null) => void;
   /**
    * The day whose month is shown first; the calendar navigates from there and

@@ -19,8 +19,7 @@ const INPUT_CLASSES = [
 ];
 
 /**
- * The yes/no field (`<smart-input-flag>`, Angular `InputFlagComponent`): a
- * checkbox followed by its label, bound to a boolean value.
+ * The yes/no field: a checkbox followed by its label, bound to a boolean value.
  */
 export function SmartInputFlag<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

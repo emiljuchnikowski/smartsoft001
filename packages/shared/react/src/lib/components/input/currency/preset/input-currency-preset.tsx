@@ -40,9 +40,8 @@ const INPUT_CLASSES = [
 ];
 
 /**
- * Preline-styled amount field (preset, Angular
- * `InputCurrencyPresetComponent`): the number input of `SmartInputCurrency`
- * with a leading currency icon.
+ * Preline-styled amount field (preset): the number input of
+ * `SmartInputCurrency` with a leading currency icon.
  */
 export function SmartInputCurrencyPreset<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

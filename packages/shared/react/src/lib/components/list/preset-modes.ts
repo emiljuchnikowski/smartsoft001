@@ -10,8 +10,7 @@ import { SmartListMobilePreset } from './mobile/preset/list-mobile-preset';
 
 /**
  * Preline-styled list mode presets, keyed by `ListMode`. Register it as
- * `listModeComponents` on `SmartProvider` (the Angular
- * `LIST_MODE_COMPONENTS_TOKEN`) to swap the covered modes:
+ * `listModeComponents` on `SmartProvider` to swap the covered modes:
  *
  * ```tsx
  * <SmartProvider listModeComponents={LIST_PRESET_MODE_COMPONENTS}>

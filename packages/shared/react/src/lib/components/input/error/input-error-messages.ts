@@ -2,9 +2,9 @@ import { SmartValidationErrors } from '../../../forms/abstract-control';
 import { SmartTranslateFn } from '../../../i18n/translate';
 
 /**
- * The messages a field shows for its validation errors, in the order the
- * Angular templates list them. `required` hides `confirm`: an empty
- * confirmation field only reports that it is empty.
+ * The messages a field shows for its validation errors, in a fixed order.
+ * `required` hides `confirm`: an empty confirmation field only reports that it
+ * is empty.
  */
 export function getInputErrorMessages(
   errors: SmartValidationErrors | null | undefined,

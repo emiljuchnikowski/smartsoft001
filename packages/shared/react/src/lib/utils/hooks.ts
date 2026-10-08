@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { getListHeader, getModelLabel } from './model';
 import { useSmart } from '../providers/smart-context';
 
-/** The label of a model field, translated (`smartModelLabel`). */
+/** The label of a model field, translated. */
 export function useModelLabel(
   instance: unknown,
   key: string,
@@ -35,7 +35,7 @@ export function useModelLabelFn(): (
   );
 }
 
-/** A header function bound to the provider (`smartListHeader`). */
+/** A list column header function bound to the provider. */
 export function useListHeaderFn(): (
   data: unknown,
   key: string,
@@ -53,7 +53,7 @@ export function useListHeaderFn(): (
   );
 }
 
-/** The download URL of an attachment (`smartFileUrl`). */
+/** The download URL of an attachment, `''` without a file service. */
 export function useFileUrl(file: { id: any } | null | undefined): string {
   const { fileService } = useSmart();
 

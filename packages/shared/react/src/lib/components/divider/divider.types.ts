@@ -7,6 +7,6 @@ export interface SmartDividerProps {
   actionLabel?: string;
   options?: IDividerOptions;
   className?: string;
-  /** The Angular `actionClick` output: the action button was clicked. */
+  /** The action button was clicked. */
   onActionClick?: () => void;
 }

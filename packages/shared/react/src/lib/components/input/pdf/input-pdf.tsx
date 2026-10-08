@@ -24,11 +24,10 @@ const GROUP_CLASSES = [
 ].join(' ');
 
 /**
- * The `pdf` field (the Angular `InputPdfComponent`, `<smart-input-pdf>`):
- * an add / change button opening a hidden `.pdf` file input whose file is
- * uploaded ({@link useInputFile}), show / delete buttons and the file name
- * once there is a value, and the upload progress. `className` is appended to
- * the group's classes.
+ * The `pdf` field: an add / change button opening a hidden `.pdf` file input
+ * whose file is uploaded ({@link useInputFile}), show / delete buttons and the
+ * file name once there is a value, and the upload progress. `className` is
+ * appended to the group's classes.
  */
 export function SmartInputPdf<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

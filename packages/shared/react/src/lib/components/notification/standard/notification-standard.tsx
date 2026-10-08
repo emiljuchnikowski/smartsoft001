@@ -1,7 +1,7 @@
 import { SmartNotificationProps } from '../notification.types';
 import { useNotification } from '../use-notification';
 
-/** The default notification rendering (`<smart-notification-standard>`). */
+/** The default notification rendering. */
 export function SmartNotificationStandard(props: SmartNotificationProps) {
   const {
     title,

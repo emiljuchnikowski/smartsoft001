@@ -13,15 +13,13 @@ import { resolveInputFieldOptions } from './field-options';
 import { SmartInputProps } from './input.types';
 
 /**
- * `<smart-input>`: renders the field component of the control's field type
- * (or `options.component`), with the field's info tooltip, a loader while an
- * async validator runs, and the validation messages once the control is
- * touched.
+ * Renders the field component of the control's field type (or
+ * `options.component`), with the field's info tooltip, a loader while an async
+ * validator runs, and the validation messages once the control is touched.
  *
- * Field components are resolved from `inputFieldComponents` on
- * `SmartProvider` (the Angular `INPUT_FIELD_COMPONENTS_TOKEN`) over the
- * library's own; register `INPUT_PRESET_FIELD_COMPONENTS` there for the
- * preset look. The messages render through `components['input-error']`.
+ * Field components are resolved from `inputFieldComponents` on `SmartProvider`
+ * over the library's own; register `INPUT_PRESET_FIELD_COMPONENTS` there for
+ * the preset look. The messages render through `components['input-error']`.
  */
 export function SmartInput<T>({ options, className }: SmartInputProps<T>) {
   const control = options?.control ?? null;

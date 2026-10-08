@@ -3,8 +3,7 @@ import type { ReactNode } from 'react';
 import { IAccordionOptions } from '../../models';
 
 /**
- * The open state every accordion shares: the Angular two-way `show` model
- * (`[(show)]`) and `options`.
+ * The open state every accordion shares: `show` and `options`.
  *
  * Pass `show` + `onShowChange` to control it; leave `show` undefined to let
  * the accordion keep its own state, starting from `defaultShow` (or
@@ -20,7 +19,7 @@ export interface SmartAccordionStateProps {
   options?: IAccordionOptions;
 }
 
-/** Props of the accordion variations (the `AccordionBaseComponent` inputs). */
+/** Props of the accordion variations. */
 export interface SmartAccordionBaseProps extends SmartAccordionStateProps {
   className?: string;
   /** Content of the header button. */
@@ -29,12 +28,12 @@ export interface SmartAccordionBaseProps extends SmartAccordionStateProps {
   bodyTpl: ReactNode;
 }
 
-/** Props of `SmartAccordion` (`<smart-accordion>`). */
+/** Props of `SmartAccordion`. */
 export interface SmartAccordionProps extends SmartAccordionStateProps {
   className?: string;
-  /** The Angular `[accordionHeader]` content slot. */
+  /** Content of the header button. */
   accordionHeader?: ReactNode;
-  /** The Angular `[accordionBody]` content slot. */
+  /** Content shown while open. */
   accordionBody?: ReactNode;
 }
 

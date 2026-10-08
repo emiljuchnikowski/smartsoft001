@@ -1,8 +1,8 @@
 import { SmartDividerProps } from '../divider.types';
 
 /**
- * The default divider rendering (`<smart-divider-standard>`): the title, the
- * label and the action button, or an `<hr />` when there is none of them.
+ * The default divider rendering: the title, the label and the action button, or
+ * an `<hr />` when there is none of them.
  */
 export function SmartDividerStandard({
   label,

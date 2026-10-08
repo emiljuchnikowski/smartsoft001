@@ -49,10 +49,10 @@ function AddressPart({
 }
 
 /**
- * `<smart-input-address>` (Angular `InputAddressComponent`): the control is
- * the address group the form factory builds; each part (city, zip code,
- * street, building and flat number) has its own labelled text input bound to
- * its control. `className` goes on the container of the parts.
+ * The `address` field: the control is the address group the form factory
+ * builds; each part (city, zip code, street, building and flat number) has its
+ * own labelled text input bound to its control. `className` goes on the
+ * container of the parts.
  */
 export function SmartInputAddress<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

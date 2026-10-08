@@ -1,9 +1,8 @@
 import { SmartListContainerProps } from '../list-container.types';
 
 /**
- * The default list-container rendering (`<smart-list-container-standard>`): a
- * `role="list"` element around `children`, exposing `options.variant` as
- * `data-variant` for styling.
+ * The default list-container rendering: a `role="list"` element around
+ * `children`, exposing `options.variant` as `data-variant` for styling.
  */
 export function SmartListContainerStandard({
   options,

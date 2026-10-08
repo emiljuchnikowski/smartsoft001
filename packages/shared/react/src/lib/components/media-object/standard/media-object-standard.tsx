@@ -1,10 +1,10 @@
 import { SmartMediaObjectProps } from '../media-object.types';
 
 /**
- * The default media-object rendering (`<smart-media-object-standard>`): the
- * media `<img>` and a `.smart-media-object-body` holding `children`. The
- * position and alignment options are exposed as `data-position` (default
- * `left`) and `data-alignment` for styling.
+ * The default media-object rendering: the media `<img>` and a
+ * `.smart-media-object-body` holding `children`. The position and alignment
+ * options are exposed as `data-position` (default `left`) and `data-alignment`
+ * for styling.
  */
 export function SmartMediaObjectStandard({
   mediaUrl,

@@ -37,15 +37,14 @@ import { ToastService } from '../services/toast/toast.service';
 
 /**
  * The name a component is registered under to replace the default rendering
- * of a wrapper: the `DynamicComponentType`s of the Angular library
- * (`'button'`, `'list'`, ...) and any other key a wrapper documents.
+ * of a wrapper: a `DynamicComponentType` (`'button'`, `'list'`, ...) or any
+ * other key a wrapper documents.
  */
 export type SmartComponentKey = DynamicComponentType | (string & {});
 
 /**
- * Replacement implementations, by key. This is what the Angular
- * `*_STANDARD_COMPONENT_TOKEN` injection tokens did: register
- * `{ button: ButtonPreset }` and every `<Button>` renders the preset.
+ * Replacement implementations, by key: register
+ * `{ button: SmartButtonPreset }` and every `<SmartButton>` renders the preset.
  */
 export type SmartComponentOverrides = Partial<
   Record<SmartComponentKey, ComponentType<any>>
@@ -91,11 +90,11 @@ export interface SmartConfig {
   appService?: AppService;
 
   components?: SmartComponentOverrides;
-  /** Input implementations by field type (`INPUT_FIELD_COMPONENTS_TOKEN`). */
+  /** Input implementations by field type, e.g. `INPUT_PRESET_FIELD_COMPONENTS`. */
   inputFieldComponents?: Partial<Record<FieldTypeDef, ComponentType<any>>>;
-  /** Detail implementations by field type (`DETAIL_FIELD_COMPONENTS_TOKEN`). */
+  /** Detail implementations by field type, e.g. `DETAIL_PRESET_FIELD_COMPONENTS`. */
   detailFieldComponents?: Partial<Record<FieldTypeDef, ComponentType<any>>>;
-  /** List implementations by mode (`LIST_MODE_COMPONENTS_TOKEN`). */
+  /** List implementations by mode, e.g. `LIST_PRESET_MODE_COMPONENTS`. */
   listModeComponents?: Partial<Record<ListMode, ComponentType<any>>>;
 
   modelLabelProvider?: IModelLabelProvider | null;

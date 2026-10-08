@@ -13,16 +13,15 @@ const SHARED_CONTAINER_CLASSES = [
 ];
 
 /**
- * The behaviour every accordion variant shares (the Angular
- * `AccordionBaseComponent`): the open state, controlled through `show` +
- * `onShowChange` or kept internally, and `toggle()`, which does nothing while
- * `options.disabled`.
+ * The behaviour every accordion variant shares: the open state, controlled
+ * through `show` + `onShowChange` or kept internally, and `toggle()`, which
+ * does nothing while `options.disabled`.
  *
- * `options.open` is applied once, on the first render (Angular `ngOnInit`):
- * an uncontrolled accordion starts open, and `onShowChange(true)` is reported
- * unless `show` / `defaultShow` was already `true`. A controlled accordion
- * stays as its `show` prop says until the parent applies that change. Later
- * changes of `options.open` are ignored.
+ * `options.open` is applied once, on the first render: an uncontrolled
+ * accordion starts open, and `onShowChange(true)` is reported unless `show` /
+ * `defaultShow` was already `true`. A controlled accordion stays as its `show`
+ * prop says until the parent applies that change. Later changes of
+ * `options.open` are ignored.
  */
 export function useAccordion({
   show: showProp,
@@ -43,7 +42,7 @@ export function useAccordion({
 
     const initialShow = controlled ? showProp : defaultShow;
     if (options?.open && !initialShow) onShowChange?.(true);
-    // Runs once, like `ngOnInit`: later prop changes must not reopen it.
+    // Runs once, on mount: later prop changes must not reopen it.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

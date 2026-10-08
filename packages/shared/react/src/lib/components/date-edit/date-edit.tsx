@@ -24,9 +24,9 @@ function SmartDateEditVariant({
 }
 
 /**
- * The control binding of the Angular `ControlValueAccessor`: the control's
- * value is shown; an edit (even an invalid date, as the Angular wrapper
- * forwarded it) sets the value and marks the control dirty and touched.
+ * Binds the editor to a form control: the control's value is shown; an edit
+ * (even an invalid date) sets the value and marks the control dirty and
+ * touched.
  */
 function SmartDateEditBound({
   control,
@@ -55,10 +55,9 @@ function SmartDateEditBound({
 }
 
 /**
- * `<smart-date-edit>`: the date editor in the `variant` rendering
- * (`standard`, eight digit inputs, by default; or `preset`, a calendar
- * popover). Bind it with `value` + `onValueChange` (the Angular `ngModel`), or
- * pass a form `control` (the Angular `[formControl]`).
+ * The date editor in the `variant` rendering (`standard`, eight digit inputs,
+ * by default; or `preset`, a calendar popover). Bind it with `value` +
+ * `onValueChange`, or pass a form `control`.
  */
 export function SmartDateEdit({ control, ...props }: SmartDateEditProps) {
   if (control) return <SmartDateEditBound {...props} control={control} />;

@@ -24,9 +24,8 @@ const GROUP_CLASSES = [
 ].join(' ');
 
 /**
- * The `attachment` field (the Angular `InputAttachmentComponent`,
- * `<smart-input-attachment>`): an add / change button opening a hidden file
- * input (`accept` = `fieldOptions.possibilities`) whose file is uploaded
+ * The `attachment` field: an add / change button opening a hidden file input
+ * (`accept` = `fieldOptions.possibilities`) whose file is uploaded
  * ({@link useInputFile}), download / delete buttons and the file name once
  * there is a value, and the upload progress. `className` is appended to the
  * group's classes.

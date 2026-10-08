@@ -4,8 +4,7 @@ import { SmartSearchbarProps } from './searchbar.types';
 import { SmartFormControl } from '../../forms/form-control';
 
 /**
- * The behaviour every searchbar variant shares (the Angular
- * `SearchbarBaseComponent`).
+ * The behaviour every searchbar variant shares.
  *
  * The field is bound to `control`. Its changes reach `text` once they settle
  * for `options.debounceTime` ms (1000 by default); a non-empty `text` coming

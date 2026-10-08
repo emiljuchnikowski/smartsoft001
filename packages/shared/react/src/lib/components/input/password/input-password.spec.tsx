@@ -361,7 +361,7 @@ describe('@smartsoft001/react: SmartInputPassword', () => {
     );
   });
 
-  it('standard: should take the validity from the password strength output', () => {
+  it('standard: should take the validity from the password strength meter', () => {
     const { control } = setup(SmartInputPassword, {
       control: new SmartFormControl('abc'),
       fieldOptions: STRENGTH,

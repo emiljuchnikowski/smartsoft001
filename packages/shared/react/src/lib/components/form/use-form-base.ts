@@ -30,14 +30,11 @@ function getRank(modelKeys: string[], key: string): number | undefined {
 }
 
 /**
- * The keys of the form's controls, in the order they were first seen. A
- * control removed and added again (an `enabled` specification) keeps its
- * place, as with the Angular library, which read the keys once per form.
+ * The keys of the form's controls, in the order they were first seen. A control
+ * removed and added again (an `enabled` specification) keeps its place.
  *
- * The Angular factory only applied `enabled` after the form was rendered, so
- * a field that starts disabled was still part of those first keys. The React
- * factory leaves it out from the start, so a key seen for the first time later
- * is placed where the model declares it.
+ * The form factory leaves a field that starts disabled out from the start, so a
+ * key seen for the first time later is placed where the model declares it.
  */
 function getFields(form: SmartFormGroup, model: unknown): string[] {
   const keys = Object.keys(form.controls);
@@ -78,13 +75,12 @@ function getFields(form: SmartFormGroup, model: unknown): string[] {
 }
 
 /**
- * What every form body shares (the Angular `FormBaseComponent`): the fields
- * to render, the options every input gets and `submit()`. The body re-renders
- * on every change of the form, so a field added or removed by an `enabled`
- * specification shows up at once.
+ * What every form body shares: the fields to render, the options every input
+ * gets and `submit()`. The body re-renders on every change of the form, so a
+ * field added or removed by an `enabled` specification shows up at once.
  *
  * Bodies render a field when `form.controls[field]` exists and is not
- * `smartDisabled` (the Angular `__smartDisabled`).
+ * `smartDisabled`.
  */
 export function useFormBase<T>({
   form,
@@ -112,7 +108,7 @@ export function useFormBase<T>({
     treeLevel: options.treeLevel,
     /** Emits `onInvokeSubmit` with the form value. */
     submit,
-    /** The control of `field` (the Angular `getUntypedFormControl`). */
+    /** The control of `field`. */
     getControl,
   };
 }

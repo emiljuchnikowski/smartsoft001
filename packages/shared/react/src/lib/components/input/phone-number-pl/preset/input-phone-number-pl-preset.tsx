@@ -10,10 +10,9 @@ import { SmartInputFieldProps } from '../../input.types';
 import { useInputPhoneNumberPl } from '../use-input-phone-number-pl';
 
 /**
- * Styled `phoneNumberPl` field (preset, the Angular
- * `InputPhoneNumberPlPresetComponent`): the Preline look of
- * {@link SmartInputPhoneNumberPl}, with a `+48` addon inside the input and
- * the same 9-character check. Register it as
+ * Styled `phoneNumberPl` field (preset): the Preline look of
+ * {@link SmartInputPhoneNumberPl}, with a `+48` addon inside the input and the
+ * same 9-character check. Register it as
  * `inputFieldComponents[FieldType.phoneNumberPl]` on `SmartProvider`.
  */
 export function SmartInputPhoneNumberPlPreset<T>(

@@ -3,8 +3,8 @@ import { SmartCardVariantProps } from '../card.types';
 import { useCard } from '../use-card';
 
 /**
- * The default card rendering (`<smart-card-standard>`): a white panel with
- * an optional header (with `options.title`), the body and an optional footer.
+ * The default card rendering: a white panel with an optional header (with
+ * `options.title`), the body and an optional footer.
  */
 export function SmartCardStandard(props: SmartCardVariantProps) {
   const { options, className, headerTpl, bodyTpl, footerTpl } = props;

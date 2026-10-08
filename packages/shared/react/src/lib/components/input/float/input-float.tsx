@@ -34,8 +34,7 @@ const INPUT_CLASSES = [
 ];
 
 /**
- * The decimal number field (`<smart-input-float>`, Angular
- * `InputFloatComponent`): a number input with `step="0.01"`. An empty field
+ * The decimal number field: a number input with `step="0.01"`. An empty field
  * sets `null`, anything else the parsed number.
  */
 export function SmartInputFloat<T>(props: SmartInputFieldProps<T>) {

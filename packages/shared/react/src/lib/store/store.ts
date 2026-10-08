@@ -4,8 +4,9 @@ import { useCallback, useSyncExternalStore } from 'react';
  * A tiny external store: one value, replaced immutably, observed through
  * `subscribe`. The services that hold UI state (toasts, alerts, modals, menu,
  * app buttons) and the CRUD feature state are built on it, and React reads
- * them with `useStore`, so a change re-renders exactly the components that
- * read it, the way a signal or an NgRx selector did in the Angular library.
+ * them with `useStore`, so a change re-renders only the components that read
+ * the store, and with a selector only those whose slice changed (compared
+ * with `Object.is`).
  */
 export class SmartStore<T> {
   private state: T;

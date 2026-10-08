@@ -10,8 +10,8 @@ import {
 import { useModalService } from '../../providers/hooks';
 
 /**
- * The page options the Angular `DetailsPage` prepared for its page layout:
- * the `details` title (or `value.title`) without the menu button, a `trash`
+ * The page options for a page layout around `SmartDetailsPage`: the
+ * `details` title (or `value.title`) without the menu button, a `trash`
  * button when there is a `removeHandler` and an `arrow-forward-outline`
  * button when there is an `itemHandler`. Both buttons close the modal.
  *

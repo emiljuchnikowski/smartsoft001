@@ -9,17 +9,13 @@ import type { IAppProvider } from '../providers/interfaces';
 import type { SmartTrustedHtml } from '../utils/html';
 
 /*
- * The option interfaces of `@smartsoft001/angular`, ported to React:
+ * The option objects the components take. They follow a few conventions:
  *
- * - `TemplateRef` slots are `ReactNode`s;
- * - `Signal<T>` / `Observable<T>` inputs are plain values, since a React
- *   component re-renders when its props change (`loading$` becomes
- *   `loading`, `disabled$` becomes `disabled`);
- * - `Type<any>` is a `ComponentType`;
+ * - content slots (`*Tpl`) are `ReactNode`s;
+ * - state that changes over time (`loading`, `disabled`, ...) is a plain
+ *   value, since a component re-renders when its props change;
+ * - a component to render is a `ComponentType`;
  * - form controls are the framework-agnostic `SmartAbstractControl`s.
- *
- * Names and shapes are otherwise kept, so code and documentation written for
- * one library reads the same against the other.
  */
 
 /** One entry of an `enum`, `radio`, `check` or `strings` field. */
@@ -29,7 +25,10 @@ export interface SmartPossibility {
   checked: boolean;
 }
 
-/** The `subscribe` shape of an RxJS observable or a `SmartEmitter`. */
+/**
+ * Anything with a `subscribe(listener)` that returns an `unsubscribe()`
+ * handle, e.g. a `SmartEmitter` or an observable.
+ */
 export interface SmartSubscribable<T> {
   subscribe(listener: (value: T) => void): { unsubscribe(): void };
 }
@@ -52,10 +51,9 @@ export interface ICardOptions {
   title?: string;
   /**
    * @deprecated Has never been rendered by any card variant (standard or
-   * preset). Put actions in the header or footer instead: project them with
-   * the `[cardHeader]` / `[cardFooter]` slots of `<smart-card>` (set
-   * `hasHeader` / `hasFooter`), which reach the variant as `headerTpl` /
-   * `footerTpl`.
+   * preset). Put actions in the header or footer instead: pass them as the
+   * `header` / `footer` of `SmartCard`, which reach the variant as
+   * `headerTpl` / `footerTpl`.
    */
   buttons?: Array<IIconButtonOptions>;
   grayFooter?: boolean;
@@ -218,12 +216,12 @@ export type SmartColor =
 
 export interface IAccordionOptions {
   /**
-   * Initial open state. When `true` on first render and `show` has not been
-   * set to `true` by the consumer, the accordion sets `show` to `true` once
-   * (in `AccordionBaseComponent.ngOnInit`, so every variant gets it) and
-   * emits `showChange`. Later changes to this flag are ignored, and later
-   * toggles or a bound `[(show)]` take over. Bind `[(show)]` to a signal when
-   * combining it with `open`.
+   * Initial open state, applied once on the first render by every variant:
+   * an uncontrolled accordion starts open, and `onShowChange(true)` is
+   * reported unless `show` / `defaultShow` was already `true`. Later changes
+   * to this flag are ignored; toggles and the `show` prop take over. A
+   * controlled accordion stays as its `show` prop says until the parent
+   * applies the reported change.
    */
   open?: boolean;
   /** Prevents `toggle()` from changing `show` (the header ignores clicks). */
@@ -593,16 +591,16 @@ export interface IAvatarOptions {
   /**
    * Fallback shown when there is no `imageUrl` (default `'icon'`).
    * Initials are shown whenever `initials` is set; otherwise
-   * `AvatarPresetComponent` renders an SVG icon (`'icon'`) or an empty
-   * initials chip (`'initials'`), and `AvatarStandardComponent` renders a `·`
+   * `SmartAvatarPreset` renders an SVG icon (`'icon'`) or an empty
+   * initials chip (`'initials'`), and `SmartAvatarStandard` renders a `·`
    * placeholder. The standard also exposes the value as the
    * `data-placeholder-type` attribute on its root element.
    */
   placeholderType?: 'icon' | 'initials';
   /**
    * Stacking order of a `group` (default `'top-to-bottom'`). Purely visual:
-   * styled by `AvatarPresetComponent` (`'bottom-to-top'` reverses the stack);
-   * `AvatarStandardComponent` exposes it as the `data-stack-direction`
+   * styled by `SmartAvatarPreset` (`'bottom-to-top'` reverses the stack);
+   * `SmartAvatarStandard` exposes it as the `data-stack-direction`
    * attribute on the group container.
    */
   stackDirection?: 'top-to-bottom' | 'bottom-to-top';
@@ -613,18 +611,18 @@ export type SmartBadgeColor =
 
 export interface IBadgeOptions {
   /**
-   * Visual style variant (default `'soft'`). Styled by `BadgePresetComponent`:
+   * Visual style variant (default `'soft'`). Styled by `SmartBadgePreset`:
    * - `solid` — filled background with inverse text
    * - `soft` — tinted background with same-hue text
    * - `outline` — transparent background with colored border + text
    *
-   * `BadgeStandardComponent` does not style it; it exposes the value as the
+   * `SmartBadgeStandard` does not style it; it exposes the value as the
    * `data-variant` attribute on its root element.
    */
   variant?: 'solid' | 'soft' | 'outline';
   /**
    * Fully rounded pill shape (default `true`); `false` renders `rounded-md`
-   * corners. Styled by `BadgePresetComponent`; `BadgeStandardComponent`
+   * corners. Styled by `SmartBadgePreset`; `SmartBadgeStandard`
    * exposes it as `data-pill="true" | "false"` on its root element.
    */
   pill?: boolean;
@@ -714,7 +712,7 @@ export interface ICardHeadingOptions {
   avatarTpl?: ReactNode;
   actionsTpl?: ReactNode;
   metaTpl?: ReactNode;
-  // Consumed only by CardHeadingPresetComponent; standard component ignores it.
+  // Consumed only by SmartCardHeadingPreset; the standard one ignores it.
   presentation?: {
     variant?: 'author' | 'stacked' | 'overlay' | 'outline';
   };
@@ -732,7 +730,7 @@ export interface IPageHeadingOptions {
   logoTpl?: ReactNode;
   filtersTpl?: ReactNode;
   navTpl?: ReactNode;
-  // Consumed only by PageHeadingPresetComponent; standard component ignores it.
+  // Consumed only by SmartPageHeadingPreset; the standard one ignores it.
   presentation?: {
     layout?: 'links-left' | 'links-center' | 'links-right' | 'user';
   };
@@ -759,7 +757,7 @@ export interface ISectionHeadingOptions {
   inputGroupTpl?: ReactNode;
   badgeTpl?: ReactNode;
   imageTpl?: ReactNode;
-  // Consumed only by SectionHeadingPresetComponent; standard component ignores it.
+  // Consumed only by SmartSectionHeadingPreset; the standard one ignores it.
   presentation?: {
     layout?: 'half' | 'narrow' | 'wide' | 'vertical';
   };
@@ -1103,8 +1101,8 @@ export interface IDetailOptions<T> {
 
 export interface ICellPipe<T> {
   /**
-   * The text of a cell. Return `trustHtml(html)` to render markup you vouch
-   * for without sanitising it (Angular: returning `SafeHtml`).
+   * The text of a cell. Markup in it is sanitised before it is rendered;
+   * return `trustHtml(html)` to render markup you vouch for as is.
    */
   transform(
     value: T,
@@ -1226,7 +1224,7 @@ export interface IListOptions<T> {
 
   select?: 'multi';
 
-  // Consumed only by the desktop preset (ListDesktopPresetComponent) to pick
+  // Consumed only by the desktop preset (SmartListDesktopPreset) to pick
   // Preline table styling variations.
   presentation?: {
     variant?: 'default' | 'striped' | 'bordered' | 'borderless';

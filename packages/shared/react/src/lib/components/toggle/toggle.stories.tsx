@@ -40,8 +40,9 @@ const meta: Meta<ToggleArgs> = {
 export default meta;
 type Story = StoryObj<ToggleArgs>;
 
-// `value` is a model in Angular, bound one way here: the toggle keeps its own
-// state after a click until the control changes it again.
+// The control sets `defaultValue` (the toggle is re-mounted when it changes),
+// so the toggle keeps its own state after a click until the control changes it
+// again.
 // #region usage
 export const Playground: Story = {
   name: 'Playground',
@@ -66,10 +67,7 @@ export const Playground: Story = {
 
 const sectionTitle = { fontSize: 16, fontWeight: 600, marginBottom: 12 };
 
-/**
- * Stands in for the `<smart-toggle>` host element of the Angular story,
- * whose inline `<smart-toggle-standard>` gives each toggle a line box.
- */
+/** Wraps each toggle in a `<div>`, which gives it a line box. */
 const Host = ({ children }: { children: ReactNode }) => <div>{children}</div>;
 
 export const AllVariants: Story = {

@@ -92,8 +92,8 @@ export const Playground: Story = {
 const sectionTitle = { fontSize: 16, fontWeight: 600, marginBottom: 12 };
 
 /**
- * Stands in for the `<smart-loader>` host element of the Angular story: a
- * flex item even when the loader renders nothing, so the row keeps its gap.
+ * Wraps a loader in a flex item that stays even when the loader renders
+ * nothing, so the row keeps its gap.
  */
 const Host = ({ children }: { children: ReactNode }) => <div>{children}</div>;
 

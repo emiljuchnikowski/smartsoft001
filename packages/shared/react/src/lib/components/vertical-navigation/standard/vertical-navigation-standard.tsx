@@ -4,7 +4,7 @@ import { SmartNavLink } from '../../navbar/nav-link';
 import { useVerticalNavigation } from '../use-vertical-navigation';
 import { SmartVerticalNavigationProps } from '../vertical-navigation.types';
 
-/** The default vertical navigation rendering (`<smart-vertical-navigation-standard>`). */
+/** The default vertical navigation rendering. */
 export function SmartVerticalNavigationStandard(
   props: SmartVerticalNavigationProps,
 ) {

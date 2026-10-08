@@ -3,8 +3,7 @@ import { SmartDetailFieldProps } from '../detail.types';
 import { useDetail } from '../use-detail';
 
 /**
- * `<smart-detail-flag>` (`DetailFlagComponent`): a green check when the flag
- * is set, a gray x-mark otherwise.
+ * The flag detail: a green check when the flag is set, a gray x-mark otherwise.
  */
 export function SmartDetailFlag<T>(props: SmartDetailFieldProps<T>) {
   const { className } = props;

@@ -6,8 +6,7 @@ import { SmartDetailFieldProps } from '../detail.types';
 import { useDetailEnum } from './use-detail-enum';
 
 /**
- * `<smart-detail-enum>` (`DetailEnumComponent`): the translated value(s),
- * separated by commas.
+ * The enum detail: the translated value(s), separated by commas.
  */
 export function SmartDetailEnum<T>(props: SmartDetailFieldProps<T>) {
   const { className } = props;

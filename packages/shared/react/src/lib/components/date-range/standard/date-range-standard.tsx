@@ -5,9 +5,8 @@ import { useDateRange } from '../use-date-range';
 import { SmartDateRangeModalStandard } from './date-range-modal-standard';
 
 /**
- * The default date-range rendering (`<smart-date-range-standard>`): a trigger
- * showing the range and a clear button; the trigger opens
- * `<SmartDateRangeModalStandard>`, rendered inline as in Angular.
+ * The default date-range rendering: a trigger showing the range and a clear
+ * button; the trigger opens `<SmartDateRangeModalStandard>`, rendered inline.
  */
 export function SmartDateRangeStandard(props: SmartDateRangeVariantProps) {
   const { className } = props;

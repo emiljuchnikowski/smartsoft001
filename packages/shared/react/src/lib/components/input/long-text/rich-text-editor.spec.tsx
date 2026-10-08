@@ -178,7 +178,7 @@ describe('@smartsoft001/react: SmartRichTextEditor', () => {
   });
 
   describe('menu', () => {
-    it('should render the menu of the Angular field, in order', () => {
+    it('should render the long-text menu, in order', () => {
       setup();
 
       expect(

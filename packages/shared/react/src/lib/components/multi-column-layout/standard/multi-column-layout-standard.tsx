@@ -1,9 +1,9 @@
 import { SmartMultiColumnLayoutProps } from '../multi-column-layout.types';
 
 /**
- * The default multi-column layout (`<smart-multi-column-layout-standard>`):
- * an optional `<header>` (`options.headerTpl`), then `<aside class="nav">`
- * (`options.navTpl`), `<main>` with `children` and `<aside class="secondary">`
+ * The default multi-column layout: an optional `<header>`
+ * (`options.headerTpl`), then `<aside class="nav">` (`options.navTpl`),
+ * `<main>` with `children` and `<aside class="secondary">`
  * (`options.secondaryTpl`).
  */
 export function SmartMultiColumnLayoutStandard({

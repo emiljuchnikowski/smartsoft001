@@ -2,12 +2,12 @@ import { SmartCalendarProps } from '../calendar.types';
 import { useCalendar } from '../use-calendar';
 
 /**
- * Barebones native-HTML month calendar (`<smart-calendar-standard>`).
+ * Barebones native-HTML month calendar.
  *
- * Days with events get `data-events="<count>"`, an aria-label that mentions
- * the count and, without `options.dayCellTpl`, an `aria-hidden` event marker.
- * `options.dayCellTpl` renders each day's content from `{ cell, events }`.
- * The toolbar labels (Prev / Today / Next) are not translated, as in Angular.
+ * Days with events get `data-events="<count>"`, an aria-label that mentions the
+ * count and, without `options.dayCellTpl`, an `aria-hidden` event marker.
+ * `options.dayCellTpl` renders each day's content from `{ cell, events }`. The
+ * toolbar labels (Prev / Today / Next) are not translated.
  */
 export function SmartCalendarStandard(props: SmartCalendarProps) {
   const { options, className = '' } = props;

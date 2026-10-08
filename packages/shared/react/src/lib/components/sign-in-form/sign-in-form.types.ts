@@ -10,8 +10,8 @@ export interface SmartSignInFormProps {
   disabled?: boolean;
   options?: ISignInFormOptions;
   className?: string;
-  /** The Angular `submit` output: the typed credentials and the mode. */
+  /** Called with the typed credentials and the mode. */
   onSubmit?: (value: ISignInFormSubmit) => void;
-  /** The Angular `socialClick` output. */
+  /** Called when a social sign-in button is clicked. */
   onSocialClick?: (value: ISignInFormSocialClick) => void;
 }

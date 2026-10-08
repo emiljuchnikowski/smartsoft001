@@ -2,7 +2,7 @@
   "name": "@smartsoft001/react",
   "version": "2.191.0",
   "type": "commonjs",
-  "description": "The React UI library: smart-* components, hooks, services and the form factory that turns model metadata into a form, mirroring @smartsoft001/angular.",
+  "description": "A metadata-driven React UI library: Smart* components, the provider, services and hooks behind them, and the form factory that turns model metadata into a form.",
   "publishConfig": {
     "access": "public"
   },

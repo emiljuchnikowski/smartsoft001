@@ -10,7 +10,7 @@ const workspaceRoot = resolve(here, '../../../..');
 
 /**
  * The `@smartsoft001/*` path aliases of tsconfig.base.json, so the stories
- * import the libraries from source the way the Angular Storybook does.
+ * import the libraries from source instead of a build.
  */
 function workspaceAliases(): Record<string, string> {
   const tsconfig = require(join(workspaceRoot, 'tsconfig.base.json'));

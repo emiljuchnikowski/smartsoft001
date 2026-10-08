@@ -3,12 +3,11 @@ import { useCallback, useMemo } from 'react';
 import { SmartPagingProps } from './paging.types';
 
 /**
- * The behaviour every paging variant shares (the Angular
- * `PagingBaseComponent`): the "showing x to y" range, the page list with
- * `'...'` gaps (all pages up to 7, otherwise the first, the last and the
- * neighbours of the current one), and the guarded navigation that reports
- * the requested page through `onPageChange`. The page itself stays owned by
- * the parent (`currentPage`).
+ * The behaviour every paging variant shares: the "showing x to y" range, the
+ * page list with `'...'` gaps (all pages up to 7, otherwise the first, the last
+ * and the neighbours of the current one), and the guarded navigation that
+ * reports the requested page through `onPageChange`. The page itself stays
+ * owned by the parent (`currentPage`).
  */
 export function usePaging({
   currentPage = 1,

@@ -44,9 +44,8 @@ const sidebar = (
 );
 
 /**
- * Story host that wires the template slots into `IPageOptions` and renders
- * the preset variant through `SmartPage` (the Angular `smart-page-story`
- * host component); `search` keeps its text in state.
+ * Story wrapper that wires the template slots into `IPageOptions` and renders
+ * the preset variant through `SmartPage`; `search` keeps its text in state.
  */
 function PageStory({
   title = 'Alice Johnson',
@@ -111,7 +110,7 @@ const meta: Meta<PageArgs> = {
   title: 'Smart-Page/Page',
   tags: ['autodocs'],
   parameters: {
-    // Registers the 'preset' page variant (PAGE_VARIANT_COMPONENTS_TOKEN).
+    // Registers the 'preset' page variant.
     smart: { components: PAGE_PRESET_VARIANT_COMPONENTS },
   },
   argTypes: {

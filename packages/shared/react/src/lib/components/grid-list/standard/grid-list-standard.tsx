@@ -1,10 +1,9 @@
 import { SmartGridListProps } from '../grid-list.types';
 
 /**
- * The default grid-list rendering (`<smart-grid-list-standard>`): one
- * `li.item` per item (icon template > image, title as a link when `href` is
- * set, description, badge and action slots), the `emptyTpl` when there are no
- * items, then the `footerTpl` slot.
+ * The default grid-list rendering: one `li.item` per item (icon template >
+ * image, title as a link when `href` is set, description, badge and action
+ * slots), the `emptyTpl` when there are no items, then the `footerTpl` slot.
  */
 export function SmartGridListStandard({
   options,

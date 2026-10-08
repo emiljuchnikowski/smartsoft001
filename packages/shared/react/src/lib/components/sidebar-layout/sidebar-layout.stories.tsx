@@ -17,9 +17,8 @@ const meta: Meta<SidebarLayoutArgs> = {
   title: 'Components/SidebarLayout',
   tags: ['autodocs'],
   parameters: {
-    // SmartSidebarLayoutPreset is rendered directly, like the Angular story
-    // uses <smart-sidebar-layout-preset>; it is also registered as the
-    // replacement for every <SmartSidebarLayout>.
+    // SmartSidebarLayoutPreset is rendered directly; it is also registered as
+    // the replacement for every <SmartSidebarLayout>.
     smart: { components: { 'sidebar-layout': SmartSidebarLayoutPreset } },
   },
   argTypes: {

@@ -23,8 +23,8 @@ const COLOR_SUFFIXES = [
 
 /**
  * Writes the application's style settings (colours, font, button metrics,
- * breakpoints) as CSS custom properties on an element, the way the Angular
- * `StyleService` did. Settings accumulate across calls to `set`.
+ * breakpoints) as CSS custom properties on an element, so the components'
+ * styles pick them up. Settings accumulate across calls to `set`.
  */
 export class StyleService {
   private style: IStyle = {};

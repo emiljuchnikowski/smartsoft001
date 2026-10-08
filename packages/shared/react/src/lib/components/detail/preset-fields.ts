@@ -19,8 +19,8 @@ import { SmartDetailVideoPreset } from './video/preset/detail-video-preset';
 
 /**
  * The preset detail components, keyed by `FieldType`. Register the map as
- * `detailFieldComponents` on `SmartProvider` (the Angular
- * `DETAIL_FIELD_COMPONENTS_TOKEN`) to give every detail the preset look:
+ * `detailFieldComponents` on `SmartProvider` to give every detail the preset
+ * look:
  *
  * ```tsx
  * <SmartProvider detailFieldComponents={DETAIL_PRESET_FIELD_COMPONENTS}>

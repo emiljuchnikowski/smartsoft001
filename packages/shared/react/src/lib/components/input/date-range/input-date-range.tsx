@@ -16,15 +16,12 @@ const LABEL_CLASSES = [
 const WIDGET_CLASSES = ['smart:mt-2', 'smart:block', 'smart:w-full'].join(' ');
 
 /**
- * The `dateRange` field (the Angular `InputDateRangeComponent`,
- * `<smart-input-date-range>`): the model label and the `<SmartDateRange>`
- * picker showing the control's range. A picked or cleared range sets the
- * value and marks the control dirty (the Angular `ngModel` binding).
- * `className` is appended to the picker's classes.
+ * The `dateRange` field: the model label and the `<SmartDateRange>` picker
+ * showing the control's range. A picked or cleared range sets the value and
+ * marks the control dirty. `className` is appended to the picker's classes.
  *
- * Angular marked the control touched on a click on the `<smart-date-range>`
- * host element; the picker renders no such element here, so it is wrapped in
- * a box-less (`display: contents`) element that does it.
+ * A click on the picker marks the control touched: the picker is wrapped in a
+ * box-less (`display: contents`) element that does it.
  */
 export function SmartInputDateRange<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

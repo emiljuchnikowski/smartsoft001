@@ -3,10 +3,9 @@ import { useCallback, useState } from 'react';
 import { SmartNavbarProps } from './navbar.types';
 
 /**
- * The behaviour every navbar variant shares (the Angular
- * `NavbarBaseComponent` and its `mobileMenuOpen` model): the mobile menu
- * state, controlled through `mobileMenuOpen` or kept internally when that
- * prop is `undefined`, and the item click.
+ * The behaviour every navbar variant shares: the mobile menu state, controlled
+ * through `mobileMenuOpen` or kept internally when that prop is `undefined`,
+ * and the item click.
  */
 export function useNavbar({
   mobileMenuOpen,

@@ -20,10 +20,9 @@ function getImageUrl(
 }
 
 /**
- * {@link useInput} and {@link useInputFile} plus the preview of the image
- * fields (the `imageUrl` of the Angular `InputImageComponent` and the logo
- * preset): the URL of the attachment in the value, set at once and then
- * again a second after the value stops changing.
+ * {@link useInput} and {@link useInputFile} plus the preview of the image field
+ * and the logo preset: the URL of the attachment in the value, set at once and
+ * then again a second after the value stops changing.
  */
 export function useInputImage<T>(props: SmartInputFieldProps<T>) {
   const input = useInput(props);

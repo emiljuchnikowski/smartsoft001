@@ -55,17 +55,15 @@ function getListFields(type: any): ListField[] {
 }
 
 /**
- * `<smart-list>`: resolves the list `fields` of `options.type` (the fields
- * with `list` options, sorted by `list.order`) and renders the
- * implementation of `options.mode` (desktop by default): the one registered
- * in `listModeComponents` on `SmartProvider` (the Angular
- * `LIST_MODE_COMPONENTS_TOKEN`, e.g. `LIST_PRESET_MODE_COMPONENTS`), else
- * `SmartListDesktop` / `SmartListMobile` / `SmartListMasonryGrid`. A
- * component registered as `components.list` replaces it for every mode.
+ * Resolves the list `fields` of `options.type` (the fields with `list` options,
+ * sorted by `list.order`) and renders the implementation of `options.mode`
+ * (desktop by default): the one registered in `listModeComponents` on
+ * `SmartProvider` (e.g. `LIST_PRESET_MODE_COMPONENTS`), else `SmartListDesktop`
+ * / `SmartListMobile` / `SmartListMasonryGrid`. A component registered as
+ * `components.list` replaces it for every mode.
  *
- * Below it: the loader while `provider.loading`, and "no results" for an
- * empty list. (The Angular `HardwareService.isMobile` that picked the mobile
- * mode without `options.mode` is always `false`, so desktop is the default.)
+ * Below it: the loader while `provider.loading`, and "no results" for an empty
+ * list.
  */
 export function SmartList<T extends IEntity<string>>({
   options,

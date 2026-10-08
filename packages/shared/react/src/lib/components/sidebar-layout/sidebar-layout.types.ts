@@ -5,6 +5,6 @@ import { ISidebarLayoutOptions } from '../../models';
 export interface SmartSidebarLayoutProps {
   options?: ISidebarLayoutOptions;
   className?: string;
-  /** The main content (the Angular `<ng-content>`). */
+  /** The main content. */
   children?: ReactNode;
 }

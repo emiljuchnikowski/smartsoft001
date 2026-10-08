@@ -5,6 +5,6 @@ import { IMultiColumnLayoutOptions } from '../../models';
 export interface SmartMultiColumnLayoutProps {
   options?: IMultiColumnLayoutOptions;
   className?: string;
-  /** The main content (the Angular `<ng-content>`). */
+  /** The main content. */
   children?: ReactNode;
 }

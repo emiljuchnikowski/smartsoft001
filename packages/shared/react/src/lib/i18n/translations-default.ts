@@ -1,8 +1,8 @@
 /**
  * The translations the components fall back to when the application provides
- * none of its own, the same data `@smartsoft001/angular` registers with
- * ngx-translate. `SmartProvider` merges the application's dictionary over the
- * one matching its `language` (`pl` by default).
+ * none of its own, in Polish and English. `SmartProvider` merges the
+ * application's dictionary over the one matching its `language` (`pl` by
+ * default).
  */
 export interface ITranslateData {
   details: string;

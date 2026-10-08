@@ -1,10 +1,9 @@
 import { SmartSidebarLayoutProps } from '../sidebar-layout.types';
 
 /**
- * The default sidebar layout (`<smart-sidebar-layout-standard>`): an optional
- * `<header>` (`options.headerTpl`), an `<aside>` (`options.sidebarTpl`) and a
- * `<main>` with `children`. `options.sidebarPosition: 'right'` renders the
- * `<aside>` after `<main>`.
+ * The default sidebar layout: an optional `<header>` (`options.headerTpl`), an
+ * `<aside>` (`options.sidebarTpl`) and a `<main>` with `children`.
+ * `options.sidebarPosition: 'right'` renders the `<aside>` after `<main>`.
  */
 export function SmartSidebarLayoutStandard({
   options,

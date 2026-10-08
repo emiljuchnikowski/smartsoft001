@@ -4,9 +4,9 @@ import { SmartPagingProps } from '../paging.types';
 import { usePaging } from '../use-paging';
 
 /**
- * The default paging rendering (`<smart-paging-standard>`): translated
- * prev / next buttons around the page list. `variant` is only exposed as
- * `data-variant` on the `<nav>`; the preset styles it.
+ * The default paging rendering: translated prev / next buttons around the page
+ * list. `variant` is only exposed as `data-variant` on the `<nav>`; the preset
+ * styles it.
  */
 export function SmartPagingStandard(props: SmartPagingProps) {
   const { className } = props;

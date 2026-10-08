@@ -2,9 +2,9 @@ import { SmartAvatarProps } from '../avatar.types';
 import { useAvatar } from '../use-avatar';
 
 /**
- * The default avatar rendering (`<smart-avatar-standard>`): unstyled markup
- * exposing `size`, `shape`, `options.placeholderType` and, for a group,
- * `options.stackDirection` as `data-*` attributes.
+ * The default avatar rendering: unstyled markup exposing `size`, `shape`,
+ * `options.placeholderType` and, for a group, `options.stackDirection` as
+ * `data-*` attributes.
  */
 export function SmartAvatarStandard(props: SmartAvatarProps) {
   const {

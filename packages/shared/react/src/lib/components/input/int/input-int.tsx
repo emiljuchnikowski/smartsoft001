@@ -34,9 +34,8 @@ const INPUT_CLASSES = [
 ];
 
 /**
- * The integer field (`<smart-input-int>`, Angular `InputIntComponent`): a
- * number input with `step="1"`. An empty field sets `null`, anything else the
- * parsed number, as Angular's number value accessor does.
+ * The integer field: a number input with `step="1"`. An empty field sets
+ * `null`, anything else the parsed number.
  */
 export function SmartInputInt<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

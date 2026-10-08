@@ -6,11 +6,10 @@ import { useSmart } from '../../../providers/smart-context';
 import { SmartInputFieldProps } from '../input.types';
 
 /**
- * The upload behaviour of the file fields (the Angular
- * `InputFileBaseComponent`): picking a file checks it against the input's
- * `accept` list, uploads it through the file service with progress, and sets
- * the attachment the API returns as the value. Also the options of the add,
- * show and delete buttons the file fields render.
+ * The upload behaviour of the file fields: picking a file checks it against the
+ * input's `accept` list, uploads it through the file service with progress, and
+ * sets the attachment the API returns as the value. Also the options of the
+ * add, show and delete buttons the file fields render.
  */
 export function useInputFile<T = any>({ options }: SmartInputFieldProps<T>) {
   const { fileService, toastService, translate } = useSmart();

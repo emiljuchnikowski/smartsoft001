@@ -13,12 +13,11 @@ import { SmartListModeProps } from '../../list.types';
 import { useList, useListFileUrl } from '../../use-list';
 
 /**
- * Preline-styled mobile list variation (the Angular
- * `<smart-list-mobile-preset>`, `ListMobilePresetComponent`): a responsive
- * grid of cards. Image cells become the card image, the first non-image
- * column the card title and the others card text, followed by the details
- * and remove buttons. Register it for `ListMode.mobile` through
- * `listModeComponents` on `SmartProvider` (see `LIST_PRESET_MODE_COMPONENTS`).
+ * Preline-styled mobile list variation: a responsive grid of cards. Image cells
+ * become the card image, the first non-image column the card title and the
+ * others card text, followed by the details and remove buttons. Register it for
+ * `ListMode.mobile` through `listModeComponents` on `SmartProvider` (see
+ * `LIST_PRESET_MODE_COMPONENTS`).
  */
 export function SmartListMobilePreset<T extends IEntity<string>>(
   props: SmartListModeProps<T>,

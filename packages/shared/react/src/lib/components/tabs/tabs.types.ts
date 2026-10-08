@@ -7,8 +7,8 @@ export interface ITabChange {
 export interface SmartTabsProps {
   options?: ITabsOptions;
   /**
-   * The id of the selected tab (the Angular `selectedId` model, `null` for
-   * none). Leave it `undefined` to let the component keep the selection.
+   * The id of the selected tab (`null` for none). Leave it `undefined` to let
+   * the component keep the selection.
    */
   selectedId?: string | null;
   /** The initial selection of an uncontrolled component. */

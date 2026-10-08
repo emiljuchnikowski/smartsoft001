@@ -33,10 +33,9 @@ const IMAGE_CLASSES = [
 ].join(' ');
 
 /**
- * Styled `image` field (preset, the Angular `InputImagePresetComponent`):
- * the behaviour of {@link SmartInputImage} with a Preline card-style image
- * preview and a blue progress bar. `className` is appended to the group's
- * classes.
+ * Styled `image` field (preset): the behaviour of {@link SmartInputImage} with
+ * a Preline card-style image preview and a blue progress bar. `className` is
+ * appended to the group's classes.
  */
 export function SmartInputImagePreset<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

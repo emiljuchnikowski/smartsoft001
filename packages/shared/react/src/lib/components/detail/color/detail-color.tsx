@@ -2,7 +2,7 @@ import { cn } from '../../../utils/class-names';
 import { SmartDetailFieldProps } from '../detail.types';
 import { useDetail } from '../use-detail';
 
-/** `<smart-detail-color>` (`DetailColorComponent`): a bar filled with the colour. */
+/** The colour detail: a bar filled with the colour. */
 export function SmartDetailColor<T>(props: SmartDetailFieldProps<T>) {
   const { className } = props;
   const { item, key, value } = useDetail(props);

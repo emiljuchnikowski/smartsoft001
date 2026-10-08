@@ -38,9 +38,8 @@ const INPUT_CLASSES = [
 ].join(' ');
 
 /**
- * The `text` field (the Angular `InputTextComponent`,
- * `<smart-input-text>`): the model label and a text input bound to the
- * control. `className` is appended to the input's classes.
+ * The `text` field: the model label and a text input bound to the control.
+ * `className` is appended to the input's classes.
  */
 export function SmartInputText<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

@@ -35,9 +35,8 @@ const INPUT_CLASSES = [
 ];
 
 /**
- * Preline-styled decimal number field (preset, Angular
- * `InputFloatPresetComponent`): the same number input with `step="0.01"` as
- * `SmartInputFloat`.
+ * Preline-styled decimal number field (preset): the same number input with
+ * `step="0.01"` as `SmartInputFloat`.
  */
 export function SmartInputFloatPreset<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

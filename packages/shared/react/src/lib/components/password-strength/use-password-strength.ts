@@ -71,8 +71,7 @@ function getMessage(strength: number): PasswordStrengthMessage {
 }
 
 /**
- * The rating every password strength variant shares (the Angular
- * `PasswordStrengthBaseComponent`).
+ * The rating every password strength variant shares.
  */
 export function usePasswordStrength({
   passwordToCheck,
@@ -86,8 +85,8 @@ export function usePasswordStrength({
   const strength = getStrength(passwordToCheck, result);
   const strengthIndex = getStrengthIndex(strength);
 
-  // The Angular `effect` emitted whenever the strength changed; the ref keeps
-  // a new callback identity from re-emitting.
+  // Emits whenever the strength changes; the ref keeps a new callback identity
+  // from re-emitting.
   const onPasswordStrengthRef = useRef(onPasswordStrength);
   onPasswordStrengthRef.current = onPasswordStrength;
 

@@ -8,9 +8,8 @@ import {
 } from './preset-classes';
 
 /**
- * Styled badge variation (preset, `<smart-badge-preset>`). Register it as
- * `components.badge` on `SmartProvider` to restyle every `<SmartBadge>`, or
- * render it directly.
+ * Styled badge variation (preset). Register it as `components.badge` on
+ * `SmartProvider` to restyle every `<SmartBadge>`, or render it directly.
  *
  * Groups the solid / soft / outline colour presets into one component,
  * selected by `options.variant` (default `soft`), across the

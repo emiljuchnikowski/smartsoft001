@@ -12,12 +12,10 @@ export interface UseInputFileDropZoneOptions {
 }
 
 /**
- * The Preline-style drop zone of the `pdf`, `video` and `attachment` presets
- * (the `triggerUpload` / `onDragOver` / `onDragLeave` / `onDrop` handlers the
- * Angular presets share): a click, Enter or Space opens the file picker, a
- * dragged file highlights the zone (`dragOver`), and a drop hands the files
- * to the hidden input and fires its `change`, so the upload of
- * `useInputFile` runs as for a picked file.
+ * The Preline-style drop zone of the `pdf`, `video` and `attachment` presets: a
+ * click, Enter or Space opens the file picker, a dragged file highlights the
+ * zone (`dragOver`), and a drop hands the files to the hidden input and fires
+ * its `change`, so the upload of `useInputFile` runs as for a picked file.
  */
 export function useInputFileDropZone({
   control,

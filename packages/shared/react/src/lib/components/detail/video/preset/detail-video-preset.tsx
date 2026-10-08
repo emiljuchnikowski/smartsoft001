@@ -3,8 +3,7 @@ import { SmartDetailFieldProps } from '../../detail.types';
 import { useDetailVideo } from '../use-detail-video';
 
 /**
- * Styled video detail (preset, `DetailVideoPresetComponent`): the uploaded
- * mp4 video in a rounded frame.
+ * Styled video detail (preset): the uploaded mp4 video in a rounded frame.
  */
 export function SmartDetailVideoPreset<T>(props: SmartDetailFieldProps<T>) {
   const { className } = props;

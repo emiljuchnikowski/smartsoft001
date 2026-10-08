@@ -5,7 +5,7 @@ import { cn } from '../../../utils/class-names';
 import { SmartNavLink } from '../../navbar/nav-link';
 import { SmartProgressBarsProps } from '../progress-bars.types';
 
-// Explicit literals (the Angular `'status-' + status`), so class scanners find them.
+// Explicit `status-<status>` literals, so class scanners find them.
 const STATUS_CLASSES: Record<SmartProgressStepStatus, string> = {
   complete: 'status-complete',
   current: 'status-current',
@@ -13,8 +13,8 @@ const STATUS_CLASSES: Record<SmartProgressStepStatus, string> = {
 };
 
 /**
- * The default progress bars rendering (`<smart-progress-bars-standard>`): the
- * steps as a `<nav>` list, or a progress bar for the `progress-bar` layout.
+ * The default progress bars rendering: the steps as a `<nav>` list, or a
+ * progress bar for the `progress-bar` layout.
  */
 export function SmartProgressBarsStandard({
   options,

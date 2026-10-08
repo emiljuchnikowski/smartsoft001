@@ -4,9 +4,8 @@ import { SmartDetailFieldProps } from '../detail.types';
 import { useDetailObject } from './use-detail-object';
 
 /**
- * `<smart-detail-object>` (`DetailObjectComponent`): the nested object's own
- * details, rendered through `<SmartDetails>` (the Angular
- * `DETAILS_COMPONENT_TOKEN`), so `components.details` applies to it too.
+ * The object detail: the nested object's own details, rendered through
+ * `<SmartDetails>`, so `components.details` applies to it too.
  */
 export function SmartDetailObject<T>(props: SmartDetailFieldProps<T>) {
   const { className } = props;
