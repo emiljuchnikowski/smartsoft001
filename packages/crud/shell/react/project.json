@@ -1,0 +1,48 @@
+{
+  "name": "crud-shell-react",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/crud/shell/react/src",
+  "projectType": "library",
+  "tags": ["scope:crud", "type:shell"],
+  "targets": {
+    "styles": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": ["default", "{workspaceRoot}/tailwind.config.js"],
+      "outputs": ["{projectRoot}/styles.css"],
+      "options": {
+        "command": "npx @tailwindcss/cli -i packages/crud/shell/react/src/lib/styles.css -o packages/crud/shell/react/styles.css"
+      }
+    },
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "dependsOn": ["^build", "styles"],
+      "options": {
+        "outputPath": "dist/packages/crud/shell/react",
+        "main": "packages/crud/shell/react/src/index.ts",
+        "tsConfig": "packages/crud/shell/react/tsconfig.lib.json",
+        "assets": [
+          "packages/crud/shell/react/*.md",
+          "packages/crud/shell/react/styles.css"
+        ]
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "nx-release-publish": {
+      "options": {
+        "packageRoot": "dist/{projectRoot}"
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "packages/crud/shell/react/jest.config.ts",
+        "tsConfig": "packages/crud/shell/react/tsconfig.spec.json"
+      }
+    }
+  }
+}
