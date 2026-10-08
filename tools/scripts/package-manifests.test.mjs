@@ -63,12 +63,14 @@ function importedNames(dir) {
 
   if (!fs.existsSync(sourceRoot)) return null;
 
+  // `.tsx` covers the React libraries, whose components import as much as
+  // their `.ts` siblings do.
   const sources = fs
-    .globSync('**/*.ts', {
+    .globSync('**/*.{ts,tsx}', {
       cwd: sourceRoot,
       exclude: (name) => name === 'node_modules',
     })
-    .filter((file) => !/\.(spec|stories|test)\.ts$/.test(file))
+    .filter((file) => !/\.(spec|stories|test)\.tsx?$/.test(file))
     .filter((file) => path.basename(file) !== 'test-setup.ts');
 
   const found = new Set();

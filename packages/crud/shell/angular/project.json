@@ -88,7 +88,11 @@
         "outputDir": "dist/storybook/crud-shell-angular",
         "configDir": "packages/crud/shell/angular/.storybook",
         "browserTarget": "crud-shell-angular:build-storybook",
-        "compodoc": false
+        "compodoc": false,
+        "styles": [
+          "packages/crud/shell/angular/src/lib/styles.css",
+          "packages/shared/angular/src/lib/styles.css"
+        ]
       },
       "configurations": {
         "ci": {

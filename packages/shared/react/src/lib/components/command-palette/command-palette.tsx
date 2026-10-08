@@ -1,0 +1,19 @@
+import { SmartCommandPaletteProps } from './command-palette.types';
+import { SmartCommandPaletteStandard } from './standard/command-palette-standard';
+import { useSmartComponent } from '../../providers/hooks';
+
+/**
+ * `<smart-command-palette>`: renders the implementation registered as
+ * `components['command-palette']` on `SmartProvider` (the Angular
+ * `COMMAND_PALETTE_STANDARD_COMPONENT_TOKEN`), `SmartCommandPaletteStandard`
+ * by default. Every prop, including `onOpenChange`, `onQueryChange` and
+ * `onRunCommand`, is passed through to the implementation.
+ */
+export function SmartCommandPalette(props: SmartCommandPaletteProps) {
+  const Component = useSmartComponent(
+    'command-palette',
+    SmartCommandPaletteStandard,
+  );
+
+  return <Component {...props} />;
+}

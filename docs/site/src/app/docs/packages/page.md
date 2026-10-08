@@ -8,18 +8,19 @@ nextjs:
     description: Every @smartsoft001 package, grouped by family, with one line on what each one does and a link to its reference page.
 ---
 
-The framework publishes 26 `@smartsoft001/*` packages, installed one at a time. This page lists all of them by family, so you can find the one you need and jump to its reference page. {% .lead %}
+The framework publishes 28 `@smartsoft001/*` packages, installed one at a time. This page lists all of them by family, so you can find the one you need and jump to its reference page. {% .lead %}
 
 ---
 
 ## Install the whole set
 
-Four packages group the rest, so a project installs what it needs with one command at one version. They ship no code of their own.
+Six packages group the rest, so a project installs what it needs with one command at one version. They ship no code of their own.
 
 | Package                                           | For                           | Brings                                                                        |
 | ------------------------------------------------- | ----------------------------- | ----------------------------------------------------------------------------- |
 | [`core`](/docs/packages/core)                     | Any project                   | The decorators, contracts, helpers and DTOs that no framework choice affects. |
 | [`angular-stack`](/docs/packages/angular-stack)   | An Angular application        | `core`, the UI library and the CRUD screens.                                  |
+| [`react-stack`](/docs/packages/react-stack)       | A React application           | `core`, the React UI library and the React CRUD screens.                      |
 | [`nestjs-stack`](/docs/packages/nestjs-stack)     | A NestJS service              | `core`, the module helpers, MongoDB access and the CRUD and auth shells.      |
 | [`full-stack`](/docs/packages/full-stack)         | A frontend plus a backend     | `core` and both runtime stacks, so one install covers the whole project.      |
 | [`payments-stack`](/docs/packages/payments-stack) | A service that takes payments | The transaction family and the four provider integrations.                    |
@@ -33,6 +34,7 @@ The building blocks the rest of the framework is written against. Nothing here d
 | Package                                     | Purpose                                                                                                                               |
 | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | [`angular`](/docs/packages/angular)         | The Angular UI library: metadata-driven `smart-*` components, plus the services, pipes, directives and form factory behind them.      |
+| [`react`](/docs/packages/react)             | The React UI library: the same metadata-driven components for React, plus the provider, hooks and form engine behind them.            |
 | [`models`](/docs/packages/models)           | Describes an entity once with decorators, and exposes readers so generic code can validate it, render it and trim it per operation.   |
 | [`domain-core`](/docs/packages/domain-core) | The contracts a domain layer is written against: repositories, a unit of work, composable query specifications and two domain errors. |
 | [`utils`](/docs/packages/utils)             | Static helper services with no framework attached: identifiers, Polish document validation, array and object handling, slugs.         |
@@ -76,6 +78,7 @@ Metadata-driven data management: generic REST endpoints on the backend, generate
 | [`crud-domain`](/docs/packages/crud-domain)                         | Two types, and nothing else: the options object a bulk insert takes and the mode it carries.                                        |
 | [`crud-shell-nestjs`](/docs/packages/crud-shell-nestjs)             | One module call gives a collection its REST routes, its JWT guards and, optionally, a websocket feed of its changes.                |
 | [`crud-shell-angular`](/docs/packages/crud-shell-angular)           | Generates the list and item screens of a collection from one configuration object and the model's own metadata.                     |
+| [`crud-shell-react`](/docs/packages/crud-shell-react)               | The same list and item screens for React, with a store per entity set up by `CrudProvider` in place of NgRx.                        |
 | [`crud-shell-dtos`](/docs/packages/crud-shell-dtos)                 | The shapes that cross the wire: one decorated credentials model, and the three payloads the change feed emits.                      |
 | [`crud-shell-app-services`](/docs/packages/crud-shell-app-services) | Sits between a transport and a repository, applying the same four rules to every record: permission, validation, trimming, hashing. |
 

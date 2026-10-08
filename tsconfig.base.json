@@ -8,6 +8,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
+    "jsx": "react-jsx",
     "target": "es2022",
     "module": "es2022",
     "lib": ["es2022", "dom"],
@@ -41,6 +42,9 @@
       "@smartsoft001/crud-shell-nestjs": [
         "packages/crud/shell/nestjs/src/index.ts"
       ],
+      "@smartsoft001/crud-shell-react": [
+        "packages/crud/shell/react/src/index.ts"
+      ],
       "@smartsoft001/domain-core": ["packages/shared/domain-core/src/index.ts"],
       "@smartsoft001/fb": ["packages/shared/fb/src/index.ts"],
       "@smartsoft001/google": ["packages/shared/google/src/index.ts"],
@@ -50,6 +54,7 @@
       "@smartsoft001/paynow": ["packages/shared/paynow/src/index.ts"],
       "@smartsoft001/paypal": ["packages/shared/paypal/src/index.ts"],
       "@smartsoft001/payu": ["packages/shared/payu/src/index.ts"],
+      "@smartsoft001/react": ["packages/shared/react/src/index.ts"],
       "@smartsoft001/revolut": ["packages/shared/revolut/src/index.ts"],
       "@smartsoft001/trans-domain": ["packages/trans/domain/src/index.ts"],
       "@smartsoft001/trans-shell-app-services": [

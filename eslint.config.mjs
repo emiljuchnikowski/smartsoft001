@@ -3,6 +3,7 @@ import storybook from 'eslint-plugin-storybook';
 
 import nx from '@nx/eslint-plugin';
 import importPlugin from 'eslint-plugin-import';
+import reactHooks from 'eslint-plugin-react-hooks';
 
 export default [
   ...nx.configs['flat/base'],
@@ -60,6 +61,23 @@ export default [
     ],
     // Override or add rules here
     rules: {},
+  },
+  {
+    // The React libraries: hooks have to be called unconditionally and list
+    // what they read, or a component renders stale state.
+    files: [
+      'packages/shared/react/**/*.ts',
+      'packages/shared/react/**/*.tsx',
+      'packages/crud/shell/react/**/*.ts',
+      'packages/crud/shell/react/**/*.tsx',
+    ],
+    plugins: {
+      'react-hooks': reactHooks,
+    },
+    rules: {
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
+    },
   },
   ...storybook.configs['flat/recommended'],
   ...storybook.configs['flat/recommended'],

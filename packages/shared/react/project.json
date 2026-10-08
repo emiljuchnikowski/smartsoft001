@@ -1,0 +1,86 @@
+{
+  "name": "react",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/shared/react/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "styles": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": ["default", "{workspaceRoot}/tailwind.config.js"],
+      "outputs": ["{projectRoot}/styles.css"],
+      "options": {
+        "command": "npx @tailwindcss/cli -i packages/shared/react/src/lib/styles.css -o packages/shared/react/styles.css"
+      }
+    },
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "dependsOn": ["^build", "styles"],
+      "options": {
+        "outputPath": "dist/packages/shared/react",
+        "main": "packages/shared/react/src/index.ts",
+        "tsConfig": "packages/shared/react/tsconfig.lib.json",
+        "assets": [
+          "packages/shared/react/*.md",
+          {
+            "input": "packages/shared/react",
+            "glob": "styles.css",
+            "output": ".",
+            "includeIgnoredFiles": true
+          }
+        ]
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "nx-release-publish": {
+      "options": {
+        "packageRoot": "dist/{projectRoot}"
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "packages/shared/react/jest.config.ts",
+        "tsConfig": "packages/shared/react/tsconfig.spec.json"
+      }
+    },
+    "storybook": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "storybook dev -p 4402 -c packages/shared/react/.storybook"
+      }
+    },
+    "build-storybook": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/storybook/react"],
+      "options": {
+        "command": "storybook build -c packages/shared/react/.storybook -o dist/storybook/react"
+      },
+      "configurations": {
+        "ci": {
+          "command": "storybook build --quiet -c packages/shared/react/.storybook -o dist/storybook/react"
+        }
+      }
+    },
+    "test-storybook": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build-storybook"],
+      "cache": true,
+      "inputs": [
+        "{workspaceRoot}/tools/scripts/storybook-smoke.mjs",
+        {
+          "dependentTasksOutputFiles": "**/*",
+          "transitive": false
+        }
+      ],
+      "options": {
+        "command": "node tools/scripts/storybook-smoke.mjs --dir dist/storybook/react"
+      }
+    }
+  }
+}

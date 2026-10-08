@@ -1,0 +1,33 @@
+{
+  "name": "@smartsoft001/react",
+  "version": "2.191.0",
+  "type": "commonjs",
+  "description": "The React UI library: smart-* components, hooks, services and the form factory that turns model metadata into a form, mirroring @smartsoft001/angular.",
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "main": "./src/index.js",
+  "typings": "./src/index.d.ts",
+  "dependencies": {
+    "dompurify": "^3.4.16",
+    "jwt-decode": "^4.0.0",
+    "moment": "^2.31.0"
+  },
+  "peerDependencies": {
+    "@smartsoft001/domain-core": "2.191.0",
+    "@smartsoft001/models": "2.191.0",
+    "@smartsoft001/utils": "2.191.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "reflect-metadata": "^0.2.1"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "default": "./src/index.js"
+    },
+    "./styles.css": "./styles.css",
+    "./package.json": "./package.json"
+  }
+}

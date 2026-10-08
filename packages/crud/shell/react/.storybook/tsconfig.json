@@ -1,0 +1,17 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "module": "es2022",
+    "moduleResolution": "bundler",
+    "types": ["node"],
+    "ignoreDeprecations": "6.0"
+  },
+  "exclude": ["../**/*.spec.ts", "../**/*.spec.tsx"],
+  "include": [
+    "../src/**/*.stories.ts",
+    "../src/**/*.stories.tsx",
+    "*.ts",
+    "*.tsx",
+    "../../../../shared/react/.storybook/storybook-translations.ts"
+  ]
+}

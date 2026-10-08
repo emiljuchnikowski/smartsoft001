@@ -1,0 +1,30 @@
+{
+  "name": "@smartsoft001/crud-shell-react",
+  "version": "2.191.0",
+  "type": "commonjs",
+  "description": "React CRUD screens driven by model metadata: the list and item pages, filters, the CRUD service and its store, mirroring @smartsoft001/crud-shell-angular.",
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "main": "./src/index.js",
+  "typings": "./src/index.d.ts",
+  "dependencies": {
+    "moment": "^2.31.0"
+  },
+  "peerDependencies": {
+    "@smartsoft001/domain-core": "2.191.0",
+    "@smartsoft001/models": "2.191.0",
+    "@smartsoft001/react": "2.191.0",
+    "@smartsoft001/utils": "2.191.0",
+    "react": "^19.0.0"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "default": "./src/index.js"
+    },
+    "./styles.css": "./styles.css",
+    "./package.json": "./package.json"
+  }
+}
