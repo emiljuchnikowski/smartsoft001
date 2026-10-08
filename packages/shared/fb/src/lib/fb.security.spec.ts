@@ -1,10 +1,10 @@
 import { UnauthorizedException } from '@nestjs/common';
 import { of, throwError } from 'rxjs';
 
-import { FbAppCredentials, FbService } from './fb.service';
+import { IFbAppCredentials, FbService } from './fb.service';
 
 describe('fb: access token app binding', () => {
-  const credentials: FbAppCredentials = {
+  const credentials: IFbAppCredentials = {
     appId: 'trusted',
     appSecret: 'app-secret',
   };

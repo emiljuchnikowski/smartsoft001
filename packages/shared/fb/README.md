@@ -31,7 +31,7 @@ whether the token was issued to your application. Both extra parameters are requ
 from server configuration, never from the login request:
 
 - `appIds`: the Facebook app ids whose tokens you accept.
-- `credentials`: `{ appId, appSecret }` (`FbAppCredentials`) of the app that builds the app access
+- `credentials`: `{ appId, appSecret }` (`IFbAppCredentials`) of the app that builds the app access
   token for `debug_token`. Keep the secret on the server.
 
 A token is accepted only when the answer has `data.is_valid === true`, a `data.app_id` in `appIds`

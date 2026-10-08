@@ -152,14 +152,14 @@ Up to 2.182.0 the factory ignored what `update` returned and did not add `userna
 
 An `@Injectable()` class with six fields, registered by the shell module as a value provider.
 
-| Field                | Type                | What it does                                                                                                                                                                                         |
-| -------------------- | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `secretOrPrivateKey` | `string`            | The JWT signing key. The module also hands it to `JwtModule.register`.                                                                                                                               |
-| `expiredIn`          | `number`            | The lifetime, reported as `expired_in` and passed to the signer as `expiresIn`.                                                                                                                      |
-| `clients`            | `Array<string>`     | Accepted client ids, empty by default. Only the password grant checks this list.                                                                                                                     |
-| `googleClientIds`    | `string[]?`         | The Google OAuth client ids whose access tokens the `google` grant accepts. Unset or empty, the `google` grant is refused. Load it from server configuration, never from the request.                |
-| `fbAppIds`           | `string[]?`         | The Facebook app ids whose access tokens the `fb` grant accepts. Unset or empty, the `fb` grant is refused. Load it from server configuration, never from the request.                               |
-| `fbAppCredentials`   | `FbAppCredentials?` | `{ appId, appSecret }` of the Facebook app whose app access token asks `debug_token` to inspect `fb` tokens. Without both values the `fb` grant is refused. Keep the secret in server configuration. |
+| Field                | Type                 | What it does                                                                                                                                                                                         |
+| -------------------- | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `secretOrPrivateKey` | `string`             | The JWT signing key. The module also hands it to `JwtModule.register`.                                                                                                                               |
+| `expiredIn`          | `number`             | The lifetime, reported as `expired_in` and passed to the signer as `expiresIn`.                                                                                                                      |
+| `clients`            | `Array<string>`      | Accepted client ids, empty by default. Only the password grant checks this list.                                                                                                                     |
+| `googleClientIds`    | `string[]?`          | The Google OAuth client ids whose access tokens the `google` grant accepts. Unset or empty, the `google` grant is refused. Load it from server configuration, never from the request.                |
+| `fbAppIds`           | `string[]?`          | The Facebook app ids whose access tokens the `fb` grant accepts. Unset or empty, the `fb` grant is refused. Load it from server configuration, never from the request.                               |
+| `fbAppCredentials`   | `IFbAppCredentials?` | `{ appId, appSecret }` of the Facebook app whose app access token asks `debug_token` to inspect `fb` tokens. Without both values the `fb` grant is refused. Keep the secret in server configuration. |
 
 ### Extension points
 

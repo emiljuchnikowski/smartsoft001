@@ -2,7 +2,7 @@
 import { HttpModule } from '@nestjs/axios';
 import { Inject, Injectable, Module, Provider } from '@nestjs/common';
 
-import { FbAppCredentials, FbService } from '@smartsoft001/fb';
+import { IFbAppCredentials, FbService } from '@smartsoft001/fb';
 
 /** The id of the Facebook app, as the Meta developer console shows it. */
 export const DOCS_FB_APP_ID = '1234567890';
@@ -31,7 +31,7 @@ export class FacebookAccountsService {
   constructor(
     private readonly fb: FbService,
     @Inject(FB_APP_IDS) private readonly appIds: string[],
-    @Inject(FB_APP_CREDENTIALS) private readonly credentials: FbAppCredentials,
+    @Inject(FB_APP_CREDENTIALS) private readonly credentials: IFbAppCredentials,
   ) {}
 
   async getUserId(token: string): Promise<string> {

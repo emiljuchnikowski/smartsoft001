@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { FbAppCredentials } from '@smartsoft001/fb';
+import { IFbAppCredentials } from '@smartsoft001/fb';
 
 /**
  * Token settings, registered by the host application as a provider
@@ -16,6 +16,6 @@ export class TokenConfig {
   /** Trusted Facebook apps for Facebook access-token login. Never taken from a request. */
   fbAppIds?: string[];
   /** The app that asks Facebook's `debug_token` to inspect tokens. Keep the secret server-side. */
-  fbAppCredentials?: FbAppCredentials;
+  fbAppCredentials?: IFbAppCredentials;
   secretOrPrivateKey!: string;
 }

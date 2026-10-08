@@ -3,7 +3,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 
 /** The Facebook app that asks Graph to inspect tokens, as `<appId>|<appSecret>`. */
-export interface FbAppCredentials {
+export interface IFbAppCredentials {
   appId: string;
   appSecret: string;
 }
@@ -22,7 +22,7 @@ export class FbService {
   async getUserId(
     token: string,
     appIds: readonly string[],
-    credentials: FbAppCredentials,
+    credentials: IFbAppCredentials,
   ): Promise<string> {
     return this.verify(token, appIds, credentials);
   }
@@ -30,7 +30,7 @@ export class FbService {
   async getData(
     token: string,
     appIds: readonly string[],
-    credentials: FbAppCredentials,
+    credentials: IFbAppCredentials,
   ): Promise<{ id: string; email: string }> {
     const userId = await this.verify(token, appIds, credentials);
     const data = await this.request(
@@ -46,7 +46,7 @@ export class FbService {
   private async verify(
     token: string,
     appIds: readonly string[],
-    credentials: FbAppCredentials,
+    credentials: IFbAppCredentials,
   ): Promise<string> {
     if (
       !token ||
