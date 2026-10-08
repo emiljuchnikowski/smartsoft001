@@ -8,7 +8,7 @@ nextjs:
     description: Every @smartsoft001 package, grouped by family, with one line on what each one does and a link to its reference page.
 ---
 
-The framework publishes 29 `@smartsoft001/*` packages, installed one at a time. This page lists all of them by family, so you can find the one you need and jump to its reference page. {% .lead %}
+The framework publishes 28 `@smartsoft001/*` packages, installed one at a time. This page lists all of them by family, so you can find the one you need and jump to its reference page. {% .lead %}
 
 ---
 
@@ -78,6 +78,7 @@ Metadata-driven data management: generic REST endpoints on the backend, generate
 | [`crud-domain`](/docs/packages/crud-domain)                         | Two types, and nothing else: the options object a bulk insert takes and the mode it carries.                                        |
 | [`crud-shell-nestjs`](/docs/packages/crud-shell-nestjs)             | One module call gives a collection its REST routes, its JWT guards and, optionally, a websocket feed of its changes.                |
 | [`crud-shell-angular`](/docs/packages/crud-shell-angular)           | Generates the list and item screens of a collection from one configuration object and the model's own metadata.                     |
+| [`crud-shell-react`](/docs/packages/crud-shell-react)               | The same list and item screens for React, with a store per entity set up by `CrudProvider` in place of NgRx.                        |
 | [`crud-shell-dtos`](/docs/packages/crud-shell-dtos)                 | The shapes that cross the wire: one decorated credentials model, and the three payloads the change feed emits.                      |
 | [`crud-shell-app-services`](/docs/packages/crud-shell-app-services) | Sits between a transport and a repository, applying the same four rules to every record: permission, validation, trimming, hashing. |
 
