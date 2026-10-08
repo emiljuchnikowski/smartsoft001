@@ -43,6 +43,39 @@
         "jestConfig": "packages/shared/react/jest.config.ts",
         "tsConfig": "packages/shared/react/tsconfig.spec.json"
       }
+    },
+    "storybook": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "storybook dev -p 4402 -c packages/shared/react/.storybook"
+      }
+    },
+    "build-storybook": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/storybook/react"],
+      "options": {
+        "command": "storybook build -c packages/shared/react/.storybook -o dist/storybook/react"
+      },
+      "configurations": {
+        "ci": {
+          "command": "storybook build --quiet -c packages/shared/react/.storybook -o dist/storybook/react"
+        }
+      }
+    },
+    "test-storybook": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build-storybook"],
+      "cache": true,
+      "inputs": [
+        "{workspaceRoot}/tools/scripts/storybook-smoke.mjs",
+        {
+          "dependentTasksOutputFiles": "**/*",
+          "transitive": false
+        }
+      ],
+      "options": {
+        "command": "node tools/scripts/storybook-smoke.mjs --dir dist/storybook/react"
+      }
     }
   }
 }

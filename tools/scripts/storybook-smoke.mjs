@@ -33,6 +33,9 @@ const CONTENT_TYPES = {
  * Storybook's iframe needs a real origin, so a build cannot be opened through
  * `file://`.
  */
+/** How long a rendered story may take to fill `#storybook-root` (ms). */
+const ROOT_GRACE_MS = 2000;
+
 export async function createStaticServer(dir) {
   const root = path.resolve(dir);
   const server = http.createServer((request, response) => {
@@ -575,6 +578,22 @@ async function visitStory(page, { url, id, timeout, strictConsole }) {
         })),
       );
     } else {
+      // Angular has rendered by the time Storybook shows the main view; React
+      // commits the story a moment later. Give the root a short grace period
+      // to fill before counting, so an empty root still fails fast.
+      await step((left) =>
+        page
+          .waitForFunction(
+            () =>
+              (document.querySelector('#storybook-root')?.childElementCount ??
+                0) > 0,
+            null,
+            { timeout: Math.min(left, ROOT_GRACE_MS) },
+          )
+          .catch((error) => {
+            if (error?.name !== 'TimeoutError') throw error;
+          }),
+      );
       rootChildCount = await step(() =>
         page.evaluate(
           () =>

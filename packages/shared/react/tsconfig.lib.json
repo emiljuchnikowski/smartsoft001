@@ -14,6 +14,8 @@
     "src/**/*.spec.tsx",
     "src/**/*.test.ts",
     "src/**/*.test.tsx",
-    "src/test-setup.ts"
+    "src/test-setup.ts",
+    "src/**/*.stories.ts",
+    "src/**/*.stories.tsx"
   ]
 }
