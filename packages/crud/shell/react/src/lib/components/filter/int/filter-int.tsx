@@ -16,8 +16,7 @@ const CLEAR_CLASSES =
 
 /**
  * One end of the advanced range: a translated label and a native number
- * input bound to the slot's control (Angular `[formControl]`: an emptied
- * input is `null`).
+ * input bound to the slot's control (an emptied input is `null`).
  */
 function RangeInput({
   label,
@@ -52,14 +51,13 @@ function RangeInput({
 }
 
 /**
- * `<smart-crud-filter-int>` (Angular `FilterIntComponent`): the shared int
- * field for the item's value; for an `=` item a settings button switches to
- * the advanced "from" / "to" range (removing the value), shown as well while
- * a range value is set. The clear button removes every entry of the item at
- * once, the range ones only their own.
+ * The int filter: the shared int field for the item's value; for an `=` item
+ * a settings button switches to the advanced "from" / "to" range (removing
+ * the value), shown as well while a range value is set. The clear button
+ * removes every entry of the item at once, the range ones only their own.
  *
- * As in Angular, the range controls are seeded once and not re-synced when
- * the filter changes elsewhere (TODO GAP-19).
+ * The range controls are seeded once and not re-synced when the filter
+ * changes elsewhere (TODO GAP-19).
  */
 export function SmartCrudFilterInt(props: SmartCrudFilterProps) {
   const filter = useCrudFilter(props);

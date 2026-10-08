@@ -5,8 +5,8 @@ import { CrudFullConfig } from '../../crud.config';
 
 /**
  * Turns off `add`, `edit` and `remove` when the model's `create`, `update`
- * or `remove` permissions are not granted. The Angular `PageService` changed
- * the injected config in place; this returns a new config instead.
+ * or `remove` permissions are not granted. Returns a new config; the given
+ * one is not changed.
  */
 export function applyPagePermissions<T>(
   config: CrudFullConfig<T>,

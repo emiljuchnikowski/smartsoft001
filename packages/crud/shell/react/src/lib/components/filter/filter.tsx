@@ -32,10 +32,9 @@ function SmartCrudFilterField(props: SmartCrudFilterProps) {
 }
 
 /**
- * `<smart-crud-filter>` (Angular `FilterComponent`): the filter field of the
- * item's field type (date, date with edit, date-time, radio, check, flag,
- * int; text otherwise), reading and writing the list filter through the
- * feature's facade.
+ * The filter field of the item's field type (date, date with edit,
+ * date-time, radio, check, flag, int; text otherwise), reading and writing
+ * the list filter through the feature's facade.
  */
 export function SmartCrudFilter(props: SmartCrudFilterProps) {
   return (

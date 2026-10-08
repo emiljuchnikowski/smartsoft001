@@ -1,30 +1,30 @@
 import { useCallback, useState } from 'react';
 
 /**
- * The `[ngModel]="model"` + `(ngModelChange)` binding of the Angular date
- * filters: the editor shows what the user entered (the filter is read 500 ms
- * later) until the bound model changes, and then shows the model.
+ * The value a date filter's editor shows: what the user entered (the filter
+ * is read 500 ms later) until `value` changes, and then `value`. Every entry
+ * is passed on to `onValueChange`.
  */
-export function useCrudFilterNgModel<T>(
-  model: T,
-  onModelChange: (value: T) => void,
+export function useCrudFilterValue<T>(
+  value: T,
+  onValueChange: (value: T) => void,
 ): [T, (value: T) => void] {
-  const [view, setView] = useState(model);
-  const [prevModel, setPrevModel] = useState(model);
+  const [view, setView] = useState(value);
+  const [prevValue, setPrevValue] = useState(value);
   let current = view;
 
-  if (!Object.is(prevModel, model)) {
-    setPrevModel(model);
-    setView(model);
-    current = model;
+  if (!Object.is(prevValue, value)) {
+    setPrevValue(value);
+    setView(value);
+    current = value;
   }
 
   const onViewChange = useCallback(
-    (value: T) => {
-      setView(value);
-      onModelChange(value);
+    (next: T) => {
+      setView(next);
+      onValueChange(next);
     },
-    [onModelChange],
+    [onValueChange],
   );
 
   return [current, onViewChange];

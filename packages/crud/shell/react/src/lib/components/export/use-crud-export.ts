@@ -14,8 +14,7 @@ import { useCrudState } from '../../hooks';
 import { CrudStore } from '../../state/crud.store';
 
 /**
- * Runs `callback` once the feature is loaded, now or after a later change
- * (the Angular `toObservable(loaded).pipe(filter(l => !!l), take(1))`).
+ * Runs `callback` once the feature is loaded, now or after a later change.
  * Returns the unsubscribe function.
  */
 function onceLoaded(store: CrudStore, callback: () => void): () => void {
@@ -35,12 +34,11 @@ function onceLoaded(store: CrudStore, callback: () => void): () => void {
 }
 
 /**
- * The behaviour of the export buttons (the Angular `ExportBaseComponent`):
- * a click exports the list with the current filter, without paging, in its
- * format, and closes the overlay the component is shown in once the export
- * finished. The buttons are loading while the feature is. Attach
- * `elementRef` to the root element: it gets the application style (the
- * Angular `styleService.init(elementRef)`).
+ * The behaviour of the export buttons: a click exports the list with the
+ * current filter, without paging, in its format, and closes the overlay the
+ * component is shown in once the export finished. The buttons are loading
+ * while the feature is. Attach `elementRef` to the root element: it gets the
+ * application style.
  */
 export function useCrudExport<T extends IEntity<string>>({
   dismiss,
@@ -69,7 +67,7 @@ export function useCrudExport<T extends IEntity<string>>({
     return () => current.forEach((unsubscribe) => unsubscribe());
   }, []);
 
-  // The Angular `popoverService.close()`.
+  // Closes the overlay the buttons are shown in.
   const close = () => {
     if (dismissRef.current) dismissRef.current();
     else void modalService.dismiss();

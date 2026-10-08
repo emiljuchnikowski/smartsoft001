@@ -4,7 +4,7 @@ import { PaginationMode } from '@smartsoft001/react';
 import { ICrudFilter } from '../models';
 import { CrudAction } from './crud.actions';
 
-/** The state of one CRUD feature, as the Angular NgRx feature held it. */
+/** The state of one CRUD feature. */
 export interface CrudState<T extends IEntity<string>> {
   selected?: T | null;
   multiSelected?: Array<T>;

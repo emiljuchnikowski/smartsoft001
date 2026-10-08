@@ -4,8 +4,8 @@ import { IEntity } from '@smartsoft001/domain-core';
 import { IFormOptions } from '@smartsoft001/react';
 
 /**
- * The form options of the item page (the Angular `smartFormOptions` pipe): a
- * fresh model for `create`, a model filled from `item` for any other mode.
+ * The form options of the item page: a fresh model for `create`, a model
+ * filled from `item` for any other mode.
  */
 export function getCrudFormOptions<T extends IEntity<string>>(
   item: T | null | undefined,

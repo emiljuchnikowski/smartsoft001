@@ -8,14 +8,12 @@ import { useCrudState } from '../../../hooks';
 import { SmartCrudListPageBodyProps } from '../list-page.types';
 
 /**
- * The default list page body (`<smart-crud-list-standard-page>`, the Angular
- * `ListStandardComponent`): the active filters (`SmartCrudFiltersConfig`)
+ * The default list page body: the active filters (`SmartCrudFiltersConfig`)
  * and `SmartList`; with `config.list.groups` the list is hidden behind
- * `SmartCrudGroup` unless a text is searched. `children` are not rendered,
- * as the Angular template had no `ng-content`.
+ * `SmartCrudGroup` unless a text is searched. `children` are not rendered.
  *
- * The `hidden` the Angular template set on `<smart-list>` is set on a `div`
- * around it, rendered only when there are groups.
+ * The list is hidden through a `div` around it, rendered only when there are
+ * groups.
  */
 export function SmartCrudListPageStandard<T extends IEntity<string>>({
   listOptions,

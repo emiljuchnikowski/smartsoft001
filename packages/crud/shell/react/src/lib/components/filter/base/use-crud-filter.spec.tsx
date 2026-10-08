@@ -478,7 +478,7 @@ describe('@smartsoft001/crud-shell-react: useCrudFilter', () => {
   describe('possibilities', () => {
     const list = [{ id: 99, text: 'fromItem' }];
 
-    it('should read the item possibilities signal', () => {
+    it('should read the item possibilities given as a function', () => {
       const { result } = setup({
         item: {
           key: 'name',

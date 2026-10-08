@@ -10,9 +10,9 @@ import { CrudProvider } from '../../crud.provider';
 import { readSuccess } from '../../state/crud.actions';
 
 /**
- * Standalone story for the export popover body (`SmartCrudExport`), the
- * counterpart of the Angular `Smart-Crud/Export` story: the CSV / XLSX
- * buttons rendered directly, so their export GET can be exercised.
+ * Standalone story for the export popover body (`SmartCrudExport`): the
+ * CSV / XLSX buttons rendered directly, so their export GET can be
+ * exercised.
  */
 @Model({})
 class Note {

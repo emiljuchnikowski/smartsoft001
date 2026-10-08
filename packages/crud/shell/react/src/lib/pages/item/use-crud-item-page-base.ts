@@ -9,13 +9,12 @@ import { getCrudFormOptions } from '../../factories/form-options';
 import { useCrudState } from '../../hooks';
 
 /**
- * What every item page body shares (the Angular `CrudItemPageBaseComponent`):
- * `config`, `facade`, the `selected` item and, outside the details mode, the
- * form of the item: `formOptions` (the Angular `smartFormOptions` pipe over
- * `selected`, `mode`, `config.type`, `uniqueProvider` and
+ * What every item page body shares: `config`, `facade`, the `selected` item
+ * and, outside the details mode, the form of the item: `formOptions` (built
+ * from `selected`, `mode`, `config.type`, `uniqueProvider` and
  * `config.inputComponents`, with the built form as `control`) and `form`,
- * which is put in `formRef` for the page to validate (the Angular
- * `getForm()`). Render `<SmartForm options={formOptions}>` once both exist.
+ * which is put in `formRef` for the page to validate. Render
+ * `<SmartForm options={formOptions}>` once both exist.
  *
  * A new form is built when the selected item, the mode or the provider
  * change; while creating, the selected item is ignored.

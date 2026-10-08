@@ -48,7 +48,7 @@ function setup(item?: IModelFilter) {
 }
 
 describe('@smartsoft001/crud-shell-react: SmartCrudFilter', () => {
-  it('should wrap the field in the Angular padding container', () => {
+  it('should wrap the field in a padding container', () => {
     const { container } = setup(buildItem(FieldType.text));
 
     expect(container.firstElementChild).toHaveClass('smart:py-1');

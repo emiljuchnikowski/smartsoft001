@@ -2,7 +2,7 @@
   "name": "@smartsoft001/crud-shell-react",
   "version": "2.191.0",
   "type": "commonjs",
-  "description": "React CRUD screens driven by model metadata: the list and item pages, filters, the CRUD service and its store, mirroring @smartsoft001/crud-shell-angular.",
+  "description": "React CRUD screens driven by model metadata: the list and item pages, filters, the CRUD service and its store.",
   "publishConfig": {
     "access": "public"
   },

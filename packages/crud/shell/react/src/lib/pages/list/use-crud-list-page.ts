@@ -49,9 +49,9 @@ function sortDefaults(config: CrudFullConfig<any>) {
 }
 
 /**
- * The filter of the first read (the Angular `ngOnInit`): with
- * `list.resetQuery: 'beforeInit'` the configured defaults, else the filter the
- * feature already has, else the defaults, the enabled search filter on top.
+ * The filter of the first read: with `list.resetQuery: 'beforeInit'` the
+ * configured defaults, else the filter the feature already has, else the
+ * defaults, the enabled search filter on top.
  */
 function getInitialFilter(
   config: CrudFullConfig<any>,
@@ -101,8 +101,8 @@ function getDetailsComponents(config: CrudFullConfig<any>) {
 }
 
 /**
- * The logic of the list page (the Angular `ListComponent`), for
- * `SmartCrudListPage` or a page of your own around the same feature:
+ * The logic of the list page, for `SmartCrudListPage` or a page of your own
+ * around the same feature:
  *
  * - `config`: the `CrudFullConfig` after the model's permissions;
  * - the first read on mount (pagination, default sort, base query and the
@@ -148,7 +148,7 @@ export function useCrudListPage<T extends IEntity<string>>({
   const Multiselect = useCrudBoundComponent(SmartCrudMultiselect);
   const Export = useCrudBoundComponent(SmartCrudExport);
 
-  // The Angular page used the router's current URL.
+  // Without `basePath`, the path of the current URL.
   const path = useMemo(
     () => basePath ?? navigation.getCurrentUrl().split(/[?#]/)[0],
     [basePath, navigation],
@@ -163,7 +163,7 @@ export function useCrudListPage<T extends IEntity<string>>({
     facade.read(getInitialFilter(config, facade.filter, searchService.filter));
   }, [config, facade, searchService]);
 
-  // Closes the end menu and ends the multi selection (the Angular `clear()`).
+  // Closes the end menu and ends the multi selection.
   const clear = useCallback(async () => {
     await menuService.closeEnd();
     setSelect(undefined);
@@ -191,8 +191,7 @@ export function useCrudListPage<T extends IEntity<string>>({
         (x) => (x.options?.list as IFieldListMetadata)?.filter,
       ) || modelOptions?.filters?.length;
 
-    // The Angular page also left it out on mobile devices
-    // (`HardwareService.isMobile`), which the React library does not detect.
+    // Mobile devices are not detected; only the list mode decides.
     const showMultiEdit =
       config.list?.components?.multi ||
       (config.edit &&
@@ -249,8 +248,7 @@ export function useCrudListPage<T extends IEntity<string>>({
               icon: 'download-outline',
               type: 'popover' as const,
               component: Export,
-              // The Angular page left showing the popover to the page
-              // (commented out there); here the component opens in a modal.
+              // The export buttons open in a modal.
               handler: () => {
                 void modalService.show({ component: Export });
               },

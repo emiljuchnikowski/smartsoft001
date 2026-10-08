@@ -32,7 +32,7 @@ import { CrudProvider } from '../../crud.provider';
 import { ICrudFilter } from '../../models';
 import { CrudService } from '../../services/crud/crud.service';
 
-// The CRUD components are ported separately; the page only places them.
+// The CRUD components have specs of their own; the page only places them.
 jest.mock('../../components/filters/filters', () => ({
   SmartCrudFilters: function MockFilters() {
     const { useCrudConfig } = jest.requireActual('../../crud.context');
@@ -757,7 +757,7 @@ describe('@smartsoft001/crud-shell-react: SmartCrudListPage', () => {
       expect(handler).toHaveBeenCalled();
     });
 
-    it('should order the buttons as the Angular page', async () => {
+    it('should order the buttons: multi, filters, add, export, custom', async () => {
       const { PageProbe, last } = createPageProbe();
 
       await renderPage(

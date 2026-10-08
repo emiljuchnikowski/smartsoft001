@@ -5,8 +5,8 @@ import { SmartCrudExportProps } from './export.types';
 import { useCrudExport } from './use-crud-export';
 
 /**
- * `<smart-crud-export>`: the CSV / XLSX buttons exporting the list of the
- * CRUD feature with its current filter (the Angular `ExportComponent`).
+ * The CSV / XLSX buttons exporting the list of the CRUD feature with its
+ * current filter.
  */
 export function SmartCrudExport<T extends IEntity<string>>(
   props: SmartCrudExportProps,

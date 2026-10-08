@@ -6,11 +6,10 @@ import { useCrudFilters } from './use-crud-filters';
 import { SmartCrudFilter } from '../filter/filter';
 
 /**
- * `<smart-crud-filters>`: the filters panel of the CRUD feature (the Angular
- * `FiltersComponent`), opened in the end menu — a header with the title and
- * a close button (unless `hideMenu`), then a `SmartCrudFilter` for every
- * filter of the model: the `filters` of `@Model` and the fields with
- * `list.filter`. Render it inside `<CrudProvider>`.
+ * The filters panel of the CRUD feature, opened in the end menu — a header
+ * with the title and a close button (unless `hideMenu`), then a
+ * `SmartCrudFilter` for every filter of the model: the `filters` of `@Model`
+ * and the fields with `list.filter`. Render it inside `<CrudProvider>`.
  */
 export function SmartCrudFilters<T extends IEntity<string>>(
   props: SmartCrudFiltersProps,
@@ -36,9 +35,7 @@ export function SmartCrudFilters<T extends IEntity<string>>(
           </button>
         </header>
       )}
-      {/* The Angular template has `space-y-4` here, but its margins land on
-          the inline `<smart-crud-filter>` hosts and do not move anything;
-          left out so the panel keeps the Angular spacing. */}
+      {/* No `space-y-*` here: each filter is spaced by its own padding. */}
       <div className="smart:flex-1 smart:overflow-y-auto smart:px-4 smart:py-3">
         {list.map((item, index) => (
           <SmartCrudFilter

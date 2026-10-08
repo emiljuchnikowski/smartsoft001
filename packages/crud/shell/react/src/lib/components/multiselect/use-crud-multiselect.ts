@@ -16,10 +16,9 @@ interface PartialChange<T> {
 }
 
 /**
- * The behaviour of the multi-selection panel (the Angular
- * `MultiselectBaseComponent`): `list` is the selection, `item` a model of
- * `config.type` holding the values the selected items share in the fields
- * with `update.multi` (`showForm` when there is such a field). The form
+ * The behaviour of the multi-selection panel: `list` is the selection, `item`
+ * a model of `config.type` holding the values the selected items share in
+ * the fields with `update.multi` (`showForm` when there is such a field). The form
  * reports its changes with `onPartialChange(changes, list)` and its validity
  * with `onValidChange`; `buttonOptions` (with confirmation) apply the changes
  * to every selected item and close the end menu. `lock` is set again

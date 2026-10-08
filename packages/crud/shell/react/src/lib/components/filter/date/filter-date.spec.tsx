@@ -147,7 +147,7 @@ describe('@smartsoft001/crud-shell-react: SmartCrudFilterDate', () => {
     );
   });
 
-  it('should render the Angular host and row classes', () => {
+  it('should render the root and row classes', () => {
     const { view } = setup();
 
     expect(view.container.firstElementChild).toHaveClass(

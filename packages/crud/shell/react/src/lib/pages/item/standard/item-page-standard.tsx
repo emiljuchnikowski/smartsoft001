@@ -5,11 +5,9 @@ import { SmartCrudItemPageBodyProps } from '../item-page.types';
 import { useCrudItemPageBase } from '../use-crud-item-page-base';
 
 /**
- * The default item page body (`<smart-crud-item-standard-page>`, the Angular
- * `ItemStandardComponent`): `SmartDetails` of `detailsOptions` in the
+ * The default item page body: `SmartDetails` of `detailsOptions` in the
  * details mode, else `SmartForm` of the selected item for the mode, reporting
- * its changes, value and validity. `children` are not rendered, as the
- * Angular template had no `ng-content`.
+ * its changes, value and validity. `children` are not rendered.
  */
 export function SmartCrudItemPageStandard<T extends IEntity<string>>(
   props: SmartCrudItemPageBodyProps<T>,
