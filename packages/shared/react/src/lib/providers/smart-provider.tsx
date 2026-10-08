@@ -9,6 +9,7 @@ import {
   SmartConfig,
   SmartContext,
 } from './smart-context';
+import { SmartOverlays } from '../components/overlays/overlays';
 import { SmartTranslateFn } from '../i18n/translate';
 
 export interface SmartProviderProps extends SmartConfig {
@@ -30,7 +31,7 @@ export interface SmartProviderProps extends SmartConfig {
  * `translations` and the providers, or the context changes on every render.
  */
 export function SmartProvider(props: SmartProviderProps) {
-  const { children, overlays, ...config } = props;
+  const { children, overlays = <SmartOverlays />, ...config } = props;
   const translate = useMemo(
     () => createSmartTranslate(config),
     // eslint-disable-next-line react-hooks/exhaustive-deps
