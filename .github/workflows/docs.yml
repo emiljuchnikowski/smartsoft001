@@ -7,7 +7,8 @@
 # GitHub Pages' default Jekyll processing ignores underscore-prefixed
 # directories, which would break the deployed site's assets.
 # The docs tooling projects (docs and the docs-examples-* projects)
-# are checked and tested before the site is built. Both Storybooks are built,
+# are checked and tested before the site is built. The Storybooks (Angular
+# and React, each for the UI library and the CRUD shell) are built,
 # smoke-tested in Chromium (every story must render without throwing) and
 # copied into the static export under `storybook/<project>`, where the
 # `{% storybook %}` embeds of the component pages point; every embedded story
@@ -72,8 +73,8 @@ jobs:
         # `--with-deps` installs the system libraries Chromium needs on the
         # runner; they are not part of the cache, so run it on every job.
         run: npx playwright install --with-deps chromium
-      - name: Build and smoke-test both Storybooks
-        run: npx nx run-many -t test-storybook -p angular crud-shell-angular -c ci
+      - name: Build and smoke-test the Storybooks
+        run: npx nx run-many -t test-storybook -p angular crud-shell-angular react crud-shell-react -c ci
         env:
           NX_CLOUD_DISTRIBUTED_EXECUTION: false
       - name: Check, test and build documentation
@@ -86,6 +87,8 @@ jobs:
           mkdir -p docs/site/out/storybook
           cp -r dist/storybook/angular docs/site/out/storybook/angular
           cp -r dist/storybook/crud-shell-angular docs/site/out/storybook/crud-shell-angular
+          cp -r dist/storybook/react docs/site/out/storybook/react
+          cp -r dist/storybook/crud-shell-react docs/site/out/storybook/crud-shell-react
       - name: Publish the example application's demo next to the site
         id: demo
         # Pages serves files only, so the demo is the `demo` build of the
