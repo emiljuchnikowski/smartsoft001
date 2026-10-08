@@ -1,7 +1,7 @@
 import type { Decorator, Preview } from '@storybook/react-vite';
 
 import '../src/lib/styles.css';
-import { SmartProvider } from '../src';
+import { SmartConfig, SmartProvider } from '../src';
 import { STORYBOOK_TRANSLATIONS } from './storybook-translations';
 
 function getSystemTheme(): string {
@@ -29,8 +29,17 @@ const withSmart: Decorator = (Story, context) => {
     document.body.classList.toggle('dark', isDark);
   }
 
+  // A story replaces implementations or adds providers through
+  // `parameters.smart`, the counterpart of the `providers` an Angular story
+  // passes to `moduleMetadata` / `applicationConfig`.
+  const smart = (context.parameters['smart'] ?? {}) as SmartConfig;
+
   return (
-    <SmartProvider language="pl" translations={STORYBOOK_TRANSLATIONS}>
+    <SmartProvider
+      language="pl"
+      translations={STORYBOOK_TRANSLATIONS}
+      {...smart}
+    >
       <Story />
     </SmartProvider>
   );

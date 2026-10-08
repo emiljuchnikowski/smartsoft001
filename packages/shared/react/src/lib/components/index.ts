@@ -15,6 +15,8 @@ export * from './container';
 export * from './date-edit';
 export * from './date-range';
 export * from './description-list';
+export * from './detail';
+export * from './details';
 export * from './divider';
 export * from './drawer';
 export * from './dropdown';

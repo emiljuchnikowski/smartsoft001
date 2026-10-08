@@ -6,6 +6,7 @@ import { IFieldOptions, IModelOptions } from '@smartsoft001/models';
 import { IStyle } from './style';
 import type { SmartAbstractControl } from '../forms/abstract-control';
 import type { IAppProvider } from '../providers/interfaces';
+import type { SmartTrustedHtml } from '../utils/html';
 
 /*
  * The option interfaces of `@smartsoft001/angular`, ported to React:
@@ -1101,11 +1102,15 @@ export interface IDetailOptions<T> {
 }
 
 export interface ICellPipe<T> {
+  /**
+   * The text of a cell. Return `trustHtml(html)` to render markup you vouch
+   * for without sanitising it (Angular: returning `SafeHtml`).
+   */
   transform(
     value: T,
     columnName: string,
     translate?: (val: string) => string,
-  ): string;
+  ): string | SmartTrustedHtml;
 }
 
 export type SmartPageVariant = 'standard' | (string & {});

@@ -7,3 +7,4 @@ export * from './lib/services';
 export * from './lib/store';
 export * from './lib/utils';
 export * from './lib/components';
+export * from './lib/pages';
