@@ -422,7 +422,7 @@ describe('@smartsoft001/react: SmartForm', () => {
       expect(event.defaultPrevented).toBe(true);
     });
 
-    it('should emit onInvokeSubmit on Enter released inside the form', () => {
+    it('should emit onInvokeSubmit on Enter in a single-line input', () => {
       const onInvokeSubmit = jest.fn();
       render(
         <SmartProvider inputFieldComponents={FIELDS}>
@@ -433,7 +433,9 @@ describe('@smartsoft001/react: SmartForm', () => {
         </SmartProvider>,
       );
 
-      fireEvent.keyUp(screen.getByTestId('field-firstName'), { key: 'Enter' });
+      fireEvent.keyDown(screen.getByTestId('field-firstName'), {
+        key: 'Enter',
+      });
 
       expect(onInvokeSubmit).toHaveBeenCalledWith({
         firstName: 'Ann',
@@ -452,7 +454,48 @@ describe('@smartsoft001/react: SmartForm', () => {
         </SmartProvider>,
       );
 
-      fireEvent.keyUp(screen.getByTestId('field-firstName'), { key: 'a' });
+      fireEvent.keyDown(screen.getByTestId('field-firstName'), { key: 'a' });
+
+      expect(onInvokeSubmit).not.toHaveBeenCalled();
+    });
+
+    it('should stop the implicit submission of the handled Enter', () => {
+      render(
+        <SmartProvider inputFieldComponents={FIELDS}>
+          <SmartForm
+            options={buildControlOptions()}
+            onInvokeSubmit={jest.fn()}
+          />
+        </SmartProvider>,
+      );
+
+      const notCancelled = fireEvent.keyDown(
+        screen.getByTestId('field-firstName'),
+        { key: 'Enter' },
+      );
+
+      expect(notCancelled).toBe(false);
+    });
+
+    it('should leave Enter in a textarea alone', () => {
+      const onInvokeSubmit = jest.fn();
+      const TestLongText = (props: SmartInputFieldProps) => {
+        const { fieldKey } = useInput(props);
+
+        return <textarea data-testid={`area-${fieldKey}`} />;
+      };
+      render(
+        <SmartProvider
+          inputFieldComponents={{ [FieldType.text]: TestLongText }}
+        >
+          <SmartForm
+            options={buildControlOptions()}
+            onInvokeSubmit={onInvokeSubmit}
+          />
+        </SmartProvider>,
+      );
+
+      fireEvent.keyDown(screen.getByTestId('area-firstName'), { key: 'Enter' });
 
       expect(onInvokeSubmit).not.toHaveBeenCalled();
     });

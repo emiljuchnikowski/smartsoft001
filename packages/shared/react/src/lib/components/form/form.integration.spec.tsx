@@ -255,7 +255,7 @@ describe('@smartsoft001/react: SmartForm (integration)', () => {
         onInvokeSubmit,
       });
 
-      fireEvent.keyUp(screen.getByTestId('field-city'), { key: 'Enter' });
+      fireEvent.keyDown(screen.getByTestId('field-city'), { key: 'Enter' });
 
       expect(onInvokeSubmit).toHaveBeenCalledWith({
         title: 'ACME',

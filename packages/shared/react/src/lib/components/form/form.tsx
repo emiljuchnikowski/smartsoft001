@@ -9,6 +9,29 @@ import { SmartFormGroup } from '../../forms/form-group';
 import { IFormOptions } from '../../models';
 import { useSmartComponent } from '../../providers/hooks';
 
+const SINGLE_LINE_INPUT_TYPES = new Set([
+  'text',
+  'email',
+  'number',
+  'password',
+  'search',
+  'tel',
+  'url',
+  'date',
+  'datetime-local',
+  'month',
+  'time',
+  'week',
+]);
+
+/** True for an `<input>` where Enter has no meaning of its own. */
+function isSingleLineInput(target: EventTarget): boolean {
+  return (
+    target instanceof HTMLInputElement &&
+    SINGLE_LINE_INPUT_TYPES.has(target.type)
+  );
+}
+
 /**
  * Set inside a `SmartForm`, so a form nested in it (an `object` or `array`
  * field) does not render a `<form>` inside a `<form>`, which HTML forbids.
@@ -84,12 +107,12 @@ function useLoading(
  * `components.form` on `SmartProvider` (the Angular
  * `FORM_STANDARD_COMPONENT_TOKEN`), `SmartFormStandard` by default.
  *
- * Submitting the form or releasing Enter inside it emits `onInvokeSubmit`
- * with the form value. `options.treeLevel` defaults to 1 and is set as the
+ * Submitting the form or pressing Enter in one of its single-line inputs
+ * emits `onInvokeSubmit` with the form value, once. `options.treeLevel` defaults to 1 and is set as the
  * `tree-level` / `data-tree-level` attribute of the root element. A form
  * rendered inside another one (an `object` or `array` field) renders a
- * `<div>` instead of a nested `<form>`; its Enter key and its submission
- * reach the outer form.
+ * `<div>` instead of a nested `<form>`; Enter in its inputs submits the
+ * outer form.
  *
  * The export / import buttons of the Angular template are commented out
  * there and not ported.
@@ -137,8 +160,15 @@ export function SmartForm<T>(props: SmartFormProps<T>) {
     onInvokeSubmit?.(form.value);
   };
 
-  const onKeyUp = (event: KeyboardEvent<HTMLElement>) => {
-    if (event.key === 'Enter') onInvokeSubmit?.(form.value);
+  // Angular submitted on `keyup.enter` anywhere in the form. Here Enter in a
+  // single-line input submits once, on keydown, and stops the browser's own
+  // implicit submission, which would submit a second time. Enter keeps its
+  // meaning in a textarea, a rich-text editor, a button or a select.
+  const onKeyDown = (event: KeyboardEvent<HTMLElement>) => {
+    if (event.key !== 'Enter' || !isSingleLineInput(event.target)) return;
+
+    event.preventDefault();
+    onInvokeSubmit?.(form.value);
   };
 
   const body = (
@@ -152,9 +182,10 @@ export function SmartForm<T>(props: SmartFormProps<T>) {
     </SmartFormNestingContext.Provider>
   );
 
+  // A nested form leaves Enter to the form around it.
   if (nested) {
     return (
-      <div tree-level={treeLevel} data-tree-level={treeLevel} onKeyUp={onKeyUp}>
+      <div tree-level={treeLevel} data-tree-level={treeLevel}>
         {body}
       </div>
     );
@@ -165,7 +196,7 @@ export function SmartForm<T>(props: SmartFormProps<T>) {
       tree-level={treeLevel}
       data-tree-level={treeLevel}
       onSubmit={onSubmit}
-      onKeyUp={onKeyUp}
+      onKeyDown={onKeyDown}
     >
       {body}
     </form>
