@@ -4,13 +4,13 @@ import { SharedConfig } from '@smartsoft001/nestjs';
 type AttachmentPolicy = NonNullable<SharedConfig['attachmentPolicy']>;
 
 /** Where the application keeps who uploaded which attachment. */
-export interface AttachmentOwners {
+export interface IAttachmentOwners {
   set(id: string, username: string): Promise<void>;
   get(id: string): Promise<string | undefined>;
 }
 
 /** A stand-in for a real collection, enough for the example and its spec. */
-export class InMemoryAttachmentOwners implements AttachmentOwners {
+export class InMemoryAttachmentOwners implements IAttachmentOwners {
   private readonly owners = new Map<string, string>();
 
   async set(id: string, username: string): Promise<void> {
@@ -31,7 +31,7 @@ export class InMemoryAttachmentOwners implements AttachmentOwners {
  * header. Deletes are kept to the uploader.
  */
 export function createAttachmentPolicy(
-  owners: AttachmentOwners,
+  owners: IAttachmentOwners,
 ): AttachmentPolicy {
   return async ({ operation, id, user }) => {
     if (operation === 'create') {
