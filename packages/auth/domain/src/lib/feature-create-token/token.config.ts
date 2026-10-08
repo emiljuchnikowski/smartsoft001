@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
+import { IFbAppCredentials } from '@smartsoft001/fb';
+
 /**
  * Token settings, registered by the host application as a provider
  * (`{ provide: TokenConfig, useValue: { ... } }`). The class is a DI token and
@@ -11,5 +13,9 @@ export class TokenConfig {
   clients: Array<string> = [];
   /** Trusted OAuth clients for Google access-token login. Never taken from a request. */
   googleClientIds?: string[];
+  /** Trusted Facebook apps for Facebook access-token login. Never taken from a request. */
+  fbAppIds?: string[];
+  /** The app that asks Facebook's `debug_token` to inspect tokens. Keep the secret server-side. */
+  fbAppCredentials?: IFbAppCredentials;
   secretOrPrivateKey!: string;
 }

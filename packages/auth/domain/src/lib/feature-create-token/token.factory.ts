@@ -81,8 +81,20 @@ export class TokenFactory implements IFactory<
     const hasher = options.passwordHasher ?? TokenFactory.defaultPasswordHasher;
 
     if (options.request.grant_type === 'fb') {
+      const { fbAppIds, fbAppCredentials } = this.config;
+      if (
+        !fbAppIds?.length ||
+        !fbAppCredentials?.appId ||
+        !fbAppCredentials?.appSecret
+      ) {
+        throw new DomainValidationError(
+          'Facebook app IDs and credentials must be configured',
+        );
+      }
       options.request.fb_user_id = await this.fbService.getUserId(
         options.request.fb_token,
+        fbAppIds,
+        fbAppCredentials,
       );
     }
 

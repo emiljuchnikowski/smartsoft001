@@ -4,6 +4,14 @@ import { of } from 'rxjs';
 
 import { FbService } from './fb.service';
 
+const appIds = ['test-app'];
+const credentials = { appId: 'test-app', appSecret: 'test-secret' };
+const debugUrl =
+  'https://graph.facebook.com/debug_token?input_token=test-token&access_token=test-app%7Ctest-secret';
+const debugResponse = {
+  data: { data: { is_valid: true, app_id: 'test-app', user_id: '123456789' } },
+};
+
 describe('FbService', () => {
   let service: FbService;
   let httpService: HttpService;
@@ -38,20 +46,12 @@ describe('FbService', () => {
   describe('getUserId', () => {
     it('should return user ID from Facebook API', async () => {
       const mockToken = 'test-token';
-      const mockResponse = {
-        data: {
-          id: '123456789',
-        },
-      };
+      mockHttpService.get.mockReturnValue(of(debugResponse));
 
-      mockHttpService.get.mockReturnValue(of(mockResponse));
-
-      const result = await service.getUserId(mockToken);
+      const result = await service.getUserId(mockToken, appIds, credentials);
 
       expect(result).toBe('123456789');
-      expect(mockHttpService.get).toHaveBeenCalledWith(
-        'https://graph.facebook.com/me?access_token=' + mockToken,
-      );
+      expect(mockHttpService.get).toHaveBeenCalledWith(debugUrl);
     });
 
     it('should throw error when API call fails', async () => {
@@ -60,7 +60,9 @@ describe('FbService', () => {
         throw new Error('API Error');
       });
 
-      await expect(service.getUserId(mockToken)).rejects.toThrow('API Error');
+      await expect(
+        service.getUserId(mockToken, appIds, credentials),
+      ).rejects.toThrow('Invalid Facebook token');
     });
   });
 
@@ -74,15 +76,19 @@ describe('FbService', () => {
         },
       };
 
-      mockHttpService.get.mockReturnValue(of(mockResponse));
+      mockHttpService.get
+        .mockReturnValueOnce(of(debugResponse))
+        .mockReturnValueOnce(of(mockResponse));
 
-      const result = await service.getData(mockToken);
+      const result = await service.getData(mockToken, appIds, credentials);
 
       expect(result).toEqual({
         id: '123456789',
         email: 'test@example.com',
       });
-      expect(mockHttpService.get).toHaveBeenCalledWith(
+      expect(mockHttpService.get).toHaveBeenNthCalledWith(1, debugUrl);
+      expect(mockHttpService.get).toHaveBeenNthCalledWith(
+        2,
         'https://graph.facebook.com/me?fields=email,id&access_token=' +
           mockToken,
       );
@@ -94,7 +100,9 @@ describe('FbService', () => {
         throw new Error('API Error');
       });
 
-      await expect(service.getData(mockToken)).rejects.toThrow('API Error');
+      await expect(
+        service.getData(mockToken, appIds, credentials),
+      ).rejects.toThrow('Invalid Facebook token');
     });
   });
 });
