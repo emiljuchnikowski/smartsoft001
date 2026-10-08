@@ -1,0 +1,82 @@
+import { useTranslate } from '../../../providers/hooks';
+import { cn } from '../../../utils/class-names';
+import { SmartDateRangeVariantProps } from '../date-range.types';
+import { useDateRange } from '../use-date-range';
+import { SmartDateRangeModalStandard } from './date-range-modal-standard';
+
+/**
+ * The default date-range rendering (`<smart-date-range-standard>`): a trigger
+ * showing the range and a clear button; the trigger opens
+ * `<SmartDateRangeModalStandard>`, rendered inline as in Angular.
+ */
+export function SmartDateRangeStandard(props: SmartDateRangeVariantProps) {
+  const { className } = props;
+  const t = useTranslate();
+  const {
+    value,
+    isOpen,
+    calendarData,
+    onClick,
+    onModalApply,
+    onModalDismiss,
+    onClear,
+  } = useDateRange(props);
+
+  return (
+    <>
+      <div
+        className={cn(
+          'smart:inline-flex smart:items-center smart:gap-2',
+          className,
+        )}
+      >
+        <button
+          type="button"
+          className="smart:inline-flex smart:items-center smart:gap-2 smart:rounded-md smart:border smart:border-gray-300 smart:bg-white smart:px-3 smart:py-2 smart:text-sm smart:font-medium smart:text-gray-700 smart:shadow-xs smart:hover:bg-gray-50 smart:dark:bg-gray-800 smart:dark:border-gray-600 smart:dark:text-gray-300 smart:dark:hover:bg-gray-700"
+          onClick={onClick}
+        >
+          <svg
+            className="smart:size-5 smart:text-gray-400"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M5.75 2a.75.75 0 0 1 .75.75V4h7V2.75a.75.75 0 0 1 1.5 0V4h.25A2.75 2.75 0 0 1 18 6.75v8.5A2.75 2.75 0 0 1 15.25 18H4.75A2.75 2.75 0 0 1 2 15.25v-8.5A2.75 2.75 0 0 1 4.75 4H5V2.75A.75.75 0 0 1 5.75 2Zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25v-6.5c0-.69-.56-1.25-1.25-1.25H4.75Z"
+              clipRule="evenodd"
+            />
+          </svg>
+          {value && value.start && value.end
+            ? value.start + ' - ' + value.end
+            : t('select')}
+        </button>
+
+        {value && (
+          <button
+            type="button"
+            className="smart:text-gray-400 smart:hover:text-gray-600 smart:p-1 smart:rounded smart:dark:text-gray-500 smart:dark:hover:text-gray-300"
+            onClick={onClear}
+          >
+            <svg
+              className="smart:size-4"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+            </svg>
+          </button>
+        )}
+      </div>
+
+      {isOpen && (
+        <SmartDateRangeModalStandard
+          previousState={calendarData}
+          onApply={onModalApply}
+          onDismiss={onModalDismiss}
+        />
+      )}
+    </>
+  );
+}
