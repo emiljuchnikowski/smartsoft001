@@ -190,6 +190,63 @@ export class MongoItemRepository<
     });
   }
 
+  /**
+   * One atomic `updateOne`: the filter is `_id` plus `{ field: { $eq: value } }`
+   * for every expected field, so values never act as query operators, and the
+   * result is whether a document matched.
+   */
+  async compareAndSet(
+    id: string,
+    expected: Partial<T>,
+    set: Partial<T>,
+    user: IUser | null,
+    repoOptions?: IItemRepositoryOptions,
+  ): Promise<boolean> {
+    return await this.collectionContext<boolean>(async (collection) => {
+      const filter: Record<string, unknown> = { _id: id };
+      for (const [key, value] of Object.entries(expected)) {
+        if (key !== 'id') filter[key] = { $eq: value ?? null };
+      }
+      const fields = ObjectService.removeTypes(set);
+      delete fields.id;
+      const logItem = { id, expected, set };
+
+      try {
+        const result = await collection.updateOne(
+          filter,
+          {
+            $set: {
+              ...fields,
+              '__info.update': {
+                username: user?.username ?? null,
+                date: new Date(),
+              },
+            },
+          },
+          { session: (repoOptions?.transaction as IMongoTransaction)?.session },
+        );
+        this.logChange(
+          'compareAndSet',
+          logItem,
+          repoOptions,
+          user,
+          null,
+        ).then();
+
+        return result.matchedCount === 1;
+      } catch (errUpdate) {
+        this.logChange(
+          'compareAndSet',
+          logItem,
+          repoOptions,
+          user,
+          errUpdate,
+        ).then();
+        throw errUpdate;
+      }
+    });
+  }
+
   updatePartialManyBySpecification(
     spec: ISpecification,
     set: Partial<T>,

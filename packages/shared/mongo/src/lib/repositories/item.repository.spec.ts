@@ -813,6 +813,164 @@ describe('shared-mongo: MongoItemRepository updatePartialManyByCriteria function
   });
 });
 
+describe('shared-mongo: MongoItemRepository compareAndSet function', () => {
+  let repository: MongoItemRepository<any>;
+  let mockCollection: { updateOne: jest.Mock };
+  let mockLogChange: jest.Mock;
+  let doc: Record<string, unknown>;
+  const user: IUser = { username: 'testUser', permissions: [''] };
+
+  /** Applies an equality-only filter the way MongoDB's updateOne would. */
+  function matches(filter: Record<string, any>): boolean {
+    return Object.entries(filter).every(([key, condition]) => {
+      const expected = key === '_id' ? condition : condition.$eq;
+      return (doc[key] ?? null) === (expected ?? null);
+    });
+  }
+
+  beforeEach(() => {
+    doc = { _id: 'order', status: 'started' };
+    mockCollection = {
+      updateOne: jest.fn(async (filter, update) => {
+        await new Promise((resolve) => setImmediate(resolve));
+        if (!matches(filter)) return { matchedCount: 0, modifiedCount: 0 };
+        doc = { ...doc, ...update.$set };
+        return { matchedCount: 1, modifiedCount: 1 };
+      }),
+    };
+    mockLogChange = jest.fn().mockResolvedValue(undefined);
+    repository = new MongoItemRepository<any>(null as any);
+    jest
+      .spyOn(repository as any, 'collectionContext')
+      .mockImplementation(async (callback: any) => callback(mockCollection));
+    jest
+      .spyOn(repository as any, 'logChange')
+      .mockImplementation(mockLogChange);
+  });
+
+  it('lets exactly one of two concurrent writers win', async () => {
+    const results = await Promise.all([
+      repository.compareAndSet(
+        'order',
+        { status: 'started' },
+        { status: 'completed' },
+        user,
+      ),
+      repository.compareAndSet(
+        'order',
+        { status: 'started' },
+        { status: 'canceled' },
+        user,
+      ),
+    ]);
+
+    expect(results).toEqual([true, false]);
+    expect(doc['status']).toBe('completed');
+  });
+
+  it('wraps every expected value in $eq so it never acts as an operator', async () => {
+    await repository.compareAndSet(
+      'order',
+      { status: { $ne: 'x' } as any, lock: undefined },
+      { status: 'completed' },
+      user,
+    );
+
+    expect(mockCollection.updateOne.mock.calls[0][0]).toEqual({
+      _id: 'order',
+      status: { $eq: { $ne: 'x' } },
+      lock: { $eq: null },
+    });
+    expect(doc['status']).toBe('started');
+  });
+
+  it('matches a missing field against null', async () => {
+    const won = await repository.compareAndSet(
+      'order',
+      { lock: null },
+      { lock: 'mine' },
+      user,
+    );
+
+    expect(won).toBe(true);
+    expect(doc['lock']).toBe('mine');
+  });
+
+  it('reports false when no document has the id', async () => {
+    const won = await repository.compareAndSet(
+      'missing',
+      { status: 'started' },
+      { status: 'completed' },
+      user,
+    );
+
+    expect(won).toBe(false);
+  });
+
+  it('never changes or matches the id through the field maps', async () => {
+    await repository.compareAndSet(
+      'order',
+      { id: 'other', status: 'started' } as any,
+      { id: 'other', status: 'completed' } as any,
+      user,
+    );
+
+    const [filter, update] = mockCollection.updateOne.mock.calls[0];
+    expect(filter).toEqual({ _id: 'order', status: { $eq: 'started' } });
+    expect(update.$set).not.toHaveProperty('id');
+    expect(update.$set['__info.update']).toEqual({
+      username: 'testUser',
+      date: expect.any(Date),
+    });
+  });
+
+  it('runs in the transaction session and logs the change', async () => {
+    const repoOptions: IItemRepositoryOptions = {
+      transaction: { session: 'session' } as unknown as IMongoTransaction,
+    };
+
+    await repository.compareAndSet(
+      'order',
+      { status: 'started' },
+      { status: 'completed' },
+      user,
+      repoOptions,
+    );
+
+    expect(mockCollection.updateOne.mock.calls[0][2]).toEqual({
+      session: 'session',
+    });
+    expect(mockLogChange).toHaveBeenCalledWith(
+      'compareAndSet',
+      {
+        id: 'order',
+        expected: { status: 'started' },
+        set: { status: 'completed' },
+      },
+      repoOptions,
+      user,
+      null,
+    );
+  });
+
+  it('logs and rethrows a failed update', async () => {
+    const error = new Error('Update failed');
+    mockCollection.updateOne.mockRejectedValueOnce(error);
+
+    await expect(
+      repository.compareAndSet('order', {}, { status: 'completed' }, null),
+    ).rejects.toThrow(error);
+
+    expect(mockLogChange).toHaveBeenCalledWith(
+      'compareAndSet',
+      expect.objectContaining({ id: 'order' }),
+      undefined,
+      null,
+      error,
+    );
+  });
+});
+
 describe('shared-mongo: MongoItemRepository delete function', () => {
   let repository: MongoItemRepository<any>;
   let mockCollection: any;

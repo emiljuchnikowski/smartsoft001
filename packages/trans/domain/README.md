@@ -108,3 +108,34 @@ database transactions, crashes and replayed receipts.
   rejects there, see Payment amounts above).
 - A failed refresh no longer stores status `error`; the record keeps its last persisted status.
   Failed creates and refunds still record `error` with a `TransErrorEvent`.
+
+## 🔒 Concurrent refreshes
+
+Two instances can read the same `started` transaction at once (a PayU notification and a manual
+`POST /:id/refresh`, for example). With a repository that implements the optional
+`IItemRepository.compareAndSet`, which `MongoItemRepository` does, `RefresherService` refreshes in
+three steps:
+
+1. **Claim**: compare-and-set a lease (`refreshLockId`, `refreshLockUntil`) where `status` still
+   equals the value read and no other instance holds a live lease. Matching nothing means another
+   instance won or is working on it, so the refresh returns without calling `refreshOnce`.
+2. **Fulfil**: `refreshOnce` runs while the stored status is still the old one. A failure or a
+   falsy answer drops the lease and keeps the status, so a retry runs again with the same key. A
+   crash leaves the lease until it expires (two minutes, the protected `refreshLeaseMs`).
+3. **Commit**: compare-and-set the new status and history where `status` is still the old one and
+   the lease is still ours. If the lease expired and another instance took over, the write is
+   dropped quietly; that instance persists the status, and the idempotency key deduplicates the
+   fulfilment.
+
+This is defence in depth on top of the idempotency key, not a replacement.
+
+### Upgrading
+
+- With `MongoItemRepository`, nothing to change.
+- A custom `IItemRepository` without `compareAndSet` still compiles and falls back to
+  `updatePartial`, the unconditional write of earlier versions. Implement `compareAndSet` (atomic,
+  equality only, `null` matching a missing field, resolving whether a record matched) to get the
+  protection.
+- `Trans` gains `refreshLockId` and `refreshLockUntil`. They are internal; do not write them.
+- A refresh that meets a live lease or loses the claim resolves without effect. A crashed instance
+  blocks refreshes of that transaction until its lease expires.

@@ -144,6 +144,10 @@ Methods:
         <td>The same, driven by a specification</td>
     </tr>
     <tr>
+        <td>compareAndSet</td>
+        <td>Sets fields atomically only while the expected fields still hold their values (each wrapped in <code>$eq</code>); resolves whether a document matched</td>
+    </tr>
+    <tr>
         <td>delete</td>
         <td>Removes one document by its identifier</td>
     </tr>
