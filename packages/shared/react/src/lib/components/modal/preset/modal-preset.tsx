@@ -38,7 +38,7 @@ export function SmartModalPreset(props: SmartModalProps) {
   const { open, invokeAction, close } = useModal(props);
 
   useEffect(() => {
-    if (!open) return;
+    if (!open) return undefined;
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape' || event.key === 'Esc') close();

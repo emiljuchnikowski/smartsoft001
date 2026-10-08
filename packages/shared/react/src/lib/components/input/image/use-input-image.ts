@@ -35,7 +35,7 @@ export function useInputImage<T>(props: SmartInputFieldProps<T>) {
   );
 
   useEffect(() => {
-    if (!control) return;
+    if (!control) return undefined;
 
     setImageUrl(getImageUrl(control, fileService));
 

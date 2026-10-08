@@ -25,7 +25,7 @@ export function useInputVideo<T>(props: SmartInputFieldProps<T>) {
   const [play, setPlay] = useState(false);
 
   useEffect(() => {
-    if (!control) return;
+    if (!control) return undefined;
 
     const timers = new Set<ReturnType<typeof setTimeout>>();
     const subscription = control.valueChanges.subscribe((value) => {

@@ -396,7 +396,11 @@ export abstract class SmartAbstractControl<TValue = any> {
   private runValidator(): SmartValidationErrors | null {
     const validator = this.validator;
 
-    return validator ? (validator(this) ?? null) : null;
+    // Validators may return nothing (`void`); the cast keeps the fallback
+    // valid for consumers compiling without `strictNullChecks`.
+    return validator
+      ? ((validator(this) as SmartValidationErrors | null | undefined) ?? null)
+      : null;
   }
 
   private runAsyncValidator(emitEvent?: boolean): void {
@@ -411,7 +415,10 @@ export abstract class SmartAbstractControl<TValue = any> {
     validator(this).then(
       (errors) => {
         if (run !== this._asyncRun) return;
-        this.setErrors(errors ?? null, { emitEvent });
+        this.setErrors(
+          (errors as SmartValidationErrors | null | undefined) ?? null,
+          { emitEvent },
+        );
       },
       () => {
         if (run !== this._asyncRun) return;

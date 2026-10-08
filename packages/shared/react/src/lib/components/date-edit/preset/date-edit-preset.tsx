@@ -103,7 +103,7 @@ export function SmartDateEditPreset(props: SmartDateEditVariantProps) {
   for (let y = viewYear - 10; y <= viewYear + 10; y++) years.push(y);
 
   useEffect(() => {
-    if (!open) return;
+    if (!open) return undefined;
 
     const onDocumentClick = (event: MouseEvent) => {
       if (!rootRef.current?.contains(event.target as Node)) setOpen(false);

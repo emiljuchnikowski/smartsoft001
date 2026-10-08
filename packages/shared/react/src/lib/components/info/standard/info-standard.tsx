@@ -17,7 +17,7 @@ export function SmartInfoStandard({ options, className = '' }: SmartInfoProps) {
   const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) return undefined;
 
     const onDocumentClick = (event: MouseEvent) => {
       if (!rootRef.current?.contains(event.target as Node)) close();
