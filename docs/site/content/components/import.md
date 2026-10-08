@@ -46,7 +46,7 @@ Add a import to the settings page, using @smartsoft001/angular.
 
 ### ImportComponent (`<smart-import>`)
 
-Renders a `<smart-button>` with a projected upload icon next to a hidden `<input type="file">`. The button click forwards to the input, and the input's change event goes through `ImportBaseComponent.onFileSelected`. As with [`export`](/docs/components/export), the button must use the standard implementation so the projected icon survives.
+Renders a `<smart-button>` with a projected upload icon next to a hidden `<input type="file">`. The button click forwards to the input, and the input's change event goes through `ImportBaseComponent.onFileSelected`. As with [`export`](/docs/components/export), a button implementation registered through `BUTTON_STANDARD_COMPONENT_TOKEN` receives the projected icon in its default `<ng-content>` slot.
 
 ### ImportBaseComponent (abstract)
 

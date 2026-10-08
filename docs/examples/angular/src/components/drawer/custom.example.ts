@@ -41,10 +41,10 @@ import {
           </header>
         }
         <!--
-          smart-drawer renders a custom implementation through NgComponentOutlet,
-          which forwards neither projected content nor extra inputs. Only open,
-          title, options and cssClass arrive here, so a custom drawer renders its
-          own body instead of relying on ng-content.
+          smart-drawer passes open, title, options and cssClass to a custom
+          implementation (no other inputs), and its projected content to the
+          implementation's default ng-content. This one renders a fixed body,
+          so it declares no ng-content.
         -->
         <p class="docs-drawer__body">Your cart is empty.</p>
       </aside>
