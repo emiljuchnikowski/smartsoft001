@@ -24,7 +24,12 @@
         "tsConfig": "packages/shared/react/tsconfig.lib.json",
         "assets": [
           "packages/shared/react/*.md",
-          "packages/shared/react/styles.css"
+          {
+            "input": "packages/shared/react",
+            "glob": "styles.css",
+            "output": ".",
+            "includeIgnoredFiles": true
+          }
         ]
       }
     },

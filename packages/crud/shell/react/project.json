@@ -24,7 +24,12 @@
         "tsConfig": "packages/crud/shell/react/tsconfig.lib.json",
         "assets": [
           "packages/crud/shell/react/*.md",
-          "packages/crud/shell/react/styles.css"
+          {
+            "input": "packages/crud/shell/react",
+            "glob": "styles.css",
+            "output": ".",
+            "includeIgnoredFiles": true
+          }
         ]
       }
     },
