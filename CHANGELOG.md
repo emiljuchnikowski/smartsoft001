@@ -1,3 +1,13 @@
+## 2.200.0 (2026-10-09)
+
+### 🚀 Features
+
+- **nx:** React frontend, demo and starter for the example application ([#138](https://github.com/emiljuchnikowski/smartsoft001/pull/138))
+
+### ❤️ Thank You
+
+- Emil Juchnikowski
+
 ## 2.199.0 (2026-10-09)
 
 This was a version bump only, there were no code changes.
