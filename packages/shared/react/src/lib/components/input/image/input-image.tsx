@@ -1,10 +1,10 @@
 import { useId } from 'react';
 
+import { useInputImage } from './use-input-image';
 import { useTranslate } from '../../../providers/hooks';
 import { cn } from '../../../utils/class-names';
 import { SmartButton } from '../../button/button';
 import { SmartInputFieldProps } from '../input.types';
-import { useInputImage } from './use-input-image';
 
 const LABEL_CLASSES = [
   'smart:block',

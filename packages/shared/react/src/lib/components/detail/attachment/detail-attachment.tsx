@@ -1,7 +1,7 @@
+import { useDetailAttachment } from './use-detail-attachment';
 import { useTranslate } from '../../../providers/hooks';
 import { cn } from '../../../utils/class-names';
 import { SmartDetailFieldProps } from '../detail.types';
-import { useDetailAttachment } from './use-detail-attachment';
 
 /** The attachment detail: a download button. */
 export function SmartDetailAttachment<T>(props: SmartDetailFieldProps<T>) {

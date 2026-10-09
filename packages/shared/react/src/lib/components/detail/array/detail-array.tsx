@@ -1,7 +1,7 @@
+import { useDetailArray } from './use-detail-array';
 import { cn } from '../../../utils/class-names';
 import { SmartDetails } from '../../details/details';
 import { SmartDetailFieldProps } from '../detail.types';
-import { useDetailArray } from './use-detail-array';
 
 /**
  * The array detail: the details of every element, each rendered through

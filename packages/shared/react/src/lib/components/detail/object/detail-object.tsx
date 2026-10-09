@@ -1,7 +1,7 @@
+import { useDetailObject } from './use-detail-object';
 import { cn } from '../../../utils/class-names';
 import { SmartDetails } from '../../details/details';
 import { SmartDetailFieldProps } from '../detail.types';
-import { useDetailObject } from './use-detail-object';
 
 /**
  * The object detail: the nested object's own details, rendered through

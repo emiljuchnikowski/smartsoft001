@@ -1,10 +1,10 @@
-import { ICardHeadingOptions } from '../../../models';
-import { cn } from '../../../utils/class-names';
-import { SmartCardHeadingProps } from '../card-heading.types';
 import {
   CardHeadingVariant,
   getCardHeadingContainerClasses,
 } from './preset-classes';
+import { ICardHeadingOptions } from '../../../models';
+import { cn } from '../../../utils/class-names';
+import { SmartCardHeadingProps } from '../card-heading.types';
 
 /**
  * HyperUI-styled card heading variation (preset). Register it as

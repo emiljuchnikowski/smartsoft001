@@ -1,9 +1,9 @@
 import { Fragment } from 'react';
 
+import { useDetailEnum } from './use-detail-enum';
 import { useTranslate } from '../../../providers/hooks';
 import { cn } from '../../../utils/class-names';
 import { SmartDetailFieldProps } from '../detail.types';
-import { useDetailEnum } from './use-detail-enum';
 
 /**
  * The enum detail: the translated value(s), separated by commas.
