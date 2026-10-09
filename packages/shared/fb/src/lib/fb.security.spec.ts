@@ -1,6 +1,8 @@
 import { UnauthorizedException } from '@nestjs/common';
 import { of, throwError } from 'rxjs';
 
+import { createHmac } from 'node:crypto';
+
 import { IFbAppCredentials, FbService } from './fb.service';
 
 describe('fb: access token app binding', () => {
@@ -141,7 +143,9 @@ describe('fb: access token app binding', () => {
       expect(get.mock.calls).toEqual([
         [debugUrl('synthetic&token')],
         [
-          'https://graph.facebook.com/me?fields=email,id&access_token=synthetic%26token',
+          'https://graph.facebook.com/me?fields=email,id&access_token=synthetic%26token' +
+            // Of the raw token, not the encoded one.
+            `&appsecret_proof=${createHmac('sha256', 'app-secret').update('synthetic&token').digest('hex')}`,
         ],
       ]);
     });
@@ -183,6 +187,24 @@ describe('fb: access token app binding', () => {
 
       expect(error).toBeInstanceOf(UnauthorizedException);
       expect(JSON.stringify(error)).not.toContain('synthetic-token');
+    });
+
+    it('hides the app secret and the proof when the profile call fails', async () => {
+      const get = jest
+        .fn()
+        .mockReturnValueOnce(of({ data: { data: debug } }))
+        .mockImplementationOnce((url: string) =>
+          throwError(() => new Error('GET ' + url + ' failed')),
+        );
+      const service = new FbService({ get } as any);
+
+      const error = await service
+        .getData('synthetic-token', ['trusted'], credentials)
+        .catch((e: unknown) => e);
+
+      expect(error).toBeInstanceOf(UnauthorizedException);
+      expect(JSON.stringify(error)).not.toContain('app-secret');
+      expect(JSON.stringify(error)).not.toContain('appsecret_proof');
     });
   });
 });
