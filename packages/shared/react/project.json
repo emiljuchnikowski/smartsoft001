@@ -23,7 +23,7 @@
         "main": "packages/shared/react/src/index.ts",
         "tsConfig": "packages/shared/react/tsconfig.lib.json",
         "assets": [
-          "packages/shared/react/*.md",
+          "packages/shared/react/README.md",
           {
             "input": "packages/shared/react",
             "glob": "styles.css",

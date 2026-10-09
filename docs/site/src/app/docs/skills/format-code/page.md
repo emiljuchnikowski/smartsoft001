@@ -5,13 +5,13 @@ order: 3
 skill: format-code
 nextjs:
   metadata:
-    title: /smart:format-code
+    title: /smart-core:format-code
     description: Run the repository's Prettier and ESLint auto-fix pipeline through Nx from inside Claude Code.
 ---
 
 {% skill name="format-code" /%}
 
-This command requires the [`smart@smartsoft` plugin](/docs/skills/installing-the-plugin). Install it and reload Claude Code before invoking the skill.
+This command comes with the [`smart-core@smartsoft` plugin](/docs/skills/installing-the-plugin), which `smart-angular` and `smart-react` install as their dependency. Install the plugin of your framework and reload Claude Code before invoking the skill.
 
 ## What it does
 
@@ -26,7 +26,7 @@ Runs the project's formatting command, `npm run format`, which executes `nx form
 ## Invocation and arguments
 
 ```text
-/smart:format-code
+/smart-core:format-code
 ```
 
 The skill takes no arguments. It switches to the Node version the formatting tools need through nvm (`source ~/.nvm/nvm.sh && nvm use 24`) before running the command; when nvm is not installed it falls back to running `npm run format` with the current Node.
@@ -37,4 +37,4 @@ Formatted files in the working tree and a summary of what ESLint fixed. On a lar
 
 ## Source
 
-Defined in [`skills/format-code/SKILL.md`](https://github.com/emiljuchnikowski/smartsoft001/blob/main/packages/shared/claude-plugins/src/plugins/smart/skills/format-code/SKILL.md). The pipeline itself is the `format` script of the root `package.json`, configured by `eslint.config.mjs` and `.prettierrc`.
+Defined in [`skills/format-code/SKILL.md`](https://github.com/emiljuchnikowski/smartsoft001/blob/main/packages/shared/claude-plugins/src/plugins/smart-core/skills/format-code/SKILL.md). The pipeline itself is the `format` script of the root `package.json`, configured by `eslint.config.mjs` and `.prettierrc`.

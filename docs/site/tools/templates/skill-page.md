@@ -5,7 +5,7 @@ order: '{{order}}'
 skill: '{{name}}'
 nextjs:
   metadata:
-    title: '/smart:{{name}}'
+    title: '/{{plugin}}:{{name}}'
     description: '{{one sentence saying what the skill does}}'
 ---
 
@@ -15,8 +15,10 @@ nextjs:
   placeholder and delete these comments.
 
   `title` and `skill` must both be the skill name exactly as in the
-  frontmatter of packages/shared/claude-plugins/src/plugins/smart/skills/<name>/SKILL.md:
-  rule R10 of docs-check compares them. `order` is the position inside the
+  frontmatter of packages/shared/claude-plugins/src/plugins/<plugin>/skills/<name>/SKILL.md:
+  rule R10 of docs-check compares them. <plugin> is the plugin that ships the
+  skill: smart-core (framework-neutral), smart-angular or smart-react, and the
+  command is invoked as /<plugin>:<name>. `order` is the position inside the
   Skills section, a plain number once filled in.
 
   The {% skill %} tag below is expanded at build time from the SKILL.md
@@ -26,7 +28,7 @@ nextjs:
 
 {% skill name="{{name}}" /%}
 
-This command requires the [`smart@smartsoft` plugin](/docs/skills/installing-the-plugin). Install it and reload Claude Code before invoking the skill.
+This command requires the [`{{plugin}}@smartsoft` plugin](/docs/skills/installing-the-plugin). Install it and reload Claude Code before invoking the skill.
 
 ## What it does
 
@@ -39,7 +41,7 @@ This command requires the [`smart@smartsoft` plugin](/docs/skills/installing-the
 ## Invocation and arguments
 
 ```text
-/smart:{{name}} {{[arguments]}}
+/{{plugin}}:{{name}} {{[arguments]}}
 ```
 
 {{what each argument means and what the skill asks for}}
@@ -50,4 +52,4 @@ This command requires the [`smart@smartsoft` plugin](/docs/skills/installing-the
 
 ## Source
 
-Defined in [`skills/{{name}}/SKILL.md`](https://github.com/emiljuchnikowski/smartsoft001/blob/main/packages/shared/claude-plugins/src/plugins/smart/skills/{{name}}/SKILL.md).
+Defined in [`skills/{{name}}/SKILL.md`](https://github.com/emiljuchnikowski/smartsoft001/blob/main/packages/shared/claude-plugins/src/plugins/{{plugin}}/skills/{{name}}/SKILL.md).

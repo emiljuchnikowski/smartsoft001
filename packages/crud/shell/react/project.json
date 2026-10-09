@@ -23,7 +23,7 @@
         "main": "packages/crud/shell/react/src/index.ts",
         "tsConfig": "packages/crud/shell/react/tsconfig.lib.json",
         "assets": [
-          "packages/crud/shell/react/*.md",
+          "packages/crud/shell/react/README.md",
           {
             "input": "packages/crud/shell/react",
             "glob": "styles.css",

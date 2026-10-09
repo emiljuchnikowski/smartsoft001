@@ -18,7 +18,9 @@
  * - R15: every UI component has a compiled usage example, its template and
  *   its class, in `docs/examples/angular`.
  *
- * - R16: every component skill is named in the angular-components agent.
+ * - R16: every component skill is named in the components agent of its
+ *   plugin (angular-components in smart-angular, react-components in
+ *   smart-react).
  *
  * R1-R3, R9, R10, R12, R13 and R15 are the parity rules: they compare the workspace
  * with the site and only warn until `--strict` names them. R14 is an error
@@ -33,11 +35,17 @@ import path from 'node:path'
 
 import { insideFence, openingFences } from './fences.mjs'
 import { SECTION_ORDER } from './sections.mjs'
+import {
+  locateSkill,
+  PLUGINS_DIR,
+  pluginNames,
+  repoSkillDirs,
+  skillPath,
+} from './skills.mjs'
 
 const SCOPE = '@smartsoft001/'
-const PLUGIN_SKILLS_DIR =
-  'packages/shared/claude-plugins/src/plugins/smart/skills'
-const REPO_SKILLS_DIR = '.claude/skills'
+/** The plugin whose skills document the Angular components. */
+const ANGULAR_SKILLS_DIR = `${PLUGINS_DIR}/smart-angular/skills`
 const COMPONENTS_DIR = 'packages/shared/angular/src/lib/components'
 const COMPONENT_SKILL_PREFIX = 'angular-components-'
 const EXCLUDED_PACKAGES = new Set(['claude-plugins'])
@@ -172,13 +180,13 @@ function hasComponent(dir) {
 }
 
 /**
- * Documented UI components: the plugin component skills plus every exported
- * component directory of the shared Angular library.
+ * Documented UI components: the component skills of the smart-angular plugin
+ * plus every exported component directory of the shared Angular library.
  */
 export function componentInventory(repoRoot) {
   const names = new Set()
 
-  for (const dir of listDirectories(path.join(repoRoot, PLUGIN_SKILLS_DIR))) {
+  for (const dir of listDirectories(path.join(repoRoot, ANGULAR_SKILLS_DIR))) {
     if (dir.startsWith(COMPONENT_SKILL_PREFIX)) {
       names.add(dir.slice(COMPONENT_SKILL_PREFIX.length))
     }
@@ -202,16 +210,25 @@ export function componentInventory(repoRoot) {
   return [...names].sort()
 }
 
+/** The skills directory of every plugin, relative to the repo root. */
+function pluginSkillDirs(repoRoot) {
+  return pluginNames(repoRoot).map((plugin) => ({
+    plugin,
+    dir: `${PLUGINS_DIR}/${plugin}/skills`,
+  }))
+}
+
 /**
- * Every user-invocable skill of the plugin. The repository's own skills in
- * `.claude/skills` are tooling for working on the framework, not part of
- * what it ships, so the public site does not document them.
+ * Every user-invocable skill of the plugins (smart-core, smart-angular,
+ * smart-react). The repository's own skills, in the root `.claude/skills`
+ * and in a package's `.claude/skills`, are tooling for working on the
+ * framework, not part of what it ships, so the public site does not document
+ * them.
  */
 export function skillInventory(repoRoot) {
-  const sources = [{ dir: PLUGIN_SKILLS_DIR, source: 'plugin' }]
   const skills = []
 
-  for (const { dir, source } of sources) {
+  for (const { plugin, dir } of pluginSkillDirs(repoRoot)) {
     const root = path.join(repoRoot, dir)
 
     for (const name of listDirectories(root)) {
@@ -220,7 +237,7 @@ export function skillInventory(repoRoot) {
       if (!fs.existsSync(file)) continue
       if (readFrontmatter(file)?.['user-invocable'] !== true) continue
 
-      skills.push({ name, source })
+      skills.push({ name, source: 'plugin', plugin })
     }
   }
 
@@ -734,8 +751,8 @@ export function rule9(ctx) {
   return findings
 }
 
-/** Where a skill lives, per the source a page or a tag names. */
-const SKILL_DIRS = { plugin: PLUGIN_SKILLS_DIR, repo: REPO_SKILLS_DIR }
+/** The skill sources a page or a tag can name. */
+const SKILL_SOURCES = new Set(['plugin', 'repo'])
 
 /**
  * The directories whose pages document a skill, with the source their
@@ -744,13 +761,19 @@ const SKILL_DIRS = { plugin: PLUGIN_SKILLS_DIR, repo: REPO_SKILLS_DIR }
 const SKILL_PAGE_DIRS = [{ dir: 'docs/skills/', source: 'plugin' }]
 
 /**
- * The `SKILL.md` of `name` relative to the repo root, or `null` when `source`
- * is not a known skill source.
+ * The `SKILL.md` of `name` relative to the repo root, looked up in every
+ * plugin for a plugin skill, with `exists` telling whether it was found; a
+ * plugin skill that was not found names every plugin (`plugins/*`). `null`
+ * when `source` is not a known skill source.
  */
-function skillFile(source, name) {
-  const dir = SKILL_DIRS[source]
+function skillFile(repoRoot, source, name) {
+  if (!SKILL_SOURCES.has(source)) return null
 
-  return dir ? `${dir}/${name}/SKILL.md` : null
+  const located = locateSkill(repoRoot, name, source)
+
+  return located
+    ? { file: located.file, exists: true }
+    : { file: skillPath(name, source), exists: false }
 }
 
 /**
@@ -769,14 +792,13 @@ function skillPageMessages(ctx, page, relative) {
 
   if (!name) return []
 
-  const file = skillFile(documented.source, name)
-  const resolved = path.join(ctx.repoRoot, file)
+  const { file, exists } = skillFile(ctx.repoRoot, documented.source, name)
 
-  if (!fs.existsSync(resolved)) {
+  if (!exists) {
     return [`skill "${name}" has no SKILL.md (expected ${file})`]
   }
 
-  const declared = (readFrontmatter(resolved) ?? {}).name
+  const declared = (readFrontmatter(path.join(ctx.repoRoot, file)) ?? {}).name
 
   if (frontmatter.title === declared) return []
 
@@ -792,9 +814,8 @@ function skillTagMessages(ctx, source) {
   for (const { attributes, line } of tags(source, 'skill')) {
     const name = attributes.name ?? ''
     const from = attributes.source ?? 'plugin'
-    const file = skillFile(from, name)
 
-    if (file && fs.existsSync(path.join(ctx.repoRoot, file))) continue
+    if (skillFile(ctx.repoRoot, from, name)?.exists) continue
 
     broken.push({ line, message: `unknown skill "${name}" (source "${from}")` })
   }
@@ -1018,11 +1039,19 @@ export function rule13(ctx) {
 const EXAMPLE_APP_DIR = 'docs/examples/app'
 const EXAMPLE_APP_PATH = /`(docs\/examples\/app(?:\/[^`\s]*)?)`/g
 
-/** Every `SKILL.md` of both skill sources, relative to the repo root. */
+/**
+ * Every `SKILL.md` of both skill sources, relative to the repo root: every
+ * plugin, and the repository's skills in the root `.claude/skills` and in
+ * each package's `.claude/skills`.
+ */
 function skillFiles(repoRoot) {
   const files = []
+  const dirs = [
+    ...pluginSkillDirs(repoRoot).map(({ dir }) => dir),
+    ...repoSkillDirs(repoRoot),
+  ]
 
-  for (const dir of Object.values(SKILL_DIRS)) {
+  for (const dir of dirs) {
     for (const name of listDirectories(path.join(repoRoot, dir))) {
       const file = `${dir}/${name}/SKILL.md`
 
@@ -1092,31 +1121,50 @@ export function rule15(ctx) {
   return findings
 }
 
-/** The agent that delegates UI work to the component skills. */
-const COMPONENTS_AGENT =
-  'packages/shared/claude-plugins/src/plugins/smart/agents/angular-components/AGENT.md'
+/**
+ * The agents that delegate UI work to the component skills of their plugin:
+ * each plugin's skills with `prefix` must be named in its `agent`.
+ */
+const COMPONENT_AGENTS = [
+  {
+    plugin: 'smart-angular',
+    prefix: COMPONENT_SKILL_PREFIX,
+    agent: 'angular-components',
+  },
+  {
+    plugin: 'smart-react',
+    prefix: 'react-components-',
+    agent: 'react-components',
+  },
+]
 
 /**
- * R16: every component skill is named in the angular-components agent. The
- * agent only delegates to the skills its catalogue lists, so a skill missing
- * there is never used, however complete. An error from the start, like R14.
+ * R16: every component skill is named in the components agent of its plugin.
+ * The agent only delegates to the skills its catalogue lists, so a skill
+ * missing there is never used, however complete. An error from the start,
+ * like R14.
  */
 export function rule16(ctx) {
-  const agent = path.join(ctx.repoRoot, COMPONENTS_AGENT)
+  return COMPONENT_AGENTS.flatMap(({ plugin, prefix, agent }) => {
+    const file = `${PLUGINS_DIR}/${plugin}/agents/${agent}.md`
+    const resolved = path.join(ctx.repoRoot, file)
 
-  if (!fs.existsSync(agent)) return []
+    if (!fs.existsSync(resolved)) return []
 
-  const source = fs.readFileSync(agent, 'utf8')
+    const source = fs.readFileSync(resolved, 'utf8')
 
-  return listDirectories(path.join(ctx.repoRoot, PLUGIN_SKILLS_DIR))
-    .filter((name) => name.startsWith(COMPONENT_SKILL_PREFIX))
-    .filter((name) => !source.includes(`\`${name}\``))
-    .map((name) => ({
-      rule: 'R16',
-      level: 'error',
-      message: `Skill "${name}" is not named in the angular-components agent (${COMPONENTS_AGENT})`,
-      file: agent,
-    }))
+    return listDirectories(
+      path.join(ctx.repoRoot, PLUGINS_DIR, plugin, 'skills'),
+    )
+      .filter((name) => name.startsWith(prefix))
+      .filter((name) => !source.includes(`\`${name}\``))
+      .map((name) => ({
+        rule: 'R16',
+        level: 'error',
+        message: `Skill "${name}" is not named in the ${agent} agent (${file})`,
+        file: resolved,
+      }))
+  })
 }
 
 /** Every rule, in order. */

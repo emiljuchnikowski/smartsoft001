@@ -1,0 +1,5 @@
+{
+  "name": "smart-core",
+  "description": "Smartsoft core for every project - safety validation, audit logging and auto-formatting hooks, plus the framework-neutral skills (audit-log, format-code, project-conventions, safety-check)",
+  "version": "2.182.0"
+}

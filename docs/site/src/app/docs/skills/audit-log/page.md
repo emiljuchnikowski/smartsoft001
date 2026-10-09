@@ -5,13 +5,13 @@ order: 2
 skill: audit-log
 nextjs:
   metadata:
-    title: /smart:audit-log
+    title: /smart-core:audit-log
     description: Summarise the audit trail the plugin's hooks write for a day, with counts by event type, blocked actions and a timeline.
 ---
 
 {% skill name="audit-log" /%}
 
-This command requires the [`smart@smartsoft` plugin](/docs/skills/installing-the-plugin). Install it and reload Claude Code before invoking the skill.
+This command comes with the [`smart-core@smartsoft` plugin](/docs/skills/installing-the-plugin), which `smart-angular` and `smart-react` install as their dependency. Install the plugin of your framework and reload Claude Code before invoking the skill.
 
 ## What it does
 
@@ -27,7 +27,7 @@ The `audit_logger` hook writes every hook event to the project's `.claude/audit_
 ## Invocation and arguments
 
 ```text
-/smart:audit-log [today|yesterday|YYYYMMDD]
+/smart-core:audit-log [today|yesterday|YYYYMMDD]
 ```
 
 Without an argument the skill reads today's project-local file. `yesterday` and an explicit `YYYYMMDD` date select another day. A missing file means no session ran in the project that day or the plugin was not installed yet.
@@ -38,4 +38,4 @@ A summary table in the conversation, grouped chronologically, with safety blocks
 
 ## Source
 
-Defined in [`skills/audit-log/SKILL.md`](https://github.com/emiljuchnikowski/smartsoft001/blob/main/packages/shared/claude-plugins/src/plugins/smart/skills/audit-log/SKILL.md); the log format is produced by [`hooks/audit_logger.py`](https://github.com/emiljuchnikowski/smartsoft001/blob/main/packages/shared/claude-plugins/src/plugins/smart/hooks/audit_logger.py).
+Defined in [`skills/audit-log/SKILL.md`](https://github.com/emiljuchnikowski/smartsoft001/blob/main/packages/shared/claude-plugins/src/plugins/smart-core/skills/audit-log/SKILL.md); the log format is produced by [`hooks/audit_logger.py`](https://github.com/emiljuchnikowski/smartsoft001/blob/main/packages/shared/claude-plugins/src/plugins/smart-core/hooks/audit_logger.py).

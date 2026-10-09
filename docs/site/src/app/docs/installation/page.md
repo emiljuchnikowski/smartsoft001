@@ -24,7 +24,7 @@ On the consumer side the Angular packages target Angular 22 and the backend pack
 
 ### A new workspace
 
-If you are starting from nothing, the `smart:scaffold-nx-workspace` skill from the `smart@smartsoft` Claude Code plugin generates an Nx workspace that already follows the conventions these docs assume, and is documented in the [Skills section (coming soon)](/).
+If you are starting from nothing, the `smart-angular:scaffold-nx-workspace` skill from the `smart-angular@smartsoft` Claude Code plugin generates an Nx workspace that already follows the conventions these docs assume, and is documented in the [Skills section (coming soon)](/).
 
 ### An existing workspace
 

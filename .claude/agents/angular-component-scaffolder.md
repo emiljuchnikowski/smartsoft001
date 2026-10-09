@@ -16,7 +16,7 @@ Create Angular components using Angular 20+ patterns including signals, standalo
 
 - **No explicit `standalone: true`** - Angular 19+ defaults to standalone
 - **Tailwind CSS** for styling
-- Components use `smart` prefix for CRUD shell, `lib` prefix for shared Angular library
+- Selectors use the `smart-` prefix in both Angular libraries (`smart-button`, `smart-crud-list-page`)
 - SCSS for component-level styling
 
 ## Component Template
@@ -86,6 +86,8 @@ export class ItemCardComponent {
 
 ## Related Skills
 
-- `/angular-components` — Full component creation workflow (tests, Storybook, docs, dark/light mode)
-- `/angular-patterns` — Angular 20 modern patterns reference
-- `/test-unit` — Jest test conventions
+These live next to the Angular code, in `packages/shared/angular/.claude/skills/`, and load once a file there is read; read the `SKILL.md` directly when working in `packages/crud/shell/angular`.
+
+- `angular-components` — Full component creation workflow (tests, Storybook, docs, dark/light mode)
+- `angular-patterns` — Angular 20 modern patterns reference
+- `angular-test-unit` — Jest test conventions for Angular (the shared rules are in `test-unit`)

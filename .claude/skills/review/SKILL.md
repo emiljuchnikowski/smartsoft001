@@ -63,7 +63,7 @@ Delegate to `shared-style-enforcer` agent:
 - Run linting: `nx lint <project>` for affected projects
 - Run type-check: `npx tsc --noEmit`
 - Check import ordering, naming conventions
-- Verify Angular modern APIs (signals, @if/@for, inject())
+- Verify the touched UI library's own conventions: the patterns skill named in its `CLAUDE.md`
 
 ### Step 3: Test Review
 

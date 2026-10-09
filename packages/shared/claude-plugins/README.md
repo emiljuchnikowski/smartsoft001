@@ -16,14 +16,29 @@ claude plugin marketplace add ./node_modules/@smartsoft001/claude-plugins
 
 ## Plugins
 
-### smart
+The `smartsoft` marketplace ships three plugins. A project enables the one of its framework; both
+framework plugins declare `smart-core` as a dependency, so the hooks come with either of them.
 
-Hooks for skill activation, safety validation, formatting, and audit logging.
+| Plugin | Enable in | Contents |
+|--------|-----------|----------|
+| `smart-core` | every project, as a dependency | Hooks (safety validation, sensitive files, audit logging, skill validation, formatting) and the `audit-log`, `format-code`, `project-conventions` and `safety-check` skills |
+| `smart-angular` | Angular projects | The `angular-components-*` skills, the `angular-components` agent, `smart-crud` and `scaffold-nx-workspace` |
+| `smart-react` | React projects | The `react-components-*` skills, the `react-components` agent, `react-provider`, `react-forms` and `smart-crud-react` |
+
+```bash
+claude plugin install smart-angular@smartsoft --scope project   # Angular project
+claude plugin install smart-react@smartsoft --scope project     # React project
+```
+
+Projects that enabled the former `smart@smartsoft` plugin are moved to `smart-angular@smartsoft` by the
+marketplace's `renames` map; run the `smart-angular` install above once to install it and `smart-core`.
+
+### smart-core hooks
 
 | Documentation | Description |
 |---------------|-------------|
-| [README](./src/plugins/smart/hooks/README.md) | Overview of available hooks |
-| [CONFIG](./src/plugins/smart/hooks/CONFIG.md) | Configuration and customization guide |
+| [README](./src/plugins/smart-core/hooks/README.md) | Overview of available hooks |
+| [CONFIG](./src/plugins/smart-core/hooks/CONFIG.md) | Configuration and customization guide |
 
 ## Contributing
 

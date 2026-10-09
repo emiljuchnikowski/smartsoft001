@@ -1,6 +1,6 @@
 ---
 name: test-unit
-description: Write unit tests following project conventions. Generates Jest tests for Angular components, services, and NestJS services using AAA pattern.
+description: Write unit tests following project conventions. Jest with the AAA pattern, describe-block naming, mocks and test commands for every package, with NestJS service tests; the UI libraries add their own component-testing skill.
 allowed-tools:
   - Bash
   - Read
@@ -17,8 +17,12 @@ Write unit tests following project conventions using Jest framework with AAA (Ar
 ## Testing Framework
 
 - **Framework**: Jest for all unit tests
-- **File naming**: `{name}.spec.ts` alongside source files
+- **File naming**: `{name}.spec.ts` (`{name}.spec.tsx` when the spec renders JSX) alongside source files
 - **Test runner**: Nx (`nx test {project}`)
+
+## Framework-specific tests
+
+Component and service tests of a UI library follow that library's own testing skill, which lives in the library's `.claude/skills/` and loads once you work on its files; the library's `CLAUDE.md` names it. This skill covers what every package shares.
 
 ## Test File Location
 
@@ -27,9 +31,7 @@ Place test files next to the source files they test:
 ```
 feature/
 ├── feature.service.ts
-├── feature.service.spec.ts
-├── feature.component.ts
-└── feature.component.spec.ts
+└── feature.service.spec.ts
 ```
 
 ## Naming Convention
@@ -48,115 +50,6 @@ it('should perform expected operation', () => {
   const result = service.performOperation(input);
 
   expect(result).toBe('expected output');
-});
-```
-
-## Angular Component Testing
-
-### Basic Component Test
-
-```typescript
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { FeatureComponent } from './feature.component';
-
-describe('@smartsoft001/crud-shell-angular: FeatureComponent', () => {
-  let component: FeatureComponent;
-  let fixture: ComponentFixture<FeatureComponent>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [FeatureComponent],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(FeatureComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
-```
-
-### Testing Signal-based Components
-
-```typescript
-it('should update when signal changes', () => {
-  component.count.set(5);
-  fixture.detectChanges();
-
-  expect(fixture.nativeElement.textContent).toContain('5');
-});
-
-it('should compute derived value', () => {
-  component.items.set([1, 2, 3]);
-
-  expect(component.total()).toBe(6);
-});
-```
-
-### Testing Components with input()/output()
-
-```typescript
-it('should accept input value', () => {
-  fixture.componentRef.setInput('value', 'test');
-  fixture.detectChanges();
-
-  expect(component.value()).toBe('test');
-});
-
-it('should emit output event', () => {
-  const spy = jest.fn();
-  component.changed.subscribe(spy);
-
-  component.emitChange('new value');
-
-  expect(spy).toHaveBeenCalledWith('new value');
-});
-```
-
-## Angular Service Testing
-
-```typescript
-import { TestBed } from '@angular/core/testing';
-import {
-  HttpTestingController,
-  provideHttpClientTesting,
-} from '@angular/common/http/testing';
-import { provideHttpClient } from '@angular/common/http';
-
-import { DataService } from './data.service';
-
-describe('@smartsoft001/angular: DataService', () => {
-  let service: DataService;
-  let httpMock: HttpTestingController;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [DataService, provideHttpClient(), provideHttpClientTesting()],
-    });
-
-    service = TestBed.inject(DataService);
-    httpMock = TestBed.inject(HttpTestingController);
-  });
-
-  afterEach(() => {
-    httpMock.verify();
-  });
-
-  it('should fetch data', () => {
-    const mockData = [{ id: 1, name: 'Test' }];
-
-    service.getData().subscribe((data) => {
-      expect(data).toEqual(mockData);
-    });
-
-    const req = httpMock.expectOne('/api/data');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockData);
-  });
 });
 ```
 
@@ -195,8 +88,8 @@ describe('@smartsoft001/package-name: FeatureService', () => {
 
 ```typescript
 const mockService = {
-  getData: jest.fn().mockReturnValue(of(mockData)),
-  createItem: jest.fn().mockReturnValue(of(mockItem)),
+  getData: jest.fn().mockResolvedValue(mockData),
+  createItem: jest.fn().mockResolvedValue(mockItem),
 };
 ```
 
@@ -233,11 +126,8 @@ nx test <project-name> --testFile=feature.service.spec.ts
 
 ## Reference implementation
 
-The spec files of the example application under `docs/examples/app` are AAA tests against the real framework packages, one per kind of unit this skill covers.
+The spec files of the example application under `docs/examples/app` are AAA tests against the real framework packages.
 
-- `docs/examples/app/apps/web/src/app/auth/login.service.spec.ts`: an Angular service on `provideHttpClient()` and `provideHttpClientTesting()`, with `HttpTestingController.verify()` in `afterEach` and the arrange, act and assert blocks separated by blank lines.
-- `docs/examples/app/apps/web/src/app/auth/login.page.spec.ts`: a component driven through the DOM of the rendered `<smart-sign-in-form>`, with `LoginService` replaced by a `jest.fn()` mock and the router spied on.
-- `docs/examples/app/apps/web/src/app/auth/auth.guard.spec.ts`: a functional guard run through `TestBed.runInInjectionContext` with a stubbed `AuthService`.
 - `docs/examples/app/apps/api/src/app/users.seed.spec.ts`: a NestJS provider constructed by hand with a repository mock, no `TestingModule` needed.
 - `docs/examples/app/apps/api/src/config.spec.ts`: a pure function asserted against its documented defaults and each override.
 - `docs/examples/app/libs/model/src/lib/note.model.spec.ts`: model metadata asserted through the `@smartsoft001/models` helpers, with the project name as the describe prefix because the app is not a package.

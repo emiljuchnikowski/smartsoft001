@@ -7,7 +7,7 @@ import { describe, test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-const hook = path.join(here, '../src/plugins/smart/hooks/audit_logger.py');
+const hook = path.join(here, '../src/plugins/smart-core/hooks/audit_logger.py');
 
 function runHook({ cwd, env = {} }) {
   const result = spawnSync('python3', [hook], {

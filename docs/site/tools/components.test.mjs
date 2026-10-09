@@ -22,7 +22,7 @@ const here = path.dirname(fileURLToPath(import.meta.url))
 const fixtureRoot = path.join(here, '__fixtures__', 'components')
 const skillsDir = path.join(
   fixtureRoot,
-  'packages/shared/claude-plugins/src/plugins/smart/skills',
+  'packages/shared/claude-plugins/src/plugins/smart-angular/skills',
 )
 
 function skill(name) {
@@ -297,6 +297,17 @@ describe('transformSkillToPage body', () => {
     )
   })
 
+  test('sends the reader to the smart-angular plugin in the Claude Code tab', () => {
+    const { content: page } = button()
+    const tab = page.slice(page.indexOf('{% tab title="Claude Code" %}'))
+
+    assert.match(
+      tab,
+      /With the \[`smart-angular@smartsoft` plugin\]\(\/docs\/skills\/installing-the-plugin\) installed/,
+    )
+    assert.ok(!page.includes('smart@smartsoft'))
+  })
+
   test('leaves out the generator tab while no generator collection exists', () => {
     const { content: page } = button()
 
@@ -333,7 +344,7 @@ describe('transformSkillToPage body', () => {
           'The component lives in [`packages/shared/angular/src/lib/components/button`]' +
           '(https://github.com/emiljuchnikowski/smartsoft001/tree/main/packages/shared/angular/src/lib/components/button)' +
           ' and is documented for Claude Code by the [`angular-components-button`]' +
-          '(https://github.com/emiljuchnikowski/smartsoft001/tree/main/packages/shared/claude-plugins/src/plugins/smart/skills/angular-components-button)' +
+          '(https://github.com/emiljuchnikowski/smartsoft001/tree/main/packages/shared/claude-plugins/src/plugins/smart-angular/skills/angular-components-button)' +
           ' skill.\n',
       ),
       page.slice(-500),
@@ -450,7 +461,7 @@ describe('transformSkillToPage deviations', () => {
         '',
         '## Source',
         '',
-        'The component lives in [`packages/shared/angular/src/lib/components/gadget`](https://github.com/emiljuchnikowski/smartsoft001/tree/main/packages/shared/angular/src/lib/components/gadget) and is documented for Claude Code by the [`angular-components-gadget`](https://github.com/emiljuchnikowski/smartsoft001/tree/main/packages/shared/claude-plugins/src/plugins/smart/skills/angular-components-gadget) skill.',
+        'The component lives in [`packages/shared/angular/src/lib/components/gadget`](https://github.com/emiljuchnikowski/smartsoft001/tree/main/packages/shared/angular/src/lib/components/gadget) and is documented for Claude Code by the [`angular-components-gadget`](https://github.com/emiljuchnikowski/smartsoft001/tree/main/packages/shared/claude-plugins/src/plugins/smart-angular/skills/angular-components-gadget) skill.',
         '',
       ].join('\n'),
     )

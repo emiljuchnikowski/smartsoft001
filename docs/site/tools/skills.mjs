@@ -24,16 +24,24 @@ const ATTRIBUTE = /([a-zA-Z][\w-]*)\s*=\s*(?:"([^"]*)"|'([^']*)')/g
 
 const REPO_URL = 'https://github.com/emiljuchnikowski/smartsoft001/blob/main'
 
-const SOURCES = {
-  plugin: {
-    dir: 'packages/shared/claude-plugins/src/plugins/smart/skills',
-    prefix: 'smart:',
-  },
-  repo: {
-    dir: '.claude/skills',
-    prefix: '',
-  },
-}
+/**
+ * The plugins of the `smartsoft` marketplace, one directory each
+ * (`smart-core`, `smart-angular`, `smart-react`). A plugin skill lives in
+ * `<plugin>/skills/<name>/SKILL.md` and is invoked as `/<plugin>:<name>`.
+ */
+export const PLUGINS_DIR = 'packages/shared/claude-plugins/src/plugins'
+
+/**
+ * The repository's own skills: the shared ones in the root `.claude/skills`,
+ * the framework ones next to their package, in a `.claude/skills` below
+ * `packages/`.
+ */
+export const REPO_SKILLS_DIR = '.claude/skills'
+const PACKAGES_DIR = 'packages'
+const SKIPPED_DIRS = new Set(['node_modules', 'dist', 'coverage'])
+
+/** Skill sources a page or a tag can name. */
+const SOURCES = new Set(['plugin', 'repo'])
 
 const DEFAULT_SOURCE = 'plugin'
 const NO_TOOLS = '—'
@@ -43,29 +51,112 @@ function skillError(message) {
 }
 
 function sourceOf(source, tag) {
-  const known = SOURCES[source]
+  if (SOURCES.has(source)) return source
 
-  if (!known) {
-    const expected = Object.keys(SOURCES)
-      .map((name) => `"${name}"`)
-      .join(', ')
+  const expected = [...SOURCES].map((name) => `"${name}"`).join(', ')
 
-    throw skillError(
-      `${tag ? `${tag}: ` : ''}unknown source "${source}", expected one of ${expected}`,
-    )
+  throw skillError(
+    `${tag ? `${tag}: ` : ''}unknown source "${source}", expected one of ${expected}`,
+  )
+}
+
+/** Every plugin of the marketplace, by directory name. */
+export function pluginNames(repoRoot) {
+  const dir = path.join(repoRoot, PLUGINS_DIR)
+
+  if (!fs.existsSync(dir)) return []
+
+  return fs
+    .readdirSync(dir, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+    .sort()
+}
+
+/**
+ * Every directory that holds repository skills, relative to the repo root:
+ * the root `.claude/skills` first, then each `.claude/skills` found below
+ * `packages/`, skipping `node_modules`, build output and other dot
+ * directories.
+ */
+export function repoSkillDirs(repoRoot) {
+  const dirs = [REPO_SKILLS_DIR]
+
+  const visit = (relative) => {
+    const absolute = path.join(repoRoot, relative)
+
+    if (!fs.existsSync(absolute)) return
+
+    const entries = fs
+      .readdirSync(absolute, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .sort((a, b) => a.name.localeCompare(b.name))
+
+    for (const { name } of entries) {
+      const child = `${relative}/${name}`
+
+      if (name === '.claude') {
+        const skills = `${child}/skills`
+
+        if (fs.existsSync(path.join(repoRoot, skills))) dirs.push(skills)
+      } else if (!name.startsWith('.') && !SKIPPED_DIRS.has(name)) {
+        visit(child)
+      }
+    }
   }
 
-  return known
+  visit(PACKAGES_DIR)
+
+  return dirs
 }
 
-/** The path of a skill's `SKILL.md`, relative to the repository root. */
-export function skillPath(name, source = DEFAULT_SOURCE) {
-  return `${sourceOf(source).dir}/${name}/SKILL.md`
+/**
+ * The path of a skill's `SKILL.md`, relative to the repository root. A plugin
+ * skill needs the plugin that ships it; without one the plugin segment is `*`,
+ * which is what a lookup that found nothing reports.
+ */
+export function skillPath(name, source = DEFAULT_SOURCE, plugin = null) {
+  if (sourceOf(source) === 'repo') return `${REPO_SKILLS_DIR}/${name}/SKILL.md`
+
+  return `${PLUGINS_DIR}/${plugin ?? '*'}/skills/${name}/SKILL.md`
 }
 
-/** How a reader invokes the skill: `/smart:audit-log` or `/plan`. */
-export function skillInvocation(name, source = DEFAULT_SOURCE) {
-  return `/${sourceOf(source).prefix}${name}`
+/**
+ * Finds a skill: a repo skill in the root `.claude/skills` or a package's
+ * `.claude/skills`, a plugin skill in whichever plugin of the marketplace
+ * ships it. Returns its path relative to the repository root and its plugin
+ * (`null` for a repo skill), or `null` when the skill does not exist.
+ */
+export function locateSkill(repoRoot, name, source = DEFAULT_SOURCE) {
+  if (sourceOf(source) === 'repo') {
+    const root = skillPath(name, source)
+
+    if (fs.existsSync(path.join(repoRoot, root))) {
+      return { file: root, plugin: null }
+    }
+
+    for (const dir of repoSkillDirs(repoRoot)) {
+      const file = `${dir}/${name}/SKILL.md`
+
+      if (fs.existsSync(path.join(repoRoot, file)))
+        return { file, plugin: null }
+    }
+
+    return null
+  }
+
+  for (const plugin of pluginNames(repoRoot)) {
+    const file = skillPath(name, source, plugin)
+
+    if (fs.existsSync(path.join(repoRoot, file))) return { file, plugin }
+  }
+
+  return null
+}
+
+/** How a reader invokes the skill: `/smart-core:audit-log` or `/plan`. */
+export function skillInvocation(name, plugin = null) {
+  return `/${plugin ? `${plugin}:` : ''}${name}`
 }
 
 /** `allowed-tools` is written either as a YAML list or as one comma separated string. */
@@ -91,15 +182,16 @@ function parseAllowedTools(value) {
 export function readSkillMeta({ repoRoot, name, source = DEFAULT_SOURCE }) {
   sourceOf(source)
 
-  const relativePath = skillPath(name, source)
-  const file = path.resolve(repoRoot, relativePath)
+  const located = locateSkill(repoRoot, name, source)
 
-  if (!fs.existsSync(file)) {
+  if (!located) {
     throw skillError(
-      `skill "${name}" does not exist (looked for ${relativePath} in ${repoRoot})`,
+      `skill "${name}" does not exist (looked for ${skillPath(name, source)} in ${repoRoot})`,
     )
   }
 
+  const { file: relativePath, plugin } = located
+  const file = path.resolve(repoRoot, relativePath)
   const { data } = parseFrontmatter(fs.readFileSync(file, 'utf8'))
 
   for (const field of ['name', 'description']) {
@@ -111,10 +203,12 @@ export function readSkillMeta({ repoRoot, name, source = DEFAULT_SOURCE }) {
   return {
     name: data.name,
     source,
+    plugin,
     description: String(data.description).trim(),
     userInvocable: data['user-invocable'] === true,
     allowedTools: parseAllowedTools(data['allowed-tools']),
     file,
+    relativePath,
   }
 }
 
@@ -144,13 +238,13 @@ function escapePipes(text) {
 
 /** The callout and invocation table introducing a skill page. */
 export function renderSkillHeader(meta) {
-  const { name, source, description, allowedTools } = meta
-  const invocation = skillInvocation(name, source)
+  const { name, source, plugin, description, allowedTools, relativePath } = meta
+  const invocation = skillInvocation(name, plugin)
   const tools =
     allowedTools.length > 0
       ? allowedTools.map((tool) => `\`${tool}\``).join(', ')
       : NO_TOOLS
-  const link = `[\`SKILL.md\`](${REPO_URL}/${skillPath(name, source)})`
+  const link = `[\`SKILL.md\`](${REPO_URL}/${relativePath ?? skillPath(name, source, plugin)})`
 
   return [
     `{% callout title="${invocation}" %}`,
