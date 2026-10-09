@@ -28,7 +28,7 @@ packages/
     shell/nestjs/
     shell/angular/
     shell/react/
-  trans/          - Translation domain
+  trans/          - Payment transaction domain
     domain/
     shell/app-services/
     shell/dtos/

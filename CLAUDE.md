@@ -24,7 +24,7 @@ Nx monorepo with shared libraries for Angular, React, NestJS, and Ionic projects
 packages/
   auth/           - Authentication (domain, shell/nestjs, shell/dtos, shell/app-services)
   crud/           - CRUD operations (domain, shell/nestjs, shell/angular, shell/react, shell/dtos, shell/app-services)
-  trans/          - Translations (domain, shell/nestjs, shell/dtos, shell/app-services)
+  trans/          - Payment transactions (domain, shell/nestjs, shell/dtos, shell/app-services)
   shared/
     angular/      - Shared Angular components, NgRx state management
     react/        - Shared React components, provider, services, form engine
