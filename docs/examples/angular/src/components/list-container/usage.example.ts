@@ -13,10 +13,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListContainerUsageExampleComponent {
-  readonly options: IListContainerOptions = {
-    variant: 'card-dividers',
-    fullWidthOnMobile: true,
-  };
+  readonly options: IListContainerOptions = { variant: 'card-dividers' };
 
   readonly notifications = [
     { id: 'n1', text: 'Invoice #1042 was paid', time: '2 min ago' },

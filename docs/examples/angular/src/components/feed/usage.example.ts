@@ -12,7 +12,6 @@ import { FeedComponent, IFeedOptions } from '@smartsoft001/angular';
 export class FeedUsageExampleComponent {
   readonly options: IFeedOptions = {
     title: 'Activity',
-    variant: 'with-comments',
     events: [
       { title: 'Applied to Front End Developer', timestamp: 'Sep 20' },
       {

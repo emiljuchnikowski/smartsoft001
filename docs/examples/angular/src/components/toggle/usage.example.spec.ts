@@ -4,6 +4,7 @@ import { ToggleUsageExampleComponent } from './usage.example';
 
 describe('docs-examples-angular: ToggleUsageExampleComponent', () => {
   let fixture: ComponentFixture<ToggleUsageExampleComponent>;
+  let element: HTMLElement;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -11,35 +12,45 @@ describe('docs-examples-angular: ToggleUsageExampleComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(ToggleUsageExampleComponent);
+    element = fixture.nativeElement as HTMLElement;
     fixture.detectChanges();
   });
 
-  it('should render the switch from the options and the bound value', () => {
-    const input: HTMLInputElement =
-      fixture.nativeElement.querySelector('input');
+  function input(): HTMLInputElement {
+    return element.querySelector('input') as HTMLInputElement;
+  }
 
-    expect(input.labels?.[0]?.textContent?.trim()).toBe('Email notifications');
-    expect(input.checked).toBe(true);
+  it('should render the switch from the options and the bound value', () => {
+    // Act
+    const checkbox = input();
+
+    // Assert
+    expect(checkbox.labels?.[0]?.textContent?.trim()).toBe(
+      'Email notifications',
+    );
+    expect(checkbox.checked).toBe(true);
+    expect(element.textContent).toContain('Email notifications are on.');
   });
 
   it('should describe the switch with the description text', () => {
-    const input: HTMLInputElement =
-      fixture.nativeElement.querySelector('input');
-    const description = fixture.nativeElement.querySelector(
-      `#${input.getAttribute('aria-describedby')}`,
+    // Act
+    const description = element.querySelector(
+      `#${input().getAttribute('aria-describedby')}`,
     );
 
-    expect(description.textContent.trim()).toBe(
+    // Assert
+    expect(description?.textContent?.trim()).toBe(
       'Get an email when someone comments on your post.',
     );
   });
 
-  it('should write the new state back to the component', () => {
-    const input: HTMLInputElement =
-      fixture.nativeElement.querySelector('input');
+  it('should write the new state back and show it', () => {
+    // Act
+    input().click();
+    fixture.detectChanges();
 
-    input.click();
-
+    // Assert
     expect(fixture.componentInstance.emailNotifications()).toBe(false);
+    expect(element.textContent).toContain('Email notifications are off.');
   });
 });

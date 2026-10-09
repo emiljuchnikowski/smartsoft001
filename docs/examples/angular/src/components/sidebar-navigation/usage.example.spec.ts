@@ -4,6 +4,7 @@ import { SidebarNavigationUsageExampleComponent } from './usage.example';
 
 describe('docs-examples-angular: SidebarNavigationUsageExampleComponent', () => {
   let fixture: ComponentFixture<SidebarNavigationUsageExampleComponent>;
+  let element: HTMLElement;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -11,31 +12,61 @@ describe('docs-examples-angular: SidebarNavigationUsageExampleComponent', () => 
     }).compileComponents();
 
     fixture = TestBed.createComponent(SidebarNavigationUsageExampleComponent);
+    element = fixture.nativeElement as HTMLElement;
     fixture.detectChanges();
   });
 
+  function toggle(): HTMLButtonElement {
+    return element.querySelector('.item-toggle') as HTMLButtonElement;
+  }
+
   it('should render the items from the options', () => {
-    const element: HTMLElement = fixture.nativeElement;
+    // Act
+    const nav = element.querySelector('nav');
 
-    expect(element.textContent).toContain('Dashboard');
-    expect(element.textContent).toContain('Reports');
+    // Assert
+    expect(nav?.getAttribute('aria-label')).toBe('Main');
+    expect(nav?.textContent).toContain('Dashboard');
+    expect(toggle().textContent).toContain('Reports');
+    expect(element.textContent).toContain('Anna Kowalska');
   });
 
-  it('should hand the clicked item id to the handler', () => {
-    const item: HTMLButtonElement =
-      fixture.nativeElement.querySelector('.item-button');
+  it('should show the clicked item under the navigation', () => {
+    // Arrange
+    const dashboard = element.querySelector(
+      '.item-button',
+    ) as HTMLButtonElement;
 
-    item.click();
+    // Act
+    dashboard.click();
+    fixture.detectChanges();
 
-    expect(fixture.componentInstance.activeItem()).toBe('dashboard');
+    // Assert
+    expect(element.textContent).toContain('Active item: dashboard');
   });
 
-  it('should hand the toggled item to the handler', () => {
-    const toggle: HTMLButtonElement =
-      fixture.nativeElement.querySelector('.item-toggle');
+  it('should show the toggled section and open its children', () => {
+    // Act
+    toggle().click();
+    fixture.detectChanges();
 
-    toggle.click();
+    // Assert
+    expect(element.textContent).toContain('Expanded section: reports');
+    expect(element.querySelector('.children')?.textContent).toContain(
+      'Revenue',
+    );
+  });
 
-    expect(fixture.componentInstance.expandedItem()).toBe('reports');
+  it('should clear the expanded section when it is closed again', () => {
+    // Arrange
+    toggle().click();
+    fixture.detectChanges();
+
+    // Act
+    toggle().click();
+    fixture.detectChanges();
+
+    // Assert
+    expect(element.textContent).not.toContain('Expanded section');
   });
 });

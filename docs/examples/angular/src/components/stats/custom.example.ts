@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -52,9 +51,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomStatsComponent extends StatsBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   columns = computed(() => this.options()?.columns ?? 3);
 
   containerClasses = computed(() =>

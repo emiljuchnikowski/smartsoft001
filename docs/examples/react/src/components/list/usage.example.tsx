@@ -9,20 +9,38 @@ class Member {
   id = '';
 
   @Field({ list: { order: 1 }, type: FieldType.text })
-  name = '';
+  firstName = '';
 
-  @Field({ list: { order: 2 }, type: FieldType.email })
+  @Field({ list: { order: 2 }, type: FieldType.text })
+  lastName = '';
+
+  @Field({ list: { order: 3 }, type: FieldType.email })
   email = '';
 }
 
 const members: Member[] = [
-  { id: '1', name: 'Lindsay Walton', email: 'lindsay.walton@example.com' },
-  { id: '2', name: 'Courtney Henry', email: 'courtney.henry@example.com' },
-  { id: '3', name: 'Tom Cook', email: 'tom.cook@example.com' },
+  {
+    id: '1',
+    firstName: 'Lindsay',
+    lastName: 'Walton',
+    email: 'lindsay.walton@example.com',
+  },
+  {
+    id: '2',
+    firstName: 'Courtney',
+    lastName: 'Henry',
+    email: 'courtney.henry@example.com',
+  },
+  {
+    id: '3',
+    firstName: 'Tom',
+    lastName: 'Cook',
+    email: 'tom.cook@example.com',
+  },
 ];
 
 export function ListUsageExample() {
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selected, setSelected] = useState<Member | null>(null);
 
   // The provider is the data source; in an app it usually comes from a store.
   const options = useMemo<IListOptions<Member>>(
@@ -30,7 +48,14 @@ export function ListUsageExample() {
       type: Member,
       mode: ListMode.desktop,
       provider: { list: members, loading: false, getData: () => undefined },
-      item: { options: { edit: false, select: setSelectedId } },
+      // The item action of a row calls `select` with the row's id.
+      item: {
+        options: {
+          edit: false,
+          select: (id) =>
+            setSelected(members.find((member) => member.id === id) ?? null),
+        },
+      },
     }),
     [],
   );
@@ -38,7 +63,12 @@ export function ListUsageExample() {
   return (
     <>
       <SmartList options={options} />
-      {selectedId && <p>Selected member: {selectedId}</p>}
+
+      {selected && (
+        <p>
+          Selected member: {selected.firstName} {selected.lastName}
+        </p>
+      )}
     </>
   );
 }

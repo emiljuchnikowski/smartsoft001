@@ -17,7 +17,6 @@ import {
 })
 export class SignInFormUsageExampleComponent {
   readonly options: ISignInFormOptions = {
-    layout: 'simple',
     submitLabel: 'Sign in to your account',
     emailPlaceholder: 'you@example.com',
     forgotPasswordHref: '/forgot-password',
@@ -26,10 +25,10 @@ export class SignInFormUsageExampleComponent {
   };
 
   readonly mode: SmartSignInFormMode = 'sign-in';
-  readonly loading = signal(false);
   readonly signedInAs = signal<string | null>(null);
   readonly provider = signal<string | null>(null);
 
+  // The form does not authenticate anyone: call your API here.
   onSubmit({ email }: ISignInFormSubmit): void {
     this.signedInAs.set(email);
   }

@@ -29,6 +29,17 @@ describe('docs-examples-angular: InfoCustomExampleComponent', () => {
     expect(element.querySelector('.docs-info__popover')).toBeNull();
   });
 
+  it('should forward the class of <smart-info> to the custom info', () => {
+    // Arrange
+    const root = element.querySelector('docs-custom-info .docs-info');
+
+    // Act
+    const classes = root?.classList;
+
+    // Assert
+    expect(classes?.contains('docs-info--inline')).toBe(true);
+  });
+
   it('should show the text after the trigger is clicked', () => {
     trigger()?.click();
     fixture.detectChanges();

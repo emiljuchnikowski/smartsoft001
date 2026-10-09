@@ -5,7 +5,6 @@ const avatarUrl = 'https://i.pravatar.cc/128?u=lindsay.walton';
 
 const options: IMediaObjectOptions = {
   alignment: 'center',
-  position: 'left',
 };
 
 export function MediaObjectUsageExample() {

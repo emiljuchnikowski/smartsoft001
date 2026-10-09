@@ -37,4 +37,12 @@ describe('docs-examples-react: mount', () => {
 
     expect(window.location.pathname).toBe('/notes');
   });
+
+  it('should render the preset implementation of the components', () => {
+    // The preset button is the Preline one: rounded-lg, where the unstyled
+    // standard implementation has rounded-md.
+    expect(screen.getByRole('button', { name: 'Open notes' })).toHaveClass(
+      'smart:rounded-lg',
+    );
+  });
 });

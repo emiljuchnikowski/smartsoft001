@@ -1,3 +1,6 @@
 <!-- #region usage -->
 <smart-empty-state [options]="options" (actionClick)="onActionClick($event)" />
+@if (lastAction(); as action) {
+  <p>Last action: {{ action }}</p>
+}
 <!-- #endregion -->

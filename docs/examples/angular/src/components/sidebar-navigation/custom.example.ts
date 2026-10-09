@@ -3,7 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
+  signal,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -103,9 +103,8 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomSidebarNavigationComponent extends SidebarNavigationBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
+  // `layout` is not read by the built-in implementations: a custom one decides
+  // what it means, here a modifier class.
   readonly containerClasses = computed(() => {
     const classes = [
       'docs-sidebar-navigation',
@@ -130,9 +129,20 @@ export class CustomSidebarNavigationComponent extends SidebarNavigationBaseCompo
       useValue: CustomSidebarNavigationComponent,
     },
   ],
-  template: ` <smart-sidebar-navigation [options]="options" /> `,
+  // The wrapper re-emits the custom component's itemClick and itemToggle.
+  template: `
+    <smart-sidebar-navigation
+      [options]="options"
+      (itemClick)="activeItem.set($event.itemId)"
+    />
+    @if (activeItem()) {
+      <p>Active item: {{ activeItem() }}</p>
+    }
+  `,
 })
 export class SidebarNavigationCustomExampleComponent {
+  readonly activeItem = signal<string | null>(null);
+
   readonly options: ISidebarNavOptions = {
     layout: 'light',
     ariaLabel: 'Sidebar',

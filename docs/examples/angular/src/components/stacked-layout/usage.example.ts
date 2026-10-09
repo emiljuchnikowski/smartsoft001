@@ -23,7 +23,6 @@ export class StackedLayoutUsageExampleComponent {
 
   readonly options = computed<IStackedLayoutOptions>(() => ({
     title: 'Projects',
-    containerWidth: 'xl',
     navTpl: this.navTpl(),
   }));
 }

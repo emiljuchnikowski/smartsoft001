@@ -47,7 +47,6 @@ const components = { 'grid-list': CustomGridList };
 const options: IGridListOptions = {
   title: 'Team',
   columns: 3,
-  layout: 'cards',
   items: [
     {
       id: 'lindsay',

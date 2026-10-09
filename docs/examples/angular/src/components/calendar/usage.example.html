@@ -5,4 +5,8 @@
   [events]="events"
   [(value)]="selectedDate"
 />
+
+@if (selectedDate(); as date) {
+  <p>Selected: {{ date.toDateString() }}</p>
+}
 <!-- #endregion -->

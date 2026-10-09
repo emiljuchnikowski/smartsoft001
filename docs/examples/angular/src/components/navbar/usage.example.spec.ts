@@ -6,6 +6,11 @@ describe('docs-examples-angular: NavbarUsageExampleComponent', () => {
   let fixture: ComponentFixture<NavbarUsageExampleComponent>;
   let element: HTMLElement;
 
+  const itemButton = (label: string) =>
+    Array.from(
+      element.querySelectorAll<HTMLButtonElement>('.items .item-button'),
+    ).find((button) => button.textContent?.includes(label));
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [NavbarUsageExampleComponent],
@@ -17,20 +22,34 @@ describe('docs-examples-angular: NavbarUsageExampleComponent', () => {
   });
 
   it('should render the logo and items from the options', () => {
-    expect(element.querySelector('.logo img')?.getAttribute('alt')).toBe(
-      'Acme',
-    );
+    // Act
+    const logo = element.querySelector('.logo img');
+
+    // Assert
+    expect(logo?.getAttribute('alt')).toBe('Acme');
+    expect(logo?.getAttribute('src')).toMatch(/^https:\/\//);
     expect(element.querySelector('.items')?.textContent).toContain('Dashboard');
     expect(element.querySelector('.items')?.textContent).toContain('Projects');
   });
 
-  it('should hand the clicked item id to the handler', () => {
-    const projects = Array.from(
-      element.querySelectorAll<HTMLButtonElement>('.items .item-button'),
-    ).find((button) => button.textContent?.includes('Projects'));
+  it('should mark the first item as current', () => {
+    // Act
+    const dashboard = itemButton('Dashboard');
 
+    // Assert
+    expect(dashboard?.classList.contains('current')).toBe(true);
+  });
+
+  it('should make the clicked item current through the handler', () => {
+    // Arrange
+    const projects = itemButton('Projects');
+
+    // Act
     projects?.click();
+    fixture.detectChanges();
 
-    expect(fixture.componentInstance.activeItem()).toBe('projects');
+    // Assert
+    expect(itemButton('Projects')?.classList.contains('current')).toBe(true);
+    expect(itemButton('Dashboard')?.classList.contains('current')).toBe(false);
   });
 });

@@ -15,8 +15,10 @@ describe('docs-examples-angular: EmptyStateUsageExampleComponent', () => {
   });
 
   it('should render the title, description and action from the options', () => {
+    // Arrange
     const emptyState: HTMLElement = fixture.nativeElement;
 
+    // Assert
     expect(emptyState.textContent).toContain('No projects');
     expect(emptyState.textContent).toContain(
       'Get started by creating a new project.',
@@ -24,12 +26,18 @@ describe('docs-examples-angular: EmptyStateUsageExampleComponent', () => {
     expect(emptyState.textContent).toContain('New project');
   });
 
-  it('should hand the clicked action id to the handler', () => {
+  it('should show the id of the clicked action', () => {
+    // Arrange
     const action: HTMLButtonElement =
       fixture.nativeElement.querySelector('button.action');
 
+    // Act
     action.click();
+    fixture.detectChanges();
 
-    expect(fixture.componentInstance.lastAction()).toBe('new-project');
+    // Assert
+    expect(fixture.nativeElement.textContent).toContain(
+      'Last action: new-project',
+    );
   });
 });

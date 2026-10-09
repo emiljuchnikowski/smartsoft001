@@ -5,15 +5,13 @@ import {
 } from '@smartsoft001/react';
 
 const options: IMultiColumnLayoutOptions = {
-  title: 'Inbox',
-  width: 'constrained',
   secondaryWidth: 'md',
   headerTpl: <strong>Inbox</strong>,
   navTpl: (
     <>
-      <a href="/inbox">Inbox</a>
-      <a href="/drafts">Drafts</a>
-      <a href="/sent">Sent</a>
+      <a href="#inbox">Inbox</a>
+      <a href="#drafts">Drafts</a>
+      <a href="#sent">Sent</a>
     </>
   ),
   secondaryTpl: <span>Storage: 4.2 GB of 15 GB used</span>,

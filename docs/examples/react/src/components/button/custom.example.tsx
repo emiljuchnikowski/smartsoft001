@@ -34,10 +34,8 @@ export function ButtonCustomExample() {
   const [saved, setSaved] = useState(false);
 
   const options: IButtonOptions = {
+    color: 'emerald',
     click: () => setSaved(true),
-    variant: 'primary',
-    color: 'indigo',
-    size: 'md',
   };
 
   return (

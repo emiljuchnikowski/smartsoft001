@@ -4,21 +4,25 @@ import { CardHeadingUsageExample } from './usage.example';
 
 describe('docs-examples-react: CardHeadingUsageExample', () => {
   it('should render the title and description from the options', () => {
+    // Act
     render(<CardHeadingUsageExample />);
 
+    // Assert
     expect(
       screen.getByRole('heading', { level: 3, name: 'Job postings' }),
     ).toBeInTheDocument();
     expect(screen.getByText(/Open roles across all teams/)).toBeInTheDocument();
+    expect(screen.getByText('Jobs created: 0')).toBeInTheDocument();
   });
 
-  it('should render the actions node and run its handler', () => {
-    const { container } = render(<CardHeadingUsageExample />);
+  it('should count the jobs the action button creates', () => {
+    // Arrange
+    render(<CardHeadingUsageExample />);
 
-    fireEvent.click(
-      container.querySelector('.actions button') as HTMLButtonElement,
-    );
+    // Act
+    fireEvent.click(screen.getByRole('button', { name: 'Create new job' }));
 
+    // Assert
     expect(screen.getByText('Jobs created: 1')).toBeInTheDocument();
   });
 });

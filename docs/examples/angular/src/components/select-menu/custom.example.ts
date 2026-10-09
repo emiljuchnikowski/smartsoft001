@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   signal,
   ViewEncapsulation,
 } from '@angular/core';
@@ -52,9 +51,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomSelectMenuComponent extends SelectMenuBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   readonly expanded = signal(false);
 
   readonly items = computed(() => this.options()?.items ?? []);
@@ -96,8 +92,8 @@ export class CustomSelectMenuComponent extends SelectMenuBaseComponent {
       useValue: CustomSelectMenuComponent,
     },
   ],
-  // NgComponentOutlet forwards `value` as a plain input, so the initial value
-  // reaches the custom component but its own selections stay inside it.
+  // The wrapper forwards `value` both ways: `selected` reaches the custom
+  // component, and the item it selects comes back to `selected`.
   template: ` <smart-select-menu [(value)]="selected" [options]="options" /> `,
 })
 export class SelectMenuCustomExampleComponent {

@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
+import { NavbarComponent } from '@smartsoft001/angular';
+
 import {
   CustomNavbarComponent,
   NavbarCustomExampleComponent,
@@ -35,20 +37,29 @@ describe('docs-examples-angular: NavbarCustomExampleComponent', () => {
     expect(items[1].getAttribute('aria-current')).toBeNull();
   });
 
-  // NgComponentOutlet does not forward outputs, so the wrapper's (itemClick)
-  // never fires - the emission is asserted on the custom instance itself.
-  it('should emit itemClick with the item id when an entry is activated', () => {
+  it('should emit itemClick from the custom navbar and through the wrapper', () => {
+    // Arrange
     const navbar: CustomNavbarComponent = fixture.debugElement.query(
       By.directive(CustomNavbarComponent),
     ).componentInstance;
+    const wrapper: NavbarComponent = fixture.debugElement.query(
+      By.directive(NavbarComponent),
+    ).componentInstance;
     const emitted: string[] = [];
+    const forwarded: string[] = [];
     navbar.itemClick.subscribe(({ itemId }: { itemId: string }) =>
       emitted.push(itemId),
     );
+    wrapper.itemClick.subscribe(({ itemId }: { itemId: string }) =>
+      forwarded.push(itemId),
+    );
 
+    // Act
     element.querySelectorAll<HTMLElement>('.docs-navbar__item')[2].click();
 
+    // Assert
     expect(emitted).toEqual(['work']);
+    expect(forwarded).toEqual(['work']);
   });
 
   it('should reveal the mobile panel when the menu button is toggled', () => {

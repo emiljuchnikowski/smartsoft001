@@ -2,12 +2,16 @@
 <input
   type="password"
   autocomplete="new-password"
+  aria-label="Password"
   [value]="password()"
   (input)="onPasswordInput($event)"
 />
 <smart-password-strength
   [passwordToCheck]="password()"
-  [showHint]="showHint"
+  [showHint]="true"
   (passwordStrength)="onPasswordStrength($event)"
 />
+@if (strong()) {
+  <p>The password is strong.</p>
+}
 <!-- #endregion -->

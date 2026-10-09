@@ -3,8 +3,12 @@ import { provideTranslateService } from '@ngx-translate/core';
 
 import { PasswordStrengthUsageExampleComponent } from './usage.example';
 
+// Lower and upper letters, a symbol and more than 6 characters.
+const STRONG_EXAMPLE_VALUE = 'Placeholder-Value';
+
 describe('docs-examples-angular: PasswordStrengthUsageExampleComponent', () => {
   let fixture: ComponentFixture<PasswordStrengthUsageExampleComponent>;
+  let element: HTMLElement;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -14,25 +18,42 @@ describe('docs-examples-angular: PasswordStrengthUsageExampleComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasswordStrengthUsageExampleComponent);
+    element = fixture.nativeElement;
     fixture.detectChanges();
   });
 
   it('should rate the initial password and list the missing requirements', () => {
-    const element: HTMLElement = fixture.nativeElement;
+    // Act
+    const text = element.textContent;
 
-    expect(element.textContent).toContain('INPUT.PASSWORD-STRENGTH.poor');
-    expect(element.textContent).toContain('INPUT.ERRORS.upperLetters');
+    // Assert
+    expect(text).toContain('INPUT.PASSWORD-STRENGTH.poor');
+    expect(text).toContain('INPUT.ERRORS.upperLetters');
+  });
+
+  it('should not report the initial password as strong', () => {
+    // Act
+    const text = element.textContent;
+
+    // Assert
+    expect(text).not.toContain('The password is strong.');
   });
 
   it('should report a strong password to the handler', () => {
-    const input: HTMLInputElement = fixture.nativeElement.querySelector(
-      'input[type="password"]',
+    // Arrange
+    const input = element.querySelector<HTMLInputElement>(
+      'input[aria-label="Password"]',
     );
 
-    input.value = 'Sunrise!2026';
-    input.dispatchEvent(new Event('input'));
+    // Act
+    if (input) {
+      input.value = STRONG_EXAMPLE_VALUE;
+      input.dispatchEvent(new Event('input'));
+    }
     fixture.detectChanges();
 
-    expect(fixture.componentInstance.strong()).toBe(true);
+    // Assert
+    expect(element.textContent).toContain('The password is strong.');
+    expect(element.textContent).not.toContain('INPUT.ERRORS.upperLetters');
   });
 });

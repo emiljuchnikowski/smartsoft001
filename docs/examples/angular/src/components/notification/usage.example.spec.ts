@@ -24,21 +24,26 @@ describe('docs-examples-angular: NotificationUsageExampleComponent', () => {
     expect(status?.getAttribute('aria-live')).toBe('polite');
   });
 
-  it('should hand the clicked action id to the handler', () => {
+  it('should show the clicked action', () => {
+    // Arrange
     const undo = Array.from(
       element.querySelectorAll<HTMLButtonElement>('button[data-variant]'),
     ).find((button) => button.textContent?.includes('Undo'));
 
+    // Act
     undo?.click();
+    fixture.detectChanges();
 
-    expect(fixture.componentInstance.lastAction()).toBe('undo');
+    // Assert
+    expect(element.textContent).toContain('Last action: undo');
   });
 
   it('should hide the notification when it is dismissed', () => {
+    // Act
     element.querySelector<HTMLButtonElement>('[aria-label="Close"]')?.click();
     fixture.detectChanges();
 
-    expect(fixture.componentInstance.visible()).toBe(false);
+    // Assert
     expect(element.querySelector('[role="status"]')).toBeNull();
   });
 });

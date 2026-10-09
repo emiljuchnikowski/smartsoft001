@@ -44,8 +44,8 @@ describe('docs-examples-angular: AlertCustomExampleComponent', () => {
     expect(buttons[1].getAttribute('data-role')).toBe('destructive');
   });
 
-  // NgComponentOutlet does not forward outputs, so the wrapper's (dismissed)
-  // never fires - the emission is asserted on the custom instance itself.
+  // The host binds no (dismissed) handler, so the emission is asserted on the
+  // custom instance; <smart-alert> re-emits it as its own (dismissed).
   it('should run the handler and emit dismissed when the confirm button is clicked', () => {
     const alert: CustomAlertComponent = fixture.debugElement.query(
       By.directive(CustomAlertComponent),

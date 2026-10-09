@@ -4,7 +4,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   TemplateRef,
   ViewEncapsulation,
 } from '@angular/core';
@@ -48,11 +47,8 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomSectionHeadingComponent extends SectionHeadingBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
-  // Templates travel inside `options`, which is a plain object, so slots keep
-  // working even though NgComponentOutlet drops projected content.
+  // The slots are TemplateRefs inside `options`; the custom component renders
+  // them with ngTemplateOutlet.
   readonly actionsTpl = computed(
     () => this.options()?.actionsTpl as TemplateRef<unknown>,
   );
@@ -92,8 +88,7 @@ export class SectionHeadingCustomExampleComponent {
     return {
       label: 'New',
       title: 'Manage your team in one place',
-      description:
-        'A balanced two-column split of copy and imagery for the default layout.',
+      description: 'Invite people, set their roles and remove access.',
       actionsTpl: actions,
     };
   }

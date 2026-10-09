@@ -2,7 +2,6 @@
 import {
   ICalendarEvent,
   SmartCalendar,
-  SmartCalendarOptions,
   SmartCalendarProps,
   SmartProvider,
   useCalendar,
@@ -93,25 +92,19 @@ const components = { calendar: CustomCalendar };
 
 const referenceDate = new Date(2026, 0, 1);
 
-const options: SmartCalendarOptions = { view: 'month', weekStart: 1 };
-
+// The standard and the preset never render `title`; this implementation does.
 const events: ICalendarEvent[] = [
   {
     id: 'review',
     title: 'Design review',
     start: new Date(2026, 0, 15, 10, 0),
-    end: new Date(2026, 0, 15, 11, 0),
   },
 ];
 
 export function CalendarCustomExample() {
   return (
     <SmartProvider components={components}>
-      <SmartCalendar
-        referenceDate={referenceDate}
-        events={events}
-        options={options}
-      />
+      <SmartCalendar referenceDate={referenceDate} events={events} />
     </SmartProvider>
   );
 }

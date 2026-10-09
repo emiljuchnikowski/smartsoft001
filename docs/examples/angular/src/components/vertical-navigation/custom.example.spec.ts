@@ -1,10 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 
-import {
-  CustomVerticalNavigationComponent,
-  VerticalNavigationCustomExampleComponent,
-} from './custom.example';
+import { VerticalNavigationCustomExampleComponent } from './custom.example';
 
 describe('docs-examples-angular: VerticalNavigationCustomExampleComponent', () => {
   let fixture: ComponentFixture<VerticalNavigationCustomExampleComponent>;
@@ -21,6 +17,7 @@ describe('docs-examples-angular: VerticalNavigationCustomExampleComponent', () =
   });
 
   it('should render the custom navigation through the wrapper instead of the standard one', () => {
+    // Assert
     expect(
       element.querySelector(
         'smart-vertical-navigation docs-custom-vertical-navigation',
@@ -29,12 +26,17 @@ describe('docs-examples-angular: VerticalNavigationCustomExampleComponent', () =
     expect(
       element.querySelector('smart-vertical-navigation-standard'),
     ).toBeNull();
+    expect(element.querySelector('.docs-vertical-nav')?.className).toContain(
+      'docs-vertical-nav--with-badges',
+    );
   });
 
   it('should render the loose items and the titled group the base normalizes', () => {
+    // Act
     const groups = element.querySelectorAll('.docs-vertical-nav__group');
     const current = element.querySelector('.docs-vertical-nav__item--current');
 
+    // Assert
     expect(groups.length).toBe(2);
     expect(
       groups[1].querySelector('.docs-vertical-nav__group-title')?.textContent,
@@ -45,20 +47,18 @@ describe('docs-examples-angular: VerticalNavigationCustomExampleComponent', () =
     );
   });
 
-  // NgComponentOutlet forwards inputs but not outputs, so the wrapper's
-  // (itemClick) never fires; the custom instance emits it.
-  it('should emit itemClick from the custom instance for an item without a href', () => {
-    const nav: CustomVerticalNavigationComponent = fixture.debugElement.query(
-      By.directive(CustomVerticalNavigationComponent),
-    ).componentInstance;
-    const emitted: string[] = [];
-    nav.itemClick.subscribe((event) => emitted.push(event.itemId));
-
-    const button = element.querySelector<HTMLButtonElement>(
+  it('should show the item reported through the wrapper itemClick', () => {
+    // Arrange
+    const button = element.querySelector(
       '.docs-vertical-nav__item button',
     ) as HTMLButtonElement;
-    button.click();
 
-    expect(emitted).toEqual(['new-project']);
+    // Act
+    button.click();
+    fixture.detectChanges();
+
+    // Assert
+    expect(fixture.componentInstance.lastItem()).toBe('new-project');
+    expect(element.textContent).toContain('Last clicked item: new-project');
   });
 });

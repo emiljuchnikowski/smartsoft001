@@ -2,8 +2,8 @@
 import { ISidebarLayoutOptions, SmartSidebarLayout } from '@smartsoft001/react';
 
 const options: ISidebarLayoutOptions = {
+  // The preset shows the title in a header above the sidebar and content.
   title: 'Acme',
-  sidebarPosition: 'left',
   // The sidebar is a plain React node passed inside the options.
   sidebarTpl: (
     <nav aria-label="Main">

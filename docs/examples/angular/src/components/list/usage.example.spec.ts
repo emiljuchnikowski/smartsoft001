@@ -7,6 +7,7 @@ import { ListUsageExampleComponent } from './usage.example';
 
 describe('docs-examples-angular: ListUsageExampleComponent', () => {
   let fixture: ComponentFixture<ListUsageExampleComponent>;
+  let element: HTMLElement;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -16,23 +17,33 @@ describe('docs-examples-angular: ListUsageExampleComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(ListUsageExampleComponent);
+    element = fixture.nativeElement as HTMLElement;
     fixture.detectChanges();
   });
 
   it('should render a row per record from the provider', () => {
-    const list: HTMLElement = fixture.nativeElement;
+    // Arrange
+    const rows = element.querySelectorAll('tbody tr');
 
-    expect(list.textContent).toContain('Lindsay Walton');
-    expect(list.textContent).toContain('courtney.henry@example.com');
-    expect(list.querySelectorAll('tbody tr').length).toBe(3);
+    // Act
+    const text = element.textContent;
+
+    // Assert
+    expect(rows.length).toBe(3);
+    expect(text).toContain('Lindsay');
+    expect(text).toContain('Walton');
+    expect(text).toContain('courtney.henry@example.com');
   });
 
-  it('should hand the id of the opened row to the select handler', () => {
-    const open: HTMLButtonElement =
-      fixture.nativeElement.querySelector('tbody td button');
+  it('should show the member of the opened row', () => {
+    // Arrange
+    const open = element.querySelector<HTMLButtonElement>('tbody td button');
 
-    open.click();
+    // Act
+    open?.click();
+    fixture.detectChanges();
 
-    expect(fixture.componentInstance.selectedId()).toBe('1');
+    // Assert
+    expect(element.textContent).toContain('Selected member: Lindsay Walton');
   });
 });

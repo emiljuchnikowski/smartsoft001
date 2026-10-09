@@ -5,7 +5,6 @@ import {
   ButtonGroupComponent,
   IButtonGroupButton,
   IButtonGroupButtonClick,
-  IButtonGroupOptions,
 } from '@smartsoft001/angular';
 
 @Component({
@@ -20,8 +19,6 @@ export class ButtonGroupUsageExampleComponent {
     { id: 'week', label: 'Week' },
     { id: 'month', label: 'Month' },
   ];
-
-  readonly options: IButtonGroupOptions = { variant: 'basic' };
 
   readonly view = signal('week');
 

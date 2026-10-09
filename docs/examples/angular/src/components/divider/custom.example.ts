@@ -3,7 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
+  signal,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -11,7 +11,6 @@ import {
   DividerBaseComponent,
   DividerComponent,
   DIVIDER_STANDARD_COMPONENT_TOKEN,
-  IDividerOptions,
 } from '@smartsoft001/angular';
 
 /**
@@ -41,10 +40,8 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomDividerComponent extends DividerBaseComponent {
-  // The wrapper hands inputs to NgComponentOutlet by canonical name, so the
-  // consumer's class arrives as `cssClass` rather than through the alias.
-  override cssClass = input<string>('');
-
+  // `cssClass` comes from the base (alias `class`): the wrapper hands the
+  // consumer's class to it under that name.
   containerClasses = computed(() =>
     ['docs-divider', this.cssClass()].filter(Boolean).join(' '),
   );
@@ -53,10 +50,8 @@ export class CustomDividerComponent extends DividerBaseComponent {
 /**
  * Registering the implementation against `DIVIDER_STANDARD_COMPONENT_TOKEN`
  * makes every `<smart-divider>` in this injector render it instead of the
- * standard variation.
- *
- * NgComponentOutlet forwards inputs only, so `actionClick` is observed on the
- * implementation itself rather than on `<smart-divider>`.
+ * standard variation. The wrapper re-emits the implementation's `actionClick`,
+ * so `(actionClick)` on `<smart-divider>` keeps working.
  */
 @Component({
   selector: 'docs-divider-custom-example',
@@ -72,11 +67,11 @@ export class CustomDividerComponent extends DividerBaseComponent {
     <smart-divider
       [title]="'Team members'"
       [actionLabel]="'Add member'"
-      [options]="options"
+      (actionClick)="addClicks.update((count) => count + 1)"
     />
   `,
 })
 export class DividerCustomExampleComponent {
-  options: IDividerOptions = { variant: 'with-button', position: 'left' };
+  addClicks = signal(0);
 }
 // #endregion

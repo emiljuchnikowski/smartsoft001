@@ -1,12 +1,10 @@
 // #region usage
 import { useState } from 'react';
 
-import { IDrawerOptions, SmartDrawer } from '@smartsoft001/react';
+import { IDrawerOptions, SmartButton, SmartDrawer } from '@smartsoft001/react';
 
-const options: IDrawerOptions = {
-  position: 'right',
-  withOverlay: true,
-};
+// A backdrop behind the panel; a click on it closes the drawer.
+const options: IDrawerOptions = { withOverlay: true };
 
 export function DrawerUsageExample() {
   const [open, setOpen] = useState(false);
@@ -14,9 +12,9 @@ export function DrawerUsageExample() {
 
   return (
     <>
-      <button type="button" onClick={() => setOpen(true)}>
+      <SmartButton options={{ click: () => setOpen(true) }}>
         View cart
-      </button>
+      </SmartButton>
 
       <SmartDrawer
         open={open}

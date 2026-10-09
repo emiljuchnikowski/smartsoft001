@@ -46,10 +46,9 @@ export class DocsAccount {
       }
 
       <!--
-        NgComponentOutlet does not forward outputs, so invokeSubmit declared
-        here never reaches the caller. It does not have to: smart-form already
-        wraps this template in a <form>, so a plain submit button makes the
-        wrapper emit its own (invokeSubmit).
+        smart-form wraps this template in a <form>, so a submit button makes
+        the wrapper emit its (invokeSubmit). Calling submit() from the base
+        works too: the wrapper re-emits the body's invokeSubmit.
       -->
       <button type="submit" class="docs-form__submit">Create account</button>
     </div>
@@ -59,8 +58,8 @@ export class DocsAccount {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomFormComponent extends FormBaseComponent<DocsAccount> {
-  // FormComponent passes the external class under its aliased name, so the
-  // inherited `cssClass` input is used as is - do not redeclare it here.
+  // `cssClass` comes from the base (alias `class`): the wrapper hands the
+  // consumer's class to it under that name.
   containerClasses = computed(() => {
     const classes = ['docs-form'];
     const extra = this.cssClass();

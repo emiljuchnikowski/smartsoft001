@@ -7,41 +7,46 @@ import { FormUsageExample } from './usage.example';
 describe('docs-examples-react: FormUsageExample', () => {
   function setup() {
     return render(
-      <SmartProvider
-        language="eng"
-        translations={{ MODEL: { name: 'Name', email: 'E-mail' } }}
-      >
+      <SmartProvider language="eng">
         <FormUsageExample />
       </SmartProvider>,
     );
   }
 
-  it('should render one input per field of the model', async () => {
+  it('should render one labelled input per field of the model', async () => {
+    // Arrange
     setup();
 
-    expect(await screen.findByLabelText(/Name/)).toHaveAttribute(
+    // Assert
+    expect(await screen.findByLabelText(/first name/)).toHaveAttribute(
       'type',
       'text',
     );
-    expect(screen.getByLabelText(/E-mail/)).toHaveAttribute('type', 'email');
+    expect(screen.getByLabelText(/email/)).toHaveAttribute('type', 'email');
   });
 
-  it('should hand the typed value to the change handler', async () => {
+  it('should show the typed value from the change handler', async () => {
+    // Arrange
     setup();
 
-    fireEvent.change(await screen.findByLabelText(/Name/), {
-      target: { value: 'Ada Lovelace' },
+    // Act
+    fireEvent.change(await screen.findByLabelText(/first name/), {
+      target: { value: 'Ada' },
     });
 
-    expect(screen.getByText('Name: Ada Lovelace')).toBeInTheDocument();
+    // Assert
+    expect(screen.getByText('First name: Ada')).toBeInTheDocument();
   });
 
-  it('should call the submit handler when the form is submitted', async () => {
+  it('should show that the form was submitted', async () => {
+    // Arrange
     const { container } = setup();
-    await screen.findByLabelText(/Name/);
+    await screen.findByLabelText(/first name/);
 
+    // Act
     fireEvent.submit(container.querySelector('form') as HTMLFormElement);
 
+    // Assert
     expect(screen.getByText('Submitted')).toBeInTheDocument();
   });
 });

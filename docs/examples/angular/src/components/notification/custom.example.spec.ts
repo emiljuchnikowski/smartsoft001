@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
+import { NotificationComponent } from '@smartsoft001/angular';
+
 import {
   CustomNotificationComponent,
   NotificationCustomExampleComponent,
@@ -43,37 +45,46 @@ describe('docs-examples-angular: NotificationCustomExampleComponent', () => {
     expect(actions[1].textContent).toContain('Allow');
   });
 
-  // NgComponentOutlet does not forward outputs, so the wrapper's (actionClick)
-  // never fires - the emission is asserted on the custom instance itself.
-  it('should emit actionClick with the action id when an action is clicked', () => {
+  it('should emit actionClick from the custom notification and through the wrapper', () => {
+    // Arrange
     const notification: CustomNotificationComponent =
       fixture.debugElement.query(
         By.directive(CustomNotificationComponent),
       ).componentInstance;
+    const wrapper: NotificationComponent = fixture.debugElement.query(
+      By.directive(NotificationComponent),
+    ).componentInstance;
     const emitted: string[] = [];
+    const forwarded: string[] = [];
     notification.actionClick.subscribe(({ actionId }) =>
       emitted.push(actionId),
     );
+    wrapper.actionClick.subscribe(({ actionId }) => forwarded.push(actionId));
 
+    // Act
     element
       .querySelectorAll<HTMLButtonElement>('.docs-notification__action')[1]
       .click();
 
+    // Assert
     expect(emitted).toEqual(['allow']);
+    expect(forwarded).toEqual(['allow']);
   });
 
-  it('should emit dismissed when the custom close button is clicked', () => {
-    const notification: CustomNotificationComponent =
-      fixture.debugElement.query(
-        By.directive(CustomNotificationComponent),
-      ).componentInstance;
+  it('should emit dismissed from the custom notification and through the wrapper', () => {
+    // Arrange
+    const wrapper: NotificationComponent = fixture.debugElement.query(
+      By.directive(NotificationComponent),
+    ).componentInstance;
     let dismissals = 0;
-    notification.dismissed.subscribe(() => (dismissals += 1));
+    wrapper.dismissed.subscribe(() => (dismissals += 1));
 
+    // Act
     element
       .querySelector<HTMLButtonElement>('.docs-notification__dismiss')
       ?.click();
 
+    // Assert
     expect(dismissals).toBe(1);
   });
 });

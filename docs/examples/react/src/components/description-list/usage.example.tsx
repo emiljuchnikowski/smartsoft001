@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 import {
   IDescriptionListOptions,
+  SmartButton,
   SmartDescriptionList,
 } from '@smartsoft001/react';
 
@@ -19,9 +20,15 @@ export function DescriptionListUsageExample() {
         label: 'Email address',
         value: 'margotfoster@example.com',
         actionTpl: (
-          <button type="button" onClick={() => setEditedField('email')}>
+          <SmartButton
+            options={{
+              variant: 'secondary',
+              size: 'sm',
+              click: () => setEditedField('email'),
+            }}
+          >
             Update
-          </button>
+          </SmartButton>
         ),
       },
       { label: 'Salary expectation', value: '$120,000' },

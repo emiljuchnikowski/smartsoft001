@@ -3,7 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
+  signal,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -53,12 +53,11 @@ import {
           <p class="docs-modal__description">{{ description() }}</p>
         }
 
-        <!--
-          smart-modal renders a custom implementation through NgComponentOutlet,
-          which does not forward projected content. Only open, title,
-          description, actions, options and cssClass arrive here, so a custom
-          modal owns its body instead of relying on ng-content.
-        -->
+        <!-- The content of <smart-modal> is projected here. -->
+        <div class="docs-modal__body">
+          <ng-content />
+        </div>
+
         <footer [class]="footerClasses()">
           @for (action of actions(); track action.id) {
             <button
@@ -78,9 +77,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomModalComponent extends ModalBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   containerClasses = computed(() => {
     const classes = ['docs-modal'];
     const variant = this.options()?.variant;
@@ -101,7 +97,8 @@ export class CustomModalComponent extends ModalBaseComponent {
 /**
  * Registering the implementation against `MODAL_STANDARD_COMPONENT_TOKEN`
  * makes every `<smart-modal>` in this injector render it instead of the
- * standard variation.
+ * standard variation. The wrapper forwards its inputs, its content and the
+ * implementation's `actionClick`, `closed` and `open` changes.
  */
 @Component({
   selector: 'docs-modal-custom-example',
@@ -117,10 +114,19 @@ export class CustomModalComponent extends ModalBaseComponent {
       description="Once the account is deactivated all of its data will be permanently removed."
       [actions]="actions"
       [options]="options"
-    />
+      (actionClick)="lastAction.set($event.actionId)"
+    >
+      <p>Your invoices stay available for 30 days.</p>
+    </smart-modal>
+
+    <p class="docs-modal__last-action">
+      Last action: {{ lastAction() ?? 'none' }}
+    </p>
   `,
 })
 export class ModalCustomExampleComponent {
+  lastAction = signal<string | null>(null);
+
   actions: IModalAction[] = [
     { id: 'cancel', label: 'Cancel', variant: 'secondary' },
     { id: 'deactivate', label: 'Deactivate', variant: 'danger' },

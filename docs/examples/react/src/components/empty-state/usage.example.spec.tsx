@@ -14,8 +14,10 @@ describe('docs-examples-react: EmptyStateUsageExample', () => {
   }
 
   it('should render the title, description and action from the options', () => {
+    // Arrange
     setup();
 
+    // Assert
     expect(
       screen.getByRole('heading', { name: 'No projects' }),
     ).toBeInTheDocument();
@@ -27,11 +29,14 @@ describe('docs-examples-react: EmptyStateUsageExample', () => {
     ).toBeInTheDocument();
   });
 
-  it('should hand the clicked action id to the handler', () => {
+  it('should show the id of the clicked action', () => {
+    // Arrange
     setup();
 
+    // Act
     fireEvent.click(screen.getByRole('button', { name: 'New project' }));
 
+    // Assert
     expect(screen.getByText('Last action: new-project')).toBeInTheDocument();
   });
 });

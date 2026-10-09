@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -76,9 +75,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomNotificationComponent extends NotificationBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   containerClasses = computed(() => {
     const classes = ['docs-notification'];
     const variant = this.options()?.variant;
@@ -92,10 +88,9 @@ export class CustomNotificationComponent extends NotificationBaseComponent {
 /**
  * Registering the implementation against
  * `NOTIFICATION_STANDARD_COMPONENT_TOKEN` makes every `<smart-notification>`
- * in this injector render it instead of the standard variation.
- *
- * NgComponentOutlet does not forward outputs, so the wrapper's `(dismissed)`
- * and `(actionClick)` stay silent - a consumer listens on the custom component.
+ * in this injector render it instead of the standard variation. The wrapper
+ * forwards the `dismissed` and `actionClick` outputs of the custom
+ * notification, so the consumer keeps listening on `<smart-notification>`.
  */
 @Component({
   selector: 'docs-notification-custom-example',

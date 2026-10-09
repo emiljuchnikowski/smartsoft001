@@ -4,7 +4,6 @@ import { IContainerOptions, SmartContainer } from '@smartsoft001/react';
 const options: IContainerOptions = {
   mode: 'constrained',
   padding: 'mobile',
-  narrow: false,
 };
 
 export function ContainerUsageExample() {

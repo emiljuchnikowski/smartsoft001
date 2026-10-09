@@ -9,13 +9,15 @@ import {
 } from '@angular/core';
 
 import {
+  ButtonComponent,
   DescriptionListComponent,
+  IButtonOptions,
   IDescriptionListOptions,
 } from '@smartsoft001/angular';
 
 @Component({
   selector: 'docs-description-list-usage-example',
-  imports: [DescriptionListComponent],
+  imports: [DescriptionListComponent, ButtonComponent],
   templateUrl: './usage.example.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -40,8 +42,10 @@ export class DescriptionListUsageExampleComponent {
 
   readonly editedField = signal<string | null>(null);
 
-  onEdit(field: string): void {
-    this.editedField.set(field);
-  }
+  readonly updateEmail: IButtonOptions = {
+    variant: 'secondary',
+    size: 'sm',
+    click: () => this.editedField.set('email'),
+  };
 }
 // #endregion

@@ -19,10 +19,8 @@ export class NotificationUsageExampleComponent {
     { id: 'undo', label: 'Undo', variant: 'primary' },
   ];
 
-  readonly options: INotificationOptions = {
-    variant: 'simple',
-    ariaLive: 'polite',
-  };
+  // The preset's `simple` look has no room for actions: show them below.
+  readonly options: INotificationOptions = { variant: 'with-actions-below' };
 
   readonly visible = signal(true);
   readonly lastAction = signal<string | null>(null);

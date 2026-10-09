@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -71,9 +70,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomNavbarComponent extends NavbarBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   containerClasses = computed(() => {
     const classes = ['docs-navbar'];
     if (this.options()?.dark) classes.push('docs-navbar--dark');
@@ -89,11 +85,9 @@ export class CustomNavbarComponent extends NavbarBaseComponent {
 /**
  * Registering the implementation against `NAVBAR_STANDARD_COMPONENT_TOKEN`
  * makes every `<smart-navbar>` in this injector render it instead of the
- * standard variation.
- *
- * NgComponentOutlet forwards `mobileMenuOpen` as a plain input, so the model
- * the custom navbar writes to stays local; the wrapper's `(itemClick)` and
- * `(mobileMenuOpenChange)` never fire.
+ * standard variation. The wrapper forwards the `itemClick` output and the
+ * `mobileMenuOpen` model of the custom navbar, so `(itemClick)` and
+ * `[(mobileMenuOpen)]` on `<smart-navbar>` keep working.
  */
 @Component({
   selector: 'docs-navbar-custom-example',
@@ -109,7 +103,6 @@ export class CustomNavbarComponent extends NavbarBaseComponent {
 })
 export class NavbarCustomExampleComponent {
   options: INavbarOptions = {
-    layout: 'simple',
     dark: false,
     logoUrl: 'https://avatars.githubusercontent.com/u/10416742?s=200&v=4',
     logoAlt: 'Brand',

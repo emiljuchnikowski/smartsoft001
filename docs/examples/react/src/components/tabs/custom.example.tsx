@@ -1,4 +1,6 @@
 // #region usage
+import { useState } from 'react';
+
 import {
   ITabsOptions,
   SmartProvider,
@@ -48,9 +50,7 @@ export function CustomTabs(props: SmartTabsProps) {
 const components = { tabs: CustomTabs };
 
 const options: ITabsOptions = {
-  layout: 'underline',
   ariaLabel: 'Account sections',
-  showMobileSelect: false,
   items: [
     { id: 'account', label: 'Account' },
     { id: 'billing', label: 'Billing' },
@@ -61,9 +61,16 @@ const options: ITabsOptions = {
 // Every <SmartTabs> below the provider renders CustomTabs. Without selectedId
 // the selection lives in the implementation and starts at defaultSelectedId.
 export function TabsCustomExample() {
+  const [lastTab, setLastTab] = useState<string | null>(null);
+
   return (
     <SmartProvider components={components}>
-      <SmartTabs options={options} defaultSelectedId="billing" />
+      <SmartTabs
+        options={options}
+        defaultSelectedId="billing"
+        onTabChange={({ tabId }) => setLastTab(tabId)}
+      />
+      {lastTab && <p>Last chosen tab: {lastTab}</p>}
     </SmartProvider>
   );
 }

@@ -54,8 +54,8 @@ export class DocsProfile {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomInputTextComponent<T> extends InputBaseComponent<T> {
-  // InputComponent forwards the external class under its aliased name, so the
-  // inherited `cssClass` input is used as is - do not redeclare it here.
+  // The class passed to `<smart-input>` arrives in the inherited `cssClass`
+  // input (alias `class`).
   fieldClasses = computed(() => {
     const classes = ['docs-input__field'];
     const extra = this.cssClass();

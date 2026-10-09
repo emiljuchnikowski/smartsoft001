@@ -1,6 +1,5 @@
 // #region usage
 import {
-  IDividerOptions,
   SmartDivider,
   SmartDividerProps,
   SmartProvider,
@@ -42,17 +41,11 @@ export function CustomDivider({
 // A module constant: a new object on every render would change the context.
 const components = { divider: CustomDivider };
 
-const options: IDividerOptions = { variant: 'with-button', position: 'left' };
-
 // Every <SmartDivider> below the provider renders CustomDivider.
 export function DividerCustomExample() {
   return (
     <SmartProvider components={components}>
-      <SmartDivider
-        title="Team members"
-        actionLabel="Add member"
-        options={options}
-      />
+      <SmartDivider title="Team members" actionLabel="Add member" />
     </SmartProvider>
   );
 }

@@ -1,10 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 
-import {
-  CustomDividerComponent,
-  DividerCustomExampleComponent,
-} from './custom.example';
+import { DividerCustomExampleComponent } from './custom.example';
 
 describe('docs-examples-angular: DividerCustomExampleComponent', () => {
   let fixture: ComponentFixture<DividerCustomExampleComponent>;
@@ -36,15 +32,11 @@ describe('docs-examples-angular: DividerCustomExampleComponent', () => {
     expect(button.textContent).toContain('Add member');
   });
 
-  it('should emit actionClick from the custom component when the button is clicked', () => {
-    const custom = fixture.debugElement.query(
-      By.directive(CustomDividerComponent),
-    ).componentInstance as CustomDividerComponent;
-    const handler = jest.fn();
-    custom.actionClick.subscribe(handler);
-
+  it('should re-emit actionClick of the custom component on the wrapper', () => {
+    // Act
     fixture.nativeElement.querySelector('button').click();
 
-    expect(handler).toHaveBeenCalledTimes(1);
+    // Assert
+    expect(fixture.componentInstance.addClicks()).toBe(1);
   });
 });

@@ -6,7 +6,6 @@ import {
   ElementRef,
   HostListener,
   inject,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -45,11 +44,8 @@ import {
 export class CustomInfoComponent extends InfoBaseComponent {
   private readonly elementRef = inject(ElementRef);
 
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class'
-  // alias, so an info component registered through the token declares it
-  // explicitly.
-  override cssClass = input<string>('');
-
+  // `cssClass` (the `class` input) comes from InfoBaseComponent; the wrapper
+  // forwards the class it receives to it.
   containerClasses = computed(() => {
     const classes = ['docs-info'];
     const extra = this.cssClass();
@@ -78,7 +74,7 @@ export class CustomInfoComponent extends InfoBaseComponent {
   ],
   template: `
     <label class="docs-info__label">Email address</label>
-    <smart-info [options]="options" />
+    <smart-info [options]="options" class="docs-info--inline" />
   `,
 })
 export class InfoCustomExampleComponent {

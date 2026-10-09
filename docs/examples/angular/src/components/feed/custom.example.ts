@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   signal,
   ViewEncapsulation,
 } from '@angular/core';
@@ -51,10 +50,6 @@ const COLLAPSED_COUNT = 2;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomFeedComponent extends FeedBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class'
-  // alias, so a feed registered through the token declares it explicitly.
-  override cssClass = input<string>('');
-
   // A custom implementation is free to add its own state on top of the
   // options the wrapper forwards.
   expanded = signal(false);

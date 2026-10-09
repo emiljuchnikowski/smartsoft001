@@ -1,4 +1,6 @@
 // #region usage
+import { useState } from 'react';
+
 import {
   ITextareaOptions,
   SmartProvider,
@@ -84,13 +86,19 @@ const options: ITextareaOptions = {
 // Every <SmartTextarea> below the provider renders CustomTextarea. Without
 // value the text lives in the implementation and starts at defaultValue.
 export function TextareaCustomExample() {
+  const [lastAction, setLastAction] = useState<string | null>(null);
+
   return (
     <SmartProvider components={components}>
       <SmartTextarea
         defaultValue="Looks good to me."
         placeholder="Add your comment..."
         options={options}
+        onActionClick={({ actionId, value }) =>
+          setLastAction(`${actionId}: ${value}`)
+        }
       />
+      {lastAction && <p>Last action: {lastAction}</p>}
     </SmartProvider>
   );
 }

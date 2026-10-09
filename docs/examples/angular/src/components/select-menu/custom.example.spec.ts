@@ -54,4 +54,16 @@ describe('docs-examples-angular: SelectMenuCustomExampleComponent', () => {
     ).toContain('Germany');
     expect(element.querySelector('[role="listbox"]')).toBeNull();
   });
+
+  it('should write the selected item back to the [(value)] binding of the wrapper', () => {
+    // Arrange
+    open();
+
+    // Act
+    element.querySelectorAll<HTMLElement>('[role="option"]')[2].click();
+    fixture.detectChanges();
+
+    // Assert
+    expect(fixture.componentInstance.selected()).toBe('us');
+  });
 });

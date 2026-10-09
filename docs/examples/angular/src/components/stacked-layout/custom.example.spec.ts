@@ -23,12 +23,22 @@ describe('docs-examples-angular: StackedLayoutCustomExampleComponent', () => {
     expect(element.querySelector('smart-stacked-layout-standard')).toBeNull();
   });
 
-  it('should render the navigation and header templates from the options', () => {
+  it('should render the navigation template and the title from the options', () => {
+    // Act
     const nav = element.querySelector('.docs-stacked-layout__nav');
     const header = element.querySelector('.docs-stacked-layout__header h1');
 
+    // Assert
     expect(nav?.textContent).toContain('Dashboard');
     expect(header?.textContent).toContain('Projects');
+  });
+
+  it('should render the content projected into the wrapper in the main area', () => {
+    // Act
+    const main = element.querySelector('.docs-stacked-layout__main');
+
+    // Assert
+    expect(main?.textContent).toContain('Main content of the page.');
   });
 
   it('should turn the container width into a modifier class', () => {

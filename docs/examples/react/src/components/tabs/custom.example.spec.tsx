@@ -29,6 +29,17 @@ describe('docs-examples-react: TabsCustomExample', () => {
     ).toHaveTextContent('Members');
   });
 
+  it('should show the chosen tab reported through onTabChange', () => {
+    // Arrange
+    render(<TabsCustomExample />);
+
+    // Act
+    fireEvent.click(screen.getByRole('button', { name: /Members/ }));
+
+    // Assert
+    expect(screen.getByText('Last chosen tab: members')).toBeInTheDocument();
+  });
+
   it('should report the clicked tab through onTabChange and onSelectedIdChange', () => {
     const onTabChange = jest.fn();
     const onSelectedIdChange = jest.fn();

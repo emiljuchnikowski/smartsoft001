@@ -14,8 +14,10 @@ describe('docs-examples-react: DescriptionListUsageExample', () => {
   }
 
   it('should render the title and items from the options', () => {
+    // Arrange
     const { container } = setup();
 
+    // Assert
     expect(
       screen.getByRole('heading', { name: 'Applicant information' }),
     ).toBeInTheDocument();
@@ -23,11 +25,14 @@ describe('docs-examples-react: DescriptionListUsageExample', () => {
     expect(container.querySelector('dd')).toHaveTextContent('Margot Foster');
   });
 
-  it('should run the handler from the item action', () => {
+  it('should show the field edited through the item action', () => {
+    // Arrange
     setup();
 
+    // Act
     fireEvent.click(screen.getByRole('button', { name: 'Update' }));
 
+    // Assert
     expect(screen.getByText('Editing: email')).toBeInTheDocument();
   });
 });

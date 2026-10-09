@@ -1,7 +1,8 @@
 <!-- #region usage -->
 <smart-card-heading [options]="options()" />
+<p>Jobs created: {{ createdCount() }}</p>
 
 <ng-template #actions>
-  <button type="button" (click)="onCreate()">Create new job</button>
+  <smart-button [options]="createButton">Create new job</smart-button>
 </ng-template>
 <!-- #endregion -->

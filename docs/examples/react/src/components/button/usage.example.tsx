@@ -7,21 +7,14 @@ export function ButtonUsageExample() {
   const [saveCount, setSaveCount] = useState(0);
 
   const options: IButtonOptions = {
-    type: 'submit',
-    variant: 'primary',
-    color: 'indigo',
-    size: 'md',
-    rounded: false,
+    color: 'emerald',
+    size: 'lg',
     click: () => setSaveCount((count) => count + 1),
   };
 
-  const disabled = false;
-
   return (
     <>
-      <SmartButton options={options} disabled={disabled}>
-        Save changes
-      </SmartButton>
+      <SmartButton options={options}>Save changes</SmartButton>
       <p>Saves: {saveCount}</p>
     </>
   );

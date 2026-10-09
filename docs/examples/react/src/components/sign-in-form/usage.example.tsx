@@ -10,7 +10,6 @@ import {
 } from '@smartsoft001/react';
 
 const options: ISignInFormOptions = {
-  layout: 'simple',
   submitLabel: 'Sign in to your account',
   emailPlaceholder: 'you@example.com',
   forgotPasswordHref: '/forgot-password',
@@ -21,8 +20,6 @@ const options: ISignInFormOptions = {
 const mode: SmartSignInFormMode = 'sign-in';
 
 export function SignInFormUsageExample() {
-  // Set it to true while the application's sign-in request runs.
-  const [loading] = useState(false);
   const [signedInAs, setSignedInAs] = useState<string | null>(null);
   const [provider, setProvider] = useState<string | null>(null);
 
@@ -37,7 +34,6 @@ export function SignInFormUsageExample() {
       <SmartSignInForm
         options={options}
         mode={mode}
-        disabled={loading}
         onSubmit={onSubmit}
         onSocialClick={onSocialClick}
       />

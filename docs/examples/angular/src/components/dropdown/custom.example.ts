@@ -2,7 +2,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  input,
+  signal,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -53,10 +53,8 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomDropdownComponent extends DropdownBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class'
-  // alias, so a dropdown registered through the token declares it explicitly.
-  override cssClass = input<string>('');
-
+  // `cssClass` comes from the base (alias `class`): the wrapper hands the
+  // consumer's class to it under that name.
   // toggle(), selectItem() and close() come from DropdownBaseComponent:
   // selectItem() emits selectedItem and closes the menu for you.
 }
@@ -73,12 +71,19 @@ export class CustomDropdownComponent extends DropdownBaseComponent {
       useValue: CustomDropdownComponent,
     },
   ],
-  // NgComponentOutlet forwards inputs but not outputs, so `(selectedItem)` on
-  // the wrapper stays silent once a custom implementation is registered -
-  // handle the selection inside the custom component instead.
-  template: `<smart-dropdown [items]="items" triggerLabel="Actions" />`,
+  // The wrapper re-emits the implementation's `selectedItem`, so the handler
+  // stays on `<smart-dropdown>`.
+  template: `
+    <smart-dropdown
+      [items]="items"
+      triggerLabel="Actions"
+      (selectedItem)="selectedId.set($event.itemId)"
+    />
+  `,
 })
 export class DropdownCustomExampleComponent {
+  selectedId = signal<string | null>(null);
+
   items: IDropdownItem[] = [
     { id: 'newsletter', label: 'Newsletter' },
     { id: 'sep', label: '', divider: true },

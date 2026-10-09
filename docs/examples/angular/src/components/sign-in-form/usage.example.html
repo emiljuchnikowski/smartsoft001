@@ -2,8 +2,13 @@
 <smart-sign-in-form
   [options]="options"
   [mode]="mode"
-  [disabled]="loading()"
   (submit)="onSubmit($event)"
   (socialClick)="onSocialClick($event)"
 />
+@if (signedInAs()) {
+  <p>Signed in as {{ signedInAs() }}</p>
+}
+@if (provider()) {
+  <p>Continue with provider: {{ provider() }}</p>
+}
 <!-- #endregion -->

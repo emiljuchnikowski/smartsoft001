@@ -5,4 +5,7 @@
   placeholder="Write a comment..."
   (actionClick)="onActionClick($event)"
 />
+@if (lastSubmitted() !== null) {
+  <p>Posted: {{ lastSubmitted() }}</p>
+}
 <!-- #endregion -->

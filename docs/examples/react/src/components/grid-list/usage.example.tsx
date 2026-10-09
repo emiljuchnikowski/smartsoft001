@@ -4,10 +4,8 @@ import { IGridListOptions, SmartGridList } from '@smartsoft001/react';
 const options: IGridListOptions = {
   title: 'Team',
   description: 'The people behind the product.',
-  // layout, columns and gap shape the grid of SmartGridListPreset.
-  layout: 'cards',
+  // The preset lays the tiles out in three columns from the `lg` breakpoint.
   columns: 3,
-  gap: 'md',
   items: [
     {
       id: 'lindsay',

@@ -11,7 +11,6 @@ import { ITabChange, ITabsOptions, TabsComponent } from '@smartsoft001/angular';
 })
 export class TabsUsageExampleComponent {
   readonly options: ITabsOptions = {
-    layout: 'underline',
     ariaLabel: 'Account settings',
     items: [
       { id: 'account', label: 'My account' },

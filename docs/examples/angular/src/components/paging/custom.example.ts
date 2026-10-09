@@ -60,9 +60,9 @@ import {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-// smart-paging builds the custom component with createComponent() and calls
-// setInput('class', ...), which resolves the alias, so the inherited cssClass
-// input is used as is - do not redeclare it here.
+// The class passed to <smart-paging> arrives in the inherited cssClass input
+// (alias `class`), and every other input and the pageChange output come from
+// the base class, so the component only adds its template.
 export class CustomPagingComponent extends PagingBaseComponent {}
 
 @Component({

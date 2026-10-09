@@ -14,8 +14,10 @@ describe('docs-examples-react: DropdownUsageExample', () => {
   }
 
   it('should render the trigger label with the menu closed', () => {
+    // Arrange
     setup();
 
+    // Assert
     expect(screen.getByRole('button', { name: 'Options' })).toHaveAttribute(
       'aria-expanded',
       'false',
@@ -24,22 +26,29 @@ describe('docs-examples-react: DropdownUsageExample', () => {
   });
 
   it('should render the header and the items when opened', () => {
+    // Arrange
     setup();
 
+    // Act
     fireEvent.click(screen.getByRole('button', { name: 'Options' }));
 
+    // Assert
     const menu = screen.getByRole('menu');
     expect(menu).toHaveTextContent('Signed in as tom@example.com');
     expect(menu).toHaveTextContent('Account settings');
     expect(screen.getByRole('button', { name: 'License' })).toBeDisabled();
   });
 
-  it('should hand the selected item id to the handler and close the menu', () => {
+  it('should show the selected item id and close the menu', () => {
+    // Arrange
     setup();
     fireEvent.click(screen.getByRole('button', { name: 'Options' }));
 
+    // Act
+
     fireEvent.click(screen.getByRole('button', { name: 'Account settings' }));
 
+    // Assert
     expect(screen.getByText('Selected: settings')).toBeInTheDocument();
     expect(screen.queryByRole('menu')).toBeNull();
   });

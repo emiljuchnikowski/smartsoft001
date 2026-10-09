@@ -43,6 +43,17 @@ describe('docs-examples-angular: MultiColumnLayoutCustomExampleComponent', () =>
     ).toContain('Storage');
   });
 
+  it('should project the content of the wrapper into the main column', () => {
+    // Arrange
+    const main = element.querySelector('.docs-multi-column-layout__main');
+
+    // Act
+    const text = main?.textContent;
+
+    // Assert
+    expect(text).toContain('Three unread conversations');
+  });
+
   it('should turn the widths from the options into modifier classes', () => {
     const container = element.querySelector('.docs-multi-column-layout');
 

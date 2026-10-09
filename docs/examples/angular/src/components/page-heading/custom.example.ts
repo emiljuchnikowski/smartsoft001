@@ -4,7 +4,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   TemplateRef,
   viewChild,
   ViewEncapsulation,
@@ -62,9 +61,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomPageHeadingComponent extends PageHeadingBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   containerClasses = computed(() => {
     const classes = ['docs-page-heading'];
     const layout = this.options()?.presentation?.layout;

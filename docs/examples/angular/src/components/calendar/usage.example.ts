@@ -14,17 +14,15 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarUsageExampleComponent {
-  readonly options: ICalendarOptions = {
-    view: 'month',
-    weekStart: 1,
-    showToolbar: true,
-  };
+  // Weeks start on Sunday (the default is Monday).
+  readonly options: ICalendarOptions = { weekStart: 0 };
 
   readonly referenceDate = new Date(2026, 8, 1);
 
+  // Each event marks the day of its `start`.
   readonly events: ICalendarEvent[] = [
-    { id: 1, start: new Date(2026, 8, 3, 10), title: 'Sprint planning' },
-    { id: 2, start: new Date(2026, 8, 17, 14), title: 'Design review' },
+    { id: 1, start: new Date(2026, 8, 3, 10) },
+    { id: 2, start: new Date(2026, 8, 17, 14) },
   ];
 
   readonly selectedDate = signal<Date | null>(null);

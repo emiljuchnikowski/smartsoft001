@@ -14,8 +14,10 @@ describe('docs-examples-react: StackedLayoutUsageExample', () => {
   }
 
   it('should render the navigation and the title from the options', () => {
+    // Act
     setup();
 
+    // Assert
     expect(screen.getByRole('navigation')).toHaveTextContent('Dashboard');
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
       'Projects',
@@ -26,9 +28,11 @@ describe('docs-examples-react: StackedLayoutUsageExample', () => {
     );
   });
 
-  it('should expose the container width on the layout root', () => {
+  it('should expose the default container width on the layout root', () => {
+    // Act
     const { container } = setup();
 
+    // Assert
     expect(container.querySelector('[data-container-width]')).toHaveAttribute(
       'data-container-width',
       'xl',
@@ -36,8 +40,12 @@ describe('docs-examples-react: StackedLayoutUsageExample', () => {
   });
 
   it('should render the children in the main area', () => {
+    // Act
     setup();
 
-    expect(screen.getByRole('main')).toHaveTextContent('3 active projects');
+    // Assert
+    expect(screen.getByRole('main')).toHaveTextContent(
+      'You have 3 active projects',
+    );
   });
 });

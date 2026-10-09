@@ -12,10 +12,8 @@ const actions: INotificationAction[] = [
   { id: 'undo', label: 'Undo', variant: 'primary' },
 ];
 
-const options: INotificationOptions = {
-  variant: 'simple',
-  ariaLive: 'polite',
-};
+// The preset's `simple` look has no room for actions: show them below.
+const options: INotificationOptions = { variant: 'with-actions-below' };
 
 export function NotificationUsageExample() {
   const [visible, setVisible] = useState(true);

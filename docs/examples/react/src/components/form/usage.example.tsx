@@ -4,10 +4,12 @@ import { useState } from 'react';
 import { Field, FieldType, Model } from '@smartsoft001/models';
 import { IFormOptions, SmartForm } from '@smartsoft001/react';
 
-@Model({ titleKey: 'name' })
+// Each label is the `MODEL.<key>` translation: the library's dictionary
+// already has `firstName` and `email`.
+@Model({ titleKey: 'firstName' })
 class Contact {
   @Field({ type: FieldType.text, create: true, required: true })
-  name = '';
+  firstName = '';
 
   @Field({ type: FieldType.email, create: true })
   email = '';
@@ -19,6 +21,7 @@ export function FormUsageExample() {
   const [value, setValue] = useState<Contact | null>(null);
   const [submitted, setSubmitted] = useState(false);
 
+  // `show` is required by the type; the form does not read it.
   const options: IFormOptions<Contact> = { model, show: true, mode: 'create' };
 
   return (
@@ -26,9 +29,10 @@ export function FormUsageExample() {
       <SmartForm
         options={options}
         onValueChange={setValue}
+        // Called on submit, and on Enter in an input.
         onInvokeSubmit={() => setSubmitted(true)}
       />
-      {value?.name && <p>Name: {value.name}</p>}
+      {value?.firstName && <p>First name: {value.firstName}</p>}
       {submitted && <p>Submitted</p>}
     </>
   );

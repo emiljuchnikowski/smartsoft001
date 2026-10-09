@@ -9,11 +9,35 @@ class Member {
   id = '';
 
   @Field({ list: { order: 1 }, type: FieldType.text })
-  name = '';
+  firstName = '';
 
-  @Field({ list: { order: 2 }, type: FieldType.email })
+  @Field({ list: { order: 2 }, type: FieldType.text })
+  lastName = '';
+
+  @Field({ list: { order: 3 }, type: FieldType.email })
   email = '';
 }
+
+const members: Member[] = [
+  {
+    id: '1',
+    firstName: 'Lindsay',
+    lastName: 'Walton',
+    email: 'lindsay.walton@example.com',
+  },
+  {
+    id: '2',
+    firstName: 'Courtney',
+    lastName: 'Henry',
+    email: 'courtney.henry@example.com',
+  },
+  {
+    id: '3',
+    firstName: 'Tom',
+    lastName: 'Cook',
+    email: 'tom.cook@example.com',
+  },
+];
 
 @Component({
   selector: 'docs-list-usage-example',
@@ -22,30 +46,25 @@ class Member {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListUsageExampleComponent {
-  readonly selectedId = signal<string | null>(null);
+  readonly selected = signal<Member | null>(null);
 
   // The provider is the data source; in an app it is usually an NgRx facade.
   readonly options: IListOptions<Member> = {
     type: Member,
     mode: ListMode.desktop,
     provider: {
-      list: signal<Member[]>([
-        {
-          id: '1',
-          name: 'Lindsay Walton',
-          email: 'lindsay.walton@example.com',
-        },
-        {
-          id: '2',
-          name: 'Courtney Henry',
-          email: 'courtney.henry@example.com',
-        },
-        { id: '3', name: 'Tom Cook', email: 'tom.cook@example.com' },
-      ]),
+      list: signal(members),
       loading: signal(false),
       getData: () => undefined,
     },
-    item: { options: { edit: false, select: (id) => this.selectedId.set(id) } },
+    // The item action of a row calls `select` with the row's id.
+    item: {
+      options: {
+        edit: false,
+        select: (id) =>
+          this.selected.set(members.find((member) => member.id === id) ?? null),
+      },
+    },
   };
 }
 // #endregion

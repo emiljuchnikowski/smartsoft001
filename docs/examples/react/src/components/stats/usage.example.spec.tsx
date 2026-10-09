@@ -14,8 +14,10 @@ describe('docs-examples-react: StatsUsageExample', () => {
   }
 
   it('should render the title and every stat from the options', () => {
+    // Act
     const { container } = setup();
 
+    // Assert
     expect(
       screen.getByRole('heading', { name: 'Last 30 days' }),
     ).toBeInTheDocument();
@@ -25,10 +27,13 @@ describe('docs-examples-react: StatsUsageExample', () => {
   });
 
   it('should mark the change with its trend', () => {
+    // Arrange
     const { container } = setup();
 
+    // Act
     const change = container.querySelector('[data-trend]');
 
+    // Assert
     expect(change).toHaveAttribute('data-trend', 'up');
     expect(change).toHaveTextContent('12%');
   });

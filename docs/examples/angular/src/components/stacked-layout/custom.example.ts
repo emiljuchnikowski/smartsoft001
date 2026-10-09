@@ -4,7 +4,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   TemplateRef,
   viewChild,
   ViewEncapsulation,
@@ -39,14 +38,9 @@ import {
         </header>
       }
 
-      <!--
-        smart-stacked-layout renders a custom implementation through
-        NgComponentOutlet, which forwards neither projected content nor extra
-        inputs. Only options and cssClass arrive here, so the page body comes
-        from options().* templates instead of <ng-content>.
-      -->
+      <!-- The content projected into <smart-stacked-layout> lands here. -->
       <main class="docs-stacked-layout__main">
-        <p>Main content rendered by the layout implementation.</p>
+        <ng-content />
       </main>
     </div>
   `,
@@ -55,9 +49,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomStackedLayoutComponent extends StackedLayoutBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   containerClasses = computed(() =>
     [
       'docs-stacked-layout',
@@ -88,24 +79,20 @@ export class CustomStackedLayoutComponent extends StackedLayoutBaseComponent {
       <a href="#projects">Projects</a>
     </ng-template>
 
-    <ng-template #headerTpl>
-      <h1>Projects</h1>
-    </ng-template>
-
-    <smart-stacked-layout [options]="options()" />
+    <smart-stacked-layout [options]="options()">
+      <p>Main content of the page.</p>
+    </smart-stacked-layout>
   `,
 })
 export class StackedLayoutCustomExampleComponent {
   private navTpl = viewChild.required<TemplateRef<unknown>>('navTpl');
-  private headerTpl = viewChild.required<TemplateRef<unknown>>('headerTpl');
 
-  // Both slots of IStackedLayoutOptions are TemplateRefs, so they are read from
-  // the host view. computed() keeps the object identity stable between checks.
+  // The navigation slot is a TemplateRef, so it is read from the host view.
+  // computed() keeps the object identity stable between checks.
   options = computed<IStackedLayoutOptions>(() => ({
     title: 'Projects',
     containerWidth: 'xl',
     navTpl: this.navTpl(),
-    headerTpl: this.headerTpl(),
   }));
 }
 // #endregion

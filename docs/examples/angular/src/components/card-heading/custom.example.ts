@@ -4,7 +4,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -48,10 +47,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomCardHeadingComponent extends CardHeadingBaseComponent {
-  // The wrapper hands inputs to NgComponentOutlet by canonical name, so the
-  // consumer's class arrives as `cssClass` rather than through the alias.
-  override cssClass = input<string>('');
-
+  // The consumer's `class` on <smart-card-heading> arrives as `cssClass`.
   containerClasses = computed(() =>
     ['docs-card-heading', this.cssClass()].filter(Boolean).join(' '),
   );

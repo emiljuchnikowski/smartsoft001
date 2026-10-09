@@ -23,10 +23,9 @@ export class SidebarLayoutUsageExampleComponent {
     viewChild.required<TemplateRef<unknown>>('sidebar');
 
   readonly options = computed<ISidebarLayoutOptions>(() => ({
+    // The preset shows the title in a header above the sidebar and content.
     title: 'Acme',
     sidebarTpl: this.sidebar(),
-    sidebarPosition: 'left',
-    mobileBreakpoint: 'lg',
   }));
 }
 // #endregion

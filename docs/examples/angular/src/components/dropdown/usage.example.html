@@ -5,4 +5,7 @@
   [options]="options"
   (selectedItem)="onSelect($event)"
 />
+@if (selectedId(); as id) {
+  <p>Selected: {{ id }}</p>
+}
 <!-- #endregion -->

@@ -4,5 +4,7 @@
   [(ngModel)]="birthDate"
   (validChange)="onValidChange($event)"
 />
-<p [hidden]="isValid()">Enter a valid date of birth.</p>
+@if (!isValid()) {
+  <p>Enter a valid date of birth.</p>
+}
 <!-- #endregion -->

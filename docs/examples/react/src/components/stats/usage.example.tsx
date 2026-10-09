@@ -3,7 +3,6 @@ import { IStatsOptions, SmartStats } from '@smartsoft001/react';
 
 const options: IStatsOptions = {
   title: 'Last 30 days',
-  columns: 3,
   items: [
     {
       label: 'Total subscribers',

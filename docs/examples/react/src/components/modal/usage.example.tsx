@@ -5,6 +5,7 @@ import {
   IModalAction,
   IModalActionClick,
   IModalOptions,
+  SmartButton,
   SmartModal,
 } from '@smartsoft001/react';
 
@@ -14,7 +15,6 @@ const actions: IModalAction[] = [
 ];
 
 const options: IModalOptions = {
-  variant: 'centered',
   footerStyle: 'gray',
   withDismiss: true,
 };
@@ -32,13 +32,9 @@ export function ModalUsageExample() {
 
   return (
     <>
-      <button
-        type="button"
-        className="docs-modal-trigger"
-        onClick={() => setOpen(true)}
-      >
+      <SmartButton options={{ click: () => setOpen(true) }}>
         Deactivate account
-      </button>
+      </SmartButton>
 
       <SmartModal
         open={open}

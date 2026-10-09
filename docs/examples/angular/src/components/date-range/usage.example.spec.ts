@@ -17,20 +17,29 @@ describe('docs-examples-angular: DateRangeUsageExampleComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should render the bound range', () => {
-    const element: HTMLElement = fixture.nativeElement;
-
-    expect(element.textContent).toContain('2026-04-01 - 2026-04-30');
-  });
-
-  it('should hand the cleared range to the change handler', () => {
-    const [, clear]: HTMLButtonElement[] = Array.from(
+  it('should render the bound range on the trigger', () => {
+    // Arrange
+    const [trigger]: HTMLButtonElement[] = Array.from(
       fixture.nativeElement.querySelectorAll('button'),
     );
 
+    // Assert
+    expect(trigger.textContent).toContain('2026-04-01 - 2026-04-30');
+  });
+
+  it('should clear the range through the change handler', () => {
+    // Arrange
+    const [trigger, clear]: HTMLButtonElement[] = Array.from(
+      fixture.nativeElement.querySelectorAll('button'),
+    );
+
+    // Act
     clear.click();
     fixture.detectChanges();
 
+    // Assert
     expect(fixture.componentInstance.range()).toBeUndefined();
+    expect(trigger.textContent).not.toContain('2026-04-01 - 2026-04-30');
+    expect(fixture.nativeElement.querySelectorAll('button')).toHaveLength(1);
   });
 });

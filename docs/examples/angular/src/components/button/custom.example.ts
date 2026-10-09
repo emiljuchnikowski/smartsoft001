@@ -3,13 +3,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   signal,
   ViewEncapsulation,
 } from '@angular/core';
 
 import {
   ButtonBaseComponent,
+  ButtonComponent,
   BUTTON_STANDARD_COMPONENT_TOKEN,
   IButtonOptions,
 } from '@smartsoft001/angular';
@@ -30,9 +30,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomButtonComponent extends ButtonBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   buttonClasses = computed(() =>
     ['docs-button', ...this.variantClasses(), this.cssClass()]
       .filter(Boolean)
@@ -40,30 +37,31 @@ export class CustomButtonComponent extends ButtonBaseComponent {
   );
 }
 
+// Registering the token makes every <smart-button> in this injector render
+// CustomButtonComponent; the label between the tags reaches its <ng-content>.
 @Component({
   selector: 'docs-button-custom-example',
-  imports: [CustomButtonComponent],
-  // Registering the token makes the custom button the replacement for every
-  // <smart-button>. It is rendered here through its own selector because
-  // content projection does not cross the NgComponentOutlet the wrapper uses
-  // for injected components, so the projected label stays visible.
+  imports: [ButtonComponent],
   providers: [
     {
       provide: BUTTON_STANDARD_COMPONENT_TOKEN,
       useValue: CustomButtonComponent,
     },
   ],
-  template: `<docs-custom-button [options]="options">Save</docs-custom-button>`,
+  template: `
+    <smart-button [options]="options">Save</smart-button>
+    @if (saved()) {
+      <p>Saved.</p>
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonCustomExampleComponent {
   saved = signal(false);
 
   options: IButtonOptions = {
+    color: 'emerald',
     click: () => this.saved.set(true),
-    variant: 'primary',
-    color: 'indigo',
-    size: 'md',
   };
 }
 // #endregion

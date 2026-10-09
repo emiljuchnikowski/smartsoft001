@@ -17,10 +17,7 @@ const team: IAvatarItem[] = [
   { id: 'u3', initials: 'AK' },
 ];
 
-const groupOptions: IAvatarOptions = {
-  placeholderType: 'initials',
-  stackDirection: 'bottom-to-top',
-};
+const groupOptions: IAvatarOptions = { stackDirection: 'bottom-to-top' };
 
 export function AvatarUsageExample() {
   return (

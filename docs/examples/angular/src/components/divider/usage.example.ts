@@ -10,10 +10,8 @@ import { DividerComponent, IDividerOptions } from '@smartsoft001/angular';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DividerUsageExampleComponent {
-  readonly options: IDividerOptions = {
-    variant: 'with-button',
-    position: 'left',
-  };
+  // The preset draws the title, a line and the action in one row.
+  readonly options: IDividerOptions = { variant: 'with-toolbar' };
 
   readonly title = 'Team members';
   readonly actionLabel = 'Add member';

@@ -2,8 +2,12 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SignInFormUsageExampleComponent } from './usage.example';
 
+// A placeholder for the password field, not a real credential.
+const EXAMPLE_PASSWORD_VALUE = 'placeholder-value';
+
 describe('docs-examples-angular: SignInFormUsageExampleComponent', () => {
   let fixture: ComponentFixture<SignInFormUsageExampleComponent>;
+  let element: HTMLElement;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -11,51 +15,87 @@ describe('docs-examples-angular: SignInFormUsageExampleComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(SignInFormUsageExampleComponent);
+    element = fixture.nativeElement as HTMLElement;
     fixture.detectChanges();
   });
 
-  it('should render the form from the options', () => {
-    const element: HTMLElement = fixture.nativeElement;
+  function type(selector: string, value: string): void {
+    const input = element.querySelector(selector) as HTMLInputElement;
+    input.value = value;
+    input.dispatchEvent(new Event('input'));
+  }
 
-    expect(
-      element.querySelector('button[type="submit"]')?.textContent,
-    ).toContain('Sign in to your account');
+  it('should render the form from the options', () => {
+    // Act
+    const submit = element.querySelector('button[type="submit"]');
+
+    // Assert
+    expect(submit?.textContent).toContain('Sign in to your account');
     expect(element.textContent).toContain('Continue with Google');
+    expect(
+      element.querySelector<HTMLInputElement>('input[type="email"]')
+        ?.placeholder,
+    ).toBe('you@example.com');
+  });
+
+  it('should render the links of the sign-in mode', () => {
+    // Act
+    const links = Array.from(element.querySelectorAll('a'), (link) => [
+      link.textContent?.trim(),
+      link.getAttribute('href'),
+    ]);
+
+    // Assert
+    expect(links).toEqual([
+      ['Forgot password?', '/forgot-password'],
+      ['Create an account', '/sign-up'],
+    ]);
+  });
+
+  it('should show the typed email once the form is submitted', () => {
+    // Arrange
+    type('input[type="email"]', 'anna@example.com');
+    type('input[type="password"]', EXAMPLE_PASSWORD_VALUE);
+
+    // Act
+    (
+      element.querySelector('button[type="submit"]') as HTMLButtonElement
+    ).click();
+    fixture.detectChanges();
+
+    // Assert
+    expect(element.textContent).toContain('Signed in as anna@example.com');
   });
 
   it('should hand the credentials to the submit handler once', () => {
+    // Arrange
     const onSubmit = jest.spyOn(fixture.componentInstance, 'onSubmit');
-    const element = fixture.debugElement.nativeElement;
-    const email: HTMLInputElement = element.querySelector(
-      'input[type="email"]',
-    );
-    const password: HTMLInputElement = element.querySelector(
-      'input[type="password"]',
-    );
-    const submit: HTMLButtonElement = element.querySelector(
-      'button[type="submit"]',
-    );
+    type('input[type="email"]', 'anna@example.com');
+    type('input[type="password"]', EXAMPLE_PASSWORD_VALUE);
 
-    email.value = 'anna@example.com';
-    email.dispatchEvent(new Event('input'));
-    password.value = 'Sunrise#2026';
-    password.dispatchEvent(new Event('input'));
-    submit.click();
+    // Act
+    (
+      element.querySelector('button[type="submit"]') as HTMLButtonElement
+    ).click();
 
+    // Assert
     expect(onSubmit).toHaveBeenCalledTimes(1);
     expect(onSubmit).toHaveBeenCalledWith({
       email: 'anna@example.com',
-      password: 'Sunrise#2026',
+      password: EXAMPLE_PASSWORD_VALUE,
       mode: 'sign-in',
     });
   });
 
-  it('should hand the provider id to the social click handler', () => {
-    const social: HTMLButtonElement =
-      fixture.nativeElement.querySelector('button.social');
+  it('should show the provider of the clicked social button', () => {
+    // Arrange
+    const social = element.querySelector('button.social') as HTMLButtonElement;
 
+    // Act
     social.click();
+    fixture.detectChanges();
 
-    expect(fixture.componentInstance.provider()).toBe('google');
+    // Assert
+    expect(element.textContent).toContain('Continue with provider: google');
   });
 });

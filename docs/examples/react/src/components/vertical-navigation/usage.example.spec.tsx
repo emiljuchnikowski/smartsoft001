@@ -16,8 +16,10 @@ describe('docs-examples-react: VerticalNavigationUsageExample', () => {
   }
 
   it('should render the items from the options and mark the current one', () => {
+    // Act
     const nav = setup();
 
+    // Assert
     expect(nav).toHaveTextContent('Projects');
     expect(nav).toHaveTextContent('12');
     expect(
@@ -25,11 +27,14 @@ describe('docs-examples-react: VerticalNavigationUsageExample', () => {
     ).toHaveTextContent('Dashboard');
   });
 
-  it('should hand the clicked item id to the handler', () => {
+  it('should show the clicked item reported through onItemClick', () => {
+    // Arrange
     const nav = setup();
 
+    // Act
     fireEvent.click(within(nav).getAllByRole('button')[1]);
 
+    // Assert
     expect(screen.getByText('Last clicked item: team')).toBeInTheDocument();
   });
 });

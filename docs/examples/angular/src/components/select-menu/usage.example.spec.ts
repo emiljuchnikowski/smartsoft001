@@ -4,6 +4,7 @@ import { SelectMenuUsageExampleComponent } from './usage.example';
 
 describe('docs-examples-angular: SelectMenuUsageExampleComponent', () => {
   let fixture: ComponentFixture<SelectMenuUsageExampleComponent>;
+  let element: HTMLElement;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -11,23 +12,49 @@ describe('docs-examples-angular: SelectMenuUsageExampleComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(SelectMenuUsageExampleComponent);
+    element = fixture.nativeElement as HTMLElement;
     fixture.detectChanges();
   });
 
-  it('should render the placeholder and the items from the options', () => {
-    const element: HTMLElement = fixture.nativeElement;
+  function select(): HTMLSelectElement {
+    return element.querySelector('select') as HTMLSelectElement;
+  }
 
-    expect(element.textContent).toContain('Choose a plan');
-    expect(element.textContent).toContain('Professional');
+  it('should render the placeholder and the items from the options', () => {
+    // Act
+    const labels = Array.from(select().options, (option) =>
+      option.textContent?.trim(),
+    );
+
+    // Assert
+    expect(labels).toEqual([
+      'Choose a plan',
+      'Starter',
+      'Professional',
+      'Enterprise',
+    ]);
+    expect(select().getAttribute('aria-label')).toBe('Subscription plan');
   });
 
-  it('should write the chosen value into the bound signal', () => {
-    const select: HTMLSelectElement =
-      fixture.nativeElement.querySelector('select');
+  it('should disable the item marked as disabled', () => {
+    // Act
+    const enterprise = Array.from(select().options).find(
+      (option) => option.value === 'enterprise',
+    );
 
-    select.value = 'pro';
-    select.dispatchEvent(new Event('change'));
+    // Assert
+    expect(enterprise?.disabled).toBe(true);
+  });
 
-    expect(fixture.componentInstance.plan()).toBe('pro');
+  it('should show the chosen plan under the select', () => {
+    // Arrange
+    select().value = 'pro';
+
+    // Act
+    select().dispatchEvent(new Event('change'));
+    fixture.detectChanges();
+
+    // Assert
+    expect(element.textContent).toContain('Selected plan: pro');
   });
 });

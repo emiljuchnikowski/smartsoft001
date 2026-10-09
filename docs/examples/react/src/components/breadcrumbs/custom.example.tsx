@@ -54,8 +54,6 @@ export function CustomBreadcrumbs({
 const components = { breadcrumbs: CustomBreadcrumbs };
 
 const options: IBreadcrumbsOptions = {
-  separator: 'slash',
-  ariaLabel: 'Breadcrumb',
   items: [
     { id: 'home', label: 'Home', href: '#' },
     { id: 'center', label: 'App Center', href: '#' },

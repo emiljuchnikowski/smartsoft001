@@ -1,7 +1,11 @@
 // #region usage
 import { useState } from 'react';
 
-import { ICardHeadingOptions, SmartCardHeading } from '@smartsoft001/react';
+import {
+  ICardHeadingOptions,
+  SmartButton,
+  SmartCardHeading,
+} from '@smartsoft001/react';
 
 export function CardHeadingUsageExample() {
   const [createdCount, setCreatedCount] = useState(0);
@@ -10,12 +14,11 @@ export function CardHeadingUsageExample() {
     title: 'Job postings',
     description: 'Open roles across all teams, sorted by posting date.',
     actionsTpl: (
-      <button
-        type="button"
-        onClick={() => setCreatedCount((count) => count + 1)}
+      <SmartButton
+        options={{ click: () => setCreatedCount((count) => count + 1) }}
       >
         Create new job
-      </button>
+      </SmartButton>
     ),
   };
 
