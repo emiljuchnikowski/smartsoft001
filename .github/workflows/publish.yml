@@ -153,23 +153,43 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  # The starter repository is the example application as something to clone,
-  # generated from docs/examples/app and pinned to the release just cut, so
-  # that it cannot drift from the framework. The job is gated on the
-  # STARTER_REPOSITORY repository variable (for example
-  # `emiljuchnikowski/smartsoft001-starter`) because a fork, or this
-  # repository before the variable is set, has nowhere to push to and must
-  # still release. STARTER_DEPLOY_TOKEN is a fine-grained token scoped to that
-  # repository with "Contents: read and write" and "Workflows: read and
-  # write"; the second one is easy to miss, and without it GitHub rejects
-  # the push because the starter carries its own .github/workflows/ci.yml.
-  # The token is used only at push time. Marking the repository as a
+  # The starter repositories are the example application as something to
+  # clone, generated from docs/examples/app and pinned to the release just
+  # cut, so that they cannot drift from the framework: one per frontend, the
+  # Angular + NestJS starter and the React + NestJS one. Both are generated and
+  # verified on every release; each is pushed only where its repository
+  # variable points, because a checkout without one (this repository before
+  # the variable is set) has nowhere to push to and must still release.
+  #
+  # Angular: STARTER_REPOSITORY (for example
+  # `emiljuchnikowski/smartsoft001-starter`) and STARTER_DEPLOY_TOKEN, a
+  # fine-grained token scoped to that repository with "Contents: read and
+  # write" and "Workflows: read and write"; the second one is easy to miss,
+  # and without it GitHub rejects the push because the starter carries its
+  # own .github/workflows/ci.yml.
+  #
+  # React: STARTER_REACT_REPOSITORY (for example
+  # `emiljuchnikowski/smartsoft001-starter-react`) and
+  # STARTER_REACT_DEPLOY_TOKEN with the same two permissions on that
+  # repository; without it the push falls back to STARTER_DEPLOY_TOKEN, which
+  # works when that token covers both repositories. While the React
+  # repository does not exist yet, the variable stays unset and the push is
+  # skipped with a notice: the Docs workflow deploys only after a green
+  # Publish run, so a missing variable must not turn it red.
+  #
+  # The tokens are used only at push time. Marking a repository as a
   # template, which puts "Use this template" on its page, is a one-time
   # setting in its GitHub settings, not something this job can do.
   starter:
     needs: [main]
-    if: needs.main.result == 'success' && vars.STARTER_REPOSITORY != ''
+    if: needs.main.result == 'success'
     runs-on: ubuntu-24.04
+    strategy:
+      # Two repositories, released independently: a failing React starter
+      # must not cancel the Angular push, and the other way round.
+      fail-fast: false
+      matrix:
+        frontend: [angular, react]
     steps:
       # The tag, not main: the write-back to main can be rejected when main
       # moved, but the tag is always pushed, and it is the release the
@@ -183,7 +203,7 @@ jobs:
         with:
           node-version: '26.5.1'
       - name: Generate the starter from the example application
-        run: npm run build:starter -- --version "${{ needs.main.outputs.version }}" --target "$RUNNER_TEMP/starter"
+        run: npm run build:starter -- --version "${{ needs.main.outputs.version }}" --frontend "${{ matrix.frontend }}" --target "$RUNNER_TEMP/starter"
       # A clean clone of the generated commit has to install from the
       # lockfile, build and test on its own. If it does not, nothing is pushed
       # and the release fails here, with the packages already on npm.
@@ -196,12 +216,37 @@ jobs:
       # the new commit carries exactly that tree. An empty repository has no
       # main to fetch, and the generated commit is pushed as it is.
       - name: Push the release to the starter repository
+        if: matrix.frontend == 'angular' && vars.STARTER_REPOSITORY != ''
         working-directory: ${{ runner.temp }}/starter
         env:
           STARTER_REPOSITORY: ${{ vars.STARTER_REPOSITORY }}
           STARTER_DEPLOY_TOKEN: ${{ secrets.STARTER_DEPLOY_TOKEN }}
           VERSION: ${{ needs.main.outputs.version }}
         run: |
+          git remote add origin "https://x-access-token:${STARTER_DEPLOY_TOKEN}@github.com/${STARTER_REPOSITORY}.git"
+          if git fetch origin main; then
+            git reset --soft origin/main
+            git -c user.name="smartsoft001 release" -c user.email="noreply@github.com" \
+              commit --quiet -m "chore: release ${VERSION}"
+          else
+            echo "the starter repository is empty; pushing the first release"
+          fi
+          git push origin main
+      # The same push for the React starter, to its own repository. The
+      # variable is checked in the script rather than in `if:`, so that a
+      # release without it says so in the run instead of skipping silently.
+      - name: Push the release to the React starter repository
+        if: matrix.frontend == 'react'
+        working-directory: ${{ runner.temp }}/starter
+        env:
+          STARTER_REPOSITORY: ${{ vars.STARTER_REACT_REPOSITORY }}
+          STARTER_DEPLOY_TOKEN: ${{ secrets.STARTER_REACT_DEPLOY_TOKEN || secrets.STARTER_DEPLOY_TOKEN }}
+          VERSION: ${{ needs.main.outputs.version }}
+        run: |
+          if [ -z "${STARTER_REPOSITORY}" ]; then
+            echo "::notice title=React starter not pushed::STARTER_REACT_REPOSITORY is not set. The React starter for ${VERSION} was generated and verified; set the variable (and STARTER_REACT_DEPLOY_TOKEN) to push it."
+            exit 0
+          fi
           git remote add origin "https://x-access-token:${STARTER_DEPLOY_TOKEN}@github.com/${STARTER_REPOSITORY}.git"
           if git fetch origin main; then
             git reset --soft origin/main

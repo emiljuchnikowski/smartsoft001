@@ -229,11 +229,12 @@ describe('nx release: the current version comes from git, not from a write-back'
 });
 
 /**
- * The starter repository is generated from the example application on every
- * release and pushed by a job of its own. That job must run after the
- * release, prove the generated starter installs and works from a clean clone
- * before it pushes anything, and stay out of the way on a checkout that has
- * no starter repository to push to.
+ * The starter repositories, one per frontend of the example application, are
+ * generated from it on every release and pushed by a job of their own. That
+ * job must run after the release, prove each generated starter installs and
+ * works from a clean clone before it pushes anything, and push nothing on a
+ * checkout that has no starter repository to push to, without failing the
+ * release over it: the Docs workflow deploys only after a green Publish run.
  */
 describe('publish: the starter is generated, verified and pushed by its own job', () => {
   const workflow = fs.readFileSync(
@@ -251,10 +252,67 @@ describe('publish: the starter is generated, verified and pushed by its own job'
     assert.match(job, /needs: \[main\]/);
   });
 
-  it('should be gated on the STARTER_REPOSITORY variable', () => {
+  /** The step of the job named `name`, up to the next step. */
+  function step(name) {
+    const start = job.indexOf(`- name: ${name}\n`);
+
+    assert.ok(start > 0, `the starter job needs a "${name}" step`);
+
+    const next = job.indexOf('\n      - ', start + 1);
+
+    return job.slice(start, next === -1 ? undefined : next);
+  }
+
+  it('should generate and verify the starter of each frontend after every release', () => {
+    assert.match(job, /\n {4}if: needs\.main\.result == 'success'\n/);
+    assert.match(job, /fail-fast: false/);
+    assert.match(job, /frontend: \[angular, react\]/);
     assert.match(
-      job,
-      /if: needs\.main\.result == 'success' && vars\.STARTER_REPOSITORY != ''/,
+      step('Generate the starter from the example application'),
+      /--frontend "\$\{\{ matrix\.frontend \}\}"/,
+    );
+  });
+
+  it('should push the Angular starter only where STARTER_REPOSITORY points', () => {
+    const push = step('Push the release to the starter repository');
+
+    assert.match(
+      push,
+      /if: matrix\.frontend == 'angular' && vars\.STARTER_REPOSITORY != ''/,
+    );
+    assert.match(
+      push,
+      /STARTER_REPOSITORY: \$\{\{ vars\.STARTER_REPOSITORY \}\}/,
+    );
+    assert.match(
+      push,
+      /STARTER_DEPLOY_TOKEN: \$\{\{ secrets\.STARTER_DEPLOY_TOKEN \}\}/,
+    );
+  });
+
+  it('should push the React starter to its own repository, or skip with a notice', () => {
+    const push = step('Push the release to the React starter repository');
+
+    assert.match(push, /if: matrix\.frontend == 'react'\n/);
+    assert.match(
+      push,
+      /STARTER_REPOSITORY: \$\{\{ vars\.STARTER_REACT_REPOSITORY \}\}/,
+    );
+    assert.match(
+      push,
+      /STARTER_DEPLOY_TOKEN: \$\{\{ secrets\.STARTER_REACT_DEPLOY_TOKEN \|\| secrets\.STARTER_DEPLOY_TOKEN \}\}/,
+    );
+    // A missing variable is the state while the repository is being created;
+    // it must leave the run green.
+    const skip = push.indexOf('if [ -z "${STARTER_REPOSITORY}" ]; then');
+    const notice = push.indexOf('::notice');
+    const exit = push.indexOf('exit 0');
+    const remote = push.indexOf('git remote add origin');
+
+    assert.ok(skip > 0, 'the React push checks the variable first');
+    assert.ok(
+      skip < notice && notice < exit && exit < remote,
+      'without the variable the React push leaves a notice and exits 0 before touching a remote',
     );
   });
 

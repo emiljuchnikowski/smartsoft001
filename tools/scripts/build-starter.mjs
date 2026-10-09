@@ -8,12 +8,24 @@
  * workflow runs this script on every release and pushes the result to the
  * starter repository as one commit per release.
  *
+ * The example application has two frontends over one API, an Angular one and
+ * a React one; a starter has one of them, picked with `--frontend`. The
+ * Angular starter (the default) is `smartsoft001-starter`, the React one
+ * `smartsoft001-starter-react`, and each is generated, verified and pushed on
+ * every release.
+ *
  * The script starts from `createStandaloneApp`, which already moves the app to
  * the root of a workspace of its own and installs `@smartsoft001` from npm at
  * the version just released. On top of that copy it applies the starter layer:
  *
+ * - The other frontend goes: its app, its e2e project, its commands in
+ *   `run.sh` and `package.json` and its dependencies. The React app moves
+ *   from apps/web-react to apps/web, and the shared Playwright suite drives
+ *   the one frontend that is left instead of choosing one with `E2E_FRONTEND`.
  * - The projects lose the `docs-examples-app-` prefix they carry inside the
- *   monorepo, so the starter has `web`, `api`, `model` and `web-e2e`.
+ *   monorepo (and the React app its `-react`, which only told the two
+ *   frontends apart), so either starter has `web`, `api`, `model` and
+ *   `web-e2e`.
  * - The `#region` markers the documentation site cuts its snippets from are
  *   removed. They mean nothing outside the docs.
  * - The Docker files build with the starter root as context instead of the
@@ -26,13 +38,17 @@
  *   `verify-starter.mjs` can clone it and the workflow can push it.
  *
  * Usage: node tools/scripts/build-starter.mjs --version <v> --target <dir>
+ *          [--frontend angular|react]
  */
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { createStandaloneApp } from './example-app-standalone.mjs';
+import {
+  createStandaloneApp,
+  frameworkDependencies,
+} from './example-app-standalone.mjs';
 
 const APP_ROOT = 'docs/examples/app';
 const PROJECT_PREFIX = 'docs-examples-app-';
@@ -48,7 +64,48 @@ export const RELEASE_IDENTITY = {
 const SKIPPED = new Set(['node_modules', 'dist', '.git']);
 
 /** The files whose `#region` markers feed the documentation site. */
-const REGION_EXTENSIONS = new Set(['.ts', '.sh', '.yml']);
+const REGION_EXTENSIONS = new Set(['.ts', '.tsx', '.sh', '.yml']);
+
+/**
+ * What tells the two frontends apart in the example application: the React
+ * app is apps/web-react (project `docs-examples-app-web-react`) and its e2e
+ * project apps/web-react-e2e, and the commands that differ per frontend come
+ * in pairs, the React one carrying a `react` suffix (`web` and `web-react` in
+ * `run.sh`, `start` and `start:react` in `package.json`). A starter keeps one
+ * of each pair under the plain name.
+ */
+export const FRONTENDS = {
+  angular: {
+    label: 'Angular',
+    name: 'smartsoft001-starter',
+    project: 'web',
+    dropped: ['apps/web-react', 'apps/web-react-e2e'],
+    moved: null,
+  },
+  react: {
+    label: 'React',
+    name: 'smartsoft001-starter-react',
+    project: 'web-react',
+    dropped: ['apps/web', 'apps/web-react-e2e'],
+    moved: ['apps/web-react', 'apps/web'],
+  },
+};
+
+function frontendSpec(frontend) {
+  const spec = FRONTENDS[frontend];
+
+  if (!spec) {
+    throw new Error(
+      `unknown frontend "${frontend}"; expected one of ${Object.keys(FRONTENDS).join(', ')}`,
+    );
+  }
+
+  return spec;
+}
+
+function otherFrontend(frontend) {
+  return frontend === 'react' ? 'angular' : 'react';
+}
 
 /**
  * Files that name the monorepo on purpose: the README says where the starter
@@ -105,6 +162,55 @@ function replaceOnce(text, pattern, replacement) {
  */
 export function renameProjects(text) {
   return text.replaceAll(PROJECT_PREFIX, '');
+}
+
+/**
+ * The React starter's frontend is `web`, as the Angular starter's is: the
+ * project, its directory, its output paths and the e2e project that drives it
+ * lose the `-react` the monorepo needs to tell the two frontends apart, and
+ * `web-react-e2e` becomes the `web-e2e` it then is. The Angular starter keeps
+ * its names.
+ */
+export function renameFrontend(text, frontend) {
+  return frontend === 'react' ? text.replaceAll('web-react', 'web') : text;
+}
+
+/**
+ * Drops the other frontend's project from every `-p` list of a command, so
+ * that `nx run-many -t test -p model api web web-react` names the projects
+ * the starter has. Runs after `renameProjects`.
+ */
+export function selectProjects(text, frontend) {
+  const dropped = FRONTENDS[otherFrontend(frontend)].project;
+
+  return text.replace(
+    /(-p )([\w -]+)/g,
+    (_match, flag, list) =>
+      flag +
+      list
+        .split(' ')
+        .filter((name) => name !== dropped)
+        .join(' '),
+  );
+}
+
+/**
+ * Picks one command of each per-frontend pair from `entries` (`[name,
+ * value]`, in order): the plain one for Angular, the one named with `suffix`
+ * for React, which takes the plain name and position. Commands without a
+ * React twin are shared and stay.
+ */
+export function selectVariants(entries, frontend, suffix) {
+  const byName = new Map(entries);
+
+  return entries
+    .filter(([name]) => !name.endsWith(suffix))
+    .map(([name, value]) => [
+      name,
+      frontend === 'react' && byName.has(`${name}${suffix}`)
+        ? byName.get(`${name}${suffix}`)
+        : value,
+    ]);
 }
 
 /**
@@ -177,19 +283,33 @@ export function starterEslintConfig() {
   ].join('\n');
 }
 
+/** Where each frontend's dev server sends `/api`, as the compose header says it. */
+const COMPOSE_PROXY = {
+  angular: [
+    '# `npx nx serve web` and reaches the API through its dev-server proxy',
+    '# (apps/web/proxy.conf.json).',
+  ],
+  react: [
+    '# `npx nx serve web` and reaches the API through the proxy of its Vite',
+    '# dev server (`server.proxy` in apps/web/vite.config.ts).',
+  ],
+};
+
 /**
  * The compose file built the image from the monorepo root because the API
  * compiled the framework from its sources. The starter installs the framework
- * from npm, so its own root is the whole context.
+ * from npm, so its own root is the whole context. The header names the one
+ * frontend the starter has.
  */
-export function starterCompose(yaml) {
+export function starterCompose(yaml, frontend = 'angular') {
+  frontendSpec(frontend);
+
   const header = replaceOnce(
     stripMonorepoPaths(renameProjects(yaml)),
     /^# Brings up MongoDB and the API\.[\s\S]*?\n#\n/,
     [
       '# Brings up MongoDB and the API. The frontend runs on the host with',
-      '# `npx nx serve web` and reaches the API through its dev-server proxy',
-      '# (apps/web/proxy.conf.json).',
+      ...COMPOSE_PROXY[frontend],
       '#',
       '',
     ].join('\n'),
@@ -246,13 +366,15 @@ const MONOREPO_IGNORES = new Set([
 
 /**
  * The ignore file keeps its list minus the monorepo directories that do not
- * exist in the starter, under a header that names the starter root.
+ * exist in the starter, under a header that names the starter root. The
+ * React starter has no Angular cache to keep out either.
  */
-export function starterDockerignore(text) {
+export function starterDockerignore(text, frontend = 'angular') {
   const entries = stripMonorepoPaths(text)
     .split('\n')
     .filter((line) => line && !line.startsWith('#'))
-    .filter((line) => !MONOREPO_IGNORES.has(line));
+    .filter((line) => !MONOREPO_IGNORES.has(line))
+    .filter((line) => frontend !== 'react' || line !== '**/.angular');
 
   return [
     '# Applied to the build context of the Dockerfile, the starter root.',
@@ -262,48 +384,254 @@ export function starterDockerignore(text) {
   ].join('\n');
 }
 
-/**
- * `run.sh` is the starter's front door, so it runs from its own directory
- * instead of three levels up, and it stops explaining snippet regions it no
- * longer has.
- */
-export function starterRunScript(text) {
-  let script = stripMonorepoPaths(renameProjects(text));
+/** The functions of a shell script, by name: `name() {` to the `}` that closes it. */
+function shellFunctions(script) {
+  const functions = new Map();
 
-  script = replaceOnce(
-    script,
-    /#\n# The `# #region <name>` blocks[\s\S]*?the same lines\.\n/,
-    '',
+  for (const [, name, body] of script.matchAll(
+    /^(\w+)\(\) \{\n([\s\S]*?)^\}\n/gm,
+  )) {
+    functions.set(name, body);
+  }
+
+  return functions;
+}
+
+/** The commands of the script's `case`, as `[label, function]` in order. */
+function shellCommands(script) {
+  const block = /^case "\$\{1:-\}" in\n([\s\S]*?)^esac\n/m.exec(script);
+
+  if (!block) throw new Error('run.sh has no case statement to read');
+
+  return [...block[1].matchAll(/^ {2}([\w-]+)\) (\w+) ;;$/gm)].map(
+    ([, label, name]) => [label, name],
   );
-  script = replaceOnce(
-    script,
+}
+
+/**
+ * `run.sh` is the starter's front door. The app's script runs both frontends
+ * (`web` and `web-react`, `e2e` and `e2e-react`); the starter's runs one, so
+ * it is put together again from the app's: the same function bodies, so the
+ * commands cannot drift, for the commands of the starter's frontend under the
+ * plain names, and a header and a `case` that list only those. It runs from
+ * its own directory instead of three levels up and has no snippet regions.
+ */
+export function starterRunScript(text, frontend = 'angular') {
+  const spec = frontendSpec(frontend);
+  const script = stripRegions(stripMonorepoPaths(renameProjects(text)));
+  const functions = shellFunctions(script);
+  const commands = selectVariants(shellCommands(script), frontend, '-react');
+  const firstFunction = script.search(/^\w+\(\) \{$/m);
+  const preamble = replaceOnce(
+    script.slice(script.indexOf('set -Eeuo pipefail'), firstFunction),
     'REPO_ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"',
     'REPO_ROOT="$(cd "$(dirname "$0")" && pwd)"',
   );
+  const name = (fn) => fn.replace(/_react$/, '');
+  const bodies = commands.map(([label, fn]) => {
+    if (!functions.has(fn)) {
+      throw new Error(
+        `run.sh runs ${fn} for ${label} and has no such function`,
+      );
+    }
 
-  return stripRegions(script);
+    return `${name(fn)}() {\n${functions.get(fn)}}\n`;
+  });
+
+  const assembled = [
+    '#!/usr/bin/env bash',
+    '#',
+    '# Runs the example application. `./run.sh up` starts MongoDB and the API,',
+    `# \`./run.sh web\` the ${spec.label} frontend, \`./run.sh test\` the Jest suites and`,
+    '# `./run.sh e2e` the Playwright suite against the running stack.',
+    preamble + bodies.join('\n'),
+    'case "${1:-}" in',
+    ...commands.map(([label, fn]) => `  ${label}) ${name(fn)} ;;`),
+    '  *)',
+    `    echo "usage: $0 ${commands.map(([label]) => label).join('|')}" >&2`,
+    '    exit 64',
+    '    ;;',
+    'esac',
+    '',
+  ].join('\n');
+
+  return renameFrontend(
+    selectProjects(
+      replaceOnce(
+        assembled,
+        'the Angular and React services and pages',
+        `the ${spec.label} services and pages`,
+      ),
+      frontend,
+    ),
+    frontend,
+  );
 }
 
 /**
- * The manifest is the standalone one with the starter's name. The scripts
- * were renamed with everything else; the description said where a standalone
+ * What only one frontend installs. The app's manifest lists the dependencies
+ * of both; a starter keeps the shared ones (the API, the model, Nx, Jest,
+ * ESLint, Playwright) and those of its own frontend.
+ */
+const FRONTEND_DEPENDENCIES = {
+  angular: [
+    /^@angular\//,
+    /^@ngrx\//,
+    /^@ngx-translate\//,
+    /^ngx?-/,
+    /^jest-preset-angular$/,
+    /^@smartsoft001\/full-stack$/,
+  ],
+  react: [
+    /^react(-dom)?$/,
+    /^@types\/react(-dom)?$/,
+    /^@testing-library\//,
+    /^eslint-plugin-react-hooks$/,
+    /^vite$/,
+    /^@smartsoft001\/react-stack$/,
+  ],
+};
+
+const FULL_STACK = '@smartsoft001/full-stack';
+const NESTJS_STACK = '@smartsoft001/nestjs-stack';
+
+/**
+ * The starter's half of `dependencies` or `devDependencies`. `full-stack` is
+ * the Angular stack plus the NestJS one, so the React starter installs
+ * `nestjs-stack` in its place, at the release's version, next to
+ * `react-stack`.
+ */
+export function starterDependencies(dependencies, version, frontend) {
+  if (!dependencies) return dependencies;
+
+  const others = FRONTEND_DEPENDENCIES[otherFrontend(frontend)];
+  const result = {};
+
+  for (const [name, range] of Object.entries(dependencies)) {
+    if (frontend === 'react' && name === FULL_STACK) {
+      result[NESTJS_STACK] = version;
+    } else if (!others.some((pattern) => pattern.test(name))) {
+      result[name] = range;
+    }
+  }
+
+  return result;
+}
+
+const MANIFEST_DESCRIPTION = {
+  angular: (version) =>
+    `One entity, end to end, on @smartsoft001/full-stack ${version}.`,
+  react: (version) =>
+    `One entity, end to end, on @smartsoft001/react-stack and @smartsoft001/nestjs-stack ${version}: a React frontend and a NestJS API.`,
+};
+
+/**
+ * The manifest is the standalone one with the starter's name, the scripts and
+ * the dependencies of its frontend. The description said where a standalone
  * copy comes from, which is now the README's job.
  */
-export function starterManifest(manifest, version) {
+export function starterManifest(manifest, version, frontend = 'angular') {
+  const spec = frontendSpec(frontend);
+  const scripts = manifest.scripts && {
+    scripts: Object.fromEntries(
+      selectVariants(Object.entries(manifest.scripts), frontend, ':react').map(
+        ([name, command]) => [
+          name,
+          renameFrontend(
+            selectProjects(renameProjects(command), frontend),
+            frontend,
+          ),
+        ],
+      ),
+    ),
+  };
+
   return {
     ...manifest,
-    name: 'smartsoft001-starter',
-    description: `One entity, end to end, on @smartsoft001/full-stack ${version}. Generated from ${APP_ROOT} of the framework repository on every release.`,
+    name: spec.name,
+    description: `${MANIFEST_DESCRIPTION[frontend](version)} Generated from ${APP_ROOT} of the framework repository on every release.`,
+    ...scripts,
+    ...(manifest.dependencies && {
+      dependencies: starterDependencies(
+        manifest.dependencies,
+        version,
+        frontend,
+      ),
+    }),
+    ...(manifest.devDependencies && {
+      devDependencies: starterDependencies(
+        manifest.devDependencies,
+        version,
+        frontend,
+      ),
+    }),
   };
 }
 
+/**
+ * The suite's config picks the frontend to start from `E2E_FRONTEND`, because
+ * the monorepo runs it for both, and keeps each one's output apart. A starter
+ * has one: the table, the switch and the per-frontend folder become that
+ * frontend's dev server, served by the `web` project, and one output folder.
+ */
+export function starterPlaywrightConfig(text, frontend = 'angular') {
+  frontendSpec(frontend);
+
+  const entry = [
+    ...text.matchAll(
+      /\{\n\s*name: '(\w+)',\n\s*serve: '([^']+)',\n\s*url: '([^']+)',\n\s*\}/g,
+    ),
+  ].find(([, name]) => name === frontend);
+
+  if (!entry) {
+    throw new Error(`the Playwright config has no ${frontend} frontend`);
+  }
+
+  const [, , serve, url] = entry;
+
+  return replaceOnce(
+    text,
+    /^interface IFrontend \{[\s\S]*?^const frontend = selectFrontend\([^\n]*\);\n\n(?:\/\/[^\n]*\n)*const outputDir = resolve\(\s*workspaceRoot,\s*('[^']+'),\s*frontend\.name,\s*\);\n/m,
+    (_match, outputDir) =>
+      [
+        '/** The frontend the suite drives: the dev server of the `web` project. */',
+        'const frontend = {',
+        `  serve: '${renameFrontend(renameProjects(serve), frontend)}',`,
+        `  url: '${url}',`,
+        '};',
+        '',
+        `const outputDir = resolve(workspaceRoot, ${outputDir});`,
+        '',
+      ].join('\n'),
+  );
+}
+
+/**
+ * The monorepo's Jest preset maps Angular's testing entry points to their
+ * ESM bundles. The React starter has no Angular, so its preset is the Nx one
+ * with the same export conditions and nothing else.
+ */
+export function starterReactJestPreset() {
+  return [
+    "const nxPreset = require('@nx/jest/preset').default;",
+    '',
+    'module.exports = {',
+    '  ...nxPreset,',
+    '  testEnvironmentOptions: {',
+    "    customExportConditions: ['node', 'require', 'default'],",
+    '  },',
+    '};',
+    '',
+  ].join('\n');
+}
+
 /** The standalone ignore list plus what the app ignores on its own. */
-export function starterIgnore() {
+export function starterIgnore(frontend = 'angular') {
   return [
     'node_modules',
     'dist',
     '.nx',
-    '.angular',
+    ...(frontend === 'react' ? [] : ['.angular']),
     'coverage',
     '',
     '# Local configuration, copied from .env.example',
@@ -355,7 +683,16 @@ export function starterWorkflow() {
   ].join('\n');
 }
 
-export function starterReadme(version) {
+/** The README of a starter, written for its frontend. */
+export function starterReadme(version, frontend = 'angular') {
+  frontendSpec(frontend);
+
+  return frontend === 'react'
+    ? reactStarterReadme(version)
+    : angularStarterReadme(version);
+}
+
+function angularStarterReadme(version) {
   return [
     '# smartsoft001 starter',
     '',
@@ -475,13 +812,147 @@ export function starterReadme(version) {
   ].join('\n');
 }
 
+function reactStarterReadme(version) {
+  return [
+    '# smartsoft001 React starter',
+    '',
+    `One entity, the whole loop, on \`@smartsoft001/react-stack@${version}\` and`,
+    `\`@smartsoft001/nestjs-stack@${version}\`: a React frontend on \`@smartsoft001/crud-shell-react\` with a`,
+    'list page, an item page and a login, and a NestJS API on `@smartsoft001/crud-shell-nestjs`,',
+    '`@smartsoft001/mongo` and `@smartsoft001/auth-shell-nestjs`. It is the smallest application that',
+    'still uses the framework end to end, as a workspace of its own.',
+    '',
+    'This repository is generated. The `Publish` workflow of the framework repository writes it from',
+    `\`${APP_ROOT}\` on every release, with the React frontend of that application, pins it to the`,
+    'packages of that release, installs, builds and tests the result from a clean clone, and pushes',
+    'one commit per release. Fix the application in the framework repository and the next release',
+    'regenerates the starter; a change made here is overwritten. The application is explained line by',
+    'line on the Example application page:',
+    DOCS_PAGE,
+    '',
+    '## Prerequisites',
+    '',
+    '- Node.js 22.12 or newer (26 is what CI uses) and npm 10 or newer',
+    '- Docker with Compose (`docker compose version`)',
+    '',
+    '## Run it',
+    '',
+    '```bash',
+    'npm install',
+    '',
+    '# 1. MongoDB and the API on http://localhost:3000/api',
+    './run.sh up',
+    '',
+    '# 2. The frontend on http://localhost:4300 (proxies /api to the container)',
+    './run.sh web',
+    '```',
+    '',
+    '3. Open http://localhost:4300 and sign in with `admin@example.com` / `change-me`, the user the API',
+    '   seeds on its first start.',
+    '',
+    'What you will see: the login page, then an empty **Notes** list. **Add** opens the generated form',
+    '(a required title and a rich-text body), **Add** on that page saves the note and returns to the',
+    'list, and the arrow on a row opens the note read-only, where **Edit** turns it into the form again',
+    'and **Save** writes the change. **Remove** on a row deletes it. Every screen is generated from the',
+    '`@Field` decorators on the model and the `CrudFullConfig` object; the app itself is a handful of',
+    'small components.',
+    '',
+    'The API needs no configuration to start. To change ports, the database name, the JWT secret or the',
+    'seeded user, copy `.env.example` to `.env` next to `docker-compose.yml`; Compose reads it and passes',
+    'the values to the container. Without Docker, start MongoDB yourself and run the API with the same',
+    'variables in the shell: `npx nx serve api`.',
+    '',
+    '## Tests',
+    '',
+    '```bash',
+    '# Jest: the model, the API services, the React services and pages',
+    './run.sh test',
+    '',
+    '# Playwright, against MongoDB on localhost:27017 (the API and the frontend are started for you)',
+    './run.sh e2e',
+    '```',
+    '',
+    'The Playwright suite sits behind `RUN_EXAMPLE_APP_E2E` so that a plain `nx run-many -t test` does',
+    'not require MongoDB; `./run.sh e2e` sets the variable, and the CI workflow in',
+    '`.github/workflows/ci.yml` sets it and provides the database. `npx nx e2e web-e2e` runs the suite',
+    'unconditionally.',
+    '',
+    '`npx nx run-many -t lint` runs ESLint on every project, with the rules in `eslint.config.mjs`.',
+    '',
+    '## What is where',
+    '',
+    '| Path                                       | What it is                                                                                                                       |',
+    '| ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------- |',
+    '| `libs/model/src/lib/note.model.ts`         | The entity, decorated with `@Model` and `@Field`. Shared by both apps through the `@app/model` alias.                            |',
+    '| `apps/api/src/app/app.module.ts`           | The whole backend: TypeORM for the users, the auth module (`POST /api/token`), the CRUD module mounted under `/api/notes`.        |',
+    '| `apps/api/src/app/users.seed.ts`           | Inserts the one user at startup so that login works at once.                                                                     |',
+    '| `apps/api/src/config.ts`                   | The environment variables the API reads, with the defaults from `.env.example`.                                                  |',
+    '| `apps/web/src/main.tsx`                    | The entry point: `reflect-metadata`, the framework stylesheets, then the app inside `AppProviders`.                              |',
+    '| `apps/web/src/app/app.providers.tsx`       | One `SmartProvider`: the translations, the navigation, and the HTTP client and `AuthService` the screens use.                    |',
+    '| `apps/web/src/app/app.routes.tsx`          | The routes without a router: the login page, and the notes pages behind the guard.                                               |',
+    '| `apps/web/src/app/notes/notes.config.ts`   | The `CrudFullConfig` that says what the notes screens can do.                                                                    |',
+    '| `apps/web/src/app/notes/notes.feature.tsx` | `CrudProvider` and `SmartCrudPages`: the list, add and item pages.                                                               |',
+    '| `apps/web/src/app/auth/`                   | The login page on `SmartSignInForm`, the login service and the guard.                                                            |',
+    '| `apps/web/vite.config.ts`                  | Vite: the dev server on port 4300 and its `/api` proxy, the build, and the `demo` mode on an in-memory double of the API.        |',
+    '| `apps/web-e2e/src/`                        | Playwright: login, list, item page, against the running stack.                                                                   |',
+    '| `docker-compose.yml`, `Dockerfile`         | MongoDB plus the API built from this repository.                                                                                 |',
+    '| `run.sh`                                   | `up`, `web`, `test` and `e2e`: the commands above, in one script.                                                                |',
+    '| `eslint.config.mjs`                        | The ESLint rules every project extends: the Nx configs and the import order.                                                     |',
+    '| `.github/workflows/ci.yml`                 | Lint, build, Jest and the Playwright suite against a MongoDB service, on every push and pull request.                            |',
+    '',
+    '## Upgrade',
+    '',
+    'The framework ships its migrations with `@smartsoft001/core`, so an upgrade is the Nx one:',
+    '',
+    '```bash',
+    'npx nx migrate @smartsoft001/core@<next>',
+    'npm install',
+    'npx nx migrate --run-migrations',
+    '```',
+    '',
+    'The first command bumps every `@smartsoft001` package in `package.json` and writes',
+    '`migrations.json`, the second installs them, the third applies the migrations to the workspace.',
+    '',
+    '## How the pieces fit',
+    '',
+    '- The frontend calls `/api/...`; in development the Vite dev server proxies that to port 3000',
+    '  (`server.proxy` in `apps/web/vite.config.ts`), so there is no environment file on the frontend.',
+    '- Login is the OAuth password grant of `@smartsoft001/auth-shell-nestjs`: `POST /api/token` with the',
+    '  seeded username, the password and the `client_id` the API accepts. The returned JWT is stored by',
+    '  `AuthService` from `@smartsoft001/react`, and the HTTP client of `SmartProvider` sends it as a',
+    '  bearer header with every request.',
+    '- There is no router: `AppRoutes` reads the URL of the navigation adapter, `matchCrudRoute` matches',
+    '  `/notes`, `/notes/add` and `/notes/:id`, and `SmartCrudPages` renders the page for it.',
+    "- `reflect-metadata` is imported first in `main.tsx`: the model's decorators store their metadata",
+    '  with `Reflect`. Vite compiles the TSX and the decorators from the tsconfig, with no plugin.',
+    "- The CRUD routes come from one `@Controller('')` in `@smartsoft001/crud-shell-nestjs`; the API mounts",
+    "  it with NestJS's `RouterModule` under `notes`, which is why `apiUrl` in the frontend is `/api/notes`.",
+    '- Writes require the `admin` permission, reads `admin` or `user`; the seeded user has `admin`.',
+    "- The framework's stylesheets (Tailwind utilities under the `smart:` prefix) are the `styles.css` each",
+    '  UI package publishes: `main.tsx` imports `@smartsoft001/react/styles.css` and',
+    "  `@smartsoft001/crud-shell-react/styles.css`, then the app's own `styles.css`.",
+    '',
+  ].join('\n');
+}
+
+/**
+ * What betrays the other frontend in a starter: the React app's name and
+ * packages in the Angular starter, Angular's packages in the React one.
+ */
+const OTHER_FRONTEND_MARKERS = {
+  angular: ['web-react', '@smartsoft001/react', 'react-dom'],
+  react: ['@angular/', '@smartsoft001/angular', '@smartsoft001/full-stack'],
+};
+
 /**
  * The starter must not mention the monorepo anywhere a newcomer would not
  * expect it: a project name, a path into `docs/examples/app`, a snippet
  * marker. The README and the manifest say where the starter comes from, and
- * are the only files allowed to.
+ * are the only files allowed to. Nor may it carry a piece of the frontend it
+ * does not have.
  */
-export function leftovers(target) {
+export function leftovers(target, frontend = 'angular') {
+  const markers = OTHER_FRONTEND_MARKERS[frontend];
   const found = [];
 
   for (const file of walk(target)) {
@@ -500,6 +971,9 @@ export function leftovers(target) {
     }
     if (/^[ \t]*(\/\/|#) #(region|endregion)\b/m.test(text)) {
       reasons.push('snippet region');
+    }
+    if (markers.some((marker) => text.includes(marker))) {
+      reasons.push(`${FRONTENDS[otherFrontend(frontend)].label} frontend`);
     }
 
     if (reasons.length) found.push(`${relative}: ${reasons.join(', ')}`);
@@ -525,12 +999,13 @@ function sleepSync(ms) {
   Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
 }
 
-const STACK = '@smartsoft001/full-stack';
 const SCOPE = '@smartsoft001/';
 
 /**
  * The framework packages the starter installs, read from the registry's own
- * manifests: the stack and everything under it, transitively, through both
+ * manifests: the stacks its manifest names (`roots`: `full-stack` for the
+ * Angular starter, `nestjs-stack` and `react-stack` for the React one) and
+ * everything under them, transitively, through both
  * `dependencies` and `peerDependencies`. The packages reach each other mostly
  * as peers (auth-domain peers google, fb, users, ...), and npm installs peers,
  * so a closure over `dependencies` alone missed them: on 2.179.0 the wait saw
@@ -538,9 +1013,9 @@ const SCOPE = '@smartsoft001/';
  * Throws when a manifest is not there yet, which is how the wait below detects
  * a release that has not finished propagating.
  */
-export function releasePackages(version, view = npmView) {
+export function releasePackages(version, view = npmView, roots = [FULL_STACK]) {
   const names = new Set();
-  const pending = [STACK];
+  const pending = [...roots];
 
   while (pending.length) {
     const name = pending.pop();
@@ -573,17 +1048,23 @@ export function releasePackages(version, view = npmView) {
  */
 export function waitForRelease(
   version,
-  { attempts = 30, delayMs = 20_000, view = npmView, sleep = sleepSync } = {},
+  {
+    attempts = 30,
+    delayMs = 20_000,
+    view = npmView,
+    sleep = sleepSync,
+    roots = [FULL_STACK],
+  } = {},
 ) {
-  let missing = [STACK];
+  let missing = [...roots];
 
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
     try {
-      missing = releasePackages(version, view).filter(
+      missing = releasePackages(version, view, roots).filter(
         (name) => view(`${name}@${version}`, 'version') !== version,
       );
     } catch (error) {
-      missing = [`${STACK} (${error.message.split('\n')[0]})`];
+      missing = [`${roots.join(', ')} (${error.message.split('\n')[0]})`];
     }
 
     if (!missing.length) return;
@@ -626,29 +1107,29 @@ function commit(target, version) {
 }
 
 /**
- * Writes the starter for `version` into `target`. `install` and `git` are on
- * by default and off in the tests, which need neither the network nor a
- * repository to check what the layer rewrites.
+ * Writes the starter of `frontend` for `version` into `target`. `install` and
+ * `git` are on by default and off in the tests, which need neither the
+ * network nor a repository to check what the layer rewrites.
+ *
+ * The files that list both frontends side by side (`run.sh`, `package.json`,
+ * the Playwright config, the compose header) are rewritten first, while the
+ * React app still has its own name; the walk that renames everything else
+ * comes after, and changes nothing in them again.
  */
 export function buildStarter({
   repoRoot,
   version,
   target,
+  frontend = 'angular',
   install = true,
   git = true,
 }) {
+  const spec = frontendSpec(frontend);
+
   createStandaloneApp({ repoRoot, target, packages: { version } });
 
-  for (const file of walk(target)) {
-    const buffer = fs.readFileSync(file);
-
-    if (!isText(buffer)) continue;
-
-    const text = buffer.toString('utf8');
-    let next = stripMonorepoPaths(renameProjects(text));
-
-    if (REGION_EXTENSIONS.has(path.extname(file))) next = stripRegions(next);
-    if (next !== text) fs.writeFileSync(file, next);
+  for (const dropped of spec.dropped) {
+    fs.rmSync(path.join(target, dropped), { recursive: true, force: true });
   }
 
   const rewrite = (relative, transform) => {
@@ -657,27 +1138,67 @@ export function buildStarter({
     fs.writeFileSync(absolute, transform(fs.readFileSync(absolute, 'utf8')));
   };
 
-  rewrite('docker-compose.yml', starterCompose);
+  rewrite('docker-compose.yml', (text) => starterCompose(text, frontend));
   rewrite('Dockerfile', starterDockerfile);
-  rewrite('Dockerfile.dockerignore', starterDockerignore);
-  rewrite('run.sh', starterRunScript);
-  writeJson(
-    path.join(target, 'package.json'),
-    starterManifest(readJson(path.join(target, 'package.json')), version),
+  rewrite('Dockerfile.dockerignore', (text) =>
+    starterDockerignore(text, frontend),
   );
-  fs.writeFileSync(path.join(target, '.gitignore'), starterIgnore());
+  rewrite('run.sh', (text) => starterRunScript(text, frontend));
+  rewrite('apps/web-e2e/playwright.config.ts', (text) =>
+    starterPlaywrightConfig(text, frontend),
+  );
+  // Written after the walk, which would otherwise take the description's
+  // mention of where the starter comes from for a monorepo path.
+  const manifest = starterManifest(
+    readJson(path.join(target, 'package.json')),
+    version,
+    frontend,
+  );
+
+  if (spec.moved) {
+    const [from, to] = spec.moved;
+
+    fs.renameSync(path.join(target, from), path.join(target, to));
+  }
+
+  for (const file of walk(target)) {
+    const buffer = fs.readFileSync(file);
+
+    if (!isText(buffer)) continue;
+
+    const text = buffer.toString('utf8');
+    let next = renameFrontend(
+      stripMonorepoPaths(renameProjects(text)),
+      frontend,
+    );
+
+    if (REGION_EXTENSIONS.has(path.extname(file))) next = stripRegions(next);
+    if (next !== text) fs.writeFileSync(file, next);
+  }
+
+  writeJson(path.join(target, 'package.json'), manifest);
+  fs.writeFileSync(path.join(target, '.gitignore'), starterIgnore(frontend));
   fs.writeFileSync(
     path.join(target, 'eslint.config.mjs'),
     starterEslintConfig(),
   );
-  fs.writeFileSync(path.join(target, 'README.md'), starterReadme(version));
+  if (frontend === 'react') {
+    fs.writeFileSync(
+      path.join(target, 'jest.preset.js'),
+      starterReactJestPreset(),
+    );
+  }
+  fs.writeFileSync(
+    path.join(target, 'README.md'),
+    starterReadme(version, frontend),
+  );
   fs.mkdirSync(path.join(target, '.github', 'workflows'), { recursive: true });
   fs.writeFileSync(
     path.join(target, '.github', 'workflows', 'ci.yml'),
     starterWorkflow(),
   );
 
-  const left = leftovers(target);
+  const left = leftovers(target, frontend);
 
   if (left.length) {
     throw new Error(
@@ -686,7 +1207,7 @@ export function buildStarter({
   }
 
   if (install) {
-    waitForRelease(version);
+    waitForRelease(version, { roots: frameworkDependencies(manifest) });
     run('npm', ['install', '--no-audit', '--no-fund'], target);
   }
   if (git) commit(target, version);
@@ -703,9 +1224,16 @@ export function parseArgs(argv) {
     return argv[index + 1];
   };
 
+  const frontendIndex = argv.indexOf('--frontend');
+  const frontend =
+    frontendIndex === -1 ? 'angular' : (argv[frontendIndex + 1] ?? '');
+
+  frontendSpec(frontend);
+
   return {
     version: value('--version'),
     target: path.resolve(value('--target')),
+    frontend,
   };
 }
 
@@ -715,8 +1243,8 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     '..',
     '..',
   );
-  const { version, target } = parseArgs(process.argv.slice(2));
+  const { version, target, frontend } = parseArgs(process.argv.slice(2));
 
-  buildStarter({ repoRoot, version, target });
-  console.log(`starter for ${version} written to ${target}`);
+  buildStarter({ repoRoot, version, target, frontend });
+  console.log(`${frontend} starter for ${version} written to ${target}`);
 }

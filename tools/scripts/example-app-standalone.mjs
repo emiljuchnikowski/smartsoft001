@@ -12,10 +12,16 @@
  * workspace files the monorepo provides (`nx.json`, `tsconfig.base.json`,
  * `jest.preset.js`) are written fresh from the root ones.
  *
- * The web project's `styles` target compiles the framework's stylesheets from
+ * Each frontend's `styles` target compiles the framework's stylesheets from
  * the package sources, which a copy does not have. The published UI packages
- * ship the compiled `styles.css` instead, so the copy drops the target and
- * points the build at `node_modules/@smartsoft001/<package>/styles.css`.
+ * ship the compiled `styles.css` instead, so the copy drops the targets. The
+ * Angular build lists its stylesheets in project.json and is pointed at
+ * `node_modules/@smartsoft001/<package>/styles.css`. The React app imports
+ * `@smartsoft001/react/styles.css` and `@smartsoft001/crud-shell-react/styles.css`
+ * from main.tsx, which in a copy resolve through the packages' `exports` to
+ * the same published files: its Vite config aliases them to the compiled
+ * sources only while `tsconfig.base.json` maps the packages to `packages/`,
+ * and the copy's does not.
  *
  * Usage: node tools/scripts/example-app-standalone.mjs --target <dir>
  *          --packages tarballs:<dir>|registry:<version>
@@ -25,7 +31,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const APP_ROOT = path.join('docs', 'examples', 'app');
-const STACK = '@smartsoft001/full-stack';
+const SCOPE = '@smartsoft001/';
 
 /** What the copy leaves behind: local state, never the app. */
 const SKIPPED = new Set(['node_modules', 'dist', '.env']);
@@ -37,7 +43,7 @@ const SKIPPED = new Set(['node_modules', 'dist', '.env']);
 const CONFIG_EXTENSIONS = new Set(['.json', '.ts', '.js', '.mjs']);
 
 /**
- * The compiled stylesheets the UI packages publish, in the order the
+ * The compiled stylesheets the Angular UI packages publish, in the order the
  * monorepo's `styles` target produced them, followed by the app's own.
  */
 const STANDALONE_STYLES = [
@@ -87,8 +93,10 @@ function* walk(dir) {
 
 /**
  * Replaces the monorepo's `styles` target with the published stylesheets.
- * The target and the `dependsOn` that waited for it go; the build's `styles`
- * become the files the installed packages ship.
+ * The target and the `dependsOn` that waited for it go; an Angular build's
+ * `styles` become the files the installed packages ship. A React build lists
+ * no stylesheet (main.tsx imports them), so dropping the target is all it
+ * needs.
  */
 export function standaloneProject(project) {
   if (!project.targets?.styles) return project;
@@ -122,12 +130,26 @@ export function standaloneProject(project) {
 }
 
 /**
- * The copy's manifest. The tarball form installs the stack package from the
- * release being cut and overrides every `@smartsoft001` package with its own
- * tarball, because the tarballs pin each other at a version that is not on
- * the registry yet: without the overrides npm would look for it there and
- * fail, or worse, find the previous release. The registry form installs the
- * stack at one exact version and lets npm resolve the rest.
+ * The `@smartsoft001` packages the manifest installs directly: the stacks,
+ * `full-stack` for the Angular frontend and the API, `react-stack` for the
+ * React frontend.
+ */
+export function frameworkDependencies(manifest) {
+  return Object.keys(manifest.dependencies ?? {}).filter((name) =>
+    name.startsWith(SCOPE),
+  );
+}
+
+/**
+ * The copy's manifest. The tarball form installs the stacks from the release
+ * being cut and overrides every `@smartsoft001` package with its own tarball,
+ * because the tarballs pin each other at a version that is not on the
+ * registry yet: without the overrides npm would look for it there and fail,
+ * or worse, find the previous release. npm also refuses an override that
+ * contradicts a direct dependency, so each stack the manifest names points at
+ * its tarball too. The registry form installs every stack at one exact
+ * version and lets npm resolve the rest; a version older than a stack (the
+ * React one starts at 2.193.0) is not on the registry and fails the install.
  */
 export function standaloneManifest(manifest, packages) {
   const next = { ...manifest, dependencies: { ...manifest.dependencies } };
@@ -141,10 +163,17 @@ export function standaloneManifest(manifest, packages) {
       overrides[name] = `file:${tarball}`;
     }
 
-    next.dependencies[STACK] = overrides[STACK];
+    for (const name of frameworkDependencies(manifest)) {
+      if (!overrides[name]) throw new Error(`no tarball for ${name}`);
+
+      next.dependencies[name] = overrides[name];
+    }
+
     next.overrides = overrides;
   } else {
-    next.dependencies[STACK] = packages.version;
+    for (const name of frameworkDependencies(manifest)) {
+      next.dependencies[name] = packages.version;
+    }
   }
 
   return next;

@@ -17,6 +17,13 @@
  *    `nx migrate @smartsoft001/core@<new>` does it for a consumer (bump the
  *    manifest, install, `nx migrate --run-migrations`), then builds and tests.
  *
+ * The copy holds the whole app: the API, the model, and both frontends on
+ * their stacks (`full-stack` for Angular, `react-stack` for React), so the
+ * build and the Jest suites of the Angular and the React app run on the
+ * release, the React one on the `styles.css` the React packages publish. The
+ * Playwright projects skip without `RUN_EXAMPLE_APP_E2E`, as they do in any
+ * `nx run-many -t test` without MongoDB.
+ *
  * Run it after `nx run-many -t build`. The Publish workflow runs it after
  * `verify:dist` and before anything reaches npm.
  *
