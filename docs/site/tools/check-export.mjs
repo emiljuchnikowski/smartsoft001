@@ -44,12 +44,30 @@ export function unprefixedReferences(html, basePath) {
   return offenders
 }
 
-function* htmlFiles(dir) {
+/**
+ * The directories the Docs workflow copies into `out/` after `next build`: the
+ * Storybooks and the demos of the example application's two frontends. They
+ * are builds of their own with their own base (the React demo's assets are
+ * absolute under /demo-react/), not pages of this export, and the workflow
+ * tests them on their own, so the check leaves them alone when it runs on an
+ * `out/` that already has them.
+ */
+export const PUBLISHED_NEXT_TO_THE_EXPORT = new Set([
+  'storybook',
+  'demo',
+  'demo-react',
+])
+
+/** The HTML files of the export under `out`, without the builds copied next to it. */
+export function* htmlFiles(out, dir = out) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const full = path.join(dir, entry.name)
 
-    if (entry.isDirectory()) yield* htmlFiles(full)
-    else if (entry.name.endsWith('.html')) yield full
+    if (entry.isDirectory()) {
+      if (dir === out && PUBLISHED_NEXT_TO_THE_EXPORT.has(entry.name)) continue
+
+      yield* htmlFiles(out, full)
+    } else if (entry.name.endsWith('.html')) yield full
   }
 }
 

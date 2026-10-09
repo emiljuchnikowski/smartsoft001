@@ -13,10 +13,11 @@
 # copied into the static export under `storybook/<project>`, where the
 # `{% storybook %}` embeds of the component pages point; every embedded story
 # id is verified against the built `index.json` before the upload.
-# The example application's frontend is published under `demo/` as its `demo`
-# build, which runs against an in-memory double of the API because Pages
-# serves files only; after the deploy, the `verify-demo` job drives the live
-# demo with the application's Playwright suite.
+# The example application's frontends are published as their `demo` builds,
+# the Angular one under `demo/` and the React one under `demo-react/`, each
+# running against an in-memory double of the API because Pages serves files
+# only; after the deploy, the `verify-demo` job drives each live demo with the
+# application's Playwright suite.
 # The site deploys after a successful `Publish` run so that the installation
 # smoke test and the documented snippets match what is actually on npm. A
 # failed `Publish` therefore also blocks the docs deploy; `workflow_dispatch`
@@ -48,6 +49,7 @@ jobs:
     runs-on: ubuntu-24.04
     outputs:
       demo-index-sha: ${{ steps.demo.outputs.index-sha }}
+      demo-react-index-sha: ${{ steps.demo-react.outputs.index-sha }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -104,6 +106,19 @@ jobs:
           echo "index-sha=$(sha256sum docs/site/out/demo/index.html | cut -d ' ' -f 1)" >> "$GITHUB_OUTPUT"
         env:
           NX_CLOUD_DISTRIBUTED_EXECUTION: false
+      - name: Publish the example application's React demo next to the site
+        id: demo-react
+        # The same for the React frontend: its `demo` build (Vite's `--mode
+        # demo`) is served from /demo-react/, navigates in the hash and
+        # replaces the API with the same in-memory double. It writes to
+        # demo-react, the path it is served from. Vite names every asset by
+        # its content hash, so index.html changes whenever the demo does.
+        run: |
+          npx nx run docs-examples-app-web-react:build:demo
+          cp -r dist/docs/examples/app/apps/web-react-demo/demo-react docs/site/out/demo-react
+          echo "index-sha=$(sha256sum docs/site/out/demo-react/index.html | cut -d ' ' -f 1)" >> "$GITHUB_OUTPUT"
+        env:
+          NX_CLOUD_DISTRIBUTED_EXECUTION: false
       - name: Verify every embedded story exists
         run: npx nx run docs:verify-storybook
         env:
@@ -127,18 +142,31 @@ jobs:
         uses: actions/deploy-pages@v4
 
   verify-demo:
-    # The live demo, driven by the Playwright suite the pull request workflow
+    # The live demos, driven by the Playwright suite the pull request workflow
     # runs against the real stack, pointed at Pages (E2E_BASE_URL makes the
-    # suite start no server and skip the API-only specs). Pages can keep
-    # serving the previous deployment for a while after `deploy-pages`
-    # returns, so the job first waits until the served index.html is the one
-    # the build job produced. Output hashing makes that file differ whenever
-    # the demo changed; when it did not, the previous deployment is the same
-    # demo and the wait ends at once.
+    # suite start no server and skip the API-only specs). One leg per
+    # frontend, each against its own demo. Pages can keep serving the
+    # previous deployment for a while after `deploy-pages` returns, so each
+    # leg first waits until the served index.html of its demo is the one the
+    # build job produced. Output hashing makes that file differ whenever the
+    # demo changed; when it did not, the previous deployment is the same demo
+    # and the wait ends at once.
     needs: [build, deploy]
     runs-on: ubuntu-24.04
+    strategy:
+      # A broken React demo says nothing about the Angular one, and the other
+      # way round: let each leg report.
+      fail-fast: false
+      matrix:
+        include:
+          - frontend: angular
+            url: https://framework.smartflow.biz.pl/demo/
+            index-sha: ${{ needs.build.outputs.demo-index-sha }}
+          - frontend: react
+            url: https://framework.smartflow.biz.pl/demo-react/
+            index-sha: ${{ needs.build.outputs.demo-react-index-sha }}
     env:
-      DEMO_URL: https://framework.smartflow.biz.pl/demo/
+      DEMO_URL: ${{ matrix.url }}
     steps:
       - uses: actions/checkout@v7
       - name: Load & cache dependencies
@@ -157,7 +185,7 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Wait until Pages serves this build of the demo
         run: |
-          expected='${{ needs.build.outputs.demo-index-sha }}'
+          expected='${{ matrix.index-sha }}'
           # Up to 15 minutes: Pages caches a file for 10 minutes at its edge.
           for attempt in $(seq 1 60); do
             served="$(curl -fsSL "${DEMO_URL}index.html" | sha256sum | cut -d ' ' -f 1)"
@@ -167,9 +195,12 @@ jobs:
             fi
             sleep 15
           done
-          echo "::error::Pages still serves another build of the demo after 15 minutes (expected index.html $expected)."
+          echo "::error::Pages still serves another build of the ${{ matrix.frontend }} demo at ${DEMO_URL} after 15 minutes (expected index.html $expected)."
           exit 1
       - name: Run the Playwright suite against the deployed demo
         run: npx playwright test --config docs/examples/app/apps/web-e2e/playwright.config.ts
         env:
           E2E_BASE_URL: ${{ env.DEMO_URL }}
+          # Starts nothing with E2E_BASE_URL set; it keeps each leg's output
+          # in a folder of its own.
+          E2E_FRONTEND: ${{ matrix.frontend }}

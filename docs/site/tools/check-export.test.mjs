@@ -1,7 +1,10 @@
 import assert from 'node:assert/strict'
+import fs from 'node:fs'
+import os from 'node:os'
+import path from 'node:path'
 import { test } from 'node:test'
 
-import { unprefixedReferences } from './check-export.mjs'
+import { htmlFiles, unprefixedReferences } from './check-export.mjs'
 
 const BASE = '/smartsoft001'
 
@@ -63,4 +66,46 @@ test('a trailing slash on the base path does not change the answer', () => {
   assert.deepEqual(unprefixedReferences(html, `${BASE}/`), [
     { attribute: 'href', value: '/docs/' },
   ])
+})
+
+test('the builds copied next to the export are not pages of it', () => {
+  const out = fs.mkdtempSync(path.join(os.tmpdir(), 'check-export-'))
+  const write = (relative) => {
+    fs.mkdirSync(path.dirname(path.join(out, relative)), { recursive: true })
+    fs.writeFileSync(path.join(out, relative), '<html></html>')
+  }
+
+  try {
+    write('index.html')
+    write('docs/example-app/index.html')
+    write('demo/index.html')
+    write('demo-react/index.html')
+    write('storybook/react/iframe.html')
+
+    assert.deepEqual(
+      [...htmlFiles(out)].map((file) => path.relative(out, file)).sort(),
+      ['docs/example-app/index.html', 'index.html'],
+    )
+  } finally {
+    fs.rmSync(out, { recursive: true, force: true })
+  }
+})
+
+test('a page of the export whose path merely contains a demo name is checked', () => {
+  const out = fs.mkdtempSync(path.join(os.tmpdir(), 'check-export-'))
+
+  try {
+    fs.mkdirSync(path.join(out, 'docs', 'demo'), { recursive: true })
+    fs.writeFileSync(
+      path.join(out, 'docs', 'demo', 'index.html'),
+      '<html></html>',
+    )
+
+    assert.deepEqual(
+      [...htmlFiles(out)].map((file) => path.relative(out, file)),
+      [path.join('docs', 'demo', 'index.html')],
+    )
+  } finally {
+    fs.rmSync(out, { recursive: true, force: true })
+  }
 })
