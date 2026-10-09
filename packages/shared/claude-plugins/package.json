@@ -1,11 +1,11 @@
 {
   "name": "@smartsoft001/claude-plugins",
   "version": "2.191.0",
-  "description": "Installs the smart@smartsoft Claude Code plugin into a project: the agents, skills and hooks this workspace develops with.",
+  "description": "Installs the smartsoft Claude Code plugins into a project: smart-core (hooks and framework-neutral skills) plus smart-angular or smart-react (the component and CRUD skills and agents of one framework).",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "postinstall": "claude plugin update smart@smartsoft --scope project || true"
+    "postinstall": "node -e \"for (const plugin of ['smart-core', 'smart-angular', 'smart-react']) try { require('child_process').execSync('claude plugin update ' + plugin + '@smartsoft --scope project', { stdio: 'inherit' }) } catch {}\""
   }
 }

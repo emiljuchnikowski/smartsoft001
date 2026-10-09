@@ -1,0 +1,6 @@
+{
+  "name": "smart-angular",
+  "description": "Smartsoft for Angular projects - the @smartsoft001/angular component skills and their angular-components agent, the Angular CRUD skill and the Nx + Angular SSR workspace scaffold",
+  "version": "2.182.0",
+  "dependencies": ["smart-core"]
+}

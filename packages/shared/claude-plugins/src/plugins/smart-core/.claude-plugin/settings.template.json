@@ -1,0 +1,17 @@
+{
+  "$schema": "https://raw.githubusercontent.com/anthropics/claude-code/main/schemas/settings.schema.json",
+  "_description": "Template settings for the smart-core@smartsoft plugin. Hooks are provided by hooks/hooks.json (plugin-relative paths via ${CLAUDE_PLUGIN_ROOT}). See README.md in this directory.",
+  "permissions": {
+    "allow": [
+      "Bash(source:*)",
+      "Bash(nvm use:*)",
+      "Bash(npm run format:*)",
+      "Bash(jq:*)"
+    ],
+    "ask": [],
+    "deny": []
+  },
+  "enabledPlugins": {
+    "smart-core@smartsoft": true
+  }
+}

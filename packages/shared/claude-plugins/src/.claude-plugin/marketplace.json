@@ -7,8 +7,19 @@
   },
   "plugins": [
     {
-      "name": "smart",
-      "source": "./plugins/smart"
+      "name": "smart-core",
+      "source": "./plugins/smart-core"
+    },
+    {
+      "name": "smart-angular",
+      "source": "./plugins/smart-angular"
+    },
+    {
+      "name": "smart-react",
+      "source": "./plugins/smart-react"
     }
-  ]
+  ],
+  "renames": {
+    "smart": "smart-angular"
+  }
 }

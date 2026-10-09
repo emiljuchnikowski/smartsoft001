@@ -1,0 +1,6 @@
+{
+  "name": "smart-react",
+  "description": "Smartsoft for React projects - the @smartsoft001/react component, provider and forms skills, their react-components agent, and the React CRUD skill (@smartsoft001/crud-shell-react)",
+  "version": "2.182.0",
+  "dependencies": ["smart-core"]
+}

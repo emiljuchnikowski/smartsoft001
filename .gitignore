@@ -50,7 +50,7 @@ Thumbs.db
 .angular
 /.claude/settings.local.json
 /.claude/scheduled_tasks.lock
-/packages/shared/claude-plugins/src/plugins/smart/audit_logs
+/packages/shared/claude-plugins/src/plugins/smart-core/audit_logs
 /.claude/audit_logs
 
 .claude/worktrees
