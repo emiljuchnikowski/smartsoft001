@@ -1,10 +1,5 @@
 import { Fragment } from 'react';
 
-import { IVerticalNavItem } from '../../../models';
-import { cn } from '../../../utils/class-names';
-import { SmartNavLink } from '../../navbar/nav-link';
-import { useVerticalNavigation } from '../use-vertical-navigation';
-import { SmartVerticalNavigationProps } from '../vertical-navigation.types';
 import {
   getVerticalNavBadgeClasses,
   getVerticalNavContainerClasses,
@@ -14,6 +9,11 @@ import {
   getVerticalNavItemClasses,
   getVerticalNavNavClasses,
 } from './preset-classes';
+import { IVerticalNavItem } from '../../../models';
+import { cn } from '../../../utils/class-names';
+import { SmartNavLink } from '../../navbar/nav-link';
+import { useVerticalNavigation } from '../use-vertical-navigation';
+import { SmartVerticalNavigationProps } from '../vertical-navigation.types';
 
 /**
  * Styled vertical navigation variation (preset). Register it as

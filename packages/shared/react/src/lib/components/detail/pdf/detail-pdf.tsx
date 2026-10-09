@@ -1,7 +1,7 @@
+import { useDetailPdf } from './use-detail-pdf';
 import { useTranslate } from '../../../providers/hooks';
 import { cn } from '../../../utils/class-names';
 import { SmartDetailFieldProps } from '../detail.types';
-import { useDetailPdf } from './use-detail-pdf';
 
 /** The PDF detail: a button opening the file. */
 export function SmartDetailPdf<T>(props: SmartDetailFieldProps<T>) {

@@ -48,7 +48,7 @@ The scope is **required** and must be one of the following:
 - **auth** - Authentication related changes
 - **crud** - CRUD operations and related functionality
 - **shared** - Shared utilities and common functionality
-- **trans** - Translation/internationalization features
+- **trans** - Payment transactions (create, refresh, refund, provider webhooks)
 
 ### Infrastructure Scopes
 
@@ -95,12 +95,12 @@ refactor(shared): improve error handling helpers
 style(shared): format code according to eslint rules
 ```
 
-### Translation (trans)
+### Payment transactions (trans)
 
 ```
-feat(trans): add support for new language
-fix(trans): correct missing translation keys
-chore(trans): update translation files
+feat(trans): store the provider status history of a transaction
+fix(trans): refund only a completed transaction
+chore(trans): align the payment provider contracts
 ```
 
 ### Infrastructure

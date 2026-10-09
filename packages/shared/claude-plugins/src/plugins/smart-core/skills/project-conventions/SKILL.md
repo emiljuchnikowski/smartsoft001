@@ -27,11 +27,11 @@ This is an **Nx monorepo** using **pnpm** workspaces. Projects are organized und
 
 Three main domains, each following the same layered pattern:
 
-| Domain  | Purpose                           |
-| ------- | --------------------------------- |
-| `auth`  | Authentication and authorization  |
-| `crud`  | CRUD operations and UI components |
-| `trans` | Translation/internationalization  |
+| Domain  | Purpose                                        |
+| ------- | ---------------------------------------------- |
+| `auth`  | Authentication and authorization               |
+| `crud`  | CRUD operations and UI components              |
+| `trans` | Payment transactions (create, refresh, refund) |
 
 Each domain's layers:
 

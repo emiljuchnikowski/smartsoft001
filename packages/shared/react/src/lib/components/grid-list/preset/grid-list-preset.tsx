@@ -1,11 +1,11 @@
-import { SmartGridListLayout } from '../../../models';
-import { cn } from '../../../utils/class-names';
-import { SmartGridListProps } from '../grid-list.types';
 import {
   getGridListGridClasses,
   getGridListMediaClasses,
   getGridListTileClasses,
 } from './preset-classes';
+import { SmartGridListLayout } from '../../../models';
+import { cn } from '../../../utils/class-names';
+import { SmartGridListProps } from '../grid-list.types';
 
 const HEADER_CLASSES = 'smart:mb-4';
 const HEADER_TITLE_CLASSES =

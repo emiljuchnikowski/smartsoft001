@@ -1,10 +1,10 @@
 import { useId } from 'react';
 
+import { SmartRichTextEditor } from './rich-text-editor';
 import { useTranslate } from '../../../providers/hooks';
 import { cn } from '../../../utils/class-names';
 import { useInput } from '../base/use-input';
 import { SmartInputFieldProps } from '../input.types';
-import { SmartRichTextEditor } from './rich-text-editor';
 
 const LABEL_CLASSES =
   'smart:block smart:text-sm/6 smart:font-medium smart:text-gray-900 smart:dark:text-white';

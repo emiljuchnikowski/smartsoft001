@@ -1,12 +1,12 @@
+import {
+  getButtonPresetClasses,
+  toButtonPresetVariant,
+} from './preset-classes';
 import { useTranslate } from '../../../providers/hooks';
 import { cn } from '../../../utils/class-names';
 import { SmartIcon } from '../../icon';
 import { SmartButtonProps } from '../button.types';
 import { useButton } from '../use-button';
-import {
-  getButtonPresetClasses,
-  toButtonPresetVariant,
-} from './preset-classes';
 
 /**
  * Styled button variation (preset). Register it as `components.button` on

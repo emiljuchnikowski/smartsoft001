@@ -1,9 +1,9 @@
 import { useId } from 'react';
 
+import { useInputVideo } from './use-input-video';
 import { useTranslate } from '../../../providers/hooks';
 import { cn } from '../../../utils/class-names';
 import { SmartInputFieldProps } from '../input.types';
-import { useInputVideo } from './use-input-video';
 
 const LABEL_CLASSES = [
   'smart:block',

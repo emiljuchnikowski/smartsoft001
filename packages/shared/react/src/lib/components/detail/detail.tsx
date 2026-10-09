@@ -2,10 +2,10 @@ import { FieldType } from '@smartsoft001/models';
 
 import { getDefaultDetailFieldComponents } from './default-field-components';
 import { SmartDetailProps } from './detail.types';
+import { SmartDetailText } from './text/detail-text';
 import { useDetailFieldComponents } from '../../providers/hooks';
 import { useModelLabel } from '../../utils/hooks';
 import { SmartInfo } from '../info/info';
-import { SmartDetailText } from './text/detail-text';
 
 /**
  * The label of a field and its value, rendered by the detail component of the

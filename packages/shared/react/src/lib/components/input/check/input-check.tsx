@@ -1,8 +1,8 @@
+import { useInputCheck } from './use-input-check';
 import { useTranslate } from '../../../providers/hooks';
 import { cn } from '../../../utils/class-names';
 import { toInnerHtml } from '../../../utils/html';
 import { SmartInputFieldProps } from '../input.types';
-import { useInputCheck } from './use-input-check';
 
 const LABEL_CLASSES =
   'smart:block smart:text-sm/6 smart:font-medium smart:text-gray-900 smart:dark:text-white';
