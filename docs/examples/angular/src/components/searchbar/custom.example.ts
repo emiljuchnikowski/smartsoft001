@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   signal,
   ViewEncapsulation,
 } from '@angular/core';
@@ -47,11 +46,9 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomSearchbarComponent extends SearchbarBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   // The base class owns the debounced control.valueChanges subscription that
-  // feeds `text` - do not subscribe again here.
+  // feeds `text` - do not subscribe again here. `cssClass()` holds the `class`
+  // given to <smart-searchbar>.
   readonly containerClasses = computed(() => {
     const classes = ['docs-searchbar'];
     const extra = this.cssClass();
@@ -72,11 +69,13 @@ export class CustomSearchbarComponent extends SearchbarBaseComponent {
       useValue: CustomSearchbarComponent,
     },
   ],
-  // NgComponentOutlet forwards `show` and `text` as plain inputs, so values
-  // travel down into the custom component but its own model changes never
-  // travel back up to these signals.
+  // The wrapper forwards `show` and `text` both ways: the values reach the
+  // custom component, and its own changes come back to these signals.
   template: `
     <smart-searchbar [(show)]="show" [(text)]="text" [options]="options" />
+    @if (text()) {
+      <p>Results for "{{ text() }}"</p>
+    }
   `,
 })
 export class SearchbarCustomExampleComponent {

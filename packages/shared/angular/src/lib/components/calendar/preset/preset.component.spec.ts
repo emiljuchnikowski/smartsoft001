@@ -147,7 +147,7 @@ describe('@smartsoft001/shared-angular: CalendarPresetComponent', () => {
     expect(day?.getAttribute('aria-label')).toBe(`${date}, 2 events`);
   });
 
-  it('should apply cssClass on the host (canonical name for NgComponentOutlet)', () => {
+  it('should apply cssClass on the host', () => {
     fixture.componentRef.setInput('cssClass', 'my-extra-class');
     fixture.detectChanges();
 

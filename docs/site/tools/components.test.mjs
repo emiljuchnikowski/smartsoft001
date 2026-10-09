@@ -13,9 +13,11 @@ import {
   findExample,
   findStory,
   findUsage,
+  indefiniteArticle,
   renderIndexPage,
   transformContentToPage,
   transformSkillToPage,
+  usageExampleStoryId,
 } from './components.mjs'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
@@ -278,10 +280,40 @@ describe('transformSkillToPage body', () => {
       /\{% tab title="TypeScript" %\}\n\n\{% snippet file="angular\/src\/components\/button\/usage\.example\.ts" region="usage" \/%\}/,
     )
     assert.ok(!usage.includes('story-template'))
+  })
+
+  test('embeds the story that renders the usage example when there is one', () => {
+    const { content: page } = transformSkillToPage({
+      name: 'button',
+      order: 1,
+      source: skill('button'),
+      story: storyOf('button', 'components-button--playground'),
+      usage: {
+        html: 'angular/src/components/button/usage.example.html',
+        ts: 'angular/src/components/button/usage.example.ts',
+      },
+      example: null,
+    })
+    const usage = page.slice(
+      page.indexOf('## Usage'),
+      page.indexOf('## Components'),
+    )
+
     assert.match(
       usage,
-      /\{% storybook project="angular" story="components-button--playground" height=320 \/%\}/,
+      /\{% storybook project="angular" story="docs-usage-examples--button" height=320 \/%\}/,
     )
+    assert.ok(!usage.includes('components-button--playground'))
+    assert.match(
+      usage,
+      /The preview renders the code above in an application that registers every preset \(`provideSmartPresets\(\)`/,
+    )
+  })
+
+  test('keeps the preview note away from the fallback to the story', () => {
+    const { content: page } = button()
+
+    assert.ok(!page.includes('The preview renders the code above'))
   })
 
   test('orders the tabs markup, code, then the way to ask for it', () => {
@@ -886,9 +918,24 @@ describe('the React variant', () => {
     )
   })
 
-  test('embeds the story of the React Storybook', () => {
+  test('embeds the story that renders the React usage example', () => {
+    const block = reactBlock(page())
+
     assert.ok(
-      reactBlock(page()).includes(
+      block.includes(
+        '{% storybook project="react" story="docs-usage-examples--button" height=320 /%}',
+      ),
+    )
+    assert.ok(
+      block.includes(
+        'registers every preset (`SMART_PRESET_COMPONENTS` on `SmartProvider`',
+      ),
+    )
+  })
+
+  test('embeds the React Playground story without an executed example', () => {
+    assert.ok(
+      reactBlock(page({ usage: null })).includes(
         '{% storybook project="react" story="components-button--playground" height=320 /%}',
       ),
     )
@@ -1003,5 +1050,27 @@ describe('React references', () => {
       'react/src/components/button/custom.example.tsx',
     )
     assert.equal(findExample(fixtureRoot, 'loader', 'react'), null)
+  })
+})
+
+describe('indefiniteArticle', () => {
+  test('puts an before a component name that starts with a vowel', () => {
+    assert.equal(indefiniteArticle('icon'), 'an')
+    assert.equal(indefiniteArticle('empty-state'), 'an')
+    assert.equal(indefiniteArticle('alert'), 'an')
+  })
+
+  test('puts a before any other name', () => {
+    assert.equal(indefiniteArticle('button'), 'a')
+    assert.equal(indefiniteArticle('drawer'), 'a')
+  })
+})
+
+describe('usageExampleStoryId', () => {
+  test('names the story after the component, in the docs usage examples', () => {
+    assert.equal(
+      usageExampleStoryId('multi-column-layout'),
+      'docs-usage-examples--multi-column-layout',
+    )
   })
 })

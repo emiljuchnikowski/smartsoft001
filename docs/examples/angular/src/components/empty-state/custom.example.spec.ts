@@ -1,10 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 
-import {
-  CustomEmptyStateComponent,
-  EmptyStateCustomExampleComponent,
-} from './custom.example';
+import { EmptyStateCustomExampleComponent } from './custom.example';
 
 describe('docs-examples-angular: EmptyStateCustomExampleComponent', () => {
   let fixture: ComponentFixture<EmptyStateCustomExampleComponent>;
@@ -40,20 +36,13 @@ describe('docs-examples-angular: EmptyStateCustomExampleComponent', () => {
     expect(actions[0]?.textContent).toContain('Create a new invoice');
   });
 
-  // The wrapper's (actionClick) never fires for a custom implementation,
-  // because NgComponentOutlet forwards inputs only - the output is emitted by
-  // the custom component itself.
-  it('should emit the clicked action id', () => {
-    const custom = fixture.debugElement.query(
-      By.directive(CustomEmptyStateComponent),
-    ).componentInstance as CustomEmptyStateComponent;
-    const actions: string[] = [];
-    custom.actionClick.subscribe((event) => actions.push(event.actionId));
-
+  it('should re-emit the clicked action id on the wrapper', () => {
+    // Act
     element
       .querySelector<HTMLButtonElement>('.docs-empty-state__action')
       ?.click();
 
-    expect(actions).toEqual(['create']);
+    // Assert
+    expect(fixture.componentInstance.lastAction()).toBe('create');
   });
 });

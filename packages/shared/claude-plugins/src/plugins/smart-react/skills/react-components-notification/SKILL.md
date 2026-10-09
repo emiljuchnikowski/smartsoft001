@@ -62,11 +62,11 @@ Payload of `onActionClick`.
 
 ### `INotificationAction`
 
-| Field      | Type                       | Default    | Description                    |
-| ---------- | -------------------------- | ---------- | ------------------------------ |
-| `id`       | `string`                   | required   | Reported as `actionId`.        |
-| `label`    | `string`                   | required   | Button text.                   |
-| `variant?` | `'primary' \| 'secondary'` | `'simple'` | `primary` or `secondary` look. |
+| Field      | Type                       | Default     | Description                                                                                                   |
+| ---------- | -------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------- |
+| `id`       | `string`                   | required    | Reported as `actionId`.                                                                                       |
+| `label`    | `string`                   | required    | Button text.                                                                                                  |
+| `variant?` | `'primary' \| 'secondary'` | `'primary'` | `primary` or `secondary` look; the standard exposes it as `data-variant`, the preset styles the action by it. |
 
 ### Related types
 
@@ -154,7 +154,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
 }
 ```
 
-`SmartNotificationPreset` is the styled (preset) implementation: register it as above, render it directly in place of `SmartNotification`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
+`SmartNotificationPreset` is the styled (preset) implementation: register it under the `'notification'` key of `SmartProvider`'s `components`, render it directly in place of `SmartNotification`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
 
 ### The `useNotification` hook
 
@@ -175,7 +175,7 @@ function useNotification({
 ```tsx
 import { SmartNotificationProps, useNotification } from '@smartsoft001/react';
 
-export function BannerNotification(props: SmartNotificationProps) {
+export function CustomNotification(props: SmartNotificationProps) {
   const { dismiss, invokeAction } = useNotification(props);
 
   return (
@@ -205,11 +205,11 @@ export function BannerNotification(props: SmartNotificationProps) {
 }
 ```
 
-Registered as `components={{ notification: BannerNotification }}`, it also renders the toasts of `ToastService`.
+Registered as `components={{ notification: CustomNotification }}`, it also renders the toasts of `ToastService`.
 
 ## Styling
 
-- Both renderings carry `smart:dark:` variants; the preset renders the six toast looks and labels itself with a `useId()`-based id.
+- `SmartNotificationStandard` is unstyled semantic markup (no classes); `SmartNotificationPreset` renders the six toast looks with `smart:dark:` variants and labels itself with a `useId()`-based id.
 
 ## File Locations
 

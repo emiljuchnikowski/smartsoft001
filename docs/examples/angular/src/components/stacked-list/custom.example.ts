@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -61,9 +60,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomStackedListComponent extends StackedListBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   containerClasses = computed(() =>
     [
       'docs-stacked-list',
@@ -92,7 +88,8 @@ export class CustomStackedListComponent extends StackedListBaseComponent {
 })
 export class StackedListCustomExampleComponent {
   // withDividers and fullWidthOnMobile are styling hints: the standard list
-  // ignores them, a custom implementation decides what they mean.
+  // ignores them, the preset styles them and a custom implementation decides
+  // what they mean.
   options: IStackedListOptions = {
     title: 'Team members',
     description: 'People with access to this workspace.',

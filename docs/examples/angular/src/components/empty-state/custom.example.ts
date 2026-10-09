@@ -2,7 +2,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  input,
+  signal,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -40,12 +40,7 @@ import {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CustomEmptyStateComponent extends EmptyStateBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class'
-  // alias, so an empty state registered through the token declares it
-  // explicitly.
-  override cssClass = input<string>('');
-}
+export class CustomEmptyStateComponent extends EmptyStateBaseComponent {}
 
 @Component({
   selector: 'docs-empty-state-custom-example',
@@ -59,12 +54,18 @@ export class CustomEmptyStateComponent extends EmptyStateBaseComponent {
       useValue: CustomEmptyStateComponent,
     },
   ],
-  // NgComponentOutlet forwards inputs but not outputs, so `(actionClick)` and
-  // `(itemClick)` on the wrapper stay silent once a custom implementation is
-  // registered - handle the click inside the custom component instead.
-  template: `<smart-empty-state [options]="options" />`,
+  // The wrapper re-emits the implementation's `actionClick` and `itemClick`,
+  // so the handlers stay on `<smart-empty-state>`.
+  template: `
+    <smart-empty-state
+      [options]="options"
+      (actionClick)="lastAction.set($event.actionId)"
+    />
+  `,
 })
 export class EmptyStateCustomExampleComponent {
+  lastAction = signal<string | null>(null);
+
   options: IEmptyStateOptions = {
     title: 'No draft invoices',
     description: 'Draft an invoice and send it to a customer.',

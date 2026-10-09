@@ -41,4 +41,14 @@ describe('docs-examples-angular: DescriptionListCustomExampleComponent', () => {
 
     expect(title.textContent).toContain('Applicant information');
   });
+
+  it('should hand the class of the wrapper to the custom list', () => {
+    // Arrange
+    const custom: HTMLElement = fixture.nativeElement.querySelector(
+      '.docs-description-list',
+    );
+
+    // Assert
+    expect(custom.classList).toContain('docs-description-list--compact');
+  });
 });

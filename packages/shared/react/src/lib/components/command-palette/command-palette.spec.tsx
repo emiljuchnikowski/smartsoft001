@@ -267,7 +267,7 @@ describe('@smartsoft001/react: SmartCommandPalette', () => {
       expect(dialogOf(container)).not.toHaveAttribute('open');
     });
 
-    it('should close when the dialog fires close (Escape / native close)', () => {
+    it('should close when the dialog fires close (native close)', () => {
       const onOpenChange = jest.fn();
       const { container } = render(
         <SmartCommandPaletteStandard defaultOpen onOpenChange={onOpenChange} />,
@@ -277,6 +277,33 @@ describe('@smartsoft001/react: SmartCommandPalette', () => {
 
       expect(onOpenChange).toHaveBeenCalledWith(false);
       expect(dialogOf(container)).not.toHaveAttribute('open');
+    });
+
+    it('should close on Escape anywhere in the document while open', () => {
+      // Arrange
+      const onOpenChange = jest.fn();
+      const { container } = render(
+        <SmartCommandPaletteStandard defaultOpen onOpenChange={onOpenChange} />,
+      );
+
+      // Act
+      fireEvent.keyDown(document, { key: 'Escape' });
+
+      // Assert
+      expect(onOpenChange).toHaveBeenCalledWith(false);
+      expect(dialogOf(container)).not.toHaveAttribute('open');
+    });
+
+    it('should ignore Escape while closed', () => {
+      // Arrange
+      const onOpenChange = jest.fn();
+      render(<SmartCommandPaletteStandard onOpenChange={onOpenChange} />);
+
+      // Act
+      fireEvent.keyDown(document, { key: 'Escape' });
+
+      // Assert
+      expect(onOpenChange).not.toHaveBeenCalled();
     });
 
     it('should set the placeholder and aria-label from options', () => {
@@ -468,6 +495,17 @@ describe('@smartsoft001/react: SmartCommandPalette', () => {
       closeDialog(container);
 
       expect(onOpenChange).toHaveBeenCalledWith(false);
+    });
+
+    it('should close on Escape while open', () => {
+      // Arrange
+      const { container } = render(<SmartCommandPalettePreset defaultOpen />);
+
+      // Act
+      fireEvent.keyDown(document, { key: 'Escape' });
+
+      // Assert
+      expect(zone(container, 'dialog')).not.toHaveAttribute('open');
     });
 
     it('should default to the simple variant with an opaque white dialog', () => {

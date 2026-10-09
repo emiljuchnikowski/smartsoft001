@@ -52,6 +52,7 @@ export const FRAMEWORK_SOURCES = {
     storyProject: 'angular',
     storyExtension: '.stories.ts',
     examplesDir: 'angular/src/components',
+    presets: '`provideSmartPresets()`',
   },
   react: {
     packageName: '@smartsoft001/react',
@@ -63,6 +64,7 @@ export const FRAMEWORK_SOURCES = {
     storyProject: 'react',
     storyExtension: '.stories.tsx',
     examplesDir: 'react/src/components',
+    presets: '`SMART_PRESET_COMPONENTS` on `SmartProvider`',
   },
 }
 
@@ -503,7 +505,7 @@ function usageBlock(name, story, usage, framework = 'angular') {
 
   if (generator) tabs.splice(2, 0, generator)
 
-  return renderUsage(name, story, tabs, ANGULAR)
+  return renderUsage(name, story, tabs, ANGULAR, usage)
 }
 
 /**
@@ -525,10 +527,37 @@ function reactUsageBlock(name, story, usage) {
     },
   ]
 
-  return renderUsage(name, story, tabs, FRAMEWORK_SOURCES.react)
+  return renderUsage(name, story, tabs, FRAMEWORK_SOURCES.react, usage)
 }
 
-function renderUsage(name, story, tabs, sources) {
+/** The title of the stories that render the usage examples as they are. */
+export const USAGE_EXAMPLES_STORY_TITLE = 'Docs/Usage examples'
+
+/**
+ * The Storybook id of the story that renders the usage example of `name`:
+ * one story per example in `docs/examples/<framework>/src/components/
+ * usage-examples.stories.*`, named after the component.
+ */
+export function usageExampleStoryId(name) {
+  return `${sanitize(USAGE_EXAMPLES_STORY_TITLE)}--${sanitize(startCase(name))}`
+}
+
+/**
+ * Below the live preview of an executed example: the preview is that code,
+ * rendered in an application that registers the presets.
+ */
+function previewNote(sources) {
+  return `The preview renders the code above in an application that registers every preset (${sources.presets}, see [Installation](/docs/installation#set-up-the-root)) and the English translations; without the presets, a component that has one renders its standard implementation instead, for most components unstyled markup.`
+}
+
+/**
+ * The tabs, then the live preview. With an executed example the preview is
+ * the story that renders that very example, so the code and the preview
+ * cannot drift; without one it falls back to the component's own story.
+ */
+function renderUsage(name, story, tabs, sources, usage = null) {
+  const storyId = usage ? usageExampleStoryId(name) : story.id
+
   return [
     '## Usage',
     '',
@@ -544,8 +573,9 @@ function renderUsage(name, story, tabs, sources) {
     '',
     '{% /tabs %}',
     '',
-    `{% storybook project="${sources.storyProject}" story="${story.id}" height=${storyHeight(name)} /%}`,
+    `{% storybook project="${sources.storyProject}" story="${storyId}" height=${storyHeight(name)} /%}`,
     '',
+    ...(usage ? [previewNote(sources), ''] : []),
   ]
 }
 
@@ -559,11 +589,16 @@ function skillTabLines(name, sources = ANGULAR) {
     `With the [\`${sources.plugin}@smartsoft\` plugin](/docs/skills/installing-the-plugin) installed, ask for the component and Claude Code reads the \`${sources.skillPrefix}${name}\` skill through its [components agent](${sources.agentPage}):`,
     '',
     '```text',
-    `Add a ${name} to the settings page, using ${sources.packageName}.`,
+    `Add ${indefiniteArticle(name)} ${name} to the settings page, using ${sources.packageName}.`,
     '```',
     '',
     'The skill carries the same API this page documents, so the generated code matches it.',
   ]
+}
+
+/** `an` before a vowel sound (`an alert`, `an icon`), `a` otherwise. */
+export function indefiniteArticle(word) {
+  return /^[aeio]/i.test(word) ? 'an' : 'a'
 }
 
 /**

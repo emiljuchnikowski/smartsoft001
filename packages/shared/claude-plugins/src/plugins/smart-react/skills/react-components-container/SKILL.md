@@ -38,11 +38,11 @@ The preset's class helpers (`getContainerClasses`) are exported too, for a custo
 
 ### `IContainerOptions`
 
-| Field      | Type                                           | Default | Description                                                                                                                      |
-| ---------- | ---------------------------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| `mode?`    | `'full-width' \| 'constrained' \| 'container'` | —       | In the preset: `container` centres at `max-w-7xl`, `constrained` at `max-w-5xl`, `full-width` (also when unset) spans the width. |
-| `padding?` | `'none' \| 'mobile' \| 'always'`               | —       | In the preset: `always` pads at every breakpoint (`px-4` / `sm:px-6` / `lg:px-8`), `mobile` only below `sm`, `none` not at all.  |
-| `narrow?`  | `boolean`                                      | —       | In the preset: centres at `max-w-3xl`, whatever the mode.                                                                        |
+| Field      | Type                                           | Default | Description                                                                                                                                                               |
+| ---------- | ---------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `mode?`    | `'full-width' \| 'constrained' \| 'container'` | —       | The standard writes it to `data-mode`. In the preset: `container` centres at `max-w-7xl`, `constrained` at `max-w-5xl`, `full-width` (also when unset) spans the width.   |
+| `padding?` | `'none' \| 'mobile' \| 'always'`               | —       | The standard writes it to `data-padding`. In the preset: `always` pads at every breakpoint (`px-4` / `sm:px-6` / `lg:px-8`), `mobile` only below `sm`, `none` not at all. |
+| `narrow?`  | `boolean`                                      | —       | Preset only (the standard ignores it): centres at `max-w-3xl`, whatever the mode.                                                                                         |
 
 ## Usage
 
@@ -88,7 +88,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
 }
 ```
 
-`SmartContainerPreset` is the styled (preset) implementation: register it as above, render it directly in place of `SmartContainer`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
+`SmartContainerPreset` is the styled (preset) implementation: register it under the `'container'` key of `SmartProvider`'s `components`, render it directly in place of `SmartContainer`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
 
 ```tsx
 import { SmartContainerProps } from '@smartsoft001/react';

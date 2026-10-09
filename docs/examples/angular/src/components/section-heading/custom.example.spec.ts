@@ -34,7 +34,7 @@ describe('docs-examples-angular: SectionHeadingCustomExampleComponent', () => {
     ).toContain('New');
     expect(
       element.querySelector('.docs-section-heading__description')?.textContent,
-    ).toContain('A balanced two-column split');
+    ).toContain('Invite people, set their roles');
   });
 
   it('should render the actions template supplied through the options', () => {

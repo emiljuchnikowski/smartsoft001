@@ -11,7 +11,8 @@ import { LIST_CONTAINER_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
   template: '<div class="injected-list-container">injected</div>',
 })
 class MockInjectedComponent extends ListContainerBaseComponent {
-  // NgComponentOutlet passes 'cssClass' (not aliased 'class') so declare it explicitly
+  // Declared without the `class` alias, like the presets: the wrapper resolves
+  // its inputs through outletInputs(), so this still receives the class.
   override cssClass = input<string>('');
 }
 

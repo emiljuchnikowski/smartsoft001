@@ -236,7 +236,7 @@ describe('@smartsoft001/shared-angular: ActionPanelPresetComponent', () => {
   });
 
   describe('cssClass override', () => {
-    it('should bind the canonical cssClass input (no class alias) onto the panel', () => {
+    it('should bind the cssClass input onto the panel', () => {
       fixture.componentRef.setInput('cssClass', 'my-extra');
       fixture.componentRef.setInput('options', { title: 'A' });
       fixture.detectChanges();

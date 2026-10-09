@@ -40,7 +40,9 @@ Add a export to the settings page, using @smartsoft001/angular.
 
 {% /tabs %}
 
-{% storybook project="angular" story="components-export--playground" height=320 /%}
+{% storybook project="angular" story="docs-usage-examples--export" height=320 /%}
+
+The preview renders the code above in an application that registers every preset (`provideSmartPresets()`, see [Installation](/docs/installation#set-up-the-root)) and the English translations; without the presets, a component that has one renders its standard implementation instead, for most components unstyled markup.
 
 ## Components
 
@@ -56,12 +58,12 @@ The base directive. `onClick()` reads `value` and, when it is set, calls `handle
 
 ### Inputs
 
-| Input      | Type                                                       | Default     | Description                                                                       |
-| ---------- | ---------------------------------------------------------- | ----------- | --------------------------------------------------------------------------------- |
-| `value`    | `InputSignal<unknown \| undefined>`                        | `undefined` | The data to export. The button is disabled while it is falsy                      |
-| `handler`  | `InputSignal<(value: unknown, fileName?: string) => void>` | required    | Called with `value` and `fileName` on click; serialise and download the data here |
-| `fileName` | `InputSignal<string \| undefined>`                         | `undefined` | Name for the downloaded file, passed to `handler` as its second argument          |
-| `class`    | `InputSignal<string>`                                      | `''`        | Extra CSS classes applied to the rendered button (alias for `cssClass`)           |
+| Input      | Type                                                   | Default     | Description                                                                        |
+| ---------- | ------------------------------------------------------ | ----------- | ---------------------------------------------------------------------------------- |
+| `value`    | `InputSignal<any \| undefined>`                        | `undefined` | The data to export. The button is disabled while it is falsy                       |
+| `handler`  | `InputSignal<(value: any, fileName?: string) => void>` | required    | Called with `value` and `fileName` on click; serialise and download the data here  |
+| `fileName` | `InputSignal<string \| undefined>`                     | `undefined` | Name for the downloaded file, passed to `handler` as its second argument           |
+| `class`    | `InputSignal<string>`                                  | `''`        | Extra CSS classes applied to the rendered button (`cssClass` input, alias `class`) |
 
 The component emits no outputs. The `handler` input is the extension point: the [CRUD list page](/docs/crud/export-multiselect-groups) wires it to a service that turns the selected rows into a file.
 

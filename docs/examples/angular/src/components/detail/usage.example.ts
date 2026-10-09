@@ -4,12 +4,14 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { DetailComponent, IDetailOptions } from '@smartsoft001/angular';
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
+// Each label is the `MODEL.<key>` translation: the library's dictionary
+// already has `firstName` and `email`.
 @Model({})
 class ApplicantModel {
   id = 'applicant-1';
 
   @Field({ details: true, type: FieldType.text })
-  name = 'Margot Foster';
+  firstName = 'Margot';
 
   @Field({ details: true, type: FieldType.email })
   email = 'margot@example.com';
@@ -25,8 +27,8 @@ export class DetailUsageExampleComponent {
   readonly type = ApplicantModel;
   readonly applicant = signal(new ApplicantModel());
 
-  readonly nameOptions: IDetailOptions<ApplicantModel> = {
-    key: 'name',
+  readonly firstNameOptions: IDetailOptions<ApplicantModel> = {
+    key: 'firstName',
     options: { type: FieldType.text },
     item: this.applicant,
   };

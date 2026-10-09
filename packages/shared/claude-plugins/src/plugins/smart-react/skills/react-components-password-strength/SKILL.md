@@ -6,7 +6,7 @@ user-invocable: false
 
 # Password Strength (`SmartPasswordStrength`)
 
-`SmartPasswordStrength` rates `passwordToCheck` on four rules (lower-case letters, upper-case letters, symbols, more than 6 characters) and shows a three-bar meter with a translated message (`INPUT.PASSWORD-STRENGTH.poor` / `notGood` / `good`). With `showHint` it lists the rules the password does not meet yet. `onPasswordStrength(strong)` reports whenever the rating changes; `strong` is `true` once all rules are met. There is no preset: the standard meter is already styled.
+`SmartPasswordStrength` rates `passwordToCheck` on four rules (lower-case letters, upper-case letters, symbols, more than 6 characters) and shows a three-bar meter with a translated message (`INPUT.PASSWORD-STRENGTH.poor` / `notGood` / `good`). With `showHint` it lists the rules the password does not meet yet. `onPasswordStrength(strong)` reports once on mount and again whenever the score changes; `strong` is `true` once all rules are met. There is no preset: the standard meter is already styled.
 
 ## When to Use This Skill
 
@@ -106,9 +106,9 @@ function usePasswordStrength({
 | ------------------ | ------------------------- | ---------------------------------------------------------------------------------------------------------------- |
 | `result`           | `PasswordStrengthResult`  | The rules the password meets.                                                                                    |
 | `strength`         | `number`                  | The score: 10 (poor), 20 (not good), 30 (strong); any other value (an empty password, digits only) is not rated. |
-| `strengthIndex`    | `0 \| 2 \| 1 \| 3`        | `0` poor, `1` not good, `2` good, `3` not rated.                                                                 |
+| `strengthIndex`    | `0 \| 1 \| 2 \| 3`        | `0` poor, `1` not good, `2` good, `3` not rated.                                                                 |
 | `msg`              | `PasswordStrengthMessage` | The message key suffix for `INPUT.PASSWORD-STRENGTH.<msg>`.                                                      |
-| `barClasses`       | `string[]`                | The classes of the three bars (filled per strength).                                                             |
+| `barClasses`       | `string[]`                | The classes of the three bars (red, orange or yellow fill per strength, gray when empty).                        |
 | `msgClass`         | `string`                  | The colour class of the message.                                                                                 |
 | `containerClasses` | `string`                  | The container classes, with `className` appended.                                                                |
 
@@ -136,7 +136,7 @@ export function TextPasswordStrength(props: SmartPasswordStrengthProps) {
 
 ## Styling
 
-- The standard meter fills the bars in red / yellow / green tones with `smart:dark:` variants; the container is a third of the width (`smart:w-1/3`, full width below `sm`).
+- The standard meter fills one red bar for poor, two orange bars for not good and three yellow bars for good (gray while not rated), with `smart:dark:` variants; the message takes the same colour. The container is a third of the width (`smart:w-1/3`, full width below `sm`).
 
 ## File Locations
 

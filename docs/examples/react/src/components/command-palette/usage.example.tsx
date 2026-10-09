@@ -4,20 +4,20 @@ import { useState } from 'react';
 import {
   ICommand,
   ICommandPaletteOptions,
+  SmartButton,
   SmartCommandPalette,
 } from '@smartsoft001/react';
 
 const commands: ICommand[] = [
-  { id: 'new-project', label: 'New project', group: 'Projects' },
-  { id: 'invite-member', label: 'Invite team member', group: 'Team' },
-  { id: 'open-settings', label: 'Open settings', group: 'Account' },
+  { id: 'new-project', label: 'New project' },
+  { id: 'invite-member', label: 'Invite team member' },
+  { id: 'open-settings', label: 'Open settings' },
 ];
 
 const options: ICommandPaletteOptions = {
-  variant: 'simple',
   placeholder: 'Search commands...',
   emptyText: 'No commands found.',
-  ariaLabel: 'Command palette',
+  ariaLabel: 'Search commands',
 };
 
 export function CommandPaletteUsageExample() {
@@ -27,9 +27,9 @@ export function CommandPaletteUsageExample() {
 
   return (
     <>
-      <button type="button" onClick={() => setOpen(true)}>
+      <SmartButton options={{ click: () => setOpen(true) }}>
         Open command palette
-      </button>
+      </SmartButton>
 
       <SmartCommandPalette
         commands={commands}

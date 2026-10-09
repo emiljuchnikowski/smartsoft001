@@ -57,7 +57,6 @@ const options: IStackedLayoutOptions = {
       <a href="#projects">Projects</a>
     </>
   ),
-  headerTpl: <h1>Projects</h1>,
 };
 
 // Every <SmartStackedLayout> below the provider renders CustomStackedLayout.
@@ -65,7 +64,7 @@ export function StackedLayoutCustomExample() {
   return (
     <SmartProvider components={components}>
       <SmartStackedLayout options={options}>
-        <p>Main content rendered by the layout implementation.</p>
+        <p>Main content of the page.</p>
       </SmartStackedLayout>
     </SmartProvider>
   );

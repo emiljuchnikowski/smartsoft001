@@ -3,7 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
+  signal,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -63,9 +63,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomTextareaComponent extends TextareaBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   containerClasses = computed(() =>
     [
       'docs-textarea',
@@ -76,8 +73,8 @@ export class CustomTextareaComponent extends TextareaBaseComponent {
       .join(' '),
   );
 
-  // `value` is a model on the base, so writing to it keeps the two-way binding
-  // of `<smart-textarea [(value)]="...">` working for the standard component.
+  // `value` is a model on the base: the wrapper passes it in and writes the
+  // typed text back to `<smart-textarea [(value)]="...">`.
   protected onInput(event: Event): void {
     this.value.set((event.target as HTMLTextAreaElement).value);
   }
@@ -100,18 +97,23 @@ export class CustomTextareaComponent extends TextareaBaseComponent {
       useValue: CustomTextareaComponent,
     },
   ],
-  // NgComponentOutlet forwards inputs only: the wrapper's (actionClick) and the
-  // [(value)] write-back stay silent, so `comment` below is the initial value.
+  // The wrapper forwards `value` both ways and re-emits `actionClick` of the
+  // custom component.
   template: `
     <smart-textarea
-      [value]="comment"
+      [(value)]="comment"
       placeholder="Add your comment..."
       [options]="options"
+      (actionClick)="lastAction.set($event.actionId + ': ' + $event.value)"
     />
+    @if (lastAction()) {
+      <p>Last action: {{ lastAction() }}</p>
+    }
   `,
 })
 export class TextareaCustomExampleComponent {
-  comment = 'Looks good to me.';
+  readonly comment = signal('Looks good to me.');
+  readonly lastAction = signal<string | null>(null);
 
   options: ITextareaOptions = {
     label: 'Comment',

@@ -4,6 +4,12 @@ import { DrawerUsageExampleComponent } from './usage.example';
 
 describe('docs-examples-angular: DrawerUsageExampleComponent', () => {
   let fixture: ComponentFixture<DrawerUsageExampleComponent>;
+  let element: HTMLElement;
+
+  function openDrawer(): void {
+    element.querySelector<HTMLButtonElement>('smart-button button')?.click();
+    fixture.detectChanges();
+  }
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -11,37 +17,52 @@ describe('docs-examples-angular: DrawerUsageExampleComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(DrawerUsageExampleComponent);
+    element = fixture.nativeElement;
     fixture.detectChanges();
   });
 
   it('should keep the drawer closed until it is opened', () => {
-    const dialog = fixture.nativeElement.querySelector('[role="dialog"]');
-
-    expect(dialog).toBeNull();
+    // Assert
+    expect(element.querySelector('[role="dialog"]')).toBeNull();
   });
 
   it('should render the title and the projected content when opened', () => {
-    fixture.componentInstance.open.set(true);
-    fixture.detectChanges();
+    // Act
+    openDrawer();
 
-    const dialog: HTMLElement =
-      fixture.nativeElement.querySelector('[role="dialog"]');
+    // Assert
+    const dialog = element.querySelector('[role="dialog"]') as HTMLElement;
     expect(dialog.textContent).toContain('Shopping cart');
     expect(dialog.textContent).toContain('Throwback Hip Bag');
     expect(dialog.getAttribute('data-position')).toBe('right');
   });
 
-  it('should close the drawer and call the handler from the close button', () => {
-    fixture.componentInstance.open.set(true);
-    fixture.detectChanges();
-    const close: HTMLButtonElement = fixture.nativeElement.querySelector(
+  it('should close the drawer from the close button and count it', () => {
+    // Arrange
+    openDrawer();
+    const close = element.querySelector<HTMLButtonElement>(
       'button[aria-label="Close"]',
     );
 
-    close.click();
+    // Act
+    close?.click();
     fixture.detectChanges();
 
-    expect(fixture.componentInstance.open()).toBe(false);
-    expect(fixture.componentInstance.closedCount()).toBe(1);
+    // Assert
+    expect(element.querySelector('[role="dialog"]')).toBeNull();
+    expect(element.textContent).toContain('Times closed: 1');
+  });
+
+  it('should close the drawer from the overlay', () => {
+    // Arrange
+    openDrawer();
+
+    // Act
+    element.querySelector<HTMLElement>('.drawer-overlay')?.click();
+    fixture.detectChanges();
+
+    // Assert
+    expect(element.querySelector('[role="dialog"]')).toBeNull();
+    expect(element.textContent).toContain('Times closed: 1');
   });
 });

@@ -14,6 +14,7 @@ const ROWS = [
 interface ExportArgs {
   hasValue: boolean;
   payload: 'object' | 'rows';
+  fileName: string;
   cssClass: string;
 }
 
@@ -43,18 +44,27 @@ const meta: Meta<ExportArgs> = {
       description:
         'What gets handed to `handler`. Purely a handler-argument difference; the rendered button is identical.',
     },
+    fileName: {
+      control: 'text',
+      description: 'Handed to `handler` as its second argument.',
+    },
     cssClass: { control: 'text', description: 'Passed through as `class`.' },
   },
-  args: { hasValue: true, payload: 'object', cssClass: '' },
+  args: {
+    hasValue: true,
+    payload: 'object',
+    fileName: 'export.json',
+    cssClass: '',
+  },
 };
 
 export default meta;
 type Story = StoryObj<ExportArgs>;
 
 // `handler` is input.required — every instance must bind it or Angular throws
-// NG0950. `fileName` is deliberately not exercised: ExportBaseComponent declares
-// it but never reads it, so it has no observable effect.
-const handler = (value: unknown) => console.log('[storybook] exported', value);
+// NG0950. It receives `value` and `fileName`.
+const handler = (value: unknown, fileName?: string) =>
+  console.log('[storybook] exported', value, fileName);
 
 // #region usage
 export const Playground: Story = {
@@ -67,6 +77,7 @@ export const Playground: Story = {
           ? ROWS
           : SINGLE
         : undefined,
+      fileName: args.fileName,
       cssClass: args.cssClass,
     },
     template: `
@@ -74,7 +85,12 @@ export const Playground: Story = {
         <p style="margin-bottom: 16px; font-size: 14px; color: #6b7280;">
           Click the export button to trigger the handler (logged to the console).
         </p>
-        <smart-export [value]="data" [handler]="handler" [class]="cssClass"></smart-export>
+        <smart-export
+          [value]="data"
+          [fileName]="fileName"
+          [handler]="handler"
+          [class]="cssClass"
+        ></smart-export>
       </div>
     `,
   }),
@@ -117,7 +133,7 @@ export const AllVariants: Story = {
 
         ${section(
           'External class',
-          'The class is forwarded to the host element.',
+          'The class is applied to the rendered button.',
           `<smart-export
              class="smart:rounded-lg smart:bg-yellow-50 smart:p-4 smart:dark:bg-yellow-900/30"
              [value]="single"

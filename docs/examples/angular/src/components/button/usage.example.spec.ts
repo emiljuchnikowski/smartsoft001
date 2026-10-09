@@ -14,20 +14,28 @@ describe('docs-examples-angular: ButtonUsageExampleComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should render the projected label as a button of the configured type', () => {
+  it('should render the projected label in the configured colour', () => {
+    // Act
     const button: HTMLButtonElement =
       fixture.nativeElement.querySelector('button');
 
+    // Assert
     expect(button.textContent).toContain('Save changes');
-    expect(button.type).toBe('submit');
+    expect(button.type).toBe('button');
+    expect(button.classList.contains('smart:bg-emerald-600')).toBe(true);
+    expect(fixture.nativeElement.textContent).toContain('Saves: 0');
   });
 
-  it('should run the click handler from the options', () => {
+  it('should count the saves the click handler runs', () => {
+    // Arrange
     const button: HTMLButtonElement =
       fixture.nativeElement.querySelector('button');
 
+    // Act
     button.click();
+    fixture.detectChanges();
 
-    expect(fixture.componentInstance.saveCount()).toBe(1);
+    // Assert
+    expect(fixture.nativeElement.textContent).toContain('Saves: 1');
   });
 });

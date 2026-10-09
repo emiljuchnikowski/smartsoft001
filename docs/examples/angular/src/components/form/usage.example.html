@@ -4,4 +4,10 @@
   (valueChange)="value.set($event)"
   (invokeSubmit)="onSubmit()"
 />
+@if (value()?.firstName; as firstName) {
+  <p>First name: {{ firstName }}</p>
+}
+@if (submitted()) {
+  <p>Submitted</p>
+}
 <!-- #endregion -->

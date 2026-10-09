@@ -56,14 +56,14 @@ export function CustomCommandPalette(props: SmartCommandPaletteProps) {
 const components = { 'command-palette': CustomCommandPalette };
 
 const commands: ICommand[] = [
-  { id: 'new-file', label: 'New file', group: 'Files' },
-  { id: 'open-settings', label: 'Open settings', group: 'Files' },
-  { id: 'toggle-theme', label: 'Toggle theme', group: 'View' },
+  { id: 'new-file', label: 'New file' },
+  { id: 'open-settings', label: 'Open settings' },
+  { id: 'toggle-theme', label: 'Toggle theme' },
 ];
 
 const options: ICommandPaletteOptions = {
   placeholder: 'Search commands…',
-  emptyText: 'No results',
+  emptyText: 'Nothing matches.',
 };
 
 // Every <SmartCommandPalette> below the provider renders CustomCommandPalette.

@@ -25,11 +25,11 @@ Barebones placeholder concrete implementation. When `open()` is `true`, renders 
 
 ### DrawerPresetComponent (`<smart-drawer-preset>`)
 
-Fully-styled variation that extends `DrawerBaseComponent` and is a drop-in replacement for `DrawerStandardComponent`. Register it via `DRAWER_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-drawer>`, or use the `<smart-drawer-preset>` selector directly. It renders the translated Preline **offcanvas** look: a fixed, sliding side panel (`role="dialog"`, `aria-modal="true"`, `tabindex="-1"`) with a header (title + circular close button with the Preline X icon), a `<ng-content />` body, and an optional dimmed backdrop. It consumes `options.position` (`left`/`right`, default `right` → `data-position` + start/end placement), `options.wide` (`max-w-xs` → `max-w-md`), `options.withOverlay` (renders a click-to-close backdrop), and `options.brandedHeader` (blue header bar with inverted title/close styling). Open/close is Angular-driven via the `open` model + `@if` and `close()` (no Preline JS runtime). All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants. The class recipes live in `preset/preset-classes.util.ts` (`getDrawerPanelClasses`, `getDrawerBackdropClasses`, `getDrawerHeaderClasses`, `getDrawerTitleClasses`, `getDrawerCloseClasses`, `getDrawerBodyClasses`).
+Fully-styled variation that extends `DrawerBaseComponent` and is a drop-in replacement for `DrawerStandardComponent`. Register it for `DRAWER_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-drawer>` (or every preset at once with `provideSmartPresets()`), or use the `<smart-drawer-preset>` selector directly. It renders the translated Preline **offcanvas** look: a fixed, sliding side panel (`role="dialog"`, `aria-modal="true"`, `tabindex="-1"`) with a header (title + circular close button with the Preline X icon), a `<ng-content />` body, and an optional dimmed backdrop. It consumes `options.position` (`left`/`right`, default `right` → `data-position` + start/end placement), `options.wide` (`max-w-xs` → `max-w-md`), `options.withOverlay` (renders a click-to-close backdrop), and `options.brandedHeader` (blue header bar with inverted title/close styling). Open/close is Angular-driven via the `open` model + `@if` and `close()` (no Preline JS runtime). All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants; the class recipes are internal (not exported from `@smartsoft001/angular`). The header is always rendered, with or without `title`.
 
-> Because `DrawerComponent` renders injected components via `NgComponentOutlet` (which passes inputs by canonical name), `DrawerPresetComponent` overrides `cssClass` as `input<string>('')` **without** the `class` alias. Bind it as `[cssClass]` when using the `<smart-drawer-preset>` selector directly, or just pass `class` on `<smart-drawer>` (the wrapper forwards it).
+> The preset declares `cssClass` without the `class` alias, so bind `[cssClass]` when you use the `<smart-drawer-preset>` selector directly; `class` on `<smart-drawer>` reaches it through the wrapper.
 >
-> The preset uses `<ng-content />` for its body, which receives the content projected into `<smart-drawer>` when the preset is registered through `DRAWER_STANDARD_COMPONENT_TOKEN`, as well as with the `<smart-drawer-preset>` selector directly (see "Content Projection"). It does not consume `options.stickyFooter` (no footer slot in the base API) or `options.variant` (content-type variants are projected via `<ng-content />`, not built into the offcanvas shell). Top/bottom placements from the Preline reference are not expressible — `IDrawerOptions.position` is `left | right` only.
+> The preset's body is its `<ng-content />`: the wrapper hands the content projected into `<smart-drawer>` to the registered implementation, and the `<smart-drawer-preset>` selector takes projected content directly. It does not consume `options.stickyFooter` (no footer slot in the base API) or `options.variant` (content-type variants are projected content, not built into the offcanvas shell). Top/bottom placements from the Preline reference are not expressible — `IDrawerOptions.position` is `left | right` only.
 
 ### DrawerBaseComponent (abstract)
 
@@ -39,20 +39,32 @@ Abstract base directive for extending custom drawer implementations. Exposes `op
 
 ### Inputs
 
-| Input     | Type                                       | Default | Description                                     |
-| --------- | ------------------------------------------ | ------- | ----------------------------------------------- |
-| `open`    | `ModelSignal<boolean>`                     | `false` | Whether the drawer is open (two-way bindable)   |
-| `title`   | `InputSignal<string \| undefined>`         | -       | Optional drawer title (renders header when set) |
-| `options` | `InputSignal<IDrawerOptions \| undefined>` | -       | Optional configuration                          |
-| `class`   | `InputSignal<string>`                      | `''`    | External CSS classes (alias for `cssClass`)     |
+| Input     | Type                                       | Default | Description                                            |
+| --------- | ------------------------------------------ | ------- | ------------------------------------------------------ |
+| `open`    | `ModelSignal<boolean>`                     | `false` | Whether the drawer is open (two-way bindable)          |
+| `title`   | `InputSignal<string \| undefined>`         | -       | Optional drawer title (renders header when set)        |
+| `options` | `InputSignal<IDrawerOptions \| undefined>` | -       | Optional configuration                                 |
+| `class`   | `InputSignal<string>`                      | `''`    | Classes on the panel (`cssClass` input, alias `class`) |
 
 ### Outputs
 
-| Output   | Type           | Description                                                |
-| -------- | -------------- | ---------------------------------------------------------- |
-| `closed` | `output<void>` | Emitted when the drawer is closed (programmatic or button) |
+| Output       | Type                        | Description                                                                        |
+| ------------ | --------------------------- | ---------------------------------------------------------------------------------- |
+| `closed`     | `OutputEmitterRef<void>`    | Emitted when the drawer closes itself (`close()`: the close button or the overlay) |
+| `openChange` | `OutputEmitterRef<boolean>` | The `open` model's change event, for `[(open)]`                                    |
 
 ### IDrawerOptions
+
+| Field           | Type                 | Default   | Description                                                                                                              |
+| --------------- | -------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `position`      | `'left' \| 'right'`  | `'right'` | The side the panel opens on. The standard writes it to the `data-position` attribute; the preset places the panel there. |
+| `withOverlay`   | `boolean`            | -         | Renders a backdrop; a click on it closes the drawer (standard and preset).                                               |
+| `wide`          | `boolean`            | -         | A wider panel (`max-w-md` instead of `max-w-xs`). Preset only.                                                           |
+| `brandedHeader` | `boolean`            | -         | A blue header bar with inverted title and close button. Preset only.                                                     |
+| `stickyFooter`  | `boolean`            | -         | Not read by the built-in implementations; available to a custom implementation.                                          |
+| `variant`       | `SmartDrawerVariant` | -         | Not read by the built-in implementations; available to a custom implementation.                                          |
+
+`SmartDrawerVariant` is `'empty' | 'create-form' | 'user-profile' | 'contact-list' | 'file-details'`.
 
 ```typescript
 interface IDrawerOptions {
@@ -68,7 +80,7 @@ type SmartDrawerVariant =
   'empty' | 'create-form' | 'user-profile' | 'contact-list' | 'file-details';
 ```
 
-The standard component only consumes `position` (mapped to the `data-position` attribute on the aside, default `'right'`) and `withOverlay` (toggles the backdrop overlay). The remaining properties — `wide`, `brandedHeader`, `stickyFooter`, and `variant` — are reserved for custom implementations registered through `DRAWER_STANDARD_COMPONENT_TOKEN` and are ignored by `DrawerStandardComponent`.
+The standard component only consumes `position` (mapped to the `data-position` attribute on the aside, default `'right'`) and `withOverlay` (toggles the backdrop overlay).
 
 ## DRAWER_STANDARD_COMPONENT_TOKEN
 
@@ -76,7 +88,7 @@ The standard component only consumes `position` (mapped to the `data-position` a
 import { DRAWER_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
 ```
 
-InjectionToken that allows replacing the default `DrawerStandardComponent` with a custom implementation. Provide a `Type<DrawerBaseComponent>` to override.
+InjectionToken that allows replacing the default `DrawerStandardComponent` with a custom implementation. Provide a `Type<DrawerBaseComponent>` to override. The wrapper passes `open`, `title`, `options` and the class, hands over the projected content, and re-emits the implementation's `closed` and `open` changes.
 
 ```typescript
 // In your app module or component providers:
@@ -95,7 +107,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -130,9 +141,6 @@ import { DrawerBaseComponent } from '@smartsoft001/angular';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyCustomDrawerComponent extends DrawerBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   containerClasses = computed(() => {
     const classes = ['my-drawer'];
     if (this.options()?.wide) classes.push('my-drawer--wide');
@@ -143,12 +151,9 @@ export class MyCustomDrawerComponent extends DrawerBaseComponent {
 }
 ```
 
-When extending the base directly, remember to:
+When extending the base directly, call `this.close()` from your close affordances: it sets `open` to `false` and emits `closed` for you. Keep the inherited `cssClass` (alias `class`): the wrapper passes the class under the name the component declares.
 
-- declare `cssClass = input<string>('')` explicitly (no `class` alias) if the component is used via `NgComponentOutlet` through `DRAWER_STANDARD_COMPONENT_TOKEN`, because `NgComponentOutlet` passes inputs by canonical name (not by alias),
-- call `this.close()` from your close affordances — it sets `open` to `false` and emits `closed` for you.
-
-### Content Projection
+## Content Projection
 
 `DrawerStandardComponent` uses `<ng-content />` to project arbitrary children. A custom implementation registered via `DRAWER_STANDARD_COMPONENT_TOKEN` receives the same content in its default `<ng-content />` slot, so it can show or hide the slot with `@if (open())` like the standard drawer, and control flow at the root of the projected content keeps working. The content arrives wrapped in one `display: contents` element: selectors on the slot's parent that target its direct children (`space-y-*`, `divide-*`, `> *`) do not reach the projected nodes.
 

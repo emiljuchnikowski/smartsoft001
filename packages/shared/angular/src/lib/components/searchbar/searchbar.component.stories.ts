@@ -48,7 +48,7 @@ const meta: Meta<SearchbarArgs> = {
     cssClass: {
       control: 'text',
       description:
-        'External CSS classes (alias for `class`) forwarded to the input element',
+        'External CSS classes, passed as `class` and applied to the input element',
     },
   },
   args: {

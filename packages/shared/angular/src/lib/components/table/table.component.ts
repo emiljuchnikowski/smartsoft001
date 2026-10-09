@@ -11,6 +11,7 @@ import {
 import { TableStandardComponent } from './standard';
 import { ITableOptions } from '../../models';
 import { TABLE_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { outletInputs } from '../base/outlet-inputs';
 
 @Component({
   selector: 'smart-table',
@@ -38,8 +39,10 @@ export class TableComponent {
 
   componentType = computed(() => this.injectedComponent ?? null);
 
-  componentInputs = computed(() => ({
-    options: this.options(),
-    cssClass: this.cssClass(),
-  }));
+  componentInputs = computed(() =>
+    outletInputs(this.componentType(), {
+      options: this.options(),
+      cssClass: this.cssClass(),
+    }),
+  );
 }

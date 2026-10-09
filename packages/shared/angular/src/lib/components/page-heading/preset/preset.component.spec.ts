@@ -121,10 +121,70 @@ describe('@smartsoft001/shared-angular: PageHeadingPresetComponent', () => {
       expect(role('logo')?.querySelector('.logo-content')).toBeTruthy();
     });
 
-    it('should fall back to the title text when no logoTpl is provided', () => {
+    it('should render the title in the brand zone when no logoTpl is provided', () => {
       render({ title: 'Dashboard' });
 
       expect(role('logo')?.textContent?.trim()).toBe('Dashboard');
+    });
+  });
+
+  describe('title and subtitle', () => {
+    it('should render the title as an h1 and the subtitle under it', () => {
+      // Arrange
+      const options: IPageHeadingOptions = {
+        title: 'Back End Developer',
+        subtitle: 'Full-time, remote',
+      };
+
+      // Act
+      render(options);
+
+      // Assert
+      const title = role('title');
+      expect(title?.tagName).toBe('H1');
+      expect(title?.textContent?.trim()).toBe('Back End Developer');
+      expect(role('subtitle')?.textContent?.trim()).toBe('Full-time, remote');
+    });
+
+    it('should render the title next to the logoTpl', () => {
+      // Arrange
+      const options: IPageHeadingOptions = {
+        logoTpl: tpl.logo,
+        title: 'Acme',
+      };
+
+      // Act
+      render(options);
+
+      // Assert
+      expect(role('logo')?.querySelector('.logo-content')).toBeTruthy();
+      expect(role('title')?.textContent?.trim()).toBe('Acme');
+    });
+
+    it('should keep the actions zone next to the title', () => {
+      // Arrange
+      const options: IPageHeadingOptions = {
+        title: 'Back End Developer',
+        actionsTpl: tpl.actions,
+      };
+
+      // Act
+      render(options);
+
+      // Assert
+      expect(role('title')).toBeTruthy();
+      expect(role('actions')?.querySelector('.actions-content')).toBeTruthy();
+    });
+
+    it('should render no heading without a title or subtitle', () => {
+      // Arrange
+      const options: IPageHeadingOptions = { logoTpl: tpl.logo };
+
+      // Act
+      render(options);
+
+      // Assert
+      expect(role('heading')).toBeNull();
     });
   });
 

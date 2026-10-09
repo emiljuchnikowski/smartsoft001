@@ -41,9 +41,8 @@ describe('docs-examples-angular: PagingCustomExampleComponent', () => {
     expect(previous?.disabled).toBe(true);
   });
 
-  // smart-paging creates the custom component imperatively and subscribes to
-  // its pageChange, so unlike the NgComponentOutlet wrappers it does forward
-  // the output back to the caller.
+  // smart-paging subscribes to the pageChange of the custom component and
+  // re-emits it, so the caller moves the page.
   it('should forward pageChange from the custom component to the wrapper', () => {
     const next = element.querySelector<HTMLButtonElement>('.docs-paging__next');
 

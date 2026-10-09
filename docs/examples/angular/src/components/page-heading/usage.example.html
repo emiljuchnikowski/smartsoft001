@@ -1,8 +1,12 @@
 <!-- #region usage -->
 <smart-page-heading [options]="options()" />
 
+@if (lastAction()) {
+  <p>Last action: {{ lastAction() }}</p>
+}
+
 <ng-template #actionsTpl>
-  <button type="button" (click)="onAction('edit')">Edit</button>
-  <button type="button" (click)="onAction('publish')">Publish</button>
+  <smart-button [options]="editButton">Edit</smart-button>
+  <smart-button [options]="publishButton">Publish</smart-button>
 </ng-template>
 <!-- #endregion -->

@@ -65,7 +65,7 @@ export function SidebarLayoutCustomExample() {
   return (
     <SmartProvider components={components}>
       <SmartSidebarLayout options={options}>
-        <p>Main content passed as children.</p>
+        <p>Main content of the page.</p>
       </SmartSidebarLayout>
     </SmartProvider>
   );

@@ -13,9 +13,8 @@ export class GridListUsageExampleComponent {
   readonly options: IGridListOptions = {
     title: 'Team',
     description: 'The people behind the product.',
-    layout: 'cards',
+    // The preset lays the tiles out in three columns from the `lg` breakpoint.
     columns: 3,
-    gap: 'md',
     items: [
       {
         id: 'lindsay',

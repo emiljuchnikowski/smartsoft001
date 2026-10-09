@@ -15,8 +15,10 @@ describe('docs-examples-angular: DescriptionListUsageExampleComponent', () => {
   });
 
   it('should render the title and items from the options', () => {
+    // Arrange
     const list: HTMLElement = fixture.nativeElement;
 
+    // Assert
     expect(list.querySelector('h3')?.textContent).toContain(
       'Applicant information',
     );
@@ -24,12 +26,17 @@ describe('docs-examples-angular: DescriptionListUsageExampleComponent', () => {
     expect(list.querySelector('dd')?.textContent).toContain('Margot Foster');
   });
 
-  it('should run the handler from the item action template', () => {
+  it('should show the field edited through the item action', () => {
+    // Arrange
     const action: HTMLButtonElement =
       fixture.nativeElement.querySelector('.action button');
 
+    // Act
     action.click();
+    fixture.detectChanges();
 
-    expect(fixture.componentInstance.editedField()).toBe('email');
+    // Assert
+    expect(action.textContent).toContain('Update');
+    expect(fixture.nativeElement.textContent).toContain('Editing: email');
   });
 });

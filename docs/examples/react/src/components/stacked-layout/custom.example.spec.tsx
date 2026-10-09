@@ -34,6 +34,6 @@ describe('docs-examples-react: StackedLayoutCustomExample', () => {
 
     expect(
       container.querySelector('.docs-stacked-layout__main'),
-    ).toHaveTextContent('Main content rendered by the layout implementation.');
+    ).toHaveTextContent('Main content of the page.');
   });
 });

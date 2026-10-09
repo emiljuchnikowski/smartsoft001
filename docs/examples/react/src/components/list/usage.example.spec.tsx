@@ -14,20 +14,45 @@ describe('docs-examples-react: ListUsageExample', () => {
   }
 
   it('should render a row per record from the provider', () => {
+    // Arrange
     const { container } = setup();
 
-    expect(screen.getByText('Lindsay Walton')).toBeInTheDocument();
+    // Act
+    const rows = container.querySelectorAll('tbody tr');
+
+    // Assert
+    expect(rows).toHaveLength(3);
+    expect(screen.getByText('Lindsay')).toBeInTheDocument();
     expect(screen.getByText('courtney.henry@example.com')).toBeInTheDocument();
-    expect(container.querySelectorAll('tbody tr')).toHaveLength(3);
   });
 
-  it('should hand the id of the opened row to the select handler', () => {
+  it('should label the columns with the English model labels', () => {
+    // Arrange
+    setup();
+
+    // Act
+    const headers = screen
+      .getAllByRole('columnheader')
+      .map((header) => header.textContent?.trim());
+
+    // Assert
+    expect(headers).toEqual(
+      expect.arrayContaining(['first name', 'last name', 'email']),
+    );
+  });
+
+  it('should show the member of the opened row', () => {
+    // Arrange
     const { container } = setup();
 
+    // Act
     fireEvent.click(
       container.querySelector('tbody td button') as HTMLButtonElement,
     );
 
-    expect(screen.getByText('Selected member: 1')).toBeInTheDocument();
+    // Assert
+    expect(
+      screen.getByText('Selected member: Lindsay Walton'),
+    ).toBeInTheDocument();
   });
 });

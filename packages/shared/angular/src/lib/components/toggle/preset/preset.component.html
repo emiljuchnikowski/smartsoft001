@@ -1,22 +1,17 @@
 <div [class]="containerClasses() + ' ' + cssClass()">
   @if (hasText() && labelPosition() === 'left') {
-    <span [class]="textWrapClasses()">
-      @if (label()) {
-        <span [class]="labelClasses()">{{ label() }}</span>
-      }
-      @if (description()) {
-        <span [class]="descriptionClasses()">{{ description() }}</span>
-      }
-    </span>
+    <ng-container [ngTemplateOutlet]="text" />
   }
 
   <label [class]="switchClasses()">
     <input
       type="checkbox"
+      [id]="inputId"
       [class]="inputClasses"
       [checked]="value()"
       [disabled]="disabled()"
-      [attr.aria-label]="ariaLabel()"
+      [attr.aria-label]="label() ? null : ariaLabel()"
+      [attr.aria-describedby]="description() ? descriptionId : null"
       (change)="onChange($event)"
     />
     <span [class]="trackClasses()"></span>
@@ -24,13 +19,19 @@
   </label>
 
   @if (hasText() && labelPosition() === 'right') {
-    <span [class]="textWrapClasses()">
-      @if (label()) {
-        <span [class]="labelClasses()">{{ label() }}</span>
-      }
-      @if (description()) {
-        <span [class]="descriptionClasses()">{{ description() }}</span>
-      }
-    </span>
+    <ng-container [ngTemplateOutlet]="text" />
   }
 </div>
+
+<ng-template #text>
+  <span [class]="textWrapClasses()">
+    @if (label()) {
+      <label [class]="labelClasses()" [for]="inputId">{{ label() }}</label>
+    }
+    @if (description()) {
+      <span [class]="descriptionClasses()" [id]="descriptionId">{{
+        description()
+      }}</span>
+    }
+  </span>
+</ng-template>

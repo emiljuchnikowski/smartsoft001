@@ -20,38 +20,54 @@ describe('docs-examples-react: CommandPaletteUsageExample', () => {
     };
   }
 
-  it('should render the commands and placeholder from the props', () => {
+  it('should render the commands and the search texts from the options', () => {
+    // Act
     const { dialog, search } = setup();
 
+    // Assert
     expect(dialog).toHaveTextContent('New project');
     expect(search).toHaveAttribute('placeholder', 'Search commands...');
+    expect(search).toHaveAttribute('aria-label', 'Search commands');
   });
 
   it('should keep the palette closed until the trigger is clicked', () => {
+    // Arrange
     const { dialog } = setup();
     expect(dialog).not.toHaveAttribute('open');
 
-    fireEvent.click(screen.getByText('Open command palette'));
+    // Act
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Open command palette' }),
+    );
 
+    // Assert
     expect(dialog).toHaveAttribute('open');
   });
 
   it('should narrow the commands down to the query', () => {
+    // Arrange
     const { dialog, search } = setup();
 
+    // Act
     fireEvent.change(search, { target: { value: 'settings' } });
 
+    // Assert
     const options = dialog.querySelectorAll('[role="option"]');
     expect(options).toHaveLength(1);
     expect(options[0]).toHaveTextContent('Open settings');
   });
 
-  it('should hand the selected command id to the handler and close', () => {
+  it('should show the selected command and close the palette', () => {
+    // Arrange
     const { dialog } = setup();
-    fireEvent.click(screen.getByText('Open command palette'));
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Open command palette' }),
+    );
 
+    // Act
     fireEvent.click(screen.getByText('New project'));
 
+    // Assert
     expect(screen.getByText('Last command: new-project')).toBeInTheDocument();
     expect(dialog).not.toHaveAttribute('open');
   });

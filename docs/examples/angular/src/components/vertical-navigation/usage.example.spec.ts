@@ -4,6 +4,7 @@ import { VerticalNavigationUsageExampleComponent } from './usage.example';
 
 describe('docs-examples-angular: VerticalNavigationUsageExampleComponent', () => {
   let fixture: ComponentFixture<VerticalNavigationUsageExampleComponent>;
+  let element: HTMLElement;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -11,12 +12,15 @@ describe('docs-examples-angular: VerticalNavigationUsageExampleComponent', () =>
     }).compileComponents();
 
     fixture = TestBed.createComponent(VerticalNavigationUsageExampleComponent);
+    element = fixture.nativeElement as HTMLElement;
     fixture.detectChanges();
   });
 
   it('should render the items from the options and mark the current one', () => {
-    const nav: HTMLElement = fixture.nativeElement.querySelector('nav');
+    // Act
+    const nav = element.querySelector('nav') as HTMLElement;
 
+    // Assert
     expect(nav.getAttribute('aria-label')).toBe('Main');
     expect(nav.textContent).toContain('Projects');
     expect(nav.textContent).toContain('12');
@@ -25,12 +29,16 @@ describe('docs-examples-angular: VerticalNavigationUsageExampleComponent', () =>
     );
   });
 
-  it('should hand the clicked item id to the handler', () => {
-    const items: NodeListOf<HTMLButtonElement> =
-      fixture.nativeElement.querySelectorAll('nav button');
+  it('should show the clicked item reported through itemClick', () => {
+    // Arrange
+    const items = element.querySelectorAll<HTMLButtonElement>('nav button');
 
+    // Act
     items[1].click();
+    fixture.detectChanges();
 
+    // Assert
     expect(fixture.componentInstance.lastItem()).toBe('team');
+    expect(element.textContent).toContain('Last clicked item: team');
   });
 });

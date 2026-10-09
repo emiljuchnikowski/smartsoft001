@@ -35,7 +35,9 @@ import { CardHeadingStandardComponent } from '../standard/standard.component';
   imports: [NgTemplateOutlet],
 })
 export class CardHeadingPresetComponent extends CardHeadingStandardComponent {
-  // NgComponentOutlet forwards inputs canonically, so drop the `class` alias.
+  // Redeclared without an alias so `[cssClass]` also binds when the preset is
+  // used directly; the inherited `class` alias keeps working, and the wrapper
+  // reaches either name through outletInputs().
   override cssClass = input<string>('');
 
   variant = computed<CardHeadingVariant>(

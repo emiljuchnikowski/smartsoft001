@@ -90,7 +90,7 @@ const meta: Meta<TableArgs> = {
     },
     cssClass: {
       control: 'text',
-      description: 'External CSS classes (alias for `class`).',
+      description: 'External CSS classes, passed as `className`.',
     },
   },
   args: {

@@ -1,10 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 
-import {
-  CustomDropdownComponent,
-  DropdownCustomExampleComponent,
-} from './custom.example';
+import { DropdownCustomExampleComponent } from './custom.example';
 
 describe('docs-examples-angular: DropdownCustomExampleComponent', () => {
   let fixture: ComponentFixture<DropdownCustomExampleComponent>;
@@ -40,22 +36,17 @@ describe('docs-examples-angular: DropdownCustomExampleComponent', () => {
     expect(element.querySelectorAll('.docs-dropdown__item')).toHaveLength(2);
   });
 
-  // The wrapper's (selectedItem) never fires for a custom implementation,
-  // because NgComponentOutlet forwards inputs only - the output is emitted by
-  // the custom component itself.
-  it('should emit the selected item and close the menu', () => {
-    const custom = fixture.debugElement.query(
-      By.directive(CustomDropdownComponent),
-    ).componentInstance as CustomDropdownComponent;
-    const selected: string[] = [];
-    custom.selectedItem.subscribe((event) => selected.push(event.itemId));
-
+  it('should re-emit the selected item on the wrapper and close the menu', () => {
+    // Arrange
     trigger()?.click();
     fixture.detectChanges();
+
+    // Act
     element.querySelector<HTMLButtonElement>('.docs-dropdown__item')?.click();
     fixture.detectChanges();
 
-    expect(selected).toEqual(['newsletter']);
+    // Assert
+    expect(fixture.componentInstance.selectedId()).toBe('newsletter');
     expect(element.querySelector('.docs-dropdown__menu')).toBeNull();
   });
 });

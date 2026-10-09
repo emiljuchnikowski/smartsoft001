@@ -105,6 +105,55 @@ describe('@smartsoft001/shared-angular: TogglePresetComponent', () => {
     expect(input().getAttribute('aria-label')).toBe('Toggle dark mode');
   });
 
+  it('should make the label the accessible name of the checkbox', () => {
+    // Arrange
+    fixture.componentRef.setInput('options', {
+      label: 'Notifications',
+      ariaLabel: 'Ignored while a label is visible',
+    });
+
+    // Act
+    fixture.detectChanges();
+
+    // Assert
+    const label = root().querySelector<HTMLLabelElement>(
+      `label[for="${input().id}"]`,
+    );
+    expect(input().id).toBeTruthy();
+    expect(label?.textContent?.trim()).toBe('Notifications');
+    expect(input().labels?.length).toBe(2);
+    expect(input().getAttribute('aria-label')).toBeNull();
+  });
+
+  it('should link the description to the checkbox through aria-describedby', () => {
+    // Arrange
+    fixture.componentRef.setInput('options', {
+      label: 'Notifications',
+      description: 'Enable push alerts',
+    });
+
+    // Act
+    fixture.detectChanges();
+
+    // Assert
+    const describedBy = input().getAttribute('aria-describedby');
+    expect(describedBy).toBeTruthy();
+    expect(root().querySelector(`#${describedBy}`)?.textContent?.trim()).toBe(
+      'Enable push alerts',
+    );
+  });
+
+  it('should not set aria-describedby without a description', () => {
+    // Arrange
+    fixture.componentRef.setInput('options', { label: 'Notifications' });
+
+    // Act
+    fixture.detectChanges();
+
+    // Assert
+    expect(input().getAttribute('aria-describedby')).toBeNull();
+  });
+
   it('should apply cssClass on the root element (canonical name for NgComponentOutlet)', () => {
     fixture.componentRef.setInput('cssClass', 'my-extra-class');
     fixture.detectChanges();

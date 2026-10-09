@@ -27,7 +27,8 @@ class MockTranslatePipe implements PipeTransform {
   template: '<nav class="injected">injected</nav>',
 })
 class MockInjectedPagingComponent extends PagingBaseComponent {
-  // NgComponentOutlet passes 'cssClass' (not aliased 'class') so declare it explicitly
+  // Declared without the `class` alias, like the presets: the wrapper resolves
+  // its inputs through outletInputs(), so this still receives the class.
   override cssClass = input<string>('');
   override pageChange = output<number>();
 }

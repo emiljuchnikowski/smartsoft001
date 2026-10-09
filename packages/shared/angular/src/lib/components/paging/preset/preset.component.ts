@@ -28,10 +28,6 @@ import { PagingBaseComponent } from '../base/base.component';
  * `canGoForward`, `goToPage`, …) — no Preline JS runtime is required. The
  * `variant` input selects the layout: `card-footer` (results summary + nav),
  * `centered` and `simple`.
- *
- * Note: the inherited `cssClass` keeps its `class` alias because
- * `PagingComponent` forwards it via `setInput('class', …)` (not
- * `NgComponentOutlet`).
  */
 @Component({
   selector: 'smart-paging-preset',

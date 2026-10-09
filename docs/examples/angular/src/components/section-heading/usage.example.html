@@ -1,7 +1,10 @@
 <!-- #region usage -->
 <ng-template #actions>
-  <button type="button" (click)="onInvite()">Invite member</button>
+  <smart-button [options]="inviteButton">Invite member</smart-button>
 </ng-template>
 
 <smart-section-heading [options]="options()" />
+@if (invited()) {
+  <p>Invitation sent.</p>
+}
 <!-- #endregion -->

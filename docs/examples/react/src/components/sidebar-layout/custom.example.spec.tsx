@@ -35,7 +35,7 @@ describe('docs-examples-react: SidebarLayoutCustomExample', () => {
     render(<SidebarLayoutCustomExample />);
 
     expect(screen.getByRole('main')).toHaveTextContent(
-      'Main content passed as children.',
+      'Main content of the page.',
     );
   });
 

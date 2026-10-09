@@ -15,7 +15,6 @@ import {
 })
 export class VerticalNavigationUsageExampleComponent {
   readonly options: IVerticalNavOptions = {
-    layout: 'with-badges',
     ariaLabel: 'Main',
     items: [
       { id: 'dashboard', label: 'Dashboard', current: true },

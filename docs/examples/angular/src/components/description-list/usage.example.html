@@ -1,7 +1,11 @@
 <!-- #region usage -->
 <smart-description-list [options]="options()" />
 
+@if (editedField(); as field) {
+  <p>Editing: {{ field }}</p>
+}
+
 <ng-template #editEmail>
-  <button type="button" (click)="onEdit('email')">Update</button>
+  <smart-button [options]="updateEmail">Update</smart-button>
 </ng-template>
 <!-- #endregion -->

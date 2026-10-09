@@ -25,7 +25,7 @@ All from `@smartsoft001/react`.
 | `SmartButtonGroupStandard` | component | The default button group rendering: an unstyled `role="group"` of toggle buttons with their label and count.                                                                                                        |
 | `useButtonGroup`           | hook      | The behaviour every button group variant shares: the selected button id, controlled through `selected` / `onSelectedChange` or kept internally, and `select(id)`, which selects a button and emits `onButtonClick`. |
 
-The preset's class helpers (`getButtonGroupClasses`, `getButtonGroupButtonClasses`, `getButtonGroupCountClasses`, `getButtonGroupIconClasses`, `BUTTON_GROUP_CONTAINER`) are exported too, for a custom implementation that wants the preset look.
+The preset's class helpers (`getButtonGroupClasses`, `getButtonGroupButtonClasses`, `getButtonGroupCountClasses`, `getButtonGroupIconClasses`, `BUTTON_GROUP_CONTAINER`) and the `ButtonGroupPresetSize` type (`'sm' | 'md' | 'lg'`, the size `getButtonGroupButtonClasses` takes; the preset itself always uses `'md'`) are exported too, for a custom implementation that wants the preset look.
 
 ## Props and Types
 
@@ -126,7 +126,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
 }
 ```
 
-`SmartButtonGroupPreset` is the styled (preset) implementation: register it as above, render it directly in place of `SmartButtonGroup`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
+`SmartButtonGroupPreset` is the styled (preset) implementation: register it under the `'button-group'` key of `SmartProvider`'s `components`, render it directly in place of `SmartButtonGroup`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
 
 ### The `useButtonGroup` hook
 

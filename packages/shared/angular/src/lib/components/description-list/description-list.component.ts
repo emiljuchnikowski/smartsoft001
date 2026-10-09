@@ -11,6 +11,7 @@ import {
 import { DescriptionListStandardComponent } from './standard';
 import { IDescriptionListOptions } from '../../models';
 import { DESCRIPTION_LIST_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { outletInputs } from '../base/outlet-inputs';
 
 @Component({
   selector: 'smart-description-list',
@@ -44,8 +45,10 @@ export class DescriptionListComponent {
 
   componentType = computed(() => this.injectedComponent ?? null);
 
-  componentInputs = computed(() => ({
-    options: this.options(),
-    cssClass: this.cssClass(),
-  }));
+  componentInputs = computed(() =>
+    outletInputs(this.componentType(), {
+      options: this.options(),
+      cssClass: this.cssClass(),
+    }),
+  );
 }

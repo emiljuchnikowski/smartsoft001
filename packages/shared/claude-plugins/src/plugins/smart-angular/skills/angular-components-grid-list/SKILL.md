@@ -31,12 +31,40 @@ Abstract base directive for extending custom grid-list implementations. Exposes 
 
 ### Inputs
 
-| Input     | Type                                         | Default | Description                                                                     |
-| --------- | -------------------------------------------- | ------- | ------------------------------------------------------------------------------- |
-| `options` | `InputSignal<IGridListOptions \| undefined>` | -       | Optional configuration (title, description, items, columns, gap, layout, slots) |
-| `class`   | `InputSignal<string>`                        | `''`    | External CSS classes (alias for `cssClass`)                                     |
+| Input     | Type                                         | Default | Description                                                   |
+| --------- | -------------------------------------------- | ------- | ------------------------------------------------------------- |
+| `options` | `InputSignal<IGridListOptions \| undefined>` | -       | Header, items, grid shape and slots                           |
+| `class`   | `InputSignal<string>`                        | `''`    | Classes on the root element (`cssClass` input, alias `class`) |
 
 ### IGridListOptions
+
+| Field         | Type                   | Default   | Description                                                                                                      |
+| ------------- | ---------------------- | --------- | ---------------------------------------------------------------------------------------------------------------- |
+| `title`       | `string`               | -         | Heading above the grid.                                                                                          |
+| `description` | `string`               | -         | Text under the heading.                                                                                          |
+| `items`       | `IGridListItem[]`      | `[]`      | The tiles.                                                                                                       |
+| `columns`     | `SmartGridListColumns` | -         | Preset only: one column on mobile, two from `sm`, the requested count from `lg` (`1` or unset stays one column). |
+| `gap`         | `'sm' \| 'md' \| 'lg'` | `'md'`    | Preset only: the spacing between tiles.                                                                          |
+| `layout`      | `SmartGridListLayout`  | `'cards'` | Preset only: media on top (`cards`), an inline row (`horizontal`) or a centred logo (`logos`).                   |
+| `emptyTpl`    | `TemplateRef<unknown>` | -         | Shown when there are no items (the preset falls back to an untranslated "No items to display.").                 |
+| `footerTpl`   | `TemplateRef<unknown>` | -         | A slot below the grid.                                                                                           |
+
+`SmartGridListColumns` is `1 | 2 | 3 | 4 | 5 | 6`; `SmartGridListLayout` is `'cards' | 'horizontal' | 'logos'`.
+
+### IGridListItem
+
+| Field         | Type                   | Default  | Description                            |
+| ------------- | ---------------------- | -------- | -------------------------------------- |
+| `id`          | `string`               | -        | Track key of the tile.                 |
+| `title`       | `string`               | required | Tile title; a link when `href` is set. |
+| `description` | `string`               | -        | Tile text.                             |
+| `imageUrl`    | `string`               | -        | Tile image.                            |
+| `imageAlt`    | `string`               | -        | Alt text of the image.                 |
+| `href`        | `string`               | -        | Makes the title a link.                |
+| `iconTpl`     | `TemplateRef<unknown>` | -        | Media icon; wins over `imageUrl`.      |
+| `badgeTpl`    | `TemplateRef<unknown>` | -        | Badge next to the title.               |
+| `actionTpl`   | `TemplateRef<unknown>` | -        | Action slot of the tile.               |
+| `ariaLabel`   | `string`               | -        | Accessible name of the tile.           |
 
 ```typescript
 interface IGridListOptions {
@@ -64,7 +92,7 @@ interface IGridListItem {
 }
 ```
 
-All properties are optional except `IGridListItem.title`. The default `GridListStandardComponent` consumes every property; a section is rendered only when its template/string is provided. Within an item, `iconTpl` takes precedence over `imageUrl` when both are set. `columns`, `gap` and `layout` are hints for custom implementations registered via the token.
+The standard renders every field except `columns`, `gap` and `layout`, which only shape the preset's grid (or a custom implementation's); a section is rendered only when its template/string is provided. Within an item, `iconTpl` takes precedence over `imageUrl` when both are set.
 
 ## GRID_LIST_STANDARD_COMPONENT_TOKEN
 
@@ -72,7 +100,7 @@ All properties are optional except `IGridListItem.title`. The default `GridListS
 import { GRID_LIST_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
 ```
 
-InjectionToken that allows replacing the default `GridListStandardComponent` with a custom implementation. Provide a `Type<GridListBaseComponent>` to override.
+InjectionToken that allows replacing the default `GridListStandardComponent` with a custom implementation. Provide a `Type<GridListBaseComponent>` to override; the wrapper passes `options` and the class on.
 
 ```typescript
 providers: [
@@ -90,7 +118,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
@@ -128,9 +155,6 @@ import { GridListBaseComponent } from '@smartsoft001/angular';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyCustomGridListComponent extends GridListBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   containerClasses = computed(() => {
     const classes = ['my-grid-list'];
     const extra = this.cssClass();
@@ -228,7 +252,7 @@ Layout:
 
 Every zone is addressable via `data-role` hooks: `header`, `grid`, `item`, `media`, `title`, `description`, `badge`, `action`, `empty`, `footer`.
 
-Register it through the token to restyle every `<smart-grid-list>`:
+Register it for `GRID_LIST_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-grid-list>`, or register every preset at once with `provideSmartPresets()`.
 
 ```typescript
 providers: [
@@ -239,9 +263,9 @@ providers: [
 ];
 ```
 
-Because `GridListComponent` forwards inputs canonically through `NgComponentOutlet`, the preset overrides `cssClass` to drop the inherited `class` alias (`override cssClass = input<string>('')`); the value is merged onto the root wrapper.
+The preset declares `cssClass` without the `class` alias, so bind `[cssClass]` when you use the `<smart-grid-list-preset>` selector directly; `class` on `<smart-grid-list>` reaches it through the wrapper and is merged onto the root wrapper.
 
-Class recipes live in `preset/preset-classes.util.ts` (`getGridListColumnsClasses`, `getGridListGapClasses`, `getGridListGridClasses`, `getGridListTileClasses`, `getGridListMediaClasses`) and are intentionally not re-exported from the barrel to avoid `export *` collisions.
+The class recipes are internal (not exported from `@smartsoft001/angular`).
 
 Documented gaps: `layout` only affects the tile interior arrangement (not per-item overrides); there is no built-in pagination or selection state.
 

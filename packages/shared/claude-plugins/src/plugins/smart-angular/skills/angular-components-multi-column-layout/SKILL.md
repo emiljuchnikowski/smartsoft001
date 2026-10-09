@@ -17,7 +17,7 @@ The `<smart-multi-column-layout>` component provides a three-column application 
 
 ### MultiColumnLayoutComponent (`<smart-multi-column-layout>`)
 
-Main wrapper component. Renders `MultiColumnLayoutStandardComponent` by default. When `MULTI_COLUMN_LAYOUT_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`. Accepts main content via projected `<ng-content>`.
+Main wrapper component. Renders `MultiColumnLayoutStandardComponent` by default. When `MULTI_COLUMN_LAYOUT_STANDARD_COMPONENT_TOKEN` is provided (or `provideSmartPresets()` registers the preset), renders the injected component via `NgComponentOutlet`, forwarding `options` and the `class`. Accepts main content via projected `<ng-content>`, which reaches the injected component's default `<ng-content />` as well.
 
 ### MultiColumnLayoutStandardComponent (`<smart-multi-column-layout-standard>`)
 
@@ -31,12 +31,21 @@ Abstract base directive for extending custom multi-column-layout implementations
 
 ### Inputs
 
-| Input     | Type                                                  | Default | Description                                            |
-| --------- | ----------------------------------------------------- | ------- | ------------------------------------------------------ |
-| `options` | `InputSignal<IMultiColumnLayoutOptions \| undefined>` | -       | Optional configuration (nav, secondary, header, width) |
-| `class`   | `InputSignal<string>`                                 | `''`    | External CSS classes (alias for `cssClass`)            |
+| Input     | Type                                                  | Default | Description                                                             |
+| --------- | ----------------------------------------------------- | ------- | ----------------------------------------------------------------------- |
+| `options` | `InputSignal<IMultiColumnLayoutOptions \| undefined>` | -       | Optional configuration (header, nav and secondary slots, title, widths) |
+| `class`   | `InputSignal<string>`                                 | `''`    | External CSS classes (alias for `cssClass`)                             |
 
 ### IMultiColumnLayoutOptions
+
+| Field            | Type                      | Default  | Description                                                                         |
+| ---------------- | ------------------------- | -------- | ----------------------------------------------------------------------------------- |
+| `headerTpl`      | `TemplateRef<unknown>`    | -        | The header zone (`<header>`); wins over `title` in the preset.                      |
+| `navTpl`         | `TemplateRef<unknown>`    | -        | The navigation column (`<aside class="nav">`).                                      |
+| `secondaryTpl`   | `TemplateRef<unknown>`    | -        | The secondary column (`<aside class="secondary">`), e.g. details or activity.       |
+| `title`          | `string`                  | -        | Preset only: an `<h1>` in the header zone when `headerTpl` is not set.              |
+| `width`          | `'full' \| 'constrained'` | `'full'` | Preset only: `constrained` caps the main content container at `max-w-7xl`, centred. |
+| `secondaryWidth` | `'sm' \| 'md' \| 'lg'`    | `'sm'`   | Preset only: the width of the secondary column (`w-64`, `w-80`, `w-96`).            |
 
 ```typescript
 type SmartMultiColumnLayoutWidth = 'full' | 'constrained';
@@ -52,17 +61,15 @@ interface IMultiColumnLayoutOptions {
 }
 ```
 
-The default `MultiColumnLayoutStandardComponent` consumes `navTpl`, `secondaryTpl`, and `headerTpl`. `title`, `width`, and `secondaryWidth` are reserved for custom implementations registered via `MULTI_COLUMN_LAYOUT_STANDARD_COMPONENT_TOKEN`.
+The default `MultiColumnLayoutStandardComponent` consumes `navTpl`, `secondaryTpl` and `headerTpl`; `title`, `width` and `secondaryWidth` are read by `MultiColumnLayoutPresetComponent` (and are available to a custom implementation).
 
 ## MULTI_COLUMN_LAYOUT_STANDARD_COMPONENT_TOKEN
 
+InjectionToken from `@smartsoft001/angular` that allows replacing the default `MultiColumnLayoutStandardComponent` with a custom implementation. Provide a `Type<MultiColumnLayoutBaseComponent>` in your application or component providers; `provideSmartPresets()` provides `MultiColumnLayoutPresetComponent` for it together with every other preset.
+
 ```typescript
 import { MULTI_COLUMN_LAYOUT_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
-```
 
-InjectionToken that allows replacing the default `MultiColumnLayoutStandardComponent` with a custom implementation. Provide a `Type<MultiColumnLayoutBaseComponent>` to override.
-
-```typescript
 providers: [
   {
     provide: MULTI_COLUMN_LAYOUT_STANDARD_COMPONENT_TOKEN,
@@ -78,7 +85,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
@@ -114,9 +120,6 @@ import { MultiColumnLayoutBaseComponent } from '@smartsoft001/angular';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyCustomMultiColumnLayoutComponent extends MultiColumnLayoutBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   containerClasses = computed(() => {
     const classes = ['my-multi-column-layout'];
     const extra = this.cssClass();
@@ -194,7 +197,7 @@ The preset consumes the full `IMultiColumnLayoutOptions` surface (the standard c
 - `secondaryWidth` — `'sm'` → `w-64` (default), `'md'` → `w-80`, `'lg'` → `w-96`.
 - `headerTpl` / `title`, `navTpl`, `secondaryTpl` — as above.
 
-Class recipes live in `preset/preset-classes.util.ts` (`getMultiColumnLayout…Classes`, including the width/secondaryWidth maps).
+The class recipes are internal to the preset (not exported).
 
 ### Token registration
 
@@ -210,7 +213,7 @@ providers: [
 ];
 ```
 
-When registered through the token, the wrapper passes inputs by canonical name via `NgComponentOutlet`, so the preset overrides `cssClass` as `input<string>('')` (dropping the `class` alias).
+Provide it for `MULTI_COLUMN_LAYOUT_STANDARD_COMPONENT_TOKEN` as above, or use `provideSmartPresets()`. The preset declares `cssClass` without the `class` alias: on the `<smart-multi-column-layout-preset>` selector bind `[cssClass]`; on `<smart-multi-column-layout>` pass `class` as usual.
 
 ### Gaps
 

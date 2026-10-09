@@ -14,6 +14,7 @@ import { CalendarStandardComponent } from './standard';
 import { ICalendarEvent, ICalendarOptions } from '../../models';
 import { CALENDAR_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
+import { outletInputs } from '../base/outlet-inputs';
 
 @Component({
   selector: 'smart-calendar',
@@ -51,13 +52,15 @@ export class CalendarComponent {
 
   componentType = computed(() => this.injectedComponent ?? null);
 
-  componentInputs = computed(() => ({
-    options: this.options(),
-    cssClass: this.cssClass(),
-    value: this.value(),
-    referenceDate: this.referenceDate() ?? this.today,
-    events: this.events(),
-  }));
+  componentInputs = computed(() =>
+    outletInputs(this.componentType(), {
+      options: this.options(),
+      cssClass: this.cssClass(),
+      value: this.value(),
+      referenceDate: this.referenceDate() ?? this.today,
+      events: this.events(),
+    }),
+  );
 
   private readonly outlet = viewChild(NgComponentOutlet);
 

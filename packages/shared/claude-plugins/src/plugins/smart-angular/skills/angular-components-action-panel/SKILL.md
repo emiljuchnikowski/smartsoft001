@@ -17,11 +17,11 @@ The `<smart-action-panel>` component renders a standalone panel with a heading, 
 
 ### ActionPanelComponent (`<smart-action-panel>`)
 
-Main wrapper. Delegates to `ActionPanelStandardComponent` by default. When `ACTION_PANEL_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`. Re-emits `actionClick`.
+Main wrapper. Delegates to `ActionPanelStandardComponent` by default. When `ACTION_PANEL_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`, passes it the inputs and re-emits its `actionClick`.
 
 ### ActionPanelStandardComponent (`<smart-action-panel-standard>`)
 
-Barebones placeholder using native HTML. Renders an outer wrapper with `cssClass`, a `<section class="action-panel">` containing an optional `<h3>{{ options.title }}</h3>`, an optional description (string `options.description` rendered as `<p class="description">` or `options.descriptionTpl` rendered via `NgTemplateOutlet`), an optional `<div class="content">` slot from `options.contentTpl`, and an optional `<div class="actions">` row of `<button class="action variant-{variant}">` (or `<a>` when `action.href` is provided) per `options.actions` entry that emits `{ actionId }` via `actionClick`.
+Barebones placeholder using native HTML. Renders an outer wrapper with `cssClass`, a `<section class="action-panel">` containing an optional `<h3>{{ options.title }}</h3>`, an optional description (string `options.description` rendered as `<p class="description">` or `options.descriptionTpl` rendered via `NgTemplateOutlet`), an optional `<div class="content">` slot from `options.contentTpl`, and an optional `<div class="actions">` row of `<button class="action variant-{variant}">` (or `<a>` when `action.href` is provided) per `options.actions` entry that emits `{ actionId }` via `actionClick`. It does not vary its markup by `options.layout`.
 
 ### ActionPanelBaseComponent (abstract)
 
@@ -49,6 +49,27 @@ Abstract base directive. Exposes:
 | `actionClick` | `OutputEmitterRef<IActionPanelActionClick>` | Emitted when a button-type action is clicked |
 
 ### IActionPanelOptions
+
+| Field            | Type                     | Default     | Description                                                                                                                  |
+| ---------------- | ------------------------ | ----------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `title`          | `string`                 | `undefined` | Heading of the panel.                                                                                                        |
+| `description`    | `string`                 | `undefined` | Text under the heading.                                                                                                      |
+| `layout`         | `SmartActionPanelLayout` | `'simple'`  | Preset only: one of the eight arrangements of `ActionPanelPresetComponent`. The standard does not vary its markup by layout. |
+| `actions`        | `IActionPanelAction[]`   | `[]`        | The buttons / links of the panel.                                                                                            |
+| `descriptionTpl` | `TemplateRef<unknown>`   | `undefined` | Replaces `description` with a template.                                                                                      |
+| `contentTpl`     | `TemplateRef<unknown>`   | `undefined` | Extra content placed in the panel (a toggle, an input, a card).                                                              |
+
+### IActionPanelAction
+
+| Field     | Type                                            | Default     | Description                                                                                                                                                                                                                                                                                                   |
+| --------- | ----------------------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`      | `string`                                        | required    | Reported as `actionId` by `actionClick`.                                                                                                                                                                                                                                                                      |
+| `label`   | `string`                                        | `undefined` | Text of the button / link.                                                                                                                                                                                                                                                                                    |
+| `href`    | `string`                                        | `undefined` | Renders the action as a link instead of a button (no `actionClick`).                                                                                                                                                                                                                                          |
+| `variant` | `'primary' \| 'secondary' \| 'ghost' \| 'link'` | `undefined` | Look of the action. The standard only adds the class `variant-<variant>` (`variant-primary` by default for buttons, `variant-link` for links). The preset renders `primary` as a solid button and every other value, or none, as an outline button; in the `with-link` layout every action looks like a link. |
+| `iconTpl` | `TemplateRef<unknown>`                          | `undefined` | Icon rendered before the label.                                                                                                                                                                                                                                                                               |
+
+`SmartActionPanelLayout` is `'simple' | 'with-link' | 'right-button' | 'top-right-button' | 'with-toggle' | 'with-input' | 'well' | 'payment-method'`.
 
 ```typescript
 type SmartActionPanelLayout =
@@ -81,6 +102,8 @@ interface IActionPanelAction {
 
 ## ACTION_PANEL_STANDARD_COMPONENT_TOKEN
 
+InjectionToken that replaces the default `ActionPanelStandardComponent` with a custom implementation: provide a `Type<ActionPanelBaseComponent>` under `ACTION_PANEL_STANDARD_COMPONENT_TOKEN`. Every `<smart-action-panel>` in that injector renders it, gets the wrapper's inputs (`class` included) and re-emits its `actionClick`.
+
 ```typescript
 import { ACTION_PANEL_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
 
@@ -98,7 +121,6 @@ providers: [
 import {
   ChangeDetectionStrategy,
   Component,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -107,7 +129,7 @@ import { ActionPanelBaseComponent } from '@smartsoft001/angular';
 @Component({
   selector: 'my-custom-action-panel',
   template: `
-    <section>
+    <section [class]="cssClass()">
       @if (options()?.title) {
         <h3>{{ options()!.title }}</h3>
       }
@@ -127,10 +149,7 @@ import { ActionPanelBaseComponent } from '@smartsoft001/angular';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MyCustomActionPanelComponent extends ActionPanelBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-}
+export class MyCustomActionPanelComponent extends ActionPanelBaseComponent {}
 ```
 
 ## Usage Examples
@@ -155,20 +174,6 @@ export class MyCustomActionPanelComponent extends ActionPanelBaseComponent {
       { id: 'learn', label: 'Learn more', href: '/learn', variant: 'link' },
     ],
   }"
-/>
-
-<!-- With multiple actions -->
-<smart-action-panel
-  [options]="{
-    title: 'Manage subscription',
-    description: 'Cancel anytime.',
-    layout: 'right-button',
-    actions: [
-      { id: 'cancel', label: 'Cancel', variant: 'ghost' },
-      { id: 'change', label: 'Change plan', variant: 'primary' },
-    ],
-  }"
-  (actionClick)="onAction($event)"
 />
 
 <!-- With templated content (e.g. embedded toggle/input/well) -->
@@ -196,49 +201,19 @@ export class MyCustomActionPanelComponent extends ActionPanelBaseComponent {
 
 ## Preset
 
-`ActionPanelPresetComponent` (`smart-action-panel-preset`,
-`action-panel/preset/`) extends `ActionPanelStandardComponent` and restyles the
-panel as a bordered card
-(`rounded-xl border bg-white p-4 shadow-2xs sm:p-6` + dark twin). Title uses
-`text-base font-semibold text-gray-900`, description `text-sm text-gray-500`;
-`descriptionTpl` overrides the description text. Class recipes live in
-`preset-classes.util.ts` (`getActionPanel*Classes`, not barrel-exported).
+`ActionPanelPresetComponent` (`<smart-action-panel-preset>`) extends `ActionPanelStandardComponent` and restyles the panel as a bordered card (`rounded-xl border bg-white p-4 shadow-2xs sm:p-6` + dark twin). Title uses `text-base font-semibold text-gray-900`, description `text-sm text-gray-500`; `descriptionTpl` overrides the description text.
 
-All eight `SmartActionPanelLayout` values are realized through a `@switch`
-(default `simple`):
+Register it under `ACTION_PANEL_STANDARD_COMPONENT_TOKEN` (`{ provide: ACTION_PANEL_STANDARD_COMPONENT_TOKEN, useValue: ActionPanelPresetComponent }`) to restyle every `<smart-action-panel>`, register every preset at once with `provideSmartPresets()`, or use the `<smart-action-panel-preset>` selector directly. Used directly, it takes the extra classes as `class` or `[cssClass]`.
 
-- `simple` / `with-input` / `payment-method` — title, description, content
-  slot, then actions stacked below.
+All eight `SmartActionPanelLayout` values are realized through a `@switch` (default `simple`):
+
+- `simple` / `with-input` / `payment-method` — title, description, content slot, then actions stacked below.
 - `with-link` — actions rendered as `text-blue-600 hover:underline` links.
 - `right-button` — flex row, content left, actions right, vertically centered.
 - `top-right-button` — actions in the title row, right-aligned.
 - `with-toggle` — content slot placed beside the text (flex row), actions below.
-- `well` — content and actions wrapped in an inset
-  `bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4` panel.
+- `well` — content and actions wrapped in an inset `bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4` panel.
 
-Actions map by `variant`: `primary` → solid `bg-blue-600 text-white`, others →
-outline `border-gray-200 bg-white text-gray-800` + dark. `href` actions render
-as `<a>`, the rest as `<button>` calling the inherited `onActionClick(id)`
-(emits `actionClick` with the action id). DOM hooks: `data-role` of
-`panel`/`title`/`description`/`content`/`actions`/`well`, plus per-action
-`data-role="action"` with `data-action-id`; the panel also carries
-`data-layout`.
+Actions map by `variant`: `primary` → solid `bg-blue-600 text-white`, any other value or none → outline `border-gray-200 bg-white text-gray-800` + dark. `href` actions render as `<a>`, the rest as `<button>` emitting `actionClick` with the action id. DOM hooks: `data-role` of `panel`/`title`/`description`/`content`/`actions`/`well`, plus per-action `data-role="action"` with `data-action-id`; the panel also carries `data-layout`.
 
-Unlike the standard component, the preset drops the `class` input alias
-(`override cssClass = input<string>('')`) so the wrapper's canonical
-`componentInputs` binding reaches it via `NgComponentOutlet`.
-
-Register through the token to restyle every `<smart-action-panel>`:
-
-```ts
-providers: [
-  {
-    provide: ACTION_PANEL_STANDARD_COMPONENT_TOKEN,
-    useValue: ActionPanelPresetComponent,
-  },
-],
-```
-
-Gaps: `with-toggle` / `with-input` / `payment-method` only position the content
-slot — the interactive control (toggle switch, input, card list) is supplied by
-the caller via `contentTpl`.
+Gaps: `with-toggle` / `with-input` / `payment-method` only position the content slot — the interactive control (toggle switch, input, card list) is supplied by the caller via `contentTpl`.

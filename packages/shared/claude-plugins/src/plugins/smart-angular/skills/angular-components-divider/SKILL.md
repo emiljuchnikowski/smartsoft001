@@ -25,11 +25,16 @@ Default concrete implementation. Renders a `<div role="separator">` host with op
 
 ### DividerPresetComponent (`<smart-divider-preset>`)
 
-Styled variation that extends `DividerBaseComponent` and is a drop-in replacement for `DividerStandardComponent`. Register it via `DIVIDER_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-divider>`, or use the `<smart-divider-preset>` selector directly. It translates Preline's divider patterns to `smart:`-prefixed Tailwind (with explicit `dark:` variants): a plain `<hr>`, an inline `label`/`iconName`/`title` divider with connecting line(s) drawn left/center/right via `options.position` (default `center`), a centered `actionLabel` button, and a `with-toolbar` row (label + line + action). The visual is chosen by `options.variant`; when omitted it is **inferred** from the provided inputs (`actionLabel` → `with-button`, `title` → `with-title`, `iconName` → `with-icon`, `label` → `with-label`, otherwise plain `<hr>`). The `with-title` variant uses Preline's uppercase/muted "Or" treatment. Class recipes live in `preset/preset-classes.util.ts` (`getContainerClasses`, `getActionClasses`, `getIconClasses`, `getPlainClasses`, `getToolbarClasses`, `getToolbarLineClasses`).
+Styled variation that extends `DividerBaseComponent` and is a drop-in replacement for `DividerStandardComponent`. Register it for `DIVIDER_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-divider>` (or every preset at once with `provideSmartPresets()`), or use the `<smart-divider-preset>` selector directly. It translates Preline's divider patterns to `smart:`-prefixed Tailwind (with explicit `dark:` variants), one per variant:
 
-> Because `DividerComponent` renders injected components via `NgComponentOutlet` (which passes inputs by canonical name), `DividerPresetComponent` overrides `cssClass` as `input<string>('')` **without** the `class` alias. Bind it as `[cssClass]` when using the `<smart-divider-preset>` selector directly, or just pass `class` on `<smart-divider>` (the wrapper forwards it).
->
-> Note: `iconName` has no icon-font dependency here — it is rendered as the text content of a `size-4` icon slot, so consumers wiring an icon font (e.g. Material Icons) get the correct sizing.
+- plain: an `<hr>`, when there is no content and no `variant`
+- `with-label`, `with-icon`, `with-title`: the content (`label`, else `title`; `title` first for `with-title`, in Preline's uppercase muted "Or" style) with connecting line(s) placed by `options.position` (default `center`); `iconName` is shown before it
+- `with-button`: only the `actionLabel` button (with `iconName` before its text) on the line; `label` and `title` are not shown
+- `with-toolbar`: the content (`label`, else `title`), a line, then the `actionLabel` button; `options.position` does not apply
+
+When `options.variant` is omitted the variant is **inferred** from the inputs: `actionLabel` → `with-button`, `title` → `with-title`, `iconName` → `with-icon`, `label` → `with-label`, otherwise the plain `<hr>`.
+
+The preset declares `cssClass` without the `class` alias, so bind `[cssClass]` when you use the `<smart-divider-preset>` selector directly; `class` on `<smart-divider>` reaches it through the wrapper. `iconName` has no icon-font dependency: it is rendered as the text content of a `size-4` icon slot, so an icon font (e.g. Material Icons) gets the correct sizing. The class recipes are internal (not exported from `@smartsoft001/angular`).
 
 ```typescript
 import {
@@ -47,28 +52,33 @@ providers: [
 
 ### DividerBaseComponent (abstract)
 
-Abstract base directive for extending custom divider implementations.
+Abstract base directive for extending custom divider implementations. It declares the inputs and the output below (`cssClass` with the `class` alias).
 
 ## API
 
 ### Inputs
 
-| Input         | Type                           | Default     | Description                                 |
-| ------------- | ------------------------------ | ----------- | ------------------------------------------- |
-| `label`       | `InputSignal<string>`          | `undefined` | Inline divider label                        |
-| `iconName`    | `InputSignal<string>`          | `undefined` | Icon name for icon-variant dividers         |
-| `title`       | `InputSignal<string>`          | `undefined` | Title text rendered as `<h3>`               |
-| `actionLabel` | `InputSignal<string>`          | `undefined` | Action button text                          |
-| `options`     | `InputSignal<IDividerOptions>` | `undefined` | Divider configuration                       |
-| `class`       | `InputSignal<string>`          | `''`        | External CSS classes (alias for `cssClass`) |
+| Input         | Type                                        | Default     | Description                                                                              |
+| ------------- | ------------------------------------------- | ----------- | ---------------------------------------------------------------------------------------- |
+| `label`       | `InputSignal<string \| undefined>`          | `undefined` | Short text on the line (standard: a `<span>`)                                            |
+| `iconName`    | `InputSignal<string \| undefined>`          | `undefined` | Icon text before the content or the action. Preset only: the standard does not render it |
+| `title`       | `InputSignal<string \| undefined>`          | `undefined` | Heading on the line (standard: an `<h3>`)                                                |
+| `actionLabel` | `InputSignal<string \| undefined>`          | `undefined` | Renders a button with this text that emits `actionClick`                                 |
+| `options`     | `InputSignal<IDividerOptions \| undefined>` | `undefined` | Variant and position                                                                     |
+| `class`       | `InputSignal<string>`                       | `''`        | Classes on the root element (`cssClass` input, alias `class`)                            |
 
 ### Outputs
 
-| Output        | Type                  | Description                               |
-| ------------- | --------------------- | ----------------------------------------- |
-| `actionClick` | `OutputEmitter<void>` | Emitted when the action button is clicked |
+| Output        | Type                     | Description                               |
+| ------------- | ------------------------ | ----------------------------------------- |
+| `actionClick` | `OutputEmitterRef<void>` | Emitted when the action button is clicked |
 
 ### IDividerOptions
+
+| Field      | Type                            | Default    | Description                                                                                                                                                     |
+| ---------- | ------------------------------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `variant`  | `SmartDividerVariant`           | inferred   | `'with-label'`, `'with-icon'`, `'with-title'`, `'with-button'` or `'with-toolbar'`. Preset only; the standard ignores it.                                       |
+| `position` | `'left' \| 'center' \| 'right'` | `'center'` | Where the content sits on the line (preset, except `with-toolbar`). The standard only writes it to the `data-position` attribute of its root, for your own CSS. |
 
 ```typescript
 interface IDividerOptions {
@@ -83,7 +93,7 @@ interface IDividerOptions {
 import { DIVIDER_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
 ```
 
-InjectionToken that allows replacing the default `DividerStandardComponent` with a custom implementation. Provide a `Type<DividerBaseComponent>` to override.
+InjectionToken that allows replacing the default `DividerStandardComponent` with a custom implementation. Provide a `Type<DividerBaseComponent>` to override. The wrapper passes the inputs it has on and re-emits the implementation's `actionClick`.
 
 ```typescript
 // In your app module or component providers:
@@ -134,8 +144,16 @@ export class MyCustomDividerComponent extends DividerBaseComponent {}
 <!-- With label -->
 <smart-divider label="Continue with" />
 
-<!-- With title and position -->
+<!-- With title on the left (preset) -->
 <smart-divider title="Section" [options]="{ position: 'left' }" />
+
+<!-- Title, line and action in one row (preset) -->
+<smart-divider
+  title="Team members"
+  actionLabel="Add member"
+  [options]="{ variant: 'with-toolbar' }"
+  (actionClick)="onAdd()"
+/>
 
 <!-- With action button -->
 <smart-divider actionLabel="Add item" (actionClick)="onAdd()" />

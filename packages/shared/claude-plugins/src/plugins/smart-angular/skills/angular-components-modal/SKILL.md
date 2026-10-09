@@ -17,7 +17,7 @@ The `<smart-modal>` component provides a dialog overlay with title, description,
 
 ### ModalComponent (`<smart-modal>`)
 
-Main wrapper component. Renders `ModalStandardComponent` by default. When `MODAL_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`.
+Main wrapper component. Renders `ModalStandardComponent` by default. When `MODAL_STANDARD_COMPONENT_TOKEN` is provided (or `provideSmartPresets()` registers the preset), renders the injected component via `NgComponentOutlet` and forwards its inputs, its projected content, the `actionClick` and `closed` outputs and the `open` model changes. A footer action **keeps the modal open**: set `open` to `false` in the `(actionClick)` handler.
 
 ### ModalStandardComponent (`<smart-modal-standard>`)
 
@@ -25,11 +25,11 @@ Barebones placeholder concrete implementation. Renders a native `<dialog [open] 
 
 ### ModalPresetComponent (`<smart-modal-preset>`)
 
-Styled variation that extends `ModalBaseComponent` and is a drop-in replacement for `ModalStandardComponent`. Register it via `MODAL_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-modal>`, or use the `<smart-modal-preset>` selector directly. It renders a translated Preline overlay — a full-screen scrollable backdrop hosting a `rounded-xl` card with a header (`title` + optional dismiss `×`), a body (`description` + projected content), and a footer of action buttons. The look is selected through `options.variant` (default `'centered'`): `centered`/`alert` are vertically centered (`alert` is narrower), `wide` is a top-aligned large dialog, and `left-aligned-buttons` left-aligns the footer. `options.footerStyle: 'gray'` tints the footer, and action buttons are styled by their `variant` (`primary`/`secondary`/`danger`). All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants. The class recipes live in `preset/preset-classes.util.ts`.
+Styled variation that extends `ModalBaseComponent` and is a drop-in replacement for `ModalStandardComponent`. Register it via `MODAL_STANDARD_COMPONENT_TOKEN` (or with `provideSmartPresets()`) to restyle every `<smart-modal>`, or use the `<smart-modal-preset>` selector directly. It renders a translated Preline overlay — a full-screen scrollable backdrop hosting a `rounded-xl` card with a header (`title` + optional dismiss `×`), a body (`description` + projected content), and a footer of action buttons. The look is selected through `options.variant` (default `'centered'`): `centered`/`alert` are vertically centered (`alert` is narrower), `wide` is a top-aligned large dialog, and `left-aligned-buttons` left-aligns the footer. `options.footerStyle: 'gray'` tints the footer, and action buttons are styled by their `variant` (`primary`/`secondary`/`danger`). All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants; the class recipes are internal to the preset (not exported).
 
 > **Preline JS is NOT used.** Open/close is driven entirely by the existing `open` model signal + `@if` (no `HSOverlay`, no `data-hs-*`). The component binds its own dismiss UX: clicking the backdrop and pressing `Escape` both call `close()` (which sets `open` to `false` and emits `closed`). The dialog ARIA contract is preserved (`role="dialog"`, `aria-modal="true"`, `aria-labelledby` when `title` is set, else `aria-label` from `options.ariaLabel`). The header dismiss `×` button is only shown when `options.withDismiss` is `true`.
 >
-> Because `ModalComponent` renders injected components via `NgComponentOutlet` (which passes inputs by canonical name), `ModalPresetComponent` overrides `cssClass` as `input<string>('')` **without** the `class` alias (applied to the centering wrapper). Bind it as `[cssClass]` when using the `<smart-modal-preset>` selector directly, or just pass `class` on `<smart-modal>` (the wrapper forwards it).
+> `ModalPresetComponent` declares `cssClass` without the `class` alias (applied to the centering wrapper): bind it as `[cssClass]` on the `<smart-modal-preset>` selector, or pass `class` on `<smart-modal>` (the wrapper forwards it).
 
 ### ModalBaseComponent (abstract)
 
@@ -57,6 +57,12 @@ Abstract base directive for extending custom modal implementations. Exposes `ope
 
 ### IModalAction
 
+| Field     | Type                                   | Default     | Description                                                                                  |
+| --------- | -------------------------------------- | ----------- | -------------------------------------------------------------------------------------------- |
+| `id`      | `string`                               | required    | Reported as `actionId` by `actionClick`.                                                     |
+| `label`   | `string`                               | required    | Button text.                                                                                 |
+| `variant` | `'primary' \| 'secondary' \| 'danger'` | `'primary'` | The standard exposes it as `data-variant` on the button; the preset styles the button by it. |
+
 ```typescript
 interface IModalAction {
   id: string;
@@ -67,6 +73,13 @@ interface IModalAction {
 
 ### IModalOptions
 
+| Field         | Type                                                        | Default      | Description                                                                                                                                                 |
+| ------------- | ----------------------------------------------------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `variant`     | `'centered' \| 'wide' \| 'alert' \| 'left-aligned-buttons'` | `'centered'` | Preset only: `centered` and `alert` (narrower) are vertically centred, `wide` is a top-aligned large dialog, `left-aligned-buttons` left-aligns the footer. |
+| `withDismiss` | `boolean`                                                   | `false`      | Renders a close (×) button that calls `close()`.                                                                                                            |
+| `footerStyle` | `'default' \| 'gray'`                                       | `'default'`  | Preset only: `gray` gives the footer a gray background.                                                                                                     |
+| `ariaLabel`   | `string`                                                    | -            | The `aria-label` of the dialog when there is no `title`.                                                                                                    |
+
 ```typescript
 interface IModalOptions {
   variant?: 'centered' | 'wide' | 'alert' | 'left-aligned-buttons';
@@ -76,17 +89,15 @@ interface IModalOptions {
 }
 ```
 
-The default `ModalStandardComponent` consumes `withDismiss` (renders a dismiss `×` button) and `ariaLabel` (used as `aria-label` when `title` is not provided). The `variant` and `footerStyle` selectors are reserved for custom implementations registered through `MODAL_STANDARD_COMPONENT_TOKEN`.
+The default `ModalStandardComponent` consumes `withDismiss` and `ariaLabel`; `variant` and `footerStyle` are read by `ModalPresetComponent` (and are available to a custom implementation).
 
 ## MODAL_STANDARD_COMPONENT_TOKEN
 
+InjectionToken from `@smartsoft001/angular` that allows replacing the default `ModalStandardComponent` with a custom implementation. Provide a `Type<ModalBaseComponent>` in your application or component providers; `provideSmartPresets()` provides `ModalPresetComponent` for it together with every other preset.
+
 ```typescript
 import { MODAL_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
-```
 
-InjectionToken that allows replacing the default `ModalStandardComponent` with a custom implementation. Provide a `Type<ModalBaseComponent>` to override.
-
-```typescript
 providers: [
   {
     provide: MODAL_STANDARD_COMPONENT_TOKEN,
@@ -105,7 +116,6 @@ providers: [
 import {
   ChangeDetectionStrategy,
   Component,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -126,6 +136,7 @@ import { ModalBaseComponent } from '@smartsoft001/angular';
       @if (description()) {
         <p>{{ description() }}</p>
       }
+      <ng-content />
       <footer>
         @for (action of actions(); track action.id) {
           <button (click)="invokeAction(action.id)">{{ action.label }}</button>
@@ -136,15 +147,11 @@ import { ModalBaseComponent } from '@smartsoft001/angular';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MyCustomModalComponent extends ModalBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-}
+export class MyCustomModalComponent extends ModalBaseComponent {}
 ```
 
-When extending the base directly, remember to:
+The inherited `cssClass` (input alias `class`) receives the class passed to `<smart-modal>`. When extending the base directly, remember to:
 
-- declare `cssClass = input<string>('')` explicitly (no `class` alias) when the component is used via `NgComponentOutlet` through `MODAL_STANDARD_COMPONENT_TOKEN`,
 - call `invokeAction(id)` to emit `actionClick`, and `close()` to emit `closed` and set `open.set(false)`,
 - implement `Escape` key handling and backdrop click yourself if you want native UX — the base does not bind any keyboard or backdrop listeners.
 
@@ -179,7 +186,7 @@ When extending the base directly, remember to:
 - Wrapper: `packages/shared/angular/src/lib/components/modal/modal.component.ts`
 - Standard: `packages/shared/angular/src/lib/components/modal/standard/standard.component.ts`
 - Preset variation: `packages/shared/angular/src/lib/components/modal/preset/preset.component.ts`
-- Preset class recipes: `packages/shared/angular/src/lib/components/modal/preset/preset-classes.util.ts`
+- Preset class recipes (internal, not exported): `packages/shared/angular/src/lib/components/modal/preset/preset-classes.util.ts`
 - Base class: `packages/shared/angular/src/lib/components/modal/base/base.component.ts`
 - Stories: `packages/shared/angular/src/lib/components/modal/modal.component.stories.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`MODAL_STANDARD_COMPONENT_TOKEN`)

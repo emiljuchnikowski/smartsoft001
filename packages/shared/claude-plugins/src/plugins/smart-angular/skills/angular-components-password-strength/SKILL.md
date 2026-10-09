@@ -17,16 +17,20 @@ The `<smart-password-strength>` component renders a three-bar strength indicator
 
 ### PasswordStrengthComponent (`<smart-password-strength>`)
 
-Main wrapper component. Renders `PasswordStrengthStandardComponent` by default. When `PASSWORD_STRENGTH_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`. Forwards the `passwordStrength` output from the injected instance through its own output.
+Main wrapper component. Renders `PasswordStrengthStandardComponent` by default. When `PASSWORD_STRENGTH_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`, passes it `passwordToCheck`, `showHint` and `class` (resolved to the names that component declares, so the class arrives in the inherited `cssClass` input) and forwards the `passwordStrength` output of the injected instance through its own output. The host element is `display: contents`.
+
+There is no preset for this component: `provideSmartPresets()` does not register anything for `PASSWORD_STRENGTH_STANDARD_COMPONENT_TOKEN`, and the standard meter is already styled.
 
 ### PasswordStrengthStandardComponent (`<smart-password-strength-standard>`)
 
 Default concrete implementation. Renders:
 
-- three bars whose Tailwind classes come from `barClasses()` (filled-left-to-right by strength index),
+- three bars whose Tailwind classes come from `barClasses()` (filled left to right by strength index: one red bar for poor, two orange for not good, three yellow for good, all gray while not rated),
 - a message `<p>` with a translation key `INPUT.PASSWORD-STRENGTH.{poor|notGood|good}` when applicable,
 - a hint `<ul>` (shown while `showHint()` is `true`) listing unmet requirements via `INPUT.ERRORS.*` keys,
 - dark-mode variants via `smart:dark:*` classes.
+
+The container is a third of the width (`smart:w-1/3`, full width below `sm`), with the `class` input appended.
 
 ### PasswordStrengthBaseComponent (abstract)
 
@@ -44,21 +48,21 @@ Abstract base directive for extending custom implementations. Exposes signal inp
 
 ### Outputs
 
-| Output             | Type                        | Description                                                                           |
-| ------------------ | --------------------------- | ------------------------------------------------------------------------------------- |
-| `passwordStrength` | `OutputEmitterRef<boolean>` | Emits `true` when strength is maximal (lower+upper+symbol+length), `false` otherwise. |
+| Output             | Type                        | Description                                                                                                                                           |
+| ------------------ | --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `passwordStrength` | `OutputEmitterRef<boolean>` | Emits `true` when strength is maximal (lower+upper+symbol+length), `false` otherwise; it emits once on start and again whenever `strength()` changes. |
 
 ### Exposed base signals (available when extending the base)
 
-| Signal               | Type                                                  | Description                                                |
-| -------------------- | ----------------------------------------------------- | ---------------------------------------------------------- |
-| `result()`           | `{ lowerLetters; upperLetters; symbols; passLength }` | Flags for detected character classes and length threshold. |
-| `strength()`         | `number` (0, 10, 20, 30)                              | Numeric strength score matching the original algorithm.    |
-| `strengthIndex()`    | `0 \| 1 \| 2 \| 3`                                    | 0=poor, 1=notGood, 2=good, 3=none/too-weak.                |
-| `msg()`              | `'' \| 'poor' \| 'notGood' \| 'good'`                 | Translation-key suffix for the message.                    |
-| `barClasses()`       | `string[]` (length 3)                                 | Tailwind class string per bar.                             |
-| `msgClass()`         | `string`                                              | Tailwind color class for the message `<p>`.                |
-| `containerClasses()` | `string`                                              | Base container classes with `cssClass()` appended.         |
+| Signal               | Type                                                  | Description                                                                                                       |
+| -------------------- | ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `result()`           | `{ lowerLetters; upperLetters; symbols; passLength }` | Flags for detected character classes and the length rule (more than 6 characters); the interface is not exported. |
+| `strength()`         | `number`                                              | The score: 10 (poor), 20 (not good), 30 (strong); any other value (an empty password, digits only) is not rated.  |
+| `strengthIndex()`    | `0 \| 1 \| 2 \| 3`                                    | 0=poor, 1=notGood, 2=good, 3=not rated.                                                                           |
+| `msg()`              | `'' \| 'poor' \| 'notGood' \| 'good'`                 | Translation-key suffix for the message.                                                                           |
+| `barClasses()`       | `string[]` (length 3)                                 | Tailwind class string per bar.                                                                                    |
+| `msgClass()`         | `string`                                              | Tailwind color class for the message `<p>`.                                                                       |
+| `containerClasses()` | `string`                                              | Base container classes with `cssClass()` appended.                                                                |
 
 ### PASSWORD_STRENGTH_STANDARD_COMPONENT_TOKEN
 
@@ -79,12 +83,13 @@ providers: [
 
 ## Extending the Base Class
 
+The base class brings the inputs, the `passwordStrength` output and the rating signals. The `class` passed to `<smart-password-strength>` arrives in the inherited `cssClass` input and is already part of `containerClasses()`, so a custom implementation only adds its template.
+
 ```typescript
 import {
   ChangeDetectionStrategy,
   Component,
   ViewEncapsulation,
-  input,
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -110,14 +115,11 @@ import { PasswordStrengthBaseComponent } from '@smartsoft001/angular';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MyCustomPasswordStrengthComponent extends PasswordStrengthBaseComponent {
-  override cssClass = input<string>('');
-}
+export class MyCustomPasswordStrengthComponent extends PasswordStrengthBaseComponent {}
 ```
 
 When extending the base directly, remember to:
 
-- declare `cssClass = input<string>('')` explicitly (no `class` alias) when used via `NgComponentOutlet` through `PASSWORD_STRENGTH_STANDARD_COMPONENT_TOKEN`, because `NgComponentOutlet` passes inputs by canonical name (not by alias),
 - rely on `barClasses()`, `msgClass()`, and `containerClasses()` for Tailwind class strings rather than recomputing them,
 - do not re-emit `passwordStrength` — the base class does that automatically via an `effect()`.
 

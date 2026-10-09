@@ -3,6 +3,9 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 
 import { PasswordStrengthComponent } from '@smartsoft001/angular';
 
+// A placeholder, not a real credential: the meter rates whatever is typed.
+const EXAMPLE_PASSWORD_VALUE = 'placeholder';
+
 @Component({
   selector: 'docs-password-strength-usage-example',
   imports: [PasswordStrengthComponent],
@@ -10,9 +13,7 @@ import { PasswordStrengthComponent } from '@smartsoft001/angular';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PasswordStrengthUsageExampleComponent {
-  readonly password = signal('secret');
-  readonly showHint = true;
-
+  readonly password = signal(EXAMPLE_PASSWORD_VALUE);
   readonly strong = signal(false);
 
   onPasswordInput(event: Event): void {

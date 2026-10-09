@@ -4,7 +4,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   TemplateRef,
   viewChild,
   ViewEncapsulation,
@@ -44,14 +43,9 @@ import {
         </aside>
       }
 
-      <!--
-        smart-multi-column-layout renders a custom implementation through
-        NgComponentOutlet, which does not forward projected content. Only
-        options and cssClass arrive here, so the main column is owned by the
-        implementation instead of relying on ng-content.
-      -->
+      <!-- The content of <smart-multi-column-layout> is projected here. -->
       <main class="docs-multi-column-layout__main">
-        <p>Three unread conversations, oldest from Tuesday.</p>
+        <ng-content />
       </main>
 
       @if (options()?.secondaryTpl) {
@@ -66,9 +60,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomMultiColumnLayoutComponent extends MultiColumnLayoutBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   containerClasses = computed(() => {
     const classes = ['docs-multi-column-layout'];
     const width = this.options()?.width;
@@ -101,7 +92,9 @@ export class CustomMultiColumnLayoutComponent extends MultiColumnLayoutBaseCompo
     },
   ],
   template: `
-    <smart-multi-column-layout [options]="options()" />
+    <smart-multi-column-layout [options]="options()">
+      <p>Three unread conversations, oldest from Tuesday.</p>
+    </smart-multi-column-layout>
 
     <ng-template #headerTpl>
       <span>Unread first</span>

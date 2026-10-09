@@ -14,6 +14,7 @@ export class ImportUsageExampleComponent {
 
   readonly importedFile = signal<string | null>(null);
 
+  // Receives the picked File: read and parse it here.
   onImport(file: File): void {
     this.importedFile.set(file.name);
   }

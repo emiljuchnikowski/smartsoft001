@@ -1,5 +1,5 @@
 <!-- #region usage -->
-<button type="button" (click)="open.set(true)">Open command palette</button>
+<smart-button [options]="openButton">Open command palette</smart-button>
 
 <smart-command-palette
   [commands]="commands"
@@ -8,4 +8,8 @@
   [(query)]="query"
   (runCommand)="onRunCommand($event)"
 />
+
+@if (lastCommand(); as commandId) {
+  <p>Last command: {{ commandId }}</p>
+}
 <!-- #endregion -->

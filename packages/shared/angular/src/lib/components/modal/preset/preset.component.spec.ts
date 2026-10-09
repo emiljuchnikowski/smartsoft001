@@ -193,7 +193,7 @@ describe('@smartsoft001/shared-angular: ModalPresetComponent', () => {
     expect(component.open()).toBe(false);
   });
 
-  it('should apply cssClass on the wrapper (canonical name for NgComponentOutlet)', () => {
+  it('should apply cssClass on the wrapper (declared without the class alias)', () => {
     fixture.componentRef.setInput('cssClass', 'my-extra-class');
     open();
 

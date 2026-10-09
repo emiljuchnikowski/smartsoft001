@@ -15,9 +15,9 @@ export abstract class CardBaseComponent {
   hasFooter: InputSignal<boolean> = input<boolean>(false);
   // Aliased `class` so CardComponent's `[class]="cssClass()"` fallback binding
   // reaches this input instead of falling through to the DOM of the
-  // intermediate <smart-card-standard> element, where it had no effect.
-  // CardPresetComponent overrides this without the alias because the
-  // NgComponentOutlet path passes the canonical `cssClass` key.
+  // intermediate <smart-card-standard> element, where it had no effect. The
+  // wrapper's outlet inputs resolve to this public name for an implementation
+  // registered through CARD_STANDARD_COMPONENT_TOKEN.
   cssClass: InputSignal<string> = input<string>('', { alias: 'class' });
 
   headerTpl = input<TemplateRef<unknown>>();

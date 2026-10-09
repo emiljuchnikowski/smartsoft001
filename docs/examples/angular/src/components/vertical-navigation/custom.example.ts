@@ -3,7 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
+  signal,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -66,9 +66,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomVerticalNavigationComponent extends VerticalNavigationBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   groups = computed(() => this.resolvedGroups());
 
   containerClasses = computed(() =>
@@ -104,14 +101,25 @@ export class CustomVerticalNavigationComponent extends VerticalNavigationBaseCom
       useValue: CustomVerticalNavigationComponent,
     },
   ],
-  // NgComponentOutlet forwards inputs only, so the wrapper's (itemClick) stays
-  // silent: the custom implementation emits it instead.
-  template: `<smart-vertical-navigation [options]="options" />`,
+  // The wrapper re-emits `itemClick` of the custom component.
+  template: `
+    <smart-vertical-navigation
+      [options]="options"
+      (itemClick)="lastItem.set($event.itemId)"
+    />
+    @if (lastItem()) {
+      <p>Last clicked item: {{ lastItem() }}</p>
+    }
+  `,
 })
 export class VerticalNavigationCustomExampleComponent {
+  readonly lastItem = signal<string | null>(null);
+
   // `items` and `groups` can be combined: the base puts the loose items in a
   // first, untitled group and appends the explicit groups after them.
   options: IVerticalNavOptions = {
+    // The built-in implementations do not read `layout`; this custom one turns
+    // it into a class.
     layout: 'with-badges',
     ariaLabel: 'Sidebar',
     items: [

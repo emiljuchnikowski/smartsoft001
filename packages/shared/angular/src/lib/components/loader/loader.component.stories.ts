@@ -60,7 +60,7 @@ const meta: Meta<LoaderComponent> = {
     },
     cssClass: {
       control: 'text',
-      description: 'External CSS class (alias for `class`)',
+      description: 'External CSS classes (bound as `class` on <smart-loader>)',
     },
   },
 };

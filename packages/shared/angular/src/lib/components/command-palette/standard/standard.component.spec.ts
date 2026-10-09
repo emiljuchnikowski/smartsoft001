@@ -131,4 +131,43 @@ describe('@smartsoft001/shared-angular: CommandPaletteStandardComponent', () => 
     expect(empty).toBeTruthy();
     expect(empty.textContent.trim()).toBe('Nothing found');
   });
+
+  describe('Escape', () => {
+    const pressEscape = (): void => {
+      document.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }),
+      );
+    };
+
+    it('should close the open palette and report it through openChange', () => {
+      // Arrange
+      const changes: boolean[] = [];
+      component.open.subscribe((value) => changes.push(value));
+
+      // Act
+      pressEscape();
+      fixture.detectChanges();
+
+      // Assert
+      expect(component.open()).toBe(false);
+      expect(changes).toEqual([false]);
+      expect(
+        fixture.nativeElement.querySelector('dialog').hasAttribute('open'),
+      ).toBe(false);
+    });
+
+    it('should do nothing while the palette is closed', () => {
+      // Arrange
+      fixture.componentRef.setInput('open', false);
+      fixture.detectChanges();
+      const changes: boolean[] = [];
+      component.open.subscribe((value) => changes.push(value));
+
+      // Act
+      pressEscape();
+
+      // Assert
+      expect(changes).toEqual([]);
+    });
+  });
 });

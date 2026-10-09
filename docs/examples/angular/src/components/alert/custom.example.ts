@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -64,10 +63,6 @@ import {
   host: { '(document:keydown.escape)': 'onEscape()' },
 })
 export class CustomAlertComponent extends AlertBaseComponent {
-  // The wrapper and AlertService create the component by type, so inputs
-  // arrive by canonical name: no 'class' alias here.
-  override cssClass = input<string>('');
-
   panelClasses = computed(() => {
     const classes = ['docs-alert'];
     const extra = this.cssClass();

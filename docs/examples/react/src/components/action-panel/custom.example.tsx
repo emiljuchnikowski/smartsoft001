@@ -39,11 +39,10 @@ export function CustomActionPanel({
 const components = { 'action-panel': CustomActionPanel };
 
 const options: IActionPanelOptions = {
-  layout: 'simple',
   title: 'Transfer ownership',
   description: 'Move this project to another workspace member.',
   actions: [
-    { id: 'transfer', label: 'Transfer', variant: 'primary' },
+    { id: 'transfer', label: 'Transfer' },
     { id: 'cancel', label: 'Cancel' },
   ],
 };

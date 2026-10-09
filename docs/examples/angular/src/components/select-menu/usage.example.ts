@@ -25,6 +25,5 @@ export class SelectMenuUsageExampleComponent {
   };
 
   readonly plan = signal<SelectMenuValue>(null);
-  readonly disabled = false;
 }
 // #endregion

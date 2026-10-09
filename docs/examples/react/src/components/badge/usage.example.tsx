@@ -10,12 +10,7 @@ import {
 const text = 'Active';
 const color: SmartBadgeColor = 'green';
 
-const options: IBadgeOptions = {
-  variant: 'soft',
-  pill: true,
-  withDot: true,
-  withRemove: true,
-};
+const options: IBadgeOptions = { withDot: true, withRemove: true };
 
 export function BadgeUsageExample() {
   const [visible, setVisible] = useState(true);

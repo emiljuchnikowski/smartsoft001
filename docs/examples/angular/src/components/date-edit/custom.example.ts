@@ -17,7 +17,7 @@ import { DateEditBaseComponent } from '@smartsoft001/angular';
  * (`d1`, `m1`, `y1`, ...), the `validDate` flag and the whole
  * `ControlValueAccessor` contract, so a custom implementation only has to
  * provide a template and decide how a new value reaches the model. This one
- * swaps the six digit boxes of the standard variation for one native picker.
+ * swaps the eight digit boxes of the standard variation for one native picker.
  */
 @Component({
   selector: 'docs-custom-date-edit',

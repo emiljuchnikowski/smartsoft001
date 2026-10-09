@@ -6,7 +6,7 @@ user-invocable: false
 
 # Card Heading Component
 
-The `<smart-card-heading>` component provides a small composable heading region for cards, with optional slots for avatar, title, description, meta, and actions. It can be used standalone or passed as the `headerTpl` value to `<smart-card>`. It follows the Base + Standard + Wrapper pattern with an InjectionToken-based extension mechanism. The abstract `CardHeadingBaseComponent` defines the shared API — optional `ICardHeadingOptions` and `cssClass` (alias `class`). `CardHeadingStandardComponent` is a barebones placeholder concrete implementation. `CardHeadingComponent` is the public wrapper that renders `CardHeadingStandardComponent` by default and accepts a custom replacement via `CARD_HEADING_STANDARD_COMPONENT_TOKEN`.
+The `<smart-card-heading>` component provides a small composable heading region for cards, with optional slots for avatar, title, description, meta, and actions. It can be used standalone or projected into the `[cardHeader]` slot of `<smart-card>` (with `[hasHeader]="true"`). It follows the Base + Standard + Wrapper pattern with an InjectionToken-based extension mechanism. The abstract `CardHeadingBaseComponent` defines the shared API — optional `ICardHeadingOptions` and `cssClass` (alias `class`). `CardHeadingStandardComponent` is a barebones placeholder concrete implementation. `CardHeadingComponent` is the public wrapper that renders `CardHeadingStandardComponent` by default and accepts a custom replacement via `CARD_HEADING_STANDARD_COMPONENT_TOKEN`.
 
 ## When to Use This Skill
 
@@ -17,7 +17,7 @@ The `<smart-card-heading>` component provides a small composable heading region 
 
 ### CardHeadingComponent (`<smart-card-heading>`)
 
-Main wrapper component. Renders `CardHeadingStandardComponent` by default. When `CARD_HEADING_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`.
+Main wrapper component. Renders `CardHeadingStandardComponent` by default. When `CARD_HEADING_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet` and passes it `options` and `class`.
 
 ### CardHeadingStandardComponent (`<smart-card-heading-standard>`)
 
@@ -38,6 +38,17 @@ Abstract base directive for extending custom card-heading implementations. Expos
 
 ### ICardHeadingOptions
 
+| Field          | Type                                                            | Default     | Description                                                                                      |
+| -------------- | --------------------------------------------------------------- | ----------- | ------------------------------------------------------------------------------------------------ |
+| `title`        | `string`                                                        | `undefined` | The heading text.                                                                                |
+| `description`  | `string`                                                        | `undefined` | Text under the title.                                                                            |
+| `avatarTpl`    | `TemplateRef<unknown>`                                          | `undefined` | An avatar or image.                                                                              |
+| `actionsTpl`   | `TemplateRef<unknown>`                                          | `undefined` | Buttons or a menu.                                                                               |
+| `metaTpl`      | `TemplateRef<unknown>`                                          | `undefined` | Meta information (date, tags, read time); the preset wraps it in a `<dl>` (`author`, `stacked`). |
+| `presentation` | `{ variant?: 'author' \| 'stacked' \| 'overlay' \| 'outline' }` | `undefined` | Preset only: `variant` picks the look (`'author'` by default). The standard ignores it.          |
+
+All properties are optional. The default `CardHeadingStandardComponent` renders every slot except `presentation`; a section is rendered only when its template/string is provided.
+
 ```typescript
 interface ICardHeadingOptions {
   title?: string;
@@ -45,10 +56,11 @@ interface ICardHeadingOptions {
   avatarTpl?: TemplateRef<unknown>;
   actionsTpl?: TemplateRef<unknown>;
   metaTpl?: TemplateRef<unknown>;
+  presentation?: {
+    variant?: 'author' | 'stacked' | 'overlay' | 'outline';
+  };
 }
 ```
-
-All properties are optional. The default `CardHeadingStandardComponent` consumes every property; a section is rendered only when its template/string is provided.
 
 ## CARD_HEADING_STANDARD_COMPONENT_TOKEN
 
@@ -56,7 +68,7 @@ All properties are optional. The default `CardHeadingStandardComponent` consumes
 import { CARD_HEADING_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
 ```
 
-InjectionToken that allows replacing the default `CardHeadingStandardComponent` with a custom implementation. Provide a `Type<CardHeadingBaseComponent>` to override.
+InjectionToken that allows replacing the default `CardHeadingStandardComponent` with a custom implementation. Provide a `Type<CardHeadingBaseComponent>` to override; the wrapper passes it `options` and `class`.
 
 ```typescript
 providers: [
@@ -74,7 +86,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
@@ -105,9 +116,6 @@ import { CardHeadingBaseComponent } from '@smartsoft001/angular';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyCustomCardHeadingComponent extends CardHeadingBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   containerClasses = computed(() => {
     const classes = ['my-card-heading'];
     const extra = this.cssClass();
@@ -137,12 +145,9 @@ export class MyCustomCardHeadingComponent extends CardHeadingBaseComponent {
   [options]="{ title: 'Job Postings', actionsTpl: actions }"
 />
 
-<!-- Inside a smart-card via headerTpl -->
-<ng-template #cardHeader>
-  <smart-card-heading [options]="{ title: 'Job Postings' }" />
-</ng-template>
-
-<smart-card [options]="{ headerTpl: cardHeader }">
+<!-- Inside a smart-card, in its header slot -->
+<smart-card [hasHeader]="true">
+  <smart-card-heading cardHeader [options]="{ title: 'Job Postings' }" />
   <p>Card body content</p>
 </smart-card>
 ```
@@ -159,9 +164,8 @@ explicit `smart:dark:*` variants. Content flows from the shared
 per-variant zones expose `data-role` hooks (`avatar`, `title`, `description`,
 `meta`, `actions`, plus `title-hover` for the outline variant).
 
-Because the wrapper forwards inputs canonically through `NgComponentOutlet`, the
-preset does `override cssClass = input<string>('')` (dropping the inherited
-`class` alias) and merges it into the root card classes.
+The extra classes (`class` on `<smart-card-heading>`, or `class` / `[cssClass]`
+on `<smart-card-heading-preset>`) are merged into the root card classes.
 
 | Variant   | Look                                                              | Slots used                                                   |
 | --------- | ----------------------------------------------------------------- | ------------------------------------------------------------ |
@@ -174,6 +178,8 @@ preset does `override cssClass = input<string>('')` (dropping the inherited
 value).
 
 ### Register the preset
+
+Provide `CardHeadingPresetComponent` under `CARD_HEADING_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-card-heading>`, or register every preset at once with `provideSmartPresets()`.
 
 ```typescript
 import { CARD_HEADING_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';

@@ -17,17 +17,17 @@ The `<smart-tabs>` component renders a tabbed navigation strip (anchor-based for
 
 ### TabsComponent (`<smart-tabs>`)
 
-Main wrapper. Delegates to `TabsStandardComponent` by default. When `TABS_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`. Re-emits `tabChange` and forwards two-way `selectedId`.
+Main wrapper. Delegates to `TabsStandardComponent` by default. When `TABS_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet` and hands it `options`, `selectedId` and `class`. Re-emits `tabChange` and forwards two-way `selectedId` of whichever implementation renders (the standard, the preset or a custom one).
 
 ### TabsStandardComponent (`<smart-tabs-standard>`)
 
-Barebones placeholder using native HTML. Renders an outer wrapper with `cssClass`, an optional mobile `<select>` (rendered when `options.showMobileSelect` is `true` or unset and `items` is non-empty), and a `<nav class="tabs-desktop">` containing a `<ul class="tabs-list">` of items. Each item renders as `<a class="tab-link">` when `href` is provided, otherwise `<button class="tab-button">` emitting `tabChange` and updating `selectedId`. Adds `current` class and `aria-current="page"` when `item.id === selectedId()`. Supports optional `iconTpl` and `badge` per item.
+Barebones placeholder using native HTML. Renders an outer wrapper with `cssClass`, an optional mobile `<select>` in `.tabs-mobile` (rendered when `options.showMobileSelect` is `true` or unset and `items` is non-empty; `aria-label` from `options.ariaLabel`, default `"Select a tab"`; one option per item with its `label`, or its `id` without one; a change emits `tabChange` and updates `selectedId`), and a `<nav class="tabs-desktop">` (`aria-label` from `options.ariaLabel`, default `"Tabs"`) containing a `<ul class="tabs-list">` of items. Each item renders as a plain `<a class="tab-link" href>` when `href` is provided (a click follows the link without changing the selection), otherwise `<button class="tab-button">` emitting `tabChange` and updating `selectedId`. Adds the `current` class and `aria-current="page"` when `item.id === selectedId()` (no item is current while `selectedId` is `null`). Supports optional `iconTpl` and `badge` per item. The standard does not read `options.layout` and adds no styles: the class hooks are for your CSS.
 
 ### TabsPresetComponent (`<smart-tabs-preset>`)
 
-Styled variation that extends `TabsBaseComponent` and is a drop-in replacement for `TabsStandardComponent`. Register it via `TABS_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-tabs>`, or use the `<smart-tabs-preset>` selector directly. It renders the translated Preline tab nav for every `SmartTabsLayout` (`underline`, `underline-with-icons`, `underline-with-badges`, `underline-full-width`, `pills`, `pills-on-gray`, `pills-with-brand-color`, `bar-with-underline`, `simple`), selected through `options.layout` (default `'underline'`). Honors `options.items` (rendering `<a role="tab">` when `href` is set, otherwise `<button role="tab">`), `options.ariaLabel`, per-item `iconTpl` and `badge`, and `options.showMobileSelect` (default `true` → renders a `<select>` shown only below `sm` and hides the nav below `sm`). The active tab is driven by the `selectedId` model (falling back to the first item) via `(click)` — Preline's Tabs JS plugin is **not** used. ARIA (`role=tablist/tab`, `aria-selected`, `aria-controls`, `aria-orientation`) is kept on the markup. All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants; the per-layout class recipes live in `preset/preset-classes.util.ts`.
+Styled variation that extends `TabsBaseComponent` and is a drop-in replacement for `TabsStandardComponent`. Register it via `TABS_STANDARD_COMPONENT_TOKEN` (or every preset at once with `provideSmartPresets()`) to restyle every `<smart-tabs>`, or use the `<smart-tabs-preset>` selector directly. It renders the translated Preline tab nav for every `SmartTabsLayout` (`underline`, `underline-with-icons`, `underline-with-badges`, `underline-full-width`, `pills`, `pills-on-gray`, `pills-with-brand-color`, `bar-with-underline`, `simple`), selected through `options.layout` (default `'underline'`). Honors `options.items` (rendering `<a role="tab">` when `href` is set, otherwise `<button role="tab">`), `options.ariaLabel`, per-item `iconTpl` and `badge`, and `options.showMobileSelect` (default `true` → renders a `<select>` shown only below `sm` and hides the nav below `sm`). The active tab is driven by the `selectedId` model (falling back to the first item); a click on a tab — a link included — or a change of the mobile select sets `selectedId` and emits `tabChange`. Preline's Tabs JS plugin is **not** used. ARIA (`role=tablist/tab`, `aria-selected`, `aria-controls`, `aria-orientation`) is kept on the markup. All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants; the per-layout class recipes are internal to the preset and not exported.
 
-> Because `TabsComponent` renders injected components via `NgComponentOutlet` (which passes inputs by canonical name), `TabsPresetComponent` overrides `cssClass` as `input<string>('')` **without** the `class` alias. Bind it as `[cssClass]` when using the `<smart-tabs-preset>` selector directly, or just pass `class` on `<smart-tabs>` (the wrapper forwards it). Note: `NgComponentOutlet` does not wire outputs, so `tabChange` does not bubble through `<smart-tabs>` when the preset is registered via the token; subscribe to it on `<smart-tabs-preset>` directly if you need the event.
+> `TabsPresetComponent` declares `cssClass` as `input<string>('')` **without** the `class` alias. Bind it as `[cssClass]` when using the `<smart-tabs-preset>` selector directly, or just pass `class` on `<smart-tabs>` (the wrapper forwards it). With the preset registered through the token, `(tabChange)` and `[(selectedId)]` on `<smart-tabs>` work as with the standard.
 
 ### TabsBaseComponent (abstract)
 
@@ -37,8 +37,6 @@ Abstract base directive. Exposes:
 - `selectedId: ModelSignal<string | null>` (default `null`)
 - `cssClass: InputSignal<string>` (alias `class`)
 - `tabChange: OutputEmitterRef<ITabChange>`
-
-`ITabChange = { tabId: string }`.
 
 ## API
 
@@ -52,11 +50,36 @@ Abstract base directive. Exposes:
 
 ### Outputs
 
-| Output      | Type                           | Description                               |
-| ----------- | ------------------------------ | ----------------------------------------- |
-| `tabChange` | `OutputEmitterRef<ITabChange>` | Emitted when a button-type tab is clicked |
+| Output      | Type                           | Description                                                                                                    |
+| ----------- | ------------------------------ | -------------------------------------------------------------------------------------------------------------- |
+| `tabChange` | `OutputEmitterRef<ITabChange>` | Emitted when a tab is chosen: a button click or a mobile select change (and, in the preset, a link click too). |
 
 ### ITabsOptions
+
+| Field              | Type              | Default       | Description                                                                                                     |
+| ------------------ | ----------------- | ------------- | --------------------------------------------------------------------------------------------------------------- |
+| `items`            | `ITabItem[]`      | `[]`          | The tabs.                                                                                                       |
+| `ariaLabel`        | `string`          | `'Tabs'`      | Accessible name of the strip; the standard mobile select uses it too, with `'Select a tab'` as its own default. |
+| `showMobileSelect` | `boolean`         | `true`        | Renders a `<select>` of the tabs; the preset shows it below `sm` and the strip from `sm` up.                    |
+| `layout`           | `SmartTabsLayout` | `'underline'` | Preset only: the look (see the preset section). The standard ignores it.                                        |
+
+`SmartTabsLayout` is `'underline' | 'underline-with-icons' | 'underline-with-badges' | 'underline-full-width' | 'pills' | 'pills-on-gray' | 'pills-with-brand-color' | 'bar-with-underline' | 'simple'`.
+
+### ITabItem
+
+| Field     | Type                   | Default  | Description                                                                                            |
+| --------- | ---------------------- | -------- | ------------------------------------------------------------------------------------------------------ |
+| `id`      | `string`               | required | Identifies the tab (`selectedId`, `tabId`, and the preset's `aria-controls`; give your panel that id). |
+| `label`   | `string`               | -        | Tab text (the mobile select falls back to the `id`).                                                   |
+| `href`    | `string`               | -        | Renders the tab as a plain `<a href>`; the standard follows the link without changing the selection.   |
+| `badge`   | `string \| number`     | -        | A count or text badge.                                                                                 |
+| `iconTpl` | `TemplateRef<unknown>` | -        | Icon before the label.                                                                                 |
+
+### ITabChange
+
+| Field   | Type     | Default  | Description                 |
+| ------- | -------- | -------- | --------------------------- |
+| `tabId` | `string` | required | The `id` of the chosen tab. |
 
 ```typescript
 type SmartTabsLayout =
@@ -71,7 +94,7 @@ type SmartTabsLayout =
   | 'simple';
 
 interface ITabsOptions {
-  layout?: SmartTabsLayout;
+  layout?: SmartTabsLayout; // preset only
   items?: ITabItem[];
   ariaLabel?: string;
   showMobileSelect?: boolean; // default true
@@ -87,6 +110,8 @@ interface ITabItem {
 ```
 
 ## TABS_STANDARD_COMPONENT_TOKEN
+
+Provide a component class extending `TabsBaseComponent` under `TABS_STANDARD_COMPONENT_TOKEN`; every `<smart-tabs>` below that injector renders it.
 
 ```typescript
 import { TABS_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
@@ -105,7 +130,6 @@ providers: [
 import {
   ChangeDetectionStrategy,
   Component,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -130,8 +154,8 @@ import { TabsBaseComponent } from '@smartsoft001/angular';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyCustomTabsComponent extends TabsBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
+  // `options()`, `selectedId` (a model the wrapper binds two-way), `cssClass()`
+  // and `tabChange` (re-emitted by the wrapper) are inherited.
 }
 ```
 

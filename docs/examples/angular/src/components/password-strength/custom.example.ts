@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   signal,
   ViewEncapsulation,
 } from '@angular/core';
@@ -49,11 +48,9 @@ const VERDICTS: Record<string, string> = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomPasswordStrengthComponent extends PasswordStrengthBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   // The base class already computes strength, barClasses, msgClass and
-  // containerClasses, and emits passwordStrength from its own effect.
+  // containerClasses (with the `class` passed to the wrapper), and emits
+  // passwordStrength from its own effect.
   readonly verdict = computed(() => VERDICTS[this.msg()] ?? '');
 
   readonly missing = computed(() => {

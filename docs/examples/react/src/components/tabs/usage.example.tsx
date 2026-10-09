@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { ITabChange, ITabsOptions, SmartTabs } from '@smartsoft001/react';
 
 const options: ITabsOptions = {
-  layout: 'underline',
   ariaLabel: 'Account settings',
   items: [
     { id: 'account', label: 'My account' },

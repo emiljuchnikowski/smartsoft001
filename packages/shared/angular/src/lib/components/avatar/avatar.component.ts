@@ -16,6 +16,7 @@ import {
   SmartAvatarSize,
 } from '../../models';
 import { AVATAR_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { outletInputs } from '../base/outlet-inputs';
 
 @Component({
   selector: 'smart-avatar',
@@ -58,14 +59,16 @@ export class AvatarComponent {
 
   componentType = computed(() => this.injectedComponent ?? null);
 
-  componentInputs = computed(() => ({
-    imageUrl: this.imageUrl(),
-    initials: this.initials(),
-    size: this.size(),
-    shape: this.shape(),
-    notificationPosition: this.notificationPosition(),
-    group: this.group(),
-    options: this.options(),
-    cssClass: this.cssClass(),
-  }));
+  componentInputs = computed(() =>
+    outletInputs(this.componentType(), {
+      imageUrl: this.imageUrl(),
+      initials: this.initials(),
+      size: this.size(),
+      shape: this.shape(),
+      notificationPosition: this.notificationPosition(),
+      group: this.group(),
+      options: this.options(),
+      cssClass: this.cssClass(),
+    }),
+  );
 }

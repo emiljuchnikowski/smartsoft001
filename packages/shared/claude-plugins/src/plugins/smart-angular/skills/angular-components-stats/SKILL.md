@@ -17,17 +17,17 @@ The `<smart-stats>` component renders a list of statistic cards (label/value pai
 
 ### StatsComponent (`<smart-stats>`)
 
-Main wrapper component. Renders `StatsStandardComponent` by default. When `STATS_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`.
+Main wrapper component. Renders `StatsStandardComponent` by default. When `STATS_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet` and hands it the `options` and `class` inputs.
 
 ### StatsStandardComponent (`<smart-stats-standard>`)
 
-Barebones placeholder concrete implementation. Renders a wrapper `<div>` containing an optional `<h3 class="title">` and a `<dl>` with one `<div class="item">` per item. Each item renders an optional icon (`iconTpl` in `<div class="icon">`), label (`<dt class="label">`), value (`<dd class="value">`), optional previous value (`<dd class="previous">`), optional change with `data-trend` attribute (`<dd class="change">`), and optional action template (`actionTpl` in `<div class="action">`). The external `cssClass` is applied to the root wrapper. It does not include any visual styling — it exists solely as the default structural placeholder until a custom implementation is registered through the token.
+Barebones placeholder concrete implementation. Renders a wrapper `<div>` containing an optional `<h3 class="title">` and a `<dl>` with one `<div class="item">` per item (with `aria-label` from the item's `ariaLabel`). Each item renders an optional icon (`iconTpl` in `<div class="icon">`), label (`<dt class="label">`), value (`<dd class="value">`), optional previous value (`<dd class="previous">`), optional change with `data-trend` attribute (`<dd class="change">`), and optional action template (`actionTpl` in `<div class="action">`). The external `cssClass` is applied to the root wrapper. It does not read `columns` and does not include any visual styling — it exists solely as the default structural placeholder until a custom implementation is registered through the token.
 
 ### StatsPresetComponent (`<smart-stats-preset>`)
 
-Styled variation that extends `StatsBaseComponent` and is a drop-in replacement for `StatsStandardComponent`. Register it via `STATS_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-stats>`, or use the `<smart-stats-preset>` selector directly. Renders the Preline "Three-Column Stats with Primary Accent" look: a responsive grid of stat blocks, each with an optional leading icon (`iconTpl`), a `label` heading, the big primary-accent `value` (with an optional inline `change` badge coloured by `trend` — green for `up`, red for `down`, gray for `neutral`/unset), an optional muted `previousValue` sub-line, and an optional `actionTpl`. Column count comes from `options.columns` (default `3`); an optional `options.title` renders as a heading above the grid. All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants. The class recipes live in `preset/preset-classes.util.ts` (`getStatsContainerClasses`, `getStatsGridClasses`, `getStatsChangeClasses`, etc.).
+Styled variation that extends `StatsBaseComponent` and is a drop-in replacement for `StatsStandardComponent`. Register it via `STATS_STANDARD_COMPONENT_TOKEN` (or every preset at once with `provideSmartPresets()`) to restyle every `<smart-stats>`, or use the `<smart-stats-preset>` selector directly. Renders the Preline "Three-Column Stats with Primary Accent" look: a responsive grid of stat blocks, each with an optional leading icon (`iconTpl`), a `label` heading, the big primary-accent `value` (with an optional inline `change` badge coloured by `trend` — green for `up`, red for `down`, gray for `neutral`/unset), an optional muted `previousValue` sub-line, and an optional `actionTpl`. Column count comes from `options.columns` (default `3`); an optional `options.title` renders as a heading above the grid. All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants. The class recipes are internal to the preset and not exported.
 
-> Because `StatsComponent` renders injected components via `NgComponentOutlet` (which passes inputs by canonical name), `StatsPresetComponent` overrides `cssClass` as `input<string>('')` **without** the `class` alias. Bind it as `[cssClass]` when using the `<smart-stats-preset>` selector directly, or just pass `class` on `<smart-stats>` (the wrapper forwards it).
+> `StatsPresetComponent` declares `cssClass` as `input<string>('')` **without** the `class` alias. Bind it as `[cssClass]` when using the `<smart-stats-preset>` selector directly, or just pass `class` on `<smart-stats>` (the wrapper forwards it).
 
 ### StatsBaseComponent (abstract)
 
@@ -44,11 +44,32 @@ Abstract base directive for extending custom stats implementations. Exposes `opt
 
 ### IStatsOptions
 
+| Field     | Type               | Default  | Description                                                                                                          |
+| --------- | ------------------ | -------- | -------------------------------------------------------------------------------------------------------------------- |
+| `title`   | `string`           | -        | Heading above the stats (`<h3>` in the standard, `<h2>` in the preset).                                              |
+| `items`   | `IStatItem[]`      | required | The figures.                                                                                                         |
+| `columns` | `1 \| 2 \| 3 \| 4` | `3`      | Preset only: the number of grid columns on wide screens (the grid collapses on small ones). The standard ignores it. |
+
+### IStatItem
+
+A part of an item is rendered only when its field is set.
+
+| Field           | Type                          | Default  | Description                                                                                                    |
+| --------------- | ----------------------------- | -------- | -------------------------------------------------------------------------------------------------------------- |
+| `label`         | `string`                      | required | What the figure is.                                                                                            |
+| `value`         | `string \| number`            | required | The figure.                                                                                                    |
+| `previousValue` | `string \| number`            | -        | A muted sub-line (previous value or context text).                                                             |
+| `change`        | `string`                      | -        | The change text (e.g. `+4.75%`).                                                                               |
+| `trend`         | `'up' \| 'down' \| 'neutral'` | -        | The standard exposes it as `data-trend` on the change; the preset colours the change badge green, red or gray. |
+| `iconTpl`       | `TemplateRef<unknown>`        | -        | Leading icon.                                                                                                  |
+| `actionTpl`     | `TemplateRef<unknown>`        | -        | An action (e.g. "View all").                                                                                   |
+| `ariaLabel`     | `string`                      | -        | Accessible name of the item.                                                                                   |
+
 ```typescript
 interface IStatsOptions {
   title?: string;
   items: IStatItem[];
-  columns?: 1 | 2 | 3 | 4;
+  columns?: 1 | 2 | 3 | 4; // preset only
 }
 
 interface IStatItem {
@@ -63,17 +84,13 @@ interface IStatItem {
 }
 ```
 
-`items` is required. The default `StatsStandardComponent` consumes every property; a section is rendered only when its template/string is provided. The `trend` value is exposed via the `data-trend` attribute on `<dd class="change">` for downstream styling. `columns` is a hint for custom implementations to lay out the grid; the default placeholder ignores it.
-
 ## STATS_STANDARD_COMPONENT_TOKEN
+
+InjectionToken that allows replacing the default `StatsStandardComponent` with a custom implementation. Provide a component class extending `StatsBaseComponent` under `STATS_STANDARD_COMPONENT_TOKEN`; every `<smart-stats>` below that injector renders it.
 
 ```typescript
 import { STATS_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
-```
 
-InjectionToken that allows replacing the default `StatsStandardComponent` with a custom implementation. Provide a `Type<StatsBaseComponent>` to override.
-
-```typescript
 providers: [
   {
     provide: STATS_STANDARD_COMPONENT_TOKEN,
@@ -89,7 +106,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
@@ -121,9 +137,6 @@ import { StatsBaseComponent } from '@smartsoft001/angular';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyCustomStatsComponent extends StatsBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   containerClasses = computed(() => {
     const classes = ['my-stats'];
     const extra = this.cssClass();

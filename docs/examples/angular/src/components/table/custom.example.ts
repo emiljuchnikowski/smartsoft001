@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -54,9 +53,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomTableComponent extends TableBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   containerClasses = computed(() =>
     [
       'docs-table',

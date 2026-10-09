@@ -4,7 +4,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   TemplateRef,
   ViewEncapsulation,
 } from '@angular/core';
@@ -38,15 +37,10 @@ import {
           <h1 class="docs-sidebar-layout__title">{{ options()?.title }}</h1>
         }
 
-        <!--
-          smart-sidebar-layout renders a custom implementation through
-          NgComponentOutlet, which drops projected content, so <ng-content />
-          would stay empty here. A custom layout either renders its own body or
-          takes it from a template passed inside the options object.
-        -->
-        <p class="docs-sidebar-layout__body">
-          Main content rendered by the custom layout.
-        </p>
+        <!-- The content projected into <smart-sidebar-layout> lands here. -->
+        <div class="docs-sidebar-layout__body">
+          <ng-content />
+        </div>
       </main>
     </div>
   `,
@@ -55,9 +49,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomSidebarLayoutComponent extends SidebarLayoutBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   readonly sidebarTpl = computed(
     () => this.options()?.sidebarTpl as TemplateRef<unknown> | undefined,
   );
@@ -97,7 +88,9 @@ export class CustomSidebarLayoutComponent extends SidebarLayoutBaseComponent {
       </nav>
     </ng-template>
 
-    <smart-sidebar-layout [options]="buildOptions(sidebar)" />
+    <smart-sidebar-layout [options]="buildOptions(sidebar)">
+      <p>Main content of the page.</p>
+    </smart-sidebar-layout>
   `,
 })
 export class SidebarLayoutCustomExampleComponent {

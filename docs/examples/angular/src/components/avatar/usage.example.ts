@@ -26,9 +26,6 @@ export class AvatarUsageExampleComponent {
     { id: 'u3', initials: 'AK' },
   ];
 
-  readonly groupOptions: IAvatarOptions = {
-    placeholderType: 'initials',
-    stackDirection: 'bottom-to-top',
-  };
+  readonly groupOptions: IAvatarOptions = { stackDirection: 'bottom-to-top' };
 }
 // #endregion

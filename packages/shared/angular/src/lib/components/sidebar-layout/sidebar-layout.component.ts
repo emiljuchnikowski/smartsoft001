@@ -14,6 +14,7 @@ import { SidebarLayoutStandardComponent } from './standard/standard.component';
 import { ISidebarLayoutOptions } from '../../models';
 import { SIDEBAR_LAYOUT_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { outletContent } from '../base/outlet-content';
+import { outletInputs } from '../base/outlet-inputs';
 
 @Component({
   selector: 'smart-sidebar-layout',
@@ -52,10 +53,12 @@ export class SidebarLayoutComponent {
 
   componentType = computed(() => this.injectedComponent ?? null);
 
-  componentInputs = computed(() => ({
-    options: this.options(),
-    cssClass: this.cssClass(),
-  }));
+  componentInputs = computed(() =>
+    outletInputs(this.componentType(), {
+      options: this.options(),
+      cssClass: this.cssClass(),
+    }),
+  );
 
   /** The wrapper's `<ng-content>`, captured once for whichever branch renders. */
   private readonly contentTemplate =

@@ -13,7 +13,6 @@ export function DateRangeUsageExample() {
 
   return (
     <SmartDateRange
-      variant="standard"
       value={range}
       onValueChange={(next) => setRange(next ?? null)}
     />

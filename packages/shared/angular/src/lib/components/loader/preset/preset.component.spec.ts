@@ -73,7 +73,7 @@ describe('@smartsoft001/shared-angular: LoaderPresetComponent', () => {
     expect(cls).toContain('smart:dark:text-rose-500');
   });
 
-  it('should apply cssClass on the spinner (canonical name for NgComponentOutlet)', () => {
+  it('should apply cssClass on the spinner (declared without the class alias)', () => {
     fixture.componentRef.setInput('cssClass', 'my-extra-class');
     fixture.detectChanges();
 

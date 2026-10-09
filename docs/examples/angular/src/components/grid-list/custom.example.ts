@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -54,10 +53,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomGridListComponent extends GridListBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class'
-  // alias, so a grid list registered through the token declares it explicitly.
-  override cssClass = input<string>('');
-
   containerClasses = computed(() => {
     const classes = ['docs-grid-list'];
     const extra = this.cssClass();
@@ -84,7 +79,6 @@ export class GridListCustomExampleComponent {
   options: IGridListOptions = {
     title: 'Team',
     columns: 3,
-    layout: 'cards',
     items: [
       {
         id: 'lindsay',

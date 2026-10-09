@@ -4,4 +4,7 @@
   [(selectedId)]="selectedTab"
   (tabChange)="onTabChange($event)"
 />
+@if (lastTab()) {
+  <p>Last chosen tab: {{ lastTab() }}</p>
+}
 <!-- #endregion -->

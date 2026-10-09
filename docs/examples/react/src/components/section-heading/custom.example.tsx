@@ -46,8 +46,7 @@ const components = { 'section-heading': CustomSectionHeading };
 const options: ISectionHeadingOptions = {
   label: 'New',
   title: 'Manage your team in one place',
-  description:
-    'A balanced two-column split of copy and imagery for the default layout.',
+  description: 'Invite people, set their roles and remove access.',
   actionsTpl: (
     <a href="#" className="docs-section-heading__cta">
       Get started

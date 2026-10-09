@@ -17,7 +17,7 @@ The `<smart-stacked-layout>` component provides a top-to-bottom application shel
 
 ### StackedLayoutComponent (`<smart-stacked-layout>`)
 
-Main wrapper component. Renders `StackedLayoutStandardComponent` by default. When `STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`. Accepts main content via projected `<ng-content>`.
+Main wrapper component. Renders `StackedLayoutStandardComponent` by default. When `STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet` and hands it the `options` and `class` inputs. Accepts main content via projected `<ng-content>`, which reaches the `<ng-content />` of whichever implementation renders (the standard, the preset or a custom one).
 
 ### StackedLayoutStandardComponent (`<smart-stacked-layout-standard>`)
 
@@ -38,6 +38,15 @@ Abstract base directive for extending custom stacked-layout implementations. Exp
 
 ### IStackedLayoutOptions
 
+| Field            | Type                               | Default | Description                                                                                                                               |
+| ---------------- | ---------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `title`          | `string`                           | -       | Page title, rendered as `<h1 data-role="title">` when `headerTpl` is not set.                                                             |
+| `navTpl`         | `TemplateRef<unknown>`             | -       | Navigation at the top (inside the `<nav>`).                                                                                               |
+| `headerTpl`      | `TemplateRef<unknown>`             | -       | The page header beneath the navigation; wins over `title`.                                                                                |
+| `containerWidth` | `SmartStackedLayoutContainerWidth` | `'xl'`  | Width of the header and content containers in the preset (see the mapping below); the standard only exposes it as `data-container-width`. |
+
+`SmartStackedLayoutContainerWidth` is `'sm' | 'md' | 'lg' | 'xl' | 'full'`.
+
 ```typescript
 type SmartStackedLayoutContainerWidth = 'sm' | 'md' | 'lg' | 'xl' | 'full';
 
@@ -45,22 +54,17 @@ interface IStackedLayoutOptions {
   title?: string;
   navTpl?: TemplateRef<unknown>;
   headerTpl?: TemplateRef<unknown>;
-  containerWidth?: SmartStackedLayoutContainerWidth;
+  containerWidth?: SmartStackedLayoutContainerWidth; // styled by the preset
 }
 ```
 
-The default `StackedLayoutStandardComponent` consumes `navTpl` (rendered inside the top `<nav>`), `headerTpl` (rendered as a secondary `<header>` block beneath the navigation) and `title` (rendered as `<header><h1 data-role="title">` when there is no `headerTpl`, the same precedence as the preset). `containerWidth` is purely visual: the standard only exposes it as `data-container-width` on the root (default `'xl'`), and the max-width is styled by `StackedLayoutPresetComponent`.
-
 ## STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN
+
+InjectionToken that allows replacing the default `StackedLayoutStandardComponent` with a custom implementation. Provide a component class extending `StackedLayoutBaseComponent` under `STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN`; every `<smart-stacked-layout>` below that injector renders it.
 
 ```typescript
 import { STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
-```
 
-InjectionToken that allows replacing the default `StackedLayoutStandardComponent` with a custom implementation. Provide a `Type<StackedLayoutBaseComponent>` to override.
-
-```typescript
-// In your app module or component providers:
 providers: [
   {
     provide: STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN,
@@ -76,7 +80,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
@@ -109,9 +112,6 @@ import { StackedLayoutBaseComponent } from '@smartsoft001/angular';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyCustomStackedLayoutComponent extends StackedLayoutBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   containerClasses = computed(() => {
     const classes = ['my-stacked-layout'];
     const extra = this.cssClass();
@@ -123,8 +123,7 @@ export class MyCustomStackedLayoutComponent extends StackedLayoutBaseComponent {
 
 When extending the base directly, remember to:
 
-- declare `cssClass = input<string>('')` explicitly (no `class` alias) if the component is used via `NgComponentOutlet` through `STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN`, because `NgComponentOutlet` passes inputs by canonical name (not by alias),
-- accept main content via `<ng-content>` so consumers can project arbitrary page content,
+- accept main content via `<ng-content>` so consumers can project arbitrary page content (the wrapper projects its content into it),
 - use `[ngTemplateOutlet]` to render `options().navTpl` and `options().headerTpl`.
 
 ## Usage Examples
@@ -164,13 +163,14 @@ When extending the base directly, remember to:
 
 - Wrapper: `packages/shared/angular/src/lib/components/stacked-layout/stacked-layout.component.ts`
 - Standard: `packages/shared/angular/src/lib/components/stacked-layout/standard/standard.component.ts`
+- Preset: `packages/shared/angular/src/lib/components/stacked-layout/preset/preset.component.ts`
 - Base class: `packages/shared/angular/src/lib/components/stacked-layout/base/base.component.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN`)
 - Interface: `packages/shared/angular/src/lib/models/interfaces.ts` (`IStackedLayoutOptions`)
 
 ## HyperUI preset
 
-`StackedLayoutPresetComponent` (`<smart-stacked-layout-preset>`) is the HyperUI-styled drop-in for `StackedLayoutStandardComponent`. It uses the same `IStackedLayoutOptions` API — no interface changes, no new options fields — and delivers the page scaffold in the HyperUI container rhythm:
+`StackedLayoutPresetComponent` (`<smart-stacked-layout-preset>`) is the HyperUI-styled drop-in for `StackedLayoutStandardComponent`. It uses the same `IStackedLayoutOptions` API — no interface changes, no new options fields — and delivers the page scaffold in the HyperUI container rhythm.
 
 - **Page root** (`data-role="root"`): full-height gray surface — `smart:min-h-full smart:bg-gray-50 smart:dark:bg-gray-900`. The external `cssClass` is merged here.
 - **Header zone**: white bar (`smart:bg-white smart:shadow-sm smart:dark:bg-gray-800 smart:dark:border-b smart:dark:border-gray-700`) whose inner container (`data-role="header"`, `smart:py-4`) renders `navTpl` (`data-role="nav"`), then `headerTpl` if present, else `title` as an `<h1 data-role="title">` fallback.
@@ -178,7 +178,7 @@ When extending the base directly, remember to:
 
 ### containerWidth mapping
 
-Both the header and content containers share the base `smart:mx-auto smart:px-4 smart:sm:px-6 smart:lg:px-8` plus a max-width from `options.containerWidth`:
+Both the header and content containers share the base `smart:mx-auto smart:px-4 smart:sm:px-6 smart:lg:px-8` plus a max-width from `options.containerWidth`, as listed below.
 
 | containerWidth       | max-width class    |
 | -------------------- | ------------------ |
@@ -190,9 +190,13 @@ Both the header and content containers share the base `smart:mx-auto smart:px-4 
 
 ### Token registration
 
+Provide `StackedLayoutPresetComponent` under `STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-stacked-layout>`, or register every preset of the library at once with `provideSmartPresets()`. The preset declares `cssClass` without the `class` alias: bind `[cssClass]` when you use `<smart-stacked-layout-preset>` directly; on `<smart-stacked-layout>` pass `class` as usual.
+
 ```typescript
-import { STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
-import { StackedLayoutPresetComponent } from '@smartsoft001/angular';
+import {
+  STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN,
+  StackedLayoutPresetComponent,
+} from '@smartsoft001/angular';
 
 providers: [
   {
@@ -204,7 +208,4 @@ providers: [
 
 ### Documented gaps
 
-The preset delivers the PAGE SCAFFOLD only. The grid "content + image" section variants from the shared FRA-206 task description are provided by the section-heading preset — use both together (section-heading blocks projected into the stacked-layout content region).
-
-- Preset: `packages/shared/angular/src/lib/components/stacked-layout/preset/preset.component.ts`
-- Class recipes: `packages/shared/angular/src/lib/components/stacked-layout/preset/preset-classes.util.ts`
+The preset delivers the page scaffold only. For "content + image" sections, project `<smart-section-heading>` blocks (with the section-heading preset) into the stacked-layout content region.

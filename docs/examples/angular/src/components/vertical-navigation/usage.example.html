@@ -3,4 +3,7 @@
   [options]="options"
   (itemClick)="onItemClick($event)"
 />
+@if (lastItem()) {
+  <p>Last clicked item: {{ lastItem() }}</p>
+}
 <!-- #endregion -->

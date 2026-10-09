@@ -1,4 +1,4 @@
-import { Component, input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ButtonComponent } from './button.component';
@@ -11,19 +11,14 @@ import { ButtonBaseComponent } from './base/base.component';
   changeDetection: ChangeDetectionStrategy.Eager,
   template: '<button class="injected">injected</button>',
 })
-class MockInjectedComponent extends ButtonBaseComponent {
-  // NgComponentOutlet passes 'cssClass' (not aliased 'class') so declare it explicitly
-  override cssClass = input<string>('');
-}
+class MockInjectedComponent extends ButtonBaseComponent {}
 
 @Component({
   selector: 'smart-test-button-with-slot',
   changeDetection: ChangeDetectionStrategy.Eager,
   template: '<button class="custom-button"><ng-content /></button>',
 })
-class MockSlotComponent extends ButtonBaseComponent {
-  override cssClass = input<string>('');
-}
+class MockSlotComponent extends ButtonBaseComponent {}
 
 const HOST_TEMPLATE = `
   <smart-button [options]="options">Projected label</smart-button>

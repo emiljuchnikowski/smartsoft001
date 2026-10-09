@@ -125,7 +125,7 @@ describe('@smartsoft001/shared-angular: NavbarPresetComponent', () => {
     );
   });
 
-  it('should apply cssClass on the host header (canonical name for NgComponentOutlet)', () => {
+  it('should apply cssClass on the host header (declared without the class alias)', () => {
     fixture.componentRef.setInput('cssClass', 'my-extra-class');
     fixture.detectChanges();
 

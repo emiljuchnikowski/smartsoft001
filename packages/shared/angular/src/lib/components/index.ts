@@ -42,6 +42,7 @@ export * from './page';
 export * from './page-heading';
 export * from './paging';
 export * from './password-strength';
+export * from './presets';
 export * from './progress-bars';
 export * from './searchbar';
 export * from './section-heading';

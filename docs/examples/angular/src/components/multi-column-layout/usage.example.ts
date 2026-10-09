@@ -24,8 +24,6 @@ export class MultiColumnLayoutUsageExampleComponent {
   readonly secondaryTpl = viewChild<TemplateRef<unknown>>('secondaryTpl');
 
   readonly options = computed<IMultiColumnLayoutOptions>(() => ({
-    title: 'Inbox',
-    width: 'constrained',
     secondaryWidth: 'md',
     headerTpl: this.headerTpl(),
     navTpl: this.navTpl(),

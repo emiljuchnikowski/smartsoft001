@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   signal,
   ViewEncapsulation,
 } from '@angular/core';
@@ -86,9 +85,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomSignInFormComponent extends SignInFormBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   readonly email = signal('');
   readonly password = signal('');
 
@@ -135,17 +131,30 @@ export class CustomSignInFormComponent extends SignInFormBaseComponent {
       useValue: CustomSignInFormComponent,
     },
   ],
+  // The wrapper re-emits the custom component's submit and socialClick.
   template: `
-    <smart-sign-in-form mode="sign-in" [disabled]="false" [options]="options" />
+    <smart-sign-in-form
+      mode="sign-in"
+      [options]="options"
+      (submit)="signedInAs.set($event.email)"
+      (socialClick)="provider.set($event.providerId)"
+    />
+    @if (signedInAs()) {
+      <p>Signed in as {{ signedInAs() }}</p>
+    }
+    @if (provider()) {
+      <p>Continue with provider: {{ provider() }}</p>
+    }
   `,
 })
 export class SignInFormCustomExampleComponent {
+  readonly signedInAs = signal<string | null>(null);
+  readonly provider = signal<string | null>(null);
+
   readonly options: ISignInFormOptions = {
     layout: 'simple',
     showLabels: true,
     forgotPasswordHref: '/forgot',
-    signUpHref: '/signup',
-    signInHref: '/signin',
     socialProviders: [{ id: 'google', label: 'Continue with Google' }],
   };
 }

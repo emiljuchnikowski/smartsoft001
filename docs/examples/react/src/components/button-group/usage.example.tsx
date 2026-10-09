@@ -4,7 +4,6 @@ import { useState } from 'react';
 import {
   IButtonGroupButton,
   IButtonGroupButtonClick,
-  IButtonGroupOptions,
   SmartButtonGroup,
 } from '@smartsoft001/react';
 
@@ -14,8 +13,6 @@ const buttons: IButtonGroupButton[] = [
   { id: 'month', label: 'Month' },
 ];
 
-const options: IButtonGroupOptions = { variant: 'basic' };
-
 export function ButtonGroupUsageExample() {
   const [view, setView] = useState('week');
 
@@ -23,12 +20,14 @@ export function ButtonGroupUsageExample() {
     setView(buttonId);
 
   return (
-    <SmartButtonGroup
-      buttons={buttons}
-      options={options}
-      selected={view}
-      onButtonClick={onButtonClick}
-    />
+    <>
+      <SmartButtonGroup
+        buttons={buttons}
+        selected={view}
+        onButtonClick={onButtonClick}
+      />
+      <p>Showing: {view}</p>
+    </>
   );
 }
 // #endregion

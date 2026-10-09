@@ -13,7 +13,6 @@ export class ToggleUsageExampleComponent {
   readonly options: IToggleOptions = {
     label: 'Email notifications',
     description: 'Get an email when someone comments on your post.',
-    labelPosition: 'right',
   };
 
   readonly emailNotifications = signal(true);

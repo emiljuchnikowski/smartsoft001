@@ -64,6 +64,7 @@ export interface IIconButtonOptions {
   icon: string;
   text?: string;
   handler?: () => void;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   component?: any;
   type?: 'default' | 'popover';
   disabled?: boolean;
@@ -128,6 +129,7 @@ export interface IDynamicComponentData {
 
 export interface IFormOptions<T> {
   model: T;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   show: boolean;
   treeLevel?: number;
   /** A ready form; without it the form is built from `model` by the form factory. */
@@ -142,6 +144,7 @@ export interface IFormOptions<T> {
   inputComponents?: {
     [key: string]: InputComponentType<T>;
   };
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   fieldOptions?: IFieldOptions;
   modelOptions?: IModelOptions;
 }
@@ -171,6 +174,7 @@ export interface IDetailsOptions<T extends IEntity<string>> {
   cellPipe?: ICellPipe<T>;
   type: any;
   item: T | null | undefined;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   loading?: boolean;
   itemHandler?: ((id: string) => void) | null;
   removeHandler?: ((item: T) => void) | null;
@@ -290,6 +294,7 @@ export interface IEmptyStateItem {
 export interface IEmptyStateOptions {
   title?: string;
   description?: string;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   layout?: SmartEmptyStateLayout;
   iconTpl?: ReactNode;
   actions?: IEmptyStateAction[];
@@ -318,6 +323,7 @@ export interface INavbarItem {
 }
 
 export interface INavbarOptions {
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   layout?: SmartNavbarLayout;
   dark?: boolean;
   menuButtonOnLeft?: boolean;
@@ -396,6 +402,10 @@ export interface IProgressBarsOptions {
   columns?: IProgressBarColumn[];
 }
 
+/**
+ * The preset's layouts. `'simple-with-chevrons'` looks the same as the default
+ * layout, since the chevron is already the default separator.
+ */
 export type SmartBreadcrumbsLayout =
   | 'contained'
   | 'full-width-bar'
@@ -445,6 +455,7 @@ export interface IVerticalNavGroup {
 }
 
 export interface IVerticalNavOptions {
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   layout?: SmartVerticalNavLayout;
   ariaLabel?: string;
   items?: IVerticalNavItem[];
@@ -461,6 +472,7 @@ export interface IButtonOptions {
   color?: SmartColor;
   rounded?: boolean;
   circular?: boolean;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   iconPosition?: 'leading' | 'trailing';
 }
 
@@ -470,6 +482,7 @@ export interface IInfoOptions {
 
 export interface ISearchbarOptions {
   placeholder?: string;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   label?: string;
   debounceTime?: number;
   showToggleButton?: boolean;
@@ -499,6 +512,7 @@ export interface ICommand {
   label: string;
   icon?: string;
   group?: string;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   href?: string;
   description?: string;
   imageUrl?: string;
@@ -555,6 +569,7 @@ export interface IDrawerOptions {
   wide?: boolean;
   withOverlay?: boolean;
   brandedHeader?: boolean;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   stickyFooter?: boolean;
   variant?: SmartDrawerVariant;
 }
@@ -634,6 +649,7 @@ export interface IDropdownItem {
   id: string;
   label: string;
   icon?: string;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   href?: string;
   disabled?: boolean;
   divider?: boolean;
@@ -677,6 +693,7 @@ export type SmartListContainerVariant =
 
 export interface IListContainerOptions {
   variant?: SmartListContainerVariant;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   fullWidthOnMobile?: boolean;
 }
 
@@ -800,8 +817,11 @@ export type SmartCalendarView = 'month' | 'week' | 'day' | 'year';
 export interface ICalendarEvent {
   id: string | number;
   start: Date;
+  /** Not rendered by the built-in implementations (they show a dot or a count per day); available to `dayCellTpl` and to a custom implementation. */
   end?: Date;
+  /** Not rendered by the built-in implementations (they show a dot or a count per day); available to `dayCellTpl` and to a custom implementation. */
   title?: string;
+  /** Not rendered by the built-in implementations (they show a dot or a count per day); available to `dayCellTpl` and to a custom implementation. */
   meta?: Record<string, unknown>;
 }
 
@@ -814,6 +834,7 @@ export interface ICalendarDayCell {
 
 export interface ICalendarOptions {
   view?: SmartCalendarView;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   monthsCount?: 1 | 2 | 12;
   weekStart?: 0 | 1;
   showToolbar?: boolean;
@@ -821,6 +842,7 @@ export interface ICalendarOptions {
   eventListTpl?: ReactNode;
   sidePanelTpl?: ReactNode;
   dayCellTpl?: ReactNode;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   eventTpl?: ReactNode;
 }
 
@@ -927,6 +949,7 @@ export type SmartSelectMenuVariant =
 export interface ISelectMenuItem {
   value: string | number;
   label: string;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   avatarUrl?: string;
   iconTpl?: ReactNode;
   secondary?: string;
@@ -938,6 +961,7 @@ export interface ISelectMenuItem {
 export interface ISelectMenuOptions {
   items?: ISelectMenuItem[];
   placeholder?: string;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   variant?: SmartSelectMenuVariant;
   emptyTpl?: ReactNode;
   ariaLabel?: string;
@@ -961,6 +985,7 @@ export interface IFeedEvent {
   iconTpl?: ReactNode;
   avatarUrl?: string;
   href?: string;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   type?: string;
   comments?: IFeedComment[];
   ariaLabel?: string;
@@ -970,6 +995,7 @@ export interface IFeedOptions {
   title?: string;
   description?: string;
   events?: IFeedEvent[];
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   variant?: SmartFeedVariant;
   commentSubmitTpl?: ReactNode;
   emptyTpl?: ReactNode;
@@ -1072,6 +1098,7 @@ export interface ISidebarNavProfile {
 }
 
 export interface ISidebarNavOptions {
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   layout?: SmartSidebarNavLayout;
   ariaLabel?: string;
   logo?: ISidebarNavLogo;
@@ -1087,6 +1114,7 @@ export interface ISidebarLayoutOptions {
   sidebarTpl?: ReactNode;
   headerTpl?: ReactNode;
   sidebarPosition?: 'left' | 'right';
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   mobileBreakpoint?: SmartSidebarLayoutMobileBreakpoint;
   condensed?: boolean;
 }
@@ -1096,6 +1124,7 @@ export interface IDetailOptions<T> {
   item?: T | null;
   options: IFieldOptions;
   cellPipe?: ICellPipe<T>;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   loading?: boolean;
 }
 
@@ -1130,6 +1159,7 @@ export interface IPageOptions {
   logoTpl?: ReactNode;
   statsTpl?: ReactNode;
   subtitleTpl?: ReactNode;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   navTpl?: ReactNode;
   sidebarTpl?: ReactNode;
 }
@@ -1145,6 +1175,7 @@ export interface IListProvider<T> {
 
 export interface IListPaginationOptions {
   mode?: PaginationMode;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   limit: number;
   loadNextPage: () => Promise<boolean>;
   loadPrevPage: () => Promise<boolean>;

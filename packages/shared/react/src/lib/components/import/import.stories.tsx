@@ -37,7 +37,7 @@ export const Playground: Story = {
     <div style={{ padding: 40 }}>
       <p style={{ marginBottom: 16, fontSize: 14, color: '#6b7280' }}>
         Click to open the native file dialog. The chosen file is emitted through{' '}
-        <code>(set)</code> and logged to the console.
+        <code>onSet</code> and logged to the console.
       </p>
       <SmartImport
         accept={args.accept}
@@ -72,7 +72,7 @@ export const AllVariants: Story = {
           <code>accept</code> is written to a hidden{' '}
           <code>&lt;input type=&quot;file&quot;&gt;</code>, so it only changes
           which files the native dialog offers. Open one and pick a file — the
-          selection is logged to the console through <code>(set)</code>.
+          selection is logged to the console through <code>onSet</code>.
         </p>
         <div
           style={{

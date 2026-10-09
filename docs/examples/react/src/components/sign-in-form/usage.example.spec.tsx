@@ -7,8 +7,10 @@ const EXAMPLE_PASSWORD_VALUE = 'placeholder-value';
 
 describe('docs-examples-react: SignInFormUsageExample', () => {
   it('should render the form from the options', () => {
+    // Act
     render(<SignInFormUsageExample />);
 
+    // Assert
     expect(
       screen.getByRole('button', { name: 'Sign in to your account' }),
     ).toHaveAttribute('type', 'submit');

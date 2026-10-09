@@ -154,7 +154,7 @@ The providers barrel also exports the `IModelLabelOptions`, `IModelPossibilities
 
 ### Component substitution
 
-Every facade component injects a token for its standard implementation, so a replacement can be provided without touching the template. The file that declares them, `src/lib/shared.inectors.ts`, is exported from the package barrel, so all of them can be imported from `@smartsoft001/angular`. The four below are the ones that come with a preset map filling them with the Preline-styled variants.
+Every facade component injects a token for its standard implementation, so a replacement can be provided without touching the template. The file that declares them, `src/lib/shared.inectors.ts`, is exported from the package barrel, so all of them can be imported from `@smartsoft001/angular`. The four below are the ones that come with a preset map filling them with the Preline-styled variants. `provideSmartPresets()` (the providers in `SMART_PRESET_PROVIDERS`) registers every preset at once: the preset component on each `*_STANDARD_COMPONENT_TOKEN` that has one, the maps below, `LIST_PRESET_MODE_COMPONENTS` on `LIST_MODE_COMPONENTS_TOKEN`, and the preset page for both the standard and the preset variant. The [installation](/docs/installation#set-up-the-root) adds it to the application config.
 
 | Token                           | Preset map                       | Replaces                                    |
 | ------------------------------- | -------------------------------- | ------------------------------------------- |

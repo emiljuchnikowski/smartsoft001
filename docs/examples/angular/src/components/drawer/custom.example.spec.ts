@@ -33,8 +33,8 @@ describe('docs-examples-angular: DrawerCustomExampleComponent', () => {
     expect(element.querySelector('.docs-drawer__overlay')).toBeTruthy();
   });
 
-  // close() sets the custom component's own `open` model. NgComponentOutlet
-  // does not forward outputs, so the wrapper's (closed) never fires.
+  // close() sets the custom component's own `open` model and emits `closed`;
+  // the wrapper re-emits both as its own `openChange` and `closed`.
   it('should hide the panel when the custom close button is clicked', () => {
     const close = element.querySelector<HTMLButtonElement>(
       '.docs-drawer__close',

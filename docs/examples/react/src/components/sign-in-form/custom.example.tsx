@@ -95,8 +95,6 @@ const options: ISignInFormOptions = {
   layout: 'simple',
   showLabels: true,
   forgotPasswordHref: '/forgot',
-  signUpHref: '/signup',
-  signInHref: '/signin',
   socialProviders: [{ id: 'google', label: 'Continue with Google' }],
 };
 
@@ -110,7 +108,6 @@ export function SignInFormCustomExample() {
     <SmartProvider components={components}>
       <SmartSignInForm
         mode="sign-in"
-        disabled={false}
         options={options}
         onSubmit={({ email }) => setSignedInAs(email)}
         onSocialClick={({ providerId }) => setProvider(providerId)}

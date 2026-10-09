@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -54,9 +53,8 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomDrawerComponent extends DrawerBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
+  // `cssClass` comes from the base (alias `class`): the wrapper hands the
+  // consumer's class to it under that name.
   panelClasses = computed(() => {
     const classes = ['docs-drawer__panel'];
     if (this.options()?.wide) classes.push('docs-drawer__panel--wide');

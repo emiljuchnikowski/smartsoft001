@@ -3,7 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
+  signal,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -55,11 +55,9 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomProgressBarsComponent extends ProgressBarsBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   readonly steps = computed(() => this.options()?.steps ?? []);
 
+  // `class` on <smart-progress-bars> reaches the inherited `cssClass` input.
   readonly containerClasses = computed(() => {
     const classes = ['docs-progress-bars'];
     const extra = this.cssClass();
@@ -74,17 +72,27 @@ export class CustomProgressBarsComponent extends ProgressBarsBaseComponent {
   imports: [ProgressBarsComponent],
   // The token swaps the standard progress bars for the custom one everywhere
   // below this component, so consumers keep writing `<smart-progress-bars>`.
+  // The wrapper re-emits the custom component's `stepClick`.
   providers: [
     {
       provide: PROGRESS_BARS_STANDARD_COMPONENT_TOKEN,
       useValue: CustomProgressBarsComponent,
     },
   ],
-  template: ` <smart-progress-bars [options]="options" /> `,
+  template: `
+    <smart-progress-bars
+      [options]="options"
+      (stepClick)="lastStep.set($event.stepId)"
+    />
+    @if (lastStep()) {
+      <p>Last clicked step: {{ lastStep() }}</p>
+    }
+  `,
 })
 export class ProgressBarsCustomExampleComponent {
+  readonly lastStep = signal<string | null>(null);
+
   readonly options: IProgressBarsOptions = {
-    layout: 'progress-bar',
     title: 'Uploading files',
     ariaLabel: 'Upload progress',
     value: 50,

@@ -33,6 +33,28 @@ All from `@smartsoft001/react`.
 | `getInputErrorMessages`          | function  | The messages a field shows for its validation errors, in a fixed order.                                                                                                                                                                              |
 | `resolveInputFieldOptions`       | function  | The options of the field an input renders, merged with the options of the form's mode: a `<key>Confirm` control takes the options of `<key>`, and an array model is read through its first item.                                                     |
 | `INPUT_PRESET_FIELD_COMPONENTS`  | const     | The Preline-styled field presets, by `FieldType`.                                                                                                                                                                                                    |
+| `LONG_TEXT_TOOLBAR`              | const     | The full menu of `SmartRichTextEditor` (its default `toolbar`), typed `SmartRichTextToolbar`.                                                                                                                                                        |
+
+Every field component of the table under "Field types" is exported too (`SmartInputText`, `SmartInputTextPreset`, ...), with the hooks their standard and preset variants share. Use them in a custom field component of the same type.
+
+| Hook / function                  | What it is                                                                                                                                                                       |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `useInputAddressPart`            | Binds the input of one part of an `address` group to its control (value, dirty on change, touched on blur, disabled with the part) and gives an `id` for its label.              |
+| `useInputArray`                  | The `array` field: the item forms, `add()`, `remove(index)`, `move(from, to)`, `getItemDragProps(index)` and `isStatic` (`possibilities.static`).                                |
+| `useInputCheck`                  | The `check` field: the possibilities (provider, input options, else the model field's), kept checked in line with the value, and `toggle(item)`.                                 |
+| `syncInputCheckPossibilities`    | The possibilities with `checked` set from a value (what `useInputCheck` uses).                                                                                                   |
+| `useInputColor`                  | The `color` field: the shown colour, picking and clearing (`null`).                                                                                                              |
+| `useInputImage`                  | `useInput` and `useInputFile` plus the preview URL of the `image` field and the `logo` preset.                                                                                   |
+| `useInputInts`                   | The `ints` field: one row per number plus a trailing row to add one.                                                                                                             |
+| `useInputNip`                    | `useInput` plus the `invalidNip` validator added to the control.                                                                                                                 |
+| `useInputObject`                 | The `object` field: the options of the nested form, one tree level deeper.                                                                                                       |
+| `useInputPassword`               | The `password` field: the strength rating and the `passwordStrength` validator it drives.                                                                                        |
+| `useInputPhoneNumberPl`          | `useInput` plus the `minLength(9)` / `maxLength(9)` validators.                                                                                                                  |
+| `useInputRadio`                  | The `radio` field: the possibilities (provider, input options, else the model field's object map).                                                                               |
+| `getModelFieldPossibilitiesList` | The model field's `possibilities` object map as a list (the fallback of the radio and enum preset fields).                                                                       |
+| `useInputVideo`                  | `useInput` and `useInputFile` plus the player of the `video` fields.                                                                                                             |
+| `useInputFileDropZone`           | The drop zone of the `pdf`, `video` and `attachment` presets (click / Enter / Space opens the picker, a drop uploads like a picked file); options `UseInputFileDropZoneOptions`. |
+| `toNumberValue`                  | The value of a number `<input>`: empty is `null`, else `parseFloat`.                                                                                                             |
 
 The preset's class helpers (`getInputEmailPresetClasses`, `getInputEmailPresetLabelClasses`, `getInputNipPresetClasses`, `getInputNipPresetLabelClasses`, `getInputPhoneNumberPlPresetClasses`, `getInputPhoneNumberPlPresetLabelClasses`, `getInputPhoneNumberPlPresetWrapperClasses`, `getInputPhoneNumberPlPresetPrefixClasses`, `getInputPhoneNumberPresetClasses`, `getInputPhoneNumberPresetLabelClasses`, `getInputTextPresetClasses`, `getInputTextPresetLabelClasses`) are exported too, for a custom implementation that wants the preset look.
 
@@ -67,24 +89,26 @@ The props every field component receives from `<SmartInput>`: the input options 
 
 Props of the rich-text editor of `longText` fields.
 
-| Prop           | Type                     | Default       | Description                                                                                               |
-| -------------- | ------------------------ | ------------- | --------------------------------------------------------------------------------------------------------- |
-| `value?`       | `string \| null`         | —             | The HTML to edit; rendered sanitised when it does not come from here.                                     |
-| `placeholder?` | `string`                 | —             | Placeholder of the empty editor.                                                                          |
-| `disabled?`    | `boolean`                | `false`       | Makes the editor read-only.                                                                               |
-| `toolbar?`     | `SmartRichTextToolbar`   | the full menu | The menu groups; the full menu (formatting, lists, headings, link, image, colours, alignment) by default. |
-| `labelledBy?`  | `string`                 | —             | The id of the element labelling the editor.                                                               |
-| `onChange?`    | `(html: string) => void` | —             | Called with the HTML of the content after every change.                                                   |
-| `onBlur?`      | `() => void`             | —             | Called when the editor loses the focus.                                                                   |
+| Prop           | Type                     | Default             | Description                                                                                               |
+| -------------- | ------------------------ | ------------------- | --------------------------------------------------------------------------------------------------------- |
+| `value?`       | `string \| null`         | —                   | The HTML to edit; rendered sanitised when it does not come from here.                                     |
+| `placeholder?` | `string`                 | —                   | Placeholder of the empty editor.                                                                          |
+| `disabled?`    | `boolean`                | `false`             | Makes the editor read-only.                                                                               |
+| `toolbar?`     | `SmartRichTextToolbar`   | `LONG_TEXT_TOOLBAR` | The menu groups; the full menu (formatting, lists, headings, link, image, colours, alignment) by default. |
+| `labelledBy?`  | `string`                 | —                   | The id of the element labelling the editor.                                                               |
+| `onChange?`    | `(html: string) => void` | —                   | Called with the HTML of the content after every change.                                                   |
+| `onBlur?`      | `() => void`             | —                   | Called when the editor loses the focus.                                                                   |
+
+`SmartRichTextToolbar` is `SmartRichTextToolbarItem[][]`, one array per group of the menu. An item is a `SmartRichTextToggle` (`'bold'`, `'italic'`, `'underline'`, `'strike'`, `'code'`, `'blockquote'`, `'ordered_list'`, `'bullet_list'`, `'align_left'`, `'align_center'`, `'align_right'`, `'align_justify'`), a `SmartRichTextColorKind` (`'text_color'`, `'background_color'`), `'link'`, `'image'` or `{ heading: SmartRichTextHeading[] }` (`'h1'` to `'h6'`). All these types are exported.
 
 ### `IInputOptions`
 
-| Field            | Type                      | Default                                      | Description                                                                                |
-| ---------------- | ------------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| `treeLevel`      | `number`                  | required                                     | Nesting depth (0 at the top; nested object / array forms go one deeper).                   |
-| `control`        | `SmartAbstractControl`    | required                                     | The control of the field (`form.controls[fieldKey]`).                                      |
-| `possibilities?` | `SmartPossibility[]`      | —                                            | The options of an `enum`, `radio`, `check` or `strings` field (wins over the model's own). |
-| `component?`     | `InputComponentType<any>` | `(type ? fieldComponents[type] : undefined)` | A field component used instead of the type's one.                                          |
+| Field            | Type                      | Default                           | Description                                                                                                                                                                                                                            |
+| ---------------- | ------------------------- | --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `treeLevel`      | `number`                  | required                          | Nesting depth (0 at the top; nested object / array forms go one deeper).                                                                                                                                                               |
+| `control`        | `SmartAbstractControl`    | required                          | The control of the field (`form.controls[fieldKey]`).                                                                                                                                                                                  |
+| `possibilities?` | `SmartPossibility[]`      | —                                 | The options of a `radio`, `check` or preset `enum` field: the model possibilities provider's win over them, they win over the field's own `possibilities`. The standard `enum` (the enum's keys) and the other types do not read them. |
+| `component?`     | `InputComponentType<any>` | the component of the field's type | A field component used instead of the type's one.                                                                                                                                                                                      |
 
 ### `IInputFromFieldOptions<T>`
 
@@ -121,7 +145,7 @@ Props of the rich-text editor of `longText` fields.
 | `dateWithEdit`                 | `SmartInputDateWithEdit`                                     | `SmartInputDateWithEditPreset`  | `SmartDateEdit` (digit inputs) bound to the control.                                                                                                                   |
 | `dateRange`                    | `SmartInputDateRange`                                        | `SmartInputDateRangePreset`     | `IDateRange` value; the standard uses `SmartDateRange`, the preset two native date inputs.                                                                             |
 | `nip`                          | `SmartInputNip`                                              | `SmartInputNipPreset`           | Adds the NIP check (`invalidNip`) to the control.                                                                                                                      |
-| `pesel`                        | `SmartInputPesel`                                            | `SmartInputPeselPreset`         | **Differs**: only the preset adds the PESEL check (`invalidPesel`).                                                                                                    |
+| `pesel`                        | `SmartInputPesel`                                            | `SmartInputPeselPreset`         | The form factory adds the `pesel` check; **differs**: the preset adds its own `invalidPesel` check to the control too (same message).                                  |
 | `phoneNumber`                  | `SmartInputPhoneNumber`                                      | `SmartInputPhoneNumberPreset`   | `type="tel"`; the form factory adds the `phoneNumber` check.                                                                                                           |
 | `phoneNumberPl`                | `SmartInputPhoneNumberPl`                                    | `SmartInputPhoneNumberPlPreset` | Exactly 9 characters (`minlength` / `maxlength`); the preset shows a `+48` addon.                                                                                      |
 | `color`                        | `SmartInputColor`                                            | `SmartInputColorPreset`         | Native colour picker with a clear button.                                                                                                                              |
@@ -141,7 +165,7 @@ Uploading fields need a file service: give `SmartProvider` a `fileServiceConfig`
 
 - The label is the label provider's (`modelLabelProvider` on `SmartProvider`) or the translation of `MODEL.<key>` (see `react-provider`).
 - A field with `info: '...'` shows a `SmartInfo` tooltip; a field with `hide: true` (for the mode) renders nothing.
-- Messages are shown once the control is touched, from its errors, in a fixed order: `required` (which hides `confirm`), `confirm`, `invalidNip`, `invalidUnique`, `email`, `phoneNumber`, `pesel`, `minlength`, `maxlength`, `min`, `max`, and `customMessage` (its value is shown as is). The texts come from `INPUT.ERRORS.*` translations. `getInputErrorMessages(errors, t)` returns that list for a custom message component.
+- Messages are shown once the control is touched, from its errors, in a fixed order: `required` (which hides `confirm`), `confirm`, `invalidNip`, `invalidUnique`, `email`, `phoneNumber`, `pesel` or `invalidPesel` (one message), `minlength`, `maxlength`, `min`, `max`, and `customMessage` (its value is shown as is). The texts come from `INPUT.ERRORS.*` translations. `getInputErrorMessages(errors, t)` returns that list for a custom message component.
 
 ## Choosing the component of a field
 

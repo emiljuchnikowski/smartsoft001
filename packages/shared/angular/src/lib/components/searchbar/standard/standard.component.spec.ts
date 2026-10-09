@@ -65,7 +65,34 @@ describe('@smartsoft001/shared-angular: SearchbarStandardComponent', () => {
     const svg = button?.querySelector('svg');
 
     expect(button).toBeTruthy();
-    expect(svg).toBeTruthy();
+    expect(svg?.getAttribute('data-icon')).toBe('magnifying-glass');
+  });
+
+  it('should name the toggle button with the translated search label', () => {
+    // Arrange
+    fixture.componentRef.setInput('options', { showToggleButton: true });
+    component.show.set(false);
+
+    // Act
+    fixture.detectChanges();
+
+    // Assert
+    const button: HTMLButtonElement =
+      fixture.nativeElement.querySelector('button');
+    expect(button.getAttribute('aria-label')).toBe('search');
+  });
+
+  it('should render the magnifying glass icon inside the visible input', () => {
+    // Arrange
+    const container: HTMLElement = fixture.nativeElement;
+
+    // Act
+    const svg = container.querySelector('input[type="search"] + svg');
+
+    // Assert
+    expect(svg?.getAttribute('data-icon')).toBe('magnifying-glass');
+    expect(svg?.getAttribute('viewBox')).toBe('0 0 20 20');
+    expect(svg?.getAttribute('aria-hidden')).toBe('true');
   });
 
   it('should call setShow() and render input when toggle button is clicked', () => {

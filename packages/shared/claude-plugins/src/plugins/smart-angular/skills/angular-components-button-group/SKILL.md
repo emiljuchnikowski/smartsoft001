@@ -18,19 +18,17 @@ The `<smart-button-group>` component renders a horizontal group of related butto
 
 ### ButtonGroupComponent (`<smart-button-group>`)
 
-Main wrapper component. Renders `ButtonGroupStandardComponent` by default. When `BUTTON_GROUP_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`.
+Main wrapper component. Renders `ButtonGroupStandardComponent` by default. When `BUTTON_GROUP_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`, passes it every input (`class` included), and forwards its `selected` changes and `buttonClick` to the wrapper.
 
 ### ButtonGroupStandardComponent (`<smart-button-group-standard>`)
 
-Default concrete implementation. Renders a `<div role="group">` containing one `<button>` per item, with optional label and count spans.
+Default concrete implementation. Renders an unstyled `<div role="group">` containing one `<button>` per item (`aria-pressed` on the selected one), with optional label and count spans. It does not render `icon` and ignores `options.variant`.
 
 ### ButtonGroupPresetComponent (`<smart-button-group-preset>`)
 
-Fully-styled, drop-in concrete implementation (Preline button-group look) that extends `ButtonGroupBaseComponent`. Renders a segmented control with a `bg-white`/`dark:bg-gray-800` surface, shared borders collapsed via `-ms-px`, and rounded ends. The segment matching `selected` is emphasised (`aria-pressed="true"` + blue text). `options.variant` adjusts per-button content: `icon-only` hides labels (and sets `aria-label`), `with-stat` styles the count pill with the blue stat palette; all other variants render the basic label + count layout.
+Fully-styled, drop-in concrete implementation (Preline button-group look) that extends `ButtonGroupBaseComponent`. Renders a segmented control with a `bg-white`/`dark:bg-gray-800` surface, shared borders collapsed via `-ms-px`, and rounded ends. The segment matching `selected` is emphasised (`aria-pressed="true"` + blue text). Each button shows its `icon` text before the label. `options.variant` adjusts per-button content: `icon-only` hides labels (and sets `aria-label`), `with-stat` styles the count pill with the blue stat palette; all other variants (`basic`, `with-dropdown`, `with-checkbox-select`) render the basic label + count layout. Every segment uses one medium size.
 
-Register it through `BUTTON_GROUP_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-button-group>`, or use the `<smart-button-group-preset>` selector directly.
-
-> NgComponentOutlet note: when registered through the token, the wrapper passes inputs by **canonical name**, so the preset overrides the inherited `class` alias with a plain `cssClass = input<string>('')` so external classes still bind.
+Register it through `BUTTON_GROUP_STANDARD_COMPONENT_TOKEN` (`{ provide: BUTTON_GROUP_STANDARD_COMPONENT_TOKEN, useValue: ButtonGroupPresetComponent }`) to restyle every `<smart-button-group>`, register every preset at once with `provideSmartPresets()`, or use the `<smart-button-group-preset>` selector directly (it takes the extra classes as `class` or `[cssClass]`).
 
 ### ButtonGroupBaseComponent (abstract)
 
@@ -40,15 +38,23 @@ Abstract base directive (`@Directive()`) for extending custom button-group imple
 
 ### Inputs / Models / Outputs
 
-| Name          | Kind   | Type                                                                                      | Default     | Description                                       |
-| ------------- | ------ | ----------------------------------------------------------------------------------------- | ----------- | ------------------------------------------------- |
-| `buttons`     | input  | `IButtonGroupButton[]`                                                                    | `[]`        | Array of button definitions                       |
-| `options`     | input  | `IButtonGroupOptions \| undefined`                                                        | `undefined` | Group-wide options (variant, etc.)                |
-| `selected`    | model  | `string \| undefined`                                                                     | `undefined` | Two-way bound id of the currently selected button |
-| `class`       | input  | `string`                                                                                  | `''`        | External CSS classes (alias for `cssClass`)       |
-| `buttonClick` | output | `IButtonGroupButtonClick` (`{ buttonId: string }`, exported from `@smartsoft001/angular`) | -           | Emitted when a button is clicked                  |
+| Name          | Kind   | Type                                                                                      | Default     | Description                                                                         |
+| ------------- | ------ | ----------------------------------------------------------------------------------------- | ----------- | ----------------------------------------------------------------------------------- |
+| `buttons`     | input  | `IButtonGroupButton[]`                                                                    | `[]`        | Array of button definitions                                                         |
+| `options`     | input  | `IButtonGroupOptions \| undefined`                                                        | `undefined` | Group-wide options (variant, etc.)                                                  |
+| `selected`    | model  | `string \| undefined`                                                                     | `undefined` | Two-way bound id of the currently selected button; `selectedChange` reports a click |
+| `class`       | input  | `string`                                                                                  | `''`        | External CSS classes (alias for `cssClass`)                                         |
+| `buttonClick` | output | `IButtonGroupButtonClick` (`{ buttonId: string }`, exported from `@smartsoft001/angular`) | -           | Emitted when a button is clicked                                                    |
 
 ### IButtonGroupButton
+
+| Field      | Type      | Default     | Description                                                                    |
+| ---------- | --------- | ----------- | ------------------------------------------------------------------------------ |
+| `id`       | `string`  | required    | Identifies the button in `selected` and `buttonClick`.                         |
+| `label`    | `string`  | `undefined` | Visible text (moved to `aria-label` by the preset's `icon-only` variant).      |
+| `icon`     | `string`  | `undefined` | Preset only: text or glyph rendered before the label. The standard ignores it. |
+| `disabled` | `boolean` | `undefined` | Disables the button.                                                           |
+| `count`    | `number`  | `undefined` | A number shown after the label.                                                |
 
 ```typescript
 interface IButtonGroupButton {
@@ -61,6 +67,12 @@ interface IButtonGroupButton {
 ```
 
 ### IButtonGroupOptions
+
+| Field     | Type                      | Default   | Description                                                                                                                                                                      |
+| --------- | ------------------------- | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `variant` | `SmartButtonGroupVariant` | `'basic'` | Preset only: `icon-only` hides the labels, `with-stat` styles the count as a blue pill; `with-dropdown` and `with-checkbox-select` render like `basic`. The standard ignores it. |
+
+`SmartButtonGroupVariant` is `'basic' | 'icon-only' | 'with-stat' | 'with-dropdown' | 'with-checkbox-select'`.
 
 ```typescript
 type SmartButtonGroupVariant =
@@ -81,7 +93,7 @@ interface IButtonGroupOptions {
 import { BUTTON_GROUP_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
 ```
 
-InjectionToken that allows replacing the default `ButtonGroupStandardComponent` with a custom implementation. Provide a `Type<ButtonGroupBaseComponent>` to override.
+InjectionToken that allows replacing the default `ButtonGroupStandardComponent` with a custom implementation. Provide a `Type<ButtonGroupBaseComponent>` to override; the wrapper passes it every input it declares, `class` included, and forwards its `selected` changes and `buttonClick`.
 
 ```typescript
 // In your app module or component providers:

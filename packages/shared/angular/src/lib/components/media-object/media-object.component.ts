@@ -14,6 +14,7 @@ import { MediaObjectStandardComponent } from './standard/standard.component';
 import { IMediaObjectOptions } from '../../models';
 import { MEDIA_OBJECT_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { outletContent } from '../base/outlet-content';
+import { outletInputs } from '../base/outlet-inputs';
 
 @Component({
   selector: 'smart-media-object',
@@ -55,12 +56,14 @@ export class MediaObjectComponent {
 
   componentType = computed(() => this.injectedComponent ?? null);
 
-  componentInputs = computed(() => ({
-    mediaUrl: this.mediaUrl(),
-    mediaAlt: this.mediaAlt(),
-    options: this.options(),
-    cssClass: this.cssClass(),
-  }));
+  componentInputs = computed(() =>
+    outletInputs(this.componentType(), {
+      mediaUrl: this.mediaUrl(),
+      mediaAlt: this.mediaAlt(),
+      options: this.options(),
+      cssClass: this.cssClass(),
+    }),
+  );
 
   /** The wrapper's `<ng-content>`, captured once for whichever branch renders. */
   private readonly contentTemplate =

@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -54,10 +53,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomCommandPaletteComponent extends CommandPaletteBaseComponent {
-  // The wrapper hands inputs to NgComponentOutlet by canonical name, so the
-  // consumer's class arrives as `cssClass` rather than through the alias.
-  override cssClass = input<string>('');
-
   containerClasses = computed(() =>
     ['docs-command-palette', this.cssClass()].filter(Boolean).join(' '),
   );
@@ -93,14 +88,14 @@ export class CustomCommandPaletteComponent extends CommandPaletteBaseComponent {
 })
 export class CommandPaletteCustomExampleComponent {
   commands: ICommand[] = [
-    { id: 'new-file', label: 'New file', group: 'Files' },
-    { id: 'open-settings', label: 'Open settings', group: 'Files' },
-    { id: 'toggle-theme', label: 'Toggle theme', group: 'View' },
+    { id: 'new-file', label: 'New file' },
+    { id: 'open-settings', label: 'Open settings' },
+    { id: 'toggle-theme', label: 'Toggle theme' },
   ];
 
   options: ICommandPaletteOptions = {
     placeholder: 'Search commands…',
-    emptyText: 'No results',
+    emptyText: 'Nothing matches.',
   };
 }
 // #endregion

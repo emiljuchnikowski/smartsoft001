@@ -13,6 +13,7 @@ import { IEntity } from '@smartsoft001/domain-core';
 import { IDetailsOptions } from '../../models';
 import { DETAILS_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { DetailsStandardComponent } from './standard/standard.component';
+import { outletInputs } from '../base/outlet-inputs';
 
 @Component({
   selector: 'smart-details',
@@ -43,8 +44,10 @@ export class DetailsComponent<T extends IEntity<string>> {
 
   componentType = computed(() => this.injectedComponent ?? null);
 
-  componentInputs = computed(() => ({
-    options: this.options(),
-    class: this.cssClass(),
-  }));
+  componentInputs = computed(() =>
+    outletInputs(this.componentType(), {
+      options: this.options(),
+      class: this.cssClass(),
+    }),
+  );
 }

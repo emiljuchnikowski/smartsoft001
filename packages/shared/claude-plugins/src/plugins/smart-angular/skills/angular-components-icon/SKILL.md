@@ -21,23 +21,23 @@ other component groups the icon has **no `*_STANDARD_COMPONENT_TOKEN`** and **no
 
 ### `smart-icon`
 
-| Input      | Type                         | Default     | Description                            |
-| ---------- | ---------------------------- | ----------- | -------------------------------------- |
-| `name`     | `IconName`                   | `undefined` | Which built-in glyph to render         |
-| `template` | `TemplateRef<unknown>\|null` | `null`      | Custom SVG; overrides `name` when set  |
-| `class`    | `string`                     | `''`        | Extra CSS class forwarded to the glyph |
+| Input      | Type                         | Default     | Description                                                          |
+| ---------- | ---------------------------- | ----------- | -------------------------------------------------------------------- |
+| `name`     | `IconName`                   | `undefined` | Which built-in glyph to render                                       |
+| `template` | `TemplateRef<unknown>\|null` | `null`      | Custom SVG; overrides `name` when set                                |
+| `class`    | `string`                     | `''`        | Extra CSS class forwarded to the glyph (not applied to a `template`) |
 
 `class` is the alias of the internal `cssClass` input (`input('', { alias: 'class' })`).
 
 ### IconName
 
+`IconName` is `'spinner' | 'chevron-down' | 'chevron-up'`; `<smart-icon>` renders nothing for another value.
+
 ```typescript
 type IconName = 'spinner' | 'chevron-down' | 'chevron-up';
 ```
 
-Each value maps to a standalone component (`smart-icon-spinner`,
-`smart-icon-chevron-down`, `smart-icon-chevron-up`) that renders a raw `<svg>`
-with `smart:`-prefixed Tailwind sizing.
+Each value maps to a standalone glyph component that renders a raw `<svg>` (`smart:size-5` plus the `class`; the spinner also spins): `IconSpinnerComponent` (`smart-icon-spinner`), `IconChevronDownComponent` (`smart-icon-chevron-down`) and `IconChevronUpComponent` (`smart-icon-chevron-up`). They extend `IconBaseComponent`, which declares the `cssClass` input (alias `class`).
 
 ### Dispatch
 

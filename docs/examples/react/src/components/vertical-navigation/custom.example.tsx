@@ -1,4 +1,6 @@
 // #region usage
+import { useState } from 'react';
+
 import {
   IVerticalNavOptions,
   SmartProvider,
@@ -77,6 +79,8 @@ const components = { 'vertical-navigation': CustomVerticalNavigation };
 // `items` and `groups` can be combined: the hook puts the loose items in a
 // first, untitled group and appends the explicit groups after them.
 const options: IVerticalNavOptions = {
+  // The built-in implementations do not read `layout`; this custom one turns it
+  // into a class.
   layout: 'with-badges',
   ariaLabel: 'Sidebar',
   items: [
@@ -104,9 +108,15 @@ const options: IVerticalNavOptions = {
 // Every <SmartVerticalNavigation> below the provider renders
 // CustomVerticalNavigation.
 export function VerticalNavigationCustomExample() {
+  const [lastItem, setLastItem] = useState<string | null>(null);
+
   return (
     <SmartProvider components={components}>
-      <SmartVerticalNavigation options={options} />
+      <SmartVerticalNavigation
+        options={options}
+        onItemClick={({ itemId }) => setLastItem(itemId)}
+      />
+      {lastItem && <p>Last clicked item: {lastItem}</p>}
     </SmartProvider>
   );
 }

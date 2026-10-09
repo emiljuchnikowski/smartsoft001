@@ -132,7 +132,7 @@ describe('@smartsoft001/shared-angular: ButtonGroupPresetComponent', () => {
     expect(component.selected()).toBe('date');
   });
 
-  it('should apply cssClass on the group (canonical name for NgComponentOutlet)', () => {
+  it('should apply cssClass on the group', () => {
     fixture.componentRef.setInput('cssClass', 'my-extra-class');
     fixture.detectChanges();
 

@@ -1,3 +1,6 @@
 <!-- #region usage -->
-<smart-select-menu [options]="options" [disabled]="disabled" [(value)]="plan" />
+<smart-select-menu [options]="options" [(value)]="plan" />
+@if (plan()) {
+  <p>Selected plan: {{ plan() }}</p>
+}
 <!-- #endregion -->

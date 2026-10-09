@@ -1,4 +1,4 @@
-import { Component, input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LOADER_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
@@ -8,12 +8,11 @@ import { LoaderComponent } from './loader.component';
 @Component({
   selector: 'smart-test-injected-loader',
   changeDetection: ChangeDetectionStrategy.Eager,
-  template: '<div class="injected-loader">injected</div>',
+  template: '<div class="injected-loader" [class]="cssClass()">injected</div>',
 })
-class MockInjectedLoaderComponent extends LoaderBaseComponent {
-  // NgComponentOutlet passes 'cssClass' (not aliased 'class') so declare it explicitly
-  override cssClass = input<string>('');
-}
+// Keeps the inherited `cssClass` input with its `class` alias: the wrapper
+// resolves the input names through outletInputs(), so the class still arrives.
+class MockInjectedLoaderComponent extends LoaderBaseComponent {}
 
 describe('@smartsoft001/shared-angular: LoaderComponent', () => {
   describe('without token', () => {
@@ -111,6 +110,20 @@ describe('@smartsoft001/shared-angular: LoaderComponent', () => {
       );
 
       expect(injected).toBeTruthy();
+    });
+
+    it('should pass the class to the inherited cssClass input of the injected component', () => {
+      // Arrange
+      fixture.componentRef.setInput('class', 'passed-class');
+
+      // Act
+      fixture.detectChanges();
+
+      // Assert
+      const injected = fixture.nativeElement.querySelector(
+        'div.injected-loader',
+      );
+      expect(injected.classList).toContain('passed-class');
     });
   });
 });

@@ -3,7 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
+  signal,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -40,9 +40,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomTabsComponent extends TabsBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   containerClasses = computed(() =>
     ['docs-tabs', this.cssClass()].filter(Boolean).join(' '),
   );
@@ -77,18 +74,25 @@ export class CustomTabsComponent extends TabsBaseComponent {
       useValue: CustomTabsComponent,
     },
   ],
-  // NgComponentOutlet forwards inputs only, so the wrapper's (tabChange) and
-  // (selectedIdChange) stay silent here: selection lives in the custom
-  // component and `selectedId` below is the initial value.
-  template: `<smart-tabs [options]="options" [selectedId]="selectedId" />`,
+  // The wrapper forwards `selectedId` both ways and re-emits `tabChange` of
+  // the custom component.
+  template: `
+    <smart-tabs
+      [options]="options"
+      [(selectedId)]="selectedId"
+      (tabChange)="lastTab.set($event.tabId)"
+    />
+    @if (lastTab()) {
+      <p>Last chosen tab: {{ lastTab() }}</p>
+    }
+  `,
 })
 export class TabsCustomExampleComponent {
-  selectedId = 'billing';
+  readonly selectedId = signal<string | null>('billing');
+  readonly lastTab = signal<string | null>(null);
 
   options: ITabsOptions = {
-    layout: 'underline',
     ariaLabel: 'Account sections',
-    showMobileSelect: false,
     items: [
       { id: 'account', label: 'Account' },
       { id: 'billing', label: 'Billing' },

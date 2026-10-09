@@ -13,15 +13,10 @@ export class ButtonUsageExampleComponent {
   readonly saveCount = signal(0);
 
   readonly options: IButtonOptions = {
-    type: 'submit',
-    variant: 'primary',
-    color: 'indigo',
-    size: 'md',
-    rounded: false,
+    color: 'emerald',
+    size: 'lg',
     click: () => this.save(),
   };
-
-  readonly disabled = false;
 
   save(): void {
     this.saveCount.update((count) => count + 1);

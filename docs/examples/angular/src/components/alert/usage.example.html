@@ -1,7 +1,11 @@
 <!-- #region usage -->
-<button type="button" (click)="isOpen.set(true)">Delete file</button>
+<smart-button [options]="openButton">Delete file</smart-button>
 
 @if (isOpen()) {
   <smart-alert [options]="options" (dismissed)="onDismissed($event)" />
+}
+
+@if (lastRole(); as role) {
+  <p>Last choice: {{ role }}</p>
 }
 <!-- #endregion -->

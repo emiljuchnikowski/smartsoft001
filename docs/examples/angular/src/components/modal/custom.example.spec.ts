@@ -43,9 +43,19 @@ describe('docs-examples-angular: ModalCustomExampleComponent', () => {
     expect(actions[1].getAttribute('data-variant')).toBe('danger');
   });
 
-  // NgComponentOutlet does not forward outputs, so the wrapper's (actionClick)
-  // never fires - the emission is asserted on the custom instance itself.
-  it('should emit actionClick with the action id when an action is clicked', () => {
+  it('should project the content of <smart-modal> into the custom body', () => {
+    // Arrange
+    const body = element.querySelector('.docs-modal__body');
+
+    // Act
+    const text = body?.textContent;
+
+    // Assert
+    expect(text).toContain('Your invoices stay available for 30 days.');
+  });
+
+  it('should emit actionClick from the custom modal and through the wrapper', () => {
+    // Arrange
     const modal: CustomModalComponent = fixture.debugElement.query(
       By.directive(CustomModalComponent),
     ).componentInstance;
@@ -54,11 +64,17 @@ describe('docs-examples-angular: ModalCustomExampleComponent', () => {
       emitted.push(actionId),
     );
 
+    // Act
     element
       .querySelectorAll<HTMLButtonElement>('.docs-modal__action')[1]
       .click();
+    fixture.detectChanges();
 
+    // Assert
     expect(emitted).toEqual(['deactivate']);
+    expect(
+      element.querySelector('.docs-modal__last-action')?.textContent,
+    ).toContain('Last action: deactivate');
   });
 
   it('should hide the dialog when the custom dismiss button is clicked', () => {

@@ -14,17 +14,31 @@ describe('docs-examples-react: DetailsUsageExample', () => {
   }
 
   it('should render the item values from the options', () => {
+    // Arrange
     setup();
 
-    expect(screen.getByText('Margot Foster')).toBeInTheDocument();
-    expect(screen.getByText('Backend Developer')).toBeInTheDocument();
+    // Assert
+    expect(screen.getByText('Margot')).toBeInTheDocument();
+    expect(screen.getByText('Foster')).toBeInTheDocument();
   });
 
   it('should render the email field as a mailto link', () => {
+    // Arrange
     setup();
 
+    // Assert
     expect(
       screen.getByRole('link', { name: 'margot.foster@example.com' }),
     ).toHaveAttribute('href', 'mailto:margot.foster@example.com');
+  });
+
+  it('should label each field with its MODEL.<key> translation', () => {
+    // Arrange
+    setup();
+
+    // Assert
+    expect(screen.getByText('first name')).toBeInTheDocument();
+    expect(screen.getByText('last name')).toBeInTheDocument();
+    expect(screen.getByText('email')).toBeInTheDocument();
   });
 });

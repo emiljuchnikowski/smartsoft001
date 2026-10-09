@@ -19,24 +19,33 @@ user-invocable: false
 
 All from `@smartsoft001/react`.
 
-| Export                            | Kind      | What it is                                                                                                                                                       |
-| --------------------------------- | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `SmartDetail`                     | component | The label of a field and its value, rendered by the detail component of the field type, with the field's info tooltip and a skeleton while there is no item yet. |
-| `SmartDetailText`                 | component | The text detail: the value of the field, or what `options.cellPipe` makes of it, rendered as HTML.                                                               |
-| `useDetail`                       | hook      | What every detail field shares: the item, the key of the field and its value, unwrapped from `options`.                                                          |
-| `useDetailCellValue`              | hook      | The value a text-like detail renders: the list cell of `key` in `item`, the cell pipe's result (or the raw value), translated when it is a string.               |
-| `getDefaultDetailFieldComponents` | function  | The library's detail component of every `FieldType` that has one.                                                                                                |
-| `DETAIL_PRESET_FIELD_COMPONENTS`  | const     | The preset detail components, keyed by `FieldType`.                                                                                                              |
+| Export                                          | Kind      | What it is                                                                                                                                                       |
+| ----------------------------------------------- | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `SmartDetail`                                   | component | The label of a field and its value, rendered by the detail component of the field type, with the field's info tooltip and a skeleton while there is no item yet. |
+| `SmartDetailText`                               | component | The text detail: the value of the field, or what `options.cellPipe` makes of it, rendered as HTML.                                                               |
+| `useDetail`                                     | hook      | What every detail field shares: the item, the key of the field and its value, unwrapped from `options`.                                                          |
+| `useDetailCellValue`                            | hook      | The value a text-like detail renders: the list cell of `key` in `item`, the cell pipe's result (or the raw value), translated when it is a string.               |
+| `getDefaultDetailFieldComponents`               | function  | The library's detail component of every `FieldType` that has one.                                                                                                |
+| `DETAIL_PRESET_FIELD_COMPONENTS`                | const     | The preset detail components, keyed by `FieldType`.                                                                                                              |
+| `SmartDetail<Type>` / `SmartDetail<Type>Preset` | component | The standard and preset detail component of each field type (see Field types below), e.g. `SmartDetailEmail`, `SmartDetailEmailPreset`.                          |
+| `useDetailAddress`                              | hook      | The address of an `address` field (`null` without one) and its `building[/flat]` part.                                                                           |
+| `useDetailArray`                                | hook      | `childOptions`: the `SmartDetails` options of each element of an `array` field, typed by the element's class.                                                    |
+| `useDetailAttachment`                           | hook      | `fileName` (`fileName` or `name` of the file, `null` without either) and `download()`, which opens the file through the file service.                            |
+| `useDetailEnum`                                 | hook      | `values`: the value of an `enum` field, or each of its values when it is an array, as strings.                                                                   |
+| `useDetailImage`                                | hook      | `imageUrl`: the file service URL of the file in an `image` field, `null` without one.                                                                            |
+| `useDetailObject`                               | hook      | `childOptions`: the `SmartDetails` options of the nested object of an `object` field, `null` without one.                                                        |
+| `useDetailPdf`                                  | hook      | `fileName` and `show()`, which opens the PDF through the file service.                                                                                           |
+| `useDetailVideo`                                | hook      | `url`: the file service URL of the video in the field, `null` without one.                                                                                       |
 
 ## Props and Types
 
 ### `SmartDetailProps<T = any>`
 
-| Prop         | Type                             | Default  | Description                                                      |
-| ------------ | -------------------------------- | -------- | ---------------------------------------------------------------- |
-| `options`    | `IDetailOptions<T> \| undefined` | required | The field to show: key, item, field options, cell pipe, loading. |
-| `type`       | `any`                            | required | The model class, for the label (`useModelLabel`).                |
-| `className?` | `string`                         | —        | Forwarded to the field component.                                |
+| Prop         | Type                             | Default  | Description                                                |
+| ------------ | -------------------------------- | -------- | ---------------------------------------------------------- |
+| `options`    | `IDetailOptions<T> \| undefined` | required | The field to show: key, item, field options and cell pipe. |
+| `type`       | `any`                            | required | The model class, for the label (`useModelLabel`).          |
+| `className?` | `string`                         | —        | Forwarded to the field component.                          |
 
 ### `SmartDetailFieldProps<T = any>`
 
@@ -54,8 +63,8 @@ The props of every detail field component: `options` and `className`.
 | `key`       | `string`        | required | The field key.                                                                                                         |
 | `item?`     | `T \| null`     | —        | The record; `null` / `undefined` shows a skeleton.                                                                     |
 | `options`   | `IFieldOptions` | required | The field's `@Field` options (`getModelFieldOptions(instance, key)`, or the `options` of `getModelFieldsWithOptions`). |
-| `cellPipe?` | `ICellPipe<T>`  | —        | Formats the value of text-like details.                                                                                |
-| `loading?`  | `boolean`       | —        | Passed to the detail component.                                                                                        |
+| `cellPipe?` | `ICellPipe<T>`  | —        | Formats the value; read by the `text` and `phoneNumberPl` details (standard and preset).                               |
+| `loading?`  | `boolean`       | —        | Not read by the built-in implementations; available to a custom implementation (`useDetail` returns it).               |
 
 ### `ICellPipe<T>`
 
@@ -152,7 +161,7 @@ export function InvoiceSummary({ invoice }: { invoice: Invoice | null }) {
 
 ## Replacing the Implementation
 
-`SmartDetail` has no single registry key: its field components come from `detailFieldComponents` on `SmartProvider`, merged over the library's map. Register the preset set, or a component of your own for one type:
+`SmartDetail` has no single registry key: its field components come from `detailFieldComponents` on `SmartProvider`, merged over the library's map. Register the preset set, or a component of your own for one type.
 
 ```tsx
 import type { ReactNode } from 'react';

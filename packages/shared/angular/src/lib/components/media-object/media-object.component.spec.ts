@@ -11,7 +11,8 @@ import { MEDIA_OBJECT_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
   template: '<div class="injected-media-object">injected</div>',
 })
 class MockInjectedComponent extends MediaObjectBaseComponent {
-  // NgComponentOutlet passes 'cssClass' (not aliased 'class') so declare it explicitly
+  // Declared without the `class` alias, like the presets: the wrapper resolves
+  // its inputs through outletInputs(), so this still receives the class.
   override cssClass = input<string>('');
 }
 

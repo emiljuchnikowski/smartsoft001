@@ -11,6 +11,7 @@ import {
 import { CardHeadingStandardComponent } from './standard/standard.component';
 import { ICardHeadingOptions } from '../../models';
 import { CARD_HEADING_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { outletInputs } from '../base/outlet-inputs';
 
 @Component({
   selector: 'smart-card-heading',
@@ -38,8 +39,10 @@ export class CardHeadingComponent {
 
   componentType = computed(() => this.injectedComponent ?? null);
 
-  componentInputs = computed(() => ({
-    options: this.options(),
-    cssClass: this.cssClass(),
-  }));
+  componentInputs = computed(() =>
+    outletInputs(this.componentType(), {
+      options: this.options(),
+      cssClass: this.cssClass(),
+    }),
+  );
 }

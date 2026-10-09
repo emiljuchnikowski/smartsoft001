@@ -36,6 +36,14 @@ describe('docs-examples-angular: SidebarLayoutCustomExampleComponent', () => {
     ).toContain('Dashboard');
   });
 
+  it('should render the content projected into the wrapper in the main area', () => {
+    // Act
+    const body = element.querySelector('.docs-sidebar-layout__body');
+
+    // Assert
+    expect(body?.textContent).toContain('Main content of the page.');
+  });
+
   it('should expose the sidebar position from the options', () => {
     expect(
       element

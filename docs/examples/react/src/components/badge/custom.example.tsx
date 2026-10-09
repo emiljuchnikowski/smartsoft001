@@ -53,11 +53,7 @@ export function CustomBadge({
 // A module constant: a new object on every render would change the context.
 const components = { badge: CustomBadge };
 
-const options: IBadgeOptions = {
-  variant: 'soft',
-  withDot: true,
-  withRemove: true,
-};
+const options: IBadgeOptions = { withDot: true, withRemove: true };
 
 export function BadgeCustomExample() {
   return (

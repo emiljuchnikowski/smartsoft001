@@ -4,7 +4,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -13,7 +12,6 @@ import {
   CalendarComponent,
   CALENDAR_STANDARD_COMPONENT_TOKEN,
   ICalendarEvent,
-  ICalendarOptions,
 } from '@smartsoft001/angular';
 
 @Component({
@@ -78,9 +76,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomCalendarComponent extends CalendarBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   containerClasses = computed(() =>
     ['docs-calendar', this.cssClass()].filter(Boolean).join(' '),
   );
@@ -96,25 +91,19 @@ export class CustomCalendarComponent extends CalendarBaseComponent {
     },
   ],
   template: `
-    <smart-calendar
-      [referenceDate]="referenceDate"
-      [events]="events"
-      [options]="options"
-    />
+    <smart-calendar [referenceDate]="referenceDate" [events]="events" />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarCustomExampleComponent {
   referenceDate = new Date(2026, 0, 1);
 
-  options: ICalendarOptions = { view: 'month', weekStart: 1 };
-
+  // The standard and the preset never render `title`; this implementation does.
   events: ICalendarEvent[] = [
     {
       id: 'review',
       title: 'Design review',
       start: new Date(2026, 0, 15, 10, 0),
-      end: new Date(2026, 0, 15, 11, 0),
     },
   ];
 }

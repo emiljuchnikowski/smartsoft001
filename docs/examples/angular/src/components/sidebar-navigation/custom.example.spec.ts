@@ -1,10 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 
-import {
-  CustomSidebarNavigationComponent,
-  SidebarNavigationCustomExampleComponent,
-} from './custom.example';
+import { SidebarNavigationCustomExampleComponent } from './custom.example';
 
 describe('docs-examples-angular: SidebarNavigationCustomExampleComponent', () => {
   let fixture: ComponentFixture<SidebarNavigationCustomExampleComponent>;
@@ -59,19 +55,17 @@ describe('docs-examples-angular: SidebarNavigationCustomExampleComponent', () =>
     ).toHaveLength(2);
   });
 
-  // NgComponentOutlet does not forward outputs, so itemClick never reaches the
-  // wrapper; it is asserted on the custom component instance instead.
-  it('should emit itemClick from the custom component when a link is clicked', () => {
-    const custom: CustomSidebarNavigationComponent = fixture.debugElement.query(
-      By.directive(CustomSidebarNavigationComponent),
-    ).componentInstance;
-    const clicked: string[] = [];
-    custom.itemClick.subscribe((event) => clicked.push(event.itemId));
+  it('should report the clicked link through the wrapper itemClick output', () => {
+    // Arrange
+    const team = element.querySelectorAll<HTMLAnchorElement>(
+      '.docs-sidebar-navigation__link',
+    )[1];
 
-    element
-      .querySelectorAll<HTMLAnchorElement>('.docs-sidebar-navigation__link')[1]
-      .click();
+    // Act
+    team.click();
+    fixture.detectChanges();
 
-    expect(clicked).toEqual(['team']);
+    // Assert
+    expect(element.textContent).toContain('Active item: team');
   });
 });

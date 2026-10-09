@@ -36,8 +36,8 @@ export class CustomDetailTextComponent extends DetailBaseComponent<
     return String(item[options.key] ?? '');
   });
 
-  // `cssClass` is left aliased as `class` by the base — smart-detail forwards
-  // the consumer's class under that name, so do not redeclare it here.
+  // `cssClass` comes from the base (alias `class`): smart-detail forwards the
+  // consumer's class to the field component.
   classes = computed(() =>
     ['docs-detail-text', this.cssClass()].filter(Boolean).join(' '),
   );

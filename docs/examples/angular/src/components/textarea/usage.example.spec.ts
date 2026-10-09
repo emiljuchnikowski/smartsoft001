@@ -4,6 +4,7 @@ import { TextareaUsageExampleComponent } from './usage.example';
 
 describe('docs-examples-angular: TextareaUsageExampleComponent', () => {
   let fixture: ComponentFixture<TextareaUsageExampleComponent>;
+  let element: HTMLElement;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -11,40 +12,54 @@ describe('docs-examples-angular: TextareaUsageExampleComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(TextareaUsageExampleComponent);
+    element = fixture.nativeElement as HTMLElement;
     fixture.detectChanges();
   });
 
-  it('should render the textarea configured by the options', () => {
-    const textarea: HTMLTextAreaElement =
-      fixture.nativeElement.querySelector('textarea');
+  function textarea(): HTMLTextAreaElement {
+    return element.querySelector('textarea') as HTMLTextAreaElement;
+  }
 
-    expect(fixture.nativeElement.textContent).toContain('Add your comment');
-    expect(textarea.rows).toBe(4);
-    expect(textarea.getAttribute('maxlength')).toBe('500');
-    expect(textarea.getAttribute('placeholder')).toBe('Write a comment...');
+  function type(value: string): void {
+    textarea().value = value;
+    textarea().dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+  }
+
+  it('should render the textarea configured by the options', () => {
+    // Act
+    const field = textarea();
+
+    // Assert
+    expect(element.querySelector('label')?.textContent).toContain(
+      'Add your comment',
+    );
+    expect(field.rows).toBe(4);
+    expect(field.getAttribute('maxlength')).toBe('500');
+    expect(field.getAttribute('placeholder')).toBe('Write a comment...');
+    expect(field.required).toBe(true);
   });
 
-  it('should bind the typed text to the component', () => {
-    const textarea: HTMLTextAreaElement =
-      fixture.nativeElement.querySelector('textarea');
+  it('should keep the typed text in the bound signal', () => {
+    // Act
+    type('Looks good to me');
 
-    textarea.value = 'Looks good to me';
-    textarea.dispatchEvent(new Event('input'));
-
+    // Assert
+    expect(textarea().value).toBe('Looks good to me');
     expect(fixture.componentInstance.comment()).toBe('Looks good to me');
   });
 
-  it('should hand the action id and the text to the handler', () => {
-    const textarea: HTMLTextAreaElement =
-      fixture.nativeElement.querySelector('textarea');
-    textarea.value = 'Ship it';
-    textarea.dispatchEvent(new Event('input'));
+  it('should show the text once the action is clicked', () => {
+    // Arrange
+    type('Ship it');
+    const post = element.querySelector('button') as HTMLButtonElement;
+
+    // Act
+    post.click();
     fixture.detectChanges();
-    const action: HTMLButtonElement =
-      fixture.nativeElement.querySelector('button');
 
-    action.click();
-
-    expect(fixture.componentInstance.lastSubmitted()).toBe('Ship it');
+    // Assert
+    expect(post.textContent).toContain('Post');
+    expect(element.textContent).toContain('Posted: Ship it');
   });
 });

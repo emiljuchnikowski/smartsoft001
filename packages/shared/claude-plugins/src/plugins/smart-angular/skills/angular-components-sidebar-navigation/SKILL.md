@@ -17,21 +17,21 @@ The `<smart-sidebar-navigation>` component renders a full-height application sid
 
 ### SidebarNavigationComponent (`<smart-sidebar-navigation>`)
 
-Main wrapper. Delegates to `SidebarNavigationStandardComponent` by default. When `SIDEBAR_NAVIGATION_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`. Re-emits `itemClick` and `itemToggle`.
+Main wrapper. Delegates to `SidebarNavigationStandardComponent` by default. When `SIDEBAR_NAVIGATION_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet` and hands it the `options` and `class` inputs. Re-emits `itemClick` and `itemToggle` of whichever implementation renders. There is no preset for this component.
 
 ### SidebarNavigationStandardComponent (`<smart-sidebar-navigation-standard>`)
 
-Barebones placeholder using native HTML. Renders an outer wrapper with `cssClass`, an optional `<div class="sidebar-logo">` (with `<img>` plus optional dark variant `<img>` and optional `<a>` link), a `<nav class="sidebar-navigation">` (with `aria-label` from `options.ariaLabel` or default `"Sidebar"`), and a `<ul>` of groups. Each group renders an optional `<div class="group-title">` and a `<ul>` of items.
+Barebones placeholder using native HTML. Renders an outer wrapper with `cssClass`, an optional `<div class="sidebar-logo">` (`logo.tpl` when set; otherwise `<img class="sidebar-logo-img">` from `logo.url` plus a second `.sidebar-logo-img-dark` image from `logo.urlDark`, both with `logo.alt`, wrapped in a plain `<a href>` when `logo.href` is set), a `<nav class="sidebar-navigation">` (with `aria-label` from `options.ariaLabel` or default `"Sidebar"`), and a `<ul>` of groups (`options.items` as a first, untitled group, then `options.groups`). Each group renders an optional `<div class="group-title">` and a `<ul>` of items.
 
-Items render in three forms:
+Items render in three forms.
 
-- `<a class="item-link">` (when `href` provided)
-- `<button class="item-button">` (when no `href`, emits `itemClick`)
-- `<button class="item-toggle">` followed by `<ul class="children">` (when `expandable === true`, emits `itemToggle`)
+- `<a class="item-link">` (when `href` is provided; a plain `<a href>`)
+- `<button class="item-button">` (when there is no `href`; a click emits `itemClick`)
+- `<button class="item-toggle">` followed by `<ul class="children">` (when `expandable === true`; a click emits `itemToggle`)
 
-Items get `current` class and `aria-current="page"` when `item.current === true`. The toggle button manages local expanded state (initial value taken from `item.expanded`). Supports `iconTpl`, `initial` (e.g. team letter), `label`, and `badge`.
+Links and buttons get the `current` class and `aria-current="page"` when `item.current === true`, and show `iconTpl` (or, without it, `initial`, e.g. a team letter), `label` and `badge`. An expandable toggle shows only `iconTpl`, `label` and a chevron: its `initial`, `badge` and `current` are not rendered. The toggle keeps a local expanded state per item id, starting from `item.expanded`. Children render as `.child-link` / `.child-button` with their `label`, `href` and `current` only: their `iconTpl`, `initial`, `badge`, `expandable` and `children` are not rendered (one nesting level).
 
-When `options.profile` is present, renders a `<li class="profile">` at the bottom containing `<a class="profile-link">` with `<img class="profile-avatar">`, optional `.sr-only` text, and `.profile-name`.
+When `options.profile` is present, renders a `<li class="profile">` at the bottom containing `<a class="profile-link">` (to `profile.href`, `'#'` by default) with `<img class="profile-avatar">` (`avatarUrl`, `avatarAlt`), an optional `.sr-only` text (`srOnlyText`) and the `.profile-name` (`name`).
 
 ### SidebarNavigationBaseComponent (abstract)
 
@@ -66,6 +66,70 @@ Abstract base directive. Exposes:
 
 ### ISidebarNavOptions
 
+When both `items` and `groups` are provided, `items` is rendered first as a leading, untitled group.
+
+| Field       | Type                    | Default     | Description                                                                     |
+| ----------- | ----------------------- | ----------- | ------------------------------------------------------------------------------- |
+| `ariaLabel` | `string`                | `'Sidebar'` | Accessible name of the `<nav>`.                                                 |
+| `logo`      | `ISidebarNavLogo`       | -           | The brand at the top.                                                           |
+| `items`     | `ISidebarNavItem[]`     | -           | The first, untitled group of items.                                             |
+| `groups`    | `ISidebarNavGroup[]`    | -           | Further groups, each with an optional title.                                    |
+| `profile`   | `ISidebarNavProfile`    | -           | A profile link at the bottom.                                                   |
+| `layout`    | `SmartSidebarNavLayout` | -           | Not read by the built-in implementations; available to a custom implementation. |
+
+`SmartSidebarNavLayout` is `'light' | 'dark' | 'with-expandable-sections' | 'with-secondary-navigation' | 'brand'`.
+
+### ISidebarNavItem
+
+| Field        | Type                   | Default  | Description                                                                              |
+| ------------ | ---------------------- | -------- | ---------------------------------------------------------------------------------------- |
+| `id`         | `string`               | required | Reported as `itemId`.                                                                    |
+| `label`      | `string`               | -        | Item text.                                                                               |
+| `href`       | `string`               | -        | Renders a plain `<a href>` (no `itemClick`).                                             |
+| `current`    | `boolean`              | -        | Marks the current page (`current` class, `aria-current="page"`); not on toggles.         |
+| `badge`      | `string \| number`     | -        | A count or text badge; not on toggles and children.                                      |
+| `iconTpl`    | `TemplateRef<unknown>` | -        | Item icon; not on children.                                                              |
+| `initial`    | `string`               | -        | A letter shown instead of an icon (e.g. for teams); not on toggles and children.         |
+| `expandable` | `boolean`              | -        | Makes the item a toggle for its `children` (top-level items only).                       |
+| `expanded`   | `boolean`              | `false`  | Initial expanded state of an expandable item.                                            |
+| `children`   | `ISidebarNavItem[]`    | -        | Nested items of an expandable item; one level, rendered with `label`, `href`, `current`. |
+
+### ISidebarNavGroup
+
+| Field   | Type                | Default  | Description                     |
+| ------- | ------------------- | -------- | ------------------------------- |
+| `id`    | `string`            | -        | Tracking key of the group.      |
+| `title` | `string`            | -        | Group heading (`.group-title`). |
+| `items` | `ISidebarNavItem[]` | required | The group's items.              |
+
+### ISidebarNavLogo
+
+| Field     | Type                   | Default | Description                                                 |
+| --------- | ---------------------- | ------- | ----------------------------------------------------------- |
+| `url`     | `string`               | -       | Logo image.                                                 |
+| `urlDark` | `string`               | -       | A second image with the `sidebar-logo-img-dark` class hook. |
+| `alt`     | `string`               | `''`    | Alt text of both images.                                    |
+| `href`    | `string`               | -       | Wraps the images in a plain `<a href>`.                     |
+| `tpl`     | `TemplateRef<unknown>` | -       | The logo as a template; wins over the images.               |
+
+### ISidebarNavProfile
+
+| Field        | Type     | Default | Description                                    |
+| ------------ | -------- | ------- | ---------------------------------------------- |
+| `name`       | `string` | -       | User name.                                     |
+| `avatarUrl`  | `string` | -       | Avatar image.                                  |
+| `avatarAlt`  | `string` | `''`    | Alt text of the avatar.                        |
+| `href`       | `string` | `'#'`   | Profile link.                                  |
+| `srOnlyText` | `string` | -       | Text for screen readers (e.g. "Your profile"). |
+
+### ISidebarNavItemClick and ISidebarNavItemToggle
+
+| Type                    | Field      | Type      | Description                   |
+| ----------------------- | ---------- | --------- | ----------------------------- |
+| `ISidebarNavItemClick`  | `itemId`   | `string`  | The `id` of the clicked item. |
+| `ISidebarNavItemToggle` | `itemId`   | `string`  | The `id` of the toggled item. |
+| `ISidebarNavItemToggle` | `expanded` | `boolean` | The new expanded state.       |
+
 ```typescript
 type SmartSidebarNavLayout =
   | 'light'
@@ -75,7 +139,7 @@ type SmartSidebarNavLayout =
   | 'brand';
 
 interface ISidebarNavOptions {
-  layout?: SmartSidebarNavLayout;
+  layout?: SmartSidebarNavLayout; // not read by the built-in implementations
   ariaLabel?: string;
   logo?: ISidebarNavLogo;
   items?: ISidebarNavItem[];
@@ -119,9 +183,9 @@ interface ISidebarNavProfile {
 }
 ```
 
-When both `items` and `groups` are provided, `items` is rendered first as a leading single-group section.
-
 ## SIDEBAR_NAVIGATION_STANDARD_COMPONENT_TOKEN
+
+Provide a component class extending `SidebarNavigationBaseComponent` under `SIDEBAR_NAVIGATION_STANDARD_COMPONENT_TOKEN`; every `<smart-sidebar-navigation>` below that injector renders it.
 
 ```typescript
 import { SIDEBAR_NAVIGATION_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
@@ -140,7 +204,6 @@ providers: [
 import {
   ChangeDetectionStrategy,
   Component,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -153,8 +216,8 @@ import { SidebarNavigationBaseComponent } from '@smartsoft001/angular';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyCustomSidebarNavigationComponent extends SidebarNavigationBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
+  // `options()`, `cssClass()`, `itemClick`, `itemToggle` and the protected
+  // `resolvedGroups()`, `isExpanded()` and `toggleExpanded()` are inherited.
 }
 ```
 
@@ -164,7 +227,7 @@ export class MyCustomSidebarNavigationComponent extends SidebarNavigationBaseCom
 <!-- Flat list with logo and profile -->
 <smart-sidebar-navigation
   [options]="{
-    logo: { url: '/logo.svg', alt: 'Acme' },
+    logo: { url: 'https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600', alt: 'Acme' },
     items: [
       { id: 'dashboard', label: 'Dashboard', href: '/', current: true, badge: 5 },
       { id: 'team', label: 'Team', href: '/team' },
@@ -172,7 +235,7 @@ export class MyCustomSidebarNavigationComponent extends SidebarNavigationBaseCom
     ],
     profile: {
       name: 'Tom Cook',
-      avatarUrl: '/avatar.jpg',
+      avatarUrl: 'https://i.pravatar.cc/80?img=12',
       href: '/me',
       srOnlyText: 'Your profile',
     },

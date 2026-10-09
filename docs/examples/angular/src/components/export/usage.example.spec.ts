@@ -4,6 +4,7 @@ import { ExportUsageExampleComponent } from './usage.example';
 
 describe('docs-examples-angular: ExportUsageExampleComponent', () => {
   let fixture: ComponentFixture<ExportUsageExampleComponent>;
+  let button: HTMLButtonElement;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -12,39 +13,27 @@ describe('docs-examples-angular: ExportUsageExampleComponent', () => {
 
     fixture = TestBed.createComponent(ExportUsageExampleComponent);
     fixture.detectChanges();
-  });
-
-  it('should enable the export button when there is a value', () => {
-    const button: HTMLButtonElement =
-      fixture.nativeElement.querySelector('button');
-
-    expect(button.disabled).toBe(false);
-  });
-
-  it('should hand the value to the handler when clicked', () => {
-    const button: HTMLButtonElement =
-      fixture.nativeElement.querySelector('button');
-
-    button.click();
-
-    expect(fixture.componentInstance.exported()).toEqual(
-      fixture.componentInstance.orders,
-    );
-  });
-
-  it('should hand the file name to the handler when clicked', () => {
-    const button: HTMLButtonElement =
-      fixture.nativeElement.querySelector('button');
-
-    button.click();
-
-    expect(fixture.componentInstance.exportedFileName()).toBe('orders.csv');
+    button = fixture.nativeElement.querySelector('button');
   });
 
   it('should give the icon-only button an accessible name', () => {
-    const button: HTMLButtonElement =
-      fixture.nativeElement.querySelector('button');
-
+    // Assert
     expect(button.textContent?.trim()).toBe('Export');
+  });
+
+  it('should enable the export button when there is a value', () => {
+    // Assert
+    expect(button.disabled).toBe(false);
+  });
+
+  it('should hand the value and the file name to the handler when clicked', () => {
+    // Act
+    button.click();
+    fixture.detectChanges();
+
+    // Assert
+    expect(fixture.nativeElement.textContent).toContain(
+      'Exported 2 orders as orders.csv',
+    );
   });
 });

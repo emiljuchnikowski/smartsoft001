@@ -65,7 +65,14 @@
         "ci": {
           "command": "storybook build --quiet -c packages/shared/react/.storybook -o dist/storybook/react"
         }
-      }
+      },
+      "inputs": [
+        "default",
+        "^default",
+        "{projectRoot}/.storybook/**/*",
+        "{projectRoot}/tsconfig.storybook.json",
+        "{workspaceRoot}/docs/examples/react/src/components/**/*"
+      ]
     },
     "test-storybook": {
       "executor": "nx:run-commands",

@@ -1,10 +1,24 @@
-# 📦 @smartsoft001/utils
+# 📦 @smartsoft001/angular
 
-![npm](https://img.shields.io/npm/v/@smartsoft001/utils) ![downloads](https://img.shields.io/npm/dm/@smartsoft001/angular)
+![npm](https://img.shields.io/npm/v/@smartsoft001/angular) ![downloads](https://img.shields.io/npm/dm/@smartsoft001/angular)
 
 ## 🚀 Usage
 
 `npm i @smartsoft001/angular`
+
+Every component renders its standard implementation, which for most components is deliberately unstyled
+markup with class hooks. Add `provideSmartPresets()` to the application's providers to register the styled
+(Preline) implementation of every component at once, or provide single `*_STANDARD_COMPONENT_TOKEN`s:
+
+```ts
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideTranslateService(),
+    importProvidersFrom(SharedModule),
+    provideSmartPresets(),
+  ],
+});
+```
 
 ## 📚 Storybook
 

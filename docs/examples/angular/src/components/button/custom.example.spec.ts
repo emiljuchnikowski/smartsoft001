@@ -4,7 +4,6 @@ import { ButtonCustomExampleComponent } from './custom.example';
 
 describe('docs-examples-angular: ButtonCustomExampleComponent', () => {
   let fixture: ComponentFixture<ButtonCustomExampleComponent>;
-  let component: ButtonCustomExampleComponent;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -12,24 +11,36 @@ describe('docs-examples-angular: ButtonCustomExampleComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(ButtonCustomExampleComponent);
-    component = fixture.componentInstance;
+    fixture.detectChanges();
+    await fixture.whenStable();
     fixture.detectChanges();
   });
 
-  it('should render the custom button with the projected label', () => {
-    const button: HTMLButtonElement =
-      fixture.nativeElement.querySelector('.docs-button');
+  it('should render the custom button with the label through <smart-button>', () => {
+    // Act
+    const button: HTMLButtonElement = fixture.nativeElement.querySelector(
+      'smart-button .docs-button',
+    );
 
+    // Assert
     expect(button).not.toBeNull();
     expect(button.textContent).toContain('Save');
+    expect(button.classList.contains('smart:bg-emerald-600')).toBe(true);
+    expect(
+      fixture.nativeElement.querySelector('smart-button-standard'),
+    ).toBeNull();
   });
 
   it('should run the options click handler when the custom button is clicked', () => {
+    // Arrange
     const button: HTMLButtonElement =
       fixture.nativeElement.querySelector('.docs-button');
 
+    // Act
     button.click();
+    fixture.detectChanges();
 
-    expect(component.saved()).toBe(true);
+    // Assert
+    expect(fixture.nativeElement.textContent).toContain('Saved.');
   });
 });

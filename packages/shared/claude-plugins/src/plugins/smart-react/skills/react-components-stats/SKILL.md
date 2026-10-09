@@ -23,7 +23,7 @@ All from `@smartsoft001/react`.
 | `SmartStatsPreset`   | component | Styled stats variation (preset).                                                                                                                                  |
 | `SmartStatsStandard` | component | The default stats rendering: an unstyled title and a `<dl>` with one item per stat (icon, label, value, previous value, change tagged with `data-trend`, action). |
 
-The preset's class helpers (`getStatsContainerClasses`, `getStatsGridClasses`, `getStatsTitleClasses`, `getStatsLabelClasses`, `getStatsValueClasses`, `getStatsSubClasses`, `getStatsIconWrapClasses`, `getStatsActionClasses`, `getStatsChangeClasses`) are exported too, for a custom implementation that wants the preset look.
+The preset's class helpers (`getStatsContainerClasses`, `getStatsGridClasses`, `getStatsTitleClasses`, `getStatsLabelClasses`, `getStatsValueClasses`, `getStatsSubClasses`, `getStatsIconWrapClasses`, `getStatsActionClasses`, `getStatsChangeClasses`) are exported too, with the type `SmartStatsColumns` (`1 | 2 | 3 | 4`, the argument of `getStatsGridClasses`), for a custom implementation that wants the preset look.
 
 ## Props and Types
 
@@ -110,7 +110,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
 }
 ```
 
-`SmartStatsPreset` is the styled (preset) implementation: register it as above, render it directly in place of `SmartStats`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
+`SmartStatsPreset` is the styled (preset) implementation: register it under the `'stats'` key of `SmartProvider`'s `components`, render it directly in place of `SmartStats`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
 
 ```tsx
 import { SmartStatsProps } from '@smartsoft001/react';

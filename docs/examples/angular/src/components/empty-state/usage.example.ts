@@ -15,7 +15,6 @@ import {
 })
 export class EmptyStateUsageExampleComponent {
   readonly options: IEmptyStateOptions = {
-    layout: 'dashed-border',
     title: 'No projects',
     description: 'Get started by creating a new project.',
     actions: [{ id: 'new-project', label: 'New project', variant: 'primary' }],

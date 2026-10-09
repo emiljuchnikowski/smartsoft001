@@ -31,7 +31,9 @@ import { ContainerStandardComponent } from '../standard/standard.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContainerPresetComponent extends ContainerStandardComponent {
-  // NgComponentOutlet forwards inputs canonically, so drop the `class` alias.
+  // Redeclared without an alias so `[cssClass]` also binds when the preset is
+  // used directly; the inherited `class` alias keeps working, and the wrapper
+  // reaches either name through outletInputs().
   override cssClass = input<string>('');
 
   containerClasses = computed(() =>

@@ -9,13 +9,15 @@ import {
 } from '@angular/core';
 
 import {
+  ButtonComponent,
   CardHeadingComponent,
+  IButtonOptions,
   ICardHeadingOptions,
 } from '@smartsoft001/angular';
 
 @Component({
   selector: 'docs-card-heading-usage-example',
-  imports: [CardHeadingComponent],
+  imports: [CardHeadingComponent, ButtonComponent],
   templateUrl: './usage.example.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -31,8 +33,8 @@ export class CardHeadingUsageExampleComponent {
 
   readonly createdCount = signal(0);
 
-  onCreate(): void {
-    this.createdCount.update((count) => count + 1);
-  }
+  readonly createButton: IButtonOptions = {
+    click: () => this.createdCount.update((count) => count + 1),
+  };
 }
 // #endregion

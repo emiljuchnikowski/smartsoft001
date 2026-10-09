@@ -65,8 +65,8 @@ export class DocsUser {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomListComponent extends ListBaseComponent<DocsUser> {
-  // ListComponent passes the external class under its aliased name, so the
-  // inherited `cssClass` input is used as is - do not redeclare it here.
+  // The class passed to `<smart-list>` arrives in the inherited `cssClass`
+  // input (alias `class`).
   containerClasses = computed(() =>
     ['docs-list', this.cssClass()].filter(Boolean).join(' '),
   );
@@ -102,9 +102,10 @@ export class CustomListComponent extends ListBaseComponent<DocsUser> {
   template: `<smart-list [options]="options" />`,
 })
 export class ListCustomExampleComponent {
-  // A provider is the list's data source: two signals plus the callback the
-  // list calls when it needs a page. A real application hands over an NgRx
-  // facade here instead of static rows.
+  // A provider is the list's data source: the rows and the loading flag as
+  // signals, plus `getData` for the provider's owner (the list never calls
+  // it). A real application hands over an NgRx facade here instead of static
+  // rows.
   options: IListOptions<DocsUser> = {
     provider: {
       list: signal<DocsUser[]>([

@@ -3,7 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
+  signal,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -45,9 +45,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomToggleComponent extends ToggleBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   containerClasses = computed(() =>
     [
       'docs-toggle',
@@ -59,8 +56,10 @@ export class CustomToggleComponent extends ToggleBaseComponent {
       .join(' '),
   );
 
-  // A change handler reads the checkbox state; a click handler would instead
-  // call the inherited toggle(), which already respects `disabled`.
+  // `value` is a model on the base: the wrapper writes the new state back to
+  // `<smart-toggle [(value)]="...">`. A change handler reads the checkbox
+  // state; a click handler would instead call the inherited toggle(), which
+  // already respects `disabled`.
   protected onChange(event: Event): void {
     this.value.set((event.target as HTMLInputElement).checked);
   }
@@ -78,17 +77,18 @@ export class CustomToggleComponent extends ToggleBaseComponent {
       useValue: CustomToggleComponent,
     },
   ],
-  // NgComponentOutlet forwards inputs only, so the [(value)] write-back stays
-  // silent here and `enabled` below is the initial state.
-  template: `<smart-toggle [value]="enabled" [options]="options" />`,
+  // The wrapper forwards `value` both ways.
+  template: `
+    <smart-toggle [(value)]="enabled" [options]="options" />
+    <p>Notifications are {{ enabled() ? 'on' : 'off' }}.</p>
+  `,
 })
 export class ToggleCustomExampleComponent {
-  enabled = false;
+  readonly enabled = signal(false);
 
   options: IToggleOptions = {
     label: 'Allow notifications',
     description: 'Send me an email when someone comments on my work.',
-    labelPosition: 'right',
     ariaLabel: 'Allow notifications',
   };
 }

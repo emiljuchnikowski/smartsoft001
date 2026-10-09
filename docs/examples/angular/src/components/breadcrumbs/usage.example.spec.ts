@@ -15,21 +15,39 @@ describe('docs-examples-angular: BreadcrumbsUsageExampleComponent', () => {
   });
 
   it('should render the trail from the options', () => {
+    // Act
     const nav: HTMLElement = fixture.nativeElement.querySelector('nav');
 
+    // Assert
+    expect(nav.getAttribute('aria-label')).toBe('Breadcrumb');
     expect(nav.textContent).toContain('Projects');
-    expect(nav.textContent).toContain('Project Nero');
     expect(nav.querySelector('[aria-current="page"]')?.textContent).toContain(
       'Project Nero',
     );
   });
 
-  it('should hand the clicked item id to the handler', () => {
+  it('should separate the items with slashes', () => {
+    // Act
+    const separator: HTMLElement = fixture.nativeElement.querySelector(
+      '.breadcrumbs-separator',
+    );
+
+    // Assert
+    expect(separator.getAttribute('data-separator')).toBe('slash');
+  });
+
+  it('should show the clicked item id under the trail', () => {
+    // Arrange
     const projects: HTMLButtonElement =
       fixture.nativeElement.querySelectorAll('nav button')[1];
 
+    // Act
     projects.click();
+    fixture.detectChanges();
 
-    expect(fixture.componentInstance.lastItemId()).toBe('projects');
+    // Assert
+    expect(fixture.nativeElement.textContent).toContain(
+      'Last clicked: projects',
+    );
   });
 });

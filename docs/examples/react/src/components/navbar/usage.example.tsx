@@ -17,9 +17,10 @@ export function NavbarUsageExample() {
   const [activeItem, setActiveItem] = useState('dashboard');
 
   const options: INavbarOptions = {
-    logoUrl: '/assets/logo.svg',
+    logoUrl:
+      'https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600',
     logoAlt: 'Acme',
-    logoHref: '/',
+    logoHref: '#',
     items: items.map((item) => ({
       ...item,
       current: item.id === activeItem,

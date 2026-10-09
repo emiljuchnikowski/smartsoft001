@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -18,7 +17,8 @@ import {
  * A custom media object built on `MediaObjectBaseComponent`.
  *
  * The base contributes the `mediaUrl`, `mediaAlt`, `options` and `class`
- * inputs; the implementation owns the markup around them.
+ * inputs; the implementation owns the markup around them and projects the
+ * body that `<smart-media-object>` receives.
  */
 @Component({
   selector: 'docs-custom-media-object',
@@ -36,17 +36,9 @@ import {
         height="64"
       />
 
-      <!--
-        smart-media-object passes mediaUrl, mediaAlt, options and cssClass to a
-        custom implementation, and its projected content to the
-        implementation's default ng-content. This one renders a fixed body, so
-        it declares no ng-content.
-      -->
+      <!-- The content of <smart-media-object> is projected here. -->
       <div class="docs-media-object__body">
-        <h3 class="docs-media-object__title">Lindsay Walton</h3>
-        <p class="docs-media-object__text">
-          Front-end developer, joined the design systems team in March.
-        </p>
+        <ng-content />
       </div>
     </article>
   `,
@@ -54,9 +46,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomMediaObjectComponent extends MediaObjectBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   containerClasses = computed(() =>
     [
       'docs-media-object',
@@ -90,7 +79,12 @@ export class CustomMediaObjectComponent extends MediaObjectBaseComponent {
       mediaAlt="Portrait of Lindsay Walton"
       [options]="options"
       class="docs-media-object--demo"
-    />
+    >
+      <h3 class="docs-media-object__title">Lindsay Walton</h3>
+      <p class="docs-media-object__text">
+        Front-end developer, joined the design systems team in March.
+      </p>
+    </smart-media-object>
   `,
 })
 export class MediaObjectCustomExampleComponent {
@@ -100,7 +94,6 @@ export class MediaObjectCustomExampleComponent {
   options: IMediaObjectOptions = {
     alignment: 'center',
     position: 'right',
-    responsive: true,
   };
 }
 // #endregion

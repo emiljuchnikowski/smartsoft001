@@ -145,6 +145,21 @@ describe('@smartsoft001/shared-angular: CommandPalettePresetComponent', () => {
 
       expect(component.query()).toBe('hello');
     });
+
+    it('should close on Escape (the listener inherited from the standard)', () => {
+      // Arrange
+      open();
+
+      // Act
+      document.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }),
+      );
+      fixture.detectChanges();
+
+      // Assert
+      expect(component.open()).toBe(false);
+      expect(byRole('dialog')?.hasAttribute('open')).toBe(false);
+    });
   });
 
   describe('variant classes', () => {
@@ -218,7 +233,7 @@ describe('@smartsoft001/shared-angular: CommandPalettePresetComponent', () => {
   });
 
   describe('cssClass override', () => {
-    it('should drop the class alias and expose a canonical cssClass input', () => {
+    it('should accept the extra classes through the cssClass input', () => {
       fixture.componentRef.setInput('cssClass', 'my-extra-class');
       fixture.componentRef.setInput('open', true);
       fixture.detectChanges();

@@ -36,9 +36,9 @@ import { ActionPanelStandardComponent } from '../standard/standard.component';
   imports: [NgTemplateOutlet],
 })
 export class ActionPanelPresetComponent extends ActionPanelStandardComponent {
-  // NgComponentOutlet (used by ActionPanelComponent when this is registered
-  // through ACTION_PANEL_STANDARD_COMPONENT_TOKEN) passes inputs by canonical
-  // name, so the inherited `class` alias must be dropped for `cssClass` to bind.
+  // Redeclared without an alias so `[cssClass]` also binds when the preset is
+  // used directly; the inherited `class` alias keeps working, and the wrapper
+  // reaches either name through outletInputs().
   override cssClass = input<string>('');
 
   protected readonly titleClasses = getActionPanelTitleClasses();

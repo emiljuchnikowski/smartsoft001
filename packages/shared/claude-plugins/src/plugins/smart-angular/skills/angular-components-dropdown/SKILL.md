@@ -21,37 +21,51 @@ Main wrapper component. Renders `DropdownStandardComponent` by default. When `DR
 
 ### DropdownStandardComponent (`<smart-dropdown-standard>`)
 
-Default concrete implementation. Renders a trigger button and a menu list using modern Angular control flow.
+Default concrete implementation, unstyled (class hooks `smart-dropdown-trigger`, `smart-dropdown-header`). Renders a trigger button showing `triggerLabel`, or the projected content without it, and while open a `<ul role="menu">`: a header item with `options.headerLabel` when `options.variant` is `'with-header'`, then one `menuitem` button per item (`disabled` respected) and a `separator` for each `divider` item.
 
 ### DropdownPresetComponent (`<smart-dropdown-preset>`)
 
-Fully styled variation that extends `DropdownBaseComponent` and is a drop-in replacement for `DropdownStandardComponent`. Register it via `DROPDOWN_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-dropdown>`, or use the `<smart-dropdown-preset>` selector directly. Renders a trigger button (with a rotating chevron) and a menu, dispatched through `options.variant` (default `'simple'`): `simple`, `with-dividers` (items split into divider-separated groups), `with-icons` (renders each `item.icon` string), `with-header` (a header block from `options.headerLabel`, items shown with icons), and `minimal` (borderless ghost trigger). All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants. Open/close is driven by the inherited `open` signal + a `(click)` toggle and `@if` — Preline's JS plugin is NOT used, but its visual classes and ARIA (`aria-haspopup="menu"`, `aria-expanded`) are preserved. The class recipes live in `preset/preset-classes.util.ts` (`getDropdownTriggerClasses`, `getDropdownMenuClasses`, `getDropdownChevronClasses`).
+Fully styled variation that extends `DropdownBaseComponent` and is a drop-in replacement for `DropdownStandardComponent`. Register it for `DROPDOWN_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-dropdown>` (or every preset at once with `provideSmartPresets()`), or use the `<smart-dropdown-preset>` selector directly. Renders a trigger button (with a rotating chevron) and a menu, dispatched through `options.variant` (default `'simple'`): `simple`, `with-dividers` (items split into divider-separated groups at each `divider` item; the other variants leave `divider` items out), `with-icons` (renders each `item.icon` string), `with-header` (a header block from `options.headerLabel`, items shown with icons), and `minimal` (borderless ghost trigger). The trigger shows `triggerLabel`, or `Actions` without it: the preset does not render projected content. All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants. Open/close is driven by the inherited `open` signal + a `(click)` toggle and `@if` — Preline's JS plugin is NOT used, but its visual classes and ARIA (`aria-haspopup="menu"`, `aria-expanded`) are preserved. The class recipes are internal (not exported from `@smartsoft001/angular`).
 
-> Because `DropdownComponent` renders injected components via `NgComponentOutlet` (which passes inputs by canonical name), `DropdownPresetComponent` overrides `cssClass` as `input<string>('')` **without** the `class` alias. Bind it as `[cssClass]` when using the `<smart-dropdown-preset>` selector directly, or just pass `class` on `<smart-dropdown>` (the wrapper forwards it).
+> The preset declares `cssClass` without the `class` alias, so bind `[cssClass]` when you use the `<smart-dropdown-preset>` selector directly; `class` on `<smart-dropdown>` reaches it through the wrapper.
 
 ### DropdownBaseComponent (abstract)
 
-Abstract base directive for extending custom dropdown implementations.
+Abstract base directive for extending custom dropdown implementations. Besides the inputs and the output below it provides:
+
+- `toggle()`: opens or closes the menu
+- `close()`: closes the menu
+- `selectItem(itemId)`: emits `selectedItem` with `{ itemId }` and closes the menu
 
 ## API
 
 ### Inputs
 
-| Input          | Type                            | Default     | Description                                                |
-| -------------- | ------------------------------- | ----------- | ---------------------------------------------------------- |
-| `items`        | `InputSignal<IDropdownItem[]>`  | `[]`        | Menu items                                                 |
-| `triggerLabel` | `InputSignal<string>`           | `undefined` | Trigger text; projected content is used when it is not set |
-| `open`         | `ModelSignal<boolean>`          | `false`     | Two-way bindable open/closed state                         |
-| `options`      | `InputSignal<IDropdownOptions>` | `undefined` | Dropdown configuration (variant, headerLabel)              |
-| `class`        | `InputSignal<string>`           | `''`        | External CSS classes (alias for `cssClass`)                |
+| Input          | Type                                         | Default     | Description                                                                                        |
+| -------------- | -------------------------------------------- | ----------- | -------------------------------------------------------------------------------------------------- |
+| `items`        | `InputSignal<IDropdownItem[]>`               | `[]`        | Menu items                                                                                         |
+| `triggerLabel` | `InputSignal<string \| undefined>`           | `undefined` | Trigger text. Without it the standard renders the projected content and the preset shows `Actions` |
+| `open`         | `ModelSignal<boolean>`                       | `false`     | Two-way bindable open/closed state                                                                 |
+| `options`      | `InputSignal<IDropdownOptions \| undefined>` | `undefined` | Variant and header label                                                                           |
+| `class`        | `InputSignal<string>`                        | `''`        | Classes on the root element (`cssClass` input, alias `class`)                                      |
 
 ### Outputs
 
-| Output         | Type                 | Description                                     |
-| -------------- | -------------------- | ----------------------------------------------- |
-| `selectedItem` | `{ itemId: string }` | Emits when a menu item is selected; closes menu |
+| Output         | Type                                   | Description                                         |
+| -------------- | -------------------------------------- | --------------------------------------------------- |
+| `selectedItem` | `OutputEmitterRef<{ itemId: string }>` | Emits when a menu item is selected; closes the menu |
+| `openChange`   | `OutputEmitterRef<boolean>`            | The `open` model's change event, for `[(open)]`     |
 
 ### IDropdownItem
+
+| Field      | Type      | Default  | Description                                                                                                         |
+| ---------- | --------- | -------- | ------------------------------------------------------------------------------------------------------------------- |
+| `id`       | `string`  | required | Reported as `itemId`.                                                                                               |
+| `label`    | `string`  | required | Item text.                                                                                                          |
+| `icon`     | `string`  | -        | Text or glyph before the label. Preset only, in the `with-icons` and `with-header` variants.                        |
+| `disabled` | `boolean` | -        | Disables the item.                                                                                                  |
+| `divider`  | `boolean` | -        | Makes the entry a separator (standard); the preset's `with-dividers` variant splits the menu there, others hide it. |
+| `href`     | `string`  | -        | Not read by the built-in implementations (no item renders as a link); available to a custom implementation.         |
 
 ```typescript
 interface IDropdownItem {
@@ -65,6 +79,11 @@ interface IDropdownItem {
 ```
 
 ### IDropdownOptions
+
+| Field         | Type                   | Default    | Description                                                                                                                       |
+| ------------- | ---------------------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `variant`     | `SmartDropdownVariant` | `'simple'` | `'simple'`, `'with-dividers'`, `'with-icons'`, `'minimal'` or `'with-header'` (preset). The standard only checks `'with-header'`. |
+| `headerLabel` | `string`               | -          | Header text, shown by both implementations when `variant` is `'with-header'`.                                                     |
 
 ```typescript
 type SmartDropdownVariant =
@@ -82,7 +101,7 @@ interface IDropdownOptions {
 import { DROPDOWN_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
 ```
 
-InjectionToken that allows replacing the default `DropdownStandardComponent` with a custom implementation. Provide a `Type<DropdownBaseComponent>` to override.
+InjectionToken that allows replacing the default `DropdownStandardComponent` with a custom implementation. Provide a `Type<DropdownBaseComponent>` to override. The wrapper passes its inputs and the projected content on, and re-emits the implementation's `selectedItem` and `open` changes.
 
 ```typescript
 // In your app module or component providers:
@@ -154,7 +173,7 @@ export class MyCustomDropdownComponent extends DropdownBaseComponent {}
   ]"
 />
 
-<!-- With custom trigger content via ng-content -->
+<!-- With custom trigger content via ng-content (standard only) -->
 <smart-dropdown [items]="items">
   <span class="icon-menu"></span> Menu
 </smart-dropdown>

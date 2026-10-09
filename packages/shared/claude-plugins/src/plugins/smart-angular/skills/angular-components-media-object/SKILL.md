@@ -45,6 +45,14 @@ The wrapper projects body content via `<ng-content />` into the `.smart-media-ob
 
 ### IMediaObjectOptions
 
+| Field        | Type                                           | Default  | Description                                                                                                                               |
+| ------------ | ---------------------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `alignment`  | `'top' \| 'center' \| 'bottom' \| 'stretched'` | -        | Vertical alignment of the image against the body; the standard exposes it as `data-alignment` (only when set), the preset aligns the row. |
+| `position`   | `'left' \| 'right'`                            | `'left'` | Side of the image; the standard exposes it as `data-position`, the preset reverses the row for `'right'`.                                 |
+| `responsive` | `boolean`                                      | `false`  | Preset only: stacks the image above the body on small screens.                                                                            |
+| `nested`     | `boolean`                                      | `false`  | Preset only: the spacing of a media object nested in another one.                                                                         |
+| `wide`       | `boolean`                                      | `false`  | Preset only: a wider image (`w-32`).                                                                                                      |
+
 ```typescript
 interface IMediaObjectOptions {
   alignment?: 'top' | 'center' | 'bottom' | 'stretched';
@@ -55,21 +63,13 @@ interface IMediaObjectOptions {
 }
 ```
 
-The standard renders:
-
-- `data-position` attribute: defaults to `'left'` when not provided
-- `data-alignment` attribute: only set when `options.alignment` is provided
-
 ### MEDIA_OBJECT_STANDARD_COMPONENT_TOKEN
+
+InjectionToken from `@smartsoft001/angular` that allows replacing the default `MediaObjectStandardComponent` with a custom implementation. Provide a `Type<MediaObjectBaseComponent>` in your application or component providers; `provideSmartPresets()` provides `MediaObjectPresetComponent` for it together with every other preset.
 
 ```typescript
 import { MEDIA_OBJECT_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
-```
 
-InjectionToken that allows replacing the default `MediaObjectStandardComponent` with a custom implementation. Provide a `Type<MediaObjectBaseComponent>` to override.
-
-```typescript
-// In your app module or component providers:
 providers: [
   {
     provide: MEDIA_OBJECT_STANDARD_COMPONENT_TOKEN,
@@ -96,6 +96,8 @@ import { MediaObjectBaseComponent } from '@smartsoft001/angular';
 })
 export class MyCustomMediaObjectComponent extends MediaObjectBaseComponent {}
 ```
+
+The wrapper forwards `mediaUrl`, `mediaAlt`, `options` and the `class` (into the inherited `cssClass`), and projects its content into the implementation's default `<ng-content />`.
 
 ## Usage Examples
 
@@ -142,9 +144,11 @@ export class MyCustomMediaObjectComponent extends MediaObjectBaseComponent {}
 
 `MediaObjectPresetComponent` (selector `smart-media-object-preset`) is a styled,
 drop-in replacement for the standard component. It extends
-`MediaObjectStandardComponent` and reuses the same inputs
-(`mediaUrl`, `mediaAlt`, `options`, `class`), so registering it through the
-token restyles every `<smart-media-object>`.
+`MediaObjectStandardComponent` and reuses its inputs, so registering it through
+the token (or with `provideSmartPresets()`) restyles every `<smart-media-object>`.
+It declares `cssClass` without the `class` alias: on the
+`<smart-media-object-preset>` selector bind `[cssClass]`; on
+`<smart-media-object>` pass `class` as usual.
 
 Look: a flex row (`smart:flex smart:gap-4`) with a rounded, cover-fitted
 thumbnail (`smart:size-16 smart:rounded-lg smart:object-cover smart:shrink-0`)
@@ -170,7 +174,7 @@ aware.
 `smart-media-object-body` marker class is preserved for content projection
 parity with the standard component.
 
-Register it as the standard replacement:
+Register it as the standard replacement by providing it for `MEDIA_OBJECT_STANDARD_COMPONENT_TOKEN`.
 
 ```ts
 import { MEDIA_OBJECT_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
@@ -184,9 +188,7 @@ providers: [
 ],
 ```
 
-Class recipes live in `media-object/preset/preset-classes.util.ts`
-(`getMediaObjectRootClasses`, `getMediaObjectMediaClasses`,
-`getMediaObjectBodyClasses`).
+The class recipes are internal to the preset (not exported).
 
 Gaps: the media is always an `<img>` (no icon/video slot), and `wide` uses a
 fixed `w-32`/`h-16` footprint rather than an intrinsic aspect ratio.

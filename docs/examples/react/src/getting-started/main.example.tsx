@@ -9,6 +9,7 @@ import { createRoot } from 'react-dom/client';
 import {
   createHistoryNavigation,
   SmartButton,
+  SMART_PRESET_COMPONENTS,
   SmartProvider,
   useNavigation,
   useTranslate,
@@ -41,6 +42,9 @@ export function mount(element: HTMLElement) {
         language="eng"
         translations={translations}
         navigation={navigation}
+        // The styled (Preline) implementation of every component; without it
+        // each component renders its unstyled standard implementation.
+        {...SMART_PRESET_COMPONENTS}
       >
         <Home />
       </SmartProvider>

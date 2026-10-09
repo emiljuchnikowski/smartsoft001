@@ -17,11 +17,11 @@ The `<smart-sign-in-form>` component renders a single form that supports both **
 
 ### SignInFormComponent (`<smart-sign-in-form>`)
 
-Main wrapper component. Renders `SignInFormStandardComponent` by default. When `SIGN_IN_FORM_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`. The wrapper re-emits `submit` and `socialClick` from the standard child, or from the custom implementation registered through the token.
+Main wrapper component. Renders `SignInFormStandardComponent` by default. When `SIGN_IN_FORM_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet` and hands it `mode`, `disabled`, `options` and `class`. The wrapper re-emits `submit` and `socialClick` from the standard child, or from the preset or custom implementation registered through the token.
 
 ### SignInFormStandardComponent (`<smart-sign-in-form-standard>`)
 
-Barebones placeholder concrete implementation using a native `<form>`. Renders an outer wrapper, the form with optional `<label>`s (toggle via `options.showLabels`), `<input type="email">`, `<input type="password">` (with `autocomplete="new-password"` in `sign-up` mode), an optional forgot-password link (sign-in mode only), an optional submit-label override, optional social provider buttons, optional alt-link (sign-up href in sign-in mode, sign-in href in sign-up mode), and an optional `extraTpl` slot. The submit handler emits `{ email, password, mode }` via the inherited `submit` output unless `disabled` is `true`. It stops the native `submit` event from bubbling, because the output shares its name with the DOM event: without that, a `(submit)` listener on the host would also receive the raw `SubmitEvent`. A custom implementation must do the same. Each social provider button emits `{ providerId, mode }` via `socialClick`.
+Barebones placeholder concrete implementation using a native `<form>` (with `aria-label` from `options.ariaLabel`). Renders an outer wrapper, the form with `Email` / `Password` `<label>`s (hidden when `options.showLabels` is `false`), `<input type="email" id="smart-sign-in-form-email">`, `<input type="password" id="smart-sign-in-form-password">` (with `autocomplete="new-password"` in `sign-up` mode, `current-password` otherwise), an optional `Forgot password?` link (sign-in mode only), the submit button (`options.submitLabel`, or `Sign in` / `Sign up` after the mode), optional social provider buttons (`iconTpl` or `iconUrl`, then `label`), an optional alt-link (`Create an account` to `signUpHref` in sign-in mode, `Already have an account?` to `signInHref` in sign-up mode), and an optional `extraTpl` slot. It does not read `layout` or `heroImageUrl` (preset only). The submit handler emits `{ email, password, mode }` via the inherited `submit` output unless `disabled` is `true`. It stops the native `submit` event from bubbling, because the output shares its name with the DOM event: without that, a `(submit)` listener on the host would also receive the raw `SubmitEvent`. A custom implementation must do the same. Each social provider button emits `{ providerId, mode }` via `socialClick`, also ignored while `disabled` (the inputs and buttons are disabled too).
 
 ### SignInFormBaseComponent (abstract)
 
@@ -47,12 +47,48 @@ Abstract base directive. Exposes:
 
 ### Outputs
 
-| Output        | Type                                       | Description                                                             |
-| ------------- | ------------------------------------------ | ----------------------------------------------------------------------- |
-| `submit`      | `OutputEmitterRef<ISignInFormSubmit>`      | Emitted on form submit (when not disabled): `{ email, password, mode }` |
-| `socialClick` | `OutputEmitterRef<ISignInFormSocialClick>` | Emitted on social provider button click: `{ providerId, mode }`         |
+| Output        | Type                                       | Description                                                                           |
+| ------------- | ------------------------------------------ | ------------------------------------------------------------------------------------- |
+| `submit`      | `OutputEmitterRef<ISignInFormSubmit>`      | Emitted on form submit (when not disabled): `{ email, password, mode }`               |
+| `socialClick` | `OutputEmitterRef<ISignInFormSocialClick>` | Emitted on a social provider button click (when not disabled): `{ providerId, mode }` |
 
 ### ISignInFormOptions
+
+| Field                 | Type                    | Default                                      | Description                                                                                                            |
+| --------------------- | ----------------------- | -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `socialProviders`     | `ISocialProvider[]`     | `[]`                                         | Social sign-in buttons.                                                                                                |
+| `showLabels`          | `boolean`               | -                                            | `false` hides the field labels; the preset's `simple-no-labels` layout hides them unless this is `true`.               |
+| `forgotPasswordHref`  | `string`                | -                                            | "Forgot password?" link (sign-in mode).                                                                                |
+| `signUpHref`          | `string`                | -                                            | "Create an account" link (sign-in mode).                                                                               |
+| `signInHref`          | `string`                | -                                            | "Already have an account?" link (sign-up mode).                                                                        |
+| `submitLabel`         | `string`                | `mode === 'sign-up' ? 'Sign up' : 'Sign in'` | Text of the submit button (not translated).                                                                            |
+| `emailPlaceholder`    | `string`                | -                                            | Placeholder of the email field.                                                                                        |
+| `passwordPlaceholder` | `string`                | -                                            | Placeholder of the password field.                                                                                     |
+| `extraTpl`            | `TemplateRef<unknown>`  | -                                            | Extra content at the end of the form (e.g. a "remember me" checkbox or terms).                                         |
+| `ariaLabel`           | `string`                | -                                            | Accessible name of the `<form>`.                                                                                       |
+| `layout`              | `SmartSignInFormLayout` | `'simple'`                                   | Preset only: `simple`, `simple-no-labels`, `card` or `split-screen` (see the preset section). The standard ignores it. |
+| `heroImageUrl`        | `string`                | -                                            | Preset only: the cover image of the `split-screen` layout. The standard ignores it.                                    |
+
+`SmartSignInFormMode` is `'sign-in' | 'sign-up'`; `SmartSignInFormLayout` is `'simple' | 'simple-no-labels' | 'split-screen' | 'card'`.
+
+### ISocialProvider
+
+| Field     | Type                   | Default  | Description                                |
+| --------- | ---------------------- | -------- | ------------------------------------------ |
+| `id`      | `string`               | required | Reported as `providerId`.                  |
+| `label`   | `string`               | required | Button text.                               |
+| `iconTpl` | `TemplateRef<unknown>` | -        | Icon template; wins over `iconUrl`.        |
+| `iconUrl` | `string`               | -        | Icon image (rendered with an empty `alt`). |
+
+### ISignInFormSubmit and ISignInFormSocialClick
+
+| Type                     | Field        | Type                  | Description                       |
+| ------------------------ | ------------ | --------------------- | --------------------------------- |
+| `ISignInFormSubmit`      | `email`      | `string`              | The typed email.                  |
+| `ISignInFormSubmit`      | `password`   | `string`              | The typed password.               |
+| `ISignInFormSubmit`      | `mode`       | `SmartSignInFormMode` | The form mode.                    |
+| `ISignInFormSocialClick` | `providerId` | `string`              | The `id` of the clicked provider. |
+| `ISignInFormSocialClick` | `mode`       | `SmartSignInFormMode` | The form mode.                    |
 
 ```typescript
 type SmartSignInFormMode = 'sign-in' | 'sign-up';
@@ -61,9 +97,9 @@ type SmartSignInFormLayout =
 
 interface ISignInFormOptions {
   socialProviders?: ISocialProvider[];
-  layout?: SmartSignInFormLayout;
+  layout?: SmartSignInFormLayout; // preset only
   showLabels?: boolean;
-  heroImageUrl?: string;
+  heroImageUrl?: string; // preset only
   forgotPasswordHref?: string;
   signUpHref?: string;
   signInHref?: string;
@@ -93,9 +129,9 @@ interface ISignInFormSocialClick {
 }
 ```
 
-The default `SignInFormStandardComponent` consumes `socialProviders`, `showLabels`, `forgotPasswordHref`, `signUpHref`, `signInHref`, `submitLabel`, `emailPlaceholder`, `passwordPlaceholder`, `extraTpl`, and `ariaLabel`. `layout` and `heroImageUrl` are hints for custom implementations registered via the token.
-
 ## SIGN_IN_FORM_STANDARD_COMPONENT_TOKEN
+
+Provide a component class extending `SignInFormBaseComponent` under `SIGN_IN_FORM_STANDARD_COMPONENT_TOKEN`; every `<smart-sign-in-form>` below that injector renders it.
 
 ```typescript
 import { SIGN_IN_FORM_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
@@ -114,8 +150,6 @@ providers: [
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
-  input,
   signal,
   ViewEncapsulation,
 } from '@angular/core';
@@ -145,9 +179,6 @@ import { SignInFormBaseComponent } from '@smartsoft001/angular';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyCustomSignInFormComponent extends SignInFormBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   email = signal('');
   password = signal('');
 
@@ -181,8 +212,8 @@ export class MyCustomSignInFormComponent extends SignInFormBaseComponent {
     forgotPasswordHref: '/forgot',
     signUpHref: '/signup',
     socialProviders: [
-      { id: 'google', label: 'Google', iconUrl: '/icons/google.svg' },
-      { id: 'github', label: 'GitHub', iconUrl: '/icons/github.svg' },
+      { id: 'google', label: 'Continue with Google' },
+      { id: 'github', label: 'Continue with GitHub' },
     ],
   }"
   (submit)="onSignIn($event)"
@@ -213,11 +244,18 @@ blue focus ring; solid blue submit; outline social buttons; blue text links).
 `data-role` hooks for testing/styling: `container`, `form`, `email`, `password`,
 `submit`, `social`, `forgot`, `alt-link`, `hero`, `extra`, `card`.
 
-Register it via the token so `<smart-sign-in-form>` renders the preset:
+Provide `SignInFormPresetComponent` under `SIGN_IN_FORM_STANDARD_COMPONENT_TOKEN`
+so `<smart-sign-in-form>` renders the preset, or register every preset of the
+library at once with `provideSmartPresets()`. The preset declares `cssClass`
+without the `class` alias: bind `[cssClass]` when you use
+`<smart-sign-in-form-preset>` directly; on `<smart-sign-in-form>` pass `class`
+as usual.
 
 ```typescript
-import { SIGN_IN_FORM_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
-import { SignInFormPresetComponent } from '@smartsoft001/angular';
+import {
+  SIGN_IN_FORM_STANDARD_COMPONENT_TOKEN,
+  SignInFormPresetComponent,
+} from '@smartsoft001/angular';
 
 providers: [
   {
@@ -227,9 +265,11 @@ providers: [
 ];
 ```
 
-Gaps: `heroImageUrl` renders as a `smart:lg:block` cover image (hidden below the
-`lg` breakpoint); `submitLabel`, `emailPlaceholder`, `passwordPlaceholder`, and
-the `extraTpl` slot are all honored.
+Notes: `heroImageUrl` renders as a `smart:lg:block` cover image (hidden below
+the `lg` breakpoint); `submitLabel`, `emailPlaceholder`, `passwordPlaceholder`,
+and the `extraTpl` slot are all honored. The preset styles the submit button
+through its `data-role="submit"` hook and does not carry the standard's
+`submit` class.
 
 ## Reference implementation
 
@@ -244,7 +284,7 @@ The example application under `docs/examples/app` signs in through this componen
 
 - Wrapper: `packages/shared/angular/src/lib/components/sign-in-form/sign-in-form.component.ts`
 - Standard: `packages/shared/angular/src/lib/components/sign-in-form/standard/standard.component.ts`
-- Preset: `packages/shared/angular/src/lib/components/sign-in-form/preset/preset.component.ts` (classes in `preset/preset-classes.util.ts`)
+- Preset: `packages/shared/angular/src/lib/components/sign-in-form/preset/preset.component.ts`
 - Base class: `packages/shared/angular/src/lib/components/sign-in-form/base/base.component.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`SIGN_IN_FORM_STANDARD_COMPONENT_TOKEN`)
 - Interfaces: `packages/shared/angular/src/lib/models/interfaces.ts` (`ISignInFormOptions`, `ISocialProvider`, `ISignInFormSubmit`, `ISignInFormSocialClick`, `SmartSignInFormMode`, `SmartSignInFormLayout`)

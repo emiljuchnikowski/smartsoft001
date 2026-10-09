@@ -9,7 +9,11 @@ import { dirname, join } from 'node:path';
 const require = createRequire(import.meta.url);
 
 const config: StorybookConfig = {
-  stories: ['../**/*.@(mdx|stories.@(js|jsx|ts|tsx))'],
+  stories: [
+    '../**/*.@(mdx|stories.@(js|jsx|ts|tsx))',
+    // The usage examples the docs pages show, embedded below their code tabs.
+    '../../../../docs/examples/angular/src/components/*.stories.ts',
+  ],
   addons: [],
   framework: {
     name: getAbsolutePath('@storybook/angular'),

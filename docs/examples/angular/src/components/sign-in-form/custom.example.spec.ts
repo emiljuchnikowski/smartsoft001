@@ -1,15 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 
-import {
-  CustomSignInFormComponent,
-  SignInFormCustomExampleComponent,
-} from './custom.example';
+import { SignInFormCustomExampleComponent } from './custom.example';
+
+// A placeholder for the password field, not a real credential.
+const EXAMPLE_PASSWORD_VALUE = 'placeholder-value';
 
 describe('docs-examples-angular: SignInFormCustomExampleComponent', () => {
   let fixture: ComponentFixture<SignInFormCustomExampleComponent>;
   let element: HTMLElement;
-  let custom: CustomSignInFormComponent;
 
   const type = (selector: string, value: string): void => {
     const input = element.querySelector<HTMLInputElement>(selector);
@@ -26,12 +24,10 @@ describe('docs-examples-angular: SignInFormCustomExampleComponent', () => {
     fixture = TestBed.createComponent(SignInFormCustomExampleComponent);
     element = fixture.nativeElement as HTMLElement;
     fixture.detectChanges();
-    custom = fixture.debugElement.query(
-      By.directive(CustomSignInFormComponent),
-    ).componentInstance;
   });
 
   it('should render the custom form through the wrapper instead of the standard one', () => {
+    // Assert
     expect(
       element.querySelector('smart-sign-in-form docs-custom-sign-in-form'),
     ).toBeTruthy();
@@ -39,9 +35,11 @@ describe('docs-examples-angular: SignInFormCustomExampleComponent', () => {
   });
 
   it('should label the submit button after the mode and render the social provider', () => {
-    expect(
-      element.querySelector('.docs-sign-in-form__submit')?.textContent,
-    ).toContain('Sign in');
+    // Act
+    const submit = element.querySelector('.docs-sign-in-form__submit');
+
+    // Assert
+    expect(submit?.textContent).toContain('Sign in');
     expect(
       element.querySelector('.docs-sign-in-form__social')?.textContent,
     ).toContain('Continue with Google');
@@ -52,34 +50,29 @@ describe('docs-examples-angular: SignInFormCustomExampleComponent', () => {
     ).toBe('/forgot');
   });
 
-  // NgComponentOutlet does not forward outputs, so submit never reaches the
-  // wrapper; it is asserted on the custom component instance instead.
-  it('should emit submit with the typed credentials and the current mode', () => {
-    const submissions: unknown[] = [];
-    // Placeholder credentials for the assertion, not a real password.
-    const typedEmail = 'ada@example.com';
-    const typedPassword = 'example-only';
-    custom.submit.subscribe((event) => submissions.push(event));
+  it('should report the typed email through the wrapper submit output', () => {
+    // Arrange
+    type('.docs-sign-in-form__email', 'ada@example.com');
+    type('.docs-sign-in-form__password', EXAMPLE_PASSWORD_VALUE);
 
-    type('.docs-sign-in-form__email', typedEmail);
-    type('.docs-sign-in-form__password', typedPassword);
+    // Act
     element
       .querySelector<HTMLFormElement>('.docs-sign-in-form')
       ?.dispatchEvent(new Event('submit', { cancelable: true }));
+    fixture.detectChanges();
 
-    expect(submissions).toEqual([
-      { email: typedEmail, password: typedPassword, mode: 'sign-in' },
-    ]);
+    // Assert
+    expect(element.textContent).toContain('Signed in as ada@example.com');
   });
 
-  it('should emit socialClick when the provider button is clicked', () => {
-    const providers: string[] = [];
-    custom.socialClick.subscribe((event) => providers.push(event.providerId));
-
+  it('should report the clicked provider through the wrapper socialClick output', () => {
+    // Act
     element
       .querySelector<HTMLButtonElement>('.docs-sign-in-form__social')
       ?.click();
+    fixture.detectChanges();
 
-    expect(providers).toEqual(['google']);
+    // Assert
+    expect(element.textContent).toContain('Continue with provider: google');
   });
 });

@@ -17,11 +17,11 @@ The `<smart-table>` component renders a tabular data view with optional title, d
 
 ### TableComponent (`<smart-table>`)
 
-Main wrapper component. Renders `TableStandardComponent` by default. When `TABLE_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`.
+Main wrapper component. Renders `TableStandardComponent` by default. When `TABLE_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet` and hands it the `options` and `class` inputs.
 
 ### TableStandardComponent (`<smart-table-standard>`)
 
-Barebones placeholder concrete implementation. Renders a wrapper `<div>` containing an optional `<h3 class="title">`, optional `<p class="description">`, optional toolbar slot, and a `<table>` with `<thead>` (one `<th>` per column) and `<tbody>` (one `<tr>` per row, one `<td>` per column reading the value via `row[col.key]`). When `withCheckboxes` is set, an extra checkbox column is rendered before all data columns. Per-column `cellTpl` and `headerTpl` templates override the default text rendering. When `rows` is empty and `emptyTpl` is provided, the empty template is rendered as a single full-width row. A bottom `footerTpl` renders inside `<div class="footer">`. The external `cssClass` is applied to the root wrapper. It does not include any visual styling — it exists solely as the default structural placeholder until a custom implementation is registered through the token.
+Barebones placeholder concrete implementation. Renders a wrapper `<div>` containing an optional `<h3 class="title">`, optional `<p class="description">`, optional toolbar slot, and — only when there is at least one column — a `<table>` with `<thead>` (one `<th>` per column, with the column `label` or, without it, the `key`, and the column's `ariaLabel` and `data-align`) and `<tbody>` (one `<tr>` per row, one `<td>` per column reading the value via `row[col.key]`). When `withCheckboxes` is set, an extra column of plain, unbound checkboxes is rendered before all data columns. Per-column `cellTpl` (context `{ $implicit: row, column }`) and `headerTpl` templates override the default text rendering. When `rows` is empty and `emptyTpl` is provided, the empty template is rendered as a single full-width row. A bottom `footerTpl` renders inside `<div class="footer">`. The external `cssClass` is applied to the root wrapper. It does not include any visual styling — it exists solely as the default structural placeholder until a custom implementation is registered through the token.
 
 ### TablePresetComponent (`<smart-table-preset>`)
 
@@ -42,16 +42,44 @@ Abstract base directive for extending custom table implementations. Exposes `opt
 
 ### ITableOptions
 
+All properties are optional except `ITableColumn.key`. A section is rendered only when its template/string is provided.
+
+| Field            | Type                   | Default | Description                                                                                                                        |
+| ---------------- | ---------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `title`          | `string`               | -       | Heading above the table.                                                                                                           |
+| `description`    | `string`               | -       | Text under the heading.                                                                                                            |
+| `toolbarTpl`     | `TemplateRef<unknown>` | -       | A slot above the table (filters, buttons).                                                                                         |
+| `columns`        | `ITableColumn[]`       | `[]`    | The columns; without any, no `<table>` is rendered.                                                                                |
+| `rows`           | `TableRow[]`           | `[]`    | The rows, as records (`Record<string, unknown>`).                                                                                  |
+| `withCheckboxes` | `boolean`              | -       | A checkbox column: plain, unbound inputs in the standard; select-all and row highlight in the preset (internal state, no outputs). |
+| `emptyTpl`       | `TemplateRef<unknown>` | -       | A full-width row shown when there are no rows.                                                                                     |
+| `footerTpl`      | `TemplateRef<unknown>` | -       | A slot below the table.                                                                                                            |
+| `striped`        | `boolean`              | -       | Preset only: zebra rows. The standard ignores it.                                                                                  |
+| `stickyHeader`   | `boolean`              | -       | Preset only: the body scrolls under a sticky header. The standard ignores it.                                                      |
+| `withBorder`     | `boolean`              | -       | Preset only: a bordered card frame. The standard ignores it.                                                                       |
+
+### ITableColumn
+
+| Field       | Type                            | Default  | Description                                                                                |
+| ----------- | ------------------------------- | -------- | ------------------------------------------------------------------------------------------ |
+| `key`       | `string`                        | required | The row field shown in the column.                                                         |
+| `label`     | `string`                        | `key`    | Header text.                                                                               |
+| `align`     | `'left' \| 'center' \| 'right'` | `'left'` | The standard only sets `data-align`; the preset aligns the header and the body cells.      |
+| `sortable`  | `boolean`                       | -        | Preset only: a header button that sorts the rows client-side (internal state, no outputs). |
+| `cellTpl`   | `TemplateRef<unknown>`          | -        | Body cell content, with the context `{ $implicit: row, column }`.                          |
+| `headerTpl` | `TemplateRef<unknown>`          | -        | Header content; wins over `label`.                                                         |
+| `ariaLabel` | `string`                        | -        | Accessible name of the header cell.                                                        |
+
 ```typescript
 interface ITableOptions {
   title?: string;
   description?: string;
   columns?: ITableColumn[];
   rows?: TableRow[];
-  striped?: boolean;
-  stickyHeader?: boolean;
+  striped?: boolean; // preset only
+  stickyHeader?: boolean; // preset only
   withCheckboxes?: boolean;
-  withBorder?: boolean;
+  withBorder?: boolean; // preset only
   emptyTpl?: TemplateRef<unknown>;
   footerTpl?: TemplateRef<unknown>;
   toolbarTpl?: TemplateRef<unknown>;
@@ -61,8 +89,8 @@ interface ITableColumn {
   key: string;
   label?: string;
   align?: 'left' | 'center' | 'right';
-  sortable?: boolean;
-  cellTpl?: TemplateRef<unknown>;
+  sortable?: boolean; // preset only
+  cellTpl?: TemplateRef<unknown>; // context: { $implicit: row, column }
   headerTpl?: TemplateRef<unknown>;
   ariaLabel?: string;
 }
@@ -70,17 +98,13 @@ interface ITableColumn {
 type TableRow = Record<string, unknown>;
 ```
 
-All properties are optional except `ITableColumn.key`. The default `TableStandardComponent` consumes every property; a section is rendered only when its template/string is provided. `striped`, `stickyHeader`, `withBorder`, `align` and `sortable` are layout hints: the standard placeholder ignores them visually (it only sets `data-align`), while `TablePresetComponent` honours every one of them (see [Preset](#preset)).
-
 ## TABLE_STANDARD_COMPONENT_TOKEN
+
+InjectionToken that allows replacing the default `TableStandardComponent` with a custom implementation. Provide a component class extending `TableBaseComponent` under `TABLE_STANDARD_COMPONENT_TOKEN`; every `<smart-table>` below that injector renders it.
 
 ```typescript
 import { TABLE_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
-```
 
-InjectionToken that allows replacing the default `TableStandardComponent` with a custom implementation. Provide a `Type<TableBaseComponent>` to override.
-
-```typescript
 providers: [
   {
     provide: TABLE_STANDARD_COMPONENT_TOKEN,
@@ -91,9 +115,9 @@ providers: [
 
 ## Preset
 
-`TablePresetComponent` (`<smart-table-preset>`) extends `TableBaseComponent`, so it takes the same `options` input, and it renders everything the standard component renders in the Tailwind UI table look. Every class carries the `smart:` prefix and has an explicit `smart:dark:*` twin. The class recipes live in `preset/preset-classes.util.ts`, which is not exported from the barrel.
+`TablePresetComponent` (`<smart-table-preset>`) extends `TableBaseComponent`, so it takes the same `options` input, and it renders everything the standard component renders in the Tailwind UI table look. Every class carries the `smart:` prefix and has an explicit `smart:dark:*` twin. The class recipes are internal to the preset and not exported.
 
-What it styles:
+It styles the parts listed below.
 
 - **Header** (`data-role="header"`, only rendered when there is a title, description or toolbar). The title is an `<h3>` with `text-base font-semibold text-gray-900 dark:text-white`. The description uses `text-sm text-gray-500 dark:text-gray-400`. `toolbarTpl` sits on the right of the header on `sm+` screens.
 - **Table.** `min-w-full divide-y divide-gray-300 dark:divide-white/15`. Header cells use `text-sm font-semibold text-gray-900 dark:text-white`. Body cells use `whitespace-nowrap text-sm`: the first data column is emphasised (`font-medium text-gray-900 dark:text-white`) and the rest are muted (`text-gray-500 dark:text-gray-400`).
@@ -101,7 +125,7 @@ What it styles:
 - **Slots.** `cellTpl` gets `{ $implicit: row, column }`. `headerTpl` replaces the label. `emptyTpl` renders in a centred row that spans every column (checkbox column included). `footerTpl` renders under the table.
 - **External class.** Merged onto the root `<div>` next to `w-full`.
 
-The options the standard component ignores, which the preset honours:
+The table lists the options the standard component ignores, which the preset honours.
 
 | Option            | Preset rendering                                                                                                                                                                                                                                                                              |
 | ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -114,9 +138,9 @@ The options the standard component ignores, which the preset honours:
 
 The flags combine freely (for example striped + bordered + sortable + checkboxes).
 
-Because `TableComponent` forwards inputs by canonical name through `NgComponentOutlet`, the preset declares `override cssClass = input<string>('')` (dropping the inherited `class` alias). Pass `class` on `<smart-table>` as usual, or bind `[cssClass]` when you use `<smart-table-preset>` directly.
+The preset declares `cssClass` without the inherited `class` alias. Pass `class` on `<smart-table>` as usual, or bind `[cssClass]` when you use `<smart-table-preset>` directly.
 
-Register it on the token to restyle every `<smart-table>`:
+Provide `TablePresetComponent` under `TABLE_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-table>`, or register every preset of the library at once with `provideSmartPresets()`.
 
 ```typescript
 import {
@@ -141,7 +165,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
@@ -180,9 +203,6 @@ import { TableBaseComponent } from '@smartsoft001/angular';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyCustomTableComponent extends TableBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   containerClasses = computed(() => {
     const classes = ['my-table'];
     const extra = this.cssClass();

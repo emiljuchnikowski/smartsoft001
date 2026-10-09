@@ -4,4 +4,10 @@
   (itemClick)="onItemClick($event)"
   (itemToggle)="onItemToggle($event)"
 />
+@if (activeItem()) {
+  <p>Active item: {{ activeItem() }}</p>
+}
+@if (expandedItem()) {
+  <p>Expanded section: {{ expandedItem() }}</p>
+}
 <!-- #endregion -->

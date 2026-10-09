@@ -17,11 +17,11 @@ The `<smart-select-menu>` component renders a single-select menu with a placehol
 
 ### SelectMenuComponent (`<smart-select-menu>`)
 
-Main wrapper component. Renders `SelectMenuStandardComponent` by default. When `SELECT_MENU_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`.
+Main wrapper component. Renders `SelectMenuStandardComponent` by default. When `SELECT_MENU_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`, hands it `value`, `disabled`, `options` and `class`, and forwards its `value` changes back, so `[(value)]` on `<smart-select-menu>` works with any implementation. There is no preset for this component.
 
 ### SelectMenuStandardComponent (`<smart-select-menu-standard>`)
 
-Barebones placeholder concrete implementation using a native `<select>`. Renders an outer wrapper `<div>`, a `<div class="select-menu">`, and a `<select>` with one `<option>` per item; an optional placeholder is rendered as a disabled first option. Disabled items get the `disabled` attribute on their `<option>`. The `<select>` is disabled when `disabled()` is `true`. On `change`, the standard reads the raw string value, looks up the matching item by `String(value) === String(item.value)` (preserving numeric types), and calls `select()`. When `items` is empty and `emptyTpl` is provided, the empty template is rendered inside `<div class="empty">`. The external `cssClass` is applied to the root wrapper. It does not include any Tailwind UI styling — it exists solely as the default structural placeholder until a custom implementation is registered through the token.
+Barebones placeholder concrete implementation using a native `<select>`. Renders an outer wrapper `<div>`, a `<div class="select-menu">`, and a `<select>` (with `aria-label` from `options.ariaLabel`) with one `<option>` per item (with the item's `ariaLabel`); an optional placeholder is rendered as a disabled first option, selected while `value` is `null`. Disabled items get the `disabled` attribute on their `<option>`. The `<select>` is disabled when `disabled()` is `true`. On `change`, the standard reads the raw string value, looks up the matching item by `String(value) === String(item.value)` (preserving numeric types), and calls `select()`. When `items` is empty and `emptyTpl` is provided, the empty template is rendered inside `<div class="empty">`. The external `cssClass` is applied to the root wrapper. It does not include any Tailwind UI styling — it exists solely as the default structural placeholder until a custom implementation is registered through the token.
 
 ### SelectMenuBaseComponent (abstract)
 
@@ -48,6 +48,29 @@ Abstract base directive for extending custom select menu implementations. Expose
 
 ### ISelectMenuOptions
 
+| Field         | Type                     | Default | Description                                                                                           |
+| ------------- | ------------------------ | ------- | ----------------------------------------------------------------------------------------------------- |
+| `items`       | `ISelectMenuItem[]`      | `[]`    | The choices.                                                                                          |
+| `placeholder` | `string`                 | -       | A disabled first option, selected while `value` is `null`.                                            |
+| `ariaLabel`   | `string`                 | -       | Accessible name of the `<select>`.                                                                    |
+| `emptyTpl`    | `TemplateRef<unknown>`   | -       | Rendered under the select when `items` is empty.                                                      |
+| `variant`     | `SmartSelectMenuVariant` | -       | Not read by the built-in implementations; available to a custom implementation (e.g. a listbox look). |
+
+`SmartSelectMenuVariant` is `'native' | 'custom' | 'with-check' | 'with-status' | 'with-avatar' | 'with-secondary' | 'branded'`.
+
+### ISelectMenuItem
+
+| Field       | Type                                        | Default  | Description                                                                     |
+| ----------- | ------------------------------------------- | -------- | ------------------------------------------------------------------------------- |
+| `value`     | `string \| number`                          | required | The value written to `value`; a numeric value stays a number.                   |
+| `label`     | `string`                                    | required | The option text.                                                                |
+| `disabled`  | `boolean`                                   | -        | Disables the option.                                                            |
+| `ariaLabel` | `string`                                    | -        | Accessible name of the option.                                                  |
+| `avatarUrl` | `string`                                    | -        | Not read by the built-in implementations; available to a custom implementation. |
+| `iconTpl`   | `TemplateRef<unknown>`                      | -        | Not read by the built-in implementations; available to a custom implementation. |
+| `secondary` | `string`                                    | -        | Not read by the built-in implementations; available to a custom implementation. |
+| `status`    | `'online' \| 'offline' \| 'busy' \| string` | -        | Not read by the built-in implementations; available to a custom implementation. |
+
 ```typescript
 type SmartSelectMenuVariant =
   | 'native'
@@ -61,7 +84,7 @@ type SmartSelectMenuVariant =
 interface ISelectMenuOptions {
   items?: ISelectMenuItem[];
   placeholder?: string;
-  variant?: SmartSelectMenuVariant;
+  variant?: SmartSelectMenuVariant; // not read by the standard implementation
   emptyTpl?: TemplateRef<unknown>;
   ariaLabel?: string;
 }
@@ -69,26 +92,22 @@ interface ISelectMenuOptions {
 interface ISelectMenuItem {
   value: string | number;
   label: string;
-  avatarUrl?: string;
-  iconTpl?: TemplateRef<unknown>;
-  secondary?: string;
-  status?: 'online' | 'offline' | 'busy' | string;
+  avatarUrl?: string; // not read by the standard implementation
+  iconTpl?: TemplateRef<unknown>; // not read by the standard implementation
+  secondary?: string; // not read by the standard implementation
+  status?: 'online' | 'offline' | 'busy' | string; // not read by the standard implementation
   disabled?: boolean;
   ariaLabel?: string;
 }
 ```
 
-The default `SelectMenuStandardComponent` renders `value`, `disabled`, `placeholder`, `items` and `emptyTpl`. `variant`, `avatarUrl`, `iconTpl`, `secondary`, and `status` are hints/data for custom implementations registered via the token.
-
 ## SELECT_MENU_STANDARD_COMPONENT_TOKEN
+
+InjectionToken that allows replacing the default `SelectMenuStandardComponent` with a custom implementation. Provide a component class extending `SelectMenuBaseComponent` under `SELECT_MENU_STANDARD_COMPONENT_TOKEN`; every `<smart-select-menu>` below that injector renders it.
 
 ```typescript
 import { SELECT_MENU_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
-```
 
-InjectionToken that allows replacing the default `SelectMenuStandardComponent` with a custom implementation. Provide a `Type<SelectMenuBaseComponent>` to override.
-
-```typescript
 providers: [
   {
     provide: SELECT_MENU_STANDARD_COMPONENT_TOKEN,
@@ -104,7 +123,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
+  signal,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -134,9 +153,6 @@ import { SelectMenuBaseComponent } from '@smartsoft001/angular';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyCustomSelectMenuComponent extends SelectMenuBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   open = signal(false);
 
   currentLabel = computed(() => {

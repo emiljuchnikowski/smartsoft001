@@ -15,6 +15,7 @@ import { NotificationStandardComponent } from './standard/standard.component';
 import { INotificationAction, INotificationOptions } from '../../models';
 import { NOTIFICATION_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
+import { outletInputs } from '../base/outlet-inputs';
 
 @Component({
   selector: 'smart-notification',
@@ -62,16 +63,18 @@ export class NotificationComponent {
 
   componentType = computed(() => this.injectedComponent ?? null);
 
-  componentInputs = computed(() => ({
-    title: this.title(),
-    description: this.description(),
-    iconName: this.iconName(),
-    avatarUrl: this.avatarUrl(),
-    actions: this.actions(),
-    dismissible: this.dismissible(),
-    options: this.options(),
-    cssClass: this.cssClass(),
-  }));
+  componentInputs = computed(() =>
+    outletInputs(this.componentType(), {
+      title: this.title(),
+      description: this.description(),
+      iconName: this.iconName(),
+      avatarUrl: this.avatarUrl(),
+      actions: this.actions(),
+      dismissible: this.dismissible(),
+      options: this.options(),
+      cssClass: this.cssClass(),
+    }),
+  );
 
   private readonly outlet = viewChild(NgComponentOutlet);
 

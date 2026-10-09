@@ -83,8 +83,9 @@ are **generated** and git-ignored, so the work is in the sources the generator r
 | Source             | Angular variant                                                       | React variant                                                   |
 | ------------------ | --------------------------------------------------------------------- | --------------------------------------------------------------- |
 | Skill (prose, API) | `plugins/smart-angular/skills/angular-components-<name>/SKILL.md`     | `plugins/smart-react/skills/react-components-<name>/SKILL.md`   |
-| Story (live embed) | `packages/shared/angular/src/lib/components/<name>/*.stories.ts`      | `packages/shared/react/src/lib/components/<name>/*.stories.tsx` |
+| Story (playground) | `packages/shared/angular/src/lib/components/<name>/*.stories.ts`      | `packages/shared/react/src/lib/components/<name>/*.stories.tsx` |
 | Usage example      | `docs/examples/angular/src/components/<name>/usage.example.{html,ts}` | `docs/examples/react/src/components/<name>/usage.example.tsx`   |
+| Live embed         | `docs/examples/angular/src/components/usage-examples.stories.ts`      | `docs/examples/react/src/components/usage-examples.stories.tsx` |
 | Custom example     | `docs/examples/angular/src/components/<name>/custom.example.ts`       | `docs/examples/react/src/components/<name>/custom.example.tsx`  |
 
 (The plugins live in `packages/shared/claude-plugins/src/plugins/`.) A component without a React skill
@@ -97,12 +98,19 @@ gets an Angular-only page with no switch.
       Angular skill, write `docs/site/content/components/<name>.md` from the component template; that hand
       written body becomes the Angular variant and the React skill still adds the React one.
 - [ ] **2. Mark the usage regions** — wrap the primary story of each library in the markers shown below, at
-      column 0. That region is the live embed, and the code fallback while a usage example is missing.
-      Rule R9 fails the check when a component has no story or no region, in either library.
+      column 0. That region is the code fallback, and its story the live embed, while a usage example is
+      missing. Rule R9 fails the check when a component has no story or no region, in either library.
 - [ ] **3. Write the usage examples** — the HTML and TypeScript tabs (Angular) and the TSX tab (React)
       show them. The React one exports `<Pascal>UsageExample` from one file wrapped in the region, imports
       only `@smartsoft001/react` (and `@smartsoft001/models`), and mirrors the scenario of the Angular
-      example; its spec renders it inside `SmartProvider`. Rule R15 fails without them.
+      example; its spec renders it inside `SmartProvider`. Rule R15 fails without them. Both examples
+      show the same scenario and the same visible result, use the library's own button for their actions,
+      and load images from absolute `https://` URLs.
+- [ ] **3a. Render them as the live embed** — add one story per framework to the `Docs/Usage examples`
+      stories files (table above), named after the component (`ButtonGroup` for `button-group`). The page
+      embeds `docs-usage-examples--<name>` below the tabs, so the preview is the very code of the tabs,
+      rendered in English with every preset registered (`provideSmartPresets()`,
+      `SMART_PRESET_COMPONENTS`). Rule R5 fails the check when that story is missing.
 - [ ] **4. Optional, the custom examples** — Angular: when the skill has an "Extending the Base Class"
       section, `custom.example.ts` (+ spec) replaces it. Register the custom class through
       `<NAME>_STANDARD_COMPONENT_TOKEN` in a host component and assert through the wrapper: it re-emits
@@ -116,7 +124,12 @@ gets an Angular-only page with no switch.
       from the skills (`<name> (react)` for the React one); a fence that carried real information belongs
       in an example, not in prose.
 - [ ] **6. Verify** — see [Verification](#verification), plus `npx nx run angular:build-storybook -c ci` and
-      `npx nx run react:build-storybook` because the regions have to compile.
+      `npx nx run react:build-storybook` because the regions and the usage example stories have to compile.
+      Open `docs-usage-examples--<name>` in each built Storybook and look at it: that is what the page shows.
+
+A skill's code fences never reach the page (rule R6), so a skill documents an options interface as a table
+(Field, Type, Default, Description), never only as a TypeScript block, and no sentence of it ends with a
+colon right before a fence: on the page the colon would introduce nothing (rule R17).
 
 The markers of step 2:
 
@@ -209,6 +222,7 @@ rule that needed a second pass.
 | R11  | Every fenced code block declares a language.                                      |
 | R13  | Component usage tabs: HTML, TypeScript, Claude Code; plus TSX with a React block. |
 | R15  | Every component needs its usage examples: Angular `.html` + `.ts`, React `.tsx`.  |
+| R17  | A sentence ending with a colon is followed by a list, table, code block or tag.   |
 
 ## Gotchas
 

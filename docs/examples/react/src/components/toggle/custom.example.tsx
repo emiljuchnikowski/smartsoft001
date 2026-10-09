@@ -1,4 +1,6 @@
 // #region usage
+import { useState } from 'react';
+
 import {
   IToggleOptions,
   SmartProvider,
@@ -52,16 +54,23 @@ const components = { toggle: CustomToggle };
 const options: IToggleOptions = {
   label: 'Allow notifications',
   description: 'Send me an email when someone comments on my work.',
-  labelPosition: 'right',
   ariaLabel: 'Allow notifications',
 };
 
 // Every <SmartToggle> below the provider renders CustomToggle. Without value
-// the state lives in the implementation and starts at defaultValue.
+// the state lives in the implementation and starts at defaultValue;
+// onValueChange still reports every change.
 export function ToggleCustomExample() {
+  const [enabled, setEnabled] = useState(false);
+
   return (
     <SmartProvider components={components}>
-      <SmartToggle defaultValue={false} options={options} />
+      <SmartToggle
+        defaultValue={false}
+        options={options}
+        onValueChange={setEnabled}
+      />
+      <p>Notifications are {enabled ? 'on' : 'off'}.</p>
     </SmartProvider>
   );
 }

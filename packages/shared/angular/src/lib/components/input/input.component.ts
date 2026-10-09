@@ -59,6 +59,7 @@ import { InputRadioComponent } from './radio/radio.component';
 import { InputStringsComponent } from './strings/strings.component';
 import { InputTextComponent } from './text/text.component';
 import { InputVideoComponent } from './video/video.component';
+import { outletInputs } from '../base/outlet-inputs';
 
 const baseMap: Partial<Record<FieldTypeDef, Type<InputBaseComponent<any>>>> = {
   [FieldType.currency]: InputCurrencyComponent,
@@ -141,8 +142,7 @@ export class InputComponent<T> implements OnInit {
 
   component = computed(() => {
     const explicit = this.options()?.component as
-      | Type<InputBaseComponent<any>>
-      | undefined;
+      Type<InputBaseComponent<any>> | undefined;
     if (explicit) return explicit;
     const type = this.fieldOptions?.type;
     if (!type) return null;
@@ -153,11 +153,13 @@ export class InputComponent<T> implements OnInit {
   // The host is `display: contents`, so an external class has to be forwarded
   // to the field component to have any effect. InputBaseComponent aliases it
   // back to `class`, so the key here is `class`, matching ListComponent.
-  componentInputs = computed(() => ({
-    options: this.options(),
-    fieldOptions: this.fieldOptions,
-    class: this.cssClass(),
-  }));
+  componentInputs = computed(() =>
+    outletInputs(this.component(), {
+      options: this.options(),
+      fieldOptions: this.fieldOptions,
+      class: this.cssClass(),
+    }),
+  );
 
   constructor() {
     effect(() => {

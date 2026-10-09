@@ -1,8 +1,8 @@
 <!-- #region usage -->
 <smart-card [options]="options" [hasHeader]="true" [hasFooter]="true">
-  <p>{{ seatsUsed }} of {{ seatsTotal }} seats used</p>
+  <p>{{ seatsUsed() }} of {{ seatsTotal }} seats used</p>
   <div cardFooter>
-    <button type="button">Invite member</button>
+    <smart-button [options]="inviteButton">Invite member</smart-button>
   </div>
 </smart-card>
 <!-- #endregion -->

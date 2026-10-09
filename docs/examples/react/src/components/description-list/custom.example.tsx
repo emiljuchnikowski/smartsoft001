@@ -58,7 +58,10 @@ const options: IDescriptionListOptions = {
 export function DescriptionListCustomExample() {
   return (
     <SmartProvider components={components}>
-      <SmartDescriptionList options={options} />
+      <SmartDescriptionList
+        options={options}
+        className="docs-description-list--compact"
+      />
     </SmartProvider>
   );
 }

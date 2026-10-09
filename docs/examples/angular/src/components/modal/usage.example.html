@@ -1,7 +1,5 @@
 <!-- #region usage -->
-<button type="button" class="docs-modal-trigger" (click)="open.set(true)">
-  Deactivate account
-</button>
+<smart-button [options]="openButton">Deactivate account</smart-button>
 
 <smart-modal
   [(open)]="open"
@@ -12,4 +10,7 @@
   (actionClick)="onActionClick($event)"
   (closed)="onClosed()"
 />
+
+<p>Last action: {{ lastAction() ?? 'none' }}</p>
+<p>Closed by the user: {{ closedCount() }}</p>
 <!-- #endregion -->

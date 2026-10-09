@@ -24,4 +24,14 @@ describe('docs-examples-react: DescriptionListCustomExample', () => {
       container.querySelector('.docs-description-list__title'),
     ).toHaveTextContent('Applicant information');
   });
+
+  it('should hand the className of the wrapper to the custom list', () => {
+    // Arrange
+    const { container } = render(<DescriptionListCustomExample />);
+
+    // Assert
+    expect(container.querySelector('.docs-description-list')).toHaveClass(
+      'docs-description-list--compact',
+    );
+  });
 });

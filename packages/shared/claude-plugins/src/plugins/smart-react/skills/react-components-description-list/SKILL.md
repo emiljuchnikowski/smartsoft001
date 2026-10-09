@@ -104,7 +104,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
 }
 ```
 
-`SmartDescriptionListPreset` is the styled (preset) implementation: register it as above, render it directly in place of `SmartDescriptionList`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
+`SmartDescriptionListPreset` is the styled (preset) implementation: register it under the `'description-list'` key of `SmartProvider`'s `components`, render it directly in place of `SmartDescriptionList`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
 
 ```tsx
 import { SmartDescriptionListProps } from '@smartsoft001/react';

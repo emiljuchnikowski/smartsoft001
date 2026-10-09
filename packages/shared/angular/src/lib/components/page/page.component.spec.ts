@@ -31,7 +31,8 @@ class MockTranslatePipe implements PipeTransform {
   template: '<section class="injected">injected</section>',
 })
 class MockInjectedPageComponent extends PageBaseComponent {
-  // NgComponentOutlet passes 'cssClass' (not aliased 'class') so declare it explicitly
+  // Declared without the `class` alias, like the presets: the wrapper resolves
+  // its inputs through outletInputs(), so this still receives the class.
   override cssClass = input<string>('');
 }
 

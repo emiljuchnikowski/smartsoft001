@@ -22,12 +22,7 @@ export function SelectMenuUsageExample() {
 
   return (
     <>
-      <SmartSelectMenu
-        options={options}
-        disabled={false}
-        value={plan}
-        onValueChange={setPlan}
-      />
+      <SmartSelectMenu options={options} value={plan} onValueChange={setPlan} />
       {plan && <p>Selected plan: {plan}</p>}
     </>
   );

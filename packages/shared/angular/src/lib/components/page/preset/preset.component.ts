@@ -40,9 +40,10 @@ import { PageStandardComponent } from '../standard/standard.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PagePresetComponent extends PageStandardComponent {
-  // NgComponentOutlet (used by PageComponent when this variant is registered
-  // through PAGE_VARIANT_COMPONENTS_TOKEN) passes inputs by canonical name, so
-  // the inherited `class` alias must be dropped for `cssClass` to bind.
+  // Declared without the inherited `class` alias. <smart-page> resolves its
+  // inputs to the names this component declares (outletInputs), so the class
+  // passed to the wrapper still lands here; used directly, the preset takes the
+  // extra classes as `[cssClass]`.
   override cssClass = input<string>('');
 
   protected readonly headerClasses = getPageHeaderClasses();

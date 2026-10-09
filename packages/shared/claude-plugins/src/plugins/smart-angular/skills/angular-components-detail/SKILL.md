@@ -53,12 +53,21 @@ Abstract base directive for all detail sub-components. Provides:
 
 ### DetailComponent Inputs
 
-| Input     | Type                                          | Default  | Description                            |
-| --------- | --------------------------------------------- | -------- | -------------------------------------- |
-| `options` | `InputSignal<IDetailOptions<T> \| undefined>` | required | Field configuration                    |
-| `type`    | `InputSignal<any>`                            | required | Model class (used by `ModelLabelPipe`) |
+| Input     | Type                                          | Default  | Description                                                                                                     |
+| --------- | --------------------------------------------- | -------- | --------------------------------------------------------------------------------------------------------------- |
+| `options` | `InputSignal<IDetailOptions<T> \| undefined>` | required | Field configuration                                                                                             |
+| `type`    | `InputSignal<any>`                            | required | Model class (used by `ModelLabelPipe`)                                                                          |
+| `class`   | `InputSignal<string>`                         | `''`     | Classes forwarded to the field sub-component (`cssClass` input, alias `class`); the host is `display: contents` |
 
 ### IDetailOptions
+
+| Field      | Type              | Default  | Description                                                                                                                |
+| ---------- | ----------------- | -------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `key`      | `string`          | required | The field key.                                                                                                             |
+| `item`     | `Signal<T>`       | -        | The record. While it is missing or returns nothing, the wrapper shows a skeleton instead of the value.                     |
+| `options`  | `IFieldOptions`   | required | The field's `@Field` options: `type` picks the sub-component (`text` when unset or unmapped), `info` adds an info tooltip. |
+| `cellPipe` | `ICellPipe<T>`    | -        | Formats the value. Read by the `text` and `phoneNumberPl` sub-components (standard and preset).                            |
+| `loading`  | `Signal<boolean>` | -        | Not read by the built-in implementations; available to a custom implementation.                                            |
 
 ```typescript
 interface IDetailOptions<T> {
@@ -70,7 +79,7 @@ interface IDetailOptions<T> {
 }
 ```
 
-**IFieldOptions** (relevant properties): `type?: FieldType`, `info?: string`.
+`IFieldOptions` comes from `@smartsoft001/models` (the `@Field` decorator options); the wrapper reads its `type` and `info`.
 
 ### DETAIL_FIELD_COMPONENTS_TOKEN
 
@@ -105,7 +114,8 @@ URLs are removed, while basic formatting (`<b>`, `<em>`, `<a href="https://...">
 The sanitizer also strips inline `style` attributes, for example the colours and alignment the
 rich-text editor writes. A consumer who needs raw HTML for a field it trusts can return `SafeHtml`
 from its own `cellPipe` (`ICellPipe.transform` is typed as `string`, so cast the result). A
-tested version lives in `docs/examples/angular/src/components/detail/trusted-html.example.ts`:
+tested version, `TrustedDescriptionCellPipe`, lives in
+`docs/examples/angular/src/components/detail/trusted-html.example.ts`.
 
 ```typescript
 @Injectable()
@@ -145,7 +155,9 @@ Fifteen field types ship a Preline-styled **preset** (`Detail<Field>PresetCompon
 | `object`        | `DetailObjectPresetComponent`        | Card envelope around the untouched nested details            |
 | `array`         | `DetailArrayPresetComponent`         | `space-y-2` stack of item cards; em-dash when empty          |
 
-Apply them via the ready-made partial map:
+Apply them all by providing the ready-made partial map `DETAIL_PRESET_FIELD_COMPONENTS` for
+`DETAIL_FIELD_COMPONENTS_TOKEN`, or register every preset of the library at once with
+`provideSmartPresets()`.
 
 ```typescript
 import {
@@ -161,7 +173,7 @@ providers: [
 ];
 ```
 
-Notes:
+Notes on the preset map:
 
 - The map is partial — all other field types keep their standard components (maps merge over `baseMap`).
   Registering `text` in the map does NOT change the fallback for unmapped/unknown types — the map is

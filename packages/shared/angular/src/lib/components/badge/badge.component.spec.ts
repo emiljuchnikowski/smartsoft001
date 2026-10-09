@@ -1,4 +1,4 @@
-import { Component, input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { BadgeComponent } from './badge.component';
@@ -10,10 +10,7 @@ import { BADGE_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
   changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="injected-badge">injected</div>',
 })
-class MockInjectedComponent extends BadgeBaseComponent {
-  // NgComponentOutlet passes 'cssClass' (not aliased 'class') so declare it explicitly
-  override cssClass = input<string>('');
-}
+class MockInjectedComponent extends BadgeBaseComponent {}
 
 describe('@smartsoft001/shared-angular: BadgeComponent', () => {
   describe('without token', () => {

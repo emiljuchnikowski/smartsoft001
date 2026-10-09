@@ -1,9 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideTranslateService } from '@ngx-translate/core';
+import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 
 import {
   FormFactory,
   MODEL_VALIDATORS_PROVIDER,
+  SharedModule,
   StyleService,
 } from '@smartsoft001/angular';
 
@@ -15,8 +16,9 @@ describe('docs-examples-angular: FormUsageExampleComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FormUsageExampleComponent],
-      // App-wide services, provided once in the application's root config.
+      // App-wide services, provided once in the application's root config:
+      // SharedModule registers the library's dictionary.
+      imports: [FormUsageExampleComponent, SharedModule],
       providers: [
         provideTranslateService(),
         FormFactory,
@@ -25,6 +27,7 @@ describe('docs-examples-angular: FormUsageExampleComponent', () => {
       ],
     }).compileComponents();
 
+    TestBed.inject(TranslateService).use('eng');
     fixture = TestBed.createComponent(FormUsageExampleComponent);
     element = fixture.nativeElement;
     fixture.detectChanges();
@@ -34,24 +37,40 @@ describe('docs-examples-angular: FormUsageExampleComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should render one input per field of the model', () => {
+  it('should render one labelled input per field of the model', () => {
+    // Arrange
+    const labels = Array.from(element.querySelectorAll('label'), (label) =>
+      label.textContent?.trim(),
+    );
+
+    // Assert
     expect(element.querySelectorAll('smart-input')).toHaveLength(2);
+    expect(labels.join(' ')).toContain('first name');
+    expect(labels.join(' ')).toContain('email');
   });
 
-  it('should hand the typed value to the change handler', () => {
+  it('should show the typed value from the change handler', () => {
+    // Arrange
     const input = element.querySelector('input') as HTMLInputElement;
 
-    input.value = 'Ada Lovelace';
+    // Act
+    input.value = 'Ada';
     input.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
 
-    expect(fixture.componentInstance.value()?.name).toBe('Ada Lovelace');
+    // Assert
+    expect(element.textContent).toContain('First name: Ada');
   });
 
-  it('should call the submit handler when the form is submitted', () => {
+  it('should show that the form was submitted', () => {
+    // Arrange
     const form = element.querySelector('form') as HTMLFormElement;
 
+    // Act
     form.dispatchEvent(new Event('submit'));
+    fixture.detectChanges();
 
-    expect(fixture.componentInstance.submitted()).toBe(true);
+    // Assert
+    expect(element.textContent).toContain('Submitted');
   });
 });

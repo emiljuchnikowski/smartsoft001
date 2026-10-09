@@ -37,10 +37,10 @@ All from `@smartsoft001/react`.
 
 ### `IListContainerOptions`
 
-| Field                | Type                        | Default | Description                                                                                               |
-| -------------------- | --------------------------- | ------- | --------------------------------------------------------------------------------------------------------- |
-| `variant?`           | `SmartListContainerVariant` | —       | Exposed as `data-variant`.                                                                                |
-| `fullWidthOnMobile?` | `boolean`                   | —       | For implementations of your own (edge-to-edge on small screens); the standard rendering does not read it. |
+| Field                | Type                        | Default | Description                                                                                                    |
+| -------------------- | --------------------------- | ------- | -------------------------------------------------------------------------------------------------------------- |
+| `variant?`           | `SmartListContainerVariant` | —       | Exposed as `data-variant`, a hook for your CSS or a custom implementation; the standard adds no styles for it. |
+| `fullWidthOnMobile?` | `boolean`                   | —       | Not read by the built-in implementation; available to a custom implementation (edge-to-edge on small screens). |
 
 ### Related types
 
@@ -65,12 +65,12 @@ export function Team() {
 
 `SmartListContainer` renders the component registered under the `'list-container'` key of `SmartProvider`'s `components`, and `SmartListContainerStandard` when nothing is registered there. Every `SmartListContainer` below the provider then renders the registered component, which receives the same props.
 
-There is no preset for this component: register a component of your own that takes `SmartListContainerProps`, as shown below, as `components={{ 'list-container': MyListContainer }}`. Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
+There is no preset for this component: register a component of your own that takes `SmartListContainerProps`, as shown below, as `components={{ 'list-container': CustomListContainer }}`. Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
 
 ```tsx
 import { SmartListContainerProps } from '@smartsoft001/react';
 
-export function CardListContainer({
+export function CustomListContainer({
   options,
   className,
   children,

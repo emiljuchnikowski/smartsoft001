@@ -1,3 +1,6 @@
 <!-- #region usage -->
 <smart-export [value]="orders" [fileName]="fileName" [handler]="exportOrders" />
+@if (exported(); as orders) {
+  <p>Exported {{ orders.length }} orders as {{ exportedFileName() }}</p>
+}
 <!-- #endregion -->

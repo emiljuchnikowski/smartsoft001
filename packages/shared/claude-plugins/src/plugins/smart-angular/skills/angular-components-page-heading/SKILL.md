@@ -17,11 +17,11 @@ The `<smart-page-heading>` component provides a composable page heading region w
 
 ### PageHeadingComponent (`<smart-page-heading>`)
 
-Main wrapper component. Renders `PageHeadingStandardComponent` by default. When `PAGE_HEADING_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`.
+Main wrapper component. Renders `PageHeadingStandardComponent` by default. When `PAGE_HEADING_STANDARD_COMPONENT_TOKEN` is provided (or `provideSmartPresets()` registers the preset), renders the injected component via `NgComponentOutlet`, forwarding `options` and the `class`.
 
 ### PageHeadingStandardComponent (`<smart-page-heading-standard>`)
 
-Barebones placeholder concrete implementation. Always renders a wrapper `<div>` and a `<header>`. Renders any of the optional slots (`breadcrumbsTpl`, `bannerTpl`, `avatarTpl`, `logoTpl`, `metaTpl`, `statsTpl`, `actionsTpl`, `filtersTpl`) only when provided. Renders `<h1>` with `options.title` and `<p class="subtitle">` with `options.subtitle` only when those strings are non-empty. The external `cssClass` is applied to the wrapper. It does not include Tailwind UI styling — it exists solely as the default structural placeholder until a custom implementation is registered through the token.
+Barebones placeholder concrete implementation. Always renders a wrapper `<div>` and a `<header>`. Renders any of the optional slots (`breadcrumbsTpl`, `bannerTpl`, `avatarTpl`, `logoTpl`, `metaTpl`, `statsTpl`, `actionsTpl`, `filtersTpl`) only when provided; it does not read `navTpl` or `presentation`. Renders `<h1>` with `options.title` and `<p class="subtitle">` with `options.subtitle` only when those strings are non-empty. The external `cssClass` is applied to the wrapper. It does not include Tailwind UI styling — it exists solely as the default structural placeholder until a custom implementation is registered through the token.
 
 ### PageHeadingBaseComponent (abstract)
 
@@ -38,6 +38,23 @@ Abstract base directive for extending custom page-heading implementations. Expos
 
 ### IPageHeadingOptions
 
+All properties are optional; a section is rendered only when its template or string is provided.
+
+| Field            | Type                                                                     | Default      | Description                                                                                     |
+| ---------------- | ------------------------------------------------------------------------ | ------------ | ----------------------------------------------------------------------------------------------- |
+| `title`          | `string`                                                                 | -            | The page title, an `<h1>` (the preset puts it in the brand zone, after the `logoTpl`).          |
+| `subtitle`       | `string`                                                                 | -            | Text under the title.                                                                           |
+| `actionsTpl`     | `TemplateRef<unknown>`                                                   | -            | Action buttons (the preset's actions zone, hidden below `md` and repeated in the mobile panel). |
+| `avatarTpl`      | `TemplateRef<unknown>`                                                   | -            | An avatar (the preset shows it in place of the actions in the `user` layout only).              |
+| `logoTpl`        | `TemplateRef<unknown>`                                                   | -            | A logo (the preset's brand zone).                                                               |
+| `breadcrumbsTpl` | `TemplateRef<unknown>`                                                   | -            | Standard only: breadcrumbs above the header.                                                    |
+| `bannerTpl`      | `TemplateRef<unknown>`                                                   | -            | Standard only: a banner above the header.                                                       |
+| `metaTpl`        | `TemplateRef<unknown>`                                                   | -            | Standard only: meta information (dates, location, counts).                                      |
+| `statsTpl`       | `TemplateRef<unknown>`                                                   | -            | Standard only: a stats row.                                                                     |
+| `filtersTpl`     | `TemplateRef<unknown>`                                                   | -            | Standard only: filter controls.                                                                 |
+| `navTpl`         | `TemplateRef<unknown>`                                                   | -            | Preset only: the desktop nav zone (hidden below `md`, repeated in the mobile panel).            |
+| `presentation`   | `{ layout?: 'links-left' \| 'links-center' \| 'links-right' \| 'user' }` | `links-left` | Preset only: the arrangement of the bar (see the layouts below).                                |
+
 ```typescript
 interface IPageHeadingOptions {
   title?: string;
@@ -50,20 +67,20 @@ interface IPageHeadingOptions {
   statsTpl?: TemplateRef<unknown>;
   logoTpl?: TemplateRef<unknown>;
   filtersTpl?: TemplateRef<unknown>;
+  navTpl?: TemplateRef<unknown>;
+  presentation?: {
+    layout?: 'links-left' | 'links-center' | 'links-right' | 'user';
+  };
 }
 ```
 
-All properties are optional. The default `PageHeadingStandardComponent` consumes every property; a section is rendered only when its template/string is provided.
-
 ## PAGE_HEADING_STANDARD_COMPONENT_TOKEN
+
+InjectionToken from `@smartsoft001/angular` that allows replacing the default `PageHeadingStandardComponent` with a custom implementation. Provide a `Type<PageHeadingBaseComponent>` in your application or component providers; `provideSmartPresets()` provides `PageHeadingPresetComponent` for it together with every other preset.
 
 ```typescript
 import { PAGE_HEADING_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
-```
 
-InjectionToken that allows replacing the default `PageHeadingStandardComponent` with a custom implementation. Provide a `Type<PageHeadingBaseComponent>` to override.
-
-```typescript
 providers: [
   {
     provide: PAGE_HEADING_STANDARD_COMPONENT_TOKEN,
@@ -79,7 +96,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
@@ -112,9 +128,6 @@ import { PageHeadingBaseComponent } from '@smartsoft001/angular';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyCustomPageHeadingComponent extends PageHeadingBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   containerClasses = computed(() => {
     const classes = ['my-page-heading'];
     const extra = this.cssClass();
@@ -179,12 +192,17 @@ export class MyCustomPageHeadingComponent extends PageHeadingBaseComponent {
 `PageHeadingPresetComponent` (`smart-page-heading-preset`) is a HyperUI-styled
 variation. Unlike the standard page-heading (a page title block), this preset
 **intentionally renders a NAVBAR look**: a sticky-ready `<header>` bar with a
-logo/brand zone, a responsive desktop nav zone, a CTA/actions zone (or a user
-avatar zone), and a mobile hamburger that toggles a collapsible panel. The
-collapse is driven by a local `menuOpened` signal — no external JS runtime.
+brand zone (the `logoTpl`, followed by the `title` as an `<h1>` and the
+`subtitle` under it), a responsive desktop nav zone, a CTA/actions zone (or a
+user avatar zone), and a mobile hamburger that toggles a collapsible panel. The
+collapse is driven by a local `menuOpened` signal — no external JS runtime. It
+does not render the breadcrumbs, banner, meta, stats and filters slots.
 
-Register it through `PAGE_HEADING_STANDARD_COMPONENT_TOKEN` to restyle every
-`<smart-page-heading>`, or use `<smart-page-heading-preset>` directly.
+Register it through `PAGE_HEADING_STANDARD_COMPONENT_TOKEN` (or with
+`provideSmartPresets()`) to restyle every `<smart-page-heading>`, or use
+`<smart-page-heading-preset>` directly. It declares `cssClass` without the
+`class` alias: on the preset selector bind `[cssClass]`; on
+`<smart-page-heading>` pass `class` as usual.
 
 ### Layouts (`presentation.layout`)
 
@@ -195,16 +213,15 @@ Register it through `PAGE_HEADING_STANDARD_COMPONENT_TOKEN` to restyle every
 | `links-right`  | Logo left (flex-1), nav + CTAs grouped on the right           |
 | `user`         | Like `links-right`, but an `avatarTpl` zone instead of CTAs   |
 
-### New `IPageHeadingOptions` fields
+### Preset-only `IPageHeadingOptions` fields
 
 - `navTpl?: TemplateRef<unknown>` — desktop nav content (hidden below `md`,
-  repeated inside the mobile panel when open). Preset-only.
+  repeated inside the mobile panel when open).
 - `presentation?: { layout?: 'links-left' | 'links-center' | 'links-right' | 'user' }`
-  — selects the navbar arrangement (default `links-left`). Preset-only.
+  — selects the navbar arrangement (default `links-left`).
 
-Existing `logoTpl` (with a `title` string fallback), `actionsTpl`, and
-`avatarTpl` (used by the `user` layout) are reused for the brand, CTA, and user
-zones respectively.
+`logoTpl`, `title` and `subtitle` fill the brand zone, `actionsTpl` the CTA zone
+and `avatarTpl` the user zone (`user` layout).
 
 ### Token registration
 
@@ -222,7 +239,7 @@ providers: [
 
 ### Example nav recipe
 
-The preset renders only the nav **zone** wrapper; supply the list via `navTpl`:
+The preset renders only the nav **zone** wrapper; supply the list via `navTpl`, as in the template below.
 
 ```html
 <ng-template #nav>

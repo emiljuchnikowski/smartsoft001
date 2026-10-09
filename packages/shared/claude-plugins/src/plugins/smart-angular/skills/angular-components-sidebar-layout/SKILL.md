@@ -17,7 +17,7 @@ The `<smart-sidebar-layout>` component provides a two-column application shell w
 
 ### SidebarLayoutComponent (`<smart-sidebar-layout>`)
 
-Main wrapper component. Renders `SidebarLayoutStandardComponent` by default. When `SIDEBAR_LAYOUT_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`. Accepts main content via projected `<ng-content>`.
+Main wrapper component. Renders `SidebarLayoutStandardComponent` by default. When `SIDEBAR_LAYOUT_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet` and hands it the `options` and `class` inputs. Accepts main content via projected `<ng-content>`, which reaches the `<ng-content />` of whichever implementation renders (the standard, the preset or a custom one).
 
 ### SidebarLayoutStandardComponent (`<smart-sidebar-layout-standard>`)
 
@@ -38,31 +38,37 @@ Abstract base directive for extending custom sidebar-layout implementations. Exp
 
 ### ISidebarLayoutOptions
 
+| Field              | Type                                 | Default  | Description                                                                                                           |
+| ------------------ | ------------------------------------ | -------- | --------------------------------------------------------------------------------------------------------------------- |
+| `sidebarTpl`       | `TemplateRef<unknown>`               | -        | The sidebar content, rendered in the `<aside>`.                                                                       |
+| `headerTpl`        | `TemplateRef<unknown>`               | -        | A header above the sidebar and the content.                                                                           |
+| `sidebarPosition`  | `'left' \| 'right'`                  | `'left'` | `'right'` renders the sidebar after the content.                                                                      |
+| `title`            | `string`                             | -        | Preset only: an `<h1>` in the header zone when `headerTpl` is not set. The standard ignores it.                       |
+| `condensed`        | `boolean`                            | `false`  | Preset only: narrows the sidebar from `w-64` to `w-16` (the sidebar content is not changed). The standard ignores it. |
+| `mobileBreakpoint` | `SmartSidebarLayoutMobileBreakpoint` | -        | Not read by the built-in implementations; available to a custom implementation.                                       |
+
+`SmartSidebarLayoutMobileBreakpoint` is `'sm' | 'md' | 'lg'`.
+
 ```typescript
 type SmartSidebarLayoutMobileBreakpoint = 'sm' | 'md' | 'lg';
 
 interface ISidebarLayoutOptions {
-  title?: string;
+  title?: string; // preset only
   sidebarTpl?: TemplateRef<unknown>;
   headerTpl?: TemplateRef<unknown>;
   sidebarPosition?: 'left' | 'right';
-  mobileBreakpoint?: SmartSidebarLayoutMobileBreakpoint;
-  condensed?: boolean;
+  mobileBreakpoint?: SmartSidebarLayoutMobileBreakpoint; // not read by the built-in implementations
+  condensed?: boolean; // preset only
 }
 ```
 
-The default `SidebarLayoutStandardComponent` consumes `sidebarTpl`, `headerTpl`, and `sidebarPosition`. `title`, `mobileBreakpoint`, and `condensed` are reserved for custom implementations registered via `SIDEBAR_LAYOUT_STANDARD_COMPONENT_TOKEN` and are ignored by `SidebarLayoutStandardComponent`.
-
 ## SIDEBAR_LAYOUT_STANDARD_COMPONENT_TOKEN
+
+InjectionToken that allows replacing the default `SidebarLayoutStandardComponent` with a custom implementation. Provide a component class extending `SidebarLayoutBaseComponent` under `SIDEBAR_LAYOUT_STANDARD_COMPONENT_TOKEN`; every `<smart-sidebar-layout>` below that injector renders it.
 
 ```typescript
 import { SIDEBAR_LAYOUT_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
-```
 
-InjectionToken that allows replacing the default `SidebarLayoutStandardComponent` with a custom implementation. Provide a `Type<SidebarLayoutBaseComponent>` to override.
-
-```typescript
-// In your app module or component providers:
 providers: [
   {
     provide: SIDEBAR_LAYOUT_STANDARD_COMPONENT_TOKEN,
@@ -78,7 +84,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
@@ -109,9 +114,6 @@ import { SidebarLayoutBaseComponent } from '@smartsoft001/angular';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyCustomSidebarLayoutComponent extends SidebarLayoutBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   containerClasses = computed(() => {
     const classes = ['my-sidebar-layout'];
     const extra = this.cssClass();
@@ -123,8 +125,7 @@ export class MyCustomSidebarLayoutComponent extends SidebarLayoutBaseComponent {
 
 When extending the base directly, remember to:
 
-- declare `cssClass = input<string>('')` explicitly (no `class` alias) if the component is used via `NgComponentOutlet` through `SIDEBAR_LAYOUT_STANDARD_COMPONENT_TOKEN`,
-- accept main content via `<ng-content>`,
+- accept main content via `<ng-content>` (the wrapper projects its content into it),
 - read `options().sidebarPosition` to swap aside/main DOM order if needed.
 
 ## Usage Examples
@@ -171,6 +172,7 @@ When extending the base directly, remember to:
 
 - Wrapper: `packages/shared/angular/src/lib/components/sidebar-layout/sidebar-layout.component.ts`
 - Standard: `packages/shared/angular/src/lib/components/sidebar-layout/standard/standard.component.ts`
+- Preset: `packages/shared/angular/src/lib/components/sidebar-layout/preset/preset.component.ts`
 - Base class: `packages/shared/angular/src/lib/components/sidebar-layout/base/base.component.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`SIDEBAR_LAYOUT_STANDARD_COMPONENT_TOKEN`)
 - Interface: `packages/shared/angular/src/lib/models/interfaces.ts` (`ISidebarLayoutOptions`)
@@ -182,7 +184,7 @@ drop-in replacement for `SidebarLayoutStandardComponent`. It extends the
 standard component (reusing `isRightSidebar`) and applies a Tailwind shell where
 every utility is `smart:`-prefixed with explicit `smart:dark:*` variants.
 
-Structure:
+The structure is listed below.
 
 - Root: full-height gray page (`smart:min-h-full smart:bg-gray-50
 smart:dark:bg-gray-900`); `cssClass` is merged onto it.
@@ -201,14 +203,16 @@ smart:dark:bg-gray-900`); `cssClass` is merged onto it.
 No new `ISidebarLayoutOptions` fields — the preset consumes the existing
 `title`, `headerTpl`, `sidebarTpl`, `sidebarPosition`, and `condensed`.
 
-Because the wrapper forwards inputs canonically through `NgComponentOutlet`, the
-preset does `override cssClass = input<string>('')` (drops the inherited `class`
-alias).
+The preset declares `cssClass` without the `class` alias: bind `[cssClass]`
+when you use `<smart-sidebar-layout-preset>` directly. On
+`<smart-sidebar-layout>` pass `class` as usual.
 
-Class recipes live in `preset/preset-classes.util.ts`
-(`getSidebarLayout*Classes`); it is intentionally NOT barrel-exported.
+The class recipes are internal to the preset and not exported.
 
-Register it to restyle every `<smart-sidebar-layout>`:
+Provide `SidebarLayoutPresetComponent` under
+`SIDEBAR_LAYOUT_STANDARD_COMPONENT_TOKEN` to restyle every
+`<smart-sidebar-layout>`, or register every preset of the library at once with
+`provideSmartPresets()`.
 
 ```typescript
 {
@@ -217,5 +221,5 @@ Register it to restyle every `<smart-sidebar-layout>`:
 }
 ```
 
-Documented gap: `options.mobileBreakpoint` is not consumed — the standard
-component the preset extends does not act on it either.
+Documented gap: `options.mobileBreakpoint` is not read by the preset nor by the
+standard component it extends.

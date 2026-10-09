@@ -32,16 +32,16 @@ The preset's class helpers (`getAvatarImageClasses`, `getAvatarInitialsClasses`,
 
 ### `SmartAvatarProps`
 
-| Prop                    | Type                | Default    | Description                                                                       |
-| ----------------------- | ------------------- | ---------- | --------------------------------------------------------------------------------- |
-| `imageUrl?`             | `string`            | —          | Picture URL; when missing, the initials or the placeholder are shown.             |
-| `initials?`             | `string`            | —          | Initials shown when there is no image.                                            |
-| `size?`                 | `SmartAvatarSize`   | `'md'`     | The size scale (`xs` to `xl`).                                                    |
-| `shape?`                | `SmartAvatarShape`  | `'circle'` | `circle` or `rounded` (rounded square).                                           |
-| `notificationPosition?` | `'top' \| 'bottom'` | —          | Corner of the status dot; no dot when unset.                                      |
-| `group?`                | `IAvatarItem[]`     | —          | Renders a stacked group instead of one avatar when non-empty.                     |
-| `options?`              | `IAvatarOptions`    | —          | Placeholder type and stack direction.                                             |
-| `className?`            | `string`            | —          | Classes on the outermost element (group container, status wrapper or the avatar). |
+| Prop                    | Type                | Default    | Description                                                                                                    |
+| ----------------------- | ------------------- | ---------- | -------------------------------------------------------------------------------------------------------------- |
+| `imageUrl?`             | `string`            | —          | Picture URL; when missing, the initials or the placeholder are shown.                                          |
+| `initials?`             | `string`            | —          | Initials shown when there is no image.                                                                         |
+| `size?`                 | `SmartAvatarSize`   | `'md'`     | The size scale (`xs` to `xl`). Styled by the preset; `data-size` on the standard.                              |
+| `shape?`                | `SmartAvatarShape`  | `'circle'` | `circle` or `rounded` (rounded square). Styled by the preset; `data-shape` on the standard.                    |
+| `notificationPosition?` | `'top' \| 'bottom'` | —          | Preset only: corner of the status dot of a single avatar; no dot when unset. `SmartAvatarStandard` ignores it. |
+| `group?`                | `IAvatarItem[]`     | —          | Renders a stacked group instead of one avatar when non-empty.                                                  |
+| `options?`              | `IAvatarOptions`    | —          | Placeholder type and stack direction.                                                                          |
+| `className?`            | `string`            | —          | Classes on the outermost element (group container, status wrapper or the avatar).                              |
 
 ### `IAvatarOptions`
 
@@ -116,7 +116,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
 }
 ```
 
-`SmartAvatarPreset` is the styled (preset) implementation: register it as above, render it directly in place of `SmartAvatar`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
+`SmartAvatarPreset` is the styled (preset) implementation: register it under the `'avatar'` key of `SmartProvider`'s `components`, render it directly in place of `SmartAvatar`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
 
 ### The `useAvatar` hook
 

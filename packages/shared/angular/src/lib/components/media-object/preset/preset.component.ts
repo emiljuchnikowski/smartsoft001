@@ -32,9 +32,10 @@ import { MediaObjectStandardComponent } from '../standard/standard.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MediaObjectPresetComponent extends MediaObjectStandardComponent {
-  // NgComponentOutlet (used by MediaObjectComponent when this is registered via
-  // MEDIA_OBJECT_STANDARD_COMPONENT_TOKEN) passes inputs by canonical name, so
-  // the inherited `class` alias must be dropped for `cssClass` to bind.
+  // Declared without the inherited `class` alias. <smart-media-object> resolves
+  // its inputs to the names this component declares (outletInputs), so the
+  // class passed to the wrapper still lands here; used directly, the preset
+  // takes the extra classes as `[cssClass]`.
   override cssClass = input<string>('');
 
   protected rootClasses = computed(() =>

@@ -1,3 +1,7 @@
 <!-- #region usage -->
 <smart-breadcrumbs [options]="options" (itemClick)="onItemClick($event)" />
+
+@if (lastItemId(); as itemId) {
+  <p>Last clicked: {{ itemId }}</p>
+}
 <!-- #endregion -->

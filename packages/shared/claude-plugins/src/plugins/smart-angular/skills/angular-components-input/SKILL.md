@@ -18,67 +18,88 @@ The `<smart-input>` component renders a form input for a single model field by d
 
 ### InputComponent (`<smart-input>`)
 
-Main wrapper component. Resolves `fieldOptions` from `@Field()` decorator metadata on the model, then selects a sub-component from `baseMap` (or `extendMap` override) based on `fieldOptions.type` and renders it via `NgComponentOutlet`. Also renders an inline info button when `fieldOptions.info` is set and a loader while `control.status === 'PENDING'`. Below the input, renders `<smart-input-error>` when `control.errors` are present and the control has been touched.
+Main wrapper component. Resolves `fieldOptions` from `@Field()` decorator metadata on the model, then selects a sub-component from `baseMap` (or `extendMap` override) based on `fieldOptions.type` and renders it via `NgComponentOutlet`, forwarding `options`, `fieldOptions` and the `class` it receives. Also renders an inline info button when `fieldOptions.info` is set and a loader while `control.status === 'PENDING'`. Below the input, renders `<smart-input-error>` when `control.errors` are present and the control has been touched. A field whose options (for the current `mode`) set `hide: true` renders nothing.
 
 ### InputBaseComponent (abstract)
 
 Abstract base directive for all input sub-components. Provides:
 
-- `options: InputSignal<InputOptions<T>>` — field configuration (control, fieldKey, model, treeLevel, possibilities, component)
-- `fieldOptions: InputSignal<IFieldOptions | undefined>` — resolved field decorator metadata
-- `cssClass: InputSignal<string>` (alias `class`) — external CSS classes
+- `options: InputSignal<InputOptions<T> | undefined>` — field configuration (control, fieldKey, model, mode, treeLevel, possibilities, component)
+- `fieldOptions: InputSignal<IFieldOptions | undefined>` (a required input) — resolved field decorator metadata
+- `cssClass: InputSignal<string>` (alias `class`) — external CSS classes, forwarded by `<smart-input>`
 - `internalOptions`, `control`, `required`, `possibilities` — populated via `effect` when options change
 - `afterSetOptionsHandler()` — hook invoked after options resolve, used by sub-components for validator/possibilities setup
 - `formControl`, `formControlArray`, `formControlGroup` — typed accessors for `control`
 
 ### InputPossibilitiesBaseComponent (abstract)
 
-Extends `InputBaseComponent` for sub-components that need list possibilities (radio, check). Injects `MODEL_POSSIBILITIES_PROVIDER` and auto-refreshes possibilities on parent control changes.
+Extends `InputBaseComponent` for sub-components that need list possibilities: the radio and check components (standard and preset) and the enum preset. Its `afterSetOptionsHandler()` asks `MODEL_POSSIBILITIES_PROVIDER` for the possibilities and asks again 500 ms after the parent form's value changes. The built-in radio, check and enum preset components override that hook without calling it, so they never consult the provider: they show `options.possibilities`, else the `possibilities` of the field's `@Field()` metadata. A custom component that keeps the inherited hook gets the provider behaviour.
+
+### InputFileBaseComponent (abstract)
+
+Extends `InputBaseComponent` for the uploading fields (attachment, image, pdf, video and the file and logo presets). It listens to the hidden `#inputObj` file input, checks the picked file against its `accept` list (a toast with `INPUT.ERRORS.invalidFileType` otherwise), uploads it through `FileService` and sets the result as the control value. It exposes `loading`, `percent`, `file` and the `addButtonOptions`, `showButtonOptions` and `deleteButtonOptions` of the buttons the fields render.
+
+### InputErrorComponent (`<smart-input-error>`)
+
+The validation messages `<smart-input>` renders under a touched field. Its only input is `errors` (the control's `ValidationErrors`). Messages, in order: `required` (which hides `confirm`), `confirm`, `invalidNip`, `invalidUnique`, `email`, `phoneNumber`, `pesel` or `invalidPesel` (one message), `minlength`, `maxlength`, `min`, `max` and `customMessage` (shown as is), translated from `INPUT.ERRORS.*`. `InputComponent` always renders this component; there is no token to replace it.
 
 ### Default Sub-Components
 
-| FieldType       | Sub-component                 | Selector                      | Description                                           |
-| --------------- | ----------------------------- | ----------------------------- | ----------------------------------------------------- |
-| `text`          | `InputTextComponent`          | `smart-input-text`            | Plain text input                                      |
-| `email`         | `InputEmailComponent`         | `smart-input-email`           | Email input                                           |
-| `password`      | `InputPasswordComponent`      | `smart-input-password`        | Password input + optional `<smart-password-strength>` |
-| `nip`           | `InputNipComponent`           | `smart-input-nip`             | NIP with built-in `invalidNip` validator              |
-| `pesel`         | `InputPeselComponent`         | `smart-input-pesel`           | PESEL text input                                      |
-| `int`           | `InputIntComponent`           | `smart-input-int`             | Integer input (`type="number" step="1"`)              |
-| `float`         | `InputFloatComponent`         | `smart-input-float`           | Decimal input (`type="number" step="0.01"`)           |
-| `currency`      | `InputCurrencyComponent`      | `smart-input-currency`        | Currency input (`type="number" step="0.01"`)          |
-| `phoneNumber`   | `InputPhoneNumberComponent`   | `smart-input-phone-number`    | Telephone input                                       |
-| `phoneNumberPl` | `InputPhoneNumberPlComponent` | `smart-input-phone-number-pl` | Telephone input + built-in length(9) validator        |
-| `longText`      | `InputLongTextComponent`      | `smart-input-long-text`       | Rich text editor (`ngx-editor`)                       |
-| `date`          | `InputDateComponent`          | `smart-input-date`            | HTML date input (`type="date"`)                       |
-| `dateWithEdit`  | `InputDateWithEditComponent`  | `smart-input-date-with-edit`  | Digit-by-digit date via `<smart-date-edit>`           |
-| `dateRange`     | `InputDateRangeComponent`     | `smart-input-date-range`      | Date range via `<smart-date-range>`                   |
-| `flag`          | `InputFlagComponent`          | `smart-input-flag`            | Single checkbox                                       |
-| `radio`         | `InputRadioComponent`         | `smart-input-radio`           | Radio group (from possibilities)                      |
-| `check`         | `InputCheckComponent`         | `smart-input-check`           | Checkbox group (from possibilities)                   |
-| `enum`          | `InputEnumComponent`          | `smart-input-enum`            | Multi-select checkboxes from enum                     |
-| `color`         | `InputColorComponent`         | `smart-input-color`           | Color picker (`ngx-color-picker`)                     |
-| `logo`          | `InputLogoComponent`          | `smart-input-logo`            | Image upload with inline preview                      |
-| `address`       | `InputAddressComponent`       | `smart-input-address`         | Nested `FormGroup` (city/zip/street/building/flat)    |
-| `object`        | `InputObjectComponent`        | `smart-input-object`          | Nested form via `FORM_COMPONENT_TOKEN`                |
-| `array`         | `InputArrayComponent`         | `smart-input-array`           | Dynamic array of nested forms                         |
-| `ints`          | `InputIntsComponent`          | `smart-input-ints`            | Dynamic list of integer inputs                        |
-| `strings`       | `InputStringsComponent`       | `smart-input-strings`         | Dynamic list of string inputs                         |
-| `file`          | `InputFileComponent`          | `smart-input-file`            | Generic file chooser                                  |
-| `attachment`    | `InputAttachmentComponent`    | `smart-input-attachment`      | File upload (any type) with download/delete           |
-| `image`         | `InputImageComponent`         | `smart-input-image`           | Image upload with preview                             |
-| `pdf`           | `InputPdfComponent`           | `smart-input-pdf`             | PDF upload with show/delete                           |
-| `video`         | `InputVideoComponent`         | `smart-input-video`           | Video upload with play/delete                         |
+| FieldType       | Sub-component                 | Selector                      | Description                                                                                                     |
+| --------------- | ----------------------------- | ----------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `text`          | `InputTextComponent`          | `smart-input-text`            | Plain text input                                                                                                |
+| `email`         | `InputEmailComponent`         | `smart-input-email`           | Email input                                                                                                     |
+| `password`      | `InputPasswordComponent`      | `smart-input-password`        | Password input; adds `<smart-password-strength>` when the field's `possibilities.strength` is set               |
+| `nip`           | `InputNipComponent`           | `smart-input-nip`             | NIP with built-in `invalidNip` validator                                                                        |
+| `pesel`         | `InputPeselComponent`         | `smart-input-pesel`           | PESEL text input (the form factory adds the `pesel` check; the preset adds `invalidPesel` too)                  |
+| `int`           | `InputIntComponent`           | `smart-input-int`             | Integer input (`type="number" step="1"`)                                                                        |
+| `float`         | `InputFloatComponent`         | `smart-input-float`           | Decimal input (`type="number" step="0.01"`)                                                                     |
+| `currency`      | `InputCurrencyComponent`      | `smart-input-currency`        | Currency input (`type="number" step="0.01"`)                                                                    |
+| `phoneNumber`   | `InputPhoneNumberComponent`   | `smart-input-phone-number`    | Telephone input                                                                                                 |
+| `phoneNumberPl` | `InputPhoneNumberPlComponent` | `smart-input-phone-number-pl` | Telephone input + built-in length(9) validator                                                                  |
+| `longText`      | `InputLongTextComponent`      | `smart-input-long-text`       | Rich text editor (`ngx-editor`)                                                                                 |
+| `date`          | `InputDateComponent`          | `smart-input-date`            | HTML date input (`type="date"`)                                                                                 |
+| `dateWithEdit`  | `InputDateWithEditComponent`  | `smart-input-date-with-edit`  | Digit-by-digit date via `<smart-date-edit>`                                                                     |
+| `dateRange`     | `InputDateRangeComponent`     | `smart-input-date-range`      | Date range via `<smart-date-range>`                                                                             |
+| `flag`          | `InputFlagComponent`          | `smart-input-flag`            | Single checkbox                                                                                                 |
+| `radio`         | `InputRadioComponent`         | `smart-input-radio`           | Radio group (from possibilities)                                                                                |
+| `check`         | `InputCheckComponent`         | `smart-input-check`           | Checkbox group (from possibilities)                                                                             |
+| `enum`          | `InputEnumComponent`          | `smart-input-enum`            | One checkbox per key of the field's enum; the value is the list of checked keys (the preset differs, see below) |
+| `color`         | `InputColorComponent`         | `smart-input-color`           | Color picker (`ngx-color-picker`)                                                                               |
+| `logo`          | `InputLogoComponent`          | `smart-input-logo`            | Image picker with inline preview; stores a base64 `data:` URL, no upload (the preset differs, see below)        |
+| `address`       | `InputAddressComponent`       | `smart-input-address`         | Nested `FormGroup` (city/zip/street/building/flat)                                                              |
+| `object`        | `InputObjectComponent`        | `smart-input-object`          | Nested form via `FORM_COMPONENT_TOKEN`                                                                          |
+| `array`         | `InputArrayComponent`         | `smart-input-array`           | Dynamic array of nested forms                                                                                   |
+| `ints`          | `InputIntsComponent`          | `smart-input-ints`            | Dynamic list of integer inputs                                                                                  |
+| `strings`       | `InputStringsComponent`       | `smart-input-strings`         | Dynamic list of string inputs                                                                                   |
+| `file`          | `InputFileComponent`          | `smart-input-file`            | Generic file chooser; keeps the picked `File` as the value, no upload (the preset differs, see below)           |
+| `attachment`    | `InputAttachmentComponent`    | `smart-input-attachment`      | File upload (any type) with download/delete                                                                     |
+| `image`         | `InputImageComponent`         | `smart-input-image`           | Image upload with preview                                                                                       |
+| `pdf`           | `InputPdfComponent`           | `smart-input-pdf`             | PDF upload with show/delete                                                                                     |
+| `video`         | `InputVideoComponent`         | `smart-input-video`           | Video upload with play/delete                                                                                   |
 
 ## API
 
 ### InputComponent Inputs
 
-| Input     | Type                                        | Default  | Description         |
-| --------- | ------------------------------------------- | -------- | ------------------- |
-| `options` | `InputSignal<InputOptions<T> \| undefined>` | optional | Field configuration |
+| Input     | Type                                        | Default     | Description                                                                   |
+| --------- | ------------------------------------------- | ----------- | ----------------------------------------------------------------------------- |
+| `options` | `InputSignal<InputOptions<T> \| undefined>` | `undefined` | Field configuration                                                           |
+| `class`   | `InputSignal<string>`                       | `''`        | External CSS classes, forwarded to the field component (alias for `cssClass`) |
 
 ### InputOptions
+
+`InputOptions<T>` is `IInputOptions & IInputFromFieldOptions<T>`.
+
+| Field           | Type                                                            | Default  | Description                                                                                                                      |
+| --------------- | --------------------------------------------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `treeLevel`     | `number`                                                        | required | Nesting depth (0 at the top; nested object / array forms go one deeper).                                                         |
+| `control`       | `UntypedFormControl \| UntypedFormArray`                        | required | The control of the field.                                                                                                        |
+| `possibilities` | `WritableSignal<{ id: any; text: string; checked: boolean }[]>` | —        | The options of a radio, check or enum preset field; wins over the field's own `possibilities`. Other field types do not read it. |
+| `component`     | `Type<InputBaseComponent<any>>`                                 | —        | A field component used instead of the one of the field type (wins over the token).                                               |
+| `model`         | `T`                                                             | required | The model instance whose `@Field()` metadata is read.                                                                            |
+| `fieldKey`      | `string`                                                        | required | The field's key; a `<key>Confirm` key reads the metadata of `<key>`.                                                             |
+| `mode`          | `'create' \| 'update' \| string`                                | —        | Merges the `@Field({ create })` / `@Field({ update })` overrides into the field options.                                         |
 
 ```typescript
 type InputOptions<T> = IInputOptions & IInputFromFieldOptions<T>;
@@ -105,14 +126,12 @@ interface IInputFromFieldOptions<T> {
 
 ### INPUT_FIELD_COMPONENTS_TOKEN
 
+`InjectionToken<Partial<Record<FieldTypeDef, Type<InputBaseComponent<any>>>>>` from `@smartsoft001/angular` — allows substituting a sub-component for any field type.
+
 ```typescript
 import { INPUT_FIELD_COMPONENTS_TOKEN } from '@smartsoft001/angular';
 import { FieldType } from '@smartsoft001/models';
-```
 
-`InjectionToken<Partial<Record<FieldTypeDef, Type<InputBaseComponent<any>>>>>` — allows substituting a sub-component for any field type.
-
-```typescript
 providers: [
   {
     provide: INPUT_FIELD_COMPONENTS_TOKEN,
@@ -132,8 +151,9 @@ Each field type ships a Preline-styled **preset** (`Input<Field>PresetComponent`
 `smart-input-<field>-preset`) alongside the default Tailwind-UI-styled field component. The
 presets live in `<field>/preset/` and all translate the Preline look to `smart:`-prefixed vanilla
 Tailwind with explicit `dark:` variants. Apply them by providing the ready-made map
-`INPUT_PRESET_FIELD_COMPONENTS` for the token (it covers all field types except the standalone
-validation-message preset):
+`INPUT_PRESET_FIELD_COMPONENTS` for `INPUT_FIELD_COMPONENTS_TOKEN` (it covers all field types
+except the standalone validation-message preset), or with `provideSmartPresets()`, which provides
+it together with every other preset.
 
 ```typescript
 import {
@@ -165,6 +185,15 @@ the most recently added ones:
 | `video`   | `InputVideoPresetComponent`   | `smart-input-video-preset`   | Dashed drop-zone (accept `.mp4`) + play/delete + `<video>`      |
 | `array`   | `InputArrayPresetComponent`   | `smart-input-array-preset`   | Item cards (`space-y-2`), outline add / ghost-red remove        |
 
+Where a preset behaves differently from the standard component of its type:
+
+| FieldType | Standard                                           | Preset                                                                                                     |
+| --------- | -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `enum`    | Checkboxes of the enum's keys; value: list of keys | A `<select>` of the possibilities (`options.possibilities`, else the field's); value: one possibility `id` |
+| `file`    | Keeps the picked `File` as the value (no upload)   | Uploads through `FileService` (`InputFileBaseComponent`); value: the API result                            |
+| `logo`    | Stores a base64 `data:` URL (no upload)            | Uploads like `image` (`.jpg,.png,.jpeg`)                                                                   |
+| `pesel`   | No validator of its own                            | Adds an `invalidPesel` check (shown with the same message as `pesel`)                                      |
+
 Notes:
 
 - Interactive Preline widgets (enum select, password strength meter, date pickers, file
@@ -186,8 +215,9 @@ Notes:
 
 ```typescript
 import { Component, computed } from '@angular/core';
-import { InputBaseComponent } from '@smartsoft001/angular';
 import { ReactiveFormsModule } from '@angular/forms';
+
+import { InputBaseComponent, ModelLabelPipe } from '@smartsoft001/angular';
 
 @Component({
   selector: 'my-input-text',
@@ -207,8 +237,7 @@ import { ReactiveFormsModule } from '@angular/forms';
       <input type="text" [formControl]="formControl" [class]="inputClasses()" />
     }
   `,
-  imports: [ReactiveFormsModule],
-  standalone: true,
+  imports: [ReactiveFormsModule, ModelLabelPipe],
 })
 export class MyInputTextComponent extends InputBaseComponent<any> {
   labelClasses = computed(() => 'my-prefix-label ' + this.cssClass());

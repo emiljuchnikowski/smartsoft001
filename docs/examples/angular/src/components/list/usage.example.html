@@ -1,3 +1,7 @@
 <!-- #region usage -->
 <smart-list [options]="options" />
+
+@if (selected(); as member) {
+  <p>Selected member: {{ member.firstName }} {{ member.lastName }}</p>
+}
 <!-- #endregion -->

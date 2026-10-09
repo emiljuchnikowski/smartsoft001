@@ -17,6 +17,7 @@ import { IDropdownItem, IDropdownOptions } from '../../models';
 import { DROPDOWN_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 import { outletContent } from '../base/outlet-content';
+import { outletInputs } from '../base/outlet-inputs';
 
 @Component({
   selector: 'smart-dropdown',
@@ -63,13 +64,15 @@ export class DropdownComponent {
 
   componentType = computed(() => this.injectedComponent ?? null);
 
-  componentInputs = computed(() => ({
-    items: this.items(),
-    triggerLabel: this.triggerLabel(),
-    open: this.open(),
-    options: this.options(),
-    cssClass: this.cssClass(),
-  }));
+  componentInputs = computed(() =>
+    outletInputs(this.componentType(), {
+      items: this.items(),
+      triggerLabel: this.triggerLabel(),
+      open: this.open(),
+      options: this.options(),
+      cssClass: this.cssClass(),
+    }),
+  );
 
   private readonly outlet = viewChild(NgComponentOutlet);
 

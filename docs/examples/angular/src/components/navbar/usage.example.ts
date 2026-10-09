@@ -1,11 +1,22 @@
 // #region usage
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  signal,
+} from '@angular/core';
 
 import {
   INavbarItemClick,
   INavbarOptions,
   NavbarComponent,
 } from '@smartsoft001/angular';
+
+const items = [
+  { id: 'dashboard', label: 'Dashboard' },
+  { id: 'team', label: 'Team' },
+  { id: 'projects', label: 'Projects' },
+];
 
 @Component({
   selector: 'docs-navbar-usage-example',
@@ -14,20 +25,20 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavbarUsageExampleComponent {
-  readonly options: INavbarOptions = {
-    layout: 'simple',
-    logoUrl: '/assets/logo.svg',
-    logoAlt: 'Acme',
-    logoHref: '/',
-    items: [
-      { id: 'dashboard', label: 'Dashboard', current: true },
-      { id: 'team', label: 'Team' },
-      { id: 'projects', label: 'Projects' },
-    ],
-  };
-
   readonly activeItem = signal('dashboard');
 
+  readonly options = computed<INavbarOptions>(() => ({
+    logoUrl:
+      'https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600',
+    logoAlt: 'Acme',
+    logoHref: '#',
+    items: items.map((item) => ({
+      ...item,
+      current: item.id === this.activeItem(),
+    })),
+  }));
+
+  // Items without `href` are buttons reported through (itemClick).
   onItemClick({ itemId }: INavbarItemClick): void {
     this.activeItem.set(itemId);
   }

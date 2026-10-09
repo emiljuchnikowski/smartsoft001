@@ -31,11 +31,11 @@ The preset's class helpers (`getActionPanelCardClasses`, `getActionPanelTitleCla
 
 ### `SmartActionPanelProps`
 
-| Prop             | Type                                       | Default | Description                                      |
-| ---------------- | ------------------------------------------ | ------- | ------------------------------------------------ |
-| `options?`       | `IActionPanelOptions`                      | —       | The panel's content and layout.                  |
-| `className?`     | `string`                                   | —       | Classes appended to the root `section`.          |
-| `onActionClick?` | `(event: IActionPanelActionClick) => void` | —       | Called when an action without `href` is clicked. |
+| Prop             | Type                                       | Default | Description                                                                                         |
+| ---------------- | ------------------------------------------ | ------- | --------------------------------------------------------------------------------------------------- |
+| `options?`       | `IActionPanelOptions`                      | —       | The panel's content and layout.                                                                     |
+| `className?`     | `string`                                   | —       | Classes on the root element: the `div` around `section.action-panel` (standard), the card (preset). |
+| `onActionClick?` | `(event: IActionPanelActionClick) => void` | —       | Called when an action without `href` is clicked.                                                    |
 
 ### `IActionPanelOptions`
 
@@ -58,13 +58,13 @@ Passed to `onActionClick` when a button action is clicked.
 
 ### `IActionPanelAction`
 
-| Field      | Type                                            | Default  | Description                                                                        |
-| ---------- | ----------------------------------------------- | -------- | ---------------------------------------------------------------------------------- |
-| `id`       | `string`                                        | required | Reported as `actionId` by `onActionClick`.                                         |
-| `label?`   | `string`                                        | —        | Text of the button / link.                                                         |
-| `href?`    | `string`                                        | —        | Renders the action as a link instead of a button (no `onActionClick`).             |
-| `variant?` | `'primary' \| 'secondary' \| 'ghost' \| 'link'` | —        | Look of the action: `primary` by default for buttons, `link` by default for links. |
-| `iconTpl?` | `ReactNode`                                     | —        | Icon rendered with the label.                                                      |
+| Field      | Type                                            | Default  | Description                                                                                                                                                                                                                                                                                                   |
+| ---------- | ----------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`       | `string`                                        | required | Reported as `actionId` by `onActionClick`.                                                                                                                                                                                                                                                                    |
+| `label?`   | `string`                                        | —        | Text of the button / link.                                                                                                                                                                                                                                                                                    |
+| `href?`    | `string`                                        | —        | Renders the action as a link instead of a button (no `onActionClick`).                                                                                                                                                                                                                                        |
+| `variant?` | `'primary' \| 'secondary' \| 'ghost' \| 'link'` | —        | Look of the action. The standard only adds the class `variant-<variant>` (`variant-primary` by default for buttons, `variant-link` for links). The preset renders `primary` as a solid button and every other value, or none, as an outline button; in the `with-link` layout every action looks like a link. |
+| `iconTpl?` | `ReactNode`                                     | —        | Icon rendered with the label.                                                                                                                                                                                                                                                                                 |
 
 ### Related types
 
@@ -138,7 +138,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
 }
 ```
 
-`SmartActionPanelPreset` is the styled (preset) implementation: register it as above, render it directly in place of `SmartActionPanel`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
+`SmartActionPanelPreset` is the styled (preset) implementation: register it under the `'action-panel'` key of `SmartProvider`'s `components`, render it directly in place of `SmartActionPanel`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
 
 A custom implementation takes `SmartActionPanelProps` and calls `onActionClick` for its buttons:
 

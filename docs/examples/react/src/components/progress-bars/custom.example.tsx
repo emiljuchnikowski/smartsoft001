@@ -60,7 +60,6 @@ export function CustomProgressBars({
 const components = { 'progress-bars': CustomProgressBars };
 
 const options: IProgressBarsOptions = {
-  layout: 'progress-bar',
   title: 'Uploading files',
   ariaLabel: 'Upload progress',
   value: 50,

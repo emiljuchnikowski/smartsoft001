@@ -1,4 +1,4 @@
-import { Component, input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ContainerBaseComponent } from './base/base.component';
@@ -10,19 +10,14 @@ import { CONTAINER_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
   changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="injected-container">injected</div>',
 })
-class MockInjectedComponent extends ContainerBaseComponent {
-  // NgComponentOutlet passes 'cssClass' (not aliased 'class') so declare it explicitly
-  override cssClass = input<string>('');
-}
+class MockInjectedComponent extends ContainerBaseComponent {}
 
 @Component({
   selector: 'smart-test-container-with-slot',
   changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="custom-container"><ng-content /></div>',
 })
-class MockSlotComponent extends ContainerBaseComponent {
-  override cssClass = input<string>('');
-}
+class MockSlotComponent extends ContainerBaseComponent {}
 
 const PROJECTION_HOST_TEMPLATE = `
   <smart-container>Projected text</smart-container>

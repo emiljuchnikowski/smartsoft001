@@ -43,10 +43,10 @@ import { MultiColumnLayoutStandardComponent } from '../standard/standard.compone
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MultiColumnLayoutPresetComponent extends MultiColumnLayoutStandardComponent {
-  // NgComponentOutlet (used by MultiColumnLayoutComponent when this is
-  // registered through MULTI_COLUMN_LAYOUT_STANDARD_COMPONENT_TOKEN) passes
-  // inputs by canonical name, so the inherited `class` alias must be dropped
-  // for `cssClass` to bind.
+  // Declared without the inherited `class` alias. <smart-multi-column-layout>
+  // resolves its inputs to the names this component declares (outletInputs), so
+  // the class passed to the wrapper still lands here; used directly, the preset
+  // takes the extra classes as `[cssClass]`.
   override cssClass = input<string>('');
 
   protected rootClasses = computed(() =>

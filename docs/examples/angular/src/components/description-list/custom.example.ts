@@ -4,7 +4,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -55,10 +54,8 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomDescriptionListComponent extends DescriptionListBaseComponent {
-  // The wrapper hands inputs to NgComponentOutlet by canonical name, so the
-  // consumer's class arrives as `cssClass` rather than through the alias.
-  override cssClass = input<string>('');
-
+  // `cssClass` comes from the base (alias `class`): the wrapper hands the
+  // consumer's class to it under that name.
   containerClasses = computed(() =>
     ['docs-description-list', this.cssClass()].filter(Boolean).join(' '),
   );
@@ -80,7 +77,10 @@ export class CustomDescriptionListComponent extends DescriptionListBaseComponent
       useValue: CustomDescriptionListComponent,
     },
   ],
-  template: `<smart-description-list [options]="options" />`,
+  template: `<smart-description-list
+    [options]="options"
+    class="docs-description-list--compact"
+  />`,
 })
 export class DescriptionListCustomExampleComponent {
   options: IDescriptionListOptions = {

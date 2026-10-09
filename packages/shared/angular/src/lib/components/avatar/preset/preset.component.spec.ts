@@ -133,7 +133,7 @@ describe('@smartsoft001/shared-angular: AvatarPresetComponent', () => {
     expect(container.className).toContain('smart:flex-row-reverse');
   });
 
-  it('should apply cssClass on the rendered avatar (canonical name for NgComponentOutlet)', () => {
+  it('should apply cssClass on the rendered avatar', () => {
     fixture.componentRef.setInput('imageUrl', 'https://example.com/a.png');
     fixture.componentRef.setInput('cssClass', 'my-extra-class');
     fixture.detectChanges();

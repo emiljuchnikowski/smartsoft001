@@ -13,7 +13,6 @@ export class ContainerUsageExampleComponent {
   readonly options: IContainerOptions = {
     mode: 'constrained',
     padding: 'mobile',
-    narrow: false,
   };
 }
 // #endregion

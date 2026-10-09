@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url'
 
 import {
   componentInventory,
+  danglingColons,
   NO_HANDWRITTEN_CODE_DIRS,
   PACKAGES_OUTSIDE_META,
   packageInventory,
@@ -26,6 +27,7 @@ import {
   rule14,
   rule15,
   rule16,
+  rule17,
   runAllRules,
   skillInventory,
   storyInventory,
@@ -221,6 +223,88 @@ describe('storyInventory', () => {
     const stories = storyInventory(fixtureRoot)
 
     assert.ok(!stories.some((story) => story.id.startsWith('note--')))
+  })
+
+  test('lists the usage example stories of docs/examples under their framework', () => {
+    const stories = storyInventory(
+      path.join(here, '__fixtures__', 'check-docs-stories'),
+    )
+
+    assert.deepEqual(
+      stories.map(({ id, project }) => ({ id, project })),
+      [
+        { id: 'docs-usage-examples--button', project: 'angular' },
+        { id: 'docs-usage-examples--button-group', project: 'react' },
+      ],
+    )
+  })
+})
+
+describe('danglingColons (R17)', () => {
+  test('reports a colon followed by prose or a heading', () => {
+    const source = [
+      'Register it through the token:',
+      '',
+      'The preset consumes the existing API.',
+      '',
+      'Apply the map:',
+      '',
+      '## API',
+    ].join('\n')
+
+    assert.deepEqual(danglingColons(source), [1, 5])
+  })
+
+  test('accepts a colon followed by a list, a table, a code block or a tag', () => {
+    const source = [
+      'Features:',
+      '- one',
+      '',
+      'Inputs:',
+      '',
+      '| Input | Type |',
+      '',
+      'The command:',
+      '```bash',
+      'npm test',
+      '```',
+      '',
+      'The example:',
+      '',
+      '{% snippet file="a.ts" region="usage" /%}',
+      '',
+      'Steps:',
+      '1. first',
+    ].join('\n')
+
+    assert.deepEqual(danglingColons(source), [])
+  })
+
+  test('reports a colon at the end of the page and before a closing tag', () => {
+    const source = ['Use it like this:', '', '{% /framework %}', 'Last:'].join(
+      '\n',
+    )
+
+    assert.deepEqual(danglingColons(source), [1, 4])
+  })
+
+  test('skips the frontmatter, code blocks, list items and indented lines', () => {
+    const source = [
+      '---',
+      'frameworks:',
+      '  - angular',
+      '---',
+      '```text',
+      'Prompt:',
+      '```',
+      '- item with nested content:',
+      '  more',
+      '    indented:',
+      '',
+      'Done.',
+    ].join('\n')
+
+    assert.deepEqual(danglingColons(source), [])
   })
 })
 

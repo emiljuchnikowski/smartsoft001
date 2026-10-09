@@ -1,9 +1,21 @@
 <ng-template #logoZone>
-  <div class="smart:flex smart:items-center" data-role="logo">
+  <div class="smart:flex smart:items-center smart:gap-3" data-role="logo">
     @if (options()?.logoTpl) {
       <ng-container [ngTemplateOutlet]="options()!.logoTpl!" />
-    } @else if (options()?.title) {
-      <span [class]="titleClasses">{{ options()!.title }}</span>
+    }
+    @if (options()?.title || options()?.subtitle) {
+      <div class="smart:min-w-0" data-role="heading">
+        @if (options()?.title) {
+          <h1 [class]="titleClasses" data-role="title">
+            {{ options()!.title }}
+          </h1>
+        }
+        @if (options()?.subtitle) {
+          <p [class]="subtitleClasses" data-role="subtitle">
+            {{ options()!.subtitle }}
+          </p>
+        }
+      </div>
     }
   </div>
 </ng-template>

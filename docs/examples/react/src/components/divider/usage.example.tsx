@@ -3,10 +3,8 @@ import { useState } from 'react';
 
 import { IDividerOptions, SmartDivider } from '@smartsoft001/react';
 
-const options: IDividerOptions = {
-  variant: 'with-button',
-  position: 'left',
-};
+// The preset draws the title, a line and the action in one row.
+const options: IDividerOptions = { variant: 'with-toolbar' };
 
 export function DividerUsageExample() {
   const [addClicks, setAddClicks] = useState(0);

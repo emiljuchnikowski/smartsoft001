@@ -1,3 +1,6 @@
 <!-- #region usage -->
 <smart-import [accept]="accept" (set)="onImport($event)" />
+@if (importedFile(); as fileName) {
+  <p>Imported: {{ fileName }}</p>
+}
 <!-- #endregion -->

@@ -6,7 +6,7 @@ user-invocable: false
 
 # Button Component
 
-The `<smart-button>` component provides a flexible button wrapper with an InjectionToken-based extension mechanism. It renders a default `ButtonStandardComponent` which can be replaced via `BUTTON_STANDARD_COMPONENT_TOKEN`.
+The `<smart-button>` component is the button of `@smartsoft001/angular`. It is configured through an `IButtonOptions` object (`click` plus the look: `variant`, `color`, `size`, `rounded`, `circular`), renders its projected content as the label, shows a spinner while `options.loading()` is `true`, and with `options.confirm` turns the first click into a Cancel / Confirm pair before `click` runs. It renders a default `ButtonStandardComponent` which can be replaced via `BUTTON_STANDARD_COMPONENT_TOKEN`.
 
 ## When to Use This Skill
 
@@ -17,17 +17,17 @@ The `<smart-button>` component provides a flexible button wrapper with an Inject
 
 ### ButtonComponent (`<smart-button>`)
 
-Main wrapper component. Renders `ButtonStandardComponent` by default. When `BUTTON_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`.
+Main wrapper component. Renders `ButtonStandardComponent` by default. When `BUTTON_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`, passes it every input (`class` included) and projects the label into the injected component's first `<ng-content>`.
 
 ### ButtonStandardComponent (`<smart-button-standard>`)
 
-Default concrete implementation. Simple Tailwind-styled button with size-dependent rounding and padding.
+Default concrete implementation: a Tailwind-styled `<button>` coloured by `COMPONENT_COLORS[color][variant]`, with size-dependent padding and rounding (`rounded-sm` for `xs` / `sm`, `rounded-md` otherwise). It does not read `rounded`, `circular` or `iconPosition`.
 
 ### ButtonPresetComponent (`<smart-button-preset>`)
 
-Fully-styled, drop-in preset implementation extending `ButtonBaseComponent`. Register it through `BUTTON_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-button>`, or use the `<smart-button-preset>` selector directly.
+Fully-styled, drop-in preset implementation extending `ButtonBaseComponent`. Register it through `BUTTON_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-button>`, register every preset at once with `provideSmartPresets()`, or use the `<smart-button-preset>` selector directly (it takes the extra classes as `class` or `[cssClass]`).
 
-Groups the Preline button types into one component, selected via the existing `options.variant`: `primary` → solid, `secondary` → outline, `soft` → soft. Works across the full `SmartColor` palette and every `SmartSize`, and honours `options.rounded` (pill), `options.circular` (square padding + pill), `options.loading`, `options.confirm`, and the `disabled` input. All classes are `smart:`-prefixed vanilla Tailwind with explicit `dark:` variants.
+Groups the Preline button types into one component, selected via the existing `options.variant`: `primary` → solid, `secondary` → outline, `soft` → soft. Works across the full `SmartColor` palette and every `SmartSize`, and honours `options.rounded` (pill), `options.circular` (square padding + pill), `options.loading`, `options.confirm`, and the `disabled` input (`disabled:opacity-50 disabled:pointer-events-none`). All classes are `smart:`-prefixed vanilla Tailwind with explicit `dark:` variants.
 
 ```typescript
 providers: [
@@ -38,23 +38,48 @@ providers: [
 ];
 ```
 
-Because `ButtonComponent` renders the injected component via `NgComponentOutlet`, inputs are passed by **canonical name** — `ButtonPresetComponent` therefore overrides `cssClass` as a plain `input<string>('')` (dropping the inherited `class` alias). The wrapper passes its projected content (the label) to the injected component's `<ng-content>`, so the label shows through the token path as well as with `<smart-button-preset>` used directly.
-
 ### ButtonBaseComponent (abstract)
 
-Abstract base directive for extending custom button implementations.
+Abstract base directive for extending custom button implementations. It holds the inputs and the confirm mode.
+
+| Member            | Type                                     | Description                                                                                                                                           |
+| ----------------- | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `mode`            | `WritableSignal<'default' \| 'confirm'>` | `'confirm'` after a first click on a `confirm` button, `'default'` otherwise.                                                                         |
+| `variantClasses`  | `Signal<string[]>`                       | The colour classes of `options.variant` / `options.color` from `COMPONENT_COLORS`, plus `smart:opacity-50 smart:cursor-not-allowed` while `disabled`. |
+| `invoke()`        | method                                   | The click handler: runs `options.click`, or enters the confirm mode when `options.confirm`.                                                           |
+| `confirmInvoke()` | method                                   | Runs `options.click` and leaves the confirm mode.                                                                                                     |
+| `confirmCancel()` | method                                   | Leaves the confirm mode without running `click`.                                                                                                      |
 
 ## API
 
 ### Inputs
 
-| Input      | Type                          | Default  | Description                                 |
-| ---------- | ----------------------------- | -------- | ------------------------------------------- |
-| `options`  | `InputSignal<IButtonOptions>` | required | Button configuration                        |
-| `disabled` | `InputSignal<boolean>`        | `false`  | Disabled state                              |
-| `class`    | `InputSignal<string>`         | `''`     | External CSS classes (alias for `cssClass`) |
+| Input      | Type                          | Default  | Description                                                            |
+| ---------- | ----------------------------- | -------- | ---------------------------------------------------------------------- |
+| `options`  | `InputSignal<IButtonOptions>` | required | Button configuration                                                   |
+| `disabled` | `InputSignal<boolean>`        | `false`  | Disables the `<button>`                                                |
+| `class`    | `InputSignal<string>`         | `''`     | External CSS classes appended to the `<button>` (alias for `cssClass`) |
+
+### Content projection
+
+| Selector | Description                                                           |
+| -------- | --------------------------------------------------------------------- |
+| default  | The label. Replaced by the spinner while `options.loading()` is true. |
 
 ### IButtonOptions
+
+| Field          | Type                      | Default     | Description                                                                                                        |
+| -------------- | ------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------ |
+| `type`         | `'submit' \| 'button'`    | `'button'`  | The `type` attribute of the `<button>`. Use `'submit'` inside a `<form>` of your own.                              |
+| `confirm`      | `boolean`                 | `undefined` | The first click shows Cancel / Confirm buttons (translated `cancel` / `confirm`); `click` runs only after Confirm. |
+| `click`        | `() => void`              | required    | Called on click (after the confirmation when `confirm` is set).                                                    |
+| `loading`      | `Signal<boolean>`         | `undefined` | While it reads `true`, the spinner replaces the label and the button is disabled.                                  |
+| `variant`      | `SmartVariant`            | `'primary'` | `primary` (solid), `secondary` (outline) or `soft`.                                                                |
+| `size`         | `SmartSize`               | `'md'`      | Padding and text size (`xs` to `xl`); the standard also uses smaller rounding for `xs` / `sm`.                     |
+| `color`        | `SmartColor`              | `'indigo'`  | One of the 22 Tailwind palette names.                                                                              |
+| `rounded`      | `boolean`                 | `undefined` | Preset only: pill shape. The standard ignores it.                                                                  |
+| `circular`     | `boolean`                 | `undefined` | Preset only: square padding plus pill shape, for an icon-only button. The standard ignores it.                     |
+| `iconPosition` | `'leading' \| 'trailing'` | `undefined` | Not read by the built-in implementations (standard and preset); available to a custom implementation.              |
 
 ```typescript
 interface IButtonOptions {
@@ -77,7 +102,7 @@ interface IButtonOptions {
 import { BUTTON_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
 ```
 
-InjectionToken that allows replacing the default `ButtonStandardComponent` with a custom implementation. Provide a `Type<ButtonBaseComponent>` to override.
+InjectionToken that allows replacing the default `ButtonStandardComponent` with a custom implementation. Provide a `Type<ButtonBaseComponent>` to override; every `<smart-button>` in that injector renders it, with the label projected into its `<ng-content>`.
 
 ```typescript
 // In your app module or component providers:
@@ -99,6 +124,7 @@ import { ButtonBaseComponent } from '@smartsoft001/angular';
   selector: 'my-custom-button',
   template: `
     <button
+      type="button"
       [class]="buttonClasses()"
       [disabled]="disabled()"
       (click)="invoke()"
@@ -125,11 +151,11 @@ export class MyCustomButtonComponent extends ButtonBaseComponent {
 <smart-button [options]="{ click: onClick }">Save</smart-button>
 
 <!-- With variant and size -->
-<smart-button [options]="{ click: onClick, variant: 'primary', size: 'lg' }">
+<smart-button [options]="{ click: onClick, variant: 'secondary', size: 'lg' }">
   Submit
 </smart-button>
 
-<!-- With loading -->
+<!-- With loading (a Signal<boolean>) -->
 <smart-button [options]="{ click: onClick, loading: loadingSignal }">
   Save
 </smart-button>
@@ -147,7 +173,7 @@ export class MyCustomButtonComponent extends ButtonBaseComponent {
 
 - Wrapper: `packages/shared/angular/src/lib/components/button/button.component.ts`
 - Standard: `packages/shared/angular/src/lib/components/button/standard/standard.component.ts`
-- Preset: `packages/shared/angular/src/lib/components/button/preset/preset.component.ts` (classes: `preset/preset-classes.util.ts`)
+- Preset: `packages/shared/angular/src/lib/components/button/preset/preset.component.ts` (classes: `preset/preset-classes.util.ts`, internal)
 - Base class: `packages/shared/angular/src/lib/components/button/base/base.component.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`BUTTON_STANDARD_COMPONENT_TOKEN`)
 - Interface: `packages/shared/angular/src/lib/models/interfaces.ts` (`IButtonOptions`)

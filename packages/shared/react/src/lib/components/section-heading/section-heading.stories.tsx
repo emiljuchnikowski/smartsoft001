@@ -36,7 +36,10 @@ const meta: Meta<SectionHeadingArgs> = {
     withBadge: { control: 'boolean' },
     withActions: { control: 'boolean' },
     withImage: { control: 'boolean' },
-    cssClass: { control: 'text', description: 'Passed through as `class`.' },
+    cssClass: {
+      control: 'text',
+      description: 'Passed through as `className`.',
+    },
   },
   args: {
     title: 'Manage your team in one place',

@@ -15,8 +15,10 @@ describe('docs-examples-angular: StatsUsageExampleComponent', () => {
   });
 
   it('should render the title and every stat from the options', () => {
+    // Act
     const stats: HTMLElement = fixture.nativeElement;
 
+    // Assert
     expect(stats.textContent).toContain('Last 30 days');
     expect(stats.querySelectorAll('dt')).toHaveLength(3);
     expect(stats.textContent).toContain('Total subscribers');
@@ -24,9 +26,11 @@ describe('docs-examples-angular: StatsUsageExampleComponent', () => {
   });
 
   it('should mark the change with its trend', () => {
+    // Act
     const change: HTMLElement =
       fixture.nativeElement.querySelector('[data-trend]');
 
+    // Assert
     expect(change.getAttribute('data-trend')).toBe('up');
     expect(change.textContent).toContain('12%');
   });

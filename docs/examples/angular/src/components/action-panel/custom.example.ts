@@ -2,7 +2,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -39,10 +38,7 @@ import {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CustomActionPanelComponent extends ActionPanelBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-}
+export class CustomActionPanelComponent extends ActionPanelBaseComponent {}
 
 @Component({
   selector: 'docs-action-panel-custom-example',
@@ -58,11 +54,10 @@ export class CustomActionPanelComponent extends ActionPanelBaseComponent {
 })
 export class ActionPanelCustomExampleComponent {
   options: IActionPanelOptions = {
-    layout: 'simple',
     title: 'Transfer ownership',
     description: 'Move this project to another workspace member.',
     actions: [
-      { id: 'transfer', label: 'Transfer', variant: 'primary' },
+      { id: 'transfer', label: 'Transfer' },
       { id: 'cancel', label: 'Cancel' },
     ],
   };

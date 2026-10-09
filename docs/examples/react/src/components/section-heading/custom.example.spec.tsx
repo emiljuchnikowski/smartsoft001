@@ -19,7 +19,7 @@ describe('docs-examples-react: SectionHeadingCustomExample', () => {
       'Manage your team in one place',
     );
     expect(screen.getByText('New')).toHaveClass('docs-section-heading__label');
-    expect(screen.getByText(/A balanced two-column split/)).toHaveClass(
+    expect(screen.getByText(/Invite people, set their roles/)).toHaveClass(
       'docs-section-heading__description',
     );
   });

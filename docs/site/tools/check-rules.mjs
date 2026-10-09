@@ -23,6 +23,10 @@
  * - R16: every component skill is named in the components agent of its
  *   plugin (angular-components in smart-angular, react-components in
  *   smart-react).
+ * - R17: a sentence that ends with a colon is followed by what it announces:
+ *   a list, a table, a code block or a tag. A colon followed by prose or a
+ *   heading is what is left when the code it introduced was dropped, as the
+ *   component generator drops the code fences of a skill.
  *
  * R1-R3, R9, R10, R12, R13 and R15 are the parity rules: they compare the workspace
  * with the site and only warn until `--strict` names them. R14 is an error
@@ -35,7 +39,7 @@ import { load as parseYaml } from 'js-yaml'
 import fs from 'node:fs'
 import path from 'node:path'
 
-import { insideFence, openingFences } from './fences.mjs'
+import { fencedLineMask, insideFence, openingFences } from './fences.mjs'
 import { SECTION_ORDER } from './sections.mjs'
 import {
   locateSkill,
@@ -81,7 +85,14 @@ const STORY_PROJECTS = [
   { dir: 'packages/crud/shell/angular', project: 'crud-shell-angular' },
   { dir: 'packages/shared/react', project: 'react' },
   { dir: 'packages/crud/shell/react', project: 'crud-shell-react' },
+  // The stories that render the usage examples of the component pages; each
+  // Storybook loads the ones of its framework next to the library's own.
+  { dir: 'docs/examples/angular', project: 'angular' },
+  { dir: 'docs/examples/react', project: 'react' },
 ]
+
+/** The directories whose stories files the Storybooks load. */
+const STORY_ROOTS = ['packages', 'docs/examples']
 
 /** The stories files of both libraries: Angular `.ts`, React `.tsx`. */
 const STORY_FILE = /\.stories\.tsx?$/
@@ -324,18 +335,32 @@ function storyProject(file) {
  * Storybook id.
  */
 export function storyInventory(repoRoot) {
-  const packagesDir = path.join(repoRoot, 'packages')
   const stories = []
 
-  for (const relative of walk(packagesDir)) {
+  for (const root of STORY_ROOTS) {
+    const rootDir = path.join(repoRoot, root)
+
+    if (!fs.existsSync(rootDir)) continue
+
+    stories.push(...rootStories(rootDir, root))
+  }
+
+  return stories.sort((a, b) => a.id.localeCompare(b.id))
+}
+
+/** The stories of one of the `STORY_ROOTS`. */
+function rootStories(rootDir, root) {
+  const stories = []
+
+  for (const relative of walk(rootDir)) {
     if (!STORY_FILE.test(relative)) continue
 
-    const file = `packages/${relative}`
+    const file = `${root}/${relative}`
     const project = storyProject(file)
 
     if (!project) continue
 
-    const source = fs.readFileSync(path.join(packagesDir, relative), 'utf8')
+    const source = fs.readFileSync(path.join(rootDir, relative), 'utf8')
     const title = metaTitle(source)
 
     if (!title) continue
@@ -353,7 +378,7 @@ export function storyInventory(repoRoot) {
     }
   }
 
-  return stories.sort((a, b) => a.id.localeCompare(b.id))
+  return stories
 }
 
 function docsPage(ctx, ...segments) {
@@ -1231,6 +1256,65 @@ export function rule16(ctx) {
 }
 
 /** Every rule, in order. */
+/** What may follow a line ending with a colon: the thing it announces. */
+const ANNOUNCED = /^(?:[-*+] |\d+\. |\||```|~~~|>|\{% (?!\/))/
+
+/**
+ * The 1-based line numbers of the lines of `source` that end with a colon
+ * but are not followed by what they announce. Lines in code blocks and the
+ * frontmatter are skipped, and so are colons a list item or an indented line
+ * ends with, since nested content follows those.
+ */
+export function danglingColons(source) {
+  const lines = source.split('\n')
+  const fenced = fencedLineMask(source)
+  const found = []
+  let start = 0
+
+  if (lines[0]?.trim() === '---') {
+    const end = lines.indexOf('---', 1)
+
+    start = end === -1 ? 0 : end + 1
+  }
+
+  for (let index = start; index < lines.length; index++) {
+    const line = lines[index]
+
+    if (fenced[index] || !line.trimEnd().endsWith(':')) continue
+    if (/^\s/.test(line) || /^(?:[-*+] |\d+\. |#)/.test(line)) continue
+
+    let next = index + 1
+
+    while (next < lines.length && lines[next].trim() === '') next++
+
+    if (next < lines.length && ANNOUNCED.test(lines[next].trim())) continue
+
+    found.push(index + 1)
+  }
+
+  return found
+}
+
+/** R17: a sentence that ends with a colon is followed by what it announces. */
+export function rule17(ctx) {
+  const findings = []
+
+  for (const page of docsPages(ctx)) {
+    const source = fs.readFileSync(page, 'utf8')
+
+    for (const line of danglingColons(source)) {
+      findings.push({
+        rule: 'R17',
+        level: 'error',
+        message: `${relativeToDocs(ctx, page)}:${line}: the sentence ends with a colon but no list, table, code block or tag follows it`,
+        file: page,
+      })
+    }
+  }
+
+  return findings
+}
+
 export function runAllRules(ctx) {
   return [
     rule1,
@@ -1249,5 +1333,6 @@ export function runAllRules(ctx) {
     rule14,
     rule15,
     rule16,
+    rule17,
   ].flatMap((rule) => rule(ctx))
 }

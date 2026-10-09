@@ -49,8 +49,9 @@ const meta: Meta<PageHeadingArgs> = {
 export default meta;
 type Story = StoryObj<PageHeadingArgs>;
 
-// The preset consumes only logoTpl, navTpl, actionsTpl and avatarTpl — the
-// remaining IPageHeadingOptions slots are standard-skin only.
+// The preset renders the logoTpl, title, subtitle, navTpl, actionsTpl and
+// avatarTpl — the breadcrumbs, banner, meta, stats and filters slots are
+// rendered by the standard page heading only.
 const logo = (
   <a
     className="smart:block smart:text-teal-600 smart:dark:text-teal-300"
@@ -187,6 +188,16 @@ export const AllVariants: Story = {
         options={{
           logoTpl: logo,
           navTpl: nav,
+          presentation: { layout: 'links-left' },
+        }}
+      />
+
+      <Section
+        title="Title and subtitle"
+        options={{
+          title: 'Back End Developer',
+          subtitle: 'Full-time, remote',
+          actionsTpl: actions,
           presentation: { layout: 'links-left' },
         }}
       />

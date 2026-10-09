@@ -10,4 +10,8 @@
     (dismissed)="onDismissed()"
   />
 }
+
+@if (lastAction()) {
+  <p>Last action: {{ lastAction() }}</p>
+}
 <!-- #endregion -->

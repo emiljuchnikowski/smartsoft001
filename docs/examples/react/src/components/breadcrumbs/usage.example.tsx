@@ -8,9 +8,7 @@ import {
 } from '@smartsoft001/react';
 
 const options: IBreadcrumbsOptions = {
-  layout: 'simple-with-chevrons',
-  separator: 'chevron',
-  ariaLabel: 'Breadcrumb',
+  separator: 'slash',
   items: [
     { id: 'home', label: 'Home' },
     { id: 'projects', label: 'Projects' },

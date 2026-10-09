@@ -4,7 +4,8 @@ import { SmartTranslateFn } from '../../../i18n/translate';
 /**
  * The messages a field shows for its validation errors, in a fixed order.
  * `required` hides `confirm`: an empty confirmation field only reports that it
- * is empty.
+ * is empty. `pesel` (form factory) and `invalidPesel` (pesel preset field)
+ * share the `INPUT.ERRORS.invalidPeselFormat` message, shown once.
  */
 export function getInputErrorMessages(
   errors: SmartValidationErrors | null | undefined,
@@ -42,7 +43,9 @@ export function getInputErrorMessages(
     });
   }
 
-  if (errors['pesel']) {
+  // `pesel` comes from the form factory, `invalidPesel` from the pesel preset
+  // field: both report the same malformed PESEL, so they share one message.
+  if (errors['pesel'] || errors['invalidPesel']) {
     messages.push({ key: 'pesel', text: t('INPUT.ERRORS.invalidPeselFormat') });
   }
 

@@ -1,4 +1,4 @@
-import { Component, input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CardHeadingBaseComponent } from './base/base.component';
@@ -10,10 +10,7 @@ import { CARD_HEADING_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
   changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="injected-card-heading">injected</div>',
 })
-class MockInjectedComponent extends CardHeadingBaseComponent {
-  // NgComponentOutlet passes 'cssClass' (not aliased 'class') so declare it explicitly
-  override cssClass = input<string>('');
-}
+class MockInjectedComponent extends CardHeadingBaseComponent {}
 
 describe('@smartsoft001/shared-angular: CardHeadingComponent', () => {
   describe('without token', () => {

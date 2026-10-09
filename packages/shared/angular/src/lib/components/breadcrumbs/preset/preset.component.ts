@@ -38,9 +38,9 @@ import {
   imports: [NgTemplateOutlet],
 })
 export class BreadcrumbsPresetComponent extends BreadcrumbsBaseComponent {
-  // NgComponentOutlet (used by BreadcrumbsComponent when this is registered
-  // through BREADCRUMBS_STANDARD_COMPONENT_TOKEN) passes inputs by canonical
-  // name, so the inherited `class` alias must be dropped for `cssClass` to bind.
+  // Redeclared without an alias so `[cssClass]` also binds when the preset is
+  // used directly; the inherited `class` alias keeps working, and the wrapper
+  // reaches either name through outletInputs().
   override cssClass = input<string>('');
 
   protected items = computed(() => this.options()?.items ?? []);

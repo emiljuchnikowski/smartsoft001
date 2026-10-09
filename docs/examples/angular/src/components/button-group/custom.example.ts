@@ -2,7 +2,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -37,10 +36,7 @@ import {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CustomButtonGroupComponent extends ButtonGroupBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-}
+export class CustomButtonGroupComponent extends ButtonGroupBaseComponent {}
 
 @Component({
   selector: 'docs-button-group-custom-example',

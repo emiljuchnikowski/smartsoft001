@@ -12,7 +12,6 @@ import { IStatsOptions, StatsComponent } from '@smartsoft001/angular';
 export class StatsUsageExampleComponent {
   readonly options: IStatsOptions = {
     title: 'Last 30 days',
-    columns: 3,
     items: [
       {
         label: 'Total subscribers',

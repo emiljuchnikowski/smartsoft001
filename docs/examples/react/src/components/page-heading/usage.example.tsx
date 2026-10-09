@@ -1,7 +1,11 @@
 // #region usage
 import { useState } from 'react';
 
-import { IPageHeadingOptions, SmartPageHeading } from '@smartsoft001/react';
+import {
+  IPageHeadingOptions,
+  SmartButton,
+  SmartPageHeading,
+} from '@smartsoft001/react';
 
 export function PageHeadingUsageExample() {
   const [lastAction, setLastAction] = useState<string | null>(null);
@@ -11,12 +15,17 @@ export function PageHeadingUsageExample() {
     subtitle: 'Full-time, remote',
     actionsTpl: (
       <>
-        <button type="button" onClick={() => setLastAction('edit')}>
+        <SmartButton
+          options={{
+            variant: 'secondary',
+            click: () => setLastAction('edit'),
+          }}
+        >
           Edit
-        </button>
-        <button type="button" onClick={() => setLastAction('publish')}>
+        </SmartButton>
+        <SmartButton options={{ click: () => setLastAction('publish') }}>
           Publish
-        </button>
+        </SmartButton>
       </>
     ),
   };

@@ -17,7 +17,6 @@ export class MediaObjectUsageExampleComponent {
 
   readonly options: IMediaObjectOptions = {
     alignment: 'center',
-    position: 'left',
   };
 }
 // #endregion

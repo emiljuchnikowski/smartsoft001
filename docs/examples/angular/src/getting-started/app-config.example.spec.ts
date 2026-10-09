@@ -1,7 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 
-import { ToastService } from '@smartsoft001/angular';
+import {
+  BUTTON_STANDARD_COMPONENT_TOKEN,
+  ButtonPresetComponent,
+  ToastService,
+} from '@smartsoft001/angular';
 
 import { appConfig } from './app-config.example';
 
@@ -26,5 +30,11 @@ describe('docs-examples-angular: appConfig', () => {
     const translateService = TestBed.inject(TranslateService);
 
     expect(translateService.getLangs()).toContain('pl');
+  });
+
+  it('should register the preset implementations', () => {
+    const button = TestBed.inject(BUTTON_STANDARD_COMPONENT_TOKEN);
+
+    expect(button).toBe(ButtonPresetComponent);
   });
 });

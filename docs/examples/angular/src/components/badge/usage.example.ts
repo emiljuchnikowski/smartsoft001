@@ -17,12 +17,7 @@ export class BadgeUsageExampleComponent {
   readonly text = 'Active';
   readonly color: SmartBadgeColor = 'green';
 
-  readonly options: IBadgeOptions = {
-    variant: 'soft',
-    pill: true,
-    withDot: true,
-    withRemove: true,
-  };
+  readonly options: IBadgeOptions = { withDot: true, withRemove: true };
 
   readonly visible = signal(true);
 

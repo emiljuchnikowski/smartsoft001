@@ -4,10 +4,12 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormComponent, IFormOptions } from '@smartsoft001/angular';
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-@Model({ titleKey: 'name' })
+// Each label is the `MODEL.<key>` translation: the library's dictionary
+// already has `firstName` and `email`.
+@Model({ titleKey: 'firstName' })
 class Contact {
   @Field({ type: FieldType.text, create: true, required: true })
-  name = '';
+  firstName = '';
 
   @Field({ type: FieldType.email, create: true })
   email = '';
@@ -20,6 +22,7 @@ class Contact {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormUsageExampleComponent {
+  // `show` is required by the type; the form does not read it.
   readonly options: IFormOptions<Contact> = {
     model: new Contact(),
     show: true,
@@ -29,6 +32,7 @@ export class FormUsageExampleComponent {
   readonly value = signal<Contact | null>(null);
   readonly submitted = signal(false);
 
+  // Called on submit, and on Enter in an input.
   onSubmit(): void {
     this.submitted.set(true);
   }

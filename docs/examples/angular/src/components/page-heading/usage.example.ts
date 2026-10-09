@@ -9,13 +9,15 @@ import {
 } from '@angular/core';
 
 import {
+  ButtonComponent,
+  IButtonOptions,
   IPageHeadingOptions,
   PageHeadingComponent,
 } from '@smartsoft001/angular';
 
 @Component({
   selector: 'docs-page-heading-usage-example',
-  imports: [PageHeadingComponent],
+  imports: [ButtonComponent, PageHeadingComponent],
   templateUrl: './usage.example.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -30,8 +32,13 @@ export class PageHeadingUsageExampleComponent {
 
   readonly lastAction = signal<string | null>(null);
 
-  onAction(actionId: string): void {
-    this.lastAction.set(actionId);
-  }
+  readonly editButton: IButtonOptions = {
+    variant: 'secondary',
+    click: () => this.lastAction.set('edit'),
+  };
+
+  readonly publishButton: IButtonOptions = {
+    click: () => this.lastAction.set('publish'),
+  };
 }
 // #endregion

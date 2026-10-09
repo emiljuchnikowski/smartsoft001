@@ -116,6 +116,36 @@ describe('@smartsoft001/shared-angular: InputErrorComponent', () => {
     expect(span.textContent).toContain('INPUT.ERRORS.invalidPeselFormat');
   });
 
+  it('should render INPUT.ERRORS.invalidPeselFormat for the pesel preset invalidPesel error', () => {
+    // Arrange
+    host.errors = { invalidPesel: true };
+
+    // Act
+    fixture.detectChanges();
+
+    // Assert
+    const span = fixture.nativeElement.querySelector('span');
+    expect(span?.textContent).toContain('INPUT.ERRORS.invalidPeselFormat');
+  });
+
+  it('should render the PESEL message once when both pesel and invalidPesel are set', () => {
+    // Arrange
+    host.errors = { pesel: true, invalidPesel: true };
+
+    // Act
+    fixture.detectChanges();
+
+    // Assert
+    const spans: HTMLElement[] = Array.from(
+      fixture.nativeElement.querySelectorAll('span'),
+    );
+    expect(
+      spans.filter((span) =>
+        span.textContent?.includes('INPUT.ERRORS.invalidPeselFormat'),
+      ),
+    ).toHaveLength(1);
+  });
+
   it('should render INPUT.ERRORS.invalidMinLength with requiredLength when errors.minlength is set', () => {
     host.errors = { minlength: { requiredLength: 5 } };
     fixture.detectChanges();

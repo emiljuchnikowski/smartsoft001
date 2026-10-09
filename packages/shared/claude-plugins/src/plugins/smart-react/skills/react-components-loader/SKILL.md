@@ -72,7 +72,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
 }
 ```
 
-`SmartLoaderPreset` is the styled (preset) implementation: register it as above, render it directly in place of `SmartLoader`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
+`SmartLoaderPreset` is the styled (preset) implementation: register it under the `'loader'` key of `SmartProvider`'s `components`, render it directly in place of `SmartLoader`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
 
 ### The `useLoader` hook
 

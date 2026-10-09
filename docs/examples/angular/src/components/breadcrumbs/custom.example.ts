@@ -2,7 +2,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -47,9 +46,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomBreadcrumbsComponent extends BreadcrumbsBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   select(event: MouseEvent, itemId: string): void {
     event.preventDefault();
     this.itemClick.emit({ itemId });
@@ -70,8 +66,6 @@ export class CustomBreadcrumbsComponent extends BreadcrumbsBaseComponent {
 })
 export class BreadcrumbsCustomExampleComponent {
   options: IBreadcrumbsOptions = {
-    separator: 'slash',
-    ariaLabel: 'Breadcrumb',
     items: [
       { id: 'home', label: 'Home', href: '#' },
       { id: 'center', label: 'App Center', href: '#' },

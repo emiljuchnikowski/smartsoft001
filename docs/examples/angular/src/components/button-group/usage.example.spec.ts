@@ -18,19 +18,23 @@ describe('docs-examples-angular: ButtonGroupUsageExampleComponent', () => {
   });
 
   it('should render the buttons and mark the selected one as pressed', () => {
-    expect(buttons().map((button) => button.textContent?.trim())).toEqual([
-      'Day',
-      'Week',
-      'Month',
-    ]);
+    // Act
+    const labels = buttons().map((button) => button.textContent?.trim());
+
+    // Assert
+    expect(labels).toEqual(['Day', 'Week', 'Month']);
     expect(buttons()[1].getAttribute('aria-pressed')).toBe('true');
+    expect(fixture.nativeElement.textContent).toContain('Showing: week');
   });
 
-  it('should hand the clicked button id to the handler', () => {
+  it('should select the clicked button and show it under the group', () => {
+    // Act
     buttons()[2].click();
     fixture.detectChanges();
 
-    expect(fixture.componentInstance.view()).toBe('month');
+    // Assert
     expect(buttons()[2].getAttribute('aria-pressed')).toBe('true');
+    expect(buttons()[1].getAttribute('aria-pressed')).toBe('false');
+    expect(fixture.nativeElement.textContent).toContain('Showing: month');
   });
 });

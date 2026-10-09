@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -40,9 +39,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomBadgeComponent extends BadgeBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   containerClasses = computed(() =>
     [
       'docs-badge',
@@ -75,6 +71,6 @@ export class CustomBadgeComponent extends BadgeBaseComponent {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BadgeCustomExampleComponent {
-  options: IBadgeOptions = { variant: 'soft', withDot: true, withRemove: true };
+  options: IBadgeOptions = { withDot: true, withRemove: true };
 }
 // #endregion

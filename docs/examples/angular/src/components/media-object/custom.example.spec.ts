@@ -39,6 +39,17 @@ describe('docs-examples-angular: MediaObjectCustomExampleComponent', () => {
     expect(article?.getAttribute('data-position')).toBe('right');
   });
 
+  it('should project the content of <smart-media-object> into the body', () => {
+    // Arrange
+    const body = element.querySelector('.docs-media-object__body');
+
+    // Act
+    const title = body?.querySelector('.docs-media-object__title');
+
+    // Assert
+    expect(title?.textContent).toContain('Lindsay Walton');
+  });
+
   it('should append the class forwarded through the wrapper', () => {
     const article = element.querySelector('.docs-media-object');
 

@@ -17,7 +17,7 @@ The `<smart-empty-state>` component renders an empty-state placeholder with an o
 
 ### EmptyStateComponent (`<smart-empty-state>`)
 
-Main wrapper. Delegates to `EmptyStateStandardComponent` by default. When `EMPTY_STATE_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`. Re-emits `actionClick` and `itemClick`.
+Main wrapper. Delegates to `EmptyStateStandardComponent` by default. When `EMPTY_STATE_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`. Re-emits `actionClick` and `itemClick` of whichever implementation it renders.
 
 ### EmptyStateStandardComponent (`<smart-empty-state-standard>`)
 
@@ -25,7 +25,7 @@ Barebones placeholder using native HTML. Renders an outer wrapper with `cssClass
 
 ### EmptyStatePresetComponent (`<smart-empty-state-preset>`)
 
-Fully-styled drop-in replacement for `EmptyStateStandardComponent`, adapting Preline's "Invoice Table Empty State" centered block: a rounded icon tile (`iconTpl`), title, description, a "Learn more" text link (`footerLinkLabel` / `footerLinkHref`) and a row of action buttons. Optional `items` render as a simple bordered list so it stays a full drop-in. All Tailwind classes are `smart:`-prefixed with explicit `dark:` variants. Action `variant` maps to: `primary` (blue button), `secondary` (white/layer button), `ghost` (text + hover) and `link` (inline blue link). Register through `EMPTY_STATE_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-empty-state>`, or use the selector directly. Like every preset it declares `override cssClass = input<string>('')` (no `class` alias) so `NgComponentOutlet` binds `cssClass` by its canonical name.
+Fully-styled drop-in replacement for `EmptyStateStandardComponent`, adapting Preline's "Invoice Table Empty State" centered block: a rounded icon tile (`iconTpl`), title, description, a "Learn more" text link (`footerLinkLabel` / `footerLinkHref`) and a row of action buttons. Optional `items` render as a simple bordered list so it stays a full drop-in. All Tailwind classes are `smart:`-prefixed with explicit `dark:` variants. Action `variant` maps to `primary` (blue button), `secondary` (white/layer button), `ghost` (text + hover) and `link` (inline blue link); without a `variant` an action with `href` is a `link` and one without is `primary`. Register it for `EMPTY_STATE_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-empty-state>` (or every preset at once with `provideSmartPresets()`), or use the selector directly. The preset declares `cssClass` without the `class` alias, so bind `[cssClass]` on the `<smart-empty-state-preset>` selector; `class` on `<smart-empty-state>` reaches it through the wrapper.
 
 ### EmptyStateBaseComponent (abstract)
 
@@ -43,10 +43,10 @@ Abstract base directive. Exposes:
 
 ### Inputs
 
-| Input     | Type                                           | Default | Description                                 |
-| --------- | ---------------------------------------------- | ------- | ------------------------------------------- |
-| `options` | `InputSignal<IEmptyStateOptions \| undefined>` | -       | Empty state configuration                   |
-| `class`   | `InputSignal<string>`                          | `''`    | External CSS classes (alias for `cssClass`) |
+| Input     | Type                                           | Default | Description                                                   |
+| --------- | ---------------------------------------------- | ------- | ------------------------------------------------------------- |
+| `options` | `InputSignal<IEmptyStateOptions \| undefined>` | -       | Empty state configuration                                     |
+| `class`   | `InputSignal<string>`                          | `''`    | Classes on the root element (`cssClass` input, alias `class`) |
 
 ### Outputs
 
@@ -56,6 +56,46 @@ Abstract base directive. Exposes:
 | `itemClick`   | `OutputEmitterRef<IEmptyStateItemClick>`   | Emitted when an item without `href` is clicked |
 
 ### IEmptyStateOptions
+
+All fields are optional. The standard and the preset read every field except `layout`.
+
+| Field             | Type                    | Default | Description                                                                     |
+| ----------------- | ----------------------- | ------- | ------------------------------------------------------------------------------- |
+| `title`           | `string`                | -       | Heading.                                                                        |
+| `description`     | `string`                | -       | Text under the heading.                                                         |
+| `iconTpl`         | `TemplateRef<unknown>`  | -       | Icon or illustration above the title.                                           |
+| `actions`         | `IEmptyStateAction[]`   | `[]`    | Buttons / links under the description.                                          |
+| `items`           | `IEmptyStateItem[]`     | `[]`    | Suggested items (starting points, templates, recommendations) listed below.     |
+| `itemsTitle`      | `string`                | -       | Heading of the items list.                                                      |
+| `formTpl`         | `TemplateRef<unknown>`  | -       | A form slot (e.g. an invite input).                                             |
+| `footerLinkLabel` | `string`                | -       | Text of the footer link (a plain text without `footerLinkHref`).                |
+| `footerLinkHref`  | `string`                | -       | Target of the footer link.                                                      |
+| `layout`          | `SmartEmptyStateLayout` | -       | Not read by the built-in implementations; available to a custom implementation. |
+
+`SmartEmptyStateLayout` is `'simple' | 'dashed-border' | 'starting-points' | 'with-recommendations' | 'with-templates' | 'with-recommendations-grid'`.
+
+### IEmptyStateAction
+
+| Field     | Type                                            | Default  | Description                                                            |
+| --------- | ----------------------------------------------- | -------- | ---------------------------------------------------------------------- |
+| `id`      | `string`                                        | required | Reported as `actionId`.                                                |
+| `label`   | `string`                                        | -        | Button / link text.                                                    |
+| `href`    | `string`                                        | -        | Renders a link instead of a button (a link emits no `actionClick`).    |
+| `variant` | `'primary' \| 'secondary' \| 'ghost' \| 'link'` | -        | Look of the action; defaults to `link` with `href`, `primary` without. |
+| `iconTpl` | `TemplateRef<unknown>`                          | -        | Icon next to the label.                                                |
+
+### IEmptyStateItem
+
+| Field         | Type                   | Default  | Description                                                      |
+| ------------- | ---------------------- | -------- | ---------------------------------------------------------------- |
+| `id`          | `string`               | required | Reported as `itemId`.                                            |
+| `title`       | `string`               | -        | Item title.                                                      |
+| `description` | `string`               | -        | Item text.                                                       |
+| `href`        | `string`               | -        | Renders the item as a link (no `itemClick`) instead of a button. |
+| `iconTpl`     | `TemplateRef<unknown>` | -        | Item icon.                                                       |
+| `imageUrl`    | `string`               | -        | Item image.                                                      |
+| `imageAlt`    | `string`               | -        | Alt text of the image.                                           |
+| `meta`        | `string`               | -        | Small extra text.                                                |
 
 ```typescript
 type SmartEmptyStateLayout =
@@ -101,6 +141,8 @@ interface IEmptyStateItem {
 
 ## EMPTY_STATE_STANDARD_COMPONENT_TOKEN
 
+Provide a `Type<EmptyStateBaseComponent>` for `EMPTY_STATE_STANDARD_COMPONENT_TOKEN` to render it in every `<smart-empty-state>` below that injector; the wrapper passes `options` and the class on and re-emits its `actionClick` and `itemClick`.
+
 ```typescript
 import { EMPTY_STATE_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
 
@@ -118,7 +160,6 @@ providers: [
 import {
   ChangeDetectionStrategy,
   Component,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -147,10 +188,7 @@ import { EmptyStateBaseComponent } from '@smartsoft001/angular';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MyCustomEmptyStateComponent extends EmptyStateBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-}
+export class MyCustomEmptyStateComponent extends EmptyStateBaseComponent {}
 ```
 
 ## Usage Examples

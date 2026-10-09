@@ -4,7 +4,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   TemplateRef,
   Type,
   viewChild,
@@ -69,9 +68,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomPageComponent extends PageBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   containerClasses = computed(() =>
     ['docs-page', this.isMobile ? 'docs-page--mobile' : '', this.cssClass()]
       .filter(Boolean)

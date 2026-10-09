@@ -173,7 +173,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
 }
 ```
 
-`SmartTablePreset` is the styled (preset) implementation: register it as above, render it directly in place of `SmartTable`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
+`SmartTablePreset` is the styled (preset) implementation: register it under the `'table'` key of `SmartProvider`'s `components`, render it directly in place of `SmartTable`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
 
 `renderTableCell(row, column)` is the cell rule every rendering uses (the `cellTpl`, else `row[column.key]` as text), so a custom table stays consistent:
 

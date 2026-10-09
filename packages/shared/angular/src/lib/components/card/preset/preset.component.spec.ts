@@ -159,7 +159,7 @@ describe('@smartsoft001/shared-angular: CardPresetComponent', () => {
     expect(footerDiv.className).toContain('smart:border-t');
   });
 
-  it('should apply cssClass on the container (canonical name for NgComponentOutlet)', async () => {
+  it('should apply cssClass on the container', async () => {
     fixture.componentInstance.cssClass = 'my-extra-class';
     fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
     fixture.detectChanges();

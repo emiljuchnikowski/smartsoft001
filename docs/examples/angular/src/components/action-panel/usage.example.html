@@ -1,3 +1,7 @@
 <!-- #region usage -->
 <smart-action-panel [options]="options" (actionClick)="onActionClick($event)" />
+
+@if (lastAction(); as action) {
+  <p>Last action: {{ action }}</p>
+}
 <!-- #endregion -->

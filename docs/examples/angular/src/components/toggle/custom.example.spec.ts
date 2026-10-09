@@ -1,10 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 
-import {
-  CustomToggleComponent,
-  ToggleCustomExampleComponent,
-} from './custom.example';
+import { ToggleCustomExampleComponent } from './custom.example';
 
 describe('docs-examples-angular: ToggleCustomExampleComponent', () => {
   let fixture: ComponentFixture<ToggleCustomExampleComponent>;
@@ -21,6 +17,7 @@ describe('docs-examples-angular: ToggleCustomExampleComponent', () => {
   });
 
   it('should render the custom toggle through the wrapper instead of the standard one', () => {
+    // Assert
     expect(
       element.querySelector('smart-toggle docs-custom-toggle'),
     ).toBeTruthy();
@@ -28,28 +25,29 @@ describe('docs-examples-angular: ToggleCustomExampleComponent', () => {
   });
 
   it('should render the label and the description from the options', () => {
-    expect(element.querySelector('.docs-toggle__label')?.textContent).toContain(
-      'Allow notifications',
-    );
-    expect(
-      element.querySelector('.docs-toggle__description')?.textContent,
-    ).toContain('Send me an email');
+    // Act
+    const label = element.querySelector('.docs-toggle__label');
+    const description = element.querySelector('.docs-toggle__description');
+
+    // Assert
+    expect(label?.textContent).toContain('Allow notifications');
+    expect(description?.textContent).toContain('Send me an email');
+    expect(element.textContent).toContain('Notifications are off.');
   });
 
-  // NgComponentOutlet forwards inputs but not the [(value)] write-back, so the
-  // new state lives on the custom instance.
-  it('should flip the value model when the switch is clicked', () => {
-    const toggle: CustomToggleComponent = fixture.debugElement.query(
-      By.directive(CustomToggleComponent),
-    ).componentInstance;
-    const input = element.querySelector<HTMLInputElement>(
+  it('should write the new state back through the wrapper [(value)]', () => {
+    // Arrange
+    const input = element.querySelector(
       '.docs-toggle__input',
     ) as HTMLInputElement;
 
+    // Act
     input.click();
     fixture.detectChanges();
 
-    expect(toggle.value()).toBe(true);
+    // Assert
     expect(input.checked).toBe(true);
+    expect(fixture.componentInstance.enabled()).toBe(true);
+    expect(element.textContent).toContain('Notifications are on.');
   });
 });

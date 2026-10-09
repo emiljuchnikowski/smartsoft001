@@ -1,3 +1,6 @@
 <!-- #region usage -->
 <smart-progress-bars [options]="options" (stepClick)="onStepClick($event)" />
+@if (lastStep()) {
+  <p>Last clicked step: {{ lastStep() }}</p>
+}
 <!-- #endregion -->

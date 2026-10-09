@@ -15,9 +15,7 @@ import {
 })
 export class BreadcrumbsUsageExampleComponent {
   readonly options: IBreadcrumbsOptions = {
-    layout: 'simple-with-chevrons',
-    separator: 'chevron',
-    ariaLabel: 'Breadcrumb',
+    separator: 'slash',
     items: [
       { id: 'home', label: 'Home' },
       { id: 'projects', label: 'Projects' },
