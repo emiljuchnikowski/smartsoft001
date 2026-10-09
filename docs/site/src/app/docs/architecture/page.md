@@ -16,9 +16,9 @@ Entities are described once with decorators, a configuration object describes th
 
 A feature family is three kinds of package with one dependency direction.
 
-The **domain** layer, `crud-domain`, holds the entities and the business rules. It imports no framework, so it can be read, tested and reused from either side of the wire. The **shell** layer adapts that domain to a runtime: `crud-shell-nestjs` exposes it over HTTP and MongoDB, and `crud-shell-angular` renders it as pages. Between the two sit the **contracts and glue**: `crud-shell-dtos` defines the shapes that cross the network, and `crud-shell-app-services` holds the services both shells resolve from their dependency injection container.
+The **domain** layer, `crud-domain`, holds the entities and the business rules. It imports no framework, so it can be read, tested and reused from either side of the wire. The **shell** layer adapts that domain to a runtime: `crud-shell-nestjs` exposes it over HTTP and MongoDB, and `crud-shell-angular` and `crud-shell-react` render it as pages, one for each UI framework. Between them sit the **contracts and glue**: `crud-shell-dtos` defines the shapes that cross the network, and `crud-shell-app-services` holds the services the NestJS shell resolves from its dependency injection container.
 
-Nothing in the domain knows that a shell exists. Replacing the backend adapter or adding a second frontend therefore touches the shell packages only, which is the whole point of the split.
+Nothing in the domain knows that a shell exists. Replacing the backend adapter or adding a frontend therefore touches the shell packages only, which is the whole point of the split: the React shell sits next to the Angular one on the same domain, the same contracts and the same endpoints.
 
 ---
 
@@ -38,11 +38,11 @@ The decorators write this into metadata rather than into the class body, and `@s
 
 ### Configuration records the intent
 
-Field metadata says what the data is; it cannot say how a screen should behave. That is the job of a `CrudFullConfig` object, provided per feature in `@smartsoft001/crud-shell-angular`. It carries the endpoint and the entity name that address the backend, the entity type whose metadata is read, and then the screen decisions: whether records can be added, edited, viewed in detail or removed, whether search and export are offered, the page size for pagination, the default sort field and direction, the list mode and pagination mode, the groups a list is broken into, and the extra buttons a page shows. Custom components can be slotted in per field or at the top and bottom of a page, so a generated screen can be extended without being abandoned.
+Field metadata says what the data is; it cannot say how a screen should behave. That is the job of a `CrudFullConfig` object, provided per feature: through `CrudModule.forFeature` of `@smartsoft001/crud-shell-angular`, or as the `config` of a `CrudProvider` of `@smartsoft001/crud-shell-react`. The two carry the same fields, save the class of the pages, `cssClass` in Angular and `className` in React. It carries the endpoint and the entity name that address the backend, the entity type whose metadata is read, and then the screen decisions: whether records can be added, edited, viewed in detail or removed, whether search and export are offered, the page size for pagination, the default sort field and direction, the list mode and pagination mode, the groups a list is broken into, and the extra buttons a page shows. Custom components can be slotted in per field or at the top and bottom of a page, so a generated screen can be extended without being abandoned.
 
 ### The engine builds the screens
 
-The list and item page components in `@smartsoft001/crud-shell-angular` are built on `CreateDynamicComponent` from `@smartsoft001/angular`. Instead of a fixed template, the page resolves its children at runtime from the configuration and the field metadata, which is how one pair of page components serves every entity in an application. The [CRUD overview](/docs/crud/overview) has the code for this, and the [list page](/docs/crud/list-page) and [item page](/docs/crud/item-page) pages describe what each of the two generates.
+Instead of a fixed template, each page resolves its children at runtime from the configuration and the field metadata, which is how one pair of page components serves every entity in an application. In `@smartsoft001/crud-shell-angular` the list and item page components are built on `CreateDynamicComponent` from `@smartsoft001/angular`. In `@smartsoft001/crud-shell-react`, `SmartCrudListPage` and `SmartCrudItemPage` render `SmartList`, `SmartForm` and `SmartDetails` from `@smartsoft001/react`, which read the field metadata as they render, and take their bodies from the `components` registry of `SmartProvider`, so an application can replace one without forking the page. The [CRUD overview](/docs/crud/overview) has the code for this, and the [list page](/docs/crud/list-page) and [item page](/docs/crud/item-page) pages describe what each of the two generates.
 
 ---
 

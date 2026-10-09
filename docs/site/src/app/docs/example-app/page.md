@@ -22,6 +22,10 @@ The application is the shortest path from an installed package to a working scre
 
 Nothing else is written by hand. There is no notes component, no form template and no HTTP service in the application code, because the framework builds them from the model and one configuration object.
 
+{% callout type="note" title="An Angular application" %}
+The frontend of this application is Angular. For React, the [`@smartsoft001/crud-shell-react`](/docs/packages/crud-shell-react) page walks the same loop, a `Note` model, its configuration and the generated list and item screens, in executed examples, and every page of the [CRUD section](/docs/crud/overview) has a React variant. The API below speaks the REST contract both frontends use.
+{% /callout %}
+
 {% callout type="note" title="The application lives with the framework" %}
 The application is part of this repository, compiles the framework from its sources and runs its Playwright suite in the pull request workflow. When a framework change breaks the loop, the application fails first. Its first build found six defects, all fixed before it landed, and the suite asserts each of those paths since.
 {% /callout %}

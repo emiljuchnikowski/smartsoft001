@@ -2,6 +2,7 @@
 title: Filters and search
 section: CRUD
 order: 5
+frameworks: [angular, react]
 nextjs:
   metadata:
     title: CRUD filters and search
@@ -32,6 +33,8 @@ A **model** can declare filters that no single field expresses, through `filters
 
 The filters panel opens from the list page header, in the end menu. Inside it, one dispatcher component renders each filter with the widget that matches its field type.
 
+{% framework name="angular" %}
+
 | Field type      | Widget                             | Renders                                                       |
 | --------------- | ---------------------------------- | ------------------------------------------------------------- |
 | `text`, default | `smart-crud-filter-text`           | A text input.                                                 |
@@ -45,7 +48,38 @@ The filters panel opens from the list page header, in the end menu. Inside it, o
 
 Every widget writes through the same base. A change is debounced by half a second, clears the offset so the result starts at the first page, and then replaces the matching entry in the query, or removes it when the value is emptied. The store's filter is frozen under immutability checks, so the base works on a clone and keeps its own pending copy until the store update comes back, which is what keeps a control from flickering back to its previous value between the edit and the round trip.
 
+{% /framework %}
+
+{% framework name="react" %}
+
+| Field type      | Widget                        | Renders                                                                |
+| --------------- | ----------------------------- | ---------------------------------------------------------------------- |
+| `text`, default | `SmartCrudFilterText`         | A text input.                                                          |
+| `int`           | `SmartCrudFilterInt`          | A number input, with a from and to range behind its settings button.   |
+| `flag`          | `SmartCrudFilterFlag`         | A boolean control.                                                     |
+| `radio`         | `SmartCrudFilterRadio`        | A single-choice control fed by the possibilities.                      |
+| `check`         | `SmartCrudFilterCheck`        | A checkbox list. It writes one query entry per checked value.          |
+| `date`          | `SmartCrudFilterDate`         | A date picker.                                                         |
+| `dateTime`      | `SmartCrudFilterDateTime`     | A datetime from and to range; each end is sent as its day.             |
+| `dateWithEdit`  | `SmartCrudFilterDateWithEdit` | An editable date, with a from and to range behind its advanced button. |
+
+`SmartCrudFilters` is the panel and `SmartCrudFilter` the dispatcher. Every widget writes through the same hook, `useCrudFilter`. A change is debounced by half a second, `CRUD_FILTER_REFRESH_DEBOUNCE`, clears the offset so the result starts at the first page, and then replaces the matching entry in the query, or removes it when the value is emptied. The hook works on a copy, so the filter in the store is never changed in place, and reads its values from that pending copy until the store's new filter comes back, which is what keeps a control from flickering back to its previous value between the edit and the round trip.
+
+{% /framework %}
+
 Active filters are also shown outside the panel. The chips above the list name each visible query entry and remove it when clicked, which is how a filter is dropped without reopening the panel.
+
+{% framework name="react" %}
+
+### The panel beside the list
+
+The panel and the chips are components of their own, `SmartCrudFilters` and `SmartCrudFiltersConfig`, so an application can place them where it likes. Here the panel stays beside the list instead of opening in the end menu.
+
+{% snippet file="react/src/crud/crud-filters.example.tsx" region="usage" /%}
+
+The spec asserts the exact requests. The first read carries the base query, `GET https://api.example.com/articles?limit=10&offset=0&archived=false`. Typing `milk` into the search box reads `?$search=milk&limit=10&offset=0&archived=false`. Typing it into the title filter instead reads `?limit=10&offset=0&archived=false&title~=milk` once the debounce has passed, and shows a chip that reads the list again without the entry when clicked. The base query entry is marked `hidden`, so it never becomes a chip.
+
+{% /framework %}
 
 ### Filters the user never sees
 
@@ -53,13 +87,25 @@ Two mechanisms add query entries that no widget owns. `baseQuery` on the configu
 
 ### The search service
 
-`CrudSearchService` is provided in root and holds a partial filter plus an enabled flag. While it is disabled it reports an empty filter, whatever was stored in it. The list page reads it when it builds its first filter, which lets a screen outside the feature, a global search for instance, decide what the list opens with. Nothing in the package enables it, so it is inert until the application calls its setters.
+{% framework name="angular" %}
+
+`CrudSearchService` is provided in root and holds a partial filter plus an enabled flag.
+
+{% /framework %}
+
+{% framework name="react" %}
+
+`CrudSearchService` is created once per `SmartProvider`, shared by every feature under it, and read with `useCrudSearchService()`. It holds a partial filter plus an enabled flag, each in a store a component can subscribe to.
+
+{% /framework %}
+
+While it is disabled it reports an empty filter, whatever was stored in it. The list page reads it when it builds its first filter, which lets a screen outside the feature, a global search for instance, decide what the list opens with. Nothing in the package enables it, so it is inert until the application calls its setters.
 
 ---
 
 ## The query on the wire
 
-The filter is one object, and the service turns it into one query string.
+The filter is one object, and the service turns it into one query string. `CrudService` builds the same string in both frameworks.
 
 | Filter field | Becomes                                 | Notes                                                                           |
 | ------------ | --------------------------------------- | ------------------------------------------------------------------------------- |

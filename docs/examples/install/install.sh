@@ -59,6 +59,12 @@ install_angular() {
   # #endregion
 }
 
+install_react() {
+  # #region install-react
+  npm install @smartsoft001/react-stack react react-dom
+  # #endregion
+}
+
 install_nestjs() {
   # #region install-nestjs
   npm install @smartsoft001/nestjs-stack
@@ -113,6 +119,9 @@ create_project
 step='install the Angular stack'
 install_angular
 
+step='install the React stack'
+install_react
+
 step='install the NestJS stack'
 install_nestjs
 
@@ -134,9 +143,10 @@ install_full_stack
 # different claims and only the second one is worth anything to a consumer.
 # `@smartsoft001/angular` is resolved instead: it is an Angular library whose
 # entry points are ESM bundles meant for a bundler, and executing one in bare
-# Node would prove nothing.
+# Node would prove nothing. The React libraries are resolved too, with the
+# stylesheets the Installation page tells a React application to import.
 step='load the packages the stacks pulled in'
-node -e "require('@smartsoft001/utils'); require('@smartsoft001/models'); require('@smartsoft001/nestjs'); require.resolve('@smartsoft001/angular'); console.log('ok')"
+node -e "require('@smartsoft001/utils'); require('@smartsoft001/models'); require('@smartsoft001/nestjs'); require.resolve('@smartsoft001/angular'); require.resolve('@smartsoft001/react'); require.resolve('@smartsoft001/react/styles.css'); require.resolve('@smartsoft001/crud-shell-react/styles.css'); console.log('ok')"
 
 step='create a second project for the per-package check'
 per_package_workspace="$(mktemp -d)"
