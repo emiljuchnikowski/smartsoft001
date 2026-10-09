@@ -14,10 +14,13 @@ jobs:
     permissions:
       contents: read
     # The example application's Playwright suite (docs/examples/app) runs the
-    # real stack: the NestJS API against this MongoDB and the Angular dev
-    # server, both started by Playwright. The suite is opt-in through
-    # RUN_EXAMPLE_APP_E2E so that `nx run-many -t test` stays runnable on a
-    # machine without MongoDB.
+    # real stack: the NestJS API against this MongoDB and a frontend's dev
+    # server, both started by Playwright. It runs once per frontend, as the
+    # `test` target of docs-examples-app-web-e2e (Angular) and of
+    # docs-examples-app-web-react-e2e (React); both start the API on :3000, so
+    # their targets set `parallelism: false` and `nx run-many` runs them one
+    # after the other. The suite is opt-in through RUN_EXAMPLE_APP_E2E so that
+    # `nx run-many -t test` stays runnable on a machine without MongoDB.
     services:
       mongo:
         image: mongo:8

@@ -7,15 +7,23 @@ import { fileURLToPath } from 'node:url';
 
 import {
   buildStarter,
+  FRONTENDS,
   leftovers,
   parseArgs,
   releasePackages,
+  renameFrontend,
   renameProjects,
+  selectProjects,
+  selectVariants,
   starterCompose,
+  starterDependencies,
   starterDockerfile,
   starterDockerignore,
+  starterIgnore,
   starterManifest,
   starterEslintConfig,
+  starterPlaywrightConfig,
+  starterReactJestPreset,
   starterReadme,
   starterRunScript,
   starterWorkflow,
@@ -82,6 +90,73 @@ describe('renameProjects', () => {
       renameProjects('RUN_EXAMPLE_APP_E2E=1'),
       'RUN_EXAMPLE_APP_E2E=1',
     );
+  });
+});
+
+describe('renameFrontend', () => {
+  test('drops the -react of the React app, its paths and its e2e project', () => {
+    assert.equal(
+      renameFrontend(
+        'nx serve web-react; apps/web-react/vite.config.ts; dist/apps/web-react-demo; nx e2e web-react-e2e',
+        'react',
+      ),
+      'nx serve web; apps/web/vite.config.ts; dist/apps/web-demo; nx e2e web-e2e',
+    );
+  });
+
+  test('keeps the demo path the React build is served from', () => {
+    assert.equal(
+      renameFrontend("base: demo ? '/demo-react/' : '/'", 'react'),
+      "base: demo ? '/demo-react/' : '/'",
+    );
+  });
+
+  test('changes nothing for the Angular starter', () => {
+    assert.equal(
+      renameFrontend('nx serve web-react', 'angular'),
+      'nx serve web-react',
+    );
+  });
+});
+
+describe('selectProjects', () => {
+  const command = 'nx run-many -t test -p model api web web-react';
+
+  test("drops the other frontend's project from a -p list", () => {
+    assert.equal(
+      selectProjects(command, 'angular'),
+      'nx run-many -t test -p model api web',
+    );
+    assert.equal(
+      selectProjects(command, 'react'),
+      'nx run-many -t test -p model api web-react',
+    );
+  });
+
+  test('leaves a command without a project list alone', () => {
+    assert.equal(selectProjects('nx serve web', 'react'), 'nx serve web');
+  });
+});
+
+describe('selectVariants', () => {
+  const entries = [
+    ['start', 'nx serve web'],
+    ['start:react', 'nx serve web-react'],
+    ['start:api', 'nx serve api'],
+  ];
+
+  test('keeps the plain command of each pair for Angular', () => {
+    assert.deepEqual(selectVariants(entries, 'angular', ':react'), [
+      ['start', 'nx serve web'],
+      ['start:api', 'nx serve api'],
+    ]);
+  });
+
+  test('puts the React command under the plain name, in its place, for React', () => {
+    assert.deepEqual(selectVariants(entries, 'react', ':react'), [
+      ['start', 'nx serve web-react'],
+      ['start:api', 'nx serve api'],
+    ]);
   });
 });
 
@@ -175,6 +250,17 @@ describe('starterCompose', () => {
 
   test('names the renamed frontend project', () => {
     assert.match(compose, /`npx nx serve web`/);
+    assert.match(compose, /\(apps\/web\/proxy\.conf\.json\)/);
+    assert.ok(!compose.includes('web-react'));
+  });
+
+  test("names the React starter's Vite proxy instead", () => {
+    const react = starterCompose(readApp('docker-compose.yml'), 'react');
+
+    assert.match(react, /`npx nx serve web`/);
+    assert.match(react, /`server\.proxy` in apps\/web\/vite\.config\.ts/);
+    assert.ok(!react.includes('proxy.conf.json'));
+    assert.ok(!react.includes('Angular'));
   });
 
   test('keeps the services and their environment', () => {
@@ -225,6 +311,25 @@ describe('starterDockerignore', () => {
     assert.match(ignore, /^\*\*\/node_modules$/m);
     assert.match(ignore, /^\*\*\/dist$/m);
     assert.match(ignore, /^\.env$/m);
+    assert.match(ignore, /^\*\*\/\.angular$/m);
+  });
+
+  test('has no Angular cache to ignore in the React starter', () => {
+    const react = starterDockerignore(
+      readApp('Dockerfile.dockerignore'),
+      'react',
+    );
+
+    assert.ok(!react.includes('.angular'));
+    assert.match(react, /^\*\*\/node_modules$/m);
+  });
+});
+
+describe('starterIgnore', () => {
+  test('ignores the Angular cache in the Angular starter only', () => {
+    assert.match(starterIgnore(), /^\.angular$/m);
+    assert.ok(!starterIgnore('react').includes('.angular'));
+    assert.match(starterIgnore('react'), /^\.env$/m);
   });
 });
 
@@ -249,6 +354,93 @@ describe('starterRunScript', () => {
     assert.ok(!script.includes('snippets.mjs'));
     assert.match(script, /the running stack\.\nset -Eeuo pipefail\n/);
   });
+
+  test('runs only the Angular frontend', () => {
+    assert.ok(!script.includes('react'));
+    assert.match(script, /`\.\/run\.sh web` the Angular frontend/);
+    assert.match(
+      script,
+      /# Jest: the model, the API services, the Angular services and pages/,
+    );
+    assert.match(script, /echo "usage: \$0 up\|web\|test\|e2e" >&2/);
+    assert.match(script, /^ {2}web\) web ;;$/m);
+    assert.match(script, /^ {2}e2e\) e2e ;;$/m);
+  });
+
+  test('keeps the bodies of the commands it runs', () => {
+    assert.match(
+      script,
+      /^web\(\) \{\n {2}# The frontend on http:\/\/localhost:4200/m,
+    );
+    assert.match(script, /^unit\(\) \{$/m);
+    assert.match(script, /^ {2}test\) unit ;;$/m);
+  });
+});
+
+describe('starterRunScript for the React starter', () => {
+  const script = starterRunScript(readApp('run.sh'), 'react');
+
+  test('runs the React app and its suite under the plain names', () => {
+    assert.match(
+      script,
+      /^web\(\) \{\n {2}# The React frontend on http:\/\/localhost:4300/m,
+    );
+    assert.match(script, /npx nx serve web$/m);
+    assert.match(script, /npx nx run-many -t test -p model api web$/m);
+    assert.match(script, /RUN_EXAMPLE_APP_E2E=1 npx nx test web-e2e$/m);
+    assert.match(
+      script,
+      /# Jest: the model, the API services, the React services and pages/,
+    );
+  });
+
+  test('has no Angular command and no -react name left', () => {
+    assert.ok(!script.includes('web-react'));
+    assert.ok(!script.includes('_react'));
+    assert.ok(!script.includes('4200'));
+    assert.equal(script.match(/^web\(\) \{$/gm).length, 1);
+    assert.equal(script.match(/^e2e\(\) \{$/gm).length, 1);
+    assert.match(script, /echo "usage: \$0 up\|web\|test\|e2e" >&2/);
+  });
+
+  test('runs from its own directory like the Angular one', () => {
+    assert.match(script, /REPO_ROOT="\$\(cd "\$\(dirname "\$0"\)" && pwd\)"/);
+    assert.match(script, /`\.\/run\.sh web` the React frontend/);
+    assert.match(script, /the running stack\.\nset -Eeuo pipefail\n/);
+  });
+});
+
+describe('starterPlaywrightConfig', () => {
+  const config = readApp('apps/web-e2e/playwright.config.ts');
+
+  for (const [frontend, url] of [
+    ['angular', 'http://localhost:4200'],
+    ['react', 'http://localhost:4300'],
+  ]) {
+    test(`drives the ${frontend} dev server of the web project, with no switch`, () => {
+      const rewritten = renameProjects(
+        starterPlaywrightConfig(config, frontend),
+      );
+
+      assert.match(rewritten, /serve: 'npx nx serve web',/);
+      assert.match(rewritten, new RegExp(`url: '${url}',`));
+      assert.ok(!rewritten.includes('E2E_FRONTEND'));
+      assert.ok(!rewritten.includes('selectFrontend'));
+      assert.ok(!rewritten.includes('FRONTENDS'));
+      assert.match(
+        rewritten,
+        /const outputDir = resolve\(workspaceRoot, 'dist\/docs\/examples\/app\/apps\/web-e2e'\);/,
+      );
+      assert.match(rewritten, /baseURL: baseURL \?\? frontend\.url/);
+    });
+  }
+
+  test('fails loudly when the config no longer has the table it rewrites', () => {
+    assert.throws(
+      () => starterPlaywrightConfig('export default {};', 'react'),
+      /has no react frontend/,
+    );
+  });
 });
 
 describe('starterManifest', () => {
@@ -261,6 +453,115 @@ describe('starterManifest', () => {
     assert.equal(manifest.name, 'smartsoft001-starter');
     assert.match(manifest.description, /2\.161\.0/);
     assert.deepEqual(manifest.scripts, { start: 'nx serve web' });
+  });
+
+  const app = readJson(path.join(repoRoot, APP, 'package.json'));
+
+  test('keeps the Angular scripts and drops the React ones', () => {
+    const manifest = starterManifest(app, '2.161.0', 'angular');
+
+    assert.deepEqual(manifest.scripts, {
+      start: 'nx serve web',
+      'start:api': 'nx serve api',
+      test: 'nx run-many -t test -p model api web',
+      e2e: 'nx e2e web-e2e',
+    });
+  });
+
+  test('puts the React scripts under the plain names for the React starter', () => {
+    const manifest = starterManifest(app, '2.161.0', 'react');
+
+    assert.equal(manifest.name, 'smartsoft001-starter-react');
+    assert.match(
+      manifest.description,
+      /react-stack and @smartsoft001\/nestjs-stack 2\.161\.0/,
+    );
+    assert.deepEqual(manifest.scripts, {
+      start: 'nx serve web',
+      'start:api': 'nx serve api',
+      test: 'nx run-many -t test -p model api web',
+      e2e: 'nx e2e web-e2e',
+    });
+  });
+});
+
+describe('starterDependencies', () => {
+  const app = readJson(path.join(repoRoot, APP, 'package.json'));
+  const all = (manifest) => [
+    ...Object.keys(manifest.dependencies),
+    ...Object.keys(manifest.devDependencies),
+  ];
+
+  test('the Angular starter installs nothing of the React frontend', () => {
+    const names = all(starterManifest(app, '2.161.0', 'angular'));
+
+    for (const name of [
+      '@smartsoft001/react-stack',
+      'react',
+      'react-dom',
+      '@types/react',
+      '@testing-library/react',
+      'eslint-plugin-react-hooks',
+      'vite',
+    ]) {
+      assert.ok(!names.includes(name), `the Angular starter installs ${name}`);
+    }
+    assert.ok(names.includes('@angular/core'));
+    assert.ok(names.includes('jest-preset-angular'));
+    assert.ok(names.includes('@nestjs/core'));
+  });
+
+  test('the React starter installs nothing of the Angular frontend', () => {
+    const names = all(starterManifest(app, '2.161.0', 'react'));
+
+    assert.deepEqual(
+      names.filter((name) =>
+        /angular|^@ngrx\/|^@ngx-translate\/|^ngx?-/.test(name),
+      ),
+      [],
+    );
+    assert.ok(!names.includes('@smartsoft001/full-stack'));
+    for (const name of [
+      'react',
+      'react-dom',
+      'vite',
+      '@nestjs/core',
+      'jest',
+      'playwright',
+    ]) {
+      assert.ok(names.includes(name), `the React starter misses ${name}`);
+    }
+  });
+
+  test('the React starter takes the NestJS half of full-stack, at the release', () => {
+    const dependencies = starterDependencies(
+      {
+        '@smartsoft001/full-stack': '2.161.0',
+        '@smartsoft001/react-stack': '2.161.0',
+        rxjs: '^7',
+      },
+      '2.161.0',
+      'react',
+    );
+
+    assert.deepEqual(dependencies, {
+      '@smartsoft001/nestjs-stack': '2.161.0',
+      '@smartsoft001/react-stack': '2.161.0',
+      rxjs: '^7',
+    });
+  });
+});
+
+describe('starterReactJestPreset', () => {
+  test('is the Nx preset without the Angular module mappings', () => {
+    const preset = starterReactJestPreset();
+
+    assert.match(preset, /require\('@nx\/jest\/preset'\)\.default/);
+    assert.match(
+      preset,
+      /customExportConditions: \['node', 'require', 'default'\]/,
+    );
+    assert.ok(!preset.includes('angular'));
   });
 });
 
@@ -287,6 +588,47 @@ describe('starterReadme', () => {
   test('says how to upgrade', () => {
     assert.match(readme, /npx nx migrate @smartsoft001\/core@<next>/);
     assert.match(readme, /npx nx migrate --run-migrations/);
+  });
+});
+
+describe('starterReadme for the React starter', () => {
+  const readme = starterReadme('2.161.0', 'react');
+
+  test('says React and NestJS and pins both stacks', () => {
+    assert.match(readme, /^# smartsoft001 React starter/);
+    assert.match(readme, /`@smartsoft001\/react-stack@2\.161\.0`/);
+    assert.match(readme, /`@smartsoft001\/nestjs-stack@2\.161\.0`/);
+    assert.match(
+      readme,
+      /a React frontend on `@smartsoft001\/crud-shell-react`/,
+    );
+    assert.match(readme, /a NestJS API on `@smartsoft001\/crud-shell-nestjs`/);
+    assert.ok(!readme.includes('Angular'));
+    assert.ok(!readme.includes('full-stack'));
+  });
+
+  test('says where it comes from and links the docs', () => {
+    assert.match(readme, /generated/);
+    assert.match(readme, /docs\/examples\/app/);
+    assert.match(
+      readme,
+      /https:\/\/framework\.smartflow\.biz\.pl\/docs\/example-app/,
+    );
+  });
+
+  test("documents the React app's port, commands and paths", () => {
+    assert.match(readme, /Open http:\/\/localhost:4300/);
+    assert.match(readme, /\.\/run\.sh web/);
+    assert.match(readme, /npx nx e2e web-e2e/);
+    assert.match(readme, /`apps\/web\/src\/app\/notes\/notes\.config\.ts`/);
+    assert.match(readme, /`apps\/web\/vite\.config\.ts`/);
+    assert.match(readme, /@smartsoft001\/crud-shell-react\/styles\.css/);
+    assert.ok(!readme.includes('docs-examples-app'));
+    assert.ok(!readme.includes('web-react'));
+  });
+
+  test('says how to upgrade', () => {
+    assert.match(readme, /npx nx migrate @smartsoft001\/core@<next>/);
   });
 });
 
@@ -320,6 +662,38 @@ describe('parseArgs', () => {
 
     assert.equal(args.version, '2.161.0');
     assert.equal(args.target, path.resolve('out'));
+    assert.equal(args.frontend, 'angular');
+  });
+
+  test('reads the frontend, and refuses one it does not know', () => {
+    assert.equal(
+      parseArgs([
+        '--version',
+        '2.161.0',
+        '--target',
+        'out',
+        '--frontend',
+        'react',
+      ]).frontend,
+      'react',
+    );
+    assert.throws(
+      () =>
+        parseArgs([
+          '--version',
+          '2.161.0',
+          '--target',
+          'out',
+          '--frontend',
+          'vue',
+        ]),
+      /unknown frontend "vue"/,
+    );
+    assert.throws(
+      () =>
+        parseArgs(['--version', '2.161.0', '--target', 'out', '--frontend']),
+      /unknown frontend ""/,
+    );
   });
 
   test('insists on both', () => {
@@ -456,7 +830,147 @@ describe('buildStarter', () => {
     assert.ok(!fs.existsSync(path.join(target, '.git')));
   });
 
+  test('has the Angular frontend only', () => {
+    assert.ok(fs.existsSync(path.join(target, 'apps/web/src/main.ts')));
+    assert.ok(!fs.existsSync(path.join(target, 'apps/web-react')));
+    assert.ok(!fs.existsSync(path.join(target, 'apps/web-react-e2e')));
+    assert.ok(!read('run.sh').includes('react'));
+    assert.match(
+      read('apps/web-e2e/playwright.config.ts'),
+      /url: 'http:\/\/localhost:4200'/,
+    );
+    assert.equal(
+      read('jest.preset.js'),
+      fs.readFileSync(path.join(repoRoot, 'jest.preset.js'), 'utf8'),
+    );
+  });
+
   after(() => fs.rmSync(root, { recursive: true, force: true }));
+});
+
+describe('buildStarter for the React frontend', () => {
+  const root = fixtureRepo();
+  const target = path.join(root, 'starter');
+
+  buildStarter({
+    repoRoot: root,
+    version: '2.161.0',
+    target,
+    frontend: 'react',
+    install: false,
+    git: false,
+  });
+
+  const read = (relative) =>
+    fs.readFileSync(path.join(target, relative), 'utf8');
+
+  test('has the React app as apps/web and no Angular app', () => {
+    assert.ok(fs.existsSync(path.join(target, 'apps/web/src/main.tsx')));
+    assert.ok(fs.existsSync(path.join(target, 'apps/web/vite.config.ts')));
+    assert.ok(!fs.existsSync(path.join(target, 'apps/web/src/main.ts')));
+    assert.ok(!fs.existsSync(path.join(target, 'apps/web/proxy.conf.json')));
+    assert.ok(!fs.existsSync(path.join(target, 'apps/web-react')));
+    assert.ok(!fs.existsSync(path.join(target, 'apps/web-react-e2e')));
+  });
+
+  test('names the projects like the Angular starter does', () => {
+    const web = readJson(path.join(target, 'apps/web/project.json'));
+    const e2e = readJson(path.join(target, 'apps/web-e2e/project.json'));
+
+    assert.equal(web.name, 'web');
+    assert.equal(web.sourceRoot, 'apps/web/src');
+    assert.equal(web.targets.build.options.outputPath, 'dist/apps/web');
+    assert.equal(
+      web.targets.serve.options.command,
+      'vite --config apps/web/vite.config.ts',
+    );
+    assert.equal(web.targets.styles, undefined);
+    assert.equal(e2e.name, 'web-e2e');
+    assert.deepEqual(e2e.implicitDependencies, ['web', 'api']);
+    assert.match(read('apps/web/jest.config.ts'), /displayName: 'web'/);
+    assert.match(
+      read('apps/web/vite.config.ts'),
+      /'dist\/apps\/web-demo\/demo-react'/,
+    );
+  });
+
+  test('drives the React app with the shared Playwright suite', () => {
+    const config = read('apps/web-e2e/playwright.config.ts');
+
+    assert.match(config, /serve: 'npx nx serve web'/);
+    assert.match(config, /url: 'http:\/\/localhost:4300'/);
+    assert.ok(!config.includes('E2E_FRONTEND'));
+    assert.match(read('apps/web-e2e/src/support/app.ts'), /tbody tr/);
+  });
+
+  test('installs the React and NestJS stacks at the release, and nothing of Angular', () => {
+    const manifest = readJson(path.join(target, 'package.json'));
+
+    assert.equal(manifest.name, 'smartsoft001-starter-react');
+    assert.equal(manifest.dependencies['@smartsoft001/react-stack'], '2.161.0');
+    assert.equal(
+      manifest.dependencies['@smartsoft001/nestjs-stack'],
+      '2.161.0',
+    );
+    assert.equal(manifest.dependencies['@smartsoft001/full-stack'], undefined);
+    assert.equal(manifest.scripts.start, 'nx serve web');
+    assert.match(manifest.description, /docs\/examples\/app/);
+    assert.ok(!JSON.stringify(manifest).includes('angular'));
+  });
+
+  test('strips the snippet regions from the TSX sources too', () => {
+    const main = read('apps/web/src/main.tsx');
+
+    assert.ok(!main.includes('#region'));
+    assert.match(main, /import '@smartsoft001\/react\/styles\.css';/);
+  });
+
+  test('writes the React starter files', () => {
+    assert.match(read('README.md'), /^# smartsoft001 React starter/);
+    assert.equal(read('jest.preset.js'), starterReactJestPreset());
+    assert.ok(!read('.gitignore').includes('.angular'));
+    assert.match(read('run.sh'), /`\.\/run\.sh web` the React frontend/);
+    assert.match(read('docker-compose.yml'), /vite\.config\.ts/);
+    assert.equal(read('.github/workflows/ci.yml'), starterWorkflow());
+    assert.equal(read('eslint.config.mjs'), starterEslintConfig());
+  });
+
+  test('leaves no trace of the monorepo or of the Angular frontend behind', () => {
+    assert.deepEqual(leftovers(target, 'react'), []);
+  });
+
+  after(() => fs.rmSync(root, { recursive: true, force: true }));
+});
+
+describe('leftovers', () => {
+  test("flags the other frontend's pieces", () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'starter-leftovers-'));
+
+    try {
+      fs.writeFileSync(path.join(dir, 'a.ts'), "import '@angular/core';\n");
+      fs.writeFileSync(path.join(dir, 'b.sh'), 'npx nx serve web-react\n');
+
+      assert.deepEqual(leftovers(dir, 'react'), ['a.ts: Angular frontend']);
+      assert.deepEqual(leftovers(dir, 'angular'), ['b.sh: React frontend']);
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true });
+    }
+  });
+});
+
+describe('FRONTENDS', () => {
+  test('names one starter repository package per frontend', () => {
+    assert.deepEqual(
+      Object.entries(FRONTENDS).map(([frontend, spec]) => [
+        frontend,
+        spec.name,
+      ]),
+      [
+        ['angular', 'smartsoft001-starter'],
+        ['react', 'smartsoft001-starter-react'],
+      ],
+    );
+  });
 });
 
 describe('build-starter: waiting for the release on the registry', () => {
@@ -548,6 +1062,32 @@ describe('build-starter: waiting for the release on the registry', () => {
     waitForRelease('1.0.0', { view: viewFrom(available), sleep, delayMs: 5 });
 
     assert.deepEqual(naps, [5]);
+  });
+
+  it('should start from the stacks it is given, as the React starter does', () => {
+    const view = viewFrom(new Set(Object.keys(manifests)));
+
+    assert.deepEqual(
+      releasePackages('1.0.0', view, ['@smartsoft001/angular-stack']),
+      [
+        '@smartsoft001/angular',
+        '@smartsoft001/angular-stack',
+        '@smartsoft001/google',
+      ],
+    );
+  });
+
+  it('should name the stacks it waits for when none resolves yet', () => {
+    assert.throws(
+      () =>
+        waitForRelease('1.0.0', {
+          view: viewFrom(new Set()),
+          sleep: () => undefined,
+          attempts: 1,
+          roots: ['@smartsoft001/nestjs-stack', '@smartsoft001/react-stack'],
+        }),
+      /still missing: @smartsoft001\/nestjs-stack, @smartsoft001\/react-stack/,
+    );
   });
 
   it('should give up after the attempts and name what is missing', () => {

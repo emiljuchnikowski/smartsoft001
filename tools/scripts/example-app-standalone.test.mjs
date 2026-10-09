@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 
 import {
   createStandaloneApp,
+  frameworkDependencies,
   parsePackages,
   rewritePaths,
   standaloneManifest,
@@ -56,6 +57,8 @@ const tarballs = new Map([
   ['@smartsoft001/core', '/tmp/t/smartsoft001-core-2.160.0.tgz'],
   ['@smartsoft001/full-stack', '/tmp/t/smartsoft001-full-stack-2.160.0.tgz'],
   ['@smartsoft001/angular', '/tmp/t/smartsoft001-angular-2.160.0.tgz'],
+  ['@smartsoft001/react-stack', '/tmp/t/smartsoft001-react-stack-2.160.0.tgz'],
+  ['@smartsoft001/react', '/tmp/t/smartsoft001-react-2.160.0.tgz'],
 ]);
 
 describe('rewritePaths', () => {
@@ -111,6 +114,21 @@ describe('standaloneProject', () => {
     assert.deepEqual(project.targets.build.dependsOn, ['^build']);
   });
 
+  test('drops the styles target of the React app, whose build lists no stylesheet', () => {
+    const webReact = readJson(
+      path.join(repoRoot, APP, 'apps', 'web-react', 'project.json'),
+    );
+    const project = standaloneProject(webReact);
+
+    assert.equal(project.targets.styles, undefined);
+    assert.equal(project.targets.build.dependsOn, undefined);
+    assert.equal(project.targets.serve.dependsOn, undefined);
+    assert.equal(project.targets.build.options.styles, undefined);
+    assert.deepEqual(project.targets['serve-static'].dependsOn, [
+      { target: 'build' },
+    ]);
+  });
+
   test('leaves a project without a styles target alone', () => {
     const api = readJson(
       path.join(repoRoot, APP, 'apps', 'api', 'project.json'),
@@ -135,14 +153,48 @@ describe('standaloneManifest', () => {
       '@smartsoft001/full-stack':
         'file:/tmp/t/smartsoft001-full-stack-2.160.0.tgz',
       '@smartsoft001/angular': 'file:/tmp/t/smartsoft001-angular-2.160.0.tgz',
+      '@smartsoft001/react-stack':
+        'file:/tmp/t/smartsoft001-react-stack-2.160.0.tgz',
+      '@smartsoft001/react': 'file:/tmp/t/smartsoft001-react-2.160.0.tgz',
     });
+  });
+
+  test('points the React stack at its tarball too, which npm requires of an overridden direct dependency', () => {
+    const next = standaloneManifest(manifest, { tarballs });
+
+    assert.equal(
+      next.dependencies['@smartsoft001/react-stack'],
+      'file:/tmp/t/smartsoft001-react-stack-2.160.0.tgz',
+    );
+  });
+
+  test('refuses a stack the release has no tarball for', () => {
+    const withoutReact = new Map(
+      [...tarballs].filter(([name]) => name !== '@smartsoft001/react-stack'),
+    );
+
+    assert.throws(
+      () => standaloneManifest(manifest, { tarballs: withoutReact }),
+      /no tarball for @smartsoft001\/react-stack/,
+    );
   });
 
   test('installs one exact version from the registry with no overrides', () => {
     const next = standaloneManifest(manifest, { version: '2.157.0' });
 
     assert.equal(next.dependencies['@smartsoft001/full-stack'], '2.157.0');
+    assert.equal(next.dependencies['@smartsoft001/react-stack'], '2.157.0');
     assert.equal(next.overrides, undefined);
+  });
+
+  test('pins only the framework, never a third-party dependency', () => {
+    const next = standaloneManifest(manifest, { version: '2.157.0' });
+
+    assert.deepEqual(frameworkDependencies(next), [
+      '@smartsoft001/full-stack',
+      '@smartsoft001/react-stack',
+    ]);
+    assert.equal(next.dependencies.react, manifest.dependencies.react);
   });
 
   test('replaces the overrides when switching from one form to the other', () => {
@@ -312,6 +364,86 @@ describe('createStandaloneApp', () => {
     assert.equal(
       web.targets.serve.options.proxyConfig,
       'apps/web/proxy.conf.json',
+    );
+  });
+
+  test('rewrites the React app for the published stylesheets', () => {
+    const webReact = readJson(
+      path.join(target, 'apps', 'web-react', 'project.json'),
+    );
+
+    assert.equal(webReact.targets.styles, undefined);
+    assert.equal(webReact.targets.build.dependsOn, undefined);
+    assert.equal(webReact.targets.serve.dependsOn, undefined);
+    assert.equal(
+      webReact.targets.build.options.outputPath,
+      'dist/apps/web-react',
+    );
+    assert.deepEqual(webReact.targets.build.options.commands, [
+      'tsc -p apps/web-react/tsconfig.app.json --noEmit',
+      'vite build --config apps/web-react/vite.config.ts',
+    ]);
+    assert.match(
+      read('apps/web-react/vite.config.ts'),
+      /resolve\(projectRoot, '\.\.\/\.\.'\)/,
+    );
+  });
+
+  test('lets the React app import the stylesheets the packages publish', () => {
+    // main.tsx imports them by package; with no `@smartsoft001` alias in the
+    // copy's tsconfig.base.json, the Vite config does not redirect them to
+    // the monorepo's compiled sources, and they resolve through each
+    // package's `exports` to the file its build ships.
+    const imports = [
+      ...read('apps/web-react/src/main.tsx').matchAll(
+        /^import '(@smartsoft001\/[^/]+)\/styles\.css';$/gm,
+      ),
+    ].map(([, name]) => name);
+
+    assert.deepEqual(imports, [
+      '@smartsoft001/react',
+      '@smartsoft001/crud-shell-react',
+    ]);
+
+    for (const [name, projectRoot] of [
+      ['@smartsoft001/react', 'packages/shared/react'],
+      ['@smartsoft001/crud-shell-react', 'packages/crud/shell/react'],
+    ]) {
+      const manifest = readJson(
+        path.join(repoRoot, projectRoot, 'package.json'),
+      );
+      const project = readJson(
+        path.join(repoRoot, projectRoot, 'project.json'),
+      );
+
+      assert.equal(manifest.name, name);
+      assert.equal(manifest.exports['./styles.css'], './styles.css');
+      assert.ok(
+        project.targets.build.options.assets.some(
+          (asset) => asset.glob === 'styles.css',
+        ),
+        `${name} does not ship styles.css`,
+      );
+    }
+
+    const paths = readJson(path.join(target, 'tsconfig.base.json'))
+      .compilerOptions.paths;
+
+    assert.ok(
+      !Object.keys(paths).some((alias) => alias.startsWith('@smartsoft001/')),
+    );
+  });
+
+  test('runs the shared Playwright suite for the React app from the copy', () => {
+    const e2e = readJson(
+      path.join(target, 'apps', 'web-react-e2e', 'project.json'),
+    );
+
+    assert.equal(e2e.targets.test.options.command, 'node apps/web-e2e/run.mjs');
+    assert.equal(e2e.targets.test.options.env.E2E_FRONTEND, 'react');
+    assert.equal(
+      e2e.targets.e2e.options.command,
+      'playwright test --config apps/web-e2e/playwright.config.ts',
     );
   });
 

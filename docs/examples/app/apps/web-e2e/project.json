@@ -9,6 +9,7 @@
     "e2e": {
       "executor": "nx:run-commands",
       "cache": false,
+      "parallelism": false,
       "options": {
         "command": "playwright test --config docs/examples/app/apps/web-e2e/playwright.config.ts"
       }
@@ -16,6 +17,7 @@
     "test": {
       "executor": "nx:run-commands",
       "cache": false,
+      "parallelism": false,
       "options": {
         "command": "node docs/examples/app/apps/web-e2e/run.mjs"
       }

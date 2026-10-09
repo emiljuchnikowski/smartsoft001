@@ -43,7 +43,7 @@ In an existing Angular, React or NestJS project nothing needs to be restructured
 
 ### Something to compare against
 
-The [example application](/docs/example-app) is a complete Angular and NestJS pair on the framework, kept in the repository and tested on every pull request. When a step on this page raises a question, it shows the answer in running code. On the React side, the executed examples of [`@smartsoft001/crud-shell-react`](/docs/packages/crud-shell-react) and the [CRUD section](/docs/crud/overview) play that part.
+The [example application](/docs/example-app) is a complete application on the framework, a NestJS API with an Angular and a React frontend, kept in the repository and tested on every pull request. When a step on this page raises a question, it shows the answer in running code. Its starters, [`smartsoft001-starter`](https://github.com/emiljuchnikowski/smartsoft001-starter) for Angular and [`smartsoft001-starter-react`](https://github.com/emiljuchnikowski/smartsoft001-starter-react) for React, are the same application as a workspace of its own.
 
 ## Create a project
 

@@ -1,6 +1,8 @@
-# Brings up MongoDB and the API. The frontend runs on the host with
-# `npx nx serve docs-examples-app-web` and reaches the API through its
-# dev-server proxy (docs/examples/app/apps/web/proxy.conf.json).
+# Brings up MongoDB and the API. A frontend runs on the host, with
+# `npx nx serve docs-examples-app-web` (Angular) or
+# `npx nx serve docs-examples-app-web-react` (React), and reaches the API
+# through its dev-server proxy (docs/examples/app/apps/web/proxy.conf.json,
+# the `server.proxy` of docs/examples/app/apps/web-react/vite.config.ts).
 #
 # Values in a `.env` next to this file override the defaults below (see
 # .env.example); the API itself reads the same variables.

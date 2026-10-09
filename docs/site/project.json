@@ -115,7 +115,13 @@
         "{workspaceRoot}/tools/tsconfig.strict.json",
         "{workspaceRoot}/tsconfig.base.json",
         "{workspaceRoot}/packages/**/*.ts",
-        "{workspaceRoot}/.github/workflows/pull-request.yml"
+        "{workspaceRoot}/packages/**/package.json",
+        "{workspaceRoot}/packages/**/project.json",
+        "{workspaceRoot}/docs/examples/app/**/*",
+        "{workspaceRoot}/jest.preset.js",
+        "{workspaceRoot}/nx.json",
+        "{workspaceRoot}/.github/workflows/pull-request.yml",
+        "{workspaceRoot}/.github/workflows/publish.yml"
       ],
       "options": {
         "command": "node --test docs/site/tools/*.test.mjs tools/scripts/*.test.mjs"
