@@ -1,7 +1,7 @@
 ---
 title: Password hashing
-section: Getting started
-order: 6
+section: Custom
+order: 1
 nextjs:
   metadata:
     title: Password hashing

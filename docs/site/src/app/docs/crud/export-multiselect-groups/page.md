@@ -2,10 +2,11 @@
 title: Export, multiselect and groups
 section: CRUD
 order: 6
+frameworks: [angular, react]
 nextjs:
   metadata:
     title: CRUD export, multiselect and groups
-    description: File export, bulk editing of a selection and grouped lists, the three collection-level features of the CRUD list page, described from the component sources.
+    description: File export, bulk editing of a selection and grouped lists, the three collection-level features of the CRUD list page in Angular and React.
 ---
 
 Three features turn the list from a table into a working screen: downloading it, editing many records at once, and breaking it into groups. All three are switched on from the configuration. {% .lead %}
@@ -14,7 +15,17 @@ Three features turn the list from a table into a working screen: downloading it,
 
 ## Export
 
+{% framework name="angular" %}
+
 `export: true` adds the export button to the list page header. It opens a popover with two buttons, CSV and XLSX, and the popover closes itself once the store reports the export as finished.
+
+{% /framework %}
+
+{% framework name="react" %}
+
+`export: true` adds the export button to the list page header. It opens `SmartCrudExport` in a modal of `ModalService`, which the `SmartOverlays` of `SmartProvider` render: two buttons, CSV and XLSX, and the modal closes itself once the store reports the export as finished: the component calls the `dismiss` prop `ModalService` hands it, and without one closes the last opened modal.
+
+{% /framework %}
 
 What is exported is what is on screen, minus the paging. The component takes the current filter, clears its limit and offset, and asks for every matching record rather than the current page. The service then issues the ordinary reading request with the format's content type as the request's content type, which is what tells the backend to answer with a file. The response is turned into a blob and handed to the browser as a download named `data.csv` or `data.xlsx`. The CSV blob is prefixed with a byte order mark so that spreadsheet applications open it as UTF-8.
 
@@ -36,11 +47,33 @@ The CSV is safe to open in a spreadsheet. A text cell that starts with `=`, `+`,
 
 Multiselect turns the list into a bulk editor for the fields that allow it.
 
+{% framework name="angular" %}
+
 The button appears when `list.components.multi` is set, or when `edit` is on and at least one field declares `update: { multi: true }`, the device is not mobile and the list is in desktop mode. Pressing it clears any existing selection and switches the list into multi-selection.
 
-From then on, every change to the selection opens the multiselect panel in the end menu, or closes it again when the selection empties, and pushes the selected records into the store. The panel reads them back through the facade's `multiSelected` signal and builds a form of exactly the fields marked `multi`. Where every selected record already shares the same value for such a field, the form is prefilled with it; where they differ, it is left empty. Confirming applies the edited values to every selected record through one partial update per record, and closes the panel.
+{% /framework %}
 
-Navigating away clears the selection: the page watches the router and drops both the selection and the multi-selection mode on every navigation event.
+{% framework name="react" %}
+
+The button appears when `list.components.multi` is set, or when `edit` is on and at least one field declares `update: { multi: true }` and the list is in desktop mode or has no mode. The device is not detected. Pressing it clears any existing selection and switches the list into multi-selection, a checkbox per row.
+
+{% /framework %}
+
+From then on, every change to the selection opens the multiselect panel in the end menu, or closes it again when the selection empties, and pushes the selected records into the store. The panel reads them back through the facade's `multiSelected` state and builds a form of exactly the fields marked `multi`. Where every selected record already shares the same value for such a field, the form is prefilled with it; where they differ, it is left empty. Confirming applies the edited values to every selected record through one partial update per record, and closes the panel.
+
+Navigating away clears the selection: the page watches the router, in React the navigation adapter, and drops both the selection and the multi-selection mode on every navigation event.
+
+{% framework name="react" %}
+
+### The end menu belongs to the application
+
+The list page opens the multiselect panel, and the filters panel, through `MenuService.openEnd`, with the component bound to the feature by `useCrudBoundComponent`, so it works outside the feature's `CrudProvider`. `MenuService` only keeps the request in its `endContent` store, and `SmartApp` renders no menu, so the application renders it. Without that, the multiselect and filters buttons appear to do nothing.
+
+{% snippet file="react/src/crud/crud-export-multiselect.example.tsx" region="usage" /%}
+
+The spec drives both features through this screen. Export: the button opens CSV and XLSX in a modal, CSV sends `GET https://api.example.com/tasks` with `Content-Type: text/csv` and no paging, the browser is handed `data.csv`, and after an XLSX export the modal is gone. Multiselect: the button adds a checkbox per row, checking one opens the end menu titled `selected: 1`, two records that share an owner prefill it and two that do not leave it empty, and confirming a new owner sends `PATCH https://api.example.com/tasks/1` and `/tasks/2`, each with `{ owner, id }`, and closes the menu.
+
+{% /framework %}
 
 ## Groups
 
@@ -54,7 +87,7 @@ Navigating away clears the selection: the page watches the router and drops both
 | `show`     | `boolean`               | Whether the group starts expanded.                             |
 | `children` | `Array<ICrudListGroup>` | A nested level of groups, rendered indented inside the parent. |
 
-Opening a group is a query change, not a client-side filter. The group service adds a hidden equality entry for the group's key and value to the current filter and re-reads from the first page, which is why only one group is open at a time: opening one closes the others. Closing a group, or leaving the page, removes the entries the groups added, in one debounced read rather than one per group. The entries are marked hidden, so they never show up among the active-filter chips.
+Opening a group is a query change, not a client-side filter. The group service, `CrudListGroupService`, adds a hidden equality entry for the group's key and value to the current filter and re-reads from the first page, which is why only one group is open at a time: opening one closes the others, and a group on the same key replaces the value of the entry. Closing a group leaves its entry in the filter; the entries go when the groups do. Leaving the page, starting a search, or closing a parent group, whose child groups then go away, removes the entries those groups added, in one debounced read rather than one per group. The entries are marked hidden, so they never show up among the active-filter chips.
 
 While groups are configured, the plain list is hidden and the grouped view takes its place. Searching reverses that: as soon as the filter carries search text, the flat list comes back, because a search is a question about the whole collection rather than about one group.
 
@@ -62,7 +95,17 @@ While groups are configured, the plain list is hidden and the grouped view takes
 
 ## Examples
 
+{% framework name="angular" %}
+
 None of these three features has an executable example in these docs. They are described here from the component sources. The configuration fields that switch them on, `export`, `list.components.multi` and `list.groups`, are part of the type that the [configuration example](/docs/crud/configuration) compiles against, so their names and shapes cannot drift, but no test in this repository mounts the export popover, the multiselect panel or the grouped list.
+
+{% /framework %}
+
+{% framework name="react" %}
+
+Export and multiselect are executed by the example under [multiselect](#the-end-menu-belongs-to-the-application), against the real store and effects over a stubbed `fetch`. Groups are described here from the component source: `SmartCrudGroup` renders them, and the standard list body puts it in place of the flat list while `list.groups` is set and nothing is searched. No spec in these docs mounts the grouped list.
+
+{% /framework %}
 
 ---
 
