@@ -1,3 +1,15 @@
+## 2.194.0 (2026-10-09)
+
+### 🩹 Fixes
+
+- **shared:** projected content for injected wrapper implementations; React packages described on their own ([#131](https://github.com/emiljuchnikowski/smartsoft001/pull/131))
+
+### ❤️ Thank You
+
+- Claude
+- Claude Opus 5.5
+- Emil Juchnikowski
+
 ## 2.191.0 (2026-10-08)
 
 This was a version bump only, there were no code changes.
