@@ -1,4 +1,5 @@
 import { Callout } from '@/components/Callout'
+import { FrameworkBlock } from '@/components/Framework'
 import { QuickLink, QuickLinks } from '@/components/QuickLinks'
 import { Storybook } from '@/components/Storybook'
 import { Tab, Tabs } from '@/components/Tabs'
@@ -30,6 +31,17 @@ const tags = {
         <figcaption>{caption}</figcaption>
       </figure>
     ),
+  },
+  framework: {
+    render: FrameworkBlock,
+    attributes: {
+      name: {
+        type: String,
+        required: true,
+        matches: ['angular', 'react'],
+        errorLevel: 'critical',
+      },
+    },
   },
   storybook: {
     selfClosing: true,

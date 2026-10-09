@@ -5,6 +5,7 @@ import clsx from 'clsx'
 
 import { Providers } from '@/app/providers'
 import { Layout } from '@/components/Layout'
+import { frameworkScript } from '../../tools/framework.mjs'
 
 import '@/styles/tailwind.css'
 
@@ -41,6 +42,10 @@ export default function RootLayout({
       className={clsx('h-full antialiased', inter.variable, lexend.variable)}
       suppressHydrationWarning
     >
+      <head>
+        {/* Before the first paint, so a page never flashes the other framework. */}
+        <script dangerouslySetInnerHTML={{ __html: frameworkScript() }} />
+      </head>
       <body className="flex min-h-full bg-white dark:bg-slate-900">
         <Providers>
           <Layout>{children}</Layout>

@@ -45,4 +45,14 @@
   [inert] ::-webkit-scrollbar {
     display: none;
   }
+
+  /*
+   * A page that documents both frameworks carries both variants; the one not
+   * picked is hidden. Without a choice (first visit, no JavaScript) the page
+   * shows Angular. See tools/framework.mjs.
+   */
+  html:not([data-framework='react']) [data-framework-only='react'],
+  html[data-framework='react'] [data-framework-only='angular'] {
+    display: none;
+  }
 }

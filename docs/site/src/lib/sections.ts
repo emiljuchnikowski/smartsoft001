@@ -59,21 +59,36 @@ function getNodeText(node: Node) {
 export type Subsection = H3Node['attributes'] & {
   id: string
   title: string
+  framework?: string
   children?: undefined
 }
 
 export type Section = H2Node['attributes'] & {
   id: string
   title: string
+  framework?: string
   children: Array<Subsection>
 }
 
+/** The framework a `{% framework name="…" %}` block is written for. */
+function frameworkOf(node: Node) {
+  return node.type === 'tag' && node.tag === 'framework'
+    ? String(node.attributes.name)
+    : undefined
+}
+
+/**
+ * The entries of the table of contents, each heading inside a framework block
+ * marked with that framework so the list shows only the reader's variant. The
+ * entries are collected into one list, so an `h3` at the top of a framework
+ * block becomes a child of the `h2` above the block.
+ */
 export function collectSections(
   nodes: Array<Node>,
   slugify = slugifyWithCounter(),
+  framework?: string,
+  sections: Array<Section> = [],
 ) {
-  let sections: Array<Section> = []
-
   for (let node of nodes) {
     if (isH2Node(node) || isH3Node(node)) {
       let title = getNodeText(node)
@@ -89,14 +104,26 @@ export function collectSections(
             ...node.attributes,
             id,
             title,
+            framework,
           })
         } else {
-          sections.push({ ...node.attributes, id, title, children: [] })
+          sections.push({
+            ...node.attributes,
+            id,
+            title,
+            framework,
+            children: [],
+          })
         }
       }
     }
 
-    sections.push(...collectSections(node.children ?? [], slugify))
+    collectSections(
+      node.children ?? [],
+      slugify,
+      frameworkOf(node) ?? framework,
+      sections,
+    )
   }
 
   return sections

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import clsx from 'clsx'
 
+import { useFramework } from '@/lib/framework'
 import { type Section, type Subsection } from '@/lib/sections'
 
 export function TableOfContents({
@@ -12,13 +13,16 @@ export function TableOfContents({
   tableOfContents: Array<Section>
 }) {
   let [currentSection, setCurrentSection] = useState(tableOfContents[0]?.id)
+  // Headings of the framework the reader did not pick are hidden: they have
+  // no position, so the list is measured again whenever the choice changes.
+  let framework = useFramework()
 
   let getHeadings = useCallback((tableOfContents: Array<Section>) => {
     return tableOfContents
       .flatMap((node) => [node.id, ...node.children.map((child) => child.id)])
       .map((id) => {
         let el = document.getElementById(id)
-        if (!el) return null
+        if (!el || el.getClientRects().length === 0) return null
 
         let style = window.getComputedStyle(el)
         let scrollMt = parseFloat(style.scrollMarginTop)
@@ -32,6 +36,7 @@ export function TableOfContents({
   useEffect(() => {
     if (tableOfContents.length === 0) return
     let headings = getHeadings(tableOfContents)
+    if (headings.length === 0) return
     function onScroll() {
       let top = window.scrollY
       let current = headings[0].id
@@ -49,7 +54,7 @@ export function TableOfContents({
     return () => {
       window.removeEventListener('scroll', onScroll)
     }
-  }, [getHeadings, tableOfContents])
+  }, [getHeadings, tableOfContents, framework])
 
   function isActive(section: Section | Subsection) {
     if (section.id === currentSection) {
@@ -77,7 +82,7 @@ export function TableOfContents({
               className="mt-4 space-y-3 text-sm [overflow-wrap:anywhere]"
             >
               {tableOfContents.map((section) => (
-                <li key={section.id}>
+                <li key={section.id} data-framework-only={section.framework}>
                   <h3>
                     <Link
                       href={`#${section.id}`}
@@ -96,7 +101,10 @@ export function TableOfContents({
                       className="mt-2 space-y-3 pl-5 text-slate-500 dark:text-slate-400"
                     >
                       {section.children.map((subSection) => (
-                        <li key={subSection.id}>
+                        <li
+                          key={subSection.id}
+                          data-framework-only={subSection.framework}
+                        >
                           <Link
                             href={`#${subSection.id}`}
                             className={
