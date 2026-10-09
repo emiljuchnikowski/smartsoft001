@@ -1,16 +1,19 @@
 import { SmartCommandPaletteProps } from '../command-palette.types';
+import { useCloseOnEscape } from '../use-close-on-escape';
 import { useCommandPalette } from '../use-command-palette';
 
 /**
  * The default command palette: a native `<dialog>` with a search input and a
  * `listbox` of the filtered commands. Clicking an option runs it and closes the
- * palette; the dialog's `close` event (e.g. Escape on a modal dialog) closes it
- * too.
+ * palette; Escape anywhere in the document closes an open palette, and so
+ * does the dialog's `close` event.
  */
 export function SmartCommandPaletteStandard(props: SmartCommandPaletteProps) {
   const { options, className = '' } = props;
   const { open, query, setQuery, filteredCommands, selectCommand, close } =
     useCommandPalette(props);
+
+  useCloseOnEscape(open, close);
 
   return (
     <dialog open={open} className={className || undefined} onClose={close}>

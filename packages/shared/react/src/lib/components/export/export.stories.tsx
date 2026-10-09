@@ -12,6 +12,7 @@ const ROWS = [
 interface ExportArgs {
   hasValue: boolean;
   payload: 'object' | 'rows';
+  fileName: string;
   cssClass: string;
 }
 
@@ -30,17 +31,30 @@ const meta: Meta<ExportArgs> = {
       description:
         'What gets handed to `handler`. Purely a handler-argument difference; the rendered button is identical.',
     },
-    cssClass: { control: 'text', description: 'Passed through as `class`.' },
+    fileName: {
+      control: 'text',
+      description: 'Handed to `handler` as its second argument.',
+    },
+    cssClass: {
+      control: 'text',
+      description: 'Passed through as `className`.',
+    },
   },
-  args: { hasValue: true, payload: 'object', cssClass: '' },
+  args: {
+    hasValue: true,
+    payload: 'object',
+    fileName: 'export.json',
+    cssClass: '',
+  },
 };
 
 export default meta;
 type Story = StoryObj<ExportArgs>;
 
-// `handler` is required — every instance must pass it. `fileName` is
-// deliberately not exercised.
-const handler = (value: unknown) => console.log('[storybook] exported', value);
+// `handler` is required — every instance must pass it. It receives `value`
+// and `fileName`.
+const handler = (value: unknown, fileName?: string) =>
+  console.log('[storybook] exported', value, fileName);
 
 // #region usage
 export const Playground: Story = {
@@ -54,6 +68,7 @@ export const Playground: Story = {
         value={
           args.hasValue ? (args.payload === 'rows' ? ROWS : SINGLE) : undefined
         }
+        fileName={args.fileName}
         handler={handler}
         className={args.cssClass}
       />

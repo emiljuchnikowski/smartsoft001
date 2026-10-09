@@ -52,6 +52,42 @@ describe('@smartsoft001/react: SmartInputError', () => {
     expect(container).toBeEmptyDOMElement();
   });
 
+  it.each([
+    ['standard', SmartInputError],
+    ['preset', SmartInputErrorPreset],
+  ])(
+    '%s: should show the PESEL message for the pesel preset invalidPesel error',
+    (_name, Error) => {
+      // Arrange
+      const errors = { invalidPesel: true };
+
+      // Act
+      render(
+        <SmartProvider language="eng">
+          <Error errors={errors} />
+        </SmartProvider>,
+      );
+
+      // Assert
+      expect(screen.getByText('invalid pesel')).toBeInTheDocument();
+    },
+  );
+
+  it('should show the PESEL message once for both pesel and invalidPesel', () => {
+    // Arrange
+    const errors = { pesel: true, invalidPesel: true };
+
+    // Act
+    render(
+      <SmartProvider language="eng">
+        <SmartInputError errors={errors} />
+      </SmartProvider>,
+    );
+
+    // Assert
+    expect(screen.getAllByText('invalid pesel')).toHaveLength(1);
+  });
+
   it('should mark the preset messages as alerts', () => {
     render(<SmartInputErrorPreset errors={{ email: true, pesel: true }} />);
 

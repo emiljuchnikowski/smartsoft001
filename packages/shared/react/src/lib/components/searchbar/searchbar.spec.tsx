@@ -162,10 +162,41 @@ describe('@smartsoft001/react: SmartSearchbar', () => {
         />,
       );
 
-      expect(
-        screen.getByRole('button').querySelector('svg'),
-      ).toBeInTheDocument();
+      expect(screen.getByRole('button').querySelector('svg')).toHaveAttribute(
+        'data-icon',
+        'magnifying-glass',
+      );
       expect(screen.queryByRole('searchbox')).toBeNull();
+    });
+
+    it('should name the toggle button with the search label', () => {
+      // Act
+      render(
+        <SmartProvider language="eng">
+          <SmartSearchbarStandard
+            show={false}
+            options={{ showToggleButton: true }}
+          />
+        </SmartProvider>,
+      );
+
+      // Assert
+      expect(
+        screen.getByRole('button', { name: 'search' }),
+      ).toBeInTheDocument();
+    });
+
+    it('should render the magnifying glass icon next to the visible input', () => {
+      // Arrange
+      const { container } = render(<SmartSearchbarStandard />);
+
+      // Act
+      const svg = container.querySelector('input[type="search"] + svg');
+
+      // Assert
+      expect(svg).toHaveAttribute('data-icon', 'magnifying-glass');
+      expect(svg).toHaveAttribute('viewBox', '0 0 20 20');
+      expect(svg).toHaveAttribute('aria-hidden', 'true');
     });
 
     it('should show the input on the toggle button click', () => {

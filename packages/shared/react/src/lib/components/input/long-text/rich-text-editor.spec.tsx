@@ -6,6 +6,7 @@ import {
   screen,
 } from '@testing-library/react';
 
+import { LONG_TEXT_TOOLBAR, SmartRichTextToolbar } from './index';
 import {
   SmartRichTextEditor,
   SmartRichTextEditorProps,
@@ -210,6 +211,33 @@ describe('@smartsoft001/react: SmartRichTextEditor', () => {
       setup();
 
       expect(screen.getAllByRole('separator')).toHaveLength(7);
+    });
+
+    it('should render only the groups of a custom toolbar', () => {
+      // Arrange
+      const toolbar: SmartRichTextToolbar = [['bold', 'italic'], ['link']];
+
+      // Act
+      setup({ toolbar });
+
+      // Assert
+      expect(
+        screen
+          .getAllByRole('button')
+          .map((item) => item.getAttribute('aria-label')),
+      ).toEqual(['Bold', 'Italic', 'Insert Link']);
+      expect(screen.getAllByRole('separator')).toHaveLength(1);
+    });
+
+    it('should use LONG_TEXT_TOOLBAR, exported by the long-text index, by default', () => {
+      // Arrange
+      const groups = LONG_TEXT_TOOLBAR.length;
+
+      // Act
+      setup();
+
+      // Assert
+      expect(screen.getAllByRole('separator')).toHaveLength(groups - 1);
     });
 
     it('should title the icon buttons', () => {

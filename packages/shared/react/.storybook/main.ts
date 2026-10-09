@@ -24,7 +24,11 @@ function workspaceAliases(): Record<string, string> {
 }
 
 const config: StorybookConfig = {
-  stories: ['../src/**/*.@(mdx|stories.@(js|jsx|ts|tsx))'],
+  stories: [
+    '../src/**/*.@(mdx|stories.@(js|jsx|ts|tsx))',
+    // The usage examples the docs pages show, embedded below their code tab.
+    '../../../../docs/examples/react/src/components/*.stories.tsx',
+  ],
   addons: [],
   framework: {
     name: getAbsolutePath('@storybook/react-vite'),

@@ -209,7 +209,7 @@ describe('@smartsoft001/react: SmartPasswordStrength', () => {
         'min length 7',
         'upper letters',
         'lower letters',
-        'string',
+        'special characters',
       ]);
     });
 
@@ -217,7 +217,7 @@ describe('@smartsoft001/react: SmartPasswordStrength', () => {
       ['abcdefg', 'min length'],
       ['A', 'upper letters'],
       ['a', 'lower letters'],
-      ['!', 'string'],
+      ['!', 'special characters'],
     ])('should hide the met rule for %s', (password, hint) => {
       render(
         <SmartProvider language="eng">

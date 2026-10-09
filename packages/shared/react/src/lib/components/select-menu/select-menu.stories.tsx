@@ -43,7 +43,7 @@ const meta: Meta<SelectMenuArgs> = {
     disabled: { control: 'boolean' },
     cssClass: {
       control: 'text',
-      description: 'External CSS classes (alias for `class`).',
+      description: 'External CSS classes, passed as `className`.',
     },
   },
   args: {

@@ -272,12 +272,77 @@ describe('@smartsoft001/react: SmartPageHeading', () => {
       ).toBeInTheDocument();
     });
 
-    it('should fall back to the title text without logoTpl', () => {
+    it('should render the title in the brand zone without logoTpl', () => {
       const { container } = render(
         <SmartPageHeadingPreset options={{ title: 'Dashboard' }} />,
       );
 
       expect(role(container, 'logo')?.textContent?.trim()).toBe('Dashboard');
+    });
+
+    it('should render the title as an h1 and the subtitle under it', () => {
+      // Arrange
+      const options = {
+        title: 'Back End Developer',
+        subtitle: 'Full-time, remote',
+      };
+
+      // Act
+      render(<SmartPageHeadingPreset options={options} />);
+
+      // Assert
+      expect(
+        screen.getByRole('heading', { level: 1, name: 'Back End Developer' }),
+      ).toBeInTheDocument();
+      expect(screen.getByText('Full-time, remote')).toHaveAttribute(
+        'data-role',
+        'subtitle',
+      );
+    });
+
+    it('should render the title next to the logoTpl', () => {
+      // Arrange
+      const options = { logoTpl, title: 'Acme' };
+
+      // Act
+      const { container } = render(
+        <SmartPageHeadingPreset options={options} />,
+      );
+
+      // Assert
+      expect(
+        role(container, 'logo')?.querySelector('.logo-content'),
+      ).toBeInTheDocument();
+      expect(role(container, 'title')).toHaveTextContent('Acme');
+    });
+
+    it('should keep the actions zone next to the title', () => {
+      // Arrange
+      const options = { title: 'Back End Developer', actionsTpl };
+
+      // Act
+      const { container } = render(
+        <SmartPageHeadingPreset options={options} />,
+      );
+
+      // Assert
+      expect(role(container, 'title')).toBeInTheDocument();
+      expect(
+        role(container, 'actions')?.querySelector('.actions-content'),
+      ).toBeInTheDocument();
+    });
+
+    it('should render no heading without a title or subtitle', () => {
+      // Arrange
+      const options = { logoTpl };
+
+      // Act
+      const { container } = render(
+        <SmartPageHeadingPreset options={options} />,
+      );
+
+      // Assert
+      expect(role(container, 'heading')).toBeNull();
     });
 
     it('should hide the mobile panel by default', () => {

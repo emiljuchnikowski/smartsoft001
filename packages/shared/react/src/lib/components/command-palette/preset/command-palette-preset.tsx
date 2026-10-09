@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { ICommand, SmartCommandPaletteVariant } from '../../../models';
 import { cn } from '../../../utils/class-names';
 import { SmartCommandPaletteProps } from '../command-palette.types';
+import { useCloseOnEscape } from '../use-close-on-escape';
 import { useCommandPalette } from '../use-command-palette';
 import {
   COMMAND_PALETTE_EMPTY,
@@ -50,13 +51,15 @@ function groupCommands(commands: ICommand[]): ICommandGroup[] {
  * component only adds the visual variants driven by `options.variant`
  * (`simple` by default): looser rows, icons, images, a translucent dialog,
  * group headers, a footer, or a preview pane showing the first result (or the
- * hovered one).
+ * hovered one). Like the standard, it closes on Escape while open.
  */
 export function SmartCommandPalettePreset(props: SmartCommandPaletteProps) {
   const { options, className = '' } = props;
   const { open, query, setQuery, filteredCommands, selectCommand, close } =
     useCommandPalette(props);
   const [previewOverride, setPreviewOverride] = useState<ICommand | null>(null);
+
+  useCloseOnEscape(open, close);
 
   const variant: SmartCommandPaletteVariant = options?.variant ?? 'simple';
   const emptyText = options?.emptyText ?? 'No results';

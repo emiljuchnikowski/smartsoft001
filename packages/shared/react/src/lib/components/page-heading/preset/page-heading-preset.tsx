@@ -9,7 +9,9 @@ import {
 } from './preset-classes';
 
 const TITLE_CLASSES =
-  'smart:text-lg smart:font-semibold smart:text-gray-900 smart:dark:text-white';
+  'smart:truncate smart:text-lg smart:font-semibold smart:text-gray-900 smart:dark:text-white';
+const SUBTITLE_CLASSES =
+  'smart:truncate smart:text-sm smart:text-gray-500 smart:dark:text-gray-400';
 const HAMBURGER_CLASSES =
   'smart:block smart:md:hidden smart:rounded-sm smart:bg-gray-100 smart:p-2.5 smart:text-gray-600 smart:transition smart:hover:text-gray-600/75 smart:dark:bg-gray-800 smart:dark:text-white smart:dark:hover:text-white/75';
 
@@ -19,10 +21,12 @@ const HAMBURGER_CLASSES =
  * `<SmartPageHeading>`, or render it directly.
  *
  * Unlike the standard page heading it renders a navbar-look `<header>`: a
- * logo/brand zone (falling back to the title), a desktop nav zone, an actions
- * zone (an avatar zone for the `user` layout) and a mobile hamburger toggling
- * a collapsible panel, laid out by `options.presentation.layout`
- * (`links-left` default, `links-center`, `links-right`, `user`).
+ * brand zone (the `logoTpl`, followed by the `title` as an `<h1>` and the
+ * `subtitle` under it), a desktop nav zone, an actions zone (an avatar zone
+ * for the `user` layout) and a mobile hamburger toggling a collapsible panel,
+ * laid out by `options.presentation.layout` (`links-left` default,
+ * `links-center`, `links-right`, `user`). The breadcrumbs, banner, meta,
+ * stats and filters slots are rendered by the standard page heading only.
  */
 export function SmartPageHeadingPreset({
   options,
@@ -35,11 +39,21 @@ export function SmartPageHeadingPreset({
   const barClasses = getPageHeadingBarClasses(layout);
 
   const logoZone = (
-    <div className="smart:flex smart:items-center" data-role="logo">
-      {options?.logoTpl ? (
-        options.logoTpl
-      ) : options?.title ? (
-        <span className={TITLE_CLASSES}>{options.title}</span>
+    <div className="smart:flex smart:items-center smart:gap-3" data-role="logo">
+      {options?.logoTpl ?? null}
+      {options?.title || options?.subtitle ? (
+        <div className="smart:min-w-0" data-role="heading">
+          {options.title ? (
+            <h1 className={TITLE_CLASSES} data-role="title">
+              {options.title}
+            </h1>
+          ) : null}
+          {options.subtitle ? (
+            <p className={SUBTITLE_CLASSES} data-role="subtitle">
+              {options.subtitle}
+            </p>
+          ) : null}
+        </div>
       ) : null}
     </div>
   );

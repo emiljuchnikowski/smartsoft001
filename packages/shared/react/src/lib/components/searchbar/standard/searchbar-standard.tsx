@@ -50,6 +50,25 @@ const TOGGLE_BUTTON_CLASSES = [
   'smart:dark:hover:bg-white/10',
 ];
 
+/** The Heroicons 20 solid magnifying glass, sized and coloured by `className`. */
+function MagnifyingGlassIcon({ className }: { className: string }) {
+  return (
+    <svg
+      viewBox="0 0 20 20"
+      fill="currentColor"
+      aria-hidden="true"
+      data-icon="magnifying-glass"
+      className={className}
+    >
+      <path
+        d="M9 3.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11ZM2 9a7 7 0 1 1 12.452 4.391l3.328 3.329a.75.75 0 1 1-1.06 1.06l-3.329-3.328A7 7 0 0 1 2 9Z"
+        clipRule="evenodd"
+        fillRule="evenodd"
+      />
+    </svg>
+  );
+}
+
 /**
  * The default searchbar: a search input bound to the hook's `control`, hidden
  * on blur while empty. While hidden it renders a magnifier button that shows it
@@ -75,18 +94,7 @@ export function SmartSearchbarStandard(props: SmartSearchbarProps) {
             tryHide();
           }}
         />
-        <svg
-          viewBox="0 0 16 16"
-          fill="currentColor"
-          aria-hidden="true"
-          className="smart:pointer-events-none smart:absolute smart:inset-y-0 smart:right-0 smart:mr-3 smart:size-5 smart:self-center smart:text-gray-400 smart:dark:text-gray-500"
-        >
-          <path
-            d="M15 8A7 7 0 1 1 1 8a7 7 0 0 1 14 0Zm-6 3.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM7.293 5.293a1 1 0 1 1 .99 1.667c-.459.134-1.033.566-1.033 1.29v.25a.75.75 0 1 0 1.5 0v-.115a2.5 2.5 0 1 0-2.518-4.153.75.75 0 1 0 1.061 1.06Z"
-            clipRule="evenodd"
-            fillRule="evenodd"
-          />
-        </svg>
+        <MagnifyingGlassIcon className="smart:pointer-events-none smart:absolute smart:inset-y-0 smart:right-0 smart:mr-3 smart:size-5 smart:self-center smart:text-gray-400 smart:dark:text-gray-500" />
       </div>
     );
   }
@@ -96,20 +104,10 @@ export function SmartSearchbarStandard(props: SmartSearchbarProps) {
       <button
         type="button"
         className={cn(TOGGLE_BUTTON_CLASSES)}
+        aria-label={t('search')}
         onClick={setShow}
       >
-        <svg
-          viewBox="0 0 16 16"
-          fill="currentColor"
-          aria-hidden="true"
-          className="smart:size-5"
-        >
-          <path
-            d="M15 8A7 7 0 1 1 1 8a7 7 0 0 1 14 0Zm-6 3.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM7.293 5.293a1 1 0 1 1 .99 1.667c-.459.134-1.033.566-1.033 1.29v.25a.75.75 0 1 0 1.5 0v-.115a2.5 2.5 0 1 0-2.518-4.153.75.75 0 1 0 1.061 1.06Z"
-            clipRule="evenodd"
-            fillRule="evenodd"
-          />
-        </svg>
+        <MagnifyingGlassIcon className="smart:size-5" />
       </button>
     );
   }

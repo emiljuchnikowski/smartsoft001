@@ -353,5 +353,49 @@ describe('@smartsoft001/react: SmartToggle', () => {
 
       expect(container.firstElementChild).toHaveClass('my-extra-class');
     });
+
+    it('should make the label the accessible name of the checkbox', () => {
+      // Arrange
+      const options = {
+        label: 'Notifications',
+        ariaLabel: 'Ignored while a label is visible',
+      };
+
+      // Act
+      render(<SmartTogglePreset options={options} />);
+
+      // Assert
+      const checkbox = screen.getByRole('checkbox', { name: 'Notifications' });
+      expect(checkbox).not.toHaveAttribute('aria-label');
+    });
+
+    it('should describe the checkbox with options.description', () => {
+      // Arrange
+      const options = {
+        label: 'Notifications',
+        description: 'Enable push alerts',
+      };
+
+      // Act
+      render(<SmartTogglePreset options={options} />);
+
+      // Assert
+      expect(screen.getByRole('checkbox')).toHaveAccessibleDescription(
+        'Enable push alerts',
+      );
+    });
+
+    it('should not set aria-describedby without a description', () => {
+      // Arrange
+      const options = { label: 'Notifications' };
+
+      // Act
+      render(<SmartTogglePreset options={options} />);
+
+      // Assert
+      expect(screen.getByRole('checkbox')).not.toHaveAttribute(
+        'aria-describedby',
+      );
+    });
   });
 });

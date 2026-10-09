@@ -226,6 +226,7 @@ export const Playground: Story = {
 
 - `packages/shared/react/README.md` — add the component where the "What is inside" list names its group, when it is a headline component.
 - `docs/site/src/app/docs/packages/react/page.md` — add `Smart<Name>` to the alphabetical list under `### Components`, and any new public hook, map or provider prop to the API tables.
+- The component's page is generated from its plugin skill, its usage example `docs/examples/react/src/components/<name>/usage.example.tsx` (with its spec) and that example's story in `docs/examples/react/src/components/usage-examples.stories.tsx`, which is the live preview of the page. The `docs` skill's component flow walks through it.
 - A new usage pattern worth a code sample goes into `docs/examples/react/src/react/<topic>.example.tsx` wrapped in `// #region usage`, with a spec (`describe('docs-examples-react: <Subject>')`), embedded with `{% snippet file="react/src/react/<topic>.example.tsx" region="usage" /%}`. Pages never hand-write code.
 
 ## Plugin Sync
@@ -257,7 +258,7 @@ Delegate code to `shared-tdd-developer` (RED → GREEN → REFACTOR) with the Re
 - [ ] **8. Exports** — the component's `index.ts`, `components/index.ts`, `SMART_PRESET_COMPONENTS`
 - [ ] **9. Translations** — new keys in `i18n/translations-default.ts` (both languages)
 - [ ] **10. Story** — `Playground` (in the `usage` region) and `AllVariants`
-- [ ] **11. Docs** — README, package page, example when the usage is new
+- [ ] **11. Docs** — README, package page, the usage example and its story in `usage-examples.stories.tsx`
 - [ ] **12. Plugin sync** — `smart-react` per-component skill and agent
 - [ ] **13. Verify** — the commands below
 
