@@ -27,15 +27,45 @@ read -ra npm_extra_flags <<<"$NPM_INSTALL_FLAGS"
 step='startup'
 trap 'echo "FAILED: installation smoke test failed during step \"${step}\"" >&2' ERR
 
+# How often, and how far apart, an install that names a version the registry
+# does not serve yet is tried again.
+INSTALL_ATTEMPTS="${INSTALL_ATTEMPTS:-6}"
+INSTALL_RETRY_SECONDS="${INSTALL_RETRY_SECONDS:-30}"
+
 # Appends NPM_INSTALL_FLAGS to `npm install` so the documented `npm install`
 # lines stay free of diagnostic flags.
+#
+# A release reaches the registry one package at a time, and the Docs workflow
+# starts the moment Publish ends. For a minute or so a stack can depend on a
+# version of one of its packages that the registry does not serve yet, and npm
+# fails with ETARGET ("No matching version found"). That is the registry
+# catching up, not a broken release, so such an install is tried again; any
+# other failure fails at once.
 npm() {
-  if [ "${1:-}" = 'install' ]; then
-    shift
-    command npm install "$@" ${npm_extra_flags[@]+"${npm_extra_flags[@]}"}
-  else
+  if [ "${1:-}" != 'install' ]; then
     command npm "$@"
+    return
   fi
+
+  shift
+
+  local attempt log
+  log="$(mktemp)"
+
+  for ((attempt = 1; ; attempt++)); do
+    if command npm install "$@" ${npm_extra_flags[@]+"${npm_extra_flags[@]}"} 2>&1 | tee "$log"; then
+      rm -f "$log"
+      return 0
+    fi
+
+    if ! grep -q 'ETARGET' "$log" || ((attempt >= INSTALL_ATTEMPTS)); then
+      rm -f "$log"
+      return 1
+    fi
+
+    echo "npm install: a version is not on the registry yet; retrying in ${INSTALL_RETRY_SECONDS}s (attempt ${attempt} of ${INSTALL_ATTEMPTS})" >&2
+    sleep "$INSTALL_RETRY_SECONDS"
+  done
 }
 
 check_prerequisites() {
