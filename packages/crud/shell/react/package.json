@@ -1,6 +1,6 @@
 {
   "name": "@smartsoft001/crud-shell-react",
-  "version": "2.191.0",
+  "version": "2.197.0",
   "type": "commonjs",
   "description": "React CRUD screens driven by model metadata: the list and item pages, filters, the CRUD service and its store.",
   "publishConfig": {
@@ -13,10 +13,10 @@
     "moment": "^2.31.0"
   },
   "peerDependencies": {
-    "@smartsoft001/domain-core": "2.191.0",
-    "@smartsoft001/models": "2.191.0",
-    "@smartsoft001/react": "2.191.0",
-    "@smartsoft001/utils": "2.191.0",
+    "@smartsoft001/domain-core": "2.197.0",
+    "@smartsoft001/models": "2.197.0",
+    "@smartsoft001/react": "2.197.0",
+    "@smartsoft001/utils": "2.197.0",
     "react": "^19.0.0"
   },
   "exports": {

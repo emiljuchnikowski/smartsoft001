@@ -1,3 +1,15 @@
+## 2.197.0 (2026-10-09)
+
+### 🩹 Fixes
+
+- **shared:** unblock the release (React lint on Node 26) and describe trans as payments ([#134](https://github.com/emiljuchnikowski/smartsoft001/pull/134))
+
+### ❤️ Thank You
+
+- Claude
+- Claude Opus 5.5
+- Emil Juchnikowski
+
 ## 2.191.0 (2026-10-08)
 
 This was a version bump only, there were no code changes.
