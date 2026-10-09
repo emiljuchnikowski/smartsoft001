@@ -76,10 +76,9 @@ export const Playground: Story = {
 
 const sectionTitle = { fontSize: 16, fontWeight: 600, marginBottom: 12 };
 
-// In Angular every avatar renders inside its host element
-// (<smart-avatar-preset>), and that element, not the avatar, is the flex item:
-// the avatar sits on a line box inside it, which gives the row its height.
-// This <div> plays the part of the host element.
+// Every avatar is wrapped in a <div>, and that wrapper, not the avatar, is the
+// flex item: the avatar sits on a line box inside it, which gives the row its
+// height.
 const Host = ({ children }: { children: ReactNode }) => <div>{children}</div>;
 
 const SizeRow = ({ shape }: { shape: SmartAvatarShape }) => (

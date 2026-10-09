@@ -8,7 +8,7 @@ export type CrudActionListener = (action: CrudAction, store: CrudStore) => void;
 /**
  * The state of one CRUD feature: a reducer applied to dispatched actions,
  * with listeners (the effects) told about every action after the state
- * changed — the part of NgRx the CRUD feature used.
+ * changed.
  */
 export class CrudStore extends SmartStore<CrudState<any>> {
   private readonly actionListeners = new Set<CrudActionListener>();

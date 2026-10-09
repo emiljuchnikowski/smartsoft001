@@ -17,9 +17,8 @@ const meta: Meta<StackedLayoutArgs> = {
   title: 'Components/StackedLayout',
   tags: ['autodocs'],
   parameters: {
-    // SmartStackedLayoutPreset is rendered directly, like the Angular story
-    // uses <smart-stacked-layout-preset>; it is also registered as the
-    // replacement for every <SmartStackedLayout>.
+    // SmartStackedLayoutPreset is rendered directly; it is also registered as
+    // the replacement for every <SmartStackedLayout>.
     smart: { components: { 'stacked-layout': SmartStackedLayoutPreset } },
   },
   argTypes: {

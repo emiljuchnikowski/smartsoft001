@@ -13,8 +13,7 @@ import type { CrudAction } from './state/crud.actions';
 import type { CrudState } from './state/crud.reducer';
 
 /**
- * What a CRUD feature talks to: the REST resource and the model. The Angular
- * `CrudConfig` was a class used as an injection token; here it is a plain
+ * What a CRUD feature talks to: the REST resource and the model. A plain
  * object handed to `<CrudProvider config>`.
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

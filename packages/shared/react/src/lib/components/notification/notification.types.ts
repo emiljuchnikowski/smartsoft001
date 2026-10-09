@@ -1,6 +1,6 @@
 import { INotificationAction, INotificationOptions } from '../../models';
 
-/** Payload of `onActionClick` (the Angular `INotificationActionClick`). */
+/** Payload of `onActionClick`. */
 export interface INotificationActionClick {
   actionId: string;
 }

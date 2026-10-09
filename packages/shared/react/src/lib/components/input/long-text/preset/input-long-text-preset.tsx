@@ -41,10 +41,9 @@ const TEXTAREA_CLASSES = [
 ];
 
 /**
- * Preline-styled long text field (preset, Angular
- * `InputLongTextPresetComponent`). Unlike `SmartInputLongText` (the rich-text
- * editor), this renders a plain `<textarea>`, as the Angular preset does
- * (FRA-267), so the value is plain text.
+ * Preline-styled long text field (preset). Unlike `SmartInputLongText` (the
+ * rich-text editor), this renders a plain `<textarea>` (FRA-267), so the value
+ * is plain text.
  */
 export function SmartInputLongTextPreset<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

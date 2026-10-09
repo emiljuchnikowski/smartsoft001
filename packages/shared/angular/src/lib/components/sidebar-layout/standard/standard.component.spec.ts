@@ -4,11 +4,28 @@ import {
   ViewChild,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
+  signal,
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SidebarLayoutStandardComponent } from './standard.component';
 import { ISidebarLayoutOptions } from '../../../models';
+
+@Component({
+  selector: 'smart-test-sidebar-layout-position-host',
+  imports: [SidebarLayoutStandardComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  template: `
+    <smart-sidebar-layout-standard
+      [options]="{ sidebarPosition: sidebarPosition() }"
+    >
+      <p class="content">Projected text</p>
+    </smart-sidebar-layout-standard>
+  `,
+})
+class PositionHostComponent {
+  sidebarPosition = signal<'left' | 'right'>('left');
+}
 
 describe('@smartsoft001/shared-angular: SidebarLayoutStandardComponent', () => {
   describe('default rendering', () => {
@@ -141,6 +158,40 @@ describe('@smartsoft001/shared-angular: SidebarLayoutStandardComponent', () => {
       const mainIndex = children.findIndex((c) => c.tagName === 'MAIN');
 
       expect(mainIndex).toBeLessThan(asideIndex);
+    });
+  });
+
+  describe('projected content', () => {
+    let fixture: ComponentFixture<PositionHostComponent>;
+
+    beforeEach(async () => {
+      await TestBed.configureTestingModule({
+        imports: [PositionHostComponent],
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(PositionHostComponent);
+    });
+
+    it.each(['left', 'right'] as const)(
+      'should project the content into <main> with sidebarPosition %s',
+      (sidebarPosition) => {
+        fixture.componentInstance.sidebarPosition.set(sidebarPosition);
+
+        fixture.detectChanges();
+
+        const content = fixture.nativeElement.querySelector('main p.content');
+        expect(content?.textContent).toBe('Projected text');
+      },
+    );
+
+    it('should keep the content in <main> when the sidebar moves to the right', () => {
+      fixture.detectChanges();
+
+      fixture.componentInstance.sidebarPosition.set('right');
+      fixture.detectChanges();
+
+      const content = fixture.nativeElement.querySelector('main p.content');
+      expect(content?.textContent).toBe('Projected text');
     });
   });
 });

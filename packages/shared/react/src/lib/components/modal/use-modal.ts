@@ -3,11 +3,10 @@ import { useCallback, useState } from 'react';
 import { SmartModalProps } from './modal.types';
 
 /**
- * The behaviour every modal variant shares (the Angular
- * `ModalBaseComponent`): the `open` state, controlled through `open` /
- * `onOpenChange` or kept internally from `defaultOpen`; `invokeAction(id)`,
- * which reports `onActionClick` without closing, and `close()`, which hides
- * the modal and reports `onClosed`.
+ * The behaviour every modal variant shares: the `open` state, controlled
+ * through `open` / `onOpenChange` or kept internally from `defaultOpen`;
+ * `invokeAction(id)`, which reports `onActionClick` without closing, and
+ * `close()`, which hides the modal and reports `onClosed`.
  */
 export function useModal({
   open: openProp,

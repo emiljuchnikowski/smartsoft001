@@ -128,10 +128,9 @@ const cardGrid = {
   gap: 24,
 };
 
-// In Angular every card heading renders inside its host element
-// (<smart-card-heading-preset>), and that element, not the card, is the grid
-// item, so the card keeps its natural height instead of stretching to the row.
-// This <div> plays the part of the host element.
+// Every card heading is wrapped in a <div>, and that wrapper, not the card, is
+// the grid item, so the card keeps its natural height instead of stretching to
+// the row.
 const Host = ({ children }: { children: ReactNode }) => <div>{children}</div>;
 
 export const AllVariants: Story = {

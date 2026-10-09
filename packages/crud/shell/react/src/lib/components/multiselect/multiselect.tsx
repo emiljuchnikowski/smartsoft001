@@ -7,9 +7,8 @@ import { useCrudMultiselect } from './use-crud-multiselect';
 import { getCrudFormOptions } from '../../factories/form-options';
 
 /**
- * `<smart-crud-multiselect>`: the panel of the items selected in the list
- * (the Angular `MultiselectComponent`), opened in the end menu. A header
- * with the count and a close button, the `config.list.components.multi`
+ * The panel of the items selected in the list, opened in the end menu. A
+ * header with the count and a close button, the `config.list.components.multi`
  * component with the selected `items`, and the `multiUpdate` form of the
  * model with the button applying it to every selected item. Render it inside
  * `<CrudProvider>`.
@@ -31,7 +30,7 @@ export function SmartCrudMultiselect<T extends IEntity<string>>() {
 
   const Multi = config?.list?.components?.multi;
 
-  // The Angular `item | smartFormOptions: 'multiUpdate' : config.type`.
+  // The `multiUpdate` form options of the shared values.
   const formOptions = useMemo(
     () => getCrudFormOptions(item, 'multiUpdate', config.type),
     [item, config.type],

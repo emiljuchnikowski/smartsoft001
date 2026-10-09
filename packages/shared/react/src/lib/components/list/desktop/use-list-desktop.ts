@@ -6,10 +6,7 @@ import { IEntity } from '@smartsoft001/domain-core';
 import { SmartListModeProps } from '../list.types';
 import { useList } from '../use-list';
 
-/**
- * The inline style the Angular CDK table put on the cells of its sticky
- * header row (`cdkHeaderRowDef ...; sticky: true`).
- */
+/** The inline style of the cells of the sticky header row. */
 export const LIST_DESKTOP_STICKY_HEADER_STYLE: CSSProperties = {
   position: 'sticky',
   top: 0,
@@ -17,10 +14,9 @@ export const LIST_DESKTOP_STICKY_HEADER_STYLE: CSSProperties = {
 };
 
 /**
- * The desktop table logic (the Angular `ListDesktopComponent` over
- * `ListBaseComponent`): `useList` plus the table columns (`desktopKeys`:
- * `selectMulti`, the keys, `removeAction`, `itemAction`), the multi
- * selection reported through `provider.onChangeMultiSelected` and cleared by
+ * The desktop table logic: `useList` plus the table columns (`desktopKeys`:
+ * `selectMulti`, the keys, `removeAction`, `itemAction`), the multi selection
+ * reported through `provider.onChangeMultiSelected` and cleared by
  * `provider.onCleanMultiSelected$`, and the `top` component factory.
  */
 export function useListDesktop<T extends IEntity<string>>(

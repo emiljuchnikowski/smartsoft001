@@ -3,11 +3,9 @@ import { SmartMultiColumnLayoutStandard } from './standard/multi-column-layout-s
 import { useSmartComponent } from '../../providers/hooks';
 
 /**
- * `<smart-multi-column-layout>`: renders the implementation registered as
- * `components['multi-column-layout']` on `SmartProvider` (the Angular
- * `MULTI_COLUMN_LAYOUT_STANDARD_COMPONENT_TOKEN`),
- * `SmartMultiColumnLayoutStandard` by default. `children` are passed through
- * to the implementation.
+ * Renders the implementation registered as `components['multi-column-layout']`
+ * on `SmartProvider`, `SmartMultiColumnLayoutStandard` by default. `children`
+ * are passed through to the implementation.
  */
 export function SmartMultiColumnLayout(props: SmartMultiColumnLayoutProps) {
   const Component = useSmartComponent(

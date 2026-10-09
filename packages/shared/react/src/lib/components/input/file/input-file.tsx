@@ -24,11 +24,10 @@ const GROUP_CLASSES = [
 ].join(' ');
 
 /**
- * The `file` field (the Angular `InputFileComponent`, `<smart-input-file>`):
- * the model label, an add / change button opening a hidden file input, and
- * the name of the value. Unlike the other file fields it does not upload:
- * the picked `File` itself becomes the value. `className` is appended to the
- * group's classes.
+ * The `file` field: the model label, an add / change button opening a hidden
+ * file input, and the name of the value. Unlike the other file fields it does
+ * not upload: the picked `File` itself becomes the value. `className` is
+ * appended to the group's classes.
  */
 export function SmartInputFile<T>(props: SmartInputFieldProps<T>) {
   const { className, fieldOptions } = props;

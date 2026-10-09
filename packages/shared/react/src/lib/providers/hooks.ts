@@ -8,7 +8,7 @@ import { SmartComponentKey, useSmart } from './smart-context';
 import { SmartTranslateFn } from '../i18n/translate';
 import { ListMode } from '../models/interfaces';
 
-/** The provider's translate function (`'cancel' | translate` in Angular). */
+/** The provider's translate function: `translate('cancel')` gives the label in the current language. */
 export function useTranslate(): SmartTranslateFn {
   return useSmart().translate;
 }

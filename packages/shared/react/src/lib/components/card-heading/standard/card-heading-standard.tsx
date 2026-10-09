@@ -1,9 +1,9 @@
 import { SmartCardHeadingProps } from '../card-heading.types';
 
 /**
- * The default card heading rendering (`<smart-card-heading-standard>`): the
- * avatar, the title, description and meta, and the actions of `options`, each
- * only when given. Unstyled; `options.presentation` is ignored.
+ * The default card heading rendering: the avatar, the title, description and
+ * meta, and the actions of `options`, each only when given. Unstyled;
+ * `options.presentation` is ignored.
  */
 export function SmartCardHeadingStandard({
   options,

@@ -6,9 +6,9 @@ import { SmartDetailsProps } from '../details.types';
 import { useDetails } from '../use-details';
 
 /**
- * The default details rendering (`<smart-details-standard>`): a description
- * list with a `<SmartDetail>` per field, between the `componentFactories.top`
- * and `componentFactories.bottom` components.
+ * The default details rendering: a description list with a `<SmartDetail>` per
+ * field, between the `componentFactories.top` and `componentFactories.bottom`
+ * components.
  */
 export function SmartDetailsStandard<T extends IEntity<string>>(
   props: SmartDetailsProps<T>,

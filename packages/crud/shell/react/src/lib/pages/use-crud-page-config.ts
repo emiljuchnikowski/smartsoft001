@@ -10,8 +10,7 @@ import { applyPagePermissions } from '../services/page/page.service';
 /**
  * The configuration of the feature's pages: the `CrudFullConfig` of the
  * `CrudProvider` with `add`, `edit` and `remove` turned off when the model's
- * permissions are not granted (the Angular `PageService.checkPermissions()`
- * every page ran on init).
+ * permissions are not granted.
  */
 export function useCrudPageConfig<
   T extends IEntity<string>,

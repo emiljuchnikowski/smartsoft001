@@ -8,9 +8,9 @@ import { SmartInputFieldProps } from '../../input.types';
 import { useInputNip } from '../use-input-nip';
 
 /**
- * Styled `nip` field (preset, the Angular `InputNipPresetComponent`): the
- * Preline look of {@link SmartInputNip}, with the same NIP check. Register
- * it as `inputFieldComponents[FieldType.nip]` on `SmartProvider`.
+ * Styled `nip` field (preset): the Preline look of {@link SmartInputNip}, with
+ * the same NIP check. Register it as `inputFieldComponents[FieldType.nip]` on
+ * `SmartProvider`.
  */
 export function SmartInputNipPreset<T>(props: SmartInputFieldProps<T>) {
   const { className = '' } = props;

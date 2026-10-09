@@ -4,8 +4,8 @@ import { SmartDetailFieldProps } from '../../detail.types';
 import { useDetailPdf } from '../use-detail-pdf';
 
 /**
- * Styled PDF detail (preset, `DetailPdfPresetComponent`): a chip with a
- * document icon, the file name and a `show` button.
+ * Styled PDF detail (preset): a chip with a document icon, the file name and a
+ * `show` button.
  */
 export function SmartDetailPdfPreset<T>(props: SmartDetailFieldProps<T>) {
   const { className } = props;

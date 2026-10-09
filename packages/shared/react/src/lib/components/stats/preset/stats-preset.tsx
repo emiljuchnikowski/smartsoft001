@@ -13,9 +13,8 @@ import {
 } from './preset-classes';
 
 /**
- * Styled stats variation (preset, the Angular `StatsPresetComponent`).
- * Register it as `components.stats` on `SmartProvider` to restyle every
- * `<SmartStats>`, or render it directly.
+ * Styled stats variation (preset). Register it as `components.stats` on
+ * `SmartProvider` to restyle every `<SmartStats>`, or render it directly.
  *
  * Renders a responsive grid of stat blocks (Preline "Three-Column Stats with
  * Primary Accent" look): an optional leading icon, a `label` heading, the big

@@ -10,7 +10,7 @@ import { useStyleService } from '../../providers/hooks';
 import { CalendarService } from '../../services/calendar/calendar.service';
 import { StyleService } from '../../services/style/style.service';
 
-/** The Angular modal's `dateForm`: the shown dates and the picked days. */
+/** The modal's form: the shown dates and the picked days. */
 export interface DateRangeModalForm {
   dateFrom: string | null;
   dateTo: string | null;
@@ -62,9 +62,8 @@ function resetDates(form: DateRangeModalForm): DateRangeModalForm {
 }
 
 /**
- * A click on `date` (the Angular `subject$` subscriber): once both ends are
- * set it starts over; a day after the start ends the range, any other day
- * becomes the new start.
+ * A click on `date`: once both ends are set it starts over; a day after the
+ * start ends the range, any other day becomes the new start.
  */
 function pickDate(
   form: DateRangeModalForm,
@@ -120,8 +119,7 @@ function getInitialSelection(state: CalendarState): DateRangeModalSelection {
 }
 
 /**
- * The behaviour of the date-range modal (the Angular
- * `DateRangeModalBaseComponent`): the scrollable calendar of the
+ * The behaviour of the date-range modal: the scrollable calendar of the
  * `CalendarService`, the picked range and the quick-pick buttons.
  */
 export function useDateRangeModal({
@@ -141,13 +139,12 @@ export function useDateRangeModal({
   const [selectedButtonName, setSelectedButtonName] = useState(
     initial.selectedButtonName,
   );
-  // The last picked day: a second click on it is ignored
-  // (`distinctUntilChanged` in Angular).
+  // The last picked day: a second click on it is ignored.
   const lastPickedRef = useRef<moment.Moment | null>(null);
 
-  // Angular called `styleService.init(this.elementRef)`, writing the
-  // application's style variables on the modal. A local service does the same
-  // without redirecting the shared one to this short-lived element.
+  // Writes the application's style variables on the modal through a local
+  // `StyleService`, so the shared one is not redirected to this short-lived
+  // element.
   useEffect(() => {
     new StyleService().init(elementRef.current, styleService.get());
   }, [styleService]);
@@ -159,10 +156,8 @@ export function useDateRangeModal({
     lastPickedRef.current = date;
     setSelectedButtonName(FilterBtnConstants.empthyString);
     setDateForm((form) => pickDate(form, date));
-    // Angular then asked `UIService.showAlertWithDismissCallback` to warn
-    // about a range breaking `restrictSelectionTo`; that method is a no-op
-    // (its body is commented out), so the picked range simply stays and the
-    // select button stays disabled.
+    // A range breaking `restrictSelectionTo` raises no warning: the picked
+    // range simply stays and the select button stays disabled.
   };
 
   const selectFilter = (

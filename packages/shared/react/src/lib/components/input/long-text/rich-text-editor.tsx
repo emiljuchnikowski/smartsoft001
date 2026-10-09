@@ -15,8 +15,8 @@ import { SmartRichTextMenu } from './rich-text-menu';
 import { LONG_TEXT_TOOLBAR, SmartRichTextToolbar } from './rich-text-toolbar';
 import { toInnerHtml } from '../../../utils/html';
 
-// The `ngx-editor` content styles (padding, paragraph spacing, quotes), plus
-// the list, heading, code and link looks Tailwind's preflight resets.
+// The content styles (padding, paragraph spacing, quotes), plus the list,
+// heading, code and link looks Tailwind's preflight resets.
 const CONTENT_CLASSES = [
   'smart:min-h-45',
   'smart:p-2',
@@ -68,7 +68,7 @@ export interface SmartRichTextEditorProps {
   value?: string | null;
   placeholder?: string;
   disabled?: boolean;
-  /** The menu; the menu of the Angular long-text field by default. */
+  /** The menu; `LONG_TEXT_TOOLBAR` by default. */
   toolbar?: SmartRichTextToolbar;
   /** The id of the element labelling the editor. */
   labelledBy?: string;
@@ -79,10 +79,8 @@ export interface SmartRichTextEditorProps {
 
 /**
  * A dependency-free rich-text editor: a menu bar over a `contentEditable`
- * element whose HTML is the value. It stands in for the `ngx-editor` menu and
- * editor the Angular `InputLongTextComponent` rendered; the menu runs its
- * commands through `document.execCommand` on the last selection made in the
- * editor.
+ * element whose HTML is the value. The menu runs its commands through
+ * `document.execCommand` on the last selection made in the editor.
  */
 export function SmartRichTextEditor({
   value,
@@ -205,7 +203,7 @@ export function SmartRichTextEditor({
           contentEditable={!disabled}
           className={CONTENT_CLASSES}
           dangerouslySetInnerHTML={initialHtml}
-          // Paragraphs, as the Angular editor wrote.
+          // Enter starts a new paragraph (`<p>`).
           onFocus={() => execCommand('defaultParagraphSeparator', 'p')}
           onInput={emit}
           onBlur={onBlur}

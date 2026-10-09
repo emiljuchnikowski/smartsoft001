@@ -25,12 +25,10 @@ const EDITOR_CLASSES = [
 ];
 
 /**
- * The long text field (`<smart-input-long-text>`, Angular
- * `InputLongTextComponent`): a rich-text editor whose value is HTML.
+ * The long text field: a rich-text editor whose value is HTML.
  *
- * Angular rendered the `ngx-editor` menu and editor; this renders
- * `SmartRichTextEditor`, a dependency-free `contentEditable` editor with the
- * same menu (bold, italic, underline, strike, code, blockquote, lists,
+ * It renders `SmartRichTextEditor`, a dependency-free `contentEditable` editor
+ * with a menu (bold, italic, underline, strike, code, blockquote, lists,
  * headings, link, image, text and background colour, alignment). The value is
  * shown sanitised (`toInnerHtml`) when it is loaded or set from outside.
  */

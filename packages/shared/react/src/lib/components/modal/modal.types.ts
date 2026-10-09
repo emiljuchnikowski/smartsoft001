@@ -2,20 +2,20 @@ import type { ReactNode } from 'react';
 
 import { IModalAction, IModalOptions } from '../../models';
 
-/** Payload of `onActionClick` (the Angular `IModalActionClick`). */
+/** Payload of `onActionClick`. */
 export interface IModalActionClick {
   actionId: string;
 }
 
 export interface SmartModalProps {
   /**
-   * Whether the modal is shown (the Angular `open` model). Leave it
-   * `undefined` for an uncontrolled modal that starts from `defaultOpen`.
+   * Whether the modal is shown. Leave it `undefined` for an uncontrolled modal
+   * that starts from `defaultOpen`.
    */
   open?: boolean;
   /** Initial `open` of an uncontrolled modal. */
   defaultOpen?: boolean;
-  /** The `openChange` half of the Angular `[(open)]` binding. */
+  /** Called when the modal opens or closes. */
   onOpenChange?: (open: boolean) => void;
   title?: string;
   description?: string;

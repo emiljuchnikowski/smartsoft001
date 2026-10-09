@@ -1,7 +1,7 @@
 /**
  * Joins class names, skipping empty values. The components build their
- * Tailwind classes from arrays of explicit literals, as in the Angular
- * library, so the class scanner finds every one.
+ * Tailwind classes from arrays of explicit literals, never from template
+ * strings, so the class scanner finds every one.
  */
 export function cn(
   ...values: Array<

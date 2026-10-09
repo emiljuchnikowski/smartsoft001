@@ -23,9 +23,7 @@ const meta: Meta<ExportArgs> = {
   decorators: [
     // <smart-button> translates its confirm-mode labels, so the story needs the
     // real dictionaries — a bare TranslateModule.forRoot() would leave the keys
-    // unresolved. Note: do NOT register BUTTON_STANDARD_COMPONENT_TOKEN here;
-    // the button dispatches through NgComponentOutlet, which would drop the
-    // projected download icon.
+    // unresolved.
     applicationConfig({
       providers: [...provideStorybookTranslations()],
     }),

@@ -17,7 +17,7 @@ The `<smart-list-container>` component is a presentational layout wrapper that g
 
 ### ListContainerComponent (`<smart-list-container>`)
 
-Main wrapper component. Renders `ListContainerStandardComponent` by default. When `LIST_CONTAINER_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`. Supports content projection through `<ng-content />` in the default branch, so children placed inside `<smart-list-container>` are rendered inside the standard list container.
+Main wrapper component. Renders `ListContainerStandardComponent` by default. When `LIST_CONTAINER_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`. Children placed inside `<smart-list-container>` are projected into the standard list container or, when the token is provided, into the injected component's default `<ng-content />`.
 
 ### ListContainerStandardComponent (`<smart-list-container-standard>`)
 
@@ -51,10 +51,7 @@ interface IListContainerOptions {
 }
 
 type SmartListContainerVariant =
-  | 'simple'
-  | 'card'
-  | 'separate-cards'
-  | 'flat-card-dividers';
+  'simple' | 'card' | 'separate-cards' | 'flat-card-dividers';
 ```
 
 The standard component only consumes `variant` (placeholder behavior — applied as the `data-variant` attribute on the list root). The `fullWidthOnMobile` flag is reserved for custom implementations registered through `LIST_CONTAINER_STANDARD_COMPONENT_TOKEN` and is ignored by `ListContainerStandardComponent`.

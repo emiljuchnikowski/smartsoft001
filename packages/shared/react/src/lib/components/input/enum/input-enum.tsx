@@ -8,10 +8,9 @@ const LABEL_CLASSES =
   'smart:block smart:text-sm/6 smart:font-medium smart:text-gray-900 smart:dark:text-white';
 
 /**
- * `<smart-input-enum>` (Angular `InputEnumComponent`): a fieldset with a
- * checkbox per key of `fieldOptions.possibilities` (an enum); the control
- * holds the list of the checked keys. `className` goes on the group of
- * checkboxes.
+ * The `enum` field: a fieldset with a checkbox per key of
+ * `fieldOptions.possibilities` (an enum); the control holds the list of the
+ * checked keys. `className` goes on the group of checkboxes.
  */
 export function SmartInputEnum<T>(props: SmartInputFieldProps<T>) {
   const { fieldOptions, className } = props;

@@ -39,7 +39,7 @@ export default meta;
 type Story = StoryObj<ExportArgs>;
 
 // `handler` is required — every instance must pass it. `fileName` is
-// deliberately not exercised, as in the Angular story.
+// deliberately not exercised.
 const handler = (value: unknown) => console.log('[storybook] exported', value);
 
 // #region usage
@@ -105,7 +105,7 @@ export const AllVariants: Story = {
 
       <Section
         title="External class"
-        note="The class is forwarded to the host element."
+        note="The class is forwarded to the wrapper around the button."
       >
         <SmartExport
           className="smart:rounded-lg smart:bg-yellow-50 smart:p-4 smart:dark:bg-yellow-900/30"

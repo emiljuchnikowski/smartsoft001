@@ -3,10 +3,8 @@ import { SmartPasswordStrengthStandard } from './standard/password-strength-stan
 import { useSmartComponent } from '../../providers/hooks';
 
 /**
- * `<smart-password-strength>`: renders the implementation registered as
- * `components['password-strength']` on `SmartProvider` (the Angular
- * `PASSWORD_STRENGTH_STANDARD_COMPONENT_TOKEN`),
- * `SmartPasswordStrengthStandard` by default.
+ * Renders the implementation registered as `components['password-strength']` on
+ * `SmartProvider`, `SmartPasswordStrengthStandard` by default.
  */
 export function SmartPasswordStrength(props: SmartPasswordStrengthProps) {
   const Component = useSmartComponent(

@@ -4,9 +4,7 @@ import { SmartForm } from '../../form/form';
 import { SmartInputFieldProps } from '../input.types';
 
 /**
- * `<smart-input-object>`: the label of an `object` field and a nested
- * `SmartForm` for its group (the Angular form rendered through
- * `FORM_COMPONENT_TOKEN`).
+ * The label of an `object` field and a nested `SmartForm` for its group.
  */
 export function SmartInputObject<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

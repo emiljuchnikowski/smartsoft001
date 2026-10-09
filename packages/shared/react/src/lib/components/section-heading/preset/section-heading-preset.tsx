@@ -14,8 +14,7 @@ import {
 } from './preset-classes';
 
 /**
- * HyperUI-styled "content with image" section heading (preset, the Angular
- * `SectionHeadingPresetComponent`). Register it as
+ * HyperUI-styled "content with image" section heading (preset). Register it as
  * `components['section-heading']` on `SmartProvider` to restyle every
  * `<SmartSectionHeading>`, or render it directly.
  *

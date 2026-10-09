@@ -12,9 +12,8 @@ function isObject(value: unknown): value is object {
 
 /**
  * The options of the field an input renders, merged with the options of the
- * form's mode, as `<smart-input>` resolved them: a `<key>Confirm` control
- * takes the options of `<key>`, and an array model is read through its first
- * item.
+ * form's mode: a `<key>Confirm` control takes the options of `<key>`, and an
+ * array model is read through its first item.
  */
 export function resolveInputFieldOptions<T>(
   options: InputOptions<T> | undefined,

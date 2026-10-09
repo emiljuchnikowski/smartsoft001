@@ -3,7 +3,7 @@ import { IListOptions } from '@smartsoft001/react';
 
 import { ICrudListGroup } from '../../models';
 
-/** The props of `<SmartCrudGroup>` (`<smart-crud-group>`). */
+/** The props of `<SmartCrudGroup>`. */
 export interface SmartCrudGroupProps<T extends IEntity<string>> {
   groups?: Array<ICrudListGroup> | null;
   listOptions?: IListOptions<T> | null;

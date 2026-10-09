@@ -20,7 +20,7 @@ import {
  * region holding `children`. `options.sidebarPosition` flips the row and the
  * sidebar border side, `options.condensed` narrows the sidebar.
  *
- * `options.mobileBreakpoint` is not consumed, as in Angular.
+ * `options.mobileBreakpoint` is not consumed.
  */
 export function SmartSidebarLayoutPreset({
   options,

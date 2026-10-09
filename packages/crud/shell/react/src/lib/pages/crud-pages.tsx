@@ -14,10 +14,9 @@ function normalizePath(path: string): string {
 }
 
 /**
- * The page of the routes of the Angular `CrudFullModule` that `url` leads to,
- * relative to `basePath`: `basePath` is the list, `basePath/add` the item
- * page creating an item, `basePath/:id` the item page of `id`. `null` for any
- * other URL.
+ * The CRUD page that `url` leads to, relative to `basePath`: `basePath` is
+ * the list, `basePath/add` the item page creating an item, `basePath/:id` the
+ * item page of `id`. `null` for any other URL.
  */
 export function matchCrudRoute(
   url: string,
@@ -47,10 +46,10 @@ export interface SmartCrudPagesProps {
 }
 
 /**
- * The routes of the Angular `CrudFullModule` without a router: renders
- * `SmartCrudListPage` on `basePath`, `SmartCrudItemPage` creating an item on
- * `basePath/add` and `SmartCrudItemPage` of the item on `basePath/:id`,
- * following the URL of `useNavigation()` (`getCurrentUrl()` + `subscribe`).
+ * The CRUD pages without a router: renders `SmartCrudListPage` on
+ * `basePath`, `SmartCrudItemPage` creating an item on `basePath/add` and
+ * `SmartCrudItemPage` of the item on `basePath/:id`, following the URL of
+ * `useNavigation()` (`getCurrentUrl()` + `subscribe`).
  * Renders nothing on any other URL. Render it inside the `CrudProvider` of
  * the feature.
  *
@@ -75,8 +74,8 @@ export function SmartCrudPages({ basePath }: SmartCrudPagesProps) {
 
   if (route.page === 'list') return <SmartCrudListPage basePath={basePath} />;
 
-  // `add` and `:id` were two routes, so the page is created anew between
-  // them; between two ids it stays, as the Angular router reused it.
+  // The page is created anew between `add` and an id; between two ids the
+  // same page stays and gets the new `id`.
   return (
     <SmartCrudItemPage
       key={route.id === undefined ? 'add' : 'item'}

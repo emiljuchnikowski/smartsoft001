@@ -52,7 +52,7 @@ export function SmartTextareaPreset(props: SmartTextareaProps) {
   const hasTabs = variant === 'with-preview' && !!options?.previewTpl;
   const showPreviewPane = hasTabs && mode === 'preview';
 
-  // Angular's `afterNextRender`: focus once, after the first render.
+  // Focus once, after the first render.
   useEffect(() => {
     if (options?.autoFocus) fieldRef.current?.focus();
     // eslint-disable-next-line react-hooks/exhaustive-deps

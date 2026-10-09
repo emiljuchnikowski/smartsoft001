@@ -1,11 +1,11 @@
 import { SmartStackedListProps } from '../stacked-list.types';
 
 /**
- * The default stacked-list rendering (`<smart-stacked-list-standard>`): one
- * `li.item` per item (icon template > avatar, title as a link when `href` is
- * set, description, meta, badge and action slots), the `emptyTpl` when there
- * are no items, then the `footerTpl` slot. The `withDividers` /
- * `fullWidthOnMobile` hints are only honoured by the preset, as in Angular.
+ * The default stacked-list rendering: one `li.item` per item (icon template >
+ * avatar, title as a link when `href` is set, description, meta, badge and
+ * action slots), the `emptyTpl` when there are no items, then the `footerTpl`
+ * slot. The `withDividers` / `fullWidthOnMobile` hints are only honoured by the
+ * preset.
  */
 export function SmartStackedListStandard({
   options,

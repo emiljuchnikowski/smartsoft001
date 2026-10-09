@@ -14,9 +14,8 @@ import { CrudContext, useCrud } from '../crud.context';
  * `Component` bound to the CRUD feature of the caller: wherever it is
  * rendered (the end menu of `MenuService.openEnd`, a modal of
  * `ModalService.show`, both rendered outside the `CrudProvider`), it reads
- * the caller's feature (`useCrud()`) and the feature's file service. This is
- * what the Angular pages handed to `MenuService.openEnd` as the `injector`.
- * Props are passed through, e.g. the `dismiss` of a modal.
+ * the caller's feature (`useCrud()`) and the feature's file service. Props
+ * are passed through, e.g. the `dismiss` of a modal.
  */
 export function useCrudBoundComponent<P extends object>(
   Component: ComponentType<P>,

@@ -4,9 +4,8 @@ import { SmartDetailFieldProps } from '../detail.types';
 import { useDetailArray } from './use-detail-array';
 
 /**
- * `<smart-detail-array>` (`DetailArrayComponent`): the details of every
- * element, each rendered through `<SmartDetails>` (the Angular
- * `DETAILS_COMPONENT_TOKEN`).
+ * The array detail: the details of every element, each rendered through
+ * `<SmartDetails>`.
  */
 export function SmartDetailArray<T>(props: SmartDetailFieldProps<T>) {
   const { className } = props;

@@ -92,10 +92,9 @@ const Box = ({
   label: string;
   options: IContainerOptions;
 }) => (
-  // In Angular the preset renders inside its host element
-  // (<smart-container-preset>), and that element, not the container, is the
-  // flex item, so the `mx-auto` container keeps its full width instead of
-  // shrinking around its content. This <div> plays the part of the host.
+  // The preset is wrapped in a <div>, and that wrapper, not the container, is
+  // the flex item, so the `mx-auto` container keeps its full width instead of
+  // shrinking around its content.
   <div>
     <SmartContainerPreset options={options}>
       <div className={BOX_CLASS}>{label}</div>

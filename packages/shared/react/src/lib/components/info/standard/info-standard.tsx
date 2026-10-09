@@ -7,9 +7,9 @@ import { SmartInfoProps } from '../info.types';
 import { useInfo } from '../use-info';
 
 /**
- * The default info rendering (`<smart-info-standard>`): an info icon that
- * toggles a popover with the translated `options.text`. A click outside the
- * component closes the popover (the Angular `document:click` host listener).
+ * The default info rendering: an info icon that toggles a popover with the
+ * translated `options.text`. A click outside the component (a `click` listener
+ * on `document`) closes the popover.
  */
 export function SmartInfoStandard({ options, className = '' }: SmartInfoProps) {
   const t = useTranslate();

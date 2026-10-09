@@ -4,8 +4,8 @@ import { SmartDetailFieldProps } from '../../detail.types';
 import { useDetailAttachment } from '../use-detail-attachment';
 
 /**
- * Styled attachment detail (preset, `DetailAttachmentPresetComponent`): a
- * chip with a file icon, the file name and a `download` button.
+ * Styled attachment detail (preset): a chip with a file icon, the file name and
+ * a `download` button.
  */
 export function SmartDetailAttachmentPreset<T>(
   props: SmartDetailFieldProps<T>,

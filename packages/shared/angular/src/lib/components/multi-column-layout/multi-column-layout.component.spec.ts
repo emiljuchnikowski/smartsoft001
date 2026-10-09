@@ -15,6 +15,41 @@ class MockInjectedComponent extends MultiColumnLayoutBaseComponent {
   override cssClass = input<string>('');
 }
 
+@Component({
+  selector: 'smart-test-multi-column-layout-with-slot',
+  changeDetection: ChangeDetectionStrategy.Eager,
+  template: '<main class="custom-multi-column-layout"><ng-content /></main>',
+})
+class MockSlotComponent extends MultiColumnLayoutBaseComponent {
+  override cssClass = input<string>('');
+}
+
+const PROJECTION_HOST_TEMPLATE = `
+  <smart-multi-column-layout>Projected text</smart-multi-column-layout>
+`;
+
+@Component({
+  selector: 'smart-test-multi-column-layout-standard-host',
+  imports: [MultiColumnLayoutComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  template: PROJECTION_HOST_TEMPLATE,
+})
+class StandardHostComponent {}
+
+@Component({
+  selector: 'smart-test-multi-column-layout-host',
+  imports: [MultiColumnLayoutComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  providers: [
+    {
+      provide: MULTI_COLUMN_LAYOUT_STANDARD_COMPONENT_TOKEN,
+      useValue: MockSlotComponent,
+    },
+  ],
+  template: PROJECTION_HOST_TEMPLATE,
+})
+class InjectedHostComponent {}
+
 describe('@smartsoft001/shared-angular: MultiColumnLayoutComponent', () => {
   describe('without token', () => {
     let fixture: ComponentFixture<MultiColumnLayoutComponent>;
@@ -85,6 +120,30 @@ describe('@smartsoft001/shared-angular: MultiColumnLayoutComponent', () => {
       );
 
       expect(standard).toBeNull();
+    });
+  });
+
+  describe('projected content', () => {
+    it('should render the projected content inside smart-multi-column-layout-standard', () => {
+      const fixture = TestBed.createComponent(StandardHostComponent);
+      fixture.detectChanges();
+
+      const slot = fixture.nativeElement.querySelector(
+        'smart-multi-column-layout-standard main',
+      );
+
+      expect(slot?.textContent.trim()).toBe('Projected text');
+    });
+
+    it('should render the projected content inside the implementation registered through MULTI_COLUMN_LAYOUT_STANDARD_COMPONENT_TOKEN', () => {
+      const fixture = TestBed.createComponent(InjectedHostComponent);
+      fixture.detectChanges();
+
+      const slot = fixture.nativeElement.querySelector(
+        'main.custom-multi-column-layout',
+      );
+
+      expect(slot?.textContent.trim()).toBe('Projected text');
     });
   });
 });

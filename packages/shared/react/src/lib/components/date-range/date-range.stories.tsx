@@ -17,7 +17,7 @@ interface DateRangeArgs {
 }
 
 const MODAL_ONLY =
-  'Consumed only by <smart-date-range-modal-standard> — the preset trigger ignores it.';
+  'Consumed only by <SmartDateRangeModalStandard> — the preset trigger ignores it.';
 
 const meta: Meta<DateRangeArgs> = {
   title: 'Components/DateRange',
@@ -46,7 +46,7 @@ const meta: Meta<DateRangeArgs> = {
 export default meta;
 type Story = StoryObj<DateRangeArgs>;
 
-/** The Angular `[(ngModel)]="value"` binding: the story keeps the value. */
+/** A controlled range: the story keeps the value in its state. */
 const PlaygroundExample = ({ withValue, cssClass }: DateRangeArgs) => {
   const [value, setValue] = useState<IDateRange | null>(
     withValue ? { ...RANGE } : null,

@@ -22,10 +22,10 @@ const WEEKDAY_LABELS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
  * `components.calendar` on `SmartProvider` to restyle every `<SmartCalendar>`,
  * or render it directly.
  *
- * Reproduces Preline's single date-picker visual with `smart:`-prefixed
- * vanilla Tailwind; month navigation and day selection are driven by
- * `useCalendar`. Out-of-month days are disabled. The month name, weekday
- * labels and the Previous / Next labels are English, as in Angular.
+ * Reproduces Preline's single date-picker visual with `smart:`-prefixed vanilla
+ * Tailwind; month navigation and day selection are driven by `useCalendar`.
+ * Out-of-month days are disabled. The month name, weekday labels and the
+ * Previous / Next labels are in English, not translated.
  */
 export function SmartCalendarPreset(props: SmartCalendarProps) {
   const { options, className = '' } = props;

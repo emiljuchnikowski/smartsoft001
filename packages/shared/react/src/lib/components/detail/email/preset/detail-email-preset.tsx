@@ -3,8 +3,7 @@ import { SmartDetailFieldProps } from '../../detail.types';
 import { useDetail } from '../../use-detail';
 
 /**
- * Styled email detail (preset, `DetailEmailPresetComponent`): a blue
- * `mailto:` link with an envelope icon.
+ * Styled email detail (preset): a blue `mailto:` link with an envelope icon.
  */
 export function SmartDetailEmailPreset<T>(props: SmartDetailFieldProps<T>) {
   const { className } = props;

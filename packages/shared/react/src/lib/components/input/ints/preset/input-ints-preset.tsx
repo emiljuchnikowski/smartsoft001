@@ -65,10 +65,9 @@ const REMOVE_BUTTON_CLASSES = [
 const ICON_CLASSES = 'smart:shrink-0 smart:size-3.5';
 
 /**
- * Preline-styled list of integers field (preset, Angular
- * `InputIntsPresetComponent`): each row is a Preline number input with
- * decrease / increase buttons and a remove button, plus a trailing row to add
- * a number (see `useInputInts`).
+ * Preline-styled list of integers field (preset): each row is a Preline number
+ * input with decrease / increase buttons and a remove button, plus a trailing
+ * row to add a number (see `useInputInts`).
  */
 export function SmartInputIntsPreset<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

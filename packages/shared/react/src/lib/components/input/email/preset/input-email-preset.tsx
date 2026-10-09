@@ -8,9 +8,8 @@ import { useInput } from '../../base/use-input';
 import { SmartInputFieldProps } from '../../input.types';
 
 /**
- * Styled `email` field (preset, the Angular `InputEmailPresetComponent`):
- * the Preline look of {@link SmartInputEmail}. Register it as
- * `inputFieldComponents[FieldType.email]` on `SmartProvider`.
+ * Styled `email` field (preset): the Preline look of {@link SmartInputEmail}.
+ * Register it as `inputFieldComponents[FieldType.email]` on `SmartProvider`.
  */
 export function SmartInputEmailPreset<T>(props: SmartInputFieldProps<T>) {
   const { className = '' } = props;

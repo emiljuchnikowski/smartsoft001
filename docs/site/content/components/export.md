@@ -46,7 +46,7 @@ Add a export to the settings page, using @smartsoft001/angular.
 
 ### ExportComponent (`<smart-export>`)
 
-Renders a `<smart-button>` with a projected download icon. The icon is hidden from assistive technology and a visually hidden "Export" label gives the button its accessible name. It extends `ExportBaseComponent`, which owns the inputs and the click logic. Because the button projects the icon through content, the standard button implementation is used; a `BUTTON_STANDARD_COMPONENT_TOKEN` registered in the same injector would render the injected button through `NgComponentOutlet` and drop the icon.
+Renders a `<smart-button>` with a projected download icon. The icon is hidden from assistive technology and a visually hidden "Export" label gives the button its accessible name. It extends `ExportBaseComponent`, which owns the inputs and the click logic. The icon is projected content, so a button implementation registered through `BUTTON_STANDARD_COMPONENT_TOKEN` in the same injector renders it too, in its default `<ng-content>` slot.
 
 ### ExportBaseComponent (abstract)
 

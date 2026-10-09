@@ -14,17 +14,14 @@ const LABEL_CLASSES = [
 const WIDGET_CLASSES = ['smart:mt-2', 'smart:block', 'smart:w-full'].join(' ');
 
 /**
- * The `dateWithEdit` field (the Angular `InputDateWithEditComponent`,
- * `<smart-input-date-with-edit>`): the model label and the `<SmartDateEdit>`
- * editor (eight digit inputs) bound to the control as `[formControl]` did:
- * an edit sets the value and marks the control dirty and touched.
+ * The `dateWithEdit` field: the model label and the `<SmartDateEdit>` editor
+ * (eight digit inputs) bound to the control: an edit sets the value and marks
+ * the control dirty and touched.
  *
- * Angular set the widget classes and `className` on the editor's host
- * element, a block box around the editor; here a `<div>` around
- * `SmartDateEdit` carries them, so the editor keeps its own layout.
+ * The widget classes and `className` go on a `<div>` around `SmartDateEdit`, a
+ * block box around the editor, so the editor keeps its own layout.
  *
- * The label has no `htmlFor`, as in Angular: the editor has no single input
- * it could point at.
+ * The label has no `htmlFor`: the editor has no single input it could point at.
  */
 export function SmartInputDateWithEdit<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

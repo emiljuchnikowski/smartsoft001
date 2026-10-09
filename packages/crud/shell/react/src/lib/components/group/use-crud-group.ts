@@ -7,12 +7,11 @@ import { useCrudListGroupService } from '../../crud.context';
 import { ICrudListGroup } from '../../models';
 
 /**
- * The behaviour of the list groups (the Angular `GroupBaseComponent`).
- * `change(val, item)` closes the other groups, filters the list by the group
- * through `CrudListGroupService` and sets `item.show` — on the next tick when
- * opening (the list reads first), at once when closing. The groups are
- * plain objects changed in place, as in Angular; the hook re-renders after
- * each change. When the component goes away, the service drops the query
+ * The behaviour of the list groups. `change(val, item)` closes the other
+ * groups, filters the list by the group through `CrudListGroupService` and
+ * sets `item.show` — on the next tick when opening (the list reads first), at
+ * once when closing. The groups are plain objects changed in place; the hook
+ * re-renders after each change. When the component goes away, the service drops the query
  * items of the groups again.
  */
 export function useCrudGroup<T extends IEntity<string>>({
@@ -20,8 +19,7 @@ export function useCrudGroup<T extends IEntity<string>>({
   listOptions = null,
 }: SmartCrudGroupProps<T>) {
   const groupService = useCrudListGroupService<T>();
-  // The Angular `cd.detectChanges()`.
-  const [, detectChanges] = useReducer((tick: number) => tick + 1, 0);
+  const [, rerender] = useReducer((tick: number) => tick + 1, 0);
   const latest = useRef({ groups, groupService });
 
   useEffect(() => {
@@ -52,11 +50,11 @@ export function useCrudGroup<T extends IEntity<string>>({
       if (val) {
         setTimeout(() => {
           item.show = val;
-          detectChanges();
+          rerender();
         });
       } else {
         item.show = val;
-        detectChanges();
+        rerender();
       }
     },
     [groups, groupService],

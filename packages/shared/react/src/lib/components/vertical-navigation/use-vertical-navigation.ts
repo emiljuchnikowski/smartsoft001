@@ -4,9 +4,9 @@ import { SmartVerticalNavigationProps } from './vertical-navigation.types';
 import { IVerticalNavGroup } from '../../models';
 
 /**
- * The behaviour every vertical navigation variant shares (the Angular
- * `VerticalNavigationBaseComponent`): `options.items` normalised into a
- * first, untitled group followed by `options.groups`, and the item click.
+ * The behaviour every vertical navigation variant shares: `options.items`
+ * normalised into a first, untitled group followed by `options.groups`, and the
+ * item click.
  */
 export function useVerticalNavigation({
   options,

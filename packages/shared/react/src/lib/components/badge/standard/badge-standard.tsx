@@ -2,9 +2,9 @@ import { SmartBadgeProps } from '../badge.types';
 import { useBadge } from '../use-badge';
 
 /**
- * The default badge rendering (`<smart-badge-standard>`): unstyled markup
- * exposing `color`, `size`, `options.variant` and `options.pill` as `data-*`
- * attributes for the application's own CSS.
+ * The default badge rendering: unstyled markup exposing `color`, `size`,
+ * `options.variant` and `options.pill` as `data-*` attributes for the
+ * application's own CSS.
  */
 export function SmartBadgeStandard(props: SmartBadgeProps) {
   const { text, color = 'gray', size = 'md', options, className } = props;

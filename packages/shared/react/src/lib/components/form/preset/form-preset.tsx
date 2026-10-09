@@ -5,7 +5,7 @@ import { SmartFormBaseProps } from '../form.types';
 import { useFormBase } from '../use-form-base';
 
 /**
- * Styled form variation (preset), `<smart-form-preset>`.
+ * Styled form variation (preset).
  *
  * A minimal restyle of `SmartFormStandard`: the field iteration and every
  * behaviour of `useFormBase` are reused unchanged — only the shell is

@@ -5,10 +5,9 @@ import { useSmartComponent } from '../../providers/hooks';
 import { SmartComponentKey } from '../../providers/smart-context';
 
 /**
- * The `SmartProvider` `components` key a page variant is registered under
- * (an entry of the Angular `PAGE_VARIANT_COMPONENTS_TOKEN` map): `'page'` for
- * `'standard'` (the page's `DynamicComponentType`), `'page:<variant>'` for the
- * others, e.g. `'page:preset'`.
+ * The `SmartProvider` `components` key a page variant is registered under:
+ * `'page'` for `'standard'` (the page's `DynamicComponentType`),
+ * `'page:<variant>'` for the others, e.g. `'page:preset'`.
  */
 export function getPageVariantKey(
   variant: SmartPageVariant,
@@ -17,10 +16,10 @@ export function getPageVariantKey(
 }
 
 /**
- * `<smart-page>`: renders the component registered for `options.variant`
- * (`'standard'` when omitted) under `getPageVariantKey(variant)` on
- * `SmartProvider`, `SmartPageStandard` when nothing is registered for it.
- * `children` become the body when `options.bodyTpl` is not set.
+ * Renders the component registered for `options.variant` (`'standard'` when
+ * omitted) under `getPageVariantKey(variant)` on `SmartProvider`,
+ * `SmartPageStandard` when nothing is registered for it. `children` become the
+ * body when `options.bodyTpl` is not set.
  */
 export function SmartPage({
   options,

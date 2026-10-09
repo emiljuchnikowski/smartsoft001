@@ -45,11 +45,16 @@ function mergeErrors(
  * The state shared by every node of a form tree: value, validation status,
  * errors and the touched / dirty flags.
  *
- * The model follows Angular's reactive forms closely, because the form
- * factory, the inputs and the CRUD screens were written against it: a change
- * of a control recomputes its validity, then its parent's, up to the root;
- * async validators only run when the sync ones pass and leave the control
- * `PENDING` meanwhile; a disabled control is left out of its parent's value.
+ * Status propagates upwards: a change of a control recomputes its value and
+ * validity, then its parent's, up to the root, so a group or array is
+ * `INVALID` while any child is and `PENDING` while any child waits for an
+ * async validator. Async validators only run once the sync ones pass; the
+ * control stays `PENDING` until they settle, a newer run discards the result
+ * of an older one, and a rejected validator marks the control invalid
+ * (`{ asyncValidator: true }`) rather than letting the value through. A
+ * disabled control has no errors, does not count towards its parent's status
+ * and is left out of its parent's `value` (`getRawValue()` still includes
+ * it); a group or array whose children are all disabled is disabled itself.
  *
  * It holds no React state. Components re-render through the hooks in
  * `hooks.ts`, which subscribe to `changes` and read `version`.
@@ -61,8 +66,8 @@ export abstract class SmartAbstractControl<TValue = any> {
   readonly statusChanges = new SmartEmitter<SmartControlStatus>();
   /**
    * Emits after any observable change: value, status, errors, touched, dirty
-   * or disabled. It is a render signal, so it fires even for updates made with
-   * `emitEvent: false`.
+   * or disabled. It exists to re-render the components, so it fires even for
+   * updates made with `emitEvent: false`.
    */
   readonly changes = new SmartEmitter<void>();
 
@@ -72,7 +77,8 @@ export abstract class SmartAbstractControl<TValue = any> {
   dirty = false;
   /**
    * Set by the form factory while the field's `enabled` specification does not
-   * hold. The Angular library stored the same flag as `__smartDisabled`.
+   * hold; the factory then takes the control out of its group and the forms
+   * skip rendering it.
    */
   smartDisabled = false;
 

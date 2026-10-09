@@ -47,13 +47,11 @@ import { SmartTogglePreset } from '../toggle/preset/toggle-preset';
 import { SmartVerticalNavigationPreset } from '../vertical-navigation/preset/vertical-navigation-preset';
 
 /**
- * Every preset (Preline-styled) implementation the library ships, in the
- * shape of `SmartProvider`'s configuration, so one spread restyles a whole
+ * Every preset (Preline-styled) implementation the library ships, in the shape
+ * of `SmartProvider`'s configuration, so one spread restyles a whole
  * application: `<SmartProvider {...SMART_PRESET_COMPONENTS}>`.
  *
- * In Angular each preset is registered on its own token
- * (`BUTTON_STANDARD_COMPONENT_TOKEN`, `INPUT_FIELD_COMPONENTS_TOKEN`, ...);
- * pick single entries from here to do the same.
+ * Pick single entries from here to register only some of the presets.
  */
 export const SMART_PRESET_COMPONENTS = {
   components: {

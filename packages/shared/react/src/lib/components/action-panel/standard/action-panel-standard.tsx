@@ -12,11 +12,10 @@ const VARIANT_CLASSES: Record<ActionVariant, string> = {
 };
 
 /**
- * The default action panel (`<smart-action-panel-standard>`): a
- * `section.action-panel` with the title, the description (or
- * `options.descriptionTpl`), `options.contentTpl` and the actions. Actions
- * with `href` render as links (variant `link` by default), the others as
- * buttons (variant `primary` by default) calling `onActionClick`.
+ * The default action panel: a `section.action-panel` with the title, the
+ * description (or `options.descriptionTpl`), `options.contentTpl` and the
+ * actions. Actions with `href` render as links (variant `link` by default), the
+ * others as buttons (variant `primary` by default) calling `onActionClick`.
  */
 export function SmartActionPanelStandard({
   options,

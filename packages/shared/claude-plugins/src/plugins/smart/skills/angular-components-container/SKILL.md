@@ -67,7 +67,7 @@ Three-layer pattern mirroring `<smart-toggle>`:
 
 1. **`ContainerBaseComponent`** (`@Directive()`) — shared signals/inputs (`options`, `cssClass` via `class` alias) and the `smartType = 'container'` discriminator. No outputs, no methods.
 2. **`ContainerStandardComponent`** (selector: `smart-container-standard`) — default concrete implementation extending the base. Renders a single `<div>` with `[class]`, `[attr.data-mode]`, `[attr.data-padding]`, and `<ng-content />`.
-3. **`ContainerComponent`** (selector: `smart-container`) — wrapper. Uses `inject(CONTAINER_STANDARD_COMPONENT_TOKEN, { optional: true })` + `*ngComponentOutlet` to render the injected component, falling back to `<smart-container-standard>` with `<ng-content />` inside it so default-mode projection works.
+3. **`ContainerComponent`** (selector: `smart-container`) — wrapper. Uses `inject(CONTAINER_STANDARD_COMPONENT_TOKEN, { optional: true })` + `*ngComponentOutlet` to render the injected component, falling back to `<smart-container-standard>`. The projected content is captured once and reaches whichever renders: the standard component, or the injected component's default `<ng-content />`.
 
 ## Overriding with Custom Implementation
 
@@ -81,7 +81,7 @@ import {
 @Component({
   selector: 'smart-container-my-variant',
   template: `<section [class]="cssClass()">
-    <!-- NOTE: ng-content does NOT work here when injected via the token -->
+    <ng-content />
   </section>`,
 })
 export class ContainerMyVariantComponent extends ContainerBaseComponent {}
@@ -95,15 +95,15 @@ providers: [
 ];
 ```
 
-## Content Projection Limitation (IMPORTANT)
+## Content Projection
 
-The wrapper uses `*ngComponentOutlet` to render any token-provided implementation. **`NgComponentOutlet` does not forward content projection** — children placed between `<smart-container>...</smart-container>` are dropped when an injected component is active.
+The wrapper uses `*ngComponentOutlet` to render any token-provided implementation and passes the children placed between `<smart-container>...</smart-container>` to it as outlet content, so they render in the injected component's default `<ng-content />` slot.
 
 Consequences for custom implementations:
 
-- The default `ContainerStandardComponent` works fine because the wrapper places `<ng-content />` directly inside `<smart-container-standard>` in the default branch.
-- A custom component provided via `CONTAINER_STANDARD_COMPONENT_TOKEN` **must not rely on `<ng-content />`**. Instead, drive the rendered content through inputs (e.g. `options`, additional input signals on the custom subclass, or a `TemplateRef` input).
-- If you genuinely need projected children with a custom variant, expose a `bodyTpl: input<TemplateRef>()` style input and render it with `<ng-container *ngTemplateOutlet="bodyTpl()" />`.
+- The default `ContainerStandardComponent` receives the children through its `<ng-content />` as before.
+- A custom component provided via `CONTAINER_STANDARD_COMPONENT_TOKEN` gets them in its first `<ng-content />` (put the default slot first if it also has `select` slots).
+- The children arrive wrapped in one `display: contents` element. Layout (flex, grid, `gap`) is unaffected, but selectors on the slot's parent that target its direct children (`space-y-*`, `divide-*`, `> *`) do not reach them.
 
 ## Preset
 
@@ -134,7 +134,7 @@ providers: [
 ];
 ```
 
-Documented gap: because `NgComponentOutlet` does not forward content projection, projected children only render when `<smart-container-preset>` is used directly, not through `<smart-container>` (see the projection limitation above). Story: `container.component.stories.ts` → `Preset`.
+Projected children render both through `<smart-container>` with the preset registered on the token and with `<smart-container-preset>` used directly (see "Content Projection" above). Story: `container.component.stories.ts` → `Preset`.
 
 ## File Locations
 

@@ -2,7 +2,7 @@ import { cn } from '../../../utils/class-names';
 import { SmartDetailFieldProps } from '../detail.types';
 import { useDetailVideo } from './use-detail-video';
 
-/** `<smart-detail-video>` (`DetailVideoComponent`): the uploaded mp4 video. */
+/** The video detail: the uploaded mp4 video. */
 export function SmartDetailVideo<T>(props: SmartDetailFieldProps<T>) {
   const { className } = props;
   const { item, key, url } = useDetailVideo(props);

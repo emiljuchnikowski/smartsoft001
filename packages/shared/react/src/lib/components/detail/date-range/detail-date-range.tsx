@@ -2,7 +2,7 @@ import { cn } from '../../../utils/class-names';
 import { SmartDetailFieldProps } from '../detail.types';
 import { useDetail } from '../use-detail';
 
-/** `<smart-detail-date-range>` (`DetailDateRangeComponent`): `start – end`. */
+/** The date range detail: `start – end`. */
 export function SmartDetailDateRange<T>(props: SmartDetailFieldProps<T>) {
   const { className } = props;
   const { item, key, value: range } = useDetail(props);

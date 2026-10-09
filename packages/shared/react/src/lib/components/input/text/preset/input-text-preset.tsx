@@ -8,9 +8,8 @@ import { useInput } from '../../base/use-input';
 import { SmartInputFieldProps } from '../../input.types';
 
 /**
- * Styled `text` field (preset, the Angular `InputTextPresetComponent`):
- * the Preline look of {@link SmartInputText}. Register it as
- * `inputFieldComponents[FieldType.text]` on `SmartProvider`.
+ * Styled `text` field (preset): the Preline look of {@link SmartInputText}.
+ * Register it as `inputFieldComponents[FieldType.text]` on `SmartProvider`.
  */
 export function SmartInputTextPreset<T>(props: SmartInputFieldProps<T>) {
   const { className = '' } = props;

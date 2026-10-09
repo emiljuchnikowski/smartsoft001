@@ -53,11 +53,10 @@ function AddressPresetPart({
 }
 
 /**
- * Styled address field (preset, Angular `InputAddressPresetComponent`): the
- * parts of the address group as Preline text inputs in a two-column grid
- * (street across both columns, then building and flat number, zip code and
- * city), each labelled and bound to its control. `className` goes on the
- * grid.
+ * Styled address field (preset): the parts of the address group as Preline text
+ * inputs in a two-column grid (street across both columns, then building and
+ * flat number, zip code and city), each labelled and bound to its control.
+ * `className` goes on the grid.
  */
 export function SmartInputAddressPreset<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

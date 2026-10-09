@@ -12,11 +12,9 @@ import { SmartListModeProps } from '../list.types';
 import { useListFileUrl } from '../use-list';
 
 /**
- * The masonry-grid list (the Angular `<smart-list-masonry-grid>`,
- * `ListMasonryGridComponent`): a grid of tiles with the item's image (the
- * model's first image field, lazy loaded) over its non-image cells, the
- * `top` component factory above it and the paging below it
- * (`PaginationMode.singlePage`).
+ * The masonry-grid list: a grid of tiles with the item's image (the model's
+ * first image field, lazy loaded) over its non-image cells, the `top` component
+ * factory above it and the paging below it (`PaginationMode.singlePage`).
  */
 export function SmartListMasonryGrid<T extends IEntity<string>>(
   props: SmartListModeProps<T>,

@@ -69,12 +69,12 @@ const PREVIEW_CLASSES = [
 ].join(' ');
 
 /**
- * Styled `video` field (preset, the Angular `InputVideoPresetComponent`): a
- * Preline drop zone ("drop file here or browse") that opens the hidden
- * `.mp4` input on click / Enter / Space and uploads a dropped file
- * ({@link useInputFileDropZone}), a preview card with the file name and the
- * play / delete buttons, the upload progress and a framed player
- * ({@link useInputVideo}). `className` is appended to the group's classes.
+ * Styled `video` field (preset): a Preline drop zone ("drop file here or
+ * browse") that opens the hidden `.mp4` input on click / Enter / Space and
+ * uploads a dropped file ({@link useInputFileDropZone}), a preview card with
+ * the file name and the play / delete buttons, the upload progress and a framed
+ * player ({@link useInputVideo}). `className` is appended to the group's
+ * classes.
  */
 export function SmartInputVideoPreset<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

@@ -102,8 +102,8 @@ function getInvalidFields(
 }
 
 /**
- * The logic of the item page (the Angular `ItemComponent`), for
- * `SmartCrudItemPage` or a page of your own around the same feature:
+ * The logic of the item page, for `SmartCrudItemPage` or a page of your own
+ * around the same feature:
  *
  * - `mode`: `'create'` without an `id`; with one `'details'` when
  *   `config.details` is set, else `'update'`; the `edit` query param (or the
@@ -124,8 +124,8 @@ function getInvalidFields(
  * - `TopComponent` / `BottomComponent`: the `components` of `config.add`
  *   while creating, of `config.edit` while updating.
  *
- * Switching between creating and an id needs a new page (a `key`), as the
- * Angular `add` and `:id` routes created a new component.
+ * Switching between creating and an id needs a new page (a `key`): the mode
+ * is set once, when the page is created.
  */
 export function useCrudItemPage<T extends IEntity<string>>({
   id,
@@ -148,14 +148,13 @@ export function useCrudItemPage<T extends IEntity<string>>({
     create ? 'create' : config.details ? 'details' : 'update',
   );
 
-  // Before the body renders, as the Angular `ngOnInit` ran before the view:
-  // the details set the root while rendering.
+  // Before the body renders: the details set the root while rendering.
   useState(() => detailsService.init());
 
   const formRef = useRef<SmartFormGroup | null>(null);
   const formValue = useRef<T | undefined>(undefined);
   const formPartialValue = useRef<Partial<T> | undefined>(undefined);
-  // Kept as the Angular `formValid`; the buttons validate the form itself.
+  // The last reported validity; the buttons validate the form itself.
   const formValid = useRef(false);
   const idRef = useRef(id);
 

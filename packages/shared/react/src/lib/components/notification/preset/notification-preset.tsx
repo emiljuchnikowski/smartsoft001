@@ -56,11 +56,10 @@ function CloseButton({
  * `components.notification` on `SmartProvider` to restyle every
  * `<SmartNotification>`, or render it directly.
  *
- * Renders the Preline toast looks, selected via `options.variant` (defaults
- * to `simple`): `simple`, `condensed`, `with-actions-below`,
- * `with-buttons-below`, `with-split-buttons` and `with-avatar`. The `simple`
- * variant does not render `actions`. The label id is
- * `smart-notification-preset-<useId()>` (a module counter in Angular).
+ * Renders the Preline toast looks, selected via `options.variant` (defaults to
+ * `simple`): `simple`, `condensed`, `with-actions-below`, `with-buttons-below`,
+ * `with-split-buttons` and `with-avatar`. The `simple` variant does not render
+ * `actions`. The label id is `smart-notification-preset-<useId()>`.
  */
 export function SmartNotificationPreset(props: SmartNotificationProps) {
   const {

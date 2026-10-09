@@ -30,9 +30,8 @@ interface CrudRegistry {
 }
 
 // One registry per application (per `SmartProvider`, whose HTTP client is
-// created once), so features with the same entity share their state the way
-// the NgRx feature did, while two applications rendered in one process (SSR)
-// stay apart.
+// created once), so features with the same entity share their state, while
+// two applications rendered in one process (SSR) stay apart.
 const registries = new WeakMap<SmartHttpClient, CrudRegistry>();
 
 function getRegistry(http: SmartHttpClient): CrudRegistry {
@@ -55,8 +54,8 @@ export interface CrudProviderProps<T extends IEntity<string>> {
 
 /**
  * Sets up a CRUD feature for its subtree: the service, the store with its
- * effects, the facade and the file service pointed at the resource, what
- * `CrudModule.forFeature` provided in Angular. Pass a memoised `config`.
+ * effects, the facade and the file service pointed at the resource. Pass a
+ * memoised `config`.
  */
 export function CrudProvider<T extends IEntity<string>>({
   config,

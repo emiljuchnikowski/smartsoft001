@@ -3,7 +3,7 @@ import { cn } from '../../../utils/class-names';
 import { SmartDetailFieldProps } from '../detail.types';
 import { useDetailAttachment } from './use-detail-attachment';
 
-/** `<smart-detail-attachment>` (`DetailAttachmentComponent`): a download button. */
+/** The attachment detail: a download button. */
 export function SmartDetailAttachment<T>(props: SmartDetailFieldProps<T>) {
   const { className } = props;
   const t = useTranslate();

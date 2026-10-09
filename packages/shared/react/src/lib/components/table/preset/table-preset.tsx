@@ -35,16 +35,15 @@ interface TableSort {
 }
 
 /**
- * Styled table variation (preset, the Angular `TablePresetComponent`).
- * Register it as `components.table` on `SmartProvider` to restyle every
- * `<SmartTable>`, or render it directly.
+ * Styled table variation (preset). Register it as `components.table` on
+ * `SmartProvider` to restyle every `<SmartTable>`, or render it directly.
  *
  * Renders the Tailwind UI table look and honours every `ITableOptions` hint the
  * standard component ignores: `striped` rows, a `stickyHeader`, a `withBorder`
  * card frame, per-column `align`, and `sortable` columns (client-side sort with
  * `aria-sort`). The checkbox column supports select-all with an indeterminate
  * state and highlights selected rows. Sort and selection are internal state,
- * as in Angular (the Angular component had no outputs).
+ * not reported to the parent.
  */
 export function SmartTablePreset({ options, className }: SmartTableProps) {
   const [sort, setSort] = useState<TableSort | null>(null);
@@ -64,8 +63,8 @@ export function SmartTablePreset({ options, className }: SmartTableProps) {
     options?.toolbarTpl
   );
 
-  // Rows keep their position in `options.rows` as the React key, so a row
-  // keeps its DOM node when sorted (Angular tracked the row object).
+  // Rows keep their position in `options.rows` as the React key, so a row keeps
+  // its DOM node when sorted.
   const sortedRows = useMemo(() => {
     const entries = (options?.rows ?? []).map((row, index) => ({ row, index }));
     if (!sort) return entries;

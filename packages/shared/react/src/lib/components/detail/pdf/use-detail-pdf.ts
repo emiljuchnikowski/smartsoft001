@@ -3,9 +3,9 @@ import { SmartDetailFieldProps } from '../detail.types';
 import { useDetail } from '../use-detail';
 
 /**
- * The PDF detail's logic (the Angular `DetailPdfComponent`): `show()` opens
- * the file through the `FileService`; `fileName` is the file's `fileName` or
- * `name` (`DetailPdfPresetComponent`), `null` without either.
+ * The PDF detail's logic: `show()` opens the file through the `FileService`;
+ * `fileName` is the file's `fileName` or `name` (shown by
+ * `SmartDetailPdfPreset`), `null` without either.
  */
 export function useDetailPdf<T>(props: SmartDetailFieldProps<T>) {
   const fileService = useFileService();

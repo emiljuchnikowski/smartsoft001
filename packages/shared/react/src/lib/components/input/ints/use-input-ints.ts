@@ -4,9 +4,9 @@ import { useInput } from '../base/use-input';
 import { SmartInputFieldProps } from '../input.types';
 import { toNumberValue } from '../int/number-value';
 
-/** One row of the ints field: the Angular per-item `FormControl`. */
+/** One row of the ints field. */
 export interface SmartIntsItem {
-  /** Stable key of the row (Angular tracked the item control itself). */
+  /** Stable key of the row. */
   id: number;
   value: number | null;
 }
@@ -19,11 +19,10 @@ function createItem(value: number | null): SmartIntsItem {
 
 /**
  * The list logic of the ints field shared by `SmartInputInts` and
- * `SmartInputIntsPreset` (the Angular components held it twice): one row per
- * number plus a trailing row to add one. Every change writes the non-empty
- * rows (`0` counts as empty) to the control as numbers, marks the control
- * touched and dirty, and appends a new row (`0`) once the last row has a
- * value. As in Angular, this also runs when the control is set.
+ * `SmartInputIntsPreset`: one row per number plus a trailing row to add one.
+ * Every change writes the non-empty rows (`0` counts as empty) to the control
+ * as numbers, marks the control touched and dirty, and appends a new row (`0`)
+ * once the last row has a value. This also runs when the control is set.
  */
 export function useInputInts<T>(props: SmartInputFieldProps<T>) {
   const input = useInput(props);

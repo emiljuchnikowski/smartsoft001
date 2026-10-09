@@ -18,13 +18,13 @@ const nipValidator: SmartValidatorFn = (c) => {
 };
 
 /**
- * {@link useInput} plus what the Angular NIP inputs did once their options
- * were set (`afterSetOptionsHandler`): add the NIP check to the control's
- * validators and validate it again.
+ * {@link useInput} plus the NIP check: once the field has its control, the
+ * check is added to the control's validators and the control is validated
+ * again.
  *
- * The validator is one shared function, so adding it again (a second render
- * of the field, Strict Mode) does not stack it. It stays on the control after
- * the field unmounts, as it did in Angular.
+ * The validator is one shared function, so adding it again (a second render of
+ * the field, Strict Mode) does not stack it. It stays on the control after the
+ * field unmounts.
  */
 export function useInputNip<T>(props: SmartInputFieldProps<T>) {
   const input = useInput(props);

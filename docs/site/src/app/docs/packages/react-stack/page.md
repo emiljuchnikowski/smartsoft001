@@ -21,7 +21,7 @@ npm install @smartsoft001/react-stack react react-dom
 
 ## What it is
 
-It ships no code of its own, only pinned dependencies, so the browser half of the framework arrives at one version with one command. It is the React counterpart of [`angular-stack`](/docs/packages/angular-stack): the same `core`, with the React UI library and CRUD screens in place of the Angular ones. React itself is a peer dependency the application installs.
+It ships no code of its own, only pinned dependencies, so the browser half of the framework arrives at one version with one command: `core`, the React UI library and the React CRUD screens. React itself is a peer dependency the application installs.
 
 ## Usage
 

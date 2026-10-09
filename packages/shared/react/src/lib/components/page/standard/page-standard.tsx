@@ -4,12 +4,12 @@ import { SmartPageVariantProps } from '../page.types';
 import { getPageButtonOptions, usePage } from '../use-page';
 
 /**
- * The default page rendering (`<smart-page-standard>`): a header with the
- * optional back button, the translated title, the search input and the end
- * buttons, followed by `options.bodyTpl`.
+ * The default page rendering: a header with the optional back button, the
+ * translated title, the search input and the end buttons, followed by
+ * `options.bodyTpl`.
  *
- * Like the Angular template, it renders no wrapper element (header and body
- * are siblings) and does not apply `className`.
+ * It renders no wrapper element (header and body are siblings) and does not
+ * apply `className`.
  */
 export function SmartPageStandard({ options }: SmartPageVariantProps) {
   const t = useTranslate();

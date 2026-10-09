@@ -14,10 +14,9 @@ const HAMBURGER_CLASSES =
   'smart:block smart:md:hidden smart:rounded-sm smart:bg-gray-100 smart:p-2.5 smart:text-gray-600 smart:transition smart:hover:text-gray-600/75 smart:dark:bg-gray-800 smart:dark:text-white smart:dark:hover:text-white/75';
 
 /**
- * HyperUI-styled page heading variation (preset, the Angular
- * `PageHeadingPresetComponent`). Register it as `components['page-heading']`
- * on `SmartProvider` to restyle every `<SmartPageHeading>`, or render it
- * directly.
+ * HyperUI-styled page heading variation (preset). Register it as
+ * `components['page-heading']` on `SmartProvider` to restyle every
+ * `<SmartPageHeading>`, or render it directly.
  *
  * Unlike the standard page heading it renders a navbar-look `<header>`: a
  * logo/brand zone (falling back to the title), a desktop nav zone, an actions

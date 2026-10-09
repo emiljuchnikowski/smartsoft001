@@ -3,31 +3,31 @@ import { useState } from 'react';
 import { SmartDateEdit, useTranslate } from '@smartsoft001/react';
 
 import { useCrudFilterDate } from '../date/use-crud-filter-date';
-import { useCrudFilterNgModel } from '../date/use-crud-filter-ng-model';
+import { useCrudFilterValue } from '../date/use-crud-filter-value';
 import { SmartCrudFilterProps } from '../filter.types';
 
 const CLEAR_CLASSES =
   'smart:shrink-0 smart:rounded smart:px-2 smart:py-2 smart:text-red-600 smart:hover:bg-red-50';
 
 /**
- * `<smart-date-edit class="smart:flex-1" [ngModel] (ngModelChange)>`: the
- * shared date editor showing what the user entered until `model` changes.
+ * The shared date editor showing what the user entered until `value`
+ * changes.
  */
 function BoundDateEdit({
-  model,
-  onModelChange,
+  value,
+  onValueChange,
 }: {
-  model: any;
-  onModelChange: (value: any) => void;
+  value: any;
+  onValueChange: (value: any) => void;
 }) {
-  const [value, setValue] = useCrudFilterNgModel(model, onModelChange);
+  const [shown, setShown] = useCrudFilterValue(value, onValueChange);
 
   return (
     <div className="smart:flex-1">
       <SmartDateEdit
         className="smart:flex-1"
-        value={value}
-        onValueChange={setValue}
+        value={shown}
+        onValueChange={setShown}
       />
     </div>
   );
@@ -36,15 +36,15 @@ function BoundDateEdit({
 /** One end of the advanced range: a label, a date editor and its clear. */
 function DateRangeRow({
   label,
-  model,
-  onModelChange,
+  value,
+  onValueChange,
   clearLabel,
   showClear,
   onClear,
 }: {
   label: string;
-  model: any;
-  onModelChange: (value: any) => void;
+  value: any;
+  onValueChange: (value: any) => void;
   clearLabel: string;
   showClear: boolean;
   onClear: () => void;
@@ -54,7 +54,7 @@ function DateRangeRow({
   return (
     <div className="smart:flex smart:w-full smart:items-end smart:gap-2">
       <label className="smart:text-sm">{t(label)}</label>
-      <BoundDateEdit model={model} onModelChange={onModelChange} />
+      <BoundDateEdit value={value} onValueChange={onValueChange} />
       {showClear && (
         <button
           type="button"
@@ -70,10 +70,9 @@ function DateRangeRow({
 }
 
 /**
- * `<smart-crud-filter-date-with-edit>` (Angular
- * `FilterDateWithEditComponent`): the item label and the shared date editor
- * for the item's value; for an `=` item an "advanced" button switches to a
- * "from" / "to" pair of editors for the `>=` / `<=` values (removing the
+ * The date filter with a range editor: the item label and the shared date
+ * editor for the item's value; for an `=` item an "advanced" button switches
+ * to a "from" / "to" pair of editors for the `>=` / `<=` values (removing the
  * value), shown as well while a range value is set.
  */
 export function SmartCrudFilterDateWithEdit(props: SmartCrudFilterProps) {
@@ -110,8 +109,8 @@ export function SmartCrudFilterDateWithEdit(props: SmartCrudFilterProps) {
       {!advanced ? (
         <div className="smart:flex smart:w-full smart:items-end smart:gap-2">
           <BoundDateEdit
-            model={customValue || ''}
-            onModelChange={setCustomValue}
+            value={customValue || ''}
+            onValueChange={setCustomValue}
           />
           {allowAdvanced && (
             <button
@@ -151,16 +150,16 @@ export function SmartCrudFilterDateWithEdit(props: SmartCrudFilterProps) {
         <div className="smart:flex smart:w-full smart:flex-col smart:gap-2">
           <DateRangeRow
             label="from"
-            model={customMinValue || ''}
-            onModelChange={setCustomMinValue}
+            value={customMinValue || ''}
+            onValueChange={setCustomMinValue}
             clearLabel="clear-from"
             showClear={hasMinValue}
             onClear={() => refresh(null, '>=')}
           />
           <DateRangeRow
             label="to"
-            model={customMaxValue || ''}
-            onModelChange={setCustomMaxValue}
+            value={customMaxValue || ''}
+            onValueChange={setCustomMaxValue}
             clearLabel="clear-to"
             showClear={hasMaxValue}
             onClear={() => refresh(null, '<=')}

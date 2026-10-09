@@ -1,9 +1,9 @@
 import { SmartPageHeadingProps } from '../page-heading.types';
 
 /**
- * The default page heading rendering (`<smart-page-heading-standard>`):
- * unstyled breadcrumbs and banner slots above a `<header>` holding the title,
- * subtitle and the avatar / logo / meta / stats / actions / filters slots.
+ * The default page heading rendering: unstyled breadcrumbs and banner slots
+ * above a `<header>` holding the title, subtitle and the avatar / logo / meta /
+ * stats / actions / filters slots.
  */
 export function SmartPageHeadingStandard({
   options,

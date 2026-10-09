@@ -34,10 +34,8 @@ const INPUT_CLASSES = [
 ];
 
 /**
- * The amount field (`<smart-input-currency>`, Angular
- * `InputCurrencyComponent`): a number input with `step="0.01"`. As in
- * Angular, nothing is formatted: an empty field sets `null`, anything else the
- * parsed number.
+ * The amount field: a number input with `step="0.01"`. Nothing is formatted: an
+ * empty field sets `null`, anything else the parsed number.
  */
 export function SmartInputCurrency<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

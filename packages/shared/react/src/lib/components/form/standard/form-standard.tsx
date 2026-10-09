@@ -3,7 +3,7 @@ import { SmartInput } from '../../input/input';
 import { SmartFormBaseProps } from '../form.types';
 import { useFormBase } from '../use-form-base';
 
-/** The default form body (`<smart-form-standard>`): one input per control. */
+/** The default form body: one input per control. */
 export function SmartFormStandard<T>(props: SmartFormBaseProps<T>) {
   const { className } = props;
   const {

@@ -1,9 +1,8 @@
 import { CrudState } from './crud.reducer';
 
 /*
- * The selectors of the Angular feature, reading one feature's state. The
- * Angular ones took the entity name and read the root store; each React
- * feature has a store of its own, so they take that store's state.
+ * The selectors of a CRUD feature. Each feature has a store of its own, so
+ * they take that store's state.
  */
 export const getCrudSelected = <T>(state: CrudState<any>): T | undefined =>
   state?.selected;

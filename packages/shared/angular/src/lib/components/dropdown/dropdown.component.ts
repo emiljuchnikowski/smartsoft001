@@ -1,4 +1,4 @@
-import { NgComponentOutlet } from '@angular/common';
+import { NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,6 +7,7 @@ import {
   input,
   model,
   output,
+  TemplateRef,
   viewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -15,13 +16,19 @@ import { DropdownStandardComponent } from './standard/standard.component';
 import { IDropdownItem, IDropdownOptions } from '../../models';
 import { DROPDOWN_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
+import { outletContent } from '../base/outlet-content';
 
 @Component({
   selector: 'smart-dropdown',
   template: `
+    <ng-template #content><ng-content /></ng-template>
     @if (componentType()) {
       <ng-container
-        *ngComponentOutlet="componentType(); inputs: componentInputs()"
+        *ngComponentOutlet="
+          componentType();
+          inputs: componentInputs();
+          content: projectedContent()
+        "
       />
     } @else {
       <smart-dropdown-standard
@@ -32,12 +39,12 @@ import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
         [class]="cssClass()"
         (selectedItem)="selectedItem.emit($event)"
       >
-        <ng-content />
+        <ng-container [ngTemplateOutlet]="content" />
       </smart-dropdown-standard>
     }
   `,
   encapsulation: ViewEncapsulation.None,
-  imports: [DropdownStandardComponent, NgComponentOutlet],
+  imports: [DropdownStandardComponent, NgComponentOutlet, NgTemplateOutlet],
   host: { class: 'smart:contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -65,6 +72,13 @@ export class DropdownComponent {
   }));
 
   private readonly outlet = viewChild(NgComponentOutlet);
+
+  /** The wrapper's `<ng-content>`, captured once for whichever branch renders. */
+  private readonly contentTemplate =
+    viewChild.required<TemplateRef<unknown>>('content');
+
+  /** The captured content for an implementation registered through the token. */
+  protected readonly projectedContent = outletContent(this.contentTemplate);
 
   constructor() {
     forwardOutletOutputs(this.outlet, {

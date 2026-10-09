@@ -16,6 +16,40 @@ class MockInjectedComponent extends ButtonBaseComponent {
   override cssClass = input<string>('');
 }
 
+@Component({
+  selector: 'smart-test-button-with-slot',
+  changeDetection: ChangeDetectionStrategy.Eager,
+  template: '<button class="custom-button"><ng-content /></button>',
+})
+class MockSlotComponent extends ButtonBaseComponent {
+  override cssClass = input<string>('');
+}
+
+const HOST_TEMPLATE = `
+  <smart-button [options]="options">Projected label</smart-button>
+`;
+
+@Component({
+  selector: 'smart-test-button-standard-host',
+  imports: [ButtonComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  template: HOST_TEMPLATE,
+})
+class StandardHostComponent {
+  options: IButtonOptions = { click: jest.fn() };
+}
+
+@Component({
+  selector: 'smart-test-button-host',
+  imports: [ButtonComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  providers: [
+    { provide: BUTTON_STANDARD_COMPONENT_TOKEN, useValue: MockSlotComponent },
+  ],
+  template: HOST_TEMPLATE,
+})
+class InjectedHostComponent extends StandardHostComponent {}
+
 describe('@smartsoft001/shared-angular: ButtonComponent', () => {
   const defaultOptions: IButtonOptions = { click: jest.fn() };
 
@@ -98,6 +132,30 @@ describe('@smartsoft001/shared-angular: ButtonComponent', () => {
       const injected = fixture.nativeElement.querySelector('button.injected');
 
       expect(injected).toBeTruthy();
+    });
+  });
+
+  describe('projected content', () => {
+    it('should render the projected content inside smart-button-standard', () => {
+      const fixture = TestBed.createComponent(StandardHostComponent);
+      fixture.detectChanges();
+
+      const button = fixture.nativeElement.querySelector(
+        'smart-button-standard button',
+      );
+
+      expect(button?.textContent.trim()).toBe('Projected label');
+    });
+
+    it('should render the projected content inside the implementation registered through BUTTON_STANDARD_COMPONENT_TOKEN', () => {
+      const fixture = TestBed.createComponent(InjectedHostComponent);
+      fixture.detectChanges();
+
+      const button = fixture.nativeElement.querySelector(
+        'button.custom-button',
+      );
+
+      expect(button?.textContent.trim()).toBe('Projected label');
     });
   });
 });

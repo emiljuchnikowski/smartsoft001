@@ -6,11 +6,10 @@ import { SmartForm } from '../../form/form';
 import { SmartInputFieldProps } from '../input.types';
 
 /**
- * `<smart-input-array>`: the label of an `array` field, a nested `SmartForm`
- * per item and an add button (hidden for `possibilities.static`). Items are
- * reordered by dragging one onto another (native drag and drop, where the
- * Angular field used the CDK). Like the Angular template, this variant has no
- * remove button; `SmartInputArrayPreset` has one.
+ * The label of an `array` field, a nested `SmartForm` per item and an add
+ * button (hidden for `possibilities.static`). Items are reordered by dragging
+ * one onto another (native drag and drop). This variant has no remove button;
+ * `SmartInputArrayPreset` has one.
  */
 export function SmartInputArray<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

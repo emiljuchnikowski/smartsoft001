@@ -53,9 +53,9 @@ import {
       }
 
       <!--
-        Unlike the other wrappers, smart-page wraps its own ng-content in a
-        TemplateRef and passes it down as options.bodyTpl, so projected content
-        survives the NgComponentOutlet hop.
+        smart-page wraps its own ng-content in a TemplateRef and passes it down
+        as options.bodyTpl, so the implementation decides where the projected
+        content goes (the other wrappers hand it to the default ng-content).
       -->
       <section class="docs-page__body">
         @if (options()?.bodyTpl; as bodyTpl) {

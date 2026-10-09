@@ -6,9 +6,9 @@ import { useCrudFilter, useCrudFilterControl } from '../base/use-crud-filter';
 import { SmartCrudFilterProps } from '../filter.types';
 
 /**
- * `<smart-crud-filter-radio>` (Angular `FilterRadioComponent`): the shared
- * radio field with the filter's possibilities, bound to the item's value, and
- * a clear button while the value is truthy or `false`.
+ * The radio filter: the shared radio field with the filter's possibilities,
+ * bound to the item's value, and a clear button while the value is truthy or
+ * `false`.
  */
 export function SmartCrudFilterRadio(props: SmartCrudFilterProps) {
   const filter = useCrudFilter(props);

@@ -23,11 +23,10 @@ const GROUP_CLASSES = [
 ].join(' ');
 
 /**
- * The `image` field (the Angular `InputImageComponent`,
- * `<smart-input-image>`): an add / change button opening a hidden
- * `.jpg,.png,.jpeg` input whose file is uploaded, a delete button and the
- * preview of the uploaded image ({@link useInputImage}), and the upload
- * progress. `className` is appended to the group's classes.
+ * The `image` field: an add / change button opening a hidden `.jpg,.png,.jpeg`
+ * input whose file is uploaded, a delete button and the preview of the uploaded
+ * image ({@link useInputImage}), and the upload progress. `className` is
+ * appended to the group's classes.
  */
 export function SmartInputImage<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

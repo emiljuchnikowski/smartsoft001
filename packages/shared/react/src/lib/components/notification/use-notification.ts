@@ -3,10 +3,9 @@ import { useCallback } from 'react';
 import { SmartNotificationProps } from './notification.types';
 
 /**
- * The behaviour every notification variant shares (the Angular
- * `NotificationBaseComponent`): `dismiss()` reports `onDismissed` and
- * `invokeAction(id)` reports `onActionClick`. The notification does not hide
- * itself; its owner removes it.
+ * The behaviour every notification variant shares: `dismiss()` reports
+ * `onDismissed` and `invokeAction(id)` reports `onActionClick`. The
+ * notification does not hide itself; its owner removes it.
  */
 export function useNotification({
   onDismissed,

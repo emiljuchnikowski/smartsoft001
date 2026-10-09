@@ -47,14 +47,13 @@ const INPUT_CLASSES = [
 ].join(' ');
 
 /**
- * Styled `date` field (preset, the Angular `InputDatePresetComponent`,
- * `<smart-input-date-preset>`): the Preline datepicker input look of
+ * Styled `date` field (preset): the Preline datepicker input look of
  * {@link SmartInputDate}. Register it as `inputFieldComponents[FieldType.date]`
  * on `SmartProvider`.
  *
- * Like the Angular preset it renders a native `type="date"` input: the
- * Preline advanced datepicker needs Vanilla Calendar Pro and the Preline JS
- * plugin, which the library does not ship.
+ * It renders a native `type="date"` input: the Preline advanced datepicker
+ * needs Vanilla Calendar Pro and the Preline JS plugin, which the library does
+ * not ship.
  */
 export function SmartInputDatePreset<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

@@ -1,10 +1,10 @@
 import { SmartFeedProps } from '../feed.types';
 
 /**
- * The default feed rendering (`<smart-feed-standard>`): an ordered list of
- * events (icon template > avatar, timestamp, title as a link when `href` is
- * set, description, nested comments), the `emptyTpl` when there are no events,
- * then the `commentSubmitTpl` and `footerTpl` slots.
+ * The default feed rendering: an ordered list of events (icon template >
+ * avatar, timestamp, title as a link when `href` is set, description, nested
+ * comments), the `emptyTpl` when there are no events, then the
+ * `commentSubmitTpl` and `footerTpl` slots.
  */
 export function SmartFeedStandard({ options, className }: SmartFeedProps) {
   const events = options?.events ?? [];

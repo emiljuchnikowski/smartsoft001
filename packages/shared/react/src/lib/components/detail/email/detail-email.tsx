@@ -2,7 +2,7 @@ import { cn } from '../../../utils/class-names';
 import { SmartDetailFieldProps } from '../detail.types';
 import { useDetail } from '../use-detail';
 
-/** `<smart-detail-email>` (`DetailEmailComponent`): a `mailto:` link. */
+/** The email detail: a `mailto:` link. */
 export function SmartDetailEmail<T>(props: SmartDetailFieldProps<T>) {
   const { className } = props;
   const { item, key, value } = useDetail(props);

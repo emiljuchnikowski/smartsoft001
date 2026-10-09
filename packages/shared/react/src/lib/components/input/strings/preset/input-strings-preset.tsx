@@ -20,11 +20,10 @@ const INPUT_CLASSES =
   'smart:py-2.5 smart:sm:py-3 smart:px-4 smart:block smart:w-full smart:bg-white smart:dark:bg-gray-800 smart:border smart:border-gray-200 smart:dark:border-gray-700 smart:rounded-lg smart:sm:text-sm smart:text-gray-900 smart:dark:text-white smart:placeholder:text-gray-500 smart:dark:placeholder:text-gray-400 smart:focus:border-blue-600 smart:dark:focus:border-blue-500 smart:focus:ring-1 smart:focus:ring-blue-600 smart:dark:focus:ring-blue-500 smart:disabled:opacity-50 smart:disabled:pointer-events-none';
 
 /**
- * Styled strings field (preset, Angular `InputStringsPresetComponent`): the
- * strings as Preline chips with a remove button, and an input that adds its
- * trimmed text on Enter (without submitting the form) or when it is left.
- * Every change marks the control touched and dirty. The label is bound to the
- * add input.
+ * Styled strings field (preset): the strings as Preline chips with a remove
+ * button, and an input that adds its trimmed text on Enter (without submitting
+ * the form) or when it is left. Every change marks the control touched and
+ * dirty. The label is bound to the add input.
  */
 export function SmartInputStringsPreset<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

@@ -18,7 +18,7 @@ const bodyCardClasses = getPageBodyCardClasses();
 const iconButtonClasses = getPageIconButtonClasses();
 
 /**
- * Styled page variation (preset, `<smart-page-preset>`).
+ * Styled page variation (preset).
  *
  * A full application-shell layout: an optional banner strip, a bordered
  * `<header>` with breadcrumbs, a title row (menu and back buttons,
@@ -28,7 +28,7 @@ const iconButtonClasses = getPageIconButtonClasses();
  *
  * Register it with `PAGE_PRESET_VARIANT_COMPONENTS` to render it for
  * `options.variant === 'preset'`, or render it directly. `className` is
- * appended to the page root. The menu button has no action, as in Angular.
+ * appended to the page root. The menu button has no action.
  */
 export function SmartPagePreset({
   options,

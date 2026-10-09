@@ -10,11 +10,10 @@ import {
 const NO_EVENTS: ICalendarEvent[] = [];
 
 /**
- * The behaviour every calendar variant shares (the Angular
- * `CalendarBaseComponent`): the options with their defaults (month view,
- * Monday week start, toolbar shown), the selected day (`value`, controlled or
- * uncontrolled), the navigated reference date with its 6 x 7 `monthGrid`, the
- * events of a day and the day's accessible name.
+ * The behaviour every calendar variant shares: the options with their defaults
+ * (month view, Monday week start, toolbar shown), the selected day (`value`,
+ * controlled or uncontrolled), the navigated reference date with its 6 x 7
+ * `monthGrid`, the events of a day and the day's accessible name.
  *
  * The reference starts at `referenceDate` (today when omitted), moves with
  * `prevPeriod` / `nextPeriod` / `goToToday`, and jumps back to
@@ -40,9 +39,9 @@ export function useCalendar({
     () => referenceDate ?? new Date(),
   );
 
-  // Sync external input -> internal reference when the input changes (the
-  // Angular `effect`). Compared by time so that a parent re-rendering an equal
-  // `new Date(...)` does not undo the navigation.
+  // Sync external input -> internal reference when the input changes. Compared
+  // by time so that a parent re-rendering an equal `new Date(...)` does not
+  // undo the navigation.
   const referenceTime = referenceDate?.getTime();
   const [syncedReferenceTime, setSyncedReferenceTime] = useState(referenceTime);
   if (!Object.is(referenceTime, syncedReferenceTime)) {
@@ -127,7 +126,7 @@ export function useCalendar({
 /**
  * `reference` moved one `view` period (a month, 7 days, a day or a year)
  * backwards (`-1`) or forwards (`1`), with the `Date` setters' overflow rules
- * (e.g. Mar 31 minus a month is Mar 3), as in Angular.
+ * (e.g. Mar 31 minus a month is Mar 3).
  */
 function shiftPeriod(
   reference: Date,
@@ -150,7 +149,7 @@ function shiftPeriod(
 /**
  * The 6 x 7 day grid of the month of `reference`, starting on `weekStart`
  * (0 = Sunday, 1 = Monday), with the leading / trailing days of the
- * neighbouring months (the Angular `CalendarBaseComponent.buildMonthGrid`).
+ * neighbouring months.
  */
 export function buildMonthGrid(
   reference: Date,

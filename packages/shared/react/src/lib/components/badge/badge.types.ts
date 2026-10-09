@@ -8,6 +8,6 @@ export interface SmartBadgeProps {
   size?: 'sm' | 'md';
   options?: IBadgeOptions;
   className?: string;
-  /** Click on the remove button (`options.withRemove`), the Angular `removed` output. */
+  /** Click on the remove button (`options.withRemove`). */
   onRemoved?: () => void;
 }

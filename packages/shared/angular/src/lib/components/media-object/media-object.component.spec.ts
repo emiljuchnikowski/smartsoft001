@@ -15,6 +15,41 @@ class MockInjectedComponent extends MediaObjectBaseComponent {
   override cssClass = input<string>('');
 }
 
+@Component({
+  selector: 'smart-test-media-object-with-slot',
+  changeDetection: ChangeDetectionStrategy.Eager,
+  template: '<div class="custom-media-object"><ng-content /></div>',
+})
+class MockSlotComponent extends MediaObjectBaseComponent {
+  override cssClass = input<string>('');
+}
+
+const PROJECTION_HOST_TEMPLATE = `
+  <smart-media-object mediaUrl="https://example.com/image.png" mediaAlt="Example image">Projected text</smart-media-object>
+`;
+
+@Component({
+  selector: 'smart-test-media-object-standard-host',
+  imports: [MediaObjectComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  template: PROJECTION_HOST_TEMPLATE,
+})
+class StandardHostComponent {}
+
+@Component({
+  selector: 'smart-test-media-object-host',
+  imports: [MediaObjectComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  providers: [
+    {
+      provide: MEDIA_OBJECT_STANDARD_COMPONENT_TOKEN,
+      useValue: MockSlotComponent,
+    },
+  ],
+  template: PROJECTION_HOST_TEMPLATE,
+})
+class InjectedHostComponent {}
+
 describe('@smartsoft001/shared-angular: MediaObjectComponent', () => {
   describe('without token', () => {
     let fixture: ComponentFixture<MediaObjectComponent>;
@@ -103,6 +138,30 @@ describe('@smartsoft001/shared-angular: MediaObjectComponent', () => {
       );
 
       expect(standard).toBeNull();
+    });
+  });
+
+  describe('projected content', () => {
+    it('should render the projected content inside smart-media-object-standard', () => {
+      const fixture = TestBed.createComponent(StandardHostComponent);
+      fixture.detectChanges();
+
+      const slot = fixture.nativeElement.querySelector(
+        'smart-media-object-standard .smart-media-object-body',
+      );
+
+      expect(slot?.textContent.trim()).toBe('Projected text');
+    });
+
+    it('should render the projected content inside the implementation registered through MEDIA_OBJECT_STANDARD_COMPONENT_TOKEN', () => {
+      const fixture = TestBed.createComponent(InjectedHostComponent);
+      fixture.detectChanges();
+
+      const slot = fixture.nativeElement.querySelector(
+        'div.custom-media-object',
+      );
+
+      expect(slot?.textContent.trim()).toBe('Projected text');
     });
   });
 });

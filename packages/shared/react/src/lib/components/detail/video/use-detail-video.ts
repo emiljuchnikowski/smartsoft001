@@ -3,8 +3,8 @@ import { SmartDetailFieldProps } from '../detail.types';
 import { useDetail } from '../use-detail';
 
 /**
- * The video detail's logic (the Angular `DetailVideoComponent.getUrl`): the
- * `FileService` URL of the file in the field, `null` without one.
+ * The video detail's logic: the `FileService` URL of the file in the field,
+ * `null` without one.
  */
 export function useDetailVideo<T>(props: SmartDetailFieldProps<T>) {
   const { item, key, value } = useDetail(props);

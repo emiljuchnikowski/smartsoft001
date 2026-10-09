@@ -1,8 +1,7 @@
 import { FieldType, getModelFieldOptions } from '@smartsoft001/models';
 
 /**
- * Whether the column `key` is an image field of the model `type` (the
- * `isImageKey` of the Angular mobile / masonry-grid presets).
+ * Whether the column `key` is an image field of the model `type`.
  */
 export function isListImageKey(type: any, key: string): boolean {
   if (!type) return false;
@@ -14,7 +13,7 @@ export function isListImageKey(type: any, key: string): boolean {
 
 /**
  * The first non-image column, rendered as the card title by the mobile and
- * masonry-grid presets (their Angular `titleKey`).
+ * masonry-grid presets.
  */
 export function getListTitleKey(
   type: any,

@@ -2,10 +2,10 @@ import { SmartCommandPaletteProps } from '../command-palette.types';
 import { useCommandPalette } from '../use-command-palette';
 
 /**
- * The default command palette (`<smart-command-palette-standard>`): a native
- * `<dialog>` with a search input and a `listbox` of the filtered commands.
- * Clicking an option runs it and closes the palette; the dialog's `close`
- * event (e.g. Escape on a modal dialog) closes it too.
+ * The default command palette: a native `<dialog>` with a search input and a
+ * `listbox` of the filtered commands. Clicking an option runs it and closes the
+ * palette; the dialog's `close` event (e.g. Escape on a modal dialog) closes it
+ * too.
  */
 export function SmartCommandPaletteStandard(props: SmartCommandPaletteProps) {
   const { options, className = '' } = props;

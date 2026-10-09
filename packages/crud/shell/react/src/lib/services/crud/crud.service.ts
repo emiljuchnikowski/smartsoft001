@@ -11,10 +11,9 @@ export interface ICrudListResult<T> {
 }
 
 /**
- * The REST client of a CRUD resource, speaking the same contract as the
- * Angular `CrudService` and `@smartsoft001/crud-shell-nestjs`: the same URLs,
- * the same query string (`$search`, `limit`/`offset`, `sort`, `key=value`
- * filters) and the same CSV / XLSX export.
+ * The REST client of a CRUD resource, speaking the contract of
+ * `@smartsoft001/crud-shell-nestjs`: its URLs, its query string (`$search`,
+ * `limit`/`offset`, `sort`, `key=value` filters) and its CSV / XLSX export.
  */
 export class CrudService<T extends IEntity<string>> {
   protected readonly formatMap = {

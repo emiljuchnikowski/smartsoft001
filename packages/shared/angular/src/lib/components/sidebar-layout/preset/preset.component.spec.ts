@@ -100,6 +100,15 @@ describe('@smartsoft001/shared-angular: SidebarLayoutPresetComponent', () => {
       expect(projected).toBeTruthy();
       expect(projected?.textContent).toContain('Main content');
     });
+
+    it('should project ng-content into the content zone with a right sidebar', async () => {
+      fixture.componentInstance.options = { sidebarPosition: 'right' };
+      await apply();
+
+      const projected = query('content')?.querySelector('p.projected');
+
+      expect(projected?.textContent).toContain('Main content');
+    });
   });
 
   describe('sidebar template', () => {

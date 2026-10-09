@@ -4,10 +4,10 @@ import { useInput } from '../base/use-input';
 import { SmartInputFieldProps } from '../input.types';
 
 /**
- * The colour logic shared by `SmartInputColor` and `SmartInputColorPreset`
- * (the Angular components held it twice): the shown colour is read from the
- * control when the control is set, then follows the picker. Picking or
- * clearing marks the control dirty and touched; clearing sets `null`.
+ * The colour logic shared by `SmartInputColor` and `SmartInputColorPreset`: the
+ * shown colour is read from the control when the control is set, then follows
+ * the picker. Picking or clearing marks the control dirty and touched; clearing
+ * sets `null`.
  */
 export function useInputColor<T>(props: SmartInputFieldProps<T>) {
   const input = useInput(props);
@@ -15,7 +15,7 @@ export function useInputColor<T>(props: SmartInputFieldProps<T>) {
   const [color, setColor] = useState<string | null>(control?.value ?? null);
   const [colorControl, setColorControl] = useState(control);
 
-  // Angular's `afterSetOptionsHandler`: a new control resets the colour.
+  // A new control resets the colour.
   if (colorControl !== control) {
     setColorControl(control);
     setColor(control?.value ?? null);

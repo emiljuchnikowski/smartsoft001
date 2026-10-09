@@ -3,10 +3,8 @@ import { SmartDescriptionListStandard } from './standard/description-list-standa
 import { useSmartComponent } from '../../providers/hooks';
 
 /**
- * `<smart-description-list>`: renders the implementation registered as
- * `components['description-list']` on `SmartProvider` (the Angular
- * `DESCRIPTION_LIST_STANDARD_COMPONENT_TOKEN`),
- * `SmartDescriptionListStandard` by default.
+ * Renders the implementation registered as `components['description-list']` on
+ * `SmartProvider`, `SmartDescriptionListStandard` by default.
  */
 export function SmartDescriptionList(props: SmartDescriptionListProps) {
   const Component = useSmartComponent(

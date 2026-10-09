@@ -7,7 +7,8 @@ import {
 
 /**
  * A set of named controls whose value is an object. Disabled controls are
- * left out of `value` (use `getRawValue()` to read them), as in Angular.
+ * left out of `value` (use `getRawValue()` to read them), so a submitted
+ * value holds only the fields the user could edit.
  */
 export class SmartFormGroup<
   TValue extends Record<string, any> = Record<string, any>,
@@ -115,8 +116,9 @@ export class SmartFormGroup<
   }
 
   /**
-   * Replaces the controls named in `form` with the ones `form` holds, the way
-   * the Angular `SmartFormGroup.setForm` does after an import.
+   * Replaces the controls named in `form` with the ones `form` holds and keeps
+   * the others, e.g. to take over the controls a form built for an imported
+   * value.
    */
   setForm(form: SmartFormGroup): void {
     for (const key of Object.keys(form.controls)) {

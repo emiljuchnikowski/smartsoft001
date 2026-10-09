@@ -9,18 +9,15 @@ import { SmartCrudListPageStandard } from './standard/list-page-standard';
 import { useCrudListPage } from './use-crud-list-page';
 
 /**
- * `<smart-crud-list-page>` (the Angular `ListComponent` of the
- * `CrudFullModule` `''` route): a `SmartPage` with the title, search and end
- * buttons of `useCrudListPage`, `config.list.components.top`, and the body:
- * the one registered as `components['crud-list-page']` on `SmartProvider`
- * (the Angular `crud-list-page` dynamic component), else
- * `SmartCrudListPageStandard`. Renders nothing until the feature's filter is
- * set by the first read. Render it inside the feature's `CrudProvider` with a
- * `CrudFullConfig`.
+ * The list page of a CRUD feature: a `SmartPage` with the title, search and
+ * end buttons of `useCrudListPage`, `config.list.components.top`, and the
+ * body: the one registered as `components['crud-list-page']` on
+ * `SmartProvider`, else `SmartCrudListPageStandard`. Renders nothing until
+ * the feature's filter is set by the first read. Render it inside the
+ * feature's `CrudProvider` with a `CrudFullConfig`.
  *
- * Like the Angular page, a registered body renders in the
- * `.dynamic-content` element. The list options are built synchronously, so
- * unlike the Angular page the body never gets `null` ones.
+ * A registered body renders in the `.dynamic-content` element. The list
+ * options are built synchronously, so the body never gets `null` ones.
  */
 export function SmartCrudListPage<T extends IEntity<string>>(
   props: SmartCrudListPageProps,

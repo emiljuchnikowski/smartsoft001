@@ -32,8 +32,8 @@ const INPUT_CLASSES = [
 ];
 
 /**
- * Preline-styled yes/no field (preset, Angular `InputFlagPresetComponent`):
- * the checkbox and label of `SmartInputFlag` with the Preline checkbox look.
+ * Preline-styled yes/no field (preset): the checkbox and label of
+ * `SmartInputFlag` with the Preline checkbox look.
  */
 export function SmartInputFlagPreset<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

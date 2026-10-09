@@ -20,9 +20,9 @@ import { useCrudState } from '../../hooks';
 
 /**
  * The filters of the model `type`: the model's `filters` (labelled
- * `MODEL.<key>` when they have no label — set on the model's filter, as in
- * Angular), then a filter for each field with `list.filter`: `~=` for text
- * fields, `=` for the others.
+ * `MODEL.<key>` when they have no label — set on the model's filter itself),
+ * then a filter for each field with `list.filter`: `~=` for text fields, `=`
+ * for the others.
  */
 function getFilters(type: new () => object): Array<IModelFilter> {
   const modelFilters = getModelOptions(type)?.filters;
@@ -52,11 +52,10 @@ function getFilters(type: new () => object): Array<IModelFilter> {
 }
 
 /**
- * The behaviour of the filters panel (the Angular `FiltersBaseComponent`):
- * `list` holds the filters of `config.type`, `filter` the current filter of
- * the feature, and `onClose` closes the end menu the panel is shown in.
- * Attach `elementRef` to the root element: it gets the application style
- * (the Angular `styleService.init(elementRef)`).
+ * The behaviour of the filters panel: `list` holds the filters of
+ * `config.type`, `filter` the current filter of the feature, and `onClose`
+ * closes the end menu the panel is shown in. Attach `elementRef` to the root
+ * element: it gets the application style.
  */
 export function useCrudFilters<T extends IEntity<string>>({
   hideMenu = false,

@@ -9,15 +9,14 @@ import { useCrud } from '../../crud.context';
 import { CrudProvider } from '../../crud.provider';
 import { read } from '../../state/crud.actions';
 
-// `IModelFilter.possibilities` is typed as an Angular signal; a function
-// returning the list is what the React filters read.
+// The filters read `IModelFilter.possibilities` as a function returning the
+// list.
 const possibilities = (items: { id: string; text: string }[]) =>
   (() => items) as unknown as IModelFilter['possibilities'];
 
 /**
- * Sample entity with several filterable fields, the same as in the Angular
- * `Smart-Crud/Filters` story: text, int, flag and date fields with
- * `list.filter`, and model-level radio and check filters.
+ * Sample entity with several filterable fields: text, int, flag and date
+ * fields with `list.filter`, and model-level radio and check filters.
  */
 @Model({
   titleKey: 'title',

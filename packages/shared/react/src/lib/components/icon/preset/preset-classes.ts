@@ -4,7 +4,7 @@ export type IconPresetVariant = 'plain' | 'contained' | 'soft';
 /** Icon footprint on the `size-*` scale. */
 export type IconPresetSize = 'sm' | 'md' | 'lg';
 
-/** Glyph footprint per size (applied on the inner `<smart-icon>`). */
+/** Glyph footprint per size (applied on the inner `<SmartIcon>`). */
 const SIZE_CLASSES: Record<IconPresetSize, string> = {
   sm: 'smart:size-4',
   md: 'smart:size-5',
@@ -41,7 +41,7 @@ const SOFT_BOX = [
   'smart:dark:text-blue-400',
 ].join(' ');
 
-/** Glyph sizing class, bound onto the inner `<smart-icon>`. */
+/** Glyph sizing class, bound onto the inner `<SmartIcon>`. */
 export function getIconSizeClasses(size: IconPresetSize): string {
   return SIZE_CLASSES[size];
 }

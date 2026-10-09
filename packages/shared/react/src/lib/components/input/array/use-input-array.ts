@@ -24,8 +24,8 @@ export type SmartInputArrayItemOptions<TChild> = IFormOptions<TChild> & {
 };
 
 /**
- * The options of the array field on the model, read through its first item
- * when the model is itself an array (the Angular `getOptions`).
+ * The options of the array field on the model, read through its first item when
+ * the model is itself an array.
  */
 function getArrayFieldOptions(
   model: unknown,
@@ -41,20 +41,18 @@ function getArrayFieldOptions(
 }
 
 /**
- * What the array field variants share (the Angular `InputArrayComponent`
- * logic):
+ * What the array field variants share:
  *
  * - `items`: the options of the nested form of every item, one tree level
  *   deeper, with a model of the field's `classType` made from the item value;
  * - `add()`: builds a new item with the form factory (for the form's mode,
  *   under the form's root) and appends it, shown;
  * - `remove(index)`: removes the item, as the preset's remove button does;
- * - `move(from, to)` and `getItemDragProps(index)`: reordering, which the
- *   Angular field did with CDK drag and drop and is done here with native
+ * - `move(from, to)` and `getItemDragProps(index)`: reordering, with native
  *   drag and drop;
  * - `isStatic`: `possibilities.static`, no add / remove / reordering.
  *
- * Every change of the array's value marks it as dirty, as in Angular.
+ * Every change of the array's value marks it as dirty.
  */
 export function useInputArray<T, TChild = unknown>(
   props: SmartInputFieldProps<T>,
@@ -65,11 +63,11 @@ export function useInputArray<T, TChild = unknown>(
   const factory = useFormFactory();
   const isStatic = !!fieldOptions?.possibilities?.static;
 
-  // The item models are made once per control, from its value at the time,
-  // as the Angular `initData` did; the items added here are shown.
+  // The item models are made once per control, from its value at the time; the
+  // items added here are shown.
   const models = useRef(new WeakMap<SmartAbstractControl, TChild>());
   const shown = useRef(new WeakSet<SmartAbstractControl>());
-  // A stable React key per item control (the Angular `track option`).
+  // A stable React key per item control.
   const keys = useRef({
     next: 0,
     ids: new WeakMap<SmartAbstractControl, number>(),
@@ -131,7 +129,7 @@ export function useInputArray<T, TChild = unknown>(
       if (!array) return;
 
       array.removeAt(index);
-      // The remaining items are read anew (`initData`).
+      // The remaining item models are made anew.
       models.current = new WeakMap();
       shown.current = new WeakSet();
       array.markAsDirty();

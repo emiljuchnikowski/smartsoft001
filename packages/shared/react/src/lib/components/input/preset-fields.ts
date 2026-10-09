@@ -34,10 +34,9 @@ import { SmartInputTextPreset } from './text/preset/input-text-preset';
 import { SmartInputVideoPreset } from './video/preset/input-video-preset';
 
 /**
- * The Preline-styled field presets, by `FieldType` (the Angular
- * `INPUT_PRESET_FIELD_COMPONENTS`). Pass it as `inputFieldComponents` to
- * `SmartProvider` to render every `<SmartInput>` with the preset look, or
- * spread it to override only some types:
+ * The Preline-styled field presets, by `FieldType`. Pass it as
+ * `inputFieldComponents` to `SmartProvider` to render every `<SmartInput>` with
+ * the preset look, or spread it to override only some types:
  * `{ ...INPUT_PRESET_FIELD_COMPONENTS, [FieldType.text]: MyText }`.
  *
  * The validation-message preset `SmartInputErrorPreset` is not a field type;

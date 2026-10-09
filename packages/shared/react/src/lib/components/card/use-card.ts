@@ -21,9 +21,8 @@ export function isCardSectionShown(
 }
 
 /**
- * The behaviour every card variant shares (the Angular `CardBaseComponent`):
- * which sections are shown, and the classes of the container and the header,
- * body and footer sections.
+ * The behaviour every card variant shares: which sections are shown, and the
+ * classes of the container and the header, body and footer sections.
  */
 export function useCard({
   options,

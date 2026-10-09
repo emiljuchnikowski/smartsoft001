@@ -16,9 +16,8 @@ function getSystemTheme(): string {
 
 /**
  * Every story renders inside a `SmartProvider` fixed to 'pl' with the
- * Storybook model labels, and follows the toolbar theme through the `.dark`
- * class, exactly as the Angular Storybook does, so the two can be compared
- * screenshot by screenshot.
+ * Storybook model labels, so its text is the same on every run, and follows
+ * the toolbar theme through the `.dark` class on `<html>` and `<body>`.
  */
 const withSmart: Decorator = (Story, context) => {
   const theme = context.globals['theme'] || getSystemTheme();
@@ -30,8 +29,7 @@ const withSmart: Decorator = (Story, context) => {
   }
 
   // A story replaces implementations or adds providers through
-  // `parameters.smart`, the counterpart of the `providers` an Angular story
-  // passes to `moduleMetadata` / `applicationConfig`.
+  // `parameters.smart`, a `SmartConfig` spread over the defaults below.
   const smart = (context.parameters['smart'] ?? {}) as SmartConfig;
 
   return (

@@ -126,7 +126,7 @@ const meta: Meta<TextareaArgs> = {
 export default meta;
 type Story = StoryObj<TextareaArgs>;
 
-/** The `[(value)]` binding of the Angular story. */
+/** A controlled `value`: the story keeps it in its state. */
 const TextareaPlayground = (args: TextareaArgs) => {
   const [comment, setComment] = useState(args.value);
 

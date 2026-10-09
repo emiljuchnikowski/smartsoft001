@@ -3,8 +3,7 @@ import { SmartDetailFieldProps } from '../../detail.types';
 import { useDetailImage } from '../use-detail-image';
 
 /**
- * Styled image detail (preset, `DetailImagePresetComponent`): the uploaded
- * image in a rounded frame.
+ * Styled image detail (preset): the uploaded image in a rounded frame.
  */
 export function SmartDetailImagePreset<T>(props: SmartDetailFieldProps<T>) {
   const { className } = props;

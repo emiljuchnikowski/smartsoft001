@@ -3,10 +3,8 @@ import { SmartSidebarNavigationStandard } from './standard/sidebar-navigation-st
 import { useSmartComponent } from '../../providers/hooks';
 
 /**
- * `<smart-sidebar-navigation>`: renders the implementation registered as
- * `components['sidebar-navigation']` on `SmartProvider` (the Angular
- * `SIDEBAR_NAVIGATION_STANDARD_COMPONENT_TOKEN`),
- * `SmartSidebarNavigationStandard` by default.
+ * Renders the implementation registered as `components['sidebar-navigation']`
+ * on `SmartProvider`, `SmartSidebarNavigationStandard` by default.
  */
 export function SmartSidebarNavigation(props: SmartSidebarNavigationProps) {
   const Component = useSmartComponent(

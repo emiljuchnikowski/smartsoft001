@@ -17,7 +17,7 @@ export type SmartRichTextHeading = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 
 export type SmartRichTextColorKind = 'text_color' | 'background_color';
 
-/** A menu item, named as in the `ngx-editor` `Toolbar`. */
+/** A menu item. */
 export type SmartRichTextToolbarItem =
   | SmartRichTextToggle
   | SmartRichTextColorKind
@@ -28,11 +28,7 @@ export type SmartRichTextToolbarItem =
 /** Groups of menu items, separated in the menu bar. */
 export type SmartRichTextToolbar = SmartRichTextToolbarItem[][];
 
-/**
- * The menu of the Angular `InputLongTextComponent` (its desktop toolbar; the
- * mobile one was never shown, as the Angular `HardwareService` always reports
- * a desktop).
- */
+/** The menu of the long-text field. */
 export const LONG_TEXT_TOOLBAR: SmartRichTextToolbar = [
   ['bold', 'italic'],
   ['underline', 'strike'],
@@ -44,10 +40,7 @@ export const LONG_TEXT_TOOLBAR: SmartRichTextToolbar = [
   ['align_left', 'align_center', 'align_right', 'align_justify'],
 ];
 
-/**
- * The texts of the menu: the default `ngx-editor` locals, which the Angular
- * field used as is (they are not translation keys).
- */
+/** The texts of the menu, in English (they are not translation keys). */
 export const RICH_TEXT_LABELS = {
   bold: 'Bold',
   italic: 'Italic',
@@ -88,19 +81,18 @@ const URL_PATTERN =
   '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/??([^#\\n\\r]*)?#?([^\\n\\r]*)';
 
 /**
- * The URLs the link form accepts: the `ngx-editor` link validation pattern,
- * matched whole. (Angular's `Validators.pattern` anchored only the ends of
- * its alternation, which let `javascript:` URLs ending in a `mailto:` part
- * through.)
+ * The URLs the link form accepts, matched whole: the anchors cover the whole
+ * alternation, not only its ends, so a `javascript:` URL ending in a `mailto:`
+ * part does not get through.
  */
 export const RICH_TEXT_LINK_PATTERN = new RegExp(
   `^(?:${URL_PATTERN}|(mailto:.*[@].*))$`,
 );
 
-/** The URLs the image form accepts: the `ngx-editor` image pattern. */
+/** The URLs the image form accepts. */
 export const RICH_TEXT_IMAGE_PATTERN = new RegExp(`^(?:${URL_PATTERN})$`);
 
-/** The `ngx-editor` colour presets, shown in rows of 8. */
+/** The colour presets, shown in rows of 8. */
 export const RICH_TEXT_COLOR_PRESETS = [
   '#b60205',
   '#d93f0b',
@@ -128,7 +120,7 @@ export type SmartRichTextIconName =
   | 'text_color'
   | 'color_fill';
 
-/** The paths of the `ngx-editor` (Material) icons, on a 24x24 view box. */
+/** The paths of the menu (Material) icons, on a 24x24 view box. */
 export const RICH_TEXT_ICONS: Record<SmartRichTextIconName, string[]> = {
   bold: [
     'M15.6 10.79c.97-.67 1.65-1.77 1.65-2.79 0-2.26-1.75-4-4-4H7v14h7.04c2.09 0 3.71-1.7 3.71-3.79 0-1.52-.86-2.82-2.15-3.42zM10 6.5h3c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5h-3v-3zm3.5 9H10v-3h3.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5z',

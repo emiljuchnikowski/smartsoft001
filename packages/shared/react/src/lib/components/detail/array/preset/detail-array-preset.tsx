@@ -4,8 +4,8 @@ import { SmartDetailFieldProps } from '../../detail.types';
 import { useDetailArray } from '../use-detail-array';
 
 /**
- * Styled array detail (preset, `DetailArrayPresetComponent`): a card per
- * element, an em dash without elements.
+ * Styled array detail (preset): a card per element, an em dash without
+ * elements.
  */
 export function SmartDetailArrayPreset<T>(props: SmartDetailFieldProps<T>) {
   const { className } = props;

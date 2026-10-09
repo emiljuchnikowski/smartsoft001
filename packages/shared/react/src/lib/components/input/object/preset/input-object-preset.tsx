@@ -4,8 +4,8 @@ import { SmartInputFieldProps } from '../../input.types';
 import { useInputObject } from '../use-input-object';
 
 /**
- * Styled object field variation (preset), `<smart-input-object-preset>`: the
- * nested `SmartForm` sits in a bordered card frame.
+ * Styled object field variation (preset): the nested `SmartForm` sits in a
+ * bordered card frame.
  */
 export function SmartInputObjectPreset<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

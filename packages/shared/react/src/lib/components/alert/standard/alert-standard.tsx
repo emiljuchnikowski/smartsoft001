@@ -5,9 +5,9 @@ import { SmartAlertProps } from '../alert.types';
 import { useAlert } from '../use-alert';
 
 /**
- * The default alert dialog (`<smart-alert-standard>`): a modal
- * `alertdialog` on a full-screen backdrop, rendered where it is placed (the
- * alert host of `SmartProvider` decides where that is).
+ * The default alert dialog: a modal `alertdialog` on a full-screen backdrop,
+ * rendered where it is placed (the alert host of `SmartProvider` decides where
+ * that is).
  *
  * On mount it focuses its first button (or the panel), keeps Tab inside the
  * panel, and cancels on Escape and on a click on the backdrop; see

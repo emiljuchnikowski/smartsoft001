@@ -5,8 +5,7 @@ import { useSmart } from '../../../providers/smart-context';
 import { SmartInputFieldProps } from '../input.types';
 
 /**
- * The options of a field with possibilities (the Angular
- * `InputPossibilitiesBaseComponent`): the ones the model possibilities
+ * The options of a field with possibilities: the ones the model possibilities
  * provider returns, asked again 500 ms after the form's value last changed so
  * they can depend on other fields, or else the ones in the input options.
  * `null` when there are none; the field then falls back to its model's

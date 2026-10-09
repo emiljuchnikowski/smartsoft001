@@ -23,9 +23,9 @@ export interface SmartProviderProps extends SmartConfig {
 }
 
 /**
- * The root of an application built with the library: translations, the
- * navigation adapter, the services, the component overrides and the model
- * providers, what the Angular `SharedModule` and its providers supplied.
+ * The root of an application built with the library: it supplies the
+ * translations, the navigation adapter, the services, the component overrides
+ * and the model providers to every component below it.
  *
  * The services are created once. Pass memoised objects for `components`,
  * `translations` and the providers, or the context changes on every render.

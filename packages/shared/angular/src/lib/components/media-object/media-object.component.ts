@@ -1,23 +1,31 @@
-import { NgComponentOutlet } from '@angular/common';
+import { NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
   inject,
   input,
+  TemplateRef,
+  viewChild,
   ViewEncapsulation,
 } from '@angular/core';
 
 import { MediaObjectStandardComponent } from './standard/standard.component';
 import { IMediaObjectOptions } from '../../models';
 import { MEDIA_OBJECT_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { outletContent } from '../base/outlet-content';
 
 @Component({
   selector: 'smart-media-object',
   template: `
+    <ng-template #content><ng-content /></ng-template>
     @if (componentType()) {
       <ng-container
-        *ngComponentOutlet="componentType(); inputs: componentInputs()"
+        *ngComponentOutlet="
+          componentType();
+          inputs: componentInputs();
+          content: projectedContent()
+        "
       />
     } @else {
       <smart-media-object-standard
@@ -26,12 +34,12 @@ import { MEDIA_OBJECT_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
         [options]="options()"
         [class]="cssClass()"
       >
-        <ng-content />
+        <ng-container [ngTemplateOutlet]="content" />
       </smart-media-object-standard>
     }
   `,
   encapsulation: ViewEncapsulation.None,
-  imports: [MediaObjectStandardComponent, NgComponentOutlet],
+  imports: [MediaObjectStandardComponent, NgComponentOutlet, NgTemplateOutlet],
   host: { class: 'smart:contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -53,4 +61,11 @@ export class MediaObjectComponent {
     options: this.options(),
     cssClass: this.cssClass(),
   }));
+
+  /** The wrapper's `<ng-content>`, captured once for whichever branch renders. */
+  private readonly contentTemplate =
+    viewChild.required<TemplateRef<unknown>>('content');
+
+  /** The captured content for an implementation registered through the token. */
+  protected readonly projectedContent = outletContent(this.contentTemplate);
 }

@@ -3,8 +3,8 @@ import { SmartDetailFieldProps } from '../detail.types';
 import { useDetail } from '../use-detail';
 
 /**
- * The image detail's logic (the Angular `DetailImageComponent.imageUrl`): the
- * `FileService` URL of the file in the field, `null` without one.
+ * The image detail's logic: the `FileService` URL of the file in the field,
+ * `null` without one.
  */
 export function useDetailImage<T>(props: SmartDetailFieldProps<T>) {
   const { value } = useDetail(props);

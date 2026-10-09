@@ -5,7 +5,7 @@ import { cn } from '../../../utils/class-names';
 import { SmartDateEditVariantProps } from '../date-edit.types';
 import { useDateEdit } from '../use-date-edit';
 
-/** Angular's `NumberValueAccessor`: an emptied input is `null`. */
+/** The number in a digit input: an emptied input is `null`. */
 function toNumber(value: string): number | null {
   return value === '' ? null : parseFloat(value);
 }
@@ -67,9 +67,8 @@ function DigitLabel({
 }
 
 /**
- * The default date-edit rendering (`<smart-date-edit-standard>`): eight
- * single-digit inputs spelling DD-MM-RRRR. A digit moves the focus to the
- * next input.
+ * The default date-edit rendering: eight single-digit inputs spelling
+ * DD-MM-RRRR. A digit moves the focus to the next input.
  */
 export function SmartDateEditStandard(props: SmartDateEditVariantProps) {
   const { className } = props;

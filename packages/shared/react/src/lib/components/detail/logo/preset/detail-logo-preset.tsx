@@ -2,7 +2,7 @@ import { cn } from '../../../../utils/class-names';
 import { SmartDetailFieldProps } from '../../detail.types';
 import { useDetail } from '../../use-detail';
 
-/** Styled logo detail (preset, `DetailLogoPresetComponent`): a compact logo. */
+/** Styled logo detail (preset): a compact logo. */
 export function SmartDetailLogoPreset<T>(props: SmartDetailFieldProps<T>) {
   const { className } = props;
   const { item, key, value } = useDetail(props);

@@ -15,6 +15,41 @@ class MockInjectedComponent extends StackedLayoutBaseComponent {
   override cssClass = input<string>('');
 }
 
+@Component({
+  selector: 'smart-test-stacked-layout-with-slot',
+  changeDetection: ChangeDetectionStrategy.Eager,
+  template: '<main class="custom-stacked-layout"><ng-content /></main>',
+})
+class MockSlotComponent extends StackedLayoutBaseComponent {
+  override cssClass = input<string>('');
+}
+
+const PROJECTION_HOST_TEMPLATE = `
+  <smart-stacked-layout>Projected text</smart-stacked-layout>
+`;
+
+@Component({
+  selector: 'smart-test-stacked-layout-standard-host',
+  imports: [StackedLayoutComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  template: PROJECTION_HOST_TEMPLATE,
+})
+class StandardHostComponent {}
+
+@Component({
+  selector: 'smart-test-stacked-layout-host',
+  imports: [StackedLayoutComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  providers: [
+    {
+      provide: STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN,
+      useValue: MockSlotComponent,
+    },
+  ],
+  template: PROJECTION_HOST_TEMPLATE,
+})
+class InjectedHostComponent {}
+
 describe('@smartsoft001/shared-angular: StackedLayoutComponent', () => {
   describe('without token', () => {
     let fixture: ComponentFixture<StackedLayoutComponent>;
@@ -85,6 +120,30 @@ describe('@smartsoft001/shared-angular: StackedLayoutComponent', () => {
       );
 
       expect(standard).toBeNull();
+    });
+  });
+
+  describe('projected content', () => {
+    it('should render the projected content inside smart-stacked-layout-standard', () => {
+      const fixture = TestBed.createComponent(StandardHostComponent);
+      fixture.detectChanges();
+
+      const slot = fixture.nativeElement.querySelector(
+        'smart-stacked-layout-standard main',
+      );
+
+      expect(slot?.textContent.trim()).toBe('Projected text');
+    });
+
+    it('should render the projected content inside the implementation registered through STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN', () => {
+      const fixture = TestBed.createComponent(InjectedHostComponent);
+      fixture.detectChanges();
+
+      const slot = fixture.nativeElement.querySelector(
+        'main.custom-stacked-layout',
+      );
+
+      expect(slot?.textContent.trim()).toBe('Projected text');
     });
   });
 });

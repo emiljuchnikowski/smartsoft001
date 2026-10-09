@@ -6,8 +6,8 @@ import { useNavigation } from '../../providers/hooks';
 const noop = () => undefined;
 
 /**
- * The Angular `PageBaseComponent`: `back()` goes to the previous location
- * (the Angular `Location.back()`), through the navigation adapter.
+ * The page's logic: `back()` goes to the previous location, through the
+ * navigation adapter.
  */
 export function usePage() {
   const navigation = useNavigation();
@@ -20,8 +20,7 @@ export function usePage() {
 }
 
 /**
- * The `SmartButton` options of a page end button (the Angular
- * `PageStandardComponent.getButtonOptions`): a secondary, `md` button
+ * The `SmartButton` options of a page end button: a secondary, `md` button
  * running `btn.handler`.
  */
 export function getPageButtonOptions(

@@ -1,22 +1,18 @@
 import { SmartDateEdit, useTranslate } from '@smartsoft001/react';
 
 import { useCrudFilterDate } from './use-crud-filter-date';
-import { useCrudFilterNgModel } from './use-crud-filter-ng-model';
+import { useCrudFilterValue } from './use-crud-filter-value';
 import { SmartCrudFilterProps } from '../filter.types';
 
 /**
- * `<smart-crud-filter-date>` (Angular `FilterDateComponent`): the item label,
- * the shared date editor bound to the item's value (`YYYY-MM-DD`) and a
- * clear button while it has one.
+ * The date filter: the item label, the shared date editor bound to the item's
+ * value (`YYYY-MM-DD`) and a clear button while it has one.
  */
 export function SmartCrudFilterDate(props: SmartCrudFilterProps) {
   const t = useTranslate();
   const { customValue, setCustomValue, hasValue, refresh } =
     useCrudFilterDate(props);
-  const [date, setDate] = useCrudFilterNgModel(
-    customValue || '',
-    setCustomValue,
-  );
+  const [date, setDate] = useCrudFilterValue(customValue || '', setCustomValue);
 
   return (
     <div className="smart:block smart:w-full">

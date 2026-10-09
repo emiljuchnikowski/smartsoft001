@@ -19,7 +19,7 @@ const BUTTON_PRIMARY =
 /**
  * Classes of an alert button by `role` (`cancel` -> secondary,
  * `destructive` -> red, anything else -> primary), followed by its
- * `cssClass`. The Angular `AlertBaseComponent.buttonClasses`.
+ * `cssClass`.
  */
 export function getAlertButtonClasses(button: IAlertButton): string {
   const role =
@@ -72,10 +72,9 @@ function trapFocus(event: SmartAlertKeyEvent, container: HTMLElement): void {
 }
 
 /**
- * The behaviour every alert variant shares (the Angular
- * `AlertBaseComponent`): the ids linking the dialog to its header and
- * message, the buttons, and the ways to close it, all reported through
- * `onDismissed`:
+ * The behaviour every alert variant shares: the ids linking the dialog to its
+ * header and message, the buttons, and the ways to close it, all reported
+ * through `onDismissed`:
  *
  * - `invoke(button)` runs `button.handler` and dismisses with the button,
  *   unless the handler of a non-cancel button returned `false`;

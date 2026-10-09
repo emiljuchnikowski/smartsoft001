@@ -19,7 +19,7 @@ export interface SmartHttpResponse<T> {
 
 /**
  * Rewrites a request before it is sent, e.g. to add an `Authorization`
- * header. The Angular library left this to an `HttpInterceptor`.
+ * header. Interceptors run in the order they were added.
  */
 export type SmartHttpInterceptor = (
   request: SmartHttpRequest,

@@ -3,7 +3,7 @@ import { cn } from '../../../utils/class-names';
 import { SmartDetailFieldProps } from '../detail.types';
 import { useDetailPdf } from './use-detail-pdf';
 
-/** `<smart-detail-pdf>` (`DetailPdfComponent`): a button opening the file. */
+/** The PDF detail: a button opening the file. */
 export function SmartDetailPdf<T>(props: SmartDetailFieldProps<T>) {
   const { className } = props;
   const t = useTranslate();

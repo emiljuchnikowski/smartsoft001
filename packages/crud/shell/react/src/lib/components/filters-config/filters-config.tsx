@@ -7,8 +7,7 @@ import { useCrudFacade } from '../../crud.context';
 import { useCrudState } from '../../hooks';
 import { ICrudFilterQueryItem } from '../../models';
 
-// The Angular `{{ item.value | translate }}`: a text is translated, any other
-// value is shown as it is.
+// A text value is translated, any other value is shown as it is.
 function translateValue(t: SmartTranslateFn, value: unknown): string {
   if (value === null || value === undefined) return '';
   if (typeof value === 'string') return t(value);
@@ -17,9 +16,9 @@ function translateValue(t: SmartTranslateFn, value: unknown): string {
 }
 
 /**
- * `<smart-crud-filters-config>`: the active filters of the CRUD feature
- * (the visible items of `filter.query`) as chips; clicking a chip removes the
- * item and reads the list again. Render it inside `<CrudProvider>`.
+ * The active filters of the CRUD feature (the visible items of
+ * `filter.query`) as chips; clicking a chip removes the item and reads the
+ * list again. Render it inside `<CrudProvider>`.
  */
 export function SmartCrudFiltersConfig() {
   const t = useTranslate();

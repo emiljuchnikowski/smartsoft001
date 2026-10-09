@@ -5,9 +5,9 @@ import { SmartAccordionHeader } from '../header/accordion-header';
 import { useAccordion } from '../use-accordion';
 
 /**
- * The default accordion rendering (`<smart-accordion-default>`): a bordered
- * card whose header toggles the body. See `SmartAccordionStateProps` for the
- * controlled / uncontrolled `show`.
+ * The default accordion rendering: a bordered card whose header toggles the
+ * body. See `SmartAccordionStateProps` for the controlled / uncontrolled
+ * `show`.
  */
 export function SmartAccordionDefault(props: SmartAccordionBaseProps) {
   const { options, className, headerTpl, bodyTpl } = props;

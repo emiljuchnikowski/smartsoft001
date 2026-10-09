@@ -6,9 +6,8 @@ import { useCrudFilter, useCrudFilterControl } from '../base/use-crud-filter';
 import { SmartCrudFilterProps } from '../filter.types';
 
 /**
- * `<smart-crud-filter-flag>` (Angular `FilterFlagComponent`): the shared flag
- * field bound to the item's value, and a clear button while the value is
- * `true` or `false`.
+ * The flag filter: the shared flag field bound to the item's value, and a
+ * clear button while the value is `true` or `false`.
  */
 export function SmartCrudFilterFlag(props: SmartCrudFilterProps) {
   const filter = useCrudFilter(props);

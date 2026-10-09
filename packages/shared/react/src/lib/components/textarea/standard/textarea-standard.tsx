@@ -11,7 +11,7 @@ const ACTION_CLASSES: Record<
   ghost: 'action variant-ghost',
 };
 
-/** The default, unstyled textarea (`<smart-textarea-standard>`). */
+/** The default, unstyled textarea. */
 export function SmartTextareaStandard(props: SmartTextareaProps) {
   const { placeholder = '', disabled = false, options, className } = props;
   const { value, setValue, actionClick } = useTextarea(props);

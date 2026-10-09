@@ -2,7 +2,7 @@
   /*
     Storybook page surface only — not part of the published library stylesheet.
 
-    Driven by the same `.dark` class that preview.ts toggles, so the canvas
+    Driven by the same `.dark` class that preview.tsx toggles, so the canvas
     follows the theme through CSS rather than inline JS. Light mode is plain
     white on purpose: the preset components are Preline / HyperUI / Tailwind UI
     derived and assume a white page. The previous inline `#f9fafb` (gray-50)
@@ -13,11 +13,10 @@
     straight into <head>, outside the Vite/PostCSS pipeline that processes
     styles.css.
 
-    (Note: `packages/shared/angular/tailwind.config.js` excludes *.stories.ts
-    from its content globs, but that file is unreferenced dead config — the
-    `@config` in styles.css points at the ROOT tailwind.config.js, which has no
-    `content` key, so Tailwind v4 automatic source detection is active and does
-    scan story files. `smart:` classes used only in stories DO compile.)
+    (Note: the `@config` in styles.css points at the ROOT tailwind.config.js,
+    which has no `content` key, so Tailwind v4 automatic source detection is
+    active and does scan story files. `smart:` classes used only in stories DO
+    compile.)
   */
   html,
   body {

@@ -16,9 +16,9 @@ import {
  * `SmartProvider` to restyle every `<SmartPaging>`, or render it directly.
  *
  * The Preline pagination examples in prefixed Tailwind classes, driven by
- * `usePaging`. `variant` selects the layout: `card-footer` (results summary
- * + nav), `centered` and `simple`. The "Showing x to y of z results",
- * "Previous" and "Next" texts are not translated, as in Angular.
+ * `usePaging`. `variant` selects the layout: `card-footer` (results summary +
+ * nav), `centered` and `simple`. The "Showing x to y of z results", "Previous"
+ * and "Next" texts are not translated.
  */
 export function SmartPagingPreset(props: SmartPagingProps) {
   const { className } = props;

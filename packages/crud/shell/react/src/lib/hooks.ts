@@ -48,8 +48,8 @@ function whenLoaded(store: CrudStore): Promise<void> {
 
 /**
  * The pagination options of the list, driven by the feature's filter and
- * links (the Angular `CrudListPaginationFactory`): the next / previous page
- * loaders resolve once the read settled, with whether there is a further page.
+ * links: the next / previous page loaders resolve once the read settled, with
+ * whether there is a further page.
  */
 export function useCrudListPagination(options: {
   mode?: PaginationMode;

@@ -1,6 +1,6 @@
 import { IBreadcrumbsOptions } from '../../models';
 
-/** Payload of `onItemClick` (the Angular `itemClick` output). */
+/** Payload of `onItemClick`. */
 export interface IBreadcrumbsItemClick {
   itemId: string;
 }
