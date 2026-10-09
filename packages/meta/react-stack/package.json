@@ -1,14 +1,14 @@
 {
   "name": "@smartsoft001/react-stack",
-  "version": "2.197.0",
+  "version": "2.198.0",
   "publishConfig": {
     "access": "public"
   },
   "description": "Everything a React application needs from @smartsoft001: the core packages, the UI library and the CRUD screens.",
   "license": "MIT",
   "dependencies": {
-    "@smartsoft001/core": "2.197.0",
-    "@smartsoft001/react": "2.197.0",
-    "@smartsoft001/crud-shell-react": "2.197.0"
+    "@smartsoft001/core": "2.198.0",
+    "@smartsoft001/react": "2.198.0",
+    "@smartsoft001/crud-shell-react": "2.198.0"
   }
 }
