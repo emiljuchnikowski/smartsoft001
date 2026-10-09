@@ -133,23 +133,23 @@ function useDateEdit({
 }: SmartDateEditVariantProps);
 ```
 
-| Returns        | Type                                                                             | Description                                                                         |
-| -------------- | -------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| `value`        | `string \| null`                                                                 | The current `YYYY-MM-DD` value (controlled or internal), `null` when empty.         |
-| `setValue`     | `(next: string) => void`                                                         | Sets the value and calls `onValueChange` (no call when unchanged).                  |
-| `validDate`    | `boolean`                                                                        | Whether the current value is a valid date.                                          |
-| `setValidDate` | `Dispatch<SetStateAction<boolean>>`                                              | Sets the validity flag (also reported through `onValidChange`).                     |
-| `setValueAt`   | `(val: string \| number \| null, index: number) => void`                         | Writes one digit at a position of the DD-MM-RRRR mask.                              |
-| `moveTo`       | `(event: KeyboardEvent<HTMLInputElement>, el: HTMLInputElement \| null) => void` | Keyup handler of a digit input: a digit moves the focus to the next input.          |
-| `select`       | `(el: HTMLInputElement \| null) => void`                                         | Trims an input to one character and selects it, so the next key replaces the digit. |
-| `d1`           | `string \| null`                                                                 | First day digit.                                                                    |
-| `d2`           | `string \| null`                                                                 | Second day digit.                                                                   |
-| `m1`           | `string \| null`                                                                 | First month digit.                                                                  |
-| `m2`           | `string \| null`                                                                 | Second month digit.                                                                 |
-| `y1`           | `string \| null`                                                                 | First year digit.                                                                   |
-| `y2`           | `string \| null`                                                                 | Second year digit.                                                                  |
-| `y3`           | `string \| null`                                                                 | Third year digit.                                                                   |
-| `y4`           | `string \| null`                                                                 | Fourth year digit.                                                                  |
+| Returns        | Type                                                                             | Description                                                                                                                         |
+| -------------- | -------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `value`        | `string \| null`                                                                 | The current `YYYY-MM-DD` value (controlled or internal), `null` when empty.                                                         |
+| `setValue`     | `(next: string) => void`                                                         | Sets the value and calls `onValueChange` (no call when unchanged).                                                                  |
+| `validDate`    | `boolean`                                                                        | Whether the current value is a valid date.                                                                                          |
+| `setValidDate` | `Dispatch<SetStateAction<boolean>>`                                              | Sets the validity flag only; `setValueAt` is what reports to `onValidChange`, so a custom editor that calls this reports it itself. |
+| `setValueAt`   | `(val: string \| number \| null, index: number) => void`                         | Writes one digit at a position of the DD-MM-RRRR mask.                                                                              |
+| `moveTo`       | `(event: KeyboardEvent<HTMLInputElement>, el: HTMLInputElement \| null) => void` | Keyup handler of a digit input: a digit moves the focus to the next input.                                                          |
+| `select`       | `(el: HTMLInputElement \| null) => void`                                         | Trims an input to one character and selects it, so the next key replaces the digit.                                                 |
+| `d1`           | `string \| null`                                                                 | First day digit.                                                                                                                    |
+| `d2`           | `string \| null`                                                                 | Second day digit.                                                                                                                   |
+| `m1`           | `string \| null`                                                                 | First month digit.                                                                                                                  |
+| `m2`           | `string \| null`                                                                 | Second month digit.                                                                                                                 |
+| `y1`           | `string \| null`                                                                 | First year digit.                                                                                                                   |
+| `y2`           | `string \| null`                                                                 | Second year digit.                                                                                                                  |
+| `y3`           | `string \| null`                                                                 | Third year digit.                                                                                                                   |
+| `y4`           | `string \| null`                                                                 | Fourth year digit.                                                                                                                  |
 
 ```tsx
 import { SmartDateEditVariantProps, useDateEdit } from '@smartsoft001/react';

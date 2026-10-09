@@ -32,11 +32,11 @@ The preset's class helpers (`getIconSizeClasses`, `getIconContainerClasses`) are
 
 ### `SmartIconProps`
 
-| Prop         | Type        | Default     | Description                                                            |
-| ------------ | ----------- | ----------- | ---------------------------------------------------------------------- |
-| `name?`      | `IconName`  | `'spinner'` | The glyph; renders nothing when neither `name` nor `template` matches. |
-| `className?` | `string`    | —           | Classes on the SVG of the glyph.                                       |
-| `template?`  | `ReactNode` | —           | Rendered instead of the named glyph.                                   |
+| Prop         | Type        | Default | Description                                                                        |
+| ------------ | ----------- | ------- | ---------------------------------------------------------------------------------- |
+| `name?`      | `IconName`  | —       | The glyph; renders nothing without a `name` or `template`, or for an unknown name. |
+| `className?` | `string`    | —       | Classes on the SVG of the glyph.                                                   |
+| `template?`  | `ReactNode` | —       | Rendered instead of the named glyph.                                               |
 
 ### `SmartIconGlyphProps`
 
