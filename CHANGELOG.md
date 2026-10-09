@@ -1,3 +1,13 @@
+## 2.202.0 (2026-10-09)
+
+### 🩹 Fixes
+
+- **shared:** make the component docs, examples and libraries agree ([#139](https://github.com/emiljuchnikowski/smartsoft001/pull/139))
+
+### ❤️ Thank You
+
+- Emil Juchnikowski
+
 ## 2.201.0 (2026-10-09)
 
 This was a version bump only, there were no code changes.
