@@ -5,10 +5,10 @@ order: 5
 nextjs:
   metadata:
     title: Angular components agent
-    description: The smart:angular-components agent that picks the right @smartsoft001/angular component for a UI task and delegates to that component's skill.
+    description: The smart-angular:angular-components agent that picks the right @smartsoft001/angular component for a UI task and delegates to that component's skill.
 ---
 
-The plugin ships one agent, `smart:angular-components`, for building screens in an application that uses `@smartsoft001/angular`. It selects a component and delegates its API details to a background skill. {% .lead %}
+The `smart-angular` plugin ships the `smart-angular:angular-components` agent for building screens in an application that uses `@smartsoft001/angular`. It selects a component and delegates its API details to a background skill. {% .lead %}
 
 ---
 
@@ -22,8 +22,8 @@ Ask for it, or let Claude pick it, when you want to build a page or feature with
 
 ## How it is invoked
 
-The agent is available after you [install the plugin](/docs/skills/installing-the-plugin) and reload Claude Code. Claude can select it for matching UI work; you can also ask explicitly, for example "use the `smart:angular-components` agent to build the settings page". The target project needs `@smartsoft001/angular` (`npm install @smartsoft001/angular`), whose styling and import conventions are on the [`angular`](/docs/packages/angular) package page.
+The agent is available after you [install the `smart-angular@smartsoft` plugin](/docs/skills/installing-the-plugin) and reload Claude Code. Claude can select it for matching UI work; you can also ask explicitly, for example "use the `smart-angular:angular-components` agent to build the settings page". The target project needs `@smartsoft001/angular` (`npm install @smartsoft001/angular`), whose styling and import conventions are on the [`angular`](/docs/packages/angular) package page.
 
 ## Source
 
-Defined in [`agents/angular-components/AGENT.md`](https://github.com/emiljuchnikowski/smartsoft001/blob/main/packages/shared/claude-plugins/src/plugins/smart/agents/angular-components/AGENT.md), next to the `angular-components-*` skills it delegates to.
+Defined in [`agents/angular-components.md`](https://github.com/emiljuchnikowski/smartsoft001/blob/main/packages/shared/claude-plugins/src/plugins/smart-angular/agents/angular-components.md), next to the `angular-components-*` skills it delegates to.

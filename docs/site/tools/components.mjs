@@ -27,7 +27,9 @@ import { parseFrontmatter } from './navigation.mjs'
 
 const REPO_URL = 'https://github.com/emiljuchnikowski/smartsoft001/tree/main'
 const COMPONENTS_DIR = 'packages/shared/angular/src/lib/components'
-const SKILLS_DIR = 'packages/shared/claude-plugins/src/plugins/smart/skills'
+/** The component skills ship in the smart-angular plugin. */
+const SKILLS_DIR =
+  'packages/shared/claude-plugins/src/plugins/smart-angular/skills'
 const SKILL_PREFIX = 'angular-components-'
 const CONTENT_DIR = 'docs/site/content/components'
 const EXAMPLES_DIR = 'docs/examples'
@@ -416,7 +418,7 @@ function usageBlock(name, story, usage) {
  */
 function skillTabLines(name) {
   return [
-    `With the [\`smart@smartsoft\` plugin](/docs/skills/installing-the-plugin) installed, ask for the component and Claude Code reads the \`${SKILL_PREFIX}${name}\` skill through its [components agent](/docs/skills/angular-components-agent):`,
+    `With the [\`smart-angular@smartsoft\` plugin](/docs/skills/installing-the-plugin) installed, ask for the component and Claude Code reads the \`${SKILL_PREFIX}${name}\` skill through its [components agent](/docs/skills/angular-components-agent):`,
     '',
     '```text',
     `Add a ${name} to the settings page, using @smartsoft001/angular.`,

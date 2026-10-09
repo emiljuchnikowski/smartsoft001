@@ -5,13 +5,13 @@ order: 4
 skill: scaffold-nx-workspace
 nextjs:
   metadata:
-    title: /smart:scaffold-nx-workspace
+    title: /smart-angular:scaffold-nx-workspace
     description: Bootstrap a new Nx and Angular SSR workspace in the framework's layout, with the toolchain patched to its conventions and no feature code.
 ---
 
 {% skill name="scaffold-nx-workspace" /%}
 
-This command requires the [`smart@smartsoft` plugin](/docs/skills/installing-the-plugin). Install it and reload Claude Code before invoking the skill.
+This command requires the [`smart-angular@smartsoft` plugin](/docs/skills/installing-the-plugin). Install it and reload Claude Code before invoking the skill.
 
 ## What it does
 
@@ -35,7 +35,7 @@ Not for adding a feature library to an existing workspace, for changing lint or 
 ## Invocation and inputs
 
 ```text
-/smart:scaffold-nx-workspace
+/smart-angular:scaffold-nx-workspace
 ```
 
 The skill declares no positional arguments. Run it in the context of an empty target directory, or state the target folder in the prompt, and it confirms the decisions that shape the workspace:
@@ -53,4 +53,4 @@ A directory with the workspace configuration (Nx, tsconfig, ESLint, Jest, Pretti
 
 ## Source
 
-Defined in [`skills/scaffold-nx-workspace/SKILL.md`](https://github.com/emiljuchnikowski/smartsoft001/blob/main/packages/shared/claude-plugins/src/plugins/smart/skills/scaffold-nx-workspace/SKILL.md), with the patch recipes in its `references/` directory and the helper scripts in `scripts/`, all shipped inside the plugin.
+Defined in [`skills/scaffold-nx-workspace/SKILL.md`](https://github.com/emiljuchnikowski/smartsoft001/blob/main/packages/shared/claude-plugins/src/plugins/smart-angular/skills/scaffold-nx-workspace/SKILL.md), with the patch recipes in its `references/` directory and the helper scripts in `scripts/`, all shipped inside the plugin.

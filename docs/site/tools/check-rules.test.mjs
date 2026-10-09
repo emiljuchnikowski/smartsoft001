@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict'
+import fs from 'node:fs'
+import os from 'node:os'
 import path from 'node:path'
 import { describe, test } from 'node:test'
 import { fileURLToPath } from 'node:url'
@@ -157,12 +159,17 @@ describe('componentInventory', () => {
 })
 
 describe('skillInventory', () => {
-  test('keeps only plugin skills marked user-invocable', () => {
+  test('keeps only plugin skills marked user-invocable, from every plugin', () => {
     const skills = skillInventory(fixtureRoot)
 
     assert.deepEqual(skills, [
-      { name: 'audit-log', source: 'plugin' },
-      { name: 'format-code', source: 'plugin' },
+      { name: 'audit-log', source: 'plugin', plugin: 'smart-core' },
+      { name: 'format-code', source: 'plugin', plugin: 'smart-core' },
+      {
+        name: 'scaffold-nx-workspace',
+        source: 'plugin',
+        plugin: 'smart-angular',
+      },
     ])
   })
 
@@ -691,10 +698,20 @@ describe('rule10 (skill references)', () => {
     assert.equal(
       finding.message,
       'docs/skills/ghost/page.md: skill "ghost" has no SKILL.md (expected ' +
-        'packages/shared/claude-plugins/src/plugins/smart/skills/ghost/' +
+        'packages/shared/claude-plugins/src/plugins/*/skills/ghost/' +
         'SKILL.md)',
     )
     assert.ok(finding.file.endsWith(path.join('ghost', 'page.md')))
+  })
+
+  test('resolves the skill of a page in whichever plugin ships it', () => {
+    const findings = rule10(skillContext())
+
+    assert.ok(
+      !findings.some((finding) =>
+        /skill "review" has no SKILL\.md/.test(finding.message),
+      ),
+    )
   })
 
   test('reports a page title that is not the name of its skill', () => {
@@ -1042,7 +1059,7 @@ describe('rule13 (usage tabs)', () => {
 })
 
 describe('rule14 (example app paths cited by skills)', () => {
-  const pluginSkills = 'packages/shared/claude-plugins/src/plugins/smart/skills'
+  const plugins = 'packages/shared/claude-plugins/src/plugins'
 
   test('accepts a cited file that exists, the app root and a directory with or without a trailing slash', () => {
     const findings = rule14(citedContext())
@@ -1068,7 +1085,7 @@ describe('rule14 (example app paths cited by skills)', () => {
     assert.equal(finding.level, 'error')
     assert.equal(
       finding.message,
-      `${pluginSkills}/moved/SKILL.md:10: cited path ` +
+      `${plugins}/smart-angular/skills/moved/SKILL.md:10: cited path ` +
         '"docs/examples/app/apps/web/src/app/moved.ts" does not exist ' +
         'under docs/examples/app',
     )
@@ -1088,10 +1105,50 @@ describe('rule14 (example app paths cited by skills)', () => {
     )
   })
 
+  test('scans the skills a package keeps in its own .claude/skills', () => {
+    const finding = rule14(citedContext()).find((item) =>
+      /angular-patterns/.test(item.message),
+    )
+
+    assert.ok(finding)
+    assert.equal(
+      finding.message,
+      'packages/shared/angular/.claude/skills/angular-patterns/SKILL.md:9: ' +
+        'cited path "docs/examples/app/apps/web/src/app/gone.ts" does not ' +
+        'exist under docs/examples/app',
+    )
+  })
+
+  test('skips package skills below node_modules and dist', () => {
+    const repoRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'check-r14-'))
+    const skill = (dir) => {
+      fs.mkdirSync(path.join(repoRoot, dir, 'cites'), { recursive: true })
+      fs.writeFileSync(
+        path.join(repoRoot, dir, 'cites', 'SKILL.md'),
+        '# Cites\n\n`docs/examples/app/missing.ts`\n',
+      )
+    }
+
+    skill('packages/lib/node_modules/dep/.claude/skills')
+    skill('packages/lib/dist/.claude/skills')
+    skill('packages/lib/.claude/skills')
+
+    const findings = rule14({
+      repoRoot,
+      docsAppDir: path.join(repoRoot, 'docs', 'site', 'src', 'app'),
+      strict: false,
+    })
+
+    assert.deepEqual(
+      findings.map((finding) => finding.message.split(':')[0]),
+      ['packages/lib/.claude/skills/cites/SKILL.md'],
+    )
+  })
+
   test('reports every missing path exactly once', () => {
     const findings = rule14(citedContext())
 
-    assert.equal(findings.length, 2)
+    assert.equal(findings.length, 3)
     assert.ok(findings.every((finding) => finding.rule === 'R14'))
   })
 
@@ -1167,13 +1224,28 @@ describe('rule16 (components agent catalogue)', () => {
   test('reports a component skill the agent never names, as an error', () => {
     const findings = rule16(agentContext())
 
-    assert.equal(findings.length, 1)
-    assert.equal(findings[0].rule, 'R16')
-    assert.equal(findings[0].level, 'error')
+    assert.equal(findings.length, 2)
+    assert.ok(findings.every((finding) => finding.rule === 'R16'))
+    assert.ok(findings.every((finding) => finding.level === 'error'))
     assert.equal(
       findings[0].message,
       'Skill "angular-components-icon" is not named in the angular-components agent ' +
-        '(packages/shared/claude-plugins/src/plugins/smart/agents/angular-components/AGENT.md)',
+        '(packages/shared/claude-plugins/src/plugins/smart-angular/agents/angular-components.md)',
+    )
+  })
+
+  test('checks the react-components skills against the agent of smart-react', () => {
+    const findings = rule16(agentContext())
+
+    assert.equal(
+      findings[1].message,
+      'Skill "react-components-icon" is not named in the react-components agent ' +
+        '(packages/shared/claude-plugins/src/plugins/smart-react/agents/react-components.md)',
+    )
+    assert.ok(
+      !findings.some((finding) =>
+        /react-components-button/.test(finding.message),
+      ),
     )
   })
 
@@ -1283,7 +1355,7 @@ describe('runAllRules', () => {
       [...new Set(findings.map((finding) => finding.rule))],
       ['R14'],
     )
-    assert.equal(findings.length, 2)
+    assert.equal(findings.length, 3)
   })
 
   test('turns parity warnings into errors in strict mode', () => {
