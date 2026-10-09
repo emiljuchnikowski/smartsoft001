@@ -41,6 +41,16 @@ const tabsRoot = path.join(here, '__fixtures__', 'check-r13')
 const citedRoot = path.join(here, '__fixtures__', 'check-r14')
 const agentRoot = path.join(here, '__fixtures__', 'check-r16')
 const quotedRoot = path.join(here, '__fixtures__', 'check-fenced')
+const reactRoot = path.join(here, '__fixtures__', 'check-react')
+
+function reactContext(overrides = {}) {
+  return context({
+    repoRoot: reactRoot,
+    docsAppDir: path.join(reactRoot, 'docs', 'site', 'src', 'app'),
+    examplesRoot: path.join(reactRoot, 'docs', 'examples'),
+    ...overrides,
+  })
+}
 
 function context(overrides = {}) {
   return {
@@ -1375,5 +1385,51 @@ describe('runAllRules', () => {
     assert.deepEqual(levels('R2'), ['warn', 'warn'])
     assert.deepEqual(levels('R3'), ['warn'])
     assert.deepEqual(levels('R9'), ['warn', 'warn'])
+  })
+})
+
+describe('the React library', () => {
+  test('storyInventory reads .stories.tsx files as the react project', () => {
+    const stories = storyInventory(reactRoot).filter(
+      (story) => story.project === 'react',
+    )
+
+    assert.deepEqual(
+      stories.map((story) => story.id),
+      ['components-badge--playground', 'components-chip--playground'],
+    )
+  })
+
+  test('rule9 reports a React story without a usage region', () => {
+    const findings = rule9(reactContext())
+
+    assert.deepEqual(
+      findings.map((finding) => finding.message),
+      [
+        'React component "chip" has no "usage" region in its stories ' +
+          '(packages/shared/react/src/lib/components/chip/chip.stories.tsx)',
+      ],
+    )
+  })
+
+  test('rule13 requires the TSX tab on a page with a React variant', () => {
+    const findings = rule13(reactContext())
+
+    assert.deepEqual(
+      findings.map((finding) => finding.message),
+      ['docs/components/chip/page.md: usage tabs are missing "TSX"'],
+    )
+  })
+
+  test('rule15 reports a React component without its .tsx usage example', () => {
+    const findings = rule15(reactContext())
+
+    assert.deepEqual(
+      findings.map((finding) => finding.message),
+      [
+        'React component "chip" has no usage example (expected ' +
+          'docs/examples/react/src/components/chip/usage.example.tsx)',
+      ],
+    )
   })
 })

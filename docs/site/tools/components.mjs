@@ -4,6 +4,11 @@
  * Storybook story the component ships and, when it exists, a compiled example
  * of extending its base class.
  *
+ * Every component exists in `@smartsoft001/angular` and `@smartsoft001/react`.
+ * A page carries one variant per framework, each in a `{% framework %}`
+ * block built from that framework's skill, examples and Storybook; the reader
+ * picks one with the switch under the title.
+ *
  * Skills are written for an agent, not for a reader: they repeat the code the
  * documentation embeds through `{% snippet %}` tags and carry sections ("When
  * to Use This Skill", "File Locations") that only make sense to Claude. The
@@ -24,17 +29,45 @@ import {
   startCase,
 } from './check-rules.mjs'
 import { parseFrontmatter } from './navigation.mjs'
+import { PLUGINS_DIR } from './skills.mjs'
 
 const REPO_URL = 'https://github.com/emiljuchnikowski/smartsoft001/tree/main'
-const COMPONENTS_DIR = 'packages/shared/angular/src/lib/components'
-/** The component skills ship in the smart-angular plugin. */
-const SKILLS_DIR =
-  'packages/shared/claude-plugins/src/plugins/smart-angular/skills'
-const SKILL_PREFIX = 'angular-components-'
 const CONTENT_DIR = 'docs/site/content/components'
 const EXAMPLES_DIR = 'docs/examples'
-const STORY_PROJECT = 'angular'
 const USAGE_REGION = 'usage'
+
+/**
+ * Where each framework keeps what its variant of a component page is built
+ * from: the library, the component skills of its plugin, the Storybook
+ * project and the executed examples under `docs/examples`.
+ */
+export const FRAMEWORK_SOURCES = {
+  angular: {
+    packageName: '@smartsoft001/angular',
+    componentsDir: 'packages/shared/angular/src/lib/components',
+    skillsDir: `${PLUGINS_DIR}/smart-angular/skills`,
+    skillPrefix: 'angular-components-',
+    plugin: 'smart-angular',
+    agentPage: '/docs/skills/angular-components-agent',
+    storyProject: 'angular',
+    storyExtension: '.stories.ts',
+    examplesDir: 'angular/src/components',
+  },
+  react: {
+    packageName: '@smartsoft001/react',
+    componentsDir: 'packages/shared/react/src/lib/components',
+    skillsDir: `${PLUGINS_DIR}/smart-react/skills`,
+    skillPrefix: 'react-components-',
+    plugin: 'smart-react',
+    agentPage: '/docs/skills/react-components-agent',
+    storyProject: 'react',
+    storyExtension: '.stories.tsx',
+    examplesDir: 'react/src/components',
+  },
+}
+
+const ANGULAR = FRAMEWORK_SOURCES.angular
+const SKILL_PREFIX = ANGULAR.skillPrefix
 
 /**
  * Component name to the Nx generator that scaffolds a usage of it. Empty while
@@ -49,6 +82,12 @@ const DROPPED_SECTIONS = new Set([
   'file locations',
   'usage examples',
 ])
+
+/**
+ * The React skills keep their examples under `## Usage`, prose included; the
+ * executed example and the story of the generated usage block replace it.
+ */
+const REACT_DROPPED_SECTIONS = new Set([...DROPPED_SECTIONS, 'usage'])
 
 /** Components whose story needs more room than the default frame. */
 export const TALL_STORIES = new Set([
@@ -72,6 +111,7 @@ const TALL_STORY_HEIGHT = 560
 const FENCE = /^\s*(`{3,}|~{3,})\s*([\w-]*)/
 const HEADING = /^(#{1,6})\s+(.*)$/
 const EXTENDING = /^extending\b/
+const REPLACING = /^replacing the implementation$/
 
 /** `# AccordionBaseComponent (Base Only)` -> `AccordionBaseComponent`. */
 const TRAILING_PARENTHETICAL = /\s*\([^()]*\)\s*$/
@@ -198,11 +238,11 @@ function onlyFences(section) {
  * Applies the section rules: agent-only sections go and a `## Usage` that
  * holds nothing but code goes, because the generated usage block replaces it.
  */
-function keepSections(sections) {
+function keepSections(sections, dropped = DROPPED_SECTIONS) {
   return sections.filter((section) => {
     const key = section.heading.text.toLowerCase()
 
-    if (DROPPED_SECTIONS.has(key)) return false
+    if (dropped.has(key)) return false
 
     return !(key === 'usage' && onlyFences(section))
   })
@@ -262,6 +302,45 @@ function replaceExtending(tokens, example) {
 }
 
 /**
+ * The React skills explain under `## Replacing the Implementation` how to
+ * register a component of your own, and end that explanation with the full
+ * custom component. The compiled example takes the place of that last code
+ * block, so the prose and the hook tables around it stay; without an example
+ * every block of the section goes, like everywhere else.
+ */
+function replaceReplacing(tokens, example) {
+  if (!example) return tokens
+
+  const start = tokens.findIndex(
+    (token) =>
+      token.type === 'heading' &&
+      token.level === 2 &&
+      REPLACING.test(token.text.toLowerCase()),
+  )
+
+  if (start === -1) return tokens
+
+  const end = sectionEnd(tokens, start)
+  let last = -1
+
+  for (let index = start + 1; index < end; index += 1) {
+    if (tokens[index].type === 'fence') last = index
+  }
+
+  if (last === -1) return tokens
+
+  return [
+    ...tokens.slice(0, last),
+    {
+      type: 'line',
+      raw: true,
+      text: `{% snippet file="${example}" region="${USAGE_REGION}" /%}`,
+    },
+    ...tokens.slice(last + 1),
+  ]
+}
+
+/**
  * Removes every fenced code block, reporting each one with the heading it sat
  * under so the CLI can show what the page no longer says.
  */
@@ -280,6 +359,37 @@ function dropFences(tokens, component, fallbackSection, report) {
 
     return false
   })
+}
+
+/**
+ * A sentence that introduced a dropped code block ("Register it under
+ * `button`:") would end the paragraph on a colon. The React skills lead into
+ * their code that way, so their variant ends such a sentence with a full stop.
+ */
+function endSentencesBeforeFences(tokens) {
+  const result = tokens.map((token) => ({ ...token }))
+
+  for (let index = 0; index < result.length; index += 1) {
+    if (result[index].type !== 'fence') continue
+
+    let previous = index - 1
+
+    while (
+      previous >= 0 &&
+      result[previous].type === 'line' &&
+      !result[previous].text.trim()
+    ) {
+      previous -= 1
+    }
+
+    const line = result[previous]
+
+    if (line?.type !== 'line' || line.raw) continue
+
+    line.text = line.text.replace(/:\s*$/, '.')
+  }
+
+  return result
 }
 
 /**
@@ -368,7 +478,9 @@ function storyHeight(name) {
  * part of this contract but stays out until such a generator exists: see
  * `generatorTab`.
  */
-function usageBlock(name, story, usage) {
+function usageBlock(name, story, usage, framework = 'angular') {
+  if (framework === 'react') return reactUsageBlock(name, story, usage)
+
   const tabs = [
     {
       title: 'HTML',
@@ -391,6 +503,32 @@ function usageBlock(name, story, usage) {
 
   if (generator) tabs.splice(2, 0, generator)
 
+  return renderUsage(name, story, tabs, ANGULAR)
+}
+
+/**
+ * The React variant: the component a consumer writes, in one file, and the
+ * way to ask Claude Code for it. Without an executed example the story's
+ * `usage` region stands in, like the Angular fallback.
+ */
+function reactUsageBlock(name, story, usage) {
+  const tabs = [
+    {
+      title: 'TSX',
+      lines: [
+        `{% snippet file="${usage ? usage.tsx : story.file}" region="${USAGE_REGION}" /%}`,
+      ],
+    },
+    {
+      title: 'Claude Code',
+      lines: skillTabLines(name, FRAMEWORK_SOURCES.react),
+    },
+  ]
+
+  return renderUsage(name, story, tabs, FRAMEWORK_SOURCES.react)
+}
+
+function renderUsage(name, story, tabs, sources) {
   return [
     '## Usage',
     '',
@@ -406,7 +544,7 @@ function usageBlock(name, story, usage) {
     '',
     '{% /tabs %}',
     '',
-    `{% storybook project="${STORY_PROJECT}" story="${story.id}" height=${storyHeight(name)} /%}`,
+    `{% storybook project="${sources.storyProject}" story="${story.id}" height=${storyHeight(name)} /%}`,
     '',
   ]
 }
@@ -416,12 +554,12 @@ function usageBlock(name, story, usage) {
  * background knowledge rather than commands (`user-invocable: false`), so what
  * a developer types is a request to the agent, not a slash command.
  */
-function skillTabLines(name) {
+function skillTabLines(name, sources = ANGULAR) {
   return [
-    `With the [\`smart-angular@smartsoft\` plugin](/docs/skills/installing-the-plugin) installed, ask for the component and Claude Code reads the \`${SKILL_PREFIX}${name}\` skill through its [components agent](/docs/skills/angular-components-agent):`,
+    `With the [\`${sources.plugin}@smartsoft\` plugin](/docs/skills/installing-the-plugin) installed, ask for the component and Claude Code reads the \`${sources.skillPrefix}${name}\` skill through its [components agent](${sources.agentPage}):`,
     '',
     '```text',
-    `Add a ${name} to the settings page, using @smartsoft001/angular.`,
+    `Add a ${name} to the settings page, using ${sources.packageName}.`,
     '```',
     '',
     'The skill carries the same API this page documents, so the generated code matches it.',
@@ -444,15 +582,15 @@ function generatorTab(name) {
   }
 }
 
-function sourceBlock(name) {
-  const library = `${COMPONENTS_DIR}/${name}`
-  const skill = `${SKILL_PREFIX}${name}`
+function sourceBlock(name, sources = ANGULAR) {
+  const library = `${sources.componentsDir}/${name}`
+  const skill = `${sources.skillPrefix}${name}`
 
   return [
     '## Source',
     '',
     `The component lives in [\`${library}\`](${REPO_URL}/${library}) and is ` +
-      `documented for Claude Code by the [\`${skill}\`](${REPO_URL}/${SKILLS_DIR}/${skill}) skill.`,
+      `documented for Claude Code by the [\`${skill}\`](${REPO_URL}/${sources.skillsDir}/${skill}) skill.`,
     '',
   ]
 }
@@ -469,9 +607,83 @@ function renderIntro(intro) {
 }
 
 /**
+ * The body of one framework's variant of a component page, out of that
+ * framework's skill: the intro as the lead, the usage block, the sections a
+ * reader needs and the source links.
+ */
+function renderVariant(framework, { name, source, story, usage, example }) {
+  const sources = FRAMEWORK_SOURCES[framework]
+  const { data, body } = parseFrontmatter(source)
+  const title = deriveTitle(body, name)
+  const component = framework === 'angular' ? name : `${name} (${framework})`
+  const report = []
+  const tokens = tokenize(body)
+  const { intro, rest } = splitIntro(tokens)
+  const sections =
+    framework === 'angular'
+      ? keepSections(splitSections(replaceExtending(rest, example)))
+      : keepSections(
+          splitSections(
+            endSentencesBeforeFences(replaceReplacing(rest, example)),
+          ),
+          REACT_DROPPED_SECTIONS,
+        )
+  const lines = [
+    ...renderIntro(dropFences(intro, component, title, report)),
+    '',
+    '---',
+    '',
+  ]
+
+  if (story) {
+    lines.push(...usageBlock(name, story, usage, framework))
+  } else {
+    report.push({ component, missing: 'usage-region' })
+  }
+
+  for (const section of sections) {
+    const kept = dropFences(
+      [section.heading, ...section.tokens],
+      component,
+      section.heading.text,
+      report,
+    )
+
+    lines.push(...tidy(renderTokens(pruneEmptyHeadings(kept))).split('\n'), '')
+  }
+
+  lines.push(...sourceBlock(name, sources))
+
+  return {
+    title,
+    description: data.description ?? `${title} component.`,
+    lines,
+    report,
+  }
+}
+
+/**
+ * The variants of a page, each wrapped in its `{% framework %}` block. A page
+ * with one variant needs no block and no switch.
+ */
+function renderVariants(variants) {
+  if (variants.length === 1) return variants[0].lines
+
+  return variants.flatMap(({ framework, lines }) => [
+    `{% framework name="${framework}" %}`,
+    '',
+    ...lines,
+    '',
+    '{% /framework %}',
+    '',
+  ])
+}
+
+/**
  * Turns one `SKILL.md` into a component page. `story`, `usage` and `example`
  * are the resolved references (or `null`), so the transformation itself
- * touches no file system.
+ * touches no file system. `react` carries the same references for the React
+ * variant, or `null` for a component the React library does not have.
  */
 export function transformSkillToPage({
   name,
@@ -480,44 +692,27 @@ export function transformSkillToPage({
   story,
   usage = null,
   example,
+  react = null,
 }) {
-  const { data, body } = parseFrontmatter(source)
-  const title = deriveTitle(body, name)
-  const description = data.description ?? `${title} component.`
-  const report = []
-  const tokens = tokenize(body)
-  const { intro, rest } = splitIntro(tokens)
-  const sections = keepSections(splitSections(replaceExtending(rest, example)))
-  const lines = [
-    ...renderIntro(dropFences(intro, name, title, report)),
-    '',
-    '---',
-    '',
-  ]
+  const angular = renderVariant('angular', {
+    name,
+    source,
+    story,
+    usage,
+    example,
+  })
+  const variants = [{ framework: 'angular', ...angular }]
 
-  if (story) {
-    lines.push(...usageBlock(name, story, usage))
-  } else {
-    report.push({ component: name, missing: 'usage-region' })
+  if (react) {
+    variants.push({ framework: 'react', ...renderVariant('react', react) })
   }
 
-  for (const section of sections) {
-    const kept = dropFences(
-      [section.heading, ...section.tokens],
-      name,
-      section.heading.text,
-      report,
-    )
-
-    lines.push(...tidy(renderTokens(pruneEmptyHeadings(kept))).split('\n'), '')
-  }
-
-  lines.push(...sourceBlock(name))
+  const { title, description } = angular
 
   return {
     title,
     description,
-    report,
+    report: variants.flatMap((variant) => variant.report),
     content:
       frontmatter({
         title,
@@ -525,41 +720,64 @@ export function transformSkillToPage({
         order,
         component: name,
         skill: `${SKILL_PREFIX}${name}`,
+        ...frameworksOf(variants),
         nextjs: { metadata: { title, description } },
       }) +
       '\n' +
-      tidy(lines),
+      tidy(renderVariants(variants)),
   }
+}
+
+/** The `frameworks` frontmatter key of a page with more than one variant. */
+function frameworksOf(variants) {
+  return variants.length > 1
+    ? { frameworks: variants.map((variant) => variant.framework) }
+    : {}
 }
 
 /**
  * Hand written pages keep their body word for word; only the frontmatter the
  * generator owns (order, section, component) is added.
  */
-export function transformContentToPage({ name, order, source }) {
+export function transformContentToPage({ name, order, source, react = null }) {
   const { data, body } = parseFrontmatter(source)
   const title = data.title ?? startCase(name)
   const description = data.nextjs?.metadata?.description ?? data.description
+  const variants = [{ framework: 'angular', lines: body.split('\n') }]
+  const report = []
+
+  // The hand written page is the Angular variant; the React one comes from
+  // the React skill like on every other page.
+  if (react) {
+    const variant = renderVariant('react', react)
+
+    variants.push({ framework: 'react', ...variant })
+    report.push(...variant.report)
+  }
 
   return {
     title,
     description,
-    report: [],
+    report,
     content:
       frontmatter({
         ...data,
         section: 'Components',
         order,
         component: name,
+        ...frameworksOf(variants),
       }) +
       '\n' +
-      tidy(body.split('\n')),
+      tidy(renderVariants(variants)),
   }
 }
 
 const INDEX_LEAD =
-  "Each page shows the component's API, an executed usage example with the " +
-  'template and the TypeScript you write, and the live Storybook story.'
+  'Every component has the same options, behaviour and Tailwind classes in ' +
+  '`@smartsoft001/angular` (`<smart-button>`) and `@smartsoft001/react` ' +
+  '(`SmartButton`). Each page documents both: pick Angular or React under ' +
+  "its title to see that framework's API, an executed usage example and " +
+  'the live Storybook story.'
 
 /** A description is prose from a skill: it may hold a `|` or a `{%`. */
 function cell(description) {
@@ -570,8 +788,7 @@ function cell(description) {
 export function renderIndexPage(entries) {
   const lines = [
     '',
-    'The `@smartsoft001/angular` package ships ' +
-      `${entries.length} \`smart-*\` components. ${INDEX_LEAD} {% .lead %}`,
+    `The framework ships ${entries.length} UI components. ${INDEX_LEAD} {% .lead %}`,
     '',
     '---',
     '',
@@ -593,7 +810,7 @@ export function renderIndexPage(entries) {
         metadata: {
           title: 'Components',
           description:
-            'Every smart-* UI component of @smartsoft001/angular, with a link to its reference page.',
+            'Every UI component of @smartsoft001/angular and @smartsoft001/react, with a link to its reference page.',
         },
       },
     }) + lines.join('\n')
@@ -619,13 +836,14 @@ function firstStoryExport(source) {
  * Storybook id of its first story. `null` when the story is still missing:
  * the page then ships without the usage block and the CLI says so.
  */
-export function findStory(repoRoot, name) {
-  const dir = path.join(repoRoot, COMPONENTS_DIR, name)
+export function findStory(repoRoot, name, framework = 'angular') {
+  const { componentsDir, storyExtension } = FRAMEWORK_SOURCES[framework]
+  const dir = path.join(repoRoot, componentsDir, name)
 
   if (!fs.existsSync(dir)) return null
 
   for (const entry of fs.readdirSync(dir).sort()) {
-    if (!entry.endsWith('.stories.ts')) continue
+    if (!entry.endsWith(storyExtension)) continue
 
     const source = fs.readFileSync(path.join(dir, entry), 'utf8')
 
@@ -637,7 +855,7 @@ export function findStory(repoRoot, name) {
     if (!title || !story) continue
 
     return {
-      file: `${COMPONENTS_DIR}/${name}/${entry}`,
+      file: `${componentsDir}/${name}/${entry}`,
       id: `${sanitize(title)}--${sanitize(startCase(story))}`,
     }
   }
@@ -647,22 +865,49 @@ export function findStory(repoRoot, name) {
 
 /**
  * The compiled usage example of a component: the template and the component
- * class a consumer writes. `null` until both files exist.
+ * class a consumer writes in Angular, the one `.tsx` file in React. `null`
+ * until every file exists.
  */
-export function findUsage(repoRoot, name) {
-  const base = `angular/src/components/${name}/usage.example`
-  const usage = { html: `${base}.html`, ts: `${base}.ts` }
+export function findUsage(repoRoot, name, framework = 'angular') {
+  const base = `${FRAMEWORK_SOURCES[framework].examplesDir}/${name}/usage.example`
+  const usage =
+    framework === 'react'
+      ? { tsx: `${base}.tsx` }
+      : { html: `${base}.html`, ts: `${base}.ts` }
   const exists = (file) =>
     fs.existsSync(path.join(repoRoot, EXAMPLES_DIR, file))
 
-  return exists(usage.html) && exists(usage.ts) ? usage : null
+  return Object.values(usage).every(exists) ? usage : null
 }
 
-/** The compiled "extend the base class" example of a component, if any. */
-export function findExample(repoRoot, name) {
-  const file = `angular/src/components/${name}/custom.example.ts`
+/**
+ * The compiled example of a component of your own: extending the base class
+ * in Angular, a component built on the hook and registered on the provider in
+ * React.
+ */
+export function findExample(repoRoot, name, framework = 'angular') {
+  const extension = framework === 'react' ? 'tsx' : 'ts'
+  const file = `${FRAMEWORK_SOURCES[framework].examplesDir}/${name}/custom.example.${extension}`
 
   return fs.existsSync(path.join(repoRoot, EXAMPLES_DIR, file)) ? file : null
+}
+
+/** The references of the React variant of a component, or `null`. */
+function reactVariant(repoRoot, name) {
+  const { skillsDir, skillPrefix } = FRAMEWORK_SOURCES.react
+  const source = readIfExists(
+    path.join(repoRoot, skillsDir, `${skillPrefix}${name}`, 'SKILL.md'),
+  )
+
+  if (!source) return null
+
+  return {
+    name,
+    source,
+    story: findStory(repoRoot, name, 'react'),
+    usage: findUsage(repoRoot, name, 'react'),
+    example: findExample(repoRoot, name, 'react'),
+  }
 }
 
 function readIfExists(file) {
@@ -687,7 +932,12 @@ export function collectComponents(
   for (const name of names) {
     const content = readIfExists(path.join(repoRoot, CONTENT_DIR, `${name}.md`))
     const skill = readIfExists(
-      path.join(repoRoot, SKILLS_DIR, `${SKILL_PREFIX}${name}`, 'SKILL.md'),
+      path.join(
+        repoRoot,
+        ANGULAR.skillsDir,
+        `${SKILL_PREFIX}${name}`,
+        'SKILL.md',
+      ),
     )
 
     if (!content && !skill) {
@@ -697,8 +947,9 @@ export function collectComponents(
 
     order += 1
 
+    const react = reactVariant(repoRoot, name)
     const page = content
-      ? transformContentToPage({ name, order, source: content })
+      ? transformContentToPage({ name, order, source: content, react })
       : transformSkillToPage({
           name,
           order,
@@ -706,6 +957,7 @@ export function collectComponents(
           story: findStory(repoRoot, name),
           usage: findUsage(repoRoot, name),
           example: findExample(repoRoot, name),
+          react,
         })
 
     pages.push({ name, content: page.content })

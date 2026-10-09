@@ -9,14 +9,16 @@
  * - R6: reference pages embed snippets, never inline code.
  * - R7: every page declares a title and a known section.
  * - R8: every package page names its package and follows the skeleton.
- * - R9: every UI component has a story with a `usage` region.
+ * - R9: every UI component has a story with a `usage` region, in each
+ *   library that has the component.
  * - R10: every skill reference points at an existing skill.
  * - R11: every fenced code block declares a language.
  * - R12: every package belongs to exactly one meta package.
  * - R13: every component page documents its usage in a tabs block.
  * - R14: every example app path a skill cites exists in the workspace.
  * - R15: every UI component has a compiled usage example, its template and
- *   its class, in `docs/examples/angular`.
+ *   its class, in `docs/examples/angular`, and its one `.tsx` file in
+ *   `docs/examples/react`.
  *
  * - R16: every component skill is named in the components agent of its
  *   plugin (angular-components in smart-angular, react-components in
@@ -47,6 +49,8 @@ const SCOPE = '@smartsoft001/'
 /** The plugin whose skills document the Angular components. */
 const ANGULAR_SKILLS_DIR = `${PLUGINS_DIR}/smart-angular/skills`
 const COMPONENTS_DIR = 'packages/shared/angular/src/lib/components'
+/** The React library: a component it has is documented, and checked, too. */
+const REACT_COMPONENTS_DIR = 'packages/shared/react/src/lib/components'
 const COMPONENT_SKILL_PREFIX = 'angular-components-'
 const EXCLUDED_PACKAGES = new Set(['claude-plugins'])
 const CODE_LANGUAGES = new Set([
@@ -75,7 +79,12 @@ export const NO_HANDWRITTEN_CODE_DIRS = [
 const STORY_PROJECTS = [
   { dir: 'packages/shared/angular', project: 'angular' },
   { dir: 'packages/crud/shell/angular', project: 'crud-shell-angular' },
+  { dir: 'packages/shared/react', project: 'react' },
+  { dir: 'packages/crud/shell/react', project: 'crud-shell-react' },
 ]
+
+/** The stories files of both libraries: Angular `.ts`, React `.tsx`. */
+const STORY_FILE = /\.stories\.tsx?$/
 
 /**
  * Lists every file below `dir` (recursively), skipping `node_modules`.
@@ -311,14 +320,15 @@ function storyProject(file) {
 }
 
 /**
- * Every story exported by a `*.stories.ts` file, with its Storybook id.
+ * Every story exported by a `*.stories.ts` or `*.stories.tsx` file, with its
+ * Storybook id.
  */
 export function storyInventory(repoRoot) {
   const packagesDir = path.join(repoRoot, 'packages')
   const stories = []
 
   for (const relative of walk(packagesDir)) {
-    if (!relative.endsWith('.stories.ts')) continue
+    if (!STORY_FILE.test(relative)) continue
 
     const file = `packages/${relative}`
     const project = storyProject(file)
@@ -701,11 +711,31 @@ export function rule8(ctx) {
 const USAGE_REGION_START = /^\s*\/\/\s*#region\s+usage\s*$/
 const REGION_END = /^\s*(?:\/\/|\/\*|<!--|#)\s*#endregion\b/
 
-/** The `*.stories.ts` files of a component directory, sorted. */
-function storiesFiles(dir) {
+/** The stories files (`*.stories.ts` by default) of a component directory. */
+function storiesFiles(dir, extension = '.stories.ts') {
   return walk(dir)
-    .filter((file) => file.endsWith('.stories.ts'))
+    .filter((file) => file.endsWith(extension))
     .sort()
+}
+
+/**
+ * The libraries a component's story and usage example are checked in: the
+ * Angular one always, the React one when it has the component.
+ */
+function componentLibraries(repoRoot, name) {
+  const libraries = [
+    { label: 'Component', dir: COMPONENTS_DIR, extension: '.stories.ts' },
+  ]
+
+  if (fs.existsSync(path.join(repoRoot, REACT_COMPONENTS_DIR, name))) {
+    libraries.push({
+      label: 'React component',
+      dir: REACT_COMPONENTS_DIR,
+      extension: '.stories.tsx',
+    })
+  }
+
+  return libraries
 }
 
 /** True when the file opens a `usage` region and closes it again. */
@@ -724,28 +754,32 @@ export function rule9(ctx) {
   const findings = []
 
   for (const name of componentInventory(ctx.repoRoot)) {
-    const dir = path.join(ctx.repoRoot, COMPONENTS_DIR, name)
-    const relative = `${COMPONENTS_DIR}/${name}`
-    const stories = storiesFiles(dir)
+    for (const library of componentLibraries(ctx.repoRoot, name)) {
+      const dir = path.join(ctx.repoRoot, library.dir, name)
+      const relative = `${library.dir}/${name}`
+      const stories = storiesFiles(dir, library.extension)
 
-    if (!stories.length) {
+      if (!stories.length) {
+        findings.push({
+          rule: 'R9',
+          level,
+          message: `${library.label} "${name}" has no Storybook story (expected a *${library.extension} under ${relative} with a "usage" region)`,
+          file: dir,
+        })
+        continue
+      }
+
+      if (stories.some((file) => hasUsageRegion(path.join(dir, file)))) {
+        continue
+      }
+
       findings.push({
         rule: 'R9',
         level,
-        message: `Component "${name}" has no Storybook story (expected a *.stories.ts under ${relative} with a "usage" region)`,
-        file: dir,
+        message: `${library.label} "${name}" has no "usage" region in its stories (${relative}/${stories[0]})`,
+        file: path.join(dir, stories[0]),
       })
-      continue
     }
-
-    if (stories.some((file) => hasUsageRegion(path.join(dir, file)))) continue
-
-    findings.push({
-      rule: 'R9',
-      level,
-      message: `Component "${name}" has no "usage" region in its stories (${relative}/${stories[0]})`,
-      file: path.join(dir, stories[0]),
-    })
   }
 
   return findings
@@ -979,7 +1013,14 @@ export function rule12(ctx) {
  * once a generator collection exists, so it is allowed but not required.
  */
 const REQUIRED_USAGE_TABS = ['HTML', 'TypeScript', 'Claude Code']
-const ALLOWED_USAGE_TABS = [...REQUIRED_USAGE_TABS, 'Nx generator']
+/** The React variant shows the one file a consumer writes. */
+const REACT_USAGE_TABS = ['TSX', 'Claude Code']
+const ALLOWED_USAGE_TABS = [
+  ...REQUIRED_USAGE_TABS,
+  ...REACT_USAGE_TABS,
+  'Nx generator',
+]
+const REACT_BLOCK = '{% framework name="react" %}'
 
 /** The `title` of every `{% tab %}` between the tabs block delimiters. */
 function usageTabTitles(source, opening, closing) {
@@ -1016,8 +1057,11 @@ export function rule13(ctx) {
     }
 
     const titles = usageTabTitles(source, opening[0], closing.at(-1))
+    const required = source.includes(REACT_BLOCK)
+      ? [...new Set([...REQUIRED_USAGE_TABS, ...REACT_USAGE_TABS])]
+      : REQUIRED_USAGE_TABS
 
-    for (const title of REQUIRED_USAGE_TABS) {
+    for (const title of required) {
       if (!titles.includes(title)) report(`usage tabs are missing "${title}"`)
     }
 
@@ -1092,11 +1136,14 @@ export function rule14(ctx) {
 
 /** Where the usage example of a component lives, relative to the repo root. */
 const USAGE_EXAMPLES_DIR = 'docs/examples/angular/src/components'
+const REACT_USAGE_EXAMPLES_DIR = 'docs/examples/react/src/components'
 
 /**
  * R15: every component has a usage example. Its template and its class are
  * the HTML and TypeScript tabs of the component page, the code a consumer
- * writes, so a component without one falls back to its Storybook story.
+ * writes, so a component without one falls back to its Storybook story. A
+ * component the React library has needs its `.tsx` example for the TSX tab
+ * as well.
  */
 export function rule15(ctx) {
   const level = isStrict(ctx, 'R15') ? 'error' : 'warn'
@@ -1104,18 +1151,34 @@ export function rule15(ctx) {
 
   for (const name of componentInventory(ctx.repoRoot)) {
     const base = `${USAGE_EXAMPLES_DIR}/${name}/usage.example`
-    const missing = ['html', 'ts']
-      .map((extension) => `${base}.${extension}`)
-      .filter((file) => !fs.existsSync(path.join(ctx.repoRoot, file)))
+    const expected = [
+      {
+        label: 'Component',
+        files: ['html', 'ts'].map((extension) => `${base}.${extension}`),
+      },
+    ]
 
-    if (!missing.length) continue
+    if (fs.existsSync(path.join(ctx.repoRoot, REACT_COMPONENTS_DIR, name))) {
+      expected.push({
+        label: 'React component',
+        files: [`${REACT_USAGE_EXAMPLES_DIR}/${name}/usage.example.tsx`],
+      })
+    }
 
-    findings.push({
-      rule: 'R15',
-      level,
-      message: `Component "${name}" has no usage example (expected ${missing.join(' and ')})`,
-      file: path.join(ctx.repoRoot, missing[0]),
-    })
+    for (const { label, files } of expected) {
+      const missing = files.filter(
+        (file) => !fs.existsSync(path.join(ctx.repoRoot, file)),
+      )
+
+      if (!missing.length) continue
+
+      findings.push({
+        rule: 'R15',
+        level,
+        message: `${label} "${name}" has no usage example (expected ${missing.join(' and ')})`,
+        file: path.join(ctx.repoRoot, missing[0]),
+      })
+    }
   }
 
   return findings

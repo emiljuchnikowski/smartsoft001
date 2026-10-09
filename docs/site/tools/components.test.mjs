@@ -634,10 +634,10 @@ describe('renderIndexPage', () => {
         'nextjs:',
         '  metadata:',
         '    title: Components',
-        '    description: Every smart-* UI component of @smartsoft001/angular, with a link to its reference page.',
+        '    description: Every UI component of @smartsoft001/angular and @smartsoft001/react, with a link to its reference page.',
         '---',
         '',
-        "The `@smartsoft001/angular` package ships 2 `smart-*` components. Each page shows the component's API, an executed usage example with the template and the TypeScript you write, and the live Storybook story. {% .lead %}",
+        "The framework ships 2 UI components. Every component has the same options, behaviour and Tailwind classes in `@smartsoft001/angular` (`<smart-button>`) and `@smartsoft001/react` (`SmartButton`). Each page documents both: pick Angular or React under its title to see that framework's API, an executed usage example and the live Storybook story. {% .lead %}",
         '',
         '---',
         '',
@@ -679,8 +679,13 @@ describe('collectComponents', () => {
     const { pages } = collectComponents(fixtureRoot)
     const loader = pages.find((page) => page.name === 'loader')
 
-    assert.ok(loader.content.includes('The `<smart-loader>` component covers'))
-    assert.ok(!loader.content.includes('## Source'))
+    const angular = loader.content.slice(
+      0,
+      loader.content.indexOf('{% framework name="react" %}'),
+    )
+
+    assert.ok(angular.includes('The `<smart-loader>` component covers'))
+    assert.ok(!angular.includes('## Source'))
   })
 
   test('reports the components whose stories carry no usage region', () => {
@@ -695,7 +700,7 @@ describe('collectComponents', () => {
   test('lists every component on the index page', () => {
     const { index } = collectComponents(fixtureRoot)
 
-    assert.ok(index.includes('ships 4 `smart-*` components'))
+    assert.ok(index.includes('ships 4 UI components'))
     assert.ok(index.includes('| [`loader`](/docs/components/loader) |'))
     assert.ok(
       index.includes(
@@ -801,5 +806,202 @@ describe('generate-components CLI', () => {
     const root = workspace()
 
     assert.throws(() => run(root, '--check'), { status: 1 })
+  })
+})
+
+describe('the React variant', () => {
+  const reactSkill = (name) =>
+    fs.readFileSync(
+      path.join(
+        fixtureRoot,
+        'packages/shared/claude-plugins/src/plugins/smart-react/skills',
+        `react-components-${name}`,
+        'SKILL.md',
+      ),
+      'utf8',
+    )
+  const react = (overrides = {}) => ({
+    name: 'button',
+    source: reactSkill('button'),
+    story: {
+      file: 'packages/shared/react/src/lib/components/button/button.stories.tsx',
+      id: 'components-button--playground',
+    },
+    usage: { tsx: 'react/src/components/button/usage.example.tsx' },
+    example: 'react/src/components/button/custom.example.tsx',
+    ...overrides,
+  })
+  const page = (overrides) =>
+    transformSkillToPage({
+      name: 'button',
+      order: 1,
+      source: skill('button'),
+      story: storyOf('button', 'components-button--playground'),
+      usage: {
+        html: 'angular/src/components/button/usage.example.html',
+        ts: 'angular/src/components/button/usage.example.ts',
+      },
+      example: 'angular/src/components/button/custom.example.ts',
+      react: react(overrides),
+    }).content
+  const reactBlock = (source) =>
+    source.slice(source.indexOf('{% framework name="react" %}'))
+
+  test('lists both frameworks in the frontmatter', () => {
+    const { data } = parseFrontmatter(page())
+
+    assert.deepEqual(data.frameworks, ['angular', 'react'])
+  })
+
+  test('wraps each variant in its framework block, Angular first', () => {
+    const source = page()
+    const angular = source.indexOf('{% framework name="angular" %}')
+    const react = source.indexOf('{% framework name="react" %}')
+
+    assert.ok(angular !== -1 && react > angular, source)
+    assert.equal(source.match(/\{% \/framework %\}/g).length, 2)
+  })
+
+  test('shows the executed React example in a TSX tab, next to Claude Code', () => {
+    const block = reactBlock(page())
+
+    assert.ok(block.includes('{% tab title="TSX" %}'))
+    assert.ok(
+      block.includes(
+        '{% snippet file="react/src/components/button/usage.example.tsx" region="usage" /%}',
+      ),
+    )
+    assert.ok(block.includes('`smart-react@smartsoft` plugin'))
+    assert.ok(block.includes('using @smartsoft001/react.'))
+    assert.ok(block.includes('(/docs/skills/react-components-agent)'))
+  })
+
+  test('falls back to the React story without an executed example', () => {
+    const block = reactBlock(page({ usage: null }))
+
+    assert.ok(
+      block.includes(
+        '{% snippet file="packages/shared/react/src/lib/components/button/button.stories.tsx" region="usage" /%}',
+      ),
+    )
+  })
+
+  test('embeds the story of the React Storybook', () => {
+    assert.ok(
+      reactBlock(page()).includes(
+        '{% storybook project="react" story="components-button--playground" height=320 /%}',
+      ),
+    )
+  })
+
+  test("drops the skill's own usage, its agent-only sections and its code", () => {
+    const block = reactBlock(page())
+
+    assert.ok(!block.includes('The handler is `options.click`'))
+    assert.ok(!block.includes('## When to Use This Skill'))
+    assert.ok(!block.includes('## File Locations'))
+    assert.ok(!block.includes('```tsx'))
+    assert.ok(block.includes('## Props and Types'))
+    assert.ok(block.includes('## Styling'))
+  })
+
+  test('puts the custom example in place of the last block of Replacing the Implementation', () => {
+    const block = reactBlock(page())
+    const section = block.slice(
+      block.indexOf('## Replacing the Implementation'),
+      block.indexOf('## Styling'),
+    )
+
+    assert.ok(section.includes('### The `useButton` hook'))
+    assert.ok(section.includes('Register a component under `button`.'))
+    assert.ok(
+      section
+        .trimEnd()
+        .endsWith(
+          '{% snippet file="react/src/components/button/custom.example.tsx" region="usage" /%}',
+        ),
+      section,
+    )
+  })
+
+  test('links the React library and skill as its source', () => {
+    assert.ok(
+      reactBlock(page()).includes(
+        '[`packages/shared/react/src/lib/components/button`]',
+      ),
+    )
+  })
+
+  test('reports the React fences it drops under the React component', () => {
+    const { report } = transformSkillToPage({
+      name: 'button',
+      order: 1,
+      source: skill('button'),
+      story: storyOf('button', 'components-button--playground'),
+      example: null,
+      react: react(),
+    })
+
+    assert.ok(
+      report.some(
+        (entry) =>
+          entry.component === 'button (react)' && entry.language === 'tsx',
+      ),
+    )
+  })
+
+  test('keeps a page without a React skill on one framework, without blocks', () => {
+    const { content: source } = transformSkillToPage({
+      name: 'widget',
+      order: 4,
+      source: skill('widget'),
+      story: storyOf('widget', 'smart-widget-widget--playground'),
+      example: null,
+    })
+
+    assert.ok(!source.includes('{% framework'))
+    assert.equal(parseFrontmatter(source).data.frameworks, undefined)
+  })
+})
+
+describe('the React variant of a hand written page', () => {
+  test('wraps the hand written body as Angular and adds the React skill', () => {
+    const { pages } = collectComponents(fixtureRoot)
+    const loader = pages.find((page) => page.name === 'loader').content
+    const angular = loader.slice(
+      loader.indexOf('{% framework name="angular" %}'),
+      loader.indexOf('{% framework name="react" %}'),
+    )
+
+    assert.ok(angular.includes('The `<smart-loader>` component covers'))
+    assert.ok(loader.includes('`SmartLoader` covers its parent'))
+    assert.deepEqual(parseFrontmatter(loader).data.frameworks, [
+      'angular',
+      'react',
+    ])
+  })
+})
+
+describe('React references', () => {
+  test('findStory reads the .stories.tsx of the React library', () => {
+    assert.deepEqual(findStory(fixtureRoot, 'button', 'react'), {
+      file: 'packages/shared/react/src/lib/components/button/button.stories.tsx',
+      id: 'components-button--playground',
+    })
+  })
+
+  test('findUsage returns the one .tsx file of the React example', () => {
+    assert.deepEqual(findUsage(fixtureRoot, 'button', 'react'), {
+      tsx: 'react/src/components/button/usage.example.tsx',
+    })
+    assert.equal(findUsage(fixtureRoot, 'loader', 'react'), null)
+  })
+
+  test('findExample returns the React custom example', () => {
+    assert.equal(
+      findExample(fixtureRoot, 'button', 'react'),
+      'react/src/components/button/custom.example.tsx',
+    )
+    assert.equal(findExample(fixtureRoot, 'loader', 'react'), null)
   })
 })

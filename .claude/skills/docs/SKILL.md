@@ -76,29 +76,47 @@ where the code lives. R8 accepts either.
 
 ## Flow: component
 
-For a UI component of `@smartsoft001/angular`. Component pages are **generated** from the plugin skill
-`packages/shared/claude-plugins/src/plugins/smart-angular/skills/angular-components-<name>/SKILL.md` and are
-git-ignored, so the work is in the sources the generator reads.
+For a UI component. Every component exists in `@smartsoft001/angular` and `@smartsoft001/react`, and its
+page documents both: an Angular | React switch under the title shows one variant at a time. Component pages
+are **generated** and git-ignored, so the work is in the sources the generator reads, per framework:
 
-- [ ] **1. Check the skill exists** — if it does not, the component page cannot be generated. Write the
-      per-component skill first (the `angular-components` skill in
-      `packages/shared/angular/.claude/skills/` owns that step), or, for a component that
-      will never have one, write `docs/site/content/components/<name>.md` from the component template.
-- [ ] **2. Mark the usage region** — wrap the primary story of
-      `packages/shared/angular/src/lib/components/<name>/<name>.component.stories.ts` in the markers shown
-      below, at column 0. That region is shown verbatim on the page, so keep the story minimal and
-      realistic. Rule R9 fails the check when a component has no story or no region.
-- [ ] **3. Optional, the extending example** — when the skill has an "Extending the Base Class" section,
-      add `docs/examples/angular/src/components/<name>/custom.example.ts` (+ spec) and the generator
-      replaces the skill's snippet with it. Register the custom class through
+| Source             | Angular variant                                                       | React variant                                                   |
+| ------------------ | --------------------------------------------------------------------- | --------------------------------------------------------------- |
+| Skill (prose, API) | `plugins/smart-angular/skills/angular-components-<name>/SKILL.md`     | `plugins/smart-react/skills/react-components-<name>/SKILL.md`   |
+| Story (live embed) | `packages/shared/angular/src/lib/components/<name>/*.stories.ts`      | `packages/shared/react/src/lib/components/<name>/*.stories.tsx` |
+| Usage example      | `docs/examples/angular/src/components/<name>/usage.example.{html,ts}` | `docs/examples/react/src/components/<name>/usage.example.tsx`   |
+| Custom example     | `docs/examples/angular/src/components/<name>/custom.example.ts`       | `docs/examples/react/src/components/<name>/custom.example.tsx`  |
+
+(The plugins live in `packages/shared/claude-plugins/src/plugins/`.) A component without a React skill
+gets an Angular-only page with no switch.
+
+- [ ] **1. Check the skills exist** — without the Angular skill the page cannot be generated, without the
+      React one it has no React variant. Write the per-component skill first (the `angular-components`
+      skill in `packages/shared/angular/.claude/skills/` and the `react-components` skill in
+      `packages/shared/react/.claude/skills/` own that step), or, for a component that will never have an
+      Angular skill, write `docs/site/content/components/<name>.md` from the component template; that hand
+      written body becomes the Angular variant and the React skill still adds the React one.
+- [ ] **2. Mark the usage regions** — wrap the primary story of each library in the markers shown below, at
+      column 0. That region is the live embed, and the code fallback while a usage example is missing.
+      Rule R9 fails the check when a component has no story or no region, in either library.
+- [ ] **3. Write the usage examples** — the HTML and TypeScript tabs (Angular) and the TSX tab (React)
+      show them. The React one exports `<Pascal>UsageExample` from one file wrapped in the region, imports
+      only `@smartsoft001/react` (and `@smartsoft001/models`), and mirrors the scenario of the Angular
+      example; its spec renders it inside `SmartProvider`. Rule R15 fails without them.
+- [ ] **4. Optional, the custom examples** — Angular: when the skill has an "Extending the Base Class"
+      section, `custom.example.ts` (+ spec) replaces it. Register the custom class through
       `<NAME>_STANDARD_COMPONENT_TOKEN` in a host component and assert through the wrapper: it re-emits
       its own outputs from the custom instance (`forwardOutletOutputs`) and passes its projected content
-      to the custom instance's default `<ng-content>` (`outletContent`).
-- [ ] **4. Generate and look at the result** — `npx nx run docs:generate-components`, then read
+      to the custom instance's default `<ng-content>` (`outletContent`). React: `custom.example.tsx`
+      (+ spec) builds `Custom<Pascal>` on the component's `use<Pascal>` hook, registers it as a module
+      constant in `SmartProvider`'s `components`, and takes the place of the last code block of the
+      skill's "Replacing the Implementation" section.
+- [ ] **5. Generate and look at the result** — `npx nx run docs:generate-components`, then read
       `docs/site/src/app/docs/components/<name>/page.md`. The generator prints every code fence it dropped
-      from the skill; a fence that carried real information belongs in an example, not in prose.
-- [ ] **5. Verify** — see [Verification](#verification), plus `npx nx run angular:build-storybook -c ci`
-      because the region has to compile.
+      from the skills (`<name> (react)` for the React one); a fence that carried real information belongs
+      in an example, not in prose.
+- [ ] **6. Verify** — see [Verification](#verification), plus `npx nx run angular:build-storybook -c ci` and
+      `npx nx run react:build-storybook` because the regions have to compile.
 
 The markers of step 2:
 
@@ -109,6 +127,29 @@ export const Playground: Story = {
 };
 // #endregion
 ```
+
+## Pages for both frameworks
+
+A hand written page whose content differs per framework (CRUD, installation) lists
+`frameworks: [angular, react]` in its frontmatter, which puts the switch under its title, and wraps each
+variant in a block; prose that holds for both stays outside:
+
+```markdown
+{% framework name="angular" %}
+
+{% snippet file="angular/src/crud/crud-module.example.ts" region="usage" /%}
+
+{% /framework %}
+
+{% framework name="react" %}
+
+{% snippet file="react/src/crud/crud-provider.example.tsx" region="usage" /%}
+
+{% /framework %}
+```
+
+The reader's choice is remembered across pages, and `?framework=react` in a link opens a page, and the
+pages after it, on React. A link to a heading inside a block switches to that block's framework.
 
 ## Flow: skill
 
@@ -153,19 +194,21 @@ rule that needed a second pass.
 `tools/scripts/docs-check.mjs`, rule bodies in `docs/site/tools/check-rules.mjs`. The parity rules
 (R1, R2, R3, R9, R10) are the ones `--strict` controls; `docs:check` runs them as errors today.
 
-| Rule | What it means for this skill                                                     |
-| ---- | -------------------------------------------------------------------------------- |
-| R1   | A published package without a page fails CI. The `package` flow exists for this. |
-| R2   | Every UI component needs a page; usually generated, so check the skill exists.   |
-| R3   | Every `user-invocable: true` skill needs a page, per its source.                 |
-| R4   | Every `{% snippet %}` must resolve to an existing file and region.               |
-| R5   | Every `{% storybook %}` id must exist in the built Storybook index.              |
-| R6   | No hand-written TypeScript or HTML on reference pages; embed a snippet instead.  |
-| R7   | Frontmatter needs `title` and a section from `docs/site/tools/sections.mjs`.     |
-| R8   | Package pages need `package`, the Install / Usage / API headings and a snippet.  |
-| R9   | Every component needs a story with a `usage` region.                             |
-| R10  | A `skill:` key and every `{% skill %}` tag must name a real skill; title = name. |
-| R11  | Every fenced code block declares a language.                                     |
+| Rule | What it means for this skill                                                      |
+| ---- | --------------------------------------------------------------------------------- |
+| R1   | A published package without a page fails CI. The `package` flow exists for this.  |
+| R2   | Every UI component needs a page; usually generated, so check the skill exists.    |
+| R3   | Every `user-invocable: true` skill needs a page, per its source.                  |
+| R4   | Every `{% snippet %}` must resolve to an existing file and region.                |
+| R5   | Every `{% storybook %}` id must exist in the built Storybook index.               |
+| R6   | No hand-written TypeScript or HTML on reference pages; embed a snippet instead.   |
+| R7   | Frontmatter needs `title` and a section from `docs/site/tools/sections.mjs`.      |
+| R8   | Package pages need `package`, the Install / Usage / API headings and a snippet.   |
+| R9   | Every component needs a story with a `usage` region, in each library that has it. |
+| R10  | A `skill:` key and every `{% skill %}` tag must name a real skill; title = name.  |
+| R11  | Every fenced code block declares a language.                                      |
+| R13  | Component usage tabs: HTML, TypeScript, Claude Code; plus TSX with a React block. |
+| R15  | Every component needs its usage examples: Angular `.html` + `.ts`, React `.tsx`.  |
 
 ## Gotchas
 
