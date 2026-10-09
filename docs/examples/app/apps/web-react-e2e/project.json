@@ -1,0 +1,30 @@
+{
+  "name": "docs-examples-app-web-react-e2e",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "tags": ["scope:docs", "type:example-app"],
+  "implicitDependencies": [
+    "docs-examples-app-web-react",
+    "docs-examples-app-api"
+  ],
+  "targets": {
+    "e2e": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "parallelism": false,
+      "options": {
+        "command": "playwright test --config docs/examples/app/apps/web-e2e/playwright.config.ts",
+        "env": { "E2E_FRONTEND": "react" }
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "parallelism": false,
+      "options": {
+        "command": "node docs/examples/app/apps/web-e2e/run.mjs",
+        "env": { "E2E_FRONTEND": "react" }
+      }
+    }
+  }
+}

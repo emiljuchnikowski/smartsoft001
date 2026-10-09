@@ -16,10 +16,14 @@ import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const workspaceRoot = resolve(here, '../../../../..');
+// The project whose `test` target ran the script, for the message below: in
+// the monorepo, one e2e project per frontend runs it.
+const project =
+  process.env['NX_TASK_TARGET_PROJECT'] ?? 'docs-examples-app-web-e2e';
 
 if (process.env['RUN_EXAMPLE_APP_E2E'] !== '1') {
   console.log(
-    'docs-examples-app-web-e2e: SKIPPED. Set RUN_EXAMPLE_APP_E2E=1 with MongoDB ' +
+    `${project}: SKIPPED. Set RUN_EXAMPLE_APP_E2E=1 with MongoDB ` +
       'running on localhost:27017 to run the Playwright suite (see docs/examples/app/README.md).',
   );
   process.exit(0);
