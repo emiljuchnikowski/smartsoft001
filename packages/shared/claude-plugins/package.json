@@ -1,6 +1,6 @@
 {
   "name": "@smartsoft001/claude-plugins",
-  "version": "2.191.0",
+  "version": "2.195.0",
   "description": "Installs the smartsoft Claude Code plugins into a project: smart-core (hooks and framework-neutral skills) plus smart-angular or smart-react (the component and CRUD skills and agents of one framework).",
   "publishConfig": {
     "access": "public"
