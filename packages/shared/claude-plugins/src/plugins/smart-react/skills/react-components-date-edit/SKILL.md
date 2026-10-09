@@ -118,7 +118,7 @@ export function DateFields() {
 
 ## Replacing the Implementation
 
-`SmartDateEdit` has no `SmartProvider` registry key: the `variant` prop picks `SmartDateEditStandard` or `SmartDateEditPreset`, and both can be rendered directly with `SmartDateEditVariantProps`. A form's `date` / `dateWithEdit` fields render it through the input field components (see `react-components-input`). For another look, write a component on `useDateEdit` and render it in place of `SmartDateEdit`.
+`SmartDateEdit` has no `SmartProvider` registry key: the `variant` prop picks `SmartDateEditStandard` or `SmartDateEditPreset`, and both can be rendered directly with `SmartDateEditVariantProps`. `SMART_PRESET_COMPONENTS` therefore does not change it; set `variant="preset"` where the calendar popover should render. A form's `date` / `dateWithEdit` fields render it through the input field components (see `react-components-input`). For another look, write a component on `useDateEdit` and render it in place of `SmartDateEdit`.
 
 ### The `useDateEdit` hook
 

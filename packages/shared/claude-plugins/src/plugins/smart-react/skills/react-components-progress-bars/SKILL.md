@@ -38,15 +38,15 @@ The preset's class helpers (`getProgressBarsColumnClasses`, `isProgressBarsVerti
 
 ### `IProgressBarsOptions`
 
-| Field          | Type                      | Default      | Description                                              |
-| -------------- | ------------------------- | ------------ | -------------------------------------------------------- |
-| `layout?`      | `SmartProgressBarsLayout` | `'simple'`   | A step layout, or `progress-bar` for the percentage bar. |
-| `ariaLabel?`   | `string`                  | `'Progress'` | Accessible name of the `<nav>`.                          |
-| `steps?`       | `IProgressStep[]`         | `[]`         | The steps of a step layout.                              |
-| `title?`       | `string`                  | —            | Title of the progress bar.                               |
-| `srOnlyTitle?` | `string`                  | —            | Title for screen readers only.                           |
-| `value?`       | `number`                  | `0`          | Percentage of the progress bar (0–100).                  |
-| `columns?`     | `IProgressBarColumn[]`    | `[]`         | Captions under the progress bar.                         |
+| Field          | Type                      | Default      | Description                                                                                           |
+| -------------- | ------------------------- | ------------ | ----------------------------------------------------------------------------------------------------- |
+| `layout?`      | `SmartProgressBarsLayout` | `'simple'`   | A step layout, or `progress-bar` for the percentage bar.                                              |
+| `ariaLabel?`   | `string`                  | `'Progress'` | Accessible name of the step `<nav>`; the preset also puts it on the bar's `role="progressbar"` track. |
+| `steps?`       | `IProgressStep[]`         | `[]`         | The steps of a step layout.                                                                           |
+| `title?`       | `string`                  | —            | Title above the steps or the bar (the preset bar also shows the `value%` next to it).                 |
+| `srOnlyTitle?` | `string`                  | —            | Bar mode: a heading for screen readers only.                                                          |
+| `value?`       | `number`                  | `0`          | Bar mode: the percentage, clamped to 0–100.                                                           |
+| `columns?`     | `IProgressBarColumn[]`    | `[]`         | Bar mode: captions under the bar.                                                                     |
 
 ### `IProgressStepClick`
 
@@ -56,15 +56,15 @@ The preset's class helpers (`getProgressBarsColumnClasses`, `isProgressBarsVerti
 
 ### `IProgressStep`
 
-| Field          | Type                      | Default  | Description                                    |
-| -------------- | ------------------------- | -------- | ---------------------------------------------- |
-| `id`           | `string`                  | required | Reported as `stepId`.                          |
-| `name?`        | `string`                  | —        | Step name.                                     |
-| `description?` | `string`                  | —        | Text under the name (layouts "with text").     |
-| `status?`      | `SmartProgressStepStatus` | —        | `complete`, `current` or `upcoming`.           |
-| `href?`        | `string`                  | —        | Renders the step as a link.                    |
-| `iconTpl?`     | `ReactNode`               | —        | Icon of the step.                              |
-| `index?`       | `string`                  | —        | Number shown in the step marker (e.g. `'01'`). |
+| Field          | Type                      | Default      | Description                                                                                                       |
+| -------------- | ------------------------- | ------------ | ----------------------------------------------------------------------------------------------------------------- |
+| `id`           | `string`                  | required     | Reported as `stepId`.                                                                                             |
+| `name?`        | `string`                  | —            | Step name.                                                                                                        |
+| `description?` | `string`                  | —            | Text under the name, in every step layout.                                                                        |
+| `status?`      | `SmartProgressStepStatus` | `'upcoming'` | `complete`, `current` (adds `aria-current="step"`) or `upcoming`.                                                 |
+| `href?`        | `string`                  | —            | Renders the step as a link (through the navigation adapter for internal paths); no `onStepClick`.                 |
+| `iconTpl?`     | `ReactNode`               | —            | Icon of the step; the preset shows it in the marker, so not in the `simple` layout.                               |
+| `index?`       | `string`                  | —            | Number of the step (e.g. `'01'`): the standard shows it when there is no `iconTpl`, the preset in circle markers. |
 
 ### `IProgressBarColumn`
 
@@ -150,7 +150,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
 }
 ```
 
-`SmartProgressBarsPreset` is the styled (preset) implementation: register it as above, render it directly in place of `SmartProgressBars`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
+`SmartProgressBarsPreset` is the styled (preset) implementation: register it under the `'progress-bars'` key of `SmartProvider`'s `components`, render it directly in place of `SmartProgressBars`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
 
 ```tsx
 import { SmartProgressBarsProps } from '@smartsoft001/react';

@@ -91,7 +91,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
 }
 ```
 
-`SmartMediaObjectPreset` is the styled (preset) implementation: register it as above, render it directly in place of `SmartMediaObject`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
+`SmartMediaObjectPreset` is the styled (preset) implementation: register it under the `'media-object'` key of `SmartProvider`'s `components`, render it directly in place of `SmartMediaObject`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
 
 ```tsx
 import { SmartMediaObjectProps } from '@smartsoft001/react';

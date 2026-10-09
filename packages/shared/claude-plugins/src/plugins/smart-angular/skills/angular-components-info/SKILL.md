@@ -30,13 +30,15 @@ Default concrete implementation. Renders:
 
 ### InfoPresetComponent (`<smart-info-preset>`)
 
-Styled variation that extends `InfoBaseComponent` and is a drop-in replacement for `InfoStandardComponent`. Register it via `INFO_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-info>`, or use the `<smart-info-preset>` selector directly. It renders the Preline **Tooltip** look: a circular icon toggle plus a small tooltip bubble. Visibility is driven by Angular hover/focus (`(mouseenter)`/`(mouseleave)` + `(focus)`/`(blur)`) using the inherited `isOpen` signal and `@if` — Preline's JS plugin is not installed. It keeps the translated Preline visual classes, exposes a `placement` input (`'top'` (default) | `'bottom'` | `'left'` | `'right'`) for tooltip position, and renders `role="tooltip"` with `aria-describedby` wiring on the toggle. All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants. The class recipes live in `preset/preset-classes.util.ts` (`getInfoContainerClasses`, `getInfoToggleClasses`, `getInfoTooltipClasses`).
+Styled variation that extends `InfoBaseComponent` and is a drop-in replacement for `InfoStandardComponent`. Register it via `INFO_STANDARD_COMPONENT_TOKEN` (or register every preset at once with `provideSmartPresets()`) to restyle every `<smart-info>`, or use the `<smart-info-preset>` selector directly. It renders the Preline **Tooltip** look: a circular icon toggle plus a small tooltip bubble. Visibility is driven by Angular hover/focus (`(mouseenter)`/`(mouseleave)` + `(focus)`/`(blur)`) using the inherited `isOpen` signal and `@if` — Preline's JS plugin is not installed. It keeps the translated Preline visual classes and renders `role="tooltip"` with `aria-describedby` wiring on the toggle. All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants; the class recipes are internal to the preset (not exported).
 
-> Because `InfoComponent` renders injected components via `NgComponentOutlet` (which passes inputs by canonical name), `InfoPresetComponent` overrides `cssClass` as `input<string>('')` **without** the `class` alias. Bind it as `[cssClass]` when using the `<smart-info-preset>` selector directly, or just pass `class` on `<smart-info>` (the wrapper forwards it). The `placement` input is only available on the preset selector directly — the `<smart-info>` wrapper forwards only `options` and `cssClass`, so through the token tooltips default to `'top'`.
+The preset adds one input of its own, `placement`, described in the API section. It is only available on the `<smart-info-preset>` selector: the `<smart-info>` wrapper forwards `options` and `class` only, so a preset registered through the token always opens its tooltip on `'top'`.
+
+The preset declares `cssClass` without the `class` alias, so on the `<smart-info-preset>` selector bind it as `[cssClass]`; on `<smart-info>` pass `class` as usual (the wrapper forwards it to whichever implementation it renders).
 
 ### InfoBaseComponent (abstract)
 
-Abstract base directive for extending custom info implementations. Exposes `options`, `cssClass`, `isOpen` signal, and `toggle()`/`open()`/`close()` methods.
+Abstract base directive for extending custom info implementations. Exposes `options`, `cssClass` (input alias `class`), the `isOpen` signal, and `toggle()`/`open()`/`close()` methods.
 
 ## API
 
@@ -47,7 +49,17 @@ Abstract base directive for extending custom info implementations. Exposes `opti
 | `options` | `InputSignal<IInfoOptions>` | required | Info configuration                          |
 | `class`   | `InputSignal<string>`       | `''`     | External CSS classes (alias for `cssClass`) |
 
+`InfoPresetComponent` (the `<smart-info-preset>` selector only) adds one input.
+
+| Input       | Type                                     | Default | Description                              |
+| ----------- | ---------------------------------------- | ------- | ---------------------------------------- |
+| `placement` | `'top' \| 'bottom' \| 'left' \| 'right'` | `'top'` | Side of the toggle the tooltip opens on. |
+
 ### IInfoOptions
+
+| Field  | Type     | Default  | Description                                                                              |
+| ------ | -------- | -------- | ---------------------------------------------------------------------------------------- |
+| `text` | `string` | required | The text of the popover, rendered through `TranslatePipe` (it may be a translation key). |
 
 ```typescript
 interface IInfoOptions {
@@ -55,18 +67,13 @@ interface IInfoOptions {
 }
 ```
 
-The `text` value is rendered inside the popover through `TranslatePipe`, so it may be a translation key.
-
 ### INFO_STANDARD_COMPONENT_TOKEN
+
+InjectionToken from `@smartsoft001/angular` that allows replacing the default `InfoStandardComponent` with a custom implementation. Provide a `Type<InfoBaseComponent>` in your application or component providers; `provideSmartPresets()` provides `InfoPresetComponent` for it together with every other preset.
 
 ```typescript
 import { INFO_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
-```
 
-InjectionToken that allows replacing the default `InfoStandardComponent` with a custom implementation. Provide a `Type<InfoBaseComponent>` to override.
-
-```typescript
-// In your app module or component providers:
 providers: [
   {
     provide: INFO_STANDARD_COMPONENT_TOKEN,
@@ -126,10 +133,7 @@ export class MyCustomInfoComponent extends InfoBaseComponent {
 }
 ```
 
-When extending the base directly, remember to:
-
-- declare `cssClass = input<string>('')` explicitly (no `class` alias) if the component is used via `NgComponentOutlet` through `INFO_STANDARD_COMPONENT_TOKEN`, because `NgComponentOutlet` passes inputs by canonical name (not by alias),
-- implement a close-on-outside-click listener yourself if the popover should close when clicking outside — the base class does not do it for you.
+The inherited `cssClass` (input alias `class`) receives the class passed to `<smart-info>`: the wrapper forwards it under the name the rendered component declares. Implement a close-on-outside-click listener yourself if the popover should close when clicking outside — the base class does not do it for you.
 
 ## Usage Examples
 
@@ -162,7 +166,7 @@ When extending the base directly, remember to:
 - Wrapper: `packages/shared/angular/src/lib/components/info/info.component.ts`
 - Standard: `packages/shared/angular/src/lib/components/info/standard/standard.component.ts`
 - Preset variation: `packages/shared/angular/src/lib/components/info/preset/preset.component.ts`
-- Preset class recipes: `packages/shared/angular/src/lib/components/info/preset/preset-classes.util.ts`
+- Preset class recipes (internal, not exported): `packages/shared/angular/src/lib/components/info/preset/preset-classes.util.ts`
 - Base class: `packages/shared/angular/src/lib/components/info/base/base.component.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`INFO_STANDARD_COMPONENT_TOKEN`)
 - Interface: `packages/shared/angular/src/lib/models/interfaces.ts` (`IInfoOptions`)

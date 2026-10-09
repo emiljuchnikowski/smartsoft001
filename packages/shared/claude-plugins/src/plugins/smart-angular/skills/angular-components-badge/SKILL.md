@@ -17,7 +17,7 @@ The `<smart-badge>` component renders a small inline status / label indicator. I
 
 ### BadgeComponent (`<smart-badge>`)
 
-Main wrapper component. Renders `BadgeStandardComponent` by default. When `BADGE_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`. Re-emits `removed` from the default standard child.
+Main wrapper component. Renders `BadgeStandardComponent` by default. When `BADGE_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet` and passes it every input, `class` included. Re-emits `removed` from whichever component it renders.
 
 ### BadgeStandardComponent (`<smart-badge-standard>`)
 
@@ -25,9 +25,9 @@ Barebones placeholder concrete implementation. Renders a `<span>` host with `dat
 
 ### BadgePresetComponent (`<smart-badge-preset>`)
 
-Styled variation that extends `BadgeBaseComponent` and is a drop-in replacement for `BadgeStandardComponent`. Register it via `BADGE_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-badge>`, or use the `<smart-badge-preset>` selector directly. It groups the **solid / soft / outline** color presets into a single component, selected through `options.variant` (default `'soft'`), across the full `SmartBadgeColor` palette. Honors `options.pill` (default `true` → `rounded-full`; `false` → `rounded-md`), `size` (`sm`/`md`), `options.withDot` (leading SVG dot), and `options.withRemove` (remove button emitting `removed`). All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants. The per-variant/color class recipes live in `preset/preset-classes.util.ts` (`getBadgeClasses`, `getDotClasses`, `getRemoveClasses`).
+Styled variation that extends `BadgeBaseComponent` and is a drop-in replacement for `BadgeStandardComponent`. Register it via `BADGE_STANDARD_COMPONENT_TOKEN` (`{ provide: BADGE_STANDARD_COMPONENT_TOKEN, useValue: BadgePresetComponent }`) to restyle every `<smart-badge>`, register every preset at once with `provideSmartPresets()`, or use the `<smart-badge-preset>` selector directly. It groups the **solid / soft / outline** color presets into a single component, selected through `options.variant` (default `'soft'`), across the full `SmartBadgeColor` palette. Honors `options.pill` (default `true` → `rounded-full`; `false` → `rounded-md`), `size` (`sm`/`md`), `options.withDot` (leading SVG dot), and `options.withRemove` (remove button emitting `removed`). All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants; the per-variant/color class recipes are internal to the preset (not exported).
 
-> Because `BadgeComponent` renders injected components via `NgComponentOutlet` (which passes inputs by canonical name), `BadgePresetComponent` overrides `cssClass` as `input<string>('')` **without** the `class` alias. Bind it as `[cssClass]` when using the `<smart-badge-preset>` selector directly, or just pass `class` on `<smart-badge>` (the wrapper forwards it).
+Used directly, `<smart-badge-preset>` takes the extra classes as `class` or `[cssClass]`; on `<smart-badge>` pass `class` and the wrapper forwards it.
 
 ### BadgeBaseComponent (abstract)
 
@@ -53,12 +53,21 @@ Abstract base directive for extending custom badge implementations. Exposes `tex
 
 ### SmartBadgeColor
 
+`SmartBadgeColor` is `'gray' | 'red' | 'yellow' | 'green' | 'blue' | 'indigo' | 'purple' | 'pink'`. The preset styles every colour; the standard exposes it as `data-color`.
+
 ```typescript
 type SmartBadgeColor =
   'gray' | 'red' | 'yellow' | 'green' | 'blue' | 'indigo' | 'purple' | 'pink';
 ```
 
 ### IBadgeOptions
+
+| Field        | Type                             | Default  | Description                                                                                                                                                                                              |
+| ------------ | -------------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `variant`    | `'solid' \| 'soft' \| 'outline'` | `'soft'` | Styled by the preset: `solid` filled with inverse text, `soft` tinted with same-hue text, `outline` transparent with a coloured border. The standard does not style it; it exposes it as `data-variant`. |
+| `pill`       | `boolean`                        | `true`   | Fully rounded pill; `false` renders `rounded-md` corners. Styled by the preset; the standard exposes it as `data-pill="true" \| "false"`.                                                                |
+| `withDot`    | `boolean`                        | `false`  | Renders a coloured dot before the text (a `•` in the standard, an SVG dot in the preset).                                                                                                                |
+| `withRemove` | `boolean`                        | `false`  | Renders a remove button that emits `removed`.                                                                                                                                                            |
 
 ```typescript
 interface IBadgeOptions {
@@ -79,7 +88,7 @@ interface IBadgeOptions {
 import { BADGE_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
 ```
 
-InjectionToken that allows replacing the default `BadgeStandardComponent` with a custom implementation. Provide a `Type<BadgeBaseComponent>` to override.
+InjectionToken that allows replacing the default `BadgeStandardComponent` with a custom implementation. Provide a `Type<BadgeBaseComponent>` to override; the wrapper passes it every input it declares, `class` included, and re-emits its `removed`.
 
 ```typescript
 // In your app module or component providers:
@@ -98,7 +107,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -123,12 +131,9 @@ import { BadgeBaseComponent } from '@smartsoft001/angular';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyCustomBadgeComponent extends BadgeBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   containerClasses = computed(() => {
     const classes = ['my-badge-container'];
-    if (this.options()?.pill) classes.push('my-badge-pill');
+    if (this.options()?.pill !== false) classes.push('my-badge-pill');
     if (this.options()?.variant === 'outline') classes.push('my-badge-outline');
     const extra = this.cssClass();
     if (extra) classes.push(extra);
@@ -139,7 +144,7 @@ export class MyCustomBadgeComponent extends BadgeBaseComponent {
 
 When extending the base directly, remember to:
 
-- declare `cssClass = input<string>('')` explicitly (no `class` alias) if the component is used via `NgComponentOutlet` through `BADGE_STANDARD_COMPONENT_TOKEN`, because `NgComponentOutlet` passes inputs by canonical name (not by alias),
+- treat a missing `options.pill` as `true` and a missing `options.variant` as `'soft'`, like the built-in variants,
 - call `this.remove()` from your remove button click handler so the `removed` output is emitted consistently.
 
 ## Usage Examples
@@ -171,7 +176,8 @@ When extending the base directly, remember to:
 ### Using the preset variation
 
 ```typescript
-// Register globally (or in a feature's providers) to restyle every <smart-badge>:
+// Register globally (or in a feature's providers) to restyle every <smart-badge>,
+// or call provideSmartPresets() to register every preset at once.
 import {
   BADGE_STANDARD_COMPONENT_TOKEN,
   BadgePresetComponent,
@@ -193,7 +199,7 @@ providers: [
   [options]="{ variant: 'soft', pill: false }"
 />
 
-<!-- Or use the variation selector directly (note [cssClass], not class) -->
+<!-- Or use the variation selector directly (class or [cssClass]) -->
 <smart-badge-preset
   text="Beta"
   color="purple"

@@ -26,7 +26,7 @@ All from `@smartsoft001/react`.
 | `SmartTabsStandard` | component | The default tabs rendering.                                                                                                                                                                                                                   |
 | `useTabs`           | hook      | The behaviour every tabs variant shares: the selection, controlled through `selectedId` or kept internally when that prop is `undefined`, and `selectTab`, which selects a tab and reports it through `onSelectedIdChange` and `onTabChange`. |
 
-The preset's class helpers (`getTabsContainerClasses`, `getTabsNavClasses`, `getTabsTriggerClasses`, `getTabsBadgeClasses`, `getTabsIconClasses`, `getTabsMobileSelectClasses`) are exported too, for a custom implementation that wants the preset look.
+The preset's class helpers (`getTabsContainerClasses`, `getTabsNavClasses`, `getTabsTriggerClasses`, `getTabsBadgeClasses`, `getTabsIconClasses`, `getTabsMobileSelectClasses`) are exported too, with the type `SmartTabsPresetLayout` (the layout argument of the helpers), for a custom implementation that wants the preset look.
 
 ## Props and Types
 
@@ -122,7 +122,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
 }
 ```
 
-`SmartTabsPreset` is the styled (preset) implementation: register it as above, render it directly in place of `SmartTabs`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
+`SmartTabsPreset` is the styled (preset) implementation: register it under the `'tabs'` key of `SmartProvider`'s `components`, render it directly in place of `SmartTabs`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
 
 ### The `useTabs` hook
 

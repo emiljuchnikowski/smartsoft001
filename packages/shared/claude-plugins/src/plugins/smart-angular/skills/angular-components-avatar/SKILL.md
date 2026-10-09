@@ -18,7 +18,7 @@ The `<smart-avatar>` component renders a user/entity avatar in either single or 
 
 ### AvatarComponent (`<smart-avatar>`)
 
-Main wrapper component. Renders `AvatarStandardComponent` by default. When `AVATAR_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`.
+Main wrapper component. Renders `AvatarStandardComponent` by default. When `AVATAR_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet` and passes it every input, `class` included.
 
 ### AvatarStandardComponent (`<smart-avatar-standard>`)
 
@@ -31,9 +31,9 @@ It does not include Tailwind UI styling — it exists solely as the default stru
 
 ### AvatarPresetComponent (`<smart-avatar-preset>`)
 
-Styled variation that extends `AvatarBaseComponent` and is a drop-in replacement for `AvatarStandardComponent`. Register it via `AVATAR_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-avatar>`, or use the `<smart-avatar-preset>` selector directly. It renders three content modes — an `<img>` (when `imageUrl` is set), an initials chip (when `initials` is set or `options.placeholderType === 'initials'`), or an SVG icon placeholder (the default) — across the full `SmartAvatarSize` scale (`xs`→`size-8`, `sm`→`size-9.5`, `md`→`size-11`, `lg`→`size-15.5`, `xl`→`size-20`) in both `circle` (`rounded-full`) and `rounded` (`rounded-lg`) shapes. When `notificationPosition` (`top`/`bottom`) is set the avatar is wrapped in a `relative` container with a corner status dot; when `group()` is non-empty it renders an overlapping stacked group (negative `-space-x-2`, ringed members), reversed when `options.stackDirection === 'bottom-to-top'`. All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants. The class recipes live in `preset/preset-classes.util.ts` (`getImageClasses`, `getInitialsClasses`, `getIconWrapperClasses`, `getStatusClasses`, `getGroupContainerClasses`, `getGroupItemImageClasses`, `getGroupItemInitialsClasses`).
+Styled variation that extends `AvatarBaseComponent` and is a drop-in replacement for `AvatarStandardComponent`. Register it via `AVATAR_STANDARD_COMPONENT_TOKEN` (`{ provide: AVATAR_STANDARD_COMPONENT_TOKEN, useValue: AvatarPresetComponent }`) to restyle every `<smart-avatar>`, register every preset at once with `provideSmartPresets()`, or use the `<smart-avatar-preset>` selector directly. It renders three content modes — an `<img>` (when `imageUrl` is set), an initials chip (when `initials` is set or `options.placeholderType === 'initials'`), or an SVG icon placeholder (the default) — across the full `SmartAvatarSize` scale (`xs`→`size-8`, `sm`→`size-9.5`, `md`→`size-11`, `lg`→`size-15.5`, `xl`→`size-20`) in both `circle` (`rounded-full`) and `rounded` (`rounded-lg`) shapes. When `notificationPosition` (`top`/`bottom`) is set the avatar is wrapped in a `relative` container with a corner status dot; when `group()` is non-empty it renders an overlapping stacked group (negative `-space-x-2`, ringed members), reversed when `options.stackDirection === 'bottom-to-top'`. In group mode the status dot is not rendered. All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants; the class recipes are internal to the preset (not exported).
 
-> Because `AvatarComponent` renders injected components via `NgComponentOutlet` (which passes inputs by canonical name), `AvatarPresetComponent` overrides `cssClass` as `input<string>('')` **without** the `class` alias. Bind it as `[cssClass]` when using the `<smart-avatar-preset>` selector directly, or just pass `class` on `<smart-avatar>` (the wrapper forwards it).
+Used directly, `<smart-avatar-preset>` takes the extra classes as `class` or `[cssClass]`; on `<smart-avatar>` pass `class` and the wrapper forwards it.
 
 ### AvatarBaseComponent (abstract)
 
@@ -53,18 +53,26 @@ Abstract base directive for extending custom avatar implementations. Static `sma
 
 ### Inputs
 
-| Input                  | Type                                          | Default    | Description                                                              |
-| ---------------------- | --------------------------------------------- | ---------- | ------------------------------------------------------------------------ |
-| `imageUrl`             | `InputSignal<string \| undefined>`            | -          | URL of the avatar image (single mode)                                    |
-| `initials`             | `InputSignal<string \| undefined>`            | -          | Initials shown when no `imageUrl` is provided (single mode)              |
-| `size`                 | `InputSignal<SmartAvatarSize>`                | `'md'`     | Avatar size: `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'`                      |
-| `shape`                | `InputSignal<SmartAvatarShape>`               | `'circle'` | Avatar shape: `'circle' \| 'rounded'`                                    |
-| `notificationPosition` | `InputSignal<'top' \| 'bottom' \| undefined>` | -          | Reserved for custom implementations to position a notification dot/badge |
-| `group`                | `InputSignal<IAvatarItem[] \| undefined>`     | -          | When set, renders a group of avatars instead of a single one             |
-| `options`              | `InputSignal<IAvatarOptions \| undefined>`    | -          | Optional configuration (placeholder type, stack direction)               |
-| `class`                | `InputSignal<string>`                         | `''`       | External CSS classes (alias for `cssClass`)                              |
+| Input                  | Type                                          | Default    | Description                                                                                                       |
+| ---------------------- | --------------------------------------------- | ---------- | ----------------------------------------------------------------------------------------------------------------- |
+| `imageUrl`             | `InputSignal<string \| undefined>`            | -          | URL of the avatar image (single mode)                                                                             |
+| `initials`             | `InputSignal<string \| undefined>`            | -          | Initials shown when no `imageUrl` is provided (single mode)                                                       |
+| `size`                 | `InputSignal<SmartAvatarSize>`                | `'md'`     | Avatar size: `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'`. Styled by the preset; the standard exposes it as `data-size` |
+| `shape`                | `InputSignal<SmartAvatarShape>`               | `'circle'` | Avatar shape: `'circle' \| 'rounded'`. Styled by the preset; the standard exposes it as `data-shape`              |
+| `notificationPosition` | `InputSignal<'top' \| 'bottom' \| undefined>` | -          | Preset only: the corner of the status dot (single mode). The standard does not render it                          |
+| `group`                | `InputSignal<IAvatarItem[] \| undefined>`     | -          | When set, renders a group of avatars instead of a single one                                                      |
+| `options`              | `InputSignal<IAvatarOptions \| undefined>`    | -          | Optional configuration (placeholder type, stack direction)                                                        |
+| `class`                | `InputSignal<string>`                         | `''`       | External CSS classes (alias for `cssClass`)                                                                       |
 
 ### IAvatarItem
+
+One avatar of a `group`. Each item must have a unique `id` (used as the `@for` track key). When `imageUrl` is present the item renders as an `<img>`; otherwise as `initials`.
+
+| Field      | Type     | Default     | Description                        |
+| ---------- | -------- | ----------- | ---------------------------------- |
+| `id`       | `string` | required    | Key of the item.                   |
+| `imageUrl` | `string` | `undefined` | Picture URL.                       |
+| `initials` | `string` | `undefined` | Initials when there is no picture. |
 
 ```typescript
 interface IAvatarItem {
@@ -74,9 +82,12 @@ interface IAvatarItem {
 }
 ```
 
-Each item in a group must have a unique `id` (used as the `@for` track key). When `imageUrl` is present the item renders as an `<img>`; otherwise as `initials`.
-
 ### IAvatarOptions
+
+| Field             | Type                                 | Default           | Description                                                                                                                                                                                                                                                                                                                                       |
+| ----------------- | ------------------------------------ | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `placeholderType` | `'icon' \| 'initials'`               | `'icon'`          | The fallback of a single avatar without `imageUrl`. `initials` are shown whenever they are set; without them `AvatarPresetComponent` renders an SVG icon (`'icon'`) or an empty initials chip (`'initials'`), while `AvatarStandardComponent` renders a `·` placeholder and exposes the value as `data-placeholder-type`. Not used in group mode. |
+| `stackDirection`  | `'top-to-bottom' \| 'bottom-to-top'` | `'top-to-bottom'` | Stacking order of a `group`. Styled by the preset (`'bottom-to-top'` reverses the overlapping stack); the standard exposes it as `data-stack-direction` on the group container (the root `<span>`, only in group mode), so plain CSS can target it.                                                                                               |
 
 ```typescript
 interface IAvatarOptions {
@@ -84,9 +95,6 @@ interface IAvatarOptions {
   stackDirection?: 'top-to-bottom' | 'bottom-to-top';
 }
 ```
-
-- **`placeholderType`** (default `'icon'`) — the fallback when there is no `imageUrl`. Both variants follow the same rule: `initials` are shown whenever they are set. Without initials, `AvatarPresetComponent` renders an SVG icon (`'icon'`) or an empty initials chip (`'initials'`), while `AvatarStandardComponent` renders a `·` placeholder. The standard also exposes the value as `data-placeholder-type` on its root `<span>`.
-- **`stackDirection`** (default `'top-to-bottom'`) — purely visual, styled by the preset (`'bottom-to-top'` reverses the overlapping stack). The standard exposes it as `data-stack-direction` on the group container (the root `<span>`, only in group mode), so plain CSS can target it.
 
 ### Single vs Group Mode
 
@@ -101,7 +109,7 @@ The component automatically detects mode from `group()`:
 import { AVATAR_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
 ```
 
-InjectionToken that allows replacing the default `AvatarStandardComponent` with a custom implementation. Provide a `Type<AvatarBaseComponent>` to override.
+InjectionToken that allows replacing the default `AvatarStandardComponent` with a custom implementation. Provide a `Type<AvatarBaseComponent>` to override; the wrapper passes it every input it declares, `class` included.
 
 ```typescript
 // In your app module or component providers:
@@ -120,7 +128,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -163,9 +170,6 @@ import { AvatarBaseComponent } from '@smartsoft001/angular';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyCustomAvatarComponent extends AvatarBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   containerClasses = computed(() => {
     const classes = [
       'my-avatar',
@@ -181,7 +185,6 @@ export class MyCustomAvatarComponent extends AvatarBaseComponent {
 
 When extending the base directly, remember to:
 
-- declare `cssClass = input<string>('')` explicitly (no `class` alias) if the component is used via `NgComponentOutlet` through `AVATAR_STANDARD_COMPONENT_TOKEN`, because `NgComponentOutlet` passes inputs by canonical name (not by alias),
 - branch on `isGroup()` to render either the group iteration or the single-avatar fallback chain (`imageUrl` -> `initials` -> placeholder),
 - track `@for` by `item.id` (the `IAvatarItem` contract).
 
@@ -203,14 +206,11 @@ When extending the base directly, remember to:
   ]"
 />
 
-<!-- With notification indicator (consumed by custom implementations) -->
+<!-- With a status dot (rendered by the preset) -->
 <smart-avatar [imageUrl]="user.photo" notificationPosition="top" />
 
-<!-- With options -->
-<smart-avatar
-  [imageUrl]="user.photo"
-  [options]="{ placeholderType: 'initials', stackDirection: 'top-to-bottom' }"
-/>
+<!-- Without picture or initials: an empty initials chip instead of the icon (preset) -->
+<smart-avatar size="lg" [options]="{ placeholderType: 'initials' }" />
 
 <!-- With external class -->
 <smart-avatar [imageUrl]="user.photo" class="smart:m-2" />

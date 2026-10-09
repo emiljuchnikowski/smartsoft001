@@ -40,12 +40,12 @@ The preset's class helpers (`getBreadcrumbsNavClasses`, `getBreadcrumbsListClass
 
 ### `IBreadcrumbsOptions`
 
-| Field        | Type                        | Default        | Description                                                                                                                                                     |
-| ------------ | --------------------------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `layout?`    | `SmartBreadcrumbsLayout`    | —              | `contained` or `full-width-bar` wrap the trail in a bar; `simple-with-slashes` implies the slash separator. Read by the preset; the standard markup ignores it. |
-| `ariaLabel?` | `string`                    | `'Breadcrumb'` | Accessible name of the `nav`.                                                                                                                                   |
-| `separator?` | `SmartBreadcrumbsSeparator` | `'chevron'`    | Glyph between items (`data-separator` on the standard markup).                                                                                                  |
-| `items`      | `IBreadcrumbItem[]`         | required       | The trail, first to last.                                                                                                                                       |
+| Field        | Type                        | Default        | Description                                                                                                                                                                                                  |
+| ------------ | --------------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `layout?`    | `SmartBreadcrumbsLayout`    | —              | `contained` or `full-width-bar` wrap the trail in a bar; `simple-with-slashes` implies the slash separator; `simple-with-chevrons` changes nothing. Read by the preset only; the standard markup ignores it. |
+| `ariaLabel?` | `string`                    | `'Breadcrumb'` | Accessible name of the `nav`.                                                                                                                                                                                |
+| `separator?` | `SmartBreadcrumbsSeparator` | `'chevron'`    | Glyph between items (`data-separator` on the standard markup).                                                                                                                                               |
+| `items`      | `IBreadcrumbItem[]`         | required       | The trail, first to last.                                                                                                                                                                                    |
 
 ### `IBreadcrumbsItemClick`
 
@@ -114,7 +114,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
 }
 ```
 
-`SmartBreadcrumbsPreset` is the styled (preset) implementation: register it as above, render it directly in place of `SmartBreadcrumbs`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
+`SmartBreadcrumbsPreset` is the styled (preset) implementation: register it under the `'breadcrumbs'` key of `SmartProvider`'s `components`, render it directly in place of `SmartBreadcrumbs`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
 
 ### The `useBreadcrumbs` hook
 

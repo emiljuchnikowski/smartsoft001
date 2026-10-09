@@ -12,7 +12,7 @@ user-invocable: false
 
 - Filtering by a period (from / to) or entering a stay, a contract term, a report range
 - Binding a range to a `SmartFormControl`
-- Using the modal's quick picks (today, last 7 days, this month...) or restricting the range length
+- Using the modal's quick picks (today, last 7 days, this month...) or restricting the range length, by rendering `SmartDateRangeModalStandard` yourself (`SmartDateRange` does not show them)
 - Building a range picker of your own on `useDateRange` / `useDateRangeModal`
 
 ## Exports
@@ -54,12 +54,12 @@ Props of the date-range variants: the range as a controlled `value` + `onValueCh
 
 ### `SmartDateRangeModalProps`
 
-Props of the date-range modal (`SmartDateRangeModalStandard`).
+Props of the date-range modal (`SmartDateRangeModalStandard`). `SmartDateRange` renders the modal with none of them but `previousState`, `onApply` and `onDismiss`, so `showFilterBtns` and `restrictSelectionTo` only take effect when you render the modal yourself, e.g. `<SmartDateRangeModalStandard showFilterBtns ... />` in a picker built on `useDateRange`.
 
 | Prop                   | Type                             | Default | Description                                                                  |
 | ---------------------- | -------------------------------- | ------- | ---------------------------------------------------------------------------- |
-| `showFilterBtns?`      | `boolean`                        | `false` | Shows the quick-pick buttons (today, last 7 days, ...).                      |
-| `restrictSelectionTo?` | `number`                         | `0`     | When set, only a range of exactly this many days can be applied.             |
+| `showFilterBtns?`      | `boolean`                        | `false` | Shows the quick-pick buttons (today, last 7 days, ...). Modal only.          |
+| `restrictSelectionTo?` | `number`                         | `0`     | When set, only a range of exactly this many days can be applied. Modal only. |
 | `previousState?`       | `CalendarState`                  | —       | The state the modal opens with; without `dateFrom` it selects today.         |
 | `onApply?`             | `(state: CalendarState) => void` | —       | Called with the picked state when the user applies.                          |
 | `onDismiss?`           | `() => void`                     | —       | Called when the modal is closed without applying (backdrop or close button). |

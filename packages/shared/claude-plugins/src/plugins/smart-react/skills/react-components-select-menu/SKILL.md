@@ -41,26 +41,26 @@ All from `@smartsoft001/react`.
 
 ### `ISelectMenuOptions`
 
-| Field          | Type                     | Default | Description                                                                   |
-| -------------- | ------------------------ | ------- | ----------------------------------------------------------------------------- |
-| `items?`       | `ISelectMenuItem[]`      | `[]`    | The choices.                                                                  |
-| `placeholder?` | `string`                 | —       | An empty first option.                                                        |
-| `variant?`     | `SmartSelectMenuVariant` | —       | For implementations of your own; the standard native select does not read it. |
-| `emptyTpl?`    | `ReactNode`              | —       | Shown when there are no items.                                                |
-| `ariaLabel?`   | `string`                 | —       | Accessible name of the select.                                                |
+| Field          | Type                     | Default | Description                                                                     |
+| -------------- | ------------------------ | ------- | ------------------------------------------------------------------------------- |
+| `items?`       | `ISelectMenuItem[]`      | `[]`    | The choices.                                                                    |
+| `placeholder?` | `string`                 | —       | An empty first option.                                                          |
+| `variant?`     | `SmartSelectMenuVariant` | —       | Not read by the built-in implementations; available to a custom implementation. |
+| `emptyTpl?`    | `ReactNode`              | —       | Shown when there are no items.                                                  |
+| `ariaLabel?`   | `string`                 | —       | Accessible name of the select.                                                  |
 
 ### `ISelectMenuItem`
 
-| Field        | Type                                        | Default  | Description                                            |
-| ------------ | ------------------------------------------- | -------- | ------------------------------------------------------ |
-| `value`      | `string \| number`                          | required | The value reported through `onValueChange`.            |
-| `label`      | `string`                                    | required | The option text.                                       |
-| `avatarUrl?` | `string`                                    | —        | For a custom listbox (not shown by the native select). |
-| `iconTpl?`   | `ReactNode`                                 | —        | For a custom listbox (not shown by the native select). |
-| `secondary?` | `string`                                    | —        | For a custom listbox (not shown by the native select). |
-| `status?`    | `'online' \| 'offline' \| 'busy' \| string` | —        | For a custom listbox (not shown by the native select). |
-| `disabled?`  | `boolean`                                   | —        | Disables the option.                                   |
-| `ariaLabel?` | `string`                                    | —        | Accessible name of the option.                         |
+| Field        | Type                                        | Default  | Description                                                                     |
+| ------------ | ------------------------------------------- | -------- | ------------------------------------------------------------------------------- |
+| `value`      | `string \| number`                          | required | The value reported through `onValueChange`.                                     |
+| `label`      | `string`                                    | required | The option text.                                                                |
+| `avatarUrl?` | `string`                                    | —        | Not read by the built-in implementations; available to a custom implementation. |
+| `iconTpl?`   | `ReactNode`                                 | —        | Not read by the built-in implementations; available to a custom implementation. |
+| `secondary?` | `string`                                    | —        | Not read by the built-in implementations; available to a custom implementation. |
+| `status?`    | `'online' \| 'offline' \| 'busy' \| string` | —        | Not read by the built-in implementations; available to a custom implementation. |
+| `disabled?`  | `boolean`                                   | —        | Disables the option.                                                            |
+| `ariaLabel?` | `string`                                    | —        | Accessible name of the option.                                                  |
 
 ### Related types
 
@@ -151,11 +151,11 @@ export function AvatarListbox(props: SmartSelectMenuProps) {
 }
 ```
 
-Registered as `components={{ 'select-menu': AvatarListbox }}`, every `SmartSelectMenu` renders it.
+Registered under the `'select-menu'` key, as above, every `SmartSelectMenu` below the provider renders the custom listbox.
 
 ## Styling
 
-- The native select carries `smart:dark:` variants; `className` is appended to the root element.
+- The native select is unstyled (no Tailwind classes, only the `select-menu` and `empty` class hooks); `className` is set on the root element.
 
 ## File Locations
 

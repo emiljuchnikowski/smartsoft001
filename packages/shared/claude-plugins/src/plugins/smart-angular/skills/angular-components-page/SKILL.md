@@ -18,24 +18,24 @@ The `<smart-page>` component provides a flexible page-header/layout wrapper with
 
 ### PageComponent (`<smart-page>`)
 
-Main wrapper component. Always renders via `NgComponentOutlet`. Looks up the target variant component from a merged map of `baseMap` + the optional `PAGE_VARIANT_COMPONENTS_TOKEN` map, keyed by `options.variant` (default `'standard'`). Falls back to `PageStandardComponent` when the variant is unknown. Captures `<ng-content>` into a `TemplateRef` and passes it to the target component as `options.bodyTpl` unless the caller provided an explicit `bodyTpl`.
+Main wrapper component. Always renders via `NgComponentOutlet`, forwarding `options` and the `class`. Looks up the target variant component from a merged map of `baseMap` + the optional `PAGE_VARIANT_COMPONENTS_TOKEN` map, keyed by `options.variant` (default `'standard'`). Falls back to `PageStandardComponent` when the variant is unknown. Captures `<ng-content>` into a `TemplateRef` and passes it to the target component as `options.bodyTpl` unless the caller provided an explicit `bodyTpl`.
 
 ### PageStandardComponent (`<smart-page-standard>`)
 
-Default concrete implementation and the value for `baseMap['standard']`. Renders a Tailwind-styled header with title, optional back button, optional search input, `endButtons` via `<smart-button>`, and a body section driven by `options.bodyTpl`.
+Default concrete implementation and the value for `baseMap['standard']`. Renders a Tailwind-styled header with the translated title, optional back button, optional search input, `endButtons` via `<smart-button>`, and a body section driven by `options.bodyTpl`. It renders no wrapper element and does not apply the `class` (header and body are siblings); of the slot templates it renders only `bodyTpl`.
 
 ### PageBaseComponent (abstract)
 
-Abstract base directive for extending custom page variants. Exposes `options`, `cssClass`, `back()`, `isMobile`, and a `contentTpl` view child for variants that need to re-project the main content.
+Abstract base directive for extending custom page variants. Exposes `options`, `cssClass` (input alias `class`), `back()` (`Location.back()`), `isMobile`, and a `contentTpl` view child for variants that need to re-project the main content. It sets the host height to `100%`.
 
 ## API
 
 ### Inputs
 
-| Input     | Type                              | Default | Description                                 |
-| --------- | --------------------------------- | ------- | ------------------------------------------- |
-| `options` | `InputSignal<IPageOptions\|null>` | -       | Page configuration (see `IPageOptions`)     |
-| `class`   | `InputSignal<string>`             | `''`    | External CSS classes (alias for `cssClass`) |
+| Input     | Type                              | Default | Description                                                                                                                                |
+| --------- | --------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `options` | `InputSignal<IPageOptions\|null>` | -       | Page configuration (see `IPageOptions`)                                                                                                    |
+| `class`   | `InputSignal<string>`             | `''`    | External CSS classes (alias for `cssClass`), forwarded to the variant; the preset puts them on its root, the standard variant ignores them |
 
 ### SmartPageVariant
 
@@ -46,6 +46,27 @@ export type SmartPageVariant = 'standard' | (string & {});
 Variant identifier used to select a concrete page component from the merged variant map. The intersection with `(string & {})` keeps `'standard'` as a suggested literal while allowing arbitrary custom keys.
 
 ### IPageOptions
+
+| Field            | Type                                                   | Default      | Description                                                                                                 |
+| ---------------- | ------------------------------------------------------ | ------------ | ----------------------------------------------------------------------------------------------------------- |
+| `title`          | `string`                                               | required     | Page title, passed through `TranslatePipe` (a key or text).                                                 |
+| `hideHeader`     | `boolean`                                              | -            | Hides the header block (title, buttons, search; in the preset also the breadcrumbs, meta and filters rows). |
+| `showBackButton` | `boolean`                                              | -            | Renders a back arrow that calls `Location.back()`.                                                          |
+| `endButtons`     | `Array<IIconButtonOptions>`                            | `[]`         | Action buttons rendered via `<smart-button>` (secondary, `md`).                                             |
+| `search`         | `{ text: Signal<string>; set: (txt: string) => void }` | -            | Inline search input bound to `text` / `set` (placeholder: the `search` translation).                        |
+| `variant`        | `SmartPageVariant`                                     | `'standard'` | Selects which variant component to render.                                                                  |
+| `bodyTpl`        | `TemplateRef<unknown>`                                 | the content  | Explicit body template; falls back to the projected `<ng-content>`.                                         |
+| `hideMenuButton` | `boolean`                                              | -            | Preset only: hides the decorative menu (hamburger) button, which has no action of its own.                  |
+| `breadcrumbsTpl` | `TemplateRef<unknown>`                                 | -            | Preset only: breadcrumbs row at the top of the header.                                                      |
+| `subtitleTpl`    | `TemplateRef<unknown>`                                 | -            | Preset only: subtitle under the title.                                                                      |
+| `avatarTpl`      | `TemplateRef<unknown>`                                 | -            | Preset only: avatar next to the title.                                                                      |
+| `logoTpl`        | `TemplateRef<unknown>`                                 | -            | Preset only: logo next to the title.                                                                        |
+| `metaTpl`        | `TemplateRef<unknown>`                                 | -            | Preset only: meta row (status, timestamps, ...) under the title.                                            |
+| `statsTpl`       | `TemplateRef<unknown>`                                 | -            | Preset only: stats, in the meta row.                                                                        |
+| `bannerTpl`      | `TemplateRef<unknown>`                                 | -            | Preset only: full-width strip above the header.                                                             |
+| `filtersTpl`     | `TemplateRef<unknown>`                                 | -            | Preset only: filters bar under the header.                                                                  |
+| `sidebarTpl`     | `TemplateRef<unknown>`                                 | -            | Preset only: an `<aside>` next to the body card (`lg` and up).                                              |
+| `navTpl`         | `TemplateRef<unknown>`                                 | -            | Not read by the built-in implementations; available to a custom implementation.                             |
 
 ```typescript
 interface IPageOptions {
@@ -70,47 +91,25 @@ interface IPageOptions {
 }
 ```
 
-| Field            | Type                                 | Description                                                                 |
-| ---------------- | ------------------------------------ | --------------------------------------------------------------------------- |
-| `title`          | `string`                             | Required. Page title (translated).                                          |
-| `hideHeader`     | `boolean`                            | Hide the entire header block.                                               |
-| `hideMenuButton` | `boolean`                            | Reserved for layouts with a menu button.                                    |
-| `showBackButton` | `boolean`                            | Render a back arrow that calls `Location.back()`.                           |
-| `endButtons`     | `Array<IIconButtonOptions>`          | Action buttons rendered via `<smart-button>`.                               |
-| `search`         | `{ text: Signal<string>; set: ... }` | Inline search input.                                                        |
-| `variant`        | `SmartPageVariant`                   | Selects which variant component to render. Defaults to `'standard'`.        |
-| `bodyTpl`        | `TemplateRef<unknown>`               | Explicit body template. Falls back to projected `<ng-content>` when absent. |
-| `breadcrumbsTpl` | `TemplateRef<unknown>`               | Breadcrumbs slot.                                                           |
-| `metaTpl`        | `TemplateRef<unknown>`               | Meta slot (status, timestamps, etc.).                                       |
-| `avatarTpl`      | `TemplateRef<unknown>`               | Avatar slot.                                                                |
-| `bannerTpl`      | `TemplateRef<unknown>`               | Banner slot.                                                                |
-| `filtersTpl`     | `TemplateRef<unknown>`               | Filters slot.                                                               |
-| `logoTpl`        | `TemplateRef<unknown>`               | Logo slot.                                                                  |
-| `statsTpl`       | `TemplateRef<unknown>`               | Stats slot.                                                                 |
-| `subtitleTpl`    | `TemplateRef<unknown>`               | Subtitle slot.                                                              |
-| `navTpl`         | `TemplateRef<unknown>`               | Navigation slot.                                                            |
-| `sidebarTpl`     | `TemplateRef<unknown>`               | Sidebar slot.                                                               |
+### IIconButtonOptions
 
-### IIconButtonOptions (relevant fields)
-
-| Field       | Type                  | Description                       |
-| ----------- | --------------------- | --------------------------------- |
-| `icon`      | `string`              | Icon name (tracked by the `@for`) |
-| `text`      | `string`              | Button label (translated)         |
-| `number`    | `number`              | Optional badge counter            |
-| `handler`   | `() => void`          | Click handler                     |
-| `disabled$` | `Observable<boolean>` | Optional disabled stream          |
+| Field       | Type                     | Default  | Description                                                                                           |
+| ----------- | ------------------------ | -------- | ----------------------------------------------------------------------------------------------------- |
+| `icon`      | `string`                 | required | Identifier of the button (the `@for` track key, so keep it unique).                                   |
+| `text`      | `string`                 | -        | Button label (translated).                                                                            |
+| `handler`   | `() => void`             | -        | Click handler.                                                                                        |
+| `number`    | `number`                 | -        | A count badge.                                                                                        |
+| `disabled$` | `Observable<boolean>`    | -        | Disables the button while it emits `true`.                                                            |
+| `component` | `any`                    | -        | Not read by the built-in implementations; available to a custom implementation (e.g. a popover body). |
+| `type`      | `'default' \| 'popover'` | -        | Not read by the built-in implementations; available to a custom implementation.                       |
 
 ### PAGE_VARIANT_COMPONENTS_TOKEN
 
+InjectionToken from `@smartsoft001/angular`, of type `Partial<Record<SmartPageVariant, Type<PageBaseComponent>>>`. Provide a map to register additional variants. The map is merged on top of `baseMap` (which contains the default `{ standard: PageStandardComponent }`), so you can both add new variants and override `'standard'`.
+
 ```typescript
 import { PAGE_VARIANT_COMPONENTS_TOKEN } from '@smartsoft001/angular';
-```
 
-InjectionToken of type `Partial<Record<SmartPageVariant, Type<PageBaseComponent>>>`. Provide a map to register additional variants. The map is merged on top of `baseMap` (which contains the default `{ standard: PageStandardComponent }`), so you can both add new variants and override `'standard'`.
-
-```typescript
-// In your app providers:
 providers: [
   {
     provide: PAGE_VARIANT_COMPONENTS_TOKEN,
@@ -125,7 +124,7 @@ providers: [
 ## Extending the Base Class
 
 ```typescript
-import { Component, ViewEncapsulation, input } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { PageBaseComponent } from '@smartsoft001/angular';
 
@@ -147,10 +146,7 @@ import { PageBaseComponent } from '@smartsoft001/angular';
   imports: [NgTemplateOutlet],
   encapsulation: ViewEncapsulation.None,
 })
-export class MyCustomPageComponent extends PageBaseComponent {
-  // NgComponentOutlet passes 'cssClass' (not aliased 'class') so declare it explicitly
-  override cssClass = input<string>('');
-}
+export class MyCustomPageComponent extends PageBaseComponent {}
 ```
 
 ## Usage Examples
@@ -227,7 +223,7 @@ export class MyCustomPageComponent extends PageBaseComponent {
 
 ### Registration
 
-The preset is dispatched by map key `'preset'` — the built-in `'standard'` variant is untouched. Register the ready-made map for `PAGE_VARIANT_COMPONENTS_TOKEN`:
+The preset is dispatched by map key `'preset'`. Register the ready-made map `PAGE_PRESET_VARIANT_COMPONENTS` (`{ preset: PagePresetComponent }`) for `PAGE_VARIANT_COMPONENTS_TOKEN` and set `variant: 'preset'` on the pages that should use it; the built-in `'standard'` variant is untouched. `provideSmartPresets()` instead registers the preset for both `'standard'` and `'preset'`, so every page renders it.
 
 ```typescript
 import {
@@ -242,8 +238,6 @@ providers: [
   },
 ];
 ```
-
-Then set `variant: 'preset'` on `IPageOptions`:
 
 ```html
 <smart-page [options]="{ title: 'Alice', variant: 'preset' }">
@@ -270,12 +264,12 @@ The back button (`button[data-role="back"]`) appears only when `showBackButton` 
 
 ### cssClass
 
-Registered through the token, the wrapper forwards inputs canonically via `NgComponentOutlet` (`{ options, cssClass }`), so the preset does `override cssClass = input<string>('')` (drops the `class` alias). External classes land on the `data-role="page"` wrapper.
+The preset declares `cssClass` without the `class` alias: on the `<smart-page-preset>` selector bind `[cssClass]`; on `<smart-page>` pass `class` as usual. External classes land on the `data-role="page"` wrapper.
 
 ### Documented gaps
 
 - `hideMenuButton` only toggles a decorative hamburger button; there is no menu panel wired to it.
-- Unused slots (`bannerTpl`, `breadcrumbsTpl`, `metaTpl`, `statsTpl`, `filtersTpl`, `sidebarTpl`, `avatarTpl`, `logoTpl`, `subtitleTpl`) simply render nothing when omitted; `navTpl` is not consumed by this preset.
+- Unused slots (`bannerTpl`, `breadcrumbsTpl`, `metaTpl`, `statsTpl`, `filtersTpl`, `sidebarTpl`, `avatarTpl`, `logoTpl`, `subtitleTpl`) simply render nothing when omitted; `navTpl` is not consumed by this preset (nor by the standard variant).
 
 ## File Locations
 

@@ -17,7 +17,7 @@ The `<smart-alert>` component is a small confirm dialog: a header, an optional s
 
 ### AlertComponent (`<smart-alert>`)
 
-Main wrapper component. Renders `AlertStandardComponent` by default. When `ALERT_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`. Use it inline when the alert is part of a template; use `AlertService` when it has to be opened from code.
+Main wrapper component. Renders `AlertStandardComponent` by default. When `ALERT_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`, passes it `options` and `class` and re-emits its `dismissed`. Use it inline when the alert is part of a template; use `AlertService` when it has to be opened from code.
 
 ### AlertStandardComponent (`<smart-alert-standard>`)
 
@@ -29,15 +29,15 @@ Keyboard and focus: the first button receives focus when the dialog mounts, `Tab
 
 Abstract base directive for custom alert implementations. Exposes `options` as `InputSignal<IAlertOptions>` (required), `cssClass` as `InputSignal<string>` (alias `class`), the `dismissed` output, and the computed `buttons()` and `cancelButton()` (the first button whose role is `cancel`, or `null`). Behaviour lives in the base so a custom template only has to bind it:
 
-| Member                        | What it does                                                                                                                                                                            |
-| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `invoke(button)`              | Runs `button.handler` when present, then emits `dismissed` with the button. A handler that returns `false` keeps the dialog open (Ionic semantics). A `cancel` button needs no handler. |
-| `cancel()`                    | Emits `dismissed` with `cancelButton()` or `null`. Runs no handler.                                                                                                                     |
-| `onEscape()`                  | Calls `cancel()`; the standard binds it to `document:keydown.escape`.                                                                                                                   |
-| `onBackdropClick(event)`      | Calls `cancel()` when the click landed on the backdrop itself and `options.backdropDismiss` is not `false`.                                                                             |
-| `trapFocus(event, container)` | Keeps `Tab` / `Shift+Tab` cycling among the enabled buttons of `container`.                                                                                                             |
-| `buttonClasses(button)`       | The role-based Tailwind classes plus the button's own `cssClass`.                                                                                                                       |
-| `headerId`, `messageId`       | Unique ids per instance, for `aria-labelledby` / `aria-describedby`.                                                                                                                    |
+| Member                        | What it does                                                                                                                                                                                                                                           |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `invoke(button)`              | Runs `button.handler` when present, then emits `dismissed` with the button. A handler that returns `false` keeps the dialog open (Ionic semantics), except on a button with role `cancel`, which always dismisses. A `cancel` button needs no handler. |
+| `cancel()`                    | Emits `dismissed` with `cancelButton()` or `null`. Runs no handler.                                                                                                                                                                                    |
+| `onEscape()`                  | Calls `cancel()`; the standard binds it to `document:keydown.escape`.                                                                                                                                                                                  |
+| `onBackdropClick(event)`      | Calls `cancel()` when the click landed on the backdrop itself and `options.backdropDismiss` is not `false`.                                                                                                                                            |
+| `trapFocus(event, container)` | Keeps `Tab` / `Shift+Tab` cycling among the enabled buttons of `container`.                                                                                                                                                                            |
+| `buttonClasses(button)`       | The role-based Tailwind classes plus the button's own `cssClass`.                                                                                                                                                                                      |
+| `headerId`, `messageId`       | Unique ids per instance, for `aria-labelledby` / `aria-describedby`.                                                                                                                                                                                   |
 
 ## AlertService
 
@@ -66,22 +66,22 @@ The service reads `ALERT_STANDARD_COMPONENT_TOKEN` from its own injector, so a r
 
 ### IAlertOptions
 
-| Property          | Type             | Default | Description                                              |
-| ----------------- | ---------------- | ------- | -------------------------------------------------------- |
-| `header`          | `string`         | -       | Dialog heading (also the accessible name)                |
-| `subHeader`       | `string`         | -       | Secondary heading under the header                       |
-| `message`         | `string`         | -       | Body text (also the accessible description)              |
-| `backdropDismiss` | `boolean`        | `true`  | Whether a click on the backdrop cancels the alert        |
-| `buttons`         | `IAlertButton[]` | `[]`    | Buttons rendered in order, the last one visually primary |
+| Property          | Type             | Default | Description                                                               |
+| ----------------- | ---------------- | ------- | ------------------------------------------------------------------------- |
+| `header`          | `string`         | -       | Dialog heading (also the accessible name)                                 |
+| `subHeader`       | `string`         | -       | Secondary heading under the header                                        |
+| `message`         | `string`         | -       | Body text (also the accessible description)                               |
+| `backdropDismiss` | `boolean`        | `true`  | Whether a click on the backdrop cancels the alert                         |
+| `buttons`         | `IAlertButton[]` | `[]`    | Buttons rendered in order, each styled by its `role` (see `IAlertButton`) |
 
 ### IAlertButton
 
-| Property   | Type                                                              | Default | Description                                                                      |
-| ---------- | ----------------------------------------------------------------- | ------- | -------------------------------------------------------------------------------- |
-| `text`     | `string`                                                          | -       | Visible label                                                                    |
-| `role`     | `'cancel' \| 'destructive' \| string`                             | -       | `cancel` closes without a handler and is the Escape target; `destructive` is red |
-| `cssClass` | `string \| string[]`                                              | -       | Extra classes appended to the button                                             |
-| `handler`  | `(value?: unknown) => boolean \| void \| Record<string, unknown>` | -       | Runs before the dialog closes; return `false` to keep it open                    |
+| Property   | Type                                                              | Default | Description                                                                                                                                                                        |
+| ---------- | ----------------------------------------------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `text`     | `string`                                                          | -       | Visible label                                                                                                                                                                      |
+| `role`     | `'cancel' \| 'destructive' \| string`                             | -       | `cancel`: the secondary button, and the button Escape and the backdrop dismiss with (its handler does not run then); `destructive`: red; any other value or none: the blue primary |
+| `cssClass` | `string \| string[]`                                              | -       | Extra classes appended to the button                                                                                                                                               |
+| `handler`  | `(value?: unknown) => boolean \| void \| Record<string, unknown>` | -       | Runs on click, before the dialog closes; returning `false` keeps it open, except on a `cancel` button                                                                              |
 
 ## ALERT_STANDARD_COMPONENT_TOKEN
 
@@ -106,7 +106,6 @@ providers: [
 import {
   ChangeDetectionStrategy,
   Component,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -141,15 +140,11 @@ import { AlertBaseComponent } from '@smartsoft001/angular';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { '(document:keydown.escape)': 'onEscape()' },
 })
-export class MyCustomAlertComponent extends AlertBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-}
+export class MyCustomAlertComponent extends AlertBaseComponent {}
 ```
 
 When extending the base directly, remember to:
 
-- declare `cssClass = input<string>('')` explicitly (no `class` alias) — the wrapper and `AlertService` create the component by type, so inputs arrive by canonical name,
 - call `invoke(button)` from every button so handlers run and `dismissed` fires; `AlertService.show()` resolves on that output and nothing else,
 - bind `onEscape()` to the document `keydown.escape` and `trapFocus()` to the panel yourself — the base holds the logic but binds no listeners,
 - move focus into the dialog after it mounts (the standard focuses its first button in `ngAfterViewInit`).

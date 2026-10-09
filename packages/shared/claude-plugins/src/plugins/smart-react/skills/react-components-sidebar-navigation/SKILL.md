@@ -37,14 +37,14 @@ All from `@smartsoft001/react`.
 
 ### `ISidebarNavOptions`
 
-| Field        | Type                    | Default     | Description                                                                  |
-| ------------ | ----------------------- | ----------- | ---------------------------------------------------------------------------- |
-| `layout?`    | `SmartSidebarNavLayout` | —           | Declared (`SmartSidebarNavLayout`); the standard rendering does not read it. |
-| `ariaLabel?` | `string`                | `'Sidebar'` | Accessible name of the `nav`.                                                |
-| `logo?`      | `ISidebarNavLogo`       | —           | The brand at the top.                                                        |
-| `items?`     | `ISidebarNavItem[]`     | —           | The first, untitled group of items.                                          |
-| `groups?`    | `ISidebarNavGroup[]`    | —           | Further groups, each with a title.                                           |
-| `profile?`   | `ISidebarNavProfile`    | —           | A profile link at the bottom.                                                |
+| Field        | Type                    | Default     | Description                                                                     |
+| ------------ | ----------------------- | ----------- | ------------------------------------------------------------------------------- |
+| `layout?`    | `SmartSidebarNavLayout` | —           | Not read by the built-in implementations; available to a custom implementation. |
+| `ariaLabel?` | `string`                | `'Sidebar'` | Accessible name of the `nav`.                                                   |
+| `logo?`      | `ISidebarNavLogo`       | —           | The brand at the top.                                                           |
+| `items?`     | `ISidebarNavItem[]`     | —           | The first, untitled group of items.                                             |
+| `groups?`    | `ISidebarNavGroup[]`    | —           | Further groups, each with a title.                                              |
+| `profile?`   | `ISidebarNavProfile`    | —           | A profile link at the bottom.                                                   |
 
 ### `ISidebarNavItemClick`
 
@@ -61,28 +61,28 @@ All from `@smartsoft001/react`.
 
 ### `ISidebarNavLogo`
 
-| Field      | Type        | Default | Description                               |
-| ---------- | ----------- | ------- | ----------------------------------------- |
-| `url?`     | `string`    | —       | Logo image.                               |
-| `urlDark?` | `string`    | —       | Logo image for dark mode.                 |
-| `alt?`     | `string`    | —       | Alt text of the logo.                     |
-| `href?`    | `string`    | —       | Link of the logo.                         |
-| `tpl?`     | `ReactNode` | —       | The logo as a node; wins over the images. |
+| Field      | Type        | Default | Description                                                                     |
+| ---------- | ----------- | ------- | ------------------------------------------------------------------------------- |
+| `url?`     | `string`    | —       | Logo image.                                                                     |
+| `urlDark?` | `string`    | —       | A second image with the `sidebar-logo-img-dark` class hook (for dark mode).     |
+| `alt?`     | `string`    | `''`    | Alt text of both images.                                                        |
+| `href?`    | `string`    | —       | Wraps the images in a link (through the navigation adapter for internal paths). |
+| `tpl?`     | `ReactNode` | —       | The logo as a node; wins over the images.                                       |
 
 ### `ISidebarNavItem`
 
-| Field         | Type                | Default  | Description                                                         |
-| ------------- | ------------------- | -------- | ------------------------------------------------------------------- |
-| `id`          | `string`            | required | Reported as `itemId`.                                               |
-| `label?`      | `string`            | —        | Item text.                                                          |
-| `href?`       | `string`            | —        | Renders a link (through the navigation adapter for internal paths). |
-| `current?`    | `boolean`           | —        | Marks the current page.                                             |
-| `badge?`      | `string \| number`  | —        | A count or text badge.                                              |
-| `iconTpl?`    | `ReactNode`         | —        | Item icon.                                                          |
-| `initial?`    | `string`            | —        | A letter shown instead of an icon (e.g. for teams).                 |
-| `expandable?` | `boolean`           | —        | Makes the item a toggle for its `children`.                         |
-| `expanded?`   | `boolean`           | —        | Initial expanded state.                                             |
-| `children?`   | `ISidebarNavItem[]` | —        | Nested items of an expandable item.                                 |
+| Field         | Type                | Default  | Description                                                                              |
+| ------------- | ------------------- | -------- | ---------------------------------------------------------------------------------------- |
+| `id`          | `string`            | required | Reported as `itemId`.                                                                    |
+| `label?`      | `string`            | —        | Item text.                                                                               |
+| `href?`       | `string`            | —        | Renders a link (through the navigation adapter for internal paths).                      |
+| `current?`    | `boolean`           | —        | Marks the current page (`current` class, `aria-current="page"`); not on toggles.         |
+| `badge?`      | `string \| number`  | —        | A count or text badge; not on toggles and children.                                      |
+| `iconTpl?`    | `ReactNode`         | —        | Item icon; not on children.                                                              |
+| `initial?`    | `string`            | —        | A letter shown instead of an icon (e.g. for teams); not on toggles and children.         |
+| `expandable?` | `boolean`           | —        | Makes the item a toggle for its `children` (top-level items only).                       |
+| `expanded?`   | `boolean`           | `false`  | Initial expanded state of an expandable item.                                            |
+| `children?`   | `ISidebarNavItem[]` | —        | Nested items of an expandable item; one level, rendered with `label`, `href`, `current`. |
 
 ### `ISidebarNavGroup`
 
@@ -98,8 +98,8 @@ All from `@smartsoft001/react`.
 | ------------- | -------- | ------- | ---------------------------------------------- |
 | `name?`       | `string` | —       | User name.                                     |
 | `avatarUrl?`  | `string` | —       | Avatar image.                                  |
-| `avatarAlt?`  | `string` | —       | Alt text of the avatar.                        |
-| `href?`       | `string` | —       | Profile link.                                  |
+| `avatarAlt?`  | `string` | `''`    | Alt text of the avatar.                        |
+| `href?`       | `string` | `'#'`   | Profile link.                                  |
 | `srOnlyText?` | `string` | —       | Text for screen readers (e.g. "Your profile"). |
 
 ### Related types

@@ -67,11 +67,11 @@ Payload of `onActionClick`.
 
 ### `IModalAction`
 
-| Field      | Type                      | Default      | Description                                   |
-| ---------- | ------------------------- | ------------ | --------------------------------------------- |
-| `id`       | `string`                  | required     | Reported as `actionId`.                       |
-| `label`    | `string`                  | required     | Button text.                                  |
-| `variant?` | `SmartModalActionVariant` | `'centered'` | `primary` (default), `secondary` or `danger`. |
+| Field      | Type                      | Default     | Description                                                                                                        |
+| ---------- | ------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------ |
+| `id`       | `string`                  | required    | Reported as `actionId`.                                                                                            |
+| `label`    | `string`                  | required    | Button text.                                                                                                       |
+| `variant?` | `SmartModalActionVariant` | `'primary'` | `primary`, `secondary` or `danger`; the standard exposes it as `data-variant`, the preset styles the button by it. |
 
 ### Related types
 
@@ -185,7 +185,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
 }
 ```
 
-`SmartModalPreset` is the styled (preset) implementation: register it as above, render it directly in place of `SmartModal`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
+`SmartModalPreset` is the styled (preset) implementation: register it under the `'modal'` key of `SmartProvider`'s `components`, render it directly in place of `SmartModal`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
 
 ### The `useModal` hook
 
@@ -211,7 +211,7 @@ function useModal({
 ```tsx
 import { SmartModalProps, useModal } from '@smartsoft001/react';
 
-export function SheetModal(props: SmartModalProps) {
+export function CustomModal(props: SmartModalProps) {
   const { open, close, invokeAction } = useModal(props);
 
   if (!open) return null;
@@ -247,7 +247,7 @@ export function SheetModal(props: SmartModalProps) {
 }
 ```
 
-Registered as `components={{ modal: SheetModal }}`, it renders both the `SmartModal`s placed by hand and the modals of `ModalService.show` (which pass `open`, `className` from `cssClass`, `onClosed` and the component as `children`).
+Registered as `components={{ modal: CustomModal }}`, it renders both the `SmartModal`s placed by hand and the modals of `ModalService.show` (which pass `open`, `className` from `cssClass`, `onClosed` and the component as `children`).
 
 ## Styling
 

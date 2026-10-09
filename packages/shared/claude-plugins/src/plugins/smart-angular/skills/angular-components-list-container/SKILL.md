@@ -24,7 +24,7 @@ Main wrapper component. Renders `ListContainerStandardComponent` by default. Whe
 Barebones placeholder concrete implementation. Renders a `<div role="list">` that:
 
 - exposes the variant value via `data-variant` (omitted when `options` is not provided),
-- applies the external `cssClass` directly on the host div,
+- applies the external `cssClass` directly on that `<div>`,
 - projects all children via `<ng-content />`.
 
 It does not include Tailwind UI styling — it exists solely as the default structural placeholder until a custom implementation is registered through the token.
@@ -37,12 +37,19 @@ Abstract base directive for extending custom list container implementations. Exp
 
 ### Inputs
 
-| Input     | Type                                              | Default | Description                                         |
-| --------- | ------------------------------------------------- | ------- | --------------------------------------------------- |
-| `options` | `InputSignal<IListContainerOptions \| undefined>` | -       | Optional configuration (variant, fullWidthOnMobile) |
-| `class`   | `InputSignal<string>`                             | `''`    | External CSS classes (alias for `cssClass`)         |
+| Input     | Type                                              | Default | Description                                             |
+| --------- | ------------------------------------------------- | ------- | ------------------------------------------------------- |
+| `options` | `InputSignal<IListContainerOptions \| undefined>` | -       | Optional configuration (`variant`, `fullWidthOnMobile`) |
+| `class`   | `InputSignal<string>`                             | `''`    | External CSS classes (alias for `cssClass`)             |
 
 ### IListContainerOptions
+
+| Field               | Type                        | Default | Description                                                                                                                                               |
+| ------------------- | --------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `variant`           | `SmartListContainerVariant` | -       | Exposed as the `data-variant` attribute of the `role="list"` element, a hook for your CSS or a custom implementation; the standard adds no styles for it. |
+| `fullWidthOnMobile` | `boolean`                   | -       | Not read by the built-in implementation; available to a custom implementation (edge-to-edge on small screens).                                            |
+
+`SmartListContainerVariant` is `'simple-dividers' | 'card-dividers' | 'separate-cards' | 'flat-card-dividers'`.
 
 ```typescript
 interface IListContainerOptions {
@@ -51,21 +58,18 @@ interface IListContainerOptions {
 }
 
 type SmartListContainerVariant =
-  'simple' | 'card' | 'separate-cards' | 'flat-card-dividers';
+  'simple-dividers' | 'card-dividers' | 'separate-cards' | 'flat-card-dividers';
 ```
 
-The standard component only consumes `variant` (placeholder behavior — applied as the `data-variant` attribute on the list root). The `fullWidthOnMobile` flag is reserved for custom implementations registered through `LIST_CONTAINER_STANDARD_COMPONENT_TOKEN` and is ignored by `ListContainerStandardComponent`.
+There is no preset for this component: register a component of your own through the token for a styled container.
 
 ## LIST_CONTAINER_STANDARD_COMPONENT_TOKEN
 
+InjectionToken from `@smartsoft001/angular` that allows replacing the default `ListContainerStandardComponent` with a custom implementation. Provide a `Type<ListContainerBaseComponent>` in your application or component providers.
+
 ```typescript
 import { LIST_CONTAINER_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
-```
 
-InjectionToken that allows replacing the default `ListContainerStandardComponent` with a custom implementation. Provide a `Type<ListContainerBaseComponent>` to override.
-
-```typescript
-// In your app module or component providers:
 providers: [
   {
     provide: LIST_CONTAINER_STANDARD_COMPONENT_TOKEN,
@@ -81,7 +85,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -90,17 +93,14 @@ import { ListContainerBaseComponent } from '@smartsoft001/angular';
 @Component({
   selector: 'my-custom-list-container',
   template: `
-    <div role="list" [class]="containerClasses()">
+    <ul role="list" [class]="containerClasses()">
       <ng-content />
-    </div>
+    </ul>
   `,
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyCustomListContainerComponent extends ListContainerBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   containerClasses = computed(() => {
     const classes = ['my-list-container'];
     const variant = this.options()?.variant;
@@ -115,33 +115,25 @@ export class MyCustomListContainerComponent extends ListContainerBaseComponent {
 }
 ```
 
-When extending the base directly, remember to:
-
-- declare `cssClass = input<string>('')` explicitly (no `class` alias) if the component is used via `NgComponentOutlet` through `LIST_CONTAINER_STANDARD_COMPONENT_TOKEN`, because `NgComponentOutlet` passes inputs by canonical name (not by alias),
-- include `<ng-content />` in your template so consumers can project list items.
+The inherited `cssClass` (input alias `class`) receives the class passed to `<smart-list-container>`, and the wrapper projects its content into the implementation's default `<ng-content />` (wrapped in one `display: contents` element), so include `<ng-content />` in the template.
 
 ## Usage Examples
 
 ```html
 <!-- Basic -->
 <smart-list-container>
-  <smart-list-item />
-  <smart-list-item />
+  <div role="listitem">Invoice #1042 was paid</div>
+  <div role="listitem">Courtney Henry joined the team</div>
 </smart-list-container>
 
-<!-- With variant -->
+<!-- With a variant hook (data-variant="separate-cards") -->
 <smart-list-container [options]="{ variant: 'separate-cards' }">
-  <smart-list-item />
-</smart-list-container>
-
-<!-- Full width on mobile (consumed by custom implementations) -->
-<smart-list-container [options]="{ variant: 'card', fullWidthOnMobile: true }">
-  <smart-list-item />
+  <div role="listitem">Invoice #1042 was paid</div>
 </smart-list-container>
 
 <!-- With external class -->
 <smart-list-container class="smart:my-2">
-  <smart-list-item />
+  <div role="listitem">Invoice #1042 was paid</div>
 </smart-list-container>
 ```
 

@@ -17,11 +17,11 @@ The `<smart-textarea>` component renders a multi-line text input with two-way `v
 
 ### TextareaComponent (`<smart-textarea>`)
 
-Main wrapper. Delegates to `TextareaStandardComponent` by default. When `TEXTAREA_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`. Re-emits `actionClick`.
+Main wrapper. Delegates to `TextareaStandardComponent` by default. When `TEXTAREA_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet` and hands it `value`, `placeholder`, `disabled`, `options` and `class`. Re-emits `actionClick` and forwards two-way `value` of whichever implementation renders (the standard, the preset or a custom one).
 
 ### TextareaStandardComponent (`<smart-textarea-standard>`)
 
-Barebones placeholder using a native `<textarea>`. Renders an outer wrapper, an optional `<label>` (when `options.label` provided), optional avatar/toolbar slots, the `<textarea>` with `[value]` two-way bound through input event, `[disabled]`, `[rows]` (default 3), `[attr.maxlength]`, `[attr.placeholder]`, `[attr.aria-label]`, and an optional row of `<button class="action variant-{variant}">` per `options.actions` entry that emits `{ actionId, value }` via `actionClick` (suppressed when disabled). Optional `previewTpl` and `footerTpl` slots render below the actions row. The external `cssClass` is applied to the root wrapper.
+Barebones placeholder using a native `<textarea>`. Renders an outer wrapper with `cssClass` around a `.textarea` block: an optional `<label>` (when `options.label` is set; it is not linked to the field, so give the field `options.ariaLabel` for an accessible name), optional `.avatar` and `.toolbar` slots, the `<textarea>` (`value` written back on input, `disabled`, `rows` default 3, `maxlength`, `placeholder`, `name`, `aria-label` and `required` from the options), and an optional `.actions` row with one `<button class="action variant-{variant}">` per `options.actions` entry (variant default `secondary`; `iconTpl` and `label` inside). A click emits `{ actionId, value }` through `actionClick`, never while disabled. Optional `.preview` (`previewTpl`) and `.footer` (`footerTpl`) slots render below the actions row. The standard ignores `options.variant` and `options.autoFocus` and adds no styles: the class hooks are for your CSS.
 
 ### TextareaPresetComponent (`<smart-textarea-preset>`)
 
@@ -38,8 +38,6 @@ Abstract base directive. Exposes:
 - `cssClass: InputSignal<string>` (alias `class`)
 - `actionClick: OutputEmitterRef<ITextareaActionClick>`
 
-`ITextareaActionClick = { actionId: string; value: string }`.
-
 ## API
 
 ### Inputs
@@ -48,55 +46,57 @@ Abstract base directive. Exposes:
 | ------------- | -------------------------------------------- | ------- | ------------------------------------------- |
 | `value`       | `ModelSignal<string>`                        | `''`    | Two-way bindable textarea value             |
 | `placeholder` | `InputSignal<string>`                        | `''`    | Placeholder text                            |
-| `disabled`    | `InputSignal<boolean>`                       | `false` | Disabled state                              |
+| `disabled`    | `InputSignal<boolean>`                       | `false` | Disables the field and the action buttons   |
 | `options`     | `InputSignal<ITextareaOptions \| undefined>` | -       | Optional configuration                      |
 | `class`       | `InputSignal<string>`                        | `''`    | External CSS classes (alias for `cssClass`) |
 
 ### Outputs
 
-| Output        | Type                                     | Description                              |
-| ------------- | ---------------------------------------- | ---------------------------------------- |
-| `actionClick` | `OutputEmitterRef<ITextareaActionClick>` | Emitted when an action button is clicked |
+| Output        | Type                                     | Description                                                                            |
+| ------------- | ---------------------------------------- | -------------------------------------------------------------------------------------- |
+| `actionClick` | `OutputEmitterRef<ITextareaActionClick>` | Emitted when an action button is clicked, with the current text; never while disabled. |
 
 ### ITextareaOptions
 
-```typescript
-type SmartTextareaVariant =
-  | 'simple'
-  | 'with-avatar-actions'
-  | 'with-underline'
-  | 'with-pill-actions'
-  | 'with-preview';
+| Field        | Type                   | Default    | Description                                                                       |
+| ------------ | ---------------------- | ---------- | --------------------------------------------------------------------------------- |
+| `rows`       | `number`               | `3`        | Visible text rows.                                                                |
+| `maxLength`  | `number`               | -          | `maxlength` of the field; the preset also shows a `count/max` counter.            |
+| `variant`    | `SmartTextareaVariant` | `'simple'` | Preset only: the layout (see the preset section). The standard ignores it.        |
+| `label`      | `string`               | -          | Label above the field (the preset links it to the field; the standard does not).  |
+| `name`       | `string`               | -          | `name` attribute of the field.                                                    |
+| `required`   | `boolean`              | `false`    | Sets `required` on the field; the preset also shows a red `*` in the label.       |
+| `autoFocus`  | `boolean`              | `false`    | Preset only: focuses the field after the first render. The standard ignores it.   |
+| `ariaLabel`  | `string`               | -          | `aria-label` of the field.                                                        |
+| `actions`    | `ITextareaAction[]`    | `[]`       | Buttons below (or, in some preset variants, inside) the field.                    |
+| `avatarTpl`  | `TemplateRef<unknown>` | -          | Avatar slot (the preset renders it in a column left of the field).                |
+| `toolbarTpl` | `TemplateRef<unknown>` | -          | Toolbar slot (e.g. attach / mention buttons).                                     |
+| `previewTpl` | `TemplateRef<unknown>` | -          | Preview content; the preset's `with-preview` variant shows it on the Preview tab. |
+| `footerTpl`  | `TemplateRef<unknown>` | -          | Footer slot below everything else.                                                |
 
-interface ITextareaOptions {
-  rows?: number;
-  maxLength?: number;
-  variant?: SmartTextareaVariant;
-  label?: string;
-  name?: string;
-  required?: boolean;
-  autoFocus?: boolean;
-  ariaLabel?: string;
-  actions?: ITextareaAction[];
-  avatarTpl?: TemplateRef<unknown>;
-  toolbarTpl?: TemplateRef<unknown>;
-  previewTpl?: TemplateRef<unknown>;
-  footerTpl?: TemplateRef<unknown>;
-}
+`SmartTextareaVariant` is `'simple' | 'with-avatar-actions' | 'with-underline' | 'with-pill-actions' | 'with-preview'`.
 
-interface ITextareaAction {
-  id: string;
-  label?: string;
-  iconTpl?: TemplateRef<unknown>;
-  variant?: 'primary' | 'secondary' | 'ghost';
-}
-```
+### ITextareaAction
+
+| Field     | Type                                  | Default       | Description                                                                     |
+| --------- | ------------------------------------- | ------------- | ------------------------------------------------------------------------------- |
+| `id`      | `string`                              | required      | Reported as `actionId` in `actionClick`.                                        |
+| `label`   | `string`                              | -             | Button text (the preset uses the `id` as `aria-label` of a button without one). |
+| `iconTpl` | `TemplateRef<unknown>`                | -             | Icon before the label.                                                          |
+| `variant` | `'primary' \| 'secondary' \| 'ghost'` | `'secondary'` | Look of the button (`variant-{variant}` class in the standard).                 |
+
+### ITextareaActionClick
+
+| Field      | Type     | Default  | Description                                 |
+| ---------- | -------- | -------- | ------------------------------------------- |
+| `actionId` | `string` | required | The `id` of the clicked action.             |
+| `value`    | `string` | required | The text of the field at the time of click. |
 
 ## Preset
 
-`TextareaPresetComponent` (selector `smart-textarea-preset`) renders the Tailwind UI comment-form look: white / `gray-900`-friendly surfaces (`bg-white`, `dark:bg-white/5`), `gray-300` / `white/10` outlines with a blue focus ring, `gray-900` / white text, `gray-400` / `gray-500` placeholders and `rounded-lg` fields. Every class is `smart:`-prefixed with an explicit `dark:` variant; the recipes live in `preset/preset-classes.util.ts`.
+`TextareaPresetComponent` (selector `smart-textarea-preset`) renders the Tailwind UI comment-form look: white / `gray-900`-friendly surfaces (`bg-white`, `dark:bg-white/5`), `gray-300` / `white/10` outlines with a blue focus ring, `gray-900` / white text, `gray-400` / `gray-500` placeholders and `rounded-lg` fields. Every class is `smart:`-prefixed with an explicit `dark:` variant; the class recipes are internal to the preset and not exported.
 
-It renders everything the standard component renders (label, avatar, toolbar, field, actions, preview, footer) and additionally honours the options the standard ignores:
+It renders everything the standard component renders (label, avatar, toolbar, field, actions, preview, footer) and additionally honours the options the standard ignores.
 
 - **`variant`** picks the layout (default `'simple'`, exposed as `data-variant` on the root):
 
@@ -116,7 +116,7 @@ It renders everything the standard component renders (label, avatar, toolbar, fi
 - **`avatarTpl`** renders in a column to the left of the body in every variant.
 - **Actions** are styled per `action.variant`: `primary` (solid blue), `secondary` (default: white with a `gray-300` ring, `white/10` in dark mode), `ghost` (text only, gray hover). They are disabled with the field, and clicking one emits `actionClick` with `{ actionId, value }` (never while disabled).
 
-Register it on the token to restyle every `<smart-textarea>`:
+Register it on `TEXTAREA_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-textarea>`, or register every preset at once with `provideSmartPresets()`.
 
 ```typescript
 import {
@@ -146,9 +146,11 @@ providers: [
 />
 ```
 
-> Because `TextareaComponent` renders injected components via `NgComponentOutlet` (which passes inputs by canonical name), `TextareaPresetComponent` overrides `cssClass` as `input<string>('')` **without** the `class` alias. Bind it as `[cssClass]` when using the `<smart-textarea-preset>` selector directly, or just pass `class` on `<smart-textarea>` (the wrapper forwards it).
+> `TextareaPresetComponent` declares `cssClass` as `input<string>('')` **without** the `class` alias. Bind it as `[cssClass]` when using the `<smart-textarea-preset>` selector directly, or just pass `class` on `<smart-textarea>` (the wrapper forwards it). With the preset registered through the token, `[(value)]` and `(actionClick)` on `<smart-textarea>` work as with the standard.
 
 ## TEXTAREA_STANDARD_COMPONENT_TOKEN
+
+Provide a component class extending `TextareaBaseComponent` under `TEXTAREA_STANDARD_COMPONENT_TOKEN`; every `<smart-textarea>` below that injector renders it.
 
 ```typescript
 import { TEXTAREA_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
@@ -167,7 +169,6 @@ providers: [
 import {
   ChangeDetectionStrategy,
   Component,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -187,8 +188,9 @@ import { TextareaBaseComponent } from '@smartsoft001/angular';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyCustomTextareaComponent extends TextareaBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
+  // `value` (a model the wrapper binds two-way), `placeholder()`, `disabled()`,
+  // `options()`, `cssClass()` and `actionClick` (re-emitted by the wrapper)
+  // are inherited.
 }
 ```
 

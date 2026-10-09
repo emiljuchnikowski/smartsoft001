@@ -1,26 +1,87 @@
 ---
 name: angular-components-accordion
-description: Accordion base component API for extending in custom implementations.
+description: Accordion component API (<smart-accordion>, its preset and the base class for custom implementations).
 user-invocable: false
 ---
 
-# AccordionBaseComponent (Base Only)
+# Accordion Component
 
-Abstract base directive for accordion components. This package provides the base class for creating custom accordion implementations.
+`<smart-accordion>` is a collapsible section: a header button that toggles a body. The header and body are projected through the `[accordionHeader]` / `[accordionBody]` slots, and the open state is the two-way `show` model. The accordion has **no** injection token: `<smart-accordion>` always renders `<smart-accordion-default>`; for the styled look use `<smart-accordion-preset>` directly, and for a look of your own extend `AccordionBaseComponent`.
 
 ## When to Use This Skill
 
-- Developer wants to **create a custom accordion component** by extending the base class
-- Developer needs to understand the base API (inputs, computed properties, methods)
-- Developer asks about `<smart-accordion>` → explain how to extend the base class
+- Developer wants a collapsible section (FAQ entry, "show details") in an Angular app
+- Developer wants the styled (Preline) accordion: use `<smart-accordion-preset>`
+- Developer wants a custom accordion: extend `AccordionBaseComponent`
 
-## Base Class API
+## Wrapper: `<smart-accordion>`
 
-### Import
+### Inputs and models
+
+| Input     | Type                             | Default     | Description                                                              |
+| --------- | -------------------------------- | ----------- | ------------------------------------------------------------------------ |
+| `show`    | `ModelSignal<boolean>`           | `false`     | Open state, two-way (`[(show)]`); `showChange` reports every change.     |
+| `options` | `IAccordionOptions \| undefined` | `undefined` | `open` (initial state, applied once) and `disabled`.                     |
+| `class`   | `string`                         | `''`        | Classes appended to the container (the `cssClass` input, alias `class`). |
+
+### Content projection
+
+| Selector            | Description                              |
+| ------------------- | ---------------------------------------- |
+| `[accordionHeader]` | Content of the header button.            |
+| `[accordionBody]`   | Content shown while the section is open. |
+
+The wrapper passes both slots to `<smart-accordion-default>` as the `headerTpl` / `bodyTpl` templates.
+
+### IAccordionOptions
+
+| Field      | Type      | Default     | Description                                                                                                                                                                                                                                                                       |
+| ---------- | --------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `open`     | `boolean` | `undefined` | Initial open state. When it is `true` on the first render and `show` is not already `true`, `AccordionBaseComponent.ngOnInit` sets `show` to `true` once and emits `showChange`, in every variant. Later changes of `options.open` are ignored; toggles and `[(show)]` take over. |
+| `disabled` | `boolean` | `false`     | `toggle()` does nothing and the header button is rendered disabled.                                                                                                                                                                                                               |
+| `animated` | `boolean` | `undefined` | Deprecated: not read by the built-in implementations (no variant animates); available to a custom implementation.                                                                                                                                                                 |
+
+Bind `[(show)]` to a **signal** when you combine it with `options.open`: a plain class field updated during the first change detection raises `NG0100` (ExpressionChangedAfterItHasBeenChecked) in dev mode.
 
 ```typescript
-import { AccordionBaseComponent } from '@smartsoft001/angular';
+interface IAccordionOptions {
+  open?: boolean; // initial state, applied once on the first render
+  disabled?: boolean; // toggle() does nothing
+  /** @deprecated Not read by any variant. */
+  animated?: boolean;
+}
 ```
+
+### Building blocks of the default rendering
+
+`<smart-accordion-default>` (`AccordionDefaultComponent`) is a bordered card made of two exported components you can reuse:
+
+| Component                  | Selector                 | Inputs                                                                                     |
+| -------------------------- | ------------------------ | ------------------------------------------------------------------------------------------ |
+| `AccordionHeaderComponent` | `smart-accordion-header` | `open` (`boolean`, chevron up while `true`), `disabled` (`boolean`), `cssClass` (`string`) |
+| `AccordionBodyComponent`   | `smart-accordion-body`   | `cssClass` (`string`)                                                                      |
+
+## AccordionPresetComponent (`<smart-accordion-preset>`)
+
+A fully styled accordion based on the Preline bordered accordion. It extends `AccordionBaseComponent`, so it takes the same contract as `AccordionDefaultComponent`: the required `headerTpl` / `bodyTpl` template inputs, the `show` model, `options` and `cssClass` (bound as `[cssClass]`; the base input has no `class` alias).
+
+Because there is no token, the preset cannot restyle `<smart-accordion>`, and `provideSmartPresets()` does not change it: render `<smart-accordion-preset>` where you want the styled look and supply the templates yourself.
+
+Expand/collapse is driven by the inherited `show` model and `@if`; no Preline JS runtime is needed. The toggle button carries `aria-expanded` / `aria-controls`, the open body is a `region`, the chevron points down while collapsed and up while expanded, and the container border is visible only while open.
+
+```html
+<ng-template #headerTpl>What is the best thing about Switzerland?</ng-template>
+<ng-template #bodyTpl>I don't know, but the flag is a big plus.</ng-template>
+<smart-accordion-preset
+  [headerTpl]="headerTpl"
+  [bodyTpl]="bodyTpl"
+  [(show)]="isOpen"
+/>
+```
+
+## AccordionBaseComponent
+
+The abstract directive every variant extends (`AccordionDefaultComponent`, `AccordionPresetComponent`, and yours).
 
 ### Inputs
 
@@ -29,34 +90,10 @@ import { AccordionBaseComponent } from '@smartsoft001/angular';
 | `show`      | `ModelSignal<boolean>`                        | `false`     | Two-way binding for open state |
 | `options`   | `InputSignal<IAccordionOptions \| undefined>` | `undefined` | Accordion configuration        |
 | `cssClass`  | `InputSignal<string>`                         | `''`        | External CSS classes           |
-| `headerTpl` | `InputSignal<TemplateRef>`                    | required    | Header template                |
-| `bodyTpl`   | `InputSignal<TemplateRef>`                    | required    | Body template                  |
+| `headerTpl` | `InputSignal<TemplateRef<unknown>>`           | required    | Header template                |
+| `bodyTpl`   | `InputSignal<TemplateRef<unknown>>`           | required    | Body template                  |
 
-### IAccordionOptions
-
-```typescript
-interface IAccordionOptions {
-  open?: boolean; // Initial open state (applied once, on first render)
-  disabled?: boolean; // Prevents toggle when true
-  /** @deprecated No variant animates anything; has no effect. */
-  animated?: boolean;
-}
-```
-
-- **`open`** is the initial state. When it is `true` on first render and `show`
-  has not been set to `true` by the consumer, `AccordionBaseComponent.ngOnInit`
-  sets `show` to `true` once and emits `showChange`, so both
-  `<smart-accordion>` (default) and `<smart-accordion-preset>` start expanded
-  and a bound `[(show)]` is updated to `true`. It is applied only once: later
-  changes to `options.open` are ignored and later toggles / `[(show)]` writes
-  are never overridden. Bind `[(show)]` to a **signal** when combining it with
-  `open`; a plain class field updated during the first change detection raises
-  `NG0100` (ExpressionChangedAfterItHasBeenChecked) in dev mode.
-- **`disabled`** makes `toggle()` a no-op.
-- **`animated`** is **deprecated**: no variant (default or preset) animates
-  expand/collapse.
-
-### Computed Properties
+### Computed properties
 
 | Property                 | Type               | Description                                             |
 | ------------------------ | ------------------ | ------------------------------------------------------- |
@@ -64,22 +101,24 @@ interface IAccordionOptions {
 
 ### Methods
 
-| Method       | Description                                                              |
-| ------------ | ------------------------------------------------------------------------ |
-| `toggle()`   | Toggles `show` signal (no-op if `disabled`)                              |
-| `ngOnInit()` | Applies `options.open` as the initial state (sets `show` to `true` once) |
+| Method       | Description                                                                                                         |
+| ------------ | ------------------------------------------------------------------------------------------------------------------- |
+| `toggle()`   | Toggles the `show` model (no-op while `options.disabled`)                                                           |
+| `ngOnInit()` | Applies `options.open` as the initial state; a subclass with its own `ngOnInit` calls `super.ngOnInit()` to keep it |
 
 ## Extending the Base Class
 
 ```typescript
+import { NgTemplateOutlet } from '@angular/common';
 import { Component, ViewEncapsulation } from '@angular/core';
 import { AccordionBaseComponent } from '@smartsoft001/angular';
 
 @Component({
   selector: 'my-accordion',
+  imports: [NgTemplateOutlet],
   template: `
     <div [class]="sharedContainerClasses().join(' ')">
-      <button (click)="toggle()">
+      <button type="button" (click)="toggle()">
         <ng-container [ngTemplateOutlet]="headerTpl()" />
       </button>
       @if (show()) {
@@ -94,49 +133,14 @@ import { AccordionBaseComponent } from '@smartsoft001/angular';
 export class MyAccordionComponent extends AccordionBaseComponent {}
 ```
 
-If a subclass implements its own `ngOnInit`, call `super.ngOnInit()` so
-`options.open` keeps working.
-
-## AccordionPresetComponent (`<smart-accordion-preset>`)
-
-A fully styled, drop-in accordion concrete based on the Preline bordered
-accordion (FRA-210). It extends `AccordionBaseComponent`, so it consumes the
-exact same contract as `AccordionDefaultComponent`: the `headerTpl` / `bodyTpl`
-required template inputs, the `show` two-way model, `options` and `cssClass`.
-
-> **Not token-swappable.** Unlike most preset variations in this library, the
-> accordion has **no** `ACCORDION_STANDARD_COMPONENT_TOKEN` and the
-> `<smart-accordion>` wrapper hard-codes `<smart-accordion-default>`. There is no
-> NgComponentOutlet/DI seam, so the preset cannot be registered to restyle
-> `<smart-accordion>`. **Use it directly via the `<smart-accordion-preset>`
-> selector** and supply the templates yourself.
-
-Expand/collapse is driven entirely by the inherited `show` model signal plus
-`@if` — no Preline JS runtime is required. The header arrow is an inline chevron
-(down when collapsed, up when expanded) and the container border becomes visible
-only while open.
-
-```typescript
-import { AccordionPresetComponent } from '@smartsoft001/angular';
-```
-
-```html
-<ng-template #headerTpl>What is the best thing about Switzerland?</ng-template>
-<ng-template #bodyTpl>I don't know, but the flag is a big plus.</ng-template>
-<smart-accordion-preset
-  [headerTpl]="headerTpl"
-  [bodyTpl]="bodyTpl"
-  [(show)]="isOpen"
-  [options]="{ disabled: false }"
-  [cssClass]="'my-extra-class'"
-/>
-```
+A custom accordion is rendered by its own selector (there is no token to register it under), with the header and body passed as `<ng-template>` references.
 
 ## File Locations
 
+- Wrapper: `packages/shared/angular/src/lib/components/accordion/accordion.component.ts`
 - Base class: `packages/shared/angular/src/lib/components/accordion/base/base.component.ts`
-- Tests: `packages/shared/angular/src/lib/components/accordion/base/base.component.spec.ts`
 - Default concrete: `packages/shared/angular/src/lib/components/accordion/default/default.component.ts`
+- Header / body: `packages/shared/angular/src/lib/components/accordion/header/header.component.ts`, `.../body/body.component.ts`
 - Preset concrete: `packages/shared/angular/src/lib/components/accordion/preset/preset.component.ts`
-- Preset class recipes: `packages/shared/angular/src/lib/components/accordion/preset/preset-classes.util.ts`
+- Preset class recipes (internal, not exported): `packages/shared/angular/src/lib/components/accordion/preset/preset-classes.util.ts`
 - Interface: `packages/shared/angular/src/lib/models/interfaces.ts` (`IAccordionOptions`)

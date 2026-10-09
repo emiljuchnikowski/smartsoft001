@@ -43,6 +43,8 @@ Props of `SmartInfoPreset`. Extends `SmartInfoProps`.
 | ------------ | --------------------- | ------- | ---------------------------------------- |
 | `placement?` | `InfoPresetPlacement` | `'top'` | Side of the toggle the tooltip opens on. |
 
+`placement` is only available when `SmartInfoPreset` is rendered directly: `SmartInfoProps` has no `placement`, so a preset registered under the `info` key always opens its tooltip on `'top'`.
+
 ### `IInfoOptions`
 
 | Field  | Type     | Default  | Description                                      |
@@ -91,7 +93,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
 }
 ```
 
-`SmartInfoPreset` is the styled (preset) implementation: register it as above, render it directly in place of `SmartInfo`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
+`SmartInfoPreset` is the styled (preset) implementation: register it under the `'info'` key of `SmartProvider`'s `components`, render it directly in place of `SmartInfo`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
 
 ### The `useInfo` hook
 

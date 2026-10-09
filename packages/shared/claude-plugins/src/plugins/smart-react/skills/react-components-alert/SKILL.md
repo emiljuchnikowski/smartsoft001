@@ -145,7 +145,7 @@ export function PublishConfirm({ onPublish }: { onPublish: () => void }) {
 
 `SmartAlert` renders the component registered under the `'alert'` key of `SmartProvider`'s `components`, and `SmartAlertStandard` when nothing is registered there. Every `SmartAlert` below the provider then renders the registered component, which receives the same props.
 
-There is no preset for this component: register a component of your own that takes `SmartAlertProps`, as shown below, as `components={{ alert: MyAlert }}`. Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
+There is no preset for this component: register a component of your own that takes `SmartAlertProps` as `components={{ alert: MyAlert }}` (the example at the end of this section is one). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
 
 ### The `useAlert` hook
 
@@ -226,7 +226,7 @@ export function BrandAlert(props: SmartAlertProps) {
 }
 ```
 
-Registered as `components={{ alert: BrandAlert }}`, it renders both the `SmartAlert`s placed by hand and the dialogs of `AlertService.show`.
+Registered under the `alert` key, it renders both the `SmartAlert`s placed by hand and the dialogs of `AlertService.show`.
 
 ## Styling
 

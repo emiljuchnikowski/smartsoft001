@@ -24,7 +24,7 @@ All from `@smartsoft001/react`.
 | `SmartSectionHeadingPreset`   | component | HyperUI-styled "content with image" section heading (preset).                                                                                                                  |
 | `SmartSectionHeadingStandard` | component | The default section heading rendering: an unstyled `<h3>` title (with its `label`), description and the badge / input group / actions slots, and a tabs slot under the header. |
 
-The preset's class helpers (`getSectionHeadingGridClasses`, `getSectionHeadingTextClasses`, `getSectionHeadingImageClasses`, `SECTION_HEADING_SECTION_CLASSES`, `SECTION_HEADING_CONTAINER_CLASSES`, `SECTION_HEADING_EYEBROW_CLASSES`, `SECTION_HEADING_TITLE_CLASSES`, `SECTION_HEADING_DESCRIPTION_CLASSES`, `SECTION_HEADING_ACTIONS_CLASSES`) are exported too, for a custom implementation that wants the preset look.
+The preset's class helpers (`getSectionHeadingGridClasses`, `getSectionHeadingTextClasses`, `getSectionHeadingImageClasses`, `SECTION_HEADING_SECTION_CLASSES`, `SECTION_HEADING_CONTAINER_CLASSES`, `SECTION_HEADING_EYEBROW_CLASSES`, `SECTION_HEADING_TITLE_CLASSES`, `SECTION_HEADING_DESCRIPTION_CLASSES`, `SECTION_HEADING_ACTIONS_CLASSES`) are exported too, with the type `SectionHeadingPresetLayout` (the layout argument of the helpers), for a custom implementation that wants the preset look.
 
 ## Props and Types
 
@@ -37,17 +37,17 @@ The preset's class helpers (`getSectionHeadingGridClasses`, `getSectionHeadingTe
 
 ### `ISectionHeadingOptions`
 
-| Field            | Type                                                       | Default | Description                                                                             |
-| ---------------- | ---------------------------------------------------------- | ------- | --------------------------------------------------------------------------------------- |
-| `title?`         | `string`                                                   | —       | The heading.                                                                            |
-| `description?`   | `string`                                                   | —       | Text under the heading.                                                                 |
-| `label?`         | `string`                                                   | —       | Eyebrow text next to / above the title.                                                 |
-| `actionsTpl?`    | `ReactNode`                                                | —       | Action buttons.                                                                         |
-| `tabsTpl?`       | `ReactNode`                                                | —       | Tabs under the header (standard).                                                       |
-| `inputGroupTpl?` | `ReactNode`                                                | —       | A search or input group (standard).                                                     |
-| `badgeTpl?`      | `ReactNode`                                                | —       | A badge next to the label.                                                              |
-| `imageTpl?`      | `ReactNode`                                                | —       | Image beside the text (preset).                                                         |
-| `presentation?`  | `{ layout?: 'half' \| 'narrow' \| 'wide' \| 'vertical'; }` | —       | `layout` of the preset: `half` (default), `narrow`, `wide` (image first) or `vertical`. |
+| Field            | Type                                                       | Default | Description                                                                                  |
+| ---------------- | ---------------------------------------------------------- | ------- | -------------------------------------------------------------------------------------------- |
+| `title?`         | `string`                                                   | —       | The heading (`<h3>` in the standard, `<h2>` in the preset).                                  |
+| `description?`   | `string`                                                   | —       | Text under the heading.                                                                      |
+| `label?`         | `string`                                                   | —       | Standard: a `.label` span inside the title (needs `title`). Preset: eyebrow above the title. |
+| `actionsTpl?`    | `ReactNode`                                                | —       | Action buttons.                                                                              |
+| `tabsTpl?`       | `ReactNode`                                                | —       | Standard only: tabs under the header; the preset does not render it.                         |
+| `inputGroupTpl?` | `ReactNode`                                                | —       | Standard only: a search or input group; the preset does not render it.                       |
+| `badgeTpl?`      | `ReactNode`                                                | —       | A badge: in the header row (standard) or next to the eyebrow label (preset).                 |
+| `imageTpl?`      | `ReactNode`                                                | —       | Preset only: the image beside the text.                                                      |
+| `presentation?`  | `{ layout?: 'half' \| 'narrow' \| 'wide' \| 'vertical'; }` | —       | `layout` of the preset: `half` (default), `narrow`, `wide` (image first) or `vertical`.      |
 
 ## Usage
 
@@ -100,7 +100,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
 }
 ```
 
-`SmartSectionHeadingPreset` is the styled (preset) implementation: register it as above, render it directly in place of `SmartSectionHeading`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
+`SmartSectionHeadingPreset` is the styled (preset) implementation: register it under the `'section-heading'` key of `SmartProvider`'s `components`, render it directly in place of `SmartSectionHeading`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
 
 ```tsx
 import { SmartSectionHeadingProps } from '@smartsoft001/react';

@@ -6,7 +6,7 @@ user-invocable: false
 
 # Paging (`SmartPaging`)
 
-`SmartPaging` renders pagination controls: previous / next buttons around a page list with `'...'` gaps (all pages up to 7, otherwise the first, the last and the neighbours of the current one), and, in the preset's `card-footer` variant, a "Showing x to y of z results" summary. The page is **owned by the parent**: pass `currentPage` and update it from `onPageChange(page)`. Navigation beyond the first or last page is ignored.
+`SmartPaging` renders pagination controls: previous / next buttons around a page list with `'...'` gaps (all pages up to 7, otherwise the first, the last and the neighbours of the current one), and, in the preset's `card-footer` variant, a "Showing x to y of z results" summary. The page is **owned by the parent**: pass `currentPage` and update it from `onPageChange(page)`. Navigation beyond the first or last page is ignored; clicking the current page still reports it.
 
 ## When to Use This Skill
 
@@ -27,21 +27,21 @@ All from `@smartsoft001/react`.
 | `SmartPagingStandard` | component | The default paging rendering: translated prev / next buttons around the page list.                                                                                                                                                                                                  |
 | `usePaging`           | hook      | The behaviour every paging variant shares: the "showing x to y" range, the page list with `'...'` gaps (all pages up to 7, otherwise the first, the last and the neighbours of the current one), and the guarded navigation that reports the requested page through `onPageChange`. |
 
-The preset's class helpers (`getPagingContainerClasses`, `getPagingNavClasses`, `getPagingPageClasses`, `PAGING_ELLIPSIS_CLASSES`, `PAGING_RESULTS_CLASSES`, `PAGING_PAGE_LIST_CLASSES`, `PAGING_NAV_BUTTON_CLASSES`) are exported too, for a custom implementation that wants the preset look.
+The preset's class helpers (`getPagingContainerClasses`, `getPagingNavClasses`, `getPagingPageClasses`, `PAGING_ELLIPSIS_CLASSES`, `PAGING_RESULTS_CLASSES`, `PAGING_PAGE_LIST_CLASSES`, `PAGING_NAV_BUTTON_CLASSES`) and their `SmartPagingPresetVariant` type (the same union as `PagingVariant`) are exported too, for a custom implementation that wants the preset look.
 
 ## Props and Types
 
 ### `SmartPagingProps`
 
-| Prop            | Type                     | Default         | Description                                                     |
-| --------------- | ------------------------ | --------------- | --------------------------------------------------------------- |
-| `currentPage?`  | `number`                 | `1`             | The current page, 1-based.                                      |
-| `totalPages?`   | `number`                 | `1`             | Number of pages.                                                |
-| `pageSize?`     | `number`                 | `10`            | Items per page, for the summary.                                |
-| `totalItems?`   | `number`                 | `0`             | Total number of items, for the summary.                         |
-| `variant?`      | `PagingVariant`          | `'card-footer'` | The layout (preset); the standard exposes it as `data-variant`. |
-| `className?`    | `string`                 | —               | Classes on the `<nav>`.                                         |
-| `onPageChange?` | `(page: number) => void` | —               | Called with the requested page.                                 |
+| Prop            | Type                     | Default         | Description                                                        |
+| --------------- | ------------------------ | --------------- | ------------------------------------------------------------------ |
+| `currentPage?`  | `number`                 | `1`             | The current page, 1-based.                                         |
+| `totalPages?`   | `number`                 | `1`             | Number of pages.                                                   |
+| `pageSize?`     | `number`                 | `10`            | Items per page, for the preset's `card-footer` summary.            |
+| `totalItems?`   | `number`                 | `0`             | Total number of items, for the preset's `card-footer` summary.     |
+| `variant?`      | `PagingVariant`          | `'card-footer'` | The layout (preset); the standard exposes it as `data-variant`.    |
+| `className?`    | `string`                 | —               | Classes on the root: the standard's `<nav>`, the preset's `<div>`. |
+| `onPageChange?` | `(page: number) => void` | —               | Called with the requested page.                                    |
 
 ### Related types
 
@@ -97,7 +97,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
 }
 ```
 
-`SmartPagingPreset` is the styled (preset) implementation: register it as above, render it directly in place of `SmartPaging`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
+`SmartPagingPreset` is the styled (preset) implementation: register it under the `'paging'` key of `SmartProvider`'s `components`, render it directly in place of `SmartPaging`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
 
 ### The `usePaging` hook
 
@@ -114,21 +114,21 @@ function usePaging({
 }: SmartPagingProps);
 ```
 
-| Returns        | Type                     | Description                                                                   |
-| -------------- | ------------------------ | ----------------------------------------------------------------------------- |
-| `currentPage`  | `number`                 | `currentPage` with its default.                                               |
-| `totalPages`   | `number`                 | `totalPages` with its default.                                                |
-| `pageSize`     | `number`                 | `pageSize` with its default.                                                  |
-| `totalItems`   | `number`                 | `totalItems` with its default.                                                |
-| `variant`      | `PagingVariant`          | `variant` with its default.                                                   |
-| `showingFrom`  | `number`                 | First item number of the current page.                                        |
-| `showingTo`    | `number`                 | Last item number of the current page.                                         |
-| `canGoBack`    | `boolean`                | `currentPage > 1`.                                                            |
-| `canGoForward` | `boolean`                | `currentPage < totalPages`.                                                   |
-| `pages`        | `(number \| "...")[]`    | The page numbers to render, with `'...'` gaps.                                |
-| `goToPage`     | `(page: number) => void` | Reports a page through `onPageChange` (ignored when out of range or current). |
-| `nextPage`     | `() => void`             | Reports the next page.                                                        |
-| `previousPage` | `() => void`             | Reports the previous page.                                                    |
+| Returns        | Type                     | Description                                                        |
+| -------------- | ------------------------ | ------------------------------------------------------------------ |
+| `currentPage`  | `number`                 | `currentPage` with its default.                                    |
+| `totalPages`   | `number`                 | `totalPages` with its default.                                     |
+| `pageSize`     | `number`                 | `pageSize` with its default.                                       |
+| `totalItems`   | `number`                 | `totalItems` with its default.                                     |
+| `variant`      | `PagingVariant`          | `variant` with its default.                                        |
+| `showingFrom`  | `number`                 | First item number of the current page.                             |
+| `showingTo`    | `number`                 | Last item number of the current page.                              |
+| `canGoBack`    | `boolean`                | `currentPage > 1`.                                                 |
+| `canGoForward` | `boolean`                | `currentPage < totalPages`.                                        |
+| `pages`        | `(number \| "...")[]`    | The page numbers to render, with `'...'` gaps.                     |
+| `goToPage`     | `(page: number) => void` | Reports a page through `onPageChange` (ignored when out of range). |
+| `nextPage`     | `() => void`             | Reports the next page.                                             |
+| `previousPage` | `() => void`             | Reports the previous page.                                         |
 
 ```tsx
 import { SmartPagingProps, usePaging } from '@smartsoft001/react';
@@ -169,7 +169,7 @@ export function PageSelect(props: SmartPagingProps) {
 
 ## Styling
 
-- `SmartPagingStandard` renders translated prev / next buttons and the page list; `SmartPagingPreset` renders the three layouts with `smart:dark:` variants, but its "Showing x to y of z results", "Previous" and "Next" texts are not translated.
+- `SmartPagingStandard` renders translated prev / next buttons and the page list, without a summary (`pageSize`, `totalItems` and `variant` change nothing visible there); `SmartPagingPreset` renders the three layouts with `smart:dark:` variants, but its "Showing x to y of z results", "Previous" and "Next" texts are not translated.
 
 ## File Locations
 

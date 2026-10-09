@@ -17,24 +17,24 @@ The `<smart-notification>` component displays a transient or persistent message 
 
 ### NotificationComponent (`<smart-notification>`)
 
-Main wrapper component. Renders `NotificationStandardComponent` by default. When `NOTIFICATION_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`.
+Main wrapper component. Renders `NotificationStandardComponent` by default. When `NOTIFICATION_STANDARD_COMPONENT_TOKEN` is provided (or `provideSmartPresets()` registers the preset), renders the injected component via `NgComponentOutlet`, forwarding its inputs and re-emitting its `dismissed` and `actionClick` outputs. It has no open state: render it while the notification should be visible and remove it on `(dismissed)`.
 
 ### NotificationStandardComponent (`<smart-notification-standard>`)
 
-Barebones placeholder concrete implementation. Renders a `<div role="status">` with `aria-live` (defaulting to `polite`, overridable via `options.ariaLive`), an `<h3>` for the title, an optional `<p>` for the description, an optional close button when `dismissible` is `true`, and one `<button>` per action with a `data-variant` attribute. It does not include Tailwind UI styling — it exists solely as the default structural placeholder until a custom implementation is registered through the token.
+Barebones placeholder concrete implementation. Renders a `<div role="status">` with `aria-live` (defaulting to `polite`, overridable via `options.ariaLive`), an `<h3>` for the title, an optional `<p>` for the description, an optional close button when `dismissible` is `true`, and one `<button>` per action with a `data-variant` attribute. It does not render `iconName` or `avatarUrl`. It does not include Tailwind UI styling — it exists solely as the default structural placeholder until a custom implementation is registered through the token.
 
 ### NotificationPresetComponent (`<smart-notification-preset>`)
 
-Styled toast variation that extends `NotificationBaseComponent` and is a drop-in replacement for `NotificationStandardComponent`. Register it via `NOTIFICATION_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-notification>`, or use the `<smart-notification-preset>` selector directly. It renders the translated Preline toast looks as a card (`bg-white`/`dark:bg-gray-800`, border, `rounded-xl`, `shadow-lg`), with the layout selected through `options.variant` (default `'simple'`):
+Styled toast variation that extends `NotificationBaseComponent` and is a drop-in replacement for `NotificationStandardComponent`. Register it via `NOTIFICATION_STANDARD_COMPONENT_TOKEN` (or with `provideSmartPresets()`) to restyle every `<smart-notification>`, or use the `<smart-notification-preset>` selector directly. It renders the translated Preline toast looks as a card (`bg-white`/`dark:bg-gray-800`, border, `rounded-xl`, `shadow-lg`), with the layout selected through `options.variant` (default `'simple'`):
 
-- `simple` — leading icon glyph (when `iconName` is set) plus the `title` message and optional `description`.
-- `condensed` — inline single-row message with the action links and close button pushed to the end (`ms-auto`).
+- `simple` — leading icon glyph (when `iconName` is set) plus the `title` message and optional `description`; it does **not** render `actions`.
+- `condensed` — inline single-row `title` with the action links and close button pushed to the end (`ms-auto`); no description or icon.
 - `with-actions-below` / `with-avatar` — icon (or avatar image for `with-avatar`) + heading + description, with text-link styled actions below; the close button is absolutely positioned.
 - `with-buttons-below` / `with-split-buttons` — same layout but actions render as solid/bordered buttons (per `action.variant`); `with-split-buttons` makes each button `grow` to fill the row.
 
-`dismissible` renders a close button that calls `dismiss()`; each action calls `invokeAction(action.id)`. Open/close visibility is Angular-driven via the `dismissed` output — no Preline JS runtime is used. All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants. The class recipes live in `preset/preset-classes.util.ts` (kept out of the public barrel; e.g. `getNotificationContainerClasses`, `getNotificationActionClasses`).
+`dismissible` renders a close button that calls `dismiss()`; each action calls `invokeAction(action.id)`. Open/close visibility is Angular-driven via the `dismissed` output — no Preline JS runtime is used. All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants; the class recipes are internal to the preset (not exported).
 
-> Because `NotificationComponent` renders injected components via `NgComponentOutlet` (which passes inputs by canonical name), `NotificationPresetComponent` overrides `cssClass` as `input<string>('')` **without** the `class` alias. Bind it as `[cssClass]` when using the `<smart-notification-preset>` selector directly, or just pass `class` on `<smart-notification>` (the wrapper forwards it).
+> `NotificationPresetComponent` declares `cssClass` without the `class` alias: bind it as `[cssClass]` on the `<smart-notification-preset>` selector, or pass `class` on `<smart-notification>` (the wrapper forwards it).
 
 ### NotificationBaseComponent (abstract)
 
@@ -44,16 +44,16 @@ Abstract base directive for extending custom notification implementations. Expos
 
 ### Inputs
 
-| Input         | Type                                             | Default | Description                                 |
-| ------------- | ------------------------------------------------ | ------- | ------------------------------------------- |
-| `title`       | `InputSignal<string>` (required)                 | -       | Headline text                               |
-| `description` | `InputSignal<string \| undefined>`               | -       | Optional supporting text                    |
-| `iconName`    | `InputSignal<string \| undefined>`               | -       | Optional leading icon name                  |
-| `avatarUrl`   | `InputSignal<string \| undefined>`               | -       | Optional avatar image URL                   |
-| `actions`     | `InputSignal<INotificationAction[]>`             | `[]`    | Action buttons to render                    |
-| `dismissible` | `InputSignal<boolean>`                           | `false` | When `true`, renders a close button         |
-| `options`     | `InputSignal<INotificationOptions \| undefined>` | -       | Optional configuration (variant, ariaLive)  |
-| `class`       | `InputSignal<string>`                            | `''`    | External CSS classes (alias for `cssClass`) |
+| Input         | Type                                             | Default | Description                                                                                                 |
+| ------------- | ------------------------------------------------ | ------- | ----------------------------------------------------------------------------------------------------------- |
+| `title`       | `InputSignal<string>` (required)                 | -       | Headline text                                                                                               |
+| `description` | `InputSignal<string \| undefined>`               | -       | Optional supporting text                                                                                    |
+| `iconName`    | `InputSignal<string \| undefined>`               | -       | Preset only: a glyph (text, e.g. an emoji) before the text (not in the `condensed` and `with-avatar` looks) |
+| `avatarUrl`   | `InputSignal<string \| undefined>`               | -       | Preset only: the image of the `with-avatar` look                                                            |
+| `actions`     | `InputSignal<INotificationAction[]>`             | `[]`    | Action buttons (not rendered by the preset's `simple` look)                                                 |
+| `dismissible` | `InputSignal<boolean>`                           | `false` | When `true`, renders a close button                                                                         |
+| `options`     | `InputSignal<INotificationOptions \| undefined>` | -       | Optional configuration (variant, ariaLive)                                                                  |
+| `class`       | `InputSignal<string>`                            | `''`    | External CSS classes (alias for `cssClass`)                                                                 |
 
 ### Outputs
 
@@ -64,6 +64,12 @@ Abstract base directive for extending custom notification implementations. Expos
 
 ### INotificationAction
 
+| Field     | Type                       | Default     | Description                                                                    |
+| --------- | -------------------------- | ----------- | ------------------------------------------------------------------------------ |
+| `id`      | `string`                   | required    | Echoed back as `actionId` in the `actionClick` payload.                        |
+| `label`   | `string`                   | required    | Button text.                                                                   |
+| `variant` | `'primary' \| 'secondary'` | `'primary'` | The standard exposes it as `data-variant`; the preset styles the action by it. |
+
 ```typescript
 interface INotificationAction {
   id: string;
@@ -72,9 +78,12 @@ interface INotificationAction {
 }
 ```
 
-`id` is echoed back in the `actionClick` payload so the host can route handling. `variant` controls the placeholder's `data-variant` attribute and is intended as a styling hook for custom implementations.
-
 ### INotificationOptions
+
+| Field      | Type                       | Default    | Description                                                                                                                           |
+| ---------- | -------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `variant`  | `SmartNotificationVariant` | `'simple'` | Preset only: the toast look (`simple`, `condensed`, `with-actions-below`, `with-avatar`, `with-split-buttons`, `with-buttons-below`). |
+| `ariaLive` | `'polite' \| 'assertive'`  | `'polite'` | The `aria-live` of the `role="status"` container; `assertive` for errors.                                                             |
 
 ```typescript
 type SmartNotificationVariant =
@@ -91,18 +100,13 @@ interface INotificationOptions {
 }
 ```
 
-The standard component only consumes `ariaLive` (placeholder behavior — applied directly as the `aria-live` attribute on the `role="status"` container; defaults to `'polite'`). The `variant` property is ignored by `NotificationStandardComponent` but **fully consumed by `NotificationPresetComponent`** (default `'simple'`) to pick the toast layout.
-
 ## NOTIFICATION_STANDARD_COMPONENT_TOKEN
+
+InjectionToken from `@smartsoft001/angular` that allows replacing the default `NotificationStandardComponent` with a custom implementation. Provide a `Type<NotificationBaseComponent>` in your application or component providers; `provideSmartPresets()` provides `NotificationPresetComponent` for it together with every other preset.
 
 ```typescript
 import { NOTIFICATION_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
-```
 
-InjectionToken that allows replacing the default `NotificationStandardComponent` with a custom implementation. Provide a `Type<NotificationBaseComponent>` to override.
-
-```typescript
-// In your app module or component providers:
 providers: [
   {
     provide: NOTIFICATION_STANDARD_COMPONENT_TOKEN,
@@ -118,7 +122,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -161,9 +164,6 @@ import { NotificationBaseComponent } from '@smartsoft001/angular';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyCustomNotificationComponent extends NotificationBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   containerClasses = computed(() => {
     const classes = ['my-notification-container'];
     const extra = this.cssClass();
@@ -173,9 +173,8 @@ export class MyCustomNotificationComponent extends NotificationBaseComponent {
 }
 ```
 
-When extending the base directly, remember to:
+The inherited `cssClass` (input alias `class`) receives the class passed to `<smart-notification>`, and the wrapper re-emits the outputs. When extending the base directly, remember to:
 
-- declare `cssClass = input<string>('')` explicitly (no `class` alias) if the component is used via `NgComponentOutlet` through `NOTIFICATION_STANDARD_COMPONENT_TOKEN`, because `NgComponentOutlet` passes inputs by canonical name (not by alias),
 - call `this.dismiss()` from your close handler — it already emits the `dismissed` output,
 - call `this.invokeAction(action.id)` from each action button — it already emits the `actionClick` output with `{ actionId }`.
 
@@ -228,7 +227,7 @@ When extending the base directly, remember to:
 - Wrapper: `packages/shared/angular/src/lib/components/notification/notification.component.ts`
 - Standard: `packages/shared/angular/src/lib/components/notification/standard/standard.component.ts`
 - Preset variation: `packages/shared/angular/src/lib/components/notification/preset/preset.component.ts`
-- Preset class recipes: `packages/shared/angular/src/lib/components/notification/preset/preset-classes.util.ts`
+- Preset class recipes (internal, not exported): `packages/shared/angular/src/lib/components/notification/preset/preset-classes.util.ts`
 - Base class: `packages/shared/angular/src/lib/components/notification/base/base.component.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`NOTIFICATION_STANDARD_COMPONENT_TOKEN`)
 - Interfaces: `packages/shared/angular/src/lib/models/interfaces.ts` (`INotificationAction`, `INotificationOptions`, `SmartNotificationVariant`)

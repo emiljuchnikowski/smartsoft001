@@ -18,14 +18,21 @@ Flexible card container with injectable standard rendering. The `<smart-card>` w
 
 ### Wrapper: `smart-card`
 
-| Input       | Type           | Default     | Description           |
-| ----------- | -------------- | ----------- | --------------------- |
-| `options`   | `ICardOptions` | `undefined` | Card configuration    |
-| `hasHeader` | `boolean`      | `false`     | Show header section   |
-| `hasFooter` | `boolean`      | `false`     | Show footer section   |
-| `class`     | `string`       | `''`        | Extra container class |
+| Input       | Type           | Default     | Description                                                                                        |
+| ----------- | -------------- | ----------- | -------------------------------------------------------------------------------------------------- |
+| `options`   | `ICardOptions` | `undefined` | Card configuration                                                                                 |
+| `hasHeader` | `boolean`      | `false`     | Renders the header section. The `[cardHeader]` content and `options.title` show only while `true`. |
+| `hasFooter` | `boolean`      | `false`     | Renders the footer section. The `[cardFooter]` content shows only while `true`.                    |
+| `class`     | `string`       | `''`        | Extra container class                                                                              |
 
 ### ICardOptions
+
+| Field        | Type                        | Default     | Description                                                                                                                                                                        |
+| ------------ | --------------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `title`      | `string`                    | `undefined` | Rendered as an `<h3>` at the start of the header, when `hasHeader` is `true`.                                                                                                      |
+| `buttons`    | `Array<IIconButtonOptions>` | `undefined` | Deprecated: not read by the built-in implementations (standard or preset); available to a custom implementation. Put actions in the `[cardHeader]` / `[cardFooter]` slots instead. |
+| `grayFooter` | `boolean`                   | `undefined` | Gray background on the footer.                                                                                                                                                     |
+| `grayBody`   | `boolean`                   | `undefined` | Gray background on the body.                                                                                                                                                       |
 
 ```typescript
 interface ICardOptions {
@@ -37,15 +44,15 @@ interface ICardOptions {
 }
 ```
 
-`buttons` is **deprecated**: no card variant (standard or preset) has ever rendered it. Put actions in the header or footer instead, by projecting them into the `[cardHeader]` / `[cardFooter]` slots (with `hasHeader` / `hasFooter` set); the wrapper hands those to the variant as `headerTpl` / `footerTpl`.
+`IIconButtonOptions` (`icon`, `text`, `handler`, `component`, `type`, `disabled$: Observable<boolean>`, `number`) is shared with the page buttons; the card does not render it.
 
 ### Content Projection
 
-| Selector       | Description    |
-| -------------- | -------------- |
-| `[cardHeader]` | Header content |
-| default        | Body content   |
-| `[cardFooter]` | Footer content |
+| Selector       | Description                           |
+| -------------- | ------------------------------------- |
+| `[cardHeader]` | Header content (with `hasHeader` set) |
+| default        | Body content                          |
+| `[cardFooter]` | Footer content (with `hasFooter` set) |
 
 ## Usage
 
@@ -74,19 +81,19 @@ interface ICardOptions {
 
 Three-layer pattern mirroring `<smart-button>`:
 
-1. **`CardBaseComponent`** (`@Directive()`) — shared signals/inputs (`options`, `hasHeader`, `hasFooter`, `class`, `headerTpl`, `bodyTpl`, `footerTpl`) and computed classes (`sharedContainerClasses`, `headerClasses`, `bodyClasses`, `footerClasses`). Handles divider, gray body/footer, and padding rules.
+1. **`CardBaseComponent`** (`@Directive()`) — shared inputs (`options`, `hasHeader`, `hasFooter`, `cssClass` with the `class` alias, the optional `headerTpl` / `footerTpl` and the required `bodyTpl`, all `TemplateRef<unknown>`) and computed classes (`sharedContainerClasses`, `headerClasses`, `bodyClasses`, `footerClasses`). Handles divider, gray body/footer, and padding rules.
 2. **`CardStandardComponent`** (selector: `smart-card-standard`) — default concrete implementation extending the base. Neutral Tailwind style with dark mode (`rounded-lg`, `bg-white`, `shadow-sm`, `dark:bg-gray-800/50`, `dark:outline-white/10`).
-3. **`CardComponent`** (selector: `smart-card`) — wrapper. Uses `inject(CARD_STANDARD_COMPONENT_TOKEN, { optional: true })` + `*ngComponentOutlet` to render the injected component, falling back to `<smart-card-standard>`. Content projection (`[cardHeader]`, default, `[cardFooter]`) is wrapped in local `<ng-template>` refs and passed as inputs (`headerTpl`/`bodyTpl`/`footerTpl`) to the active component.
+3. **`CardComponent`** (selector: `smart-card`) — wrapper. Uses `inject(CARD_STANDARD_COMPONENT_TOKEN, { optional: true })` + `*ngComponentOutlet` to render the injected component, falling back to `<smart-card-standard>`. Content projection (`[cardHeader]`, default, `[cardFooter]`) is wrapped in local `<ng-template>` refs and passed as inputs (`headerTpl`/`bodyTpl`/`footerTpl`) to the active component, together with `options`, `hasHeader`, `hasFooter` and `class`.
 
-## Overriding with Custom Implementation
+## Extending the Base Class
 
 ```typescript
+import { NgTemplateOutlet } from '@angular/common';
 import { Component } from '@angular/core';
 import {
   CardBaseComponent,
   CARD_STANDARD_COMPONENT_TOKEN,
 } from '@smartsoft001/angular';
-import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
   selector: 'smart-card-my-variant',
@@ -101,11 +108,13 @@ providers: [
 ];
 ```
 
+Register the subclass under `CARD_STANDARD_COMPONENT_TOKEN`; every `<smart-card>` in that injector then renders it with the projected sections as `headerTpl` / `bodyTpl` / `footerTpl`.
+
 ## CardPresetComponent (`smart-card-preset`)
 
-Fully-styled, drop-in concrete implementation extending `CardBaseComponent` — a faithful translation of Preline's card (`rounded-xl` surface, `shadow-2xs`, bordered surface header/footer) into `smart:`-prefixed vanilla Tailwind with explicit `dark:` variants. Honours `options.title`, `options.grayBody`, and `options.grayFooter`, and renders the same `headerTpl` / `bodyTpl` / `footerTpl` slots as the base.
+Fully-styled, drop-in concrete implementation extending `CardBaseComponent` — a faithful translation of Preline's card (`rounded-xl` surface, `shadow-2xs`, bordered surface header/footer) into `smart:`-prefixed vanilla Tailwind with explicit `dark:` variants. Honours `options.title`, `options.grayBody`, and `options.grayFooter`, and renders the same `headerTpl` / `bodyTpl` / `footerTpl` slots as the base. It separates the sections with its own borders, not with the base's divider classes.
 
-Use it directly via `<smart-card-preset>`, or register it through `CARD_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-card>`:
+Use it directly via `<smart-card-preset>` (it takes the extra classes as `class` or `[cssClass]`), register it through `CARD_STANDARD_COMPONENT_TOKEN` (`{ provide: CARD_STANDARD_COMPONENT_TOKEN, useValue: CardPresetComponent }`) to restyle every `<smart-card>`, or register every preset at once with `provideSmartPresets()`.
 
 ```typescript
 import {
@@ -118,13 +127,11 @@ providers: [
 ];
 ```
 
-Note: when rendered through the token, `CardComponent` uses `*ngComponentOutlet`, which passes inputs by **canonical name**. The preset therefore overrides the inherited `cssClass` to drop the `class` alias (`override cssClass = input<string>('')`) so extra classes bind correctly. Class recipes live in `preset/preset-classes.util.ts` (`getCardContainerClasses`, `getCardHeaderClasses`, `getCardBodyClasses`, `getCardFooterClasses`).
-
 ## File Locations
 
 - Wrapper: `packages/shared/angular/src/lib/components/card/card.component.ts`
 - Default: `packages/shared/angular/src/lib/components/card/standard/standard.component.{ts,html}`
-- Preset: `packages/shared/angular/src/lib/components/card/preset/preset.component.{ts,html}` + `preset/preset-classes.util.ts`
+- Preset: `packages/shared/angular/src/lib/components/card/preset/preset.component.{ts,html}` + `preset/preset-classes.util.ts` (internal)
 - Base: `packages/shared/angular/src/lib/components/card/base/base.component.ts`
 - Tests: `packages/shared/angular/src/lib/components/card/{card,standard/standard,base/base}.component.spec.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`CARD_STANDARD_COMPONENT_TOKEN`)
@@ -132,4 +139,4 @@ Note: when rendered through the token, `CardComponent` uses `*ngComponentOutlet`
 
 ## Tailwind Classes
 
-All classes use `smart:` prefix. `CardStandardComponent` container: `smart:overflow-hidden smart:rounded-lg smart:bg-white smart:shadow-sm`. Dark mode: `smart:dark:bg-gray-800/50 smart:dark:shadow-none smart:dark:outline smart:dark:-outline-offset-1 smart:dark:outline-white/10`. Divider when header/footer present: `smart:divide-y smart:divide-gray-200 smart:dark:divide-white/10`. Gray body/footer: `smart:bg-gray-50 smart:dark:bg-gray-800/50`.
+All classes use `smart:` prefix. `CardStandardComponent` container: `smart:overflow-hidden smart:rounded-lg smart:bg-white smart:shadow-sm`. Dark mode: `smart:dark:bg-gray-800/50 smart:dark:shadow-none smart:dark:outline smart:dark:-outline-offset-1 smart:dark:outline-white/10`. Divider between the sections when `hasHeader` or `hasFooter` is set and neither `grayBody` nor `grayFooter` is: `smart:divide-y smart:divide-gray-200 smart:dark:divide-white/10`. Gray body/footer: `smart:bg-gray-50 smart:dark:bg-gray-800/50`.

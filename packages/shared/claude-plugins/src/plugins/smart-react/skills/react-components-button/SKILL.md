@@ -27,33 +27,33 @@ All from `@smartsoft001/react`.
 | `SmartButtonStandard` | component | The default button rendering.                                                                                                                                                     |
 | `useButton`           | hook      | The behaviour every button variant shares: the colour classes of the variant, and the confirm mode, where a first click asks for confirmation instead of running `options.click`. |
 
-The preset's class helpers (`toButtonPresetVariant`, `getButtonPresetClasses`) are exported too, for a custom implementation that wants the preset look.
+The preset's class helpers (`toButtonPresetVariant`, `getButtonPresetClasses`) and their types (`SmartButtonPresetVariant`: `'solid' | 'outline' | 'soft'`; `ButtonPresetShape`: `{ rounded: boolean; circular: boolean }`) are exported too, for a custom implementation that wants the preset look.
 
 ## Props and Types
 
 ### `SmartButtonProps`
 
-| Prop         | Type             | Default  | Description                                                                   |
-| ------------ | ---------------- | -------- | ----------------------------------------------------------------------------- |
-| `options`    | `IButtonOptions` | required | The button configuration; `click` is required.                                |
-| `disabled?`  | `boolean`        | `false`  | Disables the button and adds `smart:opacity-50 smart:cursor-not-allowed`.     |
-| `className?` | `string`         | —        | Classes appended to the `<button>`.                                           |
-| `children?`  | `ReactNode`      | —        | The label (any `ReactNode`). Replaced by the spinner while `options.loading`. |
+| Prop         | Type             | Default  | Description                                                                                                                                                    |
+| ------------ | ---------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `options`    | `IButtonOptions` | required | The button configuration; `click` is required.                                                                                                                 |
+| `disabled?`  | `boolean`        | `false`  | Disables the button; the standard adds `smart:opacity-50 smart:cursor-not-allowed`, the preset `smart:disabled:opacity-50 smart:disabled:pointer-events-none`. |
+| `className?` | `string`         | —        | Classes appended to the `<button>`.                                                                                                                            |
+| `children?`  | `ReactNode`      | —        | The label (any `ReactNode`). Replaced by the spinner while `options.loading`.                                                                                  |
 
 ### `IButtonOptions`
 
-| Field           | Type                      | Default     | Description                                                                                                        |
-| --------------- | ------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------ |
-| `type?`         | `'submit' \| 'button'`    | `'button'`  | The `type` attribute of the `<button>`. Use `'submit'` inside a `<form>` of your own.                              |
-| `confirm?`      | `boolean`                 | —           | The first click shows Cancel / Confirm buttons (translated `cancel` / `confirm`); `click` runs only after Confirm. |
-| `click`         | `() => void`              | required    | Called on click (after the confirmation when `confirm` is set).                                                    |
-| `loading?`      | `boolean`                 | —           | Shows the spinner instead of the label and disables the button.                                                    |
-| `variant?`      | `SmartVariant`            | `'primary'` | `primary` (solid), `secondary` (outline) or `soft`.                                                                |
-| `size?`         | `SmartSize`               | `'md'`      | Padding and text size; `xs` / `sm` also use smaller rounding.                                                      |
-| `color?`        | `SmartColor`              | `'indigo'`  | One of the 22 Tailwind palette names.                                                                              |
-| `rounded?`      | `boolean`                 | —           | Pill shape. Read by `SmartButtonPreset` only.                                                                      |
-| `circular?`     | `boolean`                 | —           | Square padding plus pill shape, for an icon-only button. Read by `SmartButtonPreset` only.                         |
-| `iconPosition?` | `'leading' \| 'trailing'` | —           | Declared for implementations of your own; neither `SmartButtonStandard` nor `SmartButtonPreset` reads it.          |
+| Field           | Type                      | Default     | Description                                                                                                                  |
+| --------------- | ------------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `type?`         | `'submit' \| 'button'`    | `'button'`  | The `type` attribute of the `<button>`. Use `'submit'` inside a `<form>` of your own.                                        |
+| `confirm?`      | `boolean`                 | —           | The first click shows Cancel / Confirm buttons (translated `cancel` / `confirm`); `click` runs only after Confirm.           |
+| `click`         | `() => void`              | required    | Called on click (after the confirmation when `confirm` is set).                                                              |
+| `loading?`      | `boolean`                 | —           | Shows the spinner instead of the label and disables the button.                                                              |
+| `variant?`      | `SmartVariant`            | `'primary'` | `primary` (solid), `secondary` (outline) or `soft`.                                                                          |
+| `size?`         | `SmartSize`               | `'md'`      | Padding and text size; the standard also uses smaller rounding for `xs` / `sm`.                                              |
+| `color?`        | `SmartColor`              | `'indigo'`  | One of the 22 Tailwind palette names.                                                                                        |
+| `rounded?`      | `boolean`                 | —           | Pill shape. Read by `SmartButtonPreset` only.                                                                                |
+| `circular?`     | `boolean`                 | —           | Square padding plus pill shape, for an icon-only button. Read by `SmartButtonPreset` only.                                   |
+| `iconPosition?` | `'leading' \| 'trailing'` | —           | Not read by the built-in implementations (`SmartButtonStandard`, `SmartButtonPreset`); available to a custom implementation. |
 
 `SmartColor`, `SmartSize`, `SmartVariant` are described in the `react-provider` skill.
 
@@ -143,7 +143,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
 }
 ```
 
-`SmartButtonPreset` is the styled (preset) implementation: register it as above, render it directly in place of `SmartButton`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
+`SmartButtonPreset` is the styled (preset) implementation: register it under the `'button'` key of `SmartProvider`'s `components`, render it directly in place of `SmartButton`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
 
 ### The `useButton` hook
 

@@ -52,7 +52,7 @@ The preset's class helpers (`getCommandPaletteDialogClasses`, `getCommandPalette
 | `variant?`     | `SmartCommandPaletteVariant` | `'simple'`     | The preset look; the standard ignores it. |
 | `placeholder?` | `string`                     | —              | Placeholder of the search input.          |
 | `emptyText?`   | `string`                     | `'No results'` | Shown when nothing matches.               |
-| `ariaLabel?`   | `string`                     | —              | Accessible name of the dialog.            |
+| `ariaLabel?`   | `string`                     | —              | Accessible name of the search input.      |
 
 ### `ICommandPaletteRunCommand`
 
@@ -140,7 +140,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
 }
 ```
 
-`SmartCommandPalettePreset` is the styled (preset) implementation: register it as above, render it directly in place of `SmartCommandPalette`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
+`SmartCommandPalettePreset` is the styled (preset) implementation: register it under the `'command-palette'` key of `SmartProvider`'s `components`, render it directly in place of `SmartCommandPalette`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
 
 ### The `useCommandPalette` hook
 
@@ -213,7 +213,7 @@ export function InlineCommandList(props: SmartCommandPaletteProps) {
 
 ## Styling
 
-- The standard palette is a native `<dialog>`: Escape (the dialog's `close` event) closes it.
+- The standard and preset palettes are native `<dialog>` elements: pressing Escape anywhere in the document closes an open palette, and so does the dialog's `close` event. `useCommandPalette` binds no keyboard listener, so a custom implementation handles Escape (and any Ctrl+K shortcut) itself.
 - `SmartCommandPalettePreset` renders the variants `simple`, `with-padding`, `with-preview`, `with-images`, `with-icons`, `semi-transparent`, `with-groups` and `with-footer`, with `smart:dark:` variants.
 
 ## File Locations

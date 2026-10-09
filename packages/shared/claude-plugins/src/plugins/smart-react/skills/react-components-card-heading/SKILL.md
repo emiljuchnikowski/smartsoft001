@@ -24,7 +24,7 @@ All from `@smartsoft001/react`.
 | `SmartCardHeadingPreset`   | component | HyperUI-styled card heading variation (preset).                                                                                      |
 | `SmartCardHeadingStandard` | component | The default card heading rendering: the avatar, the title, description and meta, and the actions of `options`, each only when given. |
 
-The preset's class helpers (`getCardHeadingContainerClasses`) are exported too, for a custom implementation that wants the preset look.
+The preset's class helper `getCardHeadingContainerClasses` and its `CardHeadingVariant` type (`'author' | 'stacked' | 'overlay' | 'outline'`) are exported too, for a custom implementation that wants the preset look.
 
 ## Props and Types
 
@@ -94,7 +94,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
 }
 ```
 
-`SmartCardHeadingPreset` is the styled (preset) implementation: register it as above, render it directly in place of `SmartCardHeading`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
+`SmartCardHeadingPreset` is the styled (preset) implementation: register it under the `'card-heading'` key of `SmartProvider`'s `components`, render it directly in place of `SmartCardHeading`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
 
 ```tsx
 import { SmartCardHeadingProps } from '@smartsoft001/react';

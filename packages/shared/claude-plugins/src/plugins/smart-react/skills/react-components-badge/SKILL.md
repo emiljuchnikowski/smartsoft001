@@ -25,7 +25,7 @@ All from `@smartsoft001/react`.
 | `SmartBadgeStandard` | component | The default badge rendering: unstyled markup exposing `color`, `size`, `options.variant` and `options.pill` as `data-*` attributes for the application's own CSS. |
 | `useBadge`           | hook      | The behaviour every badge variant shares: `remove()` reports the click on the remove button through `onRemoved`.                                                  |
 
-The preset's class helpers (`getBadgeClasses`, `getDotClasses`, `getRemoveClasses`) are exported too, for a custom implementation that wants the preset look.
+The preset's class helpers (`getBadgeClasses`, `getDotClasses`, `getRemoveClasses`) and their `SmartBadgePresetVariant` type (`'solid' | 'soft' | 'outline'`) are exported too, for a custom implementation that wants the preset look.
 
 ## Props and Types
 
@@ -109,7 +109,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
 }
 ```
 
-`SmartBadgePreset` is the styled (preset) implementation: register it as above, render it directly in place of `SmartBadge`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
+`SmartBadgePreset` is the styled (preset) implementation: register it under the `'badge'` key of `SmartProvider`'s `components`, render it directly in place of `SmartBadge`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
 
 ### The `useBadge` hook
 

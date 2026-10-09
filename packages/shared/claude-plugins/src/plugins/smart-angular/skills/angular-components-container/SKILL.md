@@ -6,7 +6,7 @@ user-invocable: false
 
 # Container Component
 
-Layout primitive that constrains/wraps page content. The `<smart-container>` wrapper renders `ContainerStandardComponent` by default (a neutral `<div>` that exposes `data-mode` / `data-padding` attributes for downstream styling). Consumers can replace the standard with a custom variant via `CONTAINER_STANDARD_COMPONENT_TOKEN`.
+Layout primitive that constrains/wraps page content. The `<smart-container>` wrapper renders `ContainerStandardComponent` by default (a neutral `<div>` that exposes `data-mode` / `data-padding` attributes for downstream styling). `ContainerPresetComponent` maps the options to real Tailwind layout utilities. Consumers can replace the standard with the preset or a custom variant via `CONTAINER_STANDARD_COMPONENT_TOKEN`.
 
 ## When to Use This Skill
 
@@ -18,20 +18,18 @@ Layout primitive that constrains/wraps page content. The `<smart-container>` wra
 
 ### Wrapper: `smart-container`
 
-| Input     | Type                | Default     | Description                |
-| --------- | ------------------- | ----------- | -------------------------- |
-| `options` | `IContainerOptions` | `undefined` | Layout configuration       |
-| `class`   | `string`            | `''`        | Extra CSS class on wrapper |
+| Input     | Type                | Default     | Description                                                             |
+| --------- | ------------------- | ----------- | ----------------------------------------------------------------------- |
+| `options` | `IContainerOptions` | `undefined` | Layout configuration                                                    |
+| `class`   | `string`            | `''`        | Extra CSS classes on the container `<div>` of the active implementation |
 
 ### IContainerOptions
 
-```typescript
-interface IContainerOptions {
-  mode?: 'full-width' | 'constrained' | 'container';
-  padding?: 'none' | 'mobile' | 'always';
-  narrow?: boolean;
-}
-```
+| Field     | Type                                           | Default     | Description                                                                                                                                                             |
+| --------- | ---------------------------------------------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `mode`    | `'full-width' \| 'constrained' \| 'container'` | `undefined` | The standard writes it to `data-mode`. In the preset: `container` centres at `max-w-7xl`, `constrained` at `max-w-5xl`, `full-width` (also when unset) spans the width. |
+| `padding` | `'none' \| 'mobile' \| 'always'`               | `undefined` | The standard writes it to `data-padding`. In the preset: `always` pads at every breakpoint, `mobile` only below `sm`, `none` (also when unset) not at all.              |
+| `narrow`  | `boolean`                                      | `undefined` | Preset only (the standard ignores it): tightens the width to `max-w-3xl`, centred, whatever the mode.                                                                   |
 
 ### Content Projection
 
@@ -52,7 +50,7 @@ interface IContainerOptions {
   <p>Content</p>
 </smart-container>
 
-<!-- Narrow variant with extra class -->
+<!-- Narrow column (preset) with an extra class -->
 <smart-container
   [options]="{ mode: 'constrained', narrow: true }"
   class="my-section"
@@ -65,9 +63,9 @@ interface IContainerOptions {
 
 Three-layer pattern mirroring `<smart-toggle>`:
 
-1. **`ContainerBaseComponent`** (`@Directive()`) — shared signals/inputs (`options`, `cssClass` via `class` alias) and the `smartType = 'container'` discriminator. No outputs, no methods.
+1. **`ContainerBaseComponent`** (`@Directive()`) — shared inputs (`options`, `cssClass` with the `class` alias) and the `smartType = 'container'` discriminator. No outputs, no methods.
 2. **`ContainerStandardComponent`** (selector: `smart-container-standard`) — default concrete implementation extending the base. Renders a single `<div>` with `[class]`, `[attr.data-mode]`, `[attr.data-padding]`, and `<ng-content />`.
-3. **`ContainerComponent`** (selector: `smart-container`) — wrapper. Uses `inject(CONTAINER_STANDARD_COMPONENT_TOKEN, { optional: true })` + `*ngComponentOutlet` to render the injected component, falling back to `<smart-container-standard>`. The projected content is captured once and reaches whichever renders: the standard component, or the injected component's default `<ng-content />`.
+3. **`ContainerComponent`** (selector: `smart-container`) — wrapper. Uses `inject(CONTAINER_STANDARD_COMPONENT_TOKEN, { optional: true })` + `*ngComponentOutlet` to render the injected component, falling back to `<smart-container-standard>`. It passes `options` and `class` to the injected component and captures the projected content once, so it reaches whichever renders: the standard component, or the injected component's default `<ng-content />`.
 
 ## Overriding with Custom Implementation
 
@@ -95,6 +93,8 @@ providers: [
 ];
 ```
 
+A subclass of `ContainerBaseComponent` registered under `CONTAINER_STANDARD_COMPONENT_TOKEN` replaces the standard component in every `<smart-container>` of that injector. It reads `options()` and `cssClass()` (the wrapper's `class`) and renders the children in its default `<ng-content />`.
+
 ## Content Projection
 
 The wrapper uses `*ngComponentOutlet` to render any token-provided implementation and passes the children placed between `<smart-container>...</smart-container>` to it as outlet content, so they render in the injected component's default `<ng-content />` slot.
@@ -107,9 +107,9 @@ Consequences for custom implementations:
 
 ## Preset
 
-`ContainerPresetComponent` (selector `smart-container-preset`, dir `container/preset/`) is a styled drop-in for the neutral standard component. It `extends ContainerStandardComponent` and maps `IContainerOptions` to real Tailwind layout utilities (all `smart:`-prefixed) on a single root `<div data-role="container">` that preserves `<ng-content />`. No new options fields are introduced.
+`ContainerPresetComponent` (selector `smart-container-preset`) is a styled drop-in for the neutral standard component. It `extends ContainerStandardComponent` and maps `IContainerOptions` to real Tailwind layout utilities (all `smart:`-prefixed) on a single root `<div data-role="container">` that preserves `<ng-content />`. No new options fields are introduced.
 
-Class mapping (`getContainerClasses(mode, padding, narrow)` in `preset/preset-classes.util.ts`):
+Class mapping (computed by an internal helper of the preset, not exported):
 
 | Option                       | Classes                                                                                       |
 | ---------------------------- | --------------------------------------------------------------------------------------------- |
@@ -121,9 +121,9 @@ Class mapping (`getContainerClasses(mode, padding, narrow)` in `preset/preset-cl
 | `padding: 'mobile'`          | `smart:px-4 smart:sm:px-0`                                                                    |
 | `padding: 'none'` / unset    | no padding classes                                                                            |
 
-The wrapper forwards inputs canonically through `NgComponentOutlet`, so the preset does `override cssClass = input<string>('')` (dropping the `class` alias). External `cssClass` is appended after the mapped classes.
+The extra classes (`class` on the wrapper, or `class` / `[cssClass]` on `<smart-container-preset>` used directly) are appended after the mapped classes.
 
-Register it via the token:
+Register it through `CONTAINER_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-container>`, or register every preset at once with `provideSmartPresets()`.
 
 ```typescript
 providers: [
@@ -140,7 +140,8 @@ Projected children render both through `<smart-container>` with the preset regis
 
 - Wrapper: `packages/shared/angular/src/lib/components/container/container.component.ts`
 - Default: `packages/shared/angular/src/lib/components/container/standard/standard.component.{ts,html}`
+- Preset: `packages/shared/angular/src/lib/components/container/preset/preset.component.ts` + `preset/preset-classes.util.ts` (internal)
 - Base: `packages/shared/angular/src/lib/components/container/base/base.component.ts`
-- Tests: `packages/shared/angular/src/lib/components/container/{container,standard/standard,base/base}.component.spec.ts`
+- Tests: `packages/shared/angular/src/lib/components/container/{container,standard/standard,base/base,preset/preset}.component.spec.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`CONTAINER_STANDARD_COMPONENT_TOKEN`)
 - Interface: `packages/shared/angular/src/lib/models/interfaces.ts` (`IContainerOptions`)

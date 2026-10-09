@@ -40,14 +40,14 @@ The preset's class helpers (`getSidebarLayoutRootClasses`, `getSidebarLayoutHead
 
 ### `ISidebarLayoutOptions`
 
-| Field               | Type                                 | Default | Description                                                      |
-| ------------------- | ------------------------------------ | ------- | ---------------------------------------------------------------- |
-| `title?`            | `string`                             | —       | Heading of the header zone when `headerTpl` is not set (preset). |
-| `sidebarTpl?`       | `ReactNode`                          | —       | The sidebar content.                                             |
-| `headerTpl?`        | `ReactNode`                          | —       | The header zone.                                                 |
-| `sidebarPosition?`  | `'left' \| 'right'`                  | —       | `right` renders the sidebar after the content.                   |
-| `mobileBreakpoint?` | `SmartSidebarLayoutMobileBreakpoint` | —       | Declared; neither rendering reads it.                            |
-| `condensed?`        | `boolean`                            | `false` | Preset: a narrow sidebar (icons only).                           |
+| Field               | Type                                 | Default  | Description                                                                                  |
+| ------------------- | ------------------------------------ | -------- | -------------------------------------------------------------------------------------------- |
+| `title?`            | `string`                             | —        | Heading of the header zone when `headerTpl` is not set (preset).                             |
+| `sidebarTpl?`       | `ReactNode`                          | —        | The sidebar content.                                                                         |
+| `headerTpl?`        | `ReactNode`                          | —        | The header zone.                                                                             |
+| `sidebarPosition?`  | `'left' \| 'right'`                  | `'left'` | `right` renders the sidebar after the content.                                               |
+| `mobileBreakpoint?` | `SmartSidebarLayoutMobileBreakpoint` | —        | Not read by the built-in implementations; available to a custom implementation.              |
+| `condensed?`        | `boolean`                            | `false`  | Preset only: narrows the sidebar from `w-64` to `w-16` (the sidebar content is not changed). |
 
 ### Related types
 
@@ -108,7 +108,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
 }
 ```
 
-`SmartSidebarLayoutPreset` is the styled (preset) implementation: register it as above, render it directly in place of `SmartSidebarLayout`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
+`SmartSidebarLayoutPreset` is the styled (preset) implementation: register it under the `'sidebar-layout'` key of `SmartProvider`'s `components`, render it directly in place of `SmartSidebarLayout`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
 
 ```tsx
 import { SmartSidebarLayoutProps } from '@smartsoft001/react';

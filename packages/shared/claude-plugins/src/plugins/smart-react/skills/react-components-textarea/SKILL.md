@@ -27,7 +27,7 @@ All from `@smartsoft001/react`.
 | `SmartTextareaStandard` | component | The default, unstyled textarea.                                                                                                                                                                                                      |
 | `useTextarea`           | hook      | The behaviour every textarea variant shares: the `value`, controlled through `value` / `onValueChange` or kept internally from `defaultValue`, and `actionClick()`, which reports an action with the current text unless `disabled`. |
 
-The preset's class helpers (`textareaFieldClasses`, `textareaFrameClasses`, `textareaBarClasses`, `textareaBarInside`, `textareaActionClasses`, `textareaTabClasses`, `TEXTAREA_ROOT`, `TEXTAREA_AVATAR`, `TEXTAREA_BODY`, `TEXTAREA_LABEL`, `TEXTAREA_REQUIRED`, `TEXTAREA_TOOLBAR`, `TEXTAREA_ACTIONS`, `TEXTAREA_TABS`, `TEXTAREA_PREVIEW_PANE`, `TEXTAREA_PREVIEW_BELOW`, `TEXTAREA_COUNTER`, `TEXTAREA_FOOTER`) are exported too, for a custom implementation that wants the preset look.
+The preset's class helpers (`textareaFieldClasses`, `textareaFrameClasses`, `textareaBarClasses`, `textareaBarInside`, `textareaActionClasses`, `textareaTabClasses`, `TEXTAREA_ROOT`, `TEXTAREA_AVATAR`, `TEXTAREA_BODY`, `TEXTAREA_LABEL`, `TEXTAREA_REQUIRED`, `TEXTAREA_TOOLBAR`, `TEXTAREA_ACTIONS`, `TEXTAREA_TABS`, `TEXTAREA_PREVIEW_PANE`, `TEXTAREA_PREVIEW_BELOW`, `TEXTAREA_COUNTER`, `TEXTAREA_FOOTER`) are exported too, with the type `SmartTextareaPresetVariant` (the variant argument of the helpers), for a custom implementation that wants the preset look.
 
 ## Props and Types
 
@@ -73,12 +73,12 @@ Payload of `onActionClick`.
 
 ### `ITextareaAction`
 
-| Field      | Type                                  | Default    | Description                             |
-| ---------- | ------------------------------------- | ---------- | --------------------------------------- |
-| `id`       | `string`                              | required   | Reported as `actionId`.                 |
-| `label?`   | `string`                              | —          | Button text.                            |
-| `iconTpl?` | `ReactNode`                           | —          | Icon of the button.                     |
-| `variant?` | `'primary' \| 'secondary' \| 'ghost'` | `'simple'` | `primary`, `secondary` or `ghost` look. |
+| Field      | Type                                  | Default       | Description                             |
+| ---------- | ------------------------------------- | ------------- | --------------------------------------- |
+| `id`       | `string`                              | required      | Reported as `actionId`.                 |
+| `label?`   | `string`                              | —             | Button text.                            |
+| `iconTpl?` | `ReactNode`                           | —             | Icon of the button.                     |
+| `variant?` | `'primary' \| 'secondary' \| 'ghost'` | `'secondary'` | `primary`, `secondary` or `ghost` look. |
 
 ### Related types
 
@@ -135,7 +135,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
 }
 ```
 
-`SmartTextareaPreset` is the styled (preset) implementation: register it as above, render it directly in place of `SmartTextarea`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
+`SmartTextareaPreset` is the styled (preset) implementation: register it under the `'textarea'` key of `SmartProvider`'s `components`, render it directly in place of `SmartTextarea`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
 
 ### The `useTextarea` hook
 

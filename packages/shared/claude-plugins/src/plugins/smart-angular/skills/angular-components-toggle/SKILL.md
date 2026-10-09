@@ -17,21 +17,21 @@ The `<smart-toggle>` component provides a boolean on/off control. It follows the
 
 ### ToggleComponent (`<smart-toggle>`)
 
-Main wrapper component. Renders `ToggleStandardComponent` by default. When `TOGGLE_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`.
+Main wrapper component. Renders `ToggleStandardComponent` by default. When `TOGGLE_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`, hands it `value`, `disabled`, `options` and `class`, and forwards two-way `value` of whichever implementation renders (the standard, the preset or a custom one).
 
 ### ToggleStandardComponent (`<smart-toggle-standard>`)
 
-Barebones native-HTML implementation. Renders a `<span class="smart-toggle" data-label-position="…">` containing a minimal `<input type="checkbox">` bound to `value` and `disabled`, with the external `cssClass` applied to the input element. `options.label` renders in a `<label class="smart-toggle-label" for="…">` associated with the checkbox (so it is the accessible name), and `options.description` in a `<span class="smart-toggle-description">` referenced by the checkbox's `aria-describedby`. Both live in a `<span class="smart-toggle-text" data-role="text">` placed after the checkbox, or before it when `options.labelPosition === 'left'` (default `'right'`). `options.ariaLabel` is applied as the checkbox's `aria-label` only when there is no `label`. It does not include Tailwind UI styling.
+Barebones native-HTML implementation. Renders a `<span class="smart-toggle" data-label-position="…">` containing a minimal `<input type="checkbox">` bound to `value` and `disabled`, with the external `cssClass` applied to the input element. `options.label` renders in a `<label class="smart-toggle-label" for="…">` associated with the checkbox (so it is the accessible name), and `options.description` in a `<span class="smart-toggle-description">` referenced by the checkbox's `aria-describedby`. Both live in a `<span class="smart-toggle-text" data-role="text">` placed after the checkbox, or before it when `options.labelPosition === 'left'` (default `'right'`). `options.ariaLabel` is applied as the checkbox's `aria-label` only when there is no `label`. It adds no styles.
 
 ### TogglePresetComponent (`<smart-toggle-preset>`)
 
-Styled variation that extends `ToggleBaseComponent` and is a drop-in replacement for `ToggleStandardComponent`. Register it via `TOGGLE_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-toggle>`, or use the `<smart-toggle-preset>` selector directly. It renders the Preline **default switch**: a hidden, accessible `<input type="checkbox">` (with `peer sr-only`) drives the track / thumb visuals through `peer-checked` / `peer-disabled` states, while the `value` model holds the checked state (updated via the checkbox `change` event). Honors `options.label` and `options.description` (rendered beside the switch), `options.labelPosition` (`'left'` | `'right'`, default `'right'`), `options.ariaLabel` (forwarded to the checkbox), and `disabled`. All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants. The class recipes live in `preset/preset-classes.util.ts` (`getToggleContainerClasses`, `getToggleSwitchClasses`, `getToggleTrackClasses`, `getToggleThumbClasses`, `getToggleTextWrapClasses`, `getToggleLabelClasses`, `getToggleDescriptionClasses`).
+Styled variation that extends `ToggleBaseComponent` and is a drop-in replacement for `ToggleStandardComponent`. Register it via `TOGGLE_STANDARD_COMPONENT_TOKEN` (or every preset at once with `provideSmartPresets()`) to restyle every `<smart-toggle>`, or use the `<smart-toggle-preset>` selector directly. It renders the Preline **default switch**: a visually hidden `<input type="checkbox">` (with `peer sr-only`) drives the track / thumb visuals through `peer-checked` / `peer-disabled` states, while the `value` model holds the checked state (updated via the checkbox `change` event). Like the standard, `options.label` is a `<label for>` of the checkbox (its accessible name), `options.description` is referenced by the checkbox's `aria-describedby`, both sit beside the switch on the side given by `options.labelPosition` (default `'right'`), and `options.ariaLabel` names the checkbox only when there is no `label`. The external `cssClass` goes on the root `<div>`. All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants; the class recipes are internal to the preset and not exported.
 
-> Because `ToggleComponent` renders injected components via `NgComponentOutlet` (which passes inputs by canonical name), `TogglePresetComponent` overrides `cssClass` as `input<string>('')` **without** the `class` alias. Bind it as `[cssClass]` when using the `<smart-toggle-preset>` selector directly, or just pass `class` on `<smart-toggle>` (the wrapper forwards it). Note that the Preline doc's size, soft-color, rounded, icon, tooltip, and validation-state variants are **not** exposed, because `IToggleOptions` has no size/variant/color fields; the preset renders the default medium pill switch in the primary (blue) color.
+> `TogglePresetComponent` declares `cssClass` as `input<string>('')` **without** the `class` alias. Bind it as `[cssClass]` when using the `<smart-toggle-preset>` selector directly, or just pass `class` on `<smart-toggle>` (the wrapper forwards it). With the preset registered through the token, `[(value)]` on `<smart-toggle>` works as with the standard. The Preline doc's size, soft-color, rounded, icon, tooltip and validation-state variants are **not** exposed, because `IToggleOptions` has no size/variant/color fields; the preset renders the default medium pill switch in the primary (blue) color.
 
 ### ToggleBaseComponent (abstract)
 
-Abstract base directive for extending custom toggle implementations. Exposes `value` as a two-way `ModelSignal<boolean>` (default `false`), `disabled` as an `InputSignal<boolean>` (default `false`), `options` as an `InputSignal<IToggleOptions | undefined>`, `cssClass` as an `InputSignal<string>` (with alias `class`), and a `toggle()` method that calls `value.set(!value())` when `disabled()` is `false`.
+Abstract base directive for extending custom toggle implementations. Exposes `value` as a two-way `ModelSignal<boolean>` (default `false`), `disabled` as an `InputSignal<boolean>` (default `false`), `options` as an `InputSignal<IToggleOptions | undefined>`, `cssClass` as an `InputSignal<string>` (with alias `class`), and a `toggle()` method that flips `value` unless `disabled()` is `true`.
 
 ## API
 
@@ -46,6 +46,15 @@ Abstract base directive for extending custom toggle implementations. Exposes `va
 
 ### IToggleOptions
 
+| Field           | Type                | Default   | Description                                                                                         |
+| --------------- | ------------------- | --------- | --------------------------------------------------------------------------------------------------- |
+| `label`         | `string`            | -         | Visible label, a `<label for>` of the checkbox, so it is the accessible name.                       |
+| `description`   | `string`            | -         | Help text under the label, referenced by the checkbox's `aria-describedby`.                         |
+| `labelPosition` | `'left' \| 'right'` | `'right'` | `'left'` puts the label and description before the switch, otherwise they go after it.              |
+| `ariaLabel`     | `string`            | -         | `aria-label` of the checkbox, applied only when there is no `label`; set it for label-less toggles. |
+
+Both `ToggleStandardComponent` and `TogglePresetComponent` honour every field.
+
 ```typescript
 interface IToggleOptions {
   label?: string;
@@ -55,18 +64,13 @@ interface IToggleOptions {
 }
 ```
 
-Both `ToggleStandardComponent` and `TogglePresetComponent` honour every property: `label` (the checkbox's accessible name — a `<label for>` in the standard), `description` (referenced by `aria-describedby` in the standard), `labelPosition` (`'left'` puts the text before the switch, otherwise it goes after — default `'right'`) and `ariaLabel` (the standard uses it only when there is no visible `label`; set it for label-less toggles).
-
 ## TOGGLE_STANDARD_COMPONENT_TOKEN
+
+InjectionToken that replaces the default `ToggleStandardComponent` with a custom implementation. Provide a component class extending `ToggleBaseComponent`; every `<smart-toggle>` below that injector renders it.
 
 ```typescript
 import { TOGGLE_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
-```
 
-InjectionToken that allows replacing the default `ToggleStandardComponent` with a custom implementation. Provide a `Type<ToggleBaseComponent>` to override.
-
-```typescript
-// In your app module or component providers:
 providers: [
   {
     provide: TOGGLE_STANDARD_COMPONENT_TOKEN,
@@ -82,7 +86,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -114,27 +117,17 @@ import { ToggleBaseComponent } from '@smartsoft001/angular';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyCustomToggleComponent extends ToggleBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
-  containerClasses = computed(() => {
-    const classes = ['my-toggle-container'];
-    const extra = this.cssClass();
-    if (extra) classes.push(extra);
-    return classes.join(' ');
-  });
+  containerClasses = computed(() =>
+    ['my-toggle-container', this.cssClass()].filter(Boolean).join(' '),
+  );
 
   onChange(event: Event): void {
-    const checked = (event.target as HTMLInputElement).checked;
-    this.value.set(checked);
+    this.value.set((event.target as HTMLInputElement).checked);
   }
 }
 ```
 
-When extending the base directly, remember to:
-
-- declare `cssClass = input<string>('')` explicitly (no `class` alias) if the component is used via `NgComponentOutlet` through `TOGGLE_STANDARD_COMPONENT_TOKEN`, because `NgComponentOutlet` passes inputs by canonical name (not by alias),
-- use `this.toggle()` for click-based handlers (it already respects `disabled`), or call `this.value.set(checked)` directly in a `change` event handler.
+`value` (a model the wrapper binds two-way), `disabled()`, `options()`, `cssClass()` and `toggle()` are inherited. Use `this.toggle()` in a click handler (it already respects `disabled`), or call `this.value.set(checked)` in a `change` handler.
 
 ## Usage Examples
 

@@ -98,7 +98,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
 }
 ```
 
-`SmartTogglePreset` is the styled (preset) implementation: register it as above, render it directly in place of `SmartToggle`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
+`SmartTogglePreset` is the styled (preset) implementation: register it under the `'toggle'` key of `SmartProvider`'s `components`, render it directly in place of `SmartToggle`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
 
 ### The `useToggle` hook
 
@@ -143,7 +143,8 @@ export function SwitchButton(props: SmartToggleProps) {
 
 ## Styling
 
-- `SmartToggleStandard` is a native checkbox with a `<label htmlFor>`; `SmartTogglePreset` draws the track and thumb with `peer-*` states and `smart:dark:` variants.
+- `SmartToggleStandard` is an unstyled native checkbox; `SmartTogglePreset` draws the track and thumb with `peer-*` states and `smart:dark:` variants.
+- In both, `options.label` is a `<label htmlFor>` of the checkbox (its accessible name) and `options.description` is referenced by the checkbox's `aria-describedby`.
 
 ## File Locations
 

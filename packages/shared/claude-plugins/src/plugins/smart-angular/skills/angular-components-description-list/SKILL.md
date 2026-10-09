@@ -38,6 +38,25 @@ Abstract base directive for extending custom description-list implementations. E
 
 ### IDescriptionListOptions
 
+All fields are optional. Both the standard and the preset read every field; a section renders only when its string or template is set.
+
+| Field            | Type                     | Default | Description                                  |
+| ---------------- | ------------------------ | ------- | -------------------------------------------- |
+| `title`          | `string`                 | -       | Heading above the list.                      |
+| `description`    | `string`                 | -       | Text under the heading.                      |
+| `items`          | `IDescriptionListItem[]` | `[]`    | The rows.                                    |
+| `attachmentsTpl` | `TemplateRef<unknown>`   | -       | A section after the rows (e.g. a file list). |
+| `footerTpl`      | `TemplateRef<unknown>`   | -       | A section at the end.                        |
+
+### IDescriptionListItem
+
+| Field       | Type                   | Default  | Description                                 |
+| ----------- | ---------------------- | -------- | ------------------------------------------- |
+| `label`     | `string`               | required | The term (`<dt>`).                          |
+| `value`     | `string`               | -        | The value as text.                          |
+| `valueTpl`  | `TemplateRef<unknown>` | -        | The value as a template; wins over `value`. |
+| `actionTpl` | `TemplateRef<unknown>` | -        | An action next to the value.                |
+
 ```typescript
 interface IDescriptionListOptions {
   title?: string;
@@ -55,15 +74,13 @@ interface IDescriptionListItem {
 }
 ```
 
-All properties are optional. The default `DescriptionListStandardComponent` consumes every property; a section is rendered only when its template/string is provided. Within an item, `valueTpl` takes precedence over `value` when both are set.
-
 ## DESCRIPTION_LIST_STANDARD_COMPONENT_TOKEN
 
 ```typescript
 import { DESCRIPTION_LIST_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
 ```
 
-InjectionToken that allows replacing the default `DescriptionListStandardComponent` with a custom implementation. Provide a `Type<DescriptionListBaseComponent>` to override.
+InjectionToken that allows replacing the default `DescriptionListStandardComponent` with a custom implementation. Provide a `Type<DescriptionListBaseComponent>` to override. The wrapper passes `options` and the `class` value to the registered component (under `class` when it keeps the base's alias, under `cssClass` when it redeclares the input without it).
 
 ```typescript
 providers: [
@@ -81,7 +98,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
@@ -116,9 +132,6 @@ import { DescriptionListBaseComponent } from '@smartsoft001/angular';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyCustomDescriptionListComponent extends DescriptionListBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   containerClasses = computed(() => {
     const classes = ['my-description-list'];
     const extra = this.cssClass();
@@ -161,7 +174,7 @@ export class MyCustomDescriptionListComponent extends DescriptionListBaseCompone
 
 <!-- With per-item actions -->
 <ng-template #updateAction>
-  <button>Update</button>
+  <smart-button [options]="{ click: onUpdate }">Update</smart-button>
 </ng-template>
 
 <smart-description-list
@@ -205,7 +218,7 @@ export class MyCustomDescriptionListComponent extends DescriptionListBaseCompone
 - Rows (`data-role="row"`): `grid py-3 sm:grid-cols-3 sm:gap-4` with `<dt>` (`data-role="term"`, `text-sm font-medium text-gray-500 dark:text-gray-400`) and `<dd>` (`data-role="value"`, `text-sm text-gray-900 dark:text-white sm:col-span-2`). `valueTpl` wins over `value`; `actionTpl` renders right-aligned inside `data-role="action"`.
 - Optional `attachmentsTpl` (`data-role="attachments"`) and `footerTpl` (`data-role="footer"`) render as separate sections below the list.
 
-Because the wrapper forwards inputs canonically through `NgComponentOutlet`, the preset declares `override cssClass = input<string>('')` (dropping the inherited `class` alias). Register it through the token to restyle every `<smart-description-list>`:
+The preset declares `cssClass` without the `class` alias, so bind `[cssClass]` when you use the `<smart-description-list-preset>` selector directly; `class` on `<smart-description-list>` reaches it through the wrapper. Register it for `DESCRIPTION_LIST_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-description-list>`, or register every preset at once with `provideSmartPresets()`.
 
 ```typescript
 providers: [
@@ -216,7 +229,7 @@ providers: [
 ];
 ```
 
-No new `IDescriptionListOptions` fields are introduced; the preset consumes the existing API. Class recipes live in `preset/preset-classes.util.ts` (not exported from the barrel).
+No new `IDescriptionListOptions` fields are introduced; the preset consumes the existing API. Its class recipes are internal (not exported from `@smartsoft001/angular`).
 
 ## File Locations
 

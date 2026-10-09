@@ -19,40 +19,61 @@ The `<smart-form>` component renders a reactive form driven by `@Field()` model 
 
 ### FormComponent (`<smart-form>`)
 
-Main wrapper. Holds all reactive-form logic: builds the form via `FormFactory`, tracks `loading$`, and emits `valueChange`, `valuePartialChange`, and `validChange` outputs. Renders `FormStandardComponent` by default. When `FORM_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`, passing all inputs and outputs.
+Main wrapper. Holds all reactive-form logic: builds the form via `FormFactory` (or takes `options.control`), disables it while `loading$` emits `true`, wraps the body in a `<form>` that emits `invokeSubmit` on submit and on Enter (`keyup.enter`), and emits `valueChange`, `valuePartialChange` and `validChange` from its own subscription to the form group. Renders `FormStandardComponent` by default. When `FORM_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`, passing `options`, the built `form` and the class, and re-emitting the body's `invokeSubmit`.
 
 ### FormStandardComponent (`<smart-form-standard>`)
 
-Default concrete implementation. Generic Tailwind-styled container that iterates over `fields` and renders each via `<smart-input>` per control.
+Default concrete implementation. A container with dividers that renders one `<smart-input>` per control of the form (skipping missing and `__smartDisabled` controls), with the field's `possibilities` and `inputComponents` entry.
 
 ### FormBaseComponent (abstract)
 
-Abstract base directive. Exposes `form` (`UntypedFormGroup`), `options`, `fields` (computed from `form.controls`), `model`, `mode`, `possibilities`, `inputComponents`, `cssClass`, and lifecycle hooks `submit()`, `afterSetForm()`, `afterSetOptions()`. Extend it to build custom form implementations.
+Abstract base directive. Extend it to build custom form implementations. It exposes:
+
+- inputs `form` (`UntypedFormGroup`, required), `options` (`IFormOptions<T>`, required) and `cssClass` (alias `class`)
+- the `invokeSubmit` output (`OutputEmitterRef<any>`) and `submit()`, which emits it with the form value
+- `fields` (the keys of `form.controls`), `model`, `mode` (`''` when unset), `possibilities`, `inputComponents`, `treeLevel`, all read from the inputs
+- `getUntypedFormControl(field)` and the hooks `afterSetForm()` and `afterSetOptions()`
 
 ## API
 
 ### Inputs
 
-| Input     | Type                                     | Default    | Description                                            |
-| --------- | ---------------------------------------- | ---------- | ------------------------------------------------------ |
-| `options` | `InputSignal<IFormOptions<T>>`           | _required_ | Form configuration (model, mode, control, loading$, …) |
-| `class`   | `InputSignal<string>` (alias `cssClass`) | `''`       | External CSS classes on the container                  |
+| Input     | Type                           | Default    | Description                                                     |
+| --------- | ------------------------------ | ---------- | --------------------------------------------------------------- |
+| `options` | `InputSignal<IFormOptions<T>>` | _required_ | The model, the mode and the other form options                  |
+| `class`   | `InputSignal<string>`          | `''`       | Classes on the body container (`cssClass` input, alias `class`) |
 
 ### Outputs
 
-| Output               | Type                           | Description                                      |
-| -------------------- | ------------------------------ | ------------------------------------------------ |
-| `invokeSubmit`       | `OutputEmitterRef<T>`          | Emits the form value when the form is submitted  |
-| `valueChange`        | `OutputEmitterRef<T>`          | Emits the full form value on every change        |
-| `valuePartialChange` | `OutputEmitterRef<Partial<T>>` | Emits only the changed portion of the form value |
-| `validChange`        | `OutputEmitterRef<boolean>`    | Emits form validity on every change              |
+| Output               | Type                           | Description                                                                               |
+| -------------------- | ------------------------------ | ----------------------------------------------------------------------------------------- |
+| `invokeSubmit`       | `OutputEmitterRef<T>`          | Emits the form value (`form.value`) on submit and on Enter.                               |
+| `valueChange`        | `OutputEmitterRef<T>`          | Emits the full form value on every change, and once when the form is ready                |
+| `valuePartialChange` | `OutputEmitterRef<Partial<T>>` | Emits the values of the dirty controls (`<key>Confirm` controls left out) on every change |
+| `validChange`        | `OutputEmitterRef<boolean>`    | Emits form validity on every change                                                       |
+
+`<smart-form>` does not block the submit of an invalid form: keep `validChange` in state and check it before saving.
 
 ### IFormOptions
+
+| Field             | Type                                                                               | Default    | Description                                                                                                                     |
+| ----------------- | ---------------------------------------------------------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `model`           | `T`                                                                                | required   | The model instance (a `@Model` class); the factory builds one control per `@Field` the mode includes.                           |
+| `show`            | `boolean`                                                                          | required   | Required by the type; not read by the built-in implementations (pass `true`).                                                   |
+| `mode`            | `'create' \| 'update' \| string`                                                   | `'create'` | Which fields and which mode options the factory uses. The inputs merge the options of the mode they receive (`''` without one). |
+| `control`         | `AbstractControl`                                                                  | -          | A ready form group; without it the form is built from `model` by `FormFactory`.                                                 |
+| `loading$`        | `Observable<boolean>`                                                              | -          | Disables the whole form while it emits `true`, enables it on `false`.                                                           |
+| `uniqueProvider`  | `(values: Record<keyof T, any>) => Promise<boolean>`                               | -          | Async check of `unique` fields, passed to the factory.                                                                          |
+| `possibilities`   | `{ [key: string]: WritableSignal<{ id: any; text: string; checked: boolean }[]> }` | `{}`       | Options of choice fields (`radio`, `check`, `enum`, ...), by field key.                                                         |
+| `inputComponents` | `{ [key: string]: InputBaseComponentType<T> }`                                     | `{}`       | Field components by field key, used instead of the type's component.                                                            |
+| `treeLevel`       | `number`                                                                           | `1`        | Nesting depth; written to the host as the `tree-level` attribute.                                                               |
+| `fieldOptions`    | `IFieldOptions`                                                                    | -          | Not read by the built-in implementations; available to a custom implementation.                                                 |
+| `modelOptions`    | `IModelOptions`                                                                    | -          | Not read by the built-in implementations; available to a custom implementation.                                                 |
 
 ```typescript
 interface IFormOptions<T> {
   model: T; // Model instance (decorated with @Model / @Field)
-  show: boolean; // Whether the form is visible
+  show: boolean; // Required by the type, not read
   treeLevel?: number; // Nesting depth in hierarchical forms
   control?: AbstractControl; // Pre-built form group — skips FormFactory when provided
   mode?: 'create' | 'update' | string; // Merges @Field({ create: … }) or { update: … } overrides
@@ -66,8 +87,8 @@ interface IFormOptions<T> {
   inputComponents?: {
     [key: string]: InputBaseComponentType<T>;
   }; // Per-field component overrides keyed by field name
-  fieldOptions?: IFieldOptions; // Additional @Field() metadata overrides
-  modelOptions?: IModelOptions; // Additional @Model() metadata overrides
+  fieldOptions?: IFieldOptions; // Not read by the built-in implementations
+  modelOptions?: IModelOptions; // Not read by the built-in implementations
 }
 ```
 
@@ -77,7 +98,7 @@ interface IFormOptions<T> {
 import { FORM_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
 ```
 
-InjectionToken that allows replacing the default `FormStandardComponent` with a custom implementation. Provide a `Type<FormBaseComponent<T>>`.
+InjectionToken that allows replacing the default `FormStandardComponent` with a custom implementation. Provide a `Type<FormBaseComponent<T>>`; it renders inside the wrapper's `<form>`, so a `type="submit"` button submits it.
 
 ```typescript
 providers: [
@@ -89,22 +110,29 @@ providers: [
 
 ```typescript
 import { Component, ViewEncapsulation } from '@angular/core';
-import { FormBaseComponent } from '@smartsoft001/angular';
-import { SmartInputComponent } from '@smartsoft001/angular';
+import { FormBaseComponent, InputComponent } from '@smartsoft001/angular';
 
 @Component({
   selector: 'my-custom-form',
   template: `
-    <form [formGroup]="form" [class]="cssClass()" (ngSubmit)="submit()">
-      @for (field of fields; track field.key) {
+    <div [class]="cssClass()">
+      @for (field of fields; track field) {
         <div class="my-field-row">
-          <smart-input [options]="field.inputOptions"></smart-input>
+          <smart-input
+            [options]="{
+              treeLevel: treeLevel ?? 0,
+              fieldKey: field,
+              control: getUntypedFormControl(field),
+              model: model,
+              mode: mode,
+            }"
+          />
         </div>
       }
       <button type="submit">Save</button>
-    </form>
+    </div>
   `,
-  imports: [SmartInputComponent],
+  imports: [InputComponent],
   encapsulation: ViewEncapsulation.None,
 })
 export class MyCustomFormComponent extends FormBaseComponent<any> {}
@@ -154,7 +182,7 @@ Each field is rendered via `<smart-input>`. Per-field dispatch by `FieldType` is
 
 `FormPresetComponent` (`<smart-form-preset>`) is a styled, drop-in replacement for `FormStandardComponent`. It extends the standard component and reuses all of its logic (field iteration, statuses, submit-on-enter, and the value/valid/partial outputs on the wrapper). The preset only restyles the **shell**: the form root gets a vertical rhythm (`smart:space-y-5`) and each field row is wrapped in a `data-role="field"` element (with the field key on `data-key`); the root carries `data-role="form"`.
 
-**The form preset does NOT restyle field internals.** Each field is still rendered by `<smart-input>`, so to get the full styled look, register the input presets alongside it. The recommended duet provides both tokens:
+**The form preset does NOT restyle field internals.** Each field is still rendered by `<smart-input>`, so to get the full styled look, register the input presets alongside it: provide `FormPresetComponent` for `FORM_STANDARD_COMPONENT_TOKEN` and `INPUT_PRESET_FIELD_COMPONENTS` for `INPUT_FIELD_COMPONENTS_TOKEN`, or register every preset at once with `provideSmartPresets()`.
 
 ```typescript
 import {

@@ -26,7 +26,7 @@ All from `@smartsoft001/react`.
 | `SmartStackedListPreset`   | component | Styled stacked list variation (preset).                                                                                                                                                                                                |
 | `SmartStackedListStandard` | component | The default stacked-list rendering: one `li.item` per item (icon template > avatar, title as a link when `href` is set, description, meta, badge and action slots), the `emptyTpl` when there are no items, then the `footerTpl` slot. |
 
-The preset's class helpers (`getStackedListRootClasses`, `getStackedListListClasses`, `getStackedListItemClasses`, `STACKED_LIST_ROOT`, `STACKED_LIST_TITLE`, `STACKED_LIST_DESCRIPTION`, `STACKED_LIST_HEADER`, `STACKED_LIST_DIVIDERS`, `STACKED_LIST_FULL_WIDTH_CARD`, `STACKED_LIST_ITEM`, `STACKED_LIST_ITEM_CARD_PADDING`, `STACKED_LIST_LEAD`, `STACKED_LIST_AVATAR`, `STACKED_LIST_ICON`, `STACKED_LIST_BODY`, `STACKED_LIST_ITEM_TITLE`, `STACKED_LIST_ITEM_TITLE_LINK`, `STACKED_LIST_ITEM_DESCRIPTION`, `STACKED_LIST_ITEM_META`, `STACKED_LIST_TRAIL`, `STACKED_LIST_EMPTY`, `STACKED_LIST_FOOTER`) are exported too, for a custom implementation that wants the preset look.
+The preset's class helpers (`getStackedListRootClasses`, `getStackedListListClasses`, `getStackedListItemClasses`, `STACKED_LIST_ROOT`, `STACKED_LIST_TITLE`, `STACKED_LIST_DESCRIPTION`, `STACKED_LIST_HEADER`, `STACKED_LIST_DIVIDERS`, `STACKED_LIST_FULL_WIDTH_CARD`, `STACKED_LIST_ITEM`, `STACKED_LIST_ITEM_CARD_PADDING`, `STACKED_LIST_LEAD`, `STACKED_LIST_AVATAR`, `STACKED_LIST_ICON`, `STACKED_LIST_BODY`, `STACKED_LIST_ITEM_TITLE`, `STACKED_LIST_ITEM_TITLE_LINK`, `STACKED_LIST_ITEM_DESCRIPTION`, `STACKED_LIST_ITEM_META`, `STACKED_LIST_TRAIL`, `STACKED_LIST_EMPTY`, `STACKED_LIST_FOOTER`) are exported too, with the type `IStackedListPresetFlags` (the `withDividers` / `fullWidthOnMobile` flags the list and item helpers take), for a custom implementation that wants the preset look.
 
 ## Props and Types
 
@@ -115,7 +115,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
 }
 ```
 
-`SmartStackedListPreset` is the styled (preset) implementation: register it as above, render it directly in place of `SmartStackedList`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
+`SmartStackedListPreset` is the styled (preset) implementation: register it under the `'stacked-list'` key of `SmartProvider`'s `components`, render it directly in place of `SmartStackedList`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
 
 ```tsx
 import { SmartStackedListProps } from '@smartsoft001/react';

@@ -46,9 +46,9 @@ The preset's class helpers (`getSignInFormContainerClasses`, `getSignInFormCardC
 | Field                  | Type                    | Default                                        | Description                                                                                             |
 | ---------------------- | ----------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
 | `socialProviders?`     | `ISocialProvider[]`     | `[]`                                           | Social sign-in buttons.                                                                                 |
-| `layout?`              | `SmartSignInFormLayout` | `'simple'`                                     | Preset: `simple` (default), `simple-no-labels`, `card` or `split-screen`.                               |
+| `layout?`              | `SmartSignInFormLayout` | `'simple'`                                     | Preset only: `simple` (default), `simple-no-labels`, `card` or `split-screen`. The standard ignores it. |
 | `showLabels?`          | `boolean`               | —                                              | `false` hides the field labels (the `simple-no-labels` preset layout hides them unless this is `true`). |
-| `heroImageUrl?`        | `string`                | —                                              | Image of the `split-screen` layout.                                                                     |
+| `heroImageUrl?`        | `string`                | —                                              | Preset only: the cover image of the `split-screen` layout. The standard ignores it.                     |
 | `forgotPasswordHref?`  | `string`                | —                                              | "Forgot password" link (sign-in mode).                                                                  |
 | `signUpHref?`          | `string`                | —                                              | Link to the sign-up screen (sign-in mode).                                                              |
 | `signInHref?`          | `string`                | —                                              | Link to the sign-in screen (sign-up mode).                                                              |
@@ -155,7 +155,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
 }
 ```
 
-`SmartSignInFormPreset` is the styled (preset) implementation: register it as above, render it directly in place of `SmartSignInForm`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
+`SmartSignInFormPreset` is the styled (preset) implementation: register it under the `'sign-in-form'` key of `SmartProvider`'s `components`, render it directly in place of `SmartSignInForm`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
 
 ### The `useSignInForm` hook
 

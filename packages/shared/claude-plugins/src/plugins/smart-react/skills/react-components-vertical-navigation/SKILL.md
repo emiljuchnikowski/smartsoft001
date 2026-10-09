@@ -41,12 +41,12 @@ The preset's class helpers (`getVerticalNavContainerClasses`, `getVerticalNavNav
 
 ### `IVerticalNavOptions`
 
-| Field        | Type                     | Default     | Description                                                                                  |
-| ------------ | ------------------------ | ----------- | -------------------------------------------------------------------------------------------- |
-| `layout?`    | `SmartVerticalNavLayout` | —           | Declared (`SmartVerticalNavLayout`); neither the standard nor the preset rendering reads it. |
-| `ariaLabel?` | `string`                 | `'Sidebar'` | Accessible name of the `nav`.                                                                |
-| `items?`     | `IVerticalNavItem[]`     | —           | The first, untitled group.                                                                   |
-| `groups?`    | `IVerticalNavGroup[]`    | —           | Further groups, each with a title.                                                           |
+| Field        | Type                     | Default     | Description                                                                                           |
+| ------------ | ------------------------ | ----------- | ----------------------------------------------------------------------------------------------------- |
+| `layout?`    | `SmartVerticalNavLayout` | —           | Not read by the built-in implementations (standard and preset); available to a custom implementation. |
+| `ariaLabel?` | `string`                 | `'Sidebar'` | Accessible name of the `nav`.                                                                         |
+| `items?`     | `IVerticalNavItem[]`     | —           | The first, untitled group.                                                                            |
+| `groups?`    | `IVerticalNavGroup[]`    | —           | Further groups, each with a title.                                                                    |
 
 ### `IVerticalNavItemClick`
 
@@ -139,7 +139,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
 }
 ```
 
-`SmartVerticalNavigationPreset` is the styled (preset) implementation: register it as above, render it directly in place of `SmartVerticalNavigation`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
+`SmartVerticalNavigationPreset` is the styled (preset) implementation: register it under the `'vertical-navigation'` key of `SmartProvider`'s `components`, render it directly in place of `SmartVerticalNavigation`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
 
 ### The `useVerticalNavigation` hook
 

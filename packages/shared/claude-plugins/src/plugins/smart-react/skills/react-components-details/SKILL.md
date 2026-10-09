@@ -48,16 +48,16 @@ What `useDetailsModal` opens: a component and its params.
 
 ### `IDetailsOptions<T extends IEntity<string>>`
 
-| Field                 | Type                             | Default  | Description                                                                                    |
-| --------------------- | -------------------------------- | -------- | ---------------------------------------------------------------------------------------------- |
-| `title?`              | `string`                         | —        | Not rendered by `SmartDetails`; `useDetailsPageOptions` uses it as a page title.               |
-| `cellPipe?`           | `ICellPipe<T>`                   | —        | Formats the values of text-like fields (see `react-components-detail`).                        |
-| `type`                | `any`                            | required | The `@Model` class whose `details` fields are shown.                                           |
-| `item`                | `T \| null \| undefined`         | required | The record (a plain API object is converted to `type`); without one the fields show skeletons. |
-| `loading?`            | `boolean`                        | —        | Passed to every field.                                                                         |
-| `itemHandler?`        | `((id: string) => void) \| null` | —        | Not rendered by `SmartDetails`; `useDetailsPageOptions` turns it into a "go to item" button.   |
-| `removeHandler?`      | `((item: T) => void) \| null`    | —        | Not rendered by `SmartDetails`; `useDetailsPageOptions` turns it into a remove button.         |
-| `componentFactories?` | `IDetailsComponentFactories<T>`  | —        | Components rendered above (`top`) and below (`bottom`) the fields.                             |
+| Field                 | Type                             | Default  | Description                                                                                                    |
+| --------------------- | -------------------------------- | -------- | -------------------------------------------------------------------------------------------------------------- |
+| `title?`              | `string`                         | —        | Not rendered by `SmartDetails`; `useDetailsPageOptions` uses it as a page title.                               |
+| `cellPipe?`           | `ICellPipe<T>`                   | —        | Formats the values of text-like fields (see `react-components-detail`).                                        |
+| `type`                | `any`                            | required | The `@Model` class whose `details` fields are shown.                                                           |
+| `item`                | `T \| null \| undefined`         | required | The record (a plain API object is converted to `type`); without one the fields show skeletons.                 |
+| `loading?`            | `boolean`                        | —        | Passed to every `SmartDetail`; not read by the built-in implementations; available to a custom implementation. |
+| `itemHandler?`        | `((id: string) => void) \| null` | —        | Not rendered by `SmartDetails`; `useDetailsPageOptions` turns it into a "go to item" button.                   |
+| `removeHandler?`      | `((item: T) => void) \| null`    | —        | Not rendered by `SmartDetails`; `useDetailsPageOptions` turns it into a remove button.                         |
+| `componentFactories?` | `IDetailsComponentFactories<T>`  | —        | Components rendered above (`top`) and below (`bottom`) the fields.                                             |
 
 ### `UseDetailsModalCallbacks`
 

@@ -42,10 +42,10 @@ The preset's class helpers (`getDividerContainerClasses`, `getDividerIconClasses
 
 ### `IDividerOptions`
 
-| Field       | Type                            | Default    | Description                                                                                                                                                                                             |
-| ----------- | ------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `variant?`  | `SmartDividerVariant`           | —          | `with-label`, `with-icon`, `with-title`, `with-button` or `with-toolbar` (label + line + action). Read by the preset; inferred from the props when omitted (action, title, icon, label, in that order). |
-| `position?` | `'left' \| 'center' \| 'right'` | `'center'` | Where the content sits on the line.                                                                                                                                                                     |
+| Field       | Type                            | Default    | Description                                                                                                                                                                                                                                                                                |
+| ----------- | ------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `variant?`  | `SmartDividerVariant`           | inferred   | `with-label`, `with-icon`, `with-title`, `with-button` (only the action button on the line: `label` and `title` are not shown) or `with-toolbar` (label or title, a line, then the action). Preset only; inferred from the props when omitted (action, title, icon, label, in that order). |
+| `position?` | `'left' \| 'center' \| 'right'` | `'center'` | Where the content sits on the line (preset, except `with-toolbar`). The standard only writes it to the `data-position` attribute of its root, for your own CSS.                                                                                                                            |
 
 ### Related types
 
@@ -85,7 +85,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
 }
 ```
 
-`SmartDividerPreset` is the styled (preset) implementation: register it as above, render it directly in place of `SmartDivider`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
+`SmartDividerPreset` is the styled (preset) implementation: register it under the `'divider'` key of `SmartProvider`'s `components`, render it directly in place of `SmartDivider`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
 
 ```tsx
 import { SmartDividerProps } from '@smartsoft001/react';
@@ -115,7 +115,7 @@ export function TextDivider({
 ## Styling
 
 - `SmartDividerStandard` renders the title, label and action button, or an `<hr />` when none is given; it does not render `iconName`.
-- `SmartDividerPreset` draws the connecting lines around the content per `position`, with `smart:dark:` variants.
+- `SmartDividerPreset` draws the connecting lines around the content per `position`, with `smart:dark:` variants; `with-toolbar` draws the content, a line and the action in one row.
 
 ## File Locations
 

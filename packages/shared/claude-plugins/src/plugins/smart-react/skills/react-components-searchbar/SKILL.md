@@ -6,12 +6,12 @@ user-invocable: false
 
 # Searchbar (`SmartSearchbar`)
 
-`SmartSearchbar` is a search input whose text is reported **once the typing settles** (`options.debounceTime`, 1000 ms by default) through `onTextChange`. While empty, it hides itself on blur; with `options.showToggleButton` a magnifier button shows it again. Both `text` and `show` can be controlled (`text` / `onTextChange`, `show` / `onShowChange`) or left to the component (`defaultText`, `defaultShow` = `true`). There is no preset.
+`SmartSearchbar` is a search input whose text is reported **once the typing settles** (`options.debounceTime`, 1000 ms by default) through `onTextChange`. While empty, it hides itself on blur; with `options.showToggleButton` a magnifying-glass button shows it again. Both `text` and `show` can be controlled (`text` / `onTextChange`, `show` / `onShowChange`) or left to the component (`defaultText`, `defaultShow` = `true`). There is no preset.
 
 ## When to Use This Skill
 
 - A search box that filters a list after the user stops typing
-- A collapsible search field behind a magnifier button
+- A collapsible search field behind a magnifying-glass button
 - Providing the application's own search box (the `searchbar` registry key) on `useSearchbar`
 
 ## Exports
@@ -41,14 +41,14 @@ All from `@smartsoft001/react`.
 
 ### `ISearchbarOptions`
 
-| Field               | Type         | Default    | Description                                                                                                                                                   |
-| ------------------- | ------------ | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `placeholder?`      | `string`     | `'search'` | Placeholder of the input, passed through the translations (a key or text).                                                                                    |
-| `label?`            | `string`     | —          | Declared for implementations of your own; the standard rendering does not read it (give the input a visible label around it, or use your own implementation). |
-| `debounceTime?`     | `number`     | `1000`     | Milliseconds the typing has to settle before `onTextChange`.                                                                                                  |
-| `showToggleButton?` | `boolean`    | —          | Renders a magnifier button while the field is hidden.                                                                                                         |
-| `size?`             | `SmartSize`  | —          | Declared for implementations of your own; the standard rendering does not read it.                                                                            |
-| `color?`            | `SmartColor` | —          | Declared for implementations of your own; the standard rendering does not read it.                                                                            |
+| Field               | Type         | Default    | Description                                                                                                        |
+| ------------------- | ------------ | ---------- | ------------------------------------------------------------------------------------------------------------------ |
+| `placeholder?`      | `string`     | `'search'` | Placeholder of the input, passed through the translations (a key or text).                                         |
+| `label?`            | `string`     | —          | Not read by the built-in implementations; available to a custom implementation (e.g. as the input's `aria-label`). |
+| `debounceTime?`     | `number`     | `1000`     | Milliseconds the typing has to settle before `onTextChange`.                                                       |
+| `showToggleButton?` | `boolean`    | —          | Renders a magnifying-glass button while the field is hidden.                                                       |
+| `size?`             | `SmartSize`  | —          | Not read by the built-in implementations; available to a custom implementation.                                    |
+| `color?`            | `SmartColor` | —          | Not read by the built-in implementations; available to a custom implementation.                                    |
 
 `SmartColor`, `SmartSize` are described in the `react-provider` skill.
 

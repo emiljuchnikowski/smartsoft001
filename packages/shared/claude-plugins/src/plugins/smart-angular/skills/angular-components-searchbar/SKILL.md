@@ -6,7 +6,7 @@ user-invocable: false
 
 # Searchbar Component
 
-The `<smart-searchbar>` component provides a debounced search input with an optional toggle button. It follows the Base + Standard + Wrapper pattern with an InjectionToken-based extension mechanism. It renders a default `SearchbarStandardComponent` which can be replaced via `SEARCHBAR_STANDARD_COMPONENT_TOKEN`.
+The `<smart-searchbar>` component provides a debounced search input with an optional toggle button. It follows the Base + Standard + Wrapper pattern with an InjectionToken-based extension mechanism. It renders a default `SearchbarStandardComponent` which can be replaced via `SEARCHBAR_STANDARD_COMPONENT_TOKEN`. There is no preset for this component.
 
 ## When to Use This Skill
 
@@ -17,56 +17,63 @@ The `<smart-searchbar>` component provides a debounced search input with an opti
 
 ### SearchbarComponent (`<smart-searchbar>`)
 
-Main wrapper component. Renders `SearchbarStandardComponent` by default. When `SEARCHBAR_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`.
+Main wrapper component. Renders `SearchbarStandardComponent` by default. When `SEARCHBAR_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`, hands it `options`, `show`, `text` and `class`, and forwards its `show` and `text` changes back, so `[(show)]` and `[(text)]` on `<smart-searchbar>` keep working with any implementation.
 
 ### SearchbarStandardComponent (`<smart-searchbar-standard>`)
 
 Default concrete implementation. Renders:
 
-- a Tailwind-styled `<input type="search">` bound to a `UntypedFormControl` with `debounceTime` from options,
-- a magnifier SVG icon inside the input,
-- an optional toggle button (shown when `show()` is `false` and `options.showToggleButton` is `true`) that reveals the input,
+- a Tailwind-styled `<input type="search">` bound to the base `control` (`class` goes on this input), with the `placeholder` passed through `TranslatePipe`,
+- a magnifying-glass SVG icon inside the input,
+- while `show()` is `false`: a toggle button with the same icon when `options.showToggleButton` is `true` (a click shows the input again), otherwise nothing,
 - `smart:dark:*` dark-mode classes.
+
+Blurring the input while it is empty sets `show` to `false`.
 
 ### SearchbarBaseComponent (abstract)
 
-Abstract base directive for extending custom searchbar implementations. Exposes `options`, `cssClass`, `show` and `text` models, a `control` signal wrapping `UntypedFormControl`, and `setShow()`/`tryHide()` methods. The base class wires `control.valueChanges` through `debounceTime()` in `ngAfterViewInit` and emits into the `text` model.
+Abstract base directive for extending custom searchbar implementations. Exposes `options`, `cssClass` (alias `class`), the `show` and `text` models, a `control` signal wrapping an `UntypedFormControl`, and the `setShow()` / `tryHide()` methods (`tryHide()` hides the field only while it is empty). The base class wires `control.valueChanges` through `debounceTime()` in `ngAfterViewInit` and writes the settled value into the `text` model; the debounce is read once there, so a later change of `options.debounceTime` has no effect. A non-empty `text` coming from outside is copied into the control without being reported back.
 
 ## API
 
 ### Inputs
 
-| Input     | Type                                          | Default  | Description                                     |
-| --------- | --------------------------------------------- | -------- | ----------------------------------------------- |
-| `options` | `InputSignal<ISearchbarOptions \| undefined>` | -        | Searchbar configuration                         |
-| `show`    | `ModelSignal<boolean>`                        | `true`   | Whether the input is visible (two-way bindable) |
-| `text`    | `ModelSignal<string>`                         | required | Debounced search text (two-way bindable)        |
-| `class`   | `InputSignal<string>`                         | `''`     | External CSS classes (alias for `cssClass`)     |
+| Input     | Type                                          | Default  | Description                                                        |
+| --------- | --------------------------------------------- | -------- | ------------------------------------------------------------------ |
+| `options` | `InputSignal<ISearchbarOptions \| undefined>` | -        | Searchbar configuration                                            |
+| `show`    | `ModelSignal<boolean>`                        | `true`   | Whether the input is visible (two-way bindable)                    |
+| `text`    | `ModelSignal<string>`                         | required | Debounced search text (two-way bindable); bind it, e.g. `[(text)]` |
+| `class`   | `InputSignal<string>`                         | `''`     | External CSS classes on the input (alias for `cssClass`)           |
 
 ### ISearchbarOptions
+
+| Field              | Type         | Default    | Description                                                                                                        |
+| ------------------ | ------------ | ---------- | ------------------------------------------------------------------------------------------------------------------ |
+| `placeholder`      | `string`     | `'search'` | Placeholder of the input, passed through `TranslatePipe` (a translation key or text).                              |
+| `debounceTime`     | `number`     | `1000`     | Milliseconds the typing has to settle before `text` changes; read once, after the view is created.                 |
+| `showToggleButton` | `boolean`    | -          | While `show` is `false`, renders a magnifying-glass button that shows the input again.                             |
+| `label`            | `string`     | -          | Not read by the built-in implementations; available to a custom implementation (e.g. as the input's `aria-label`). |
+| `size`             | `SmartSize`  | -          | Not read by the built-in implementations; available to a custom implementation.                                    |
+| `color`            | `SmartColor` | -          | Not read by the built-in implementations; available to a custom implementation.                                    |
 
 ```typescript
 interface ISearchbarOptions {
   placeholder?: string; // translation key; default 'search'
-  debounceTime?: number; // ms; default 1000
+  label?: string; // not read by the standard implementation
+  debounceTime?: number; // ms; default 1000, read once
   showToggleButton?: boolean;
-  size?: SmartSize; // 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-  color?: SmartColor; // 22 Tailwind colors
+  size?: SmartSize; // not read by the standard implementation
+  color?: SmartColor; // not read by the standard implementation
 }
 ```
 
-The `placeholder` value is rendered through `TranslatePipe`, so it may be a translation key. If no `placeholder` is provided, the key `'search'` is used.
-
 ## SEARCHBAR_STANDARD_COMPONENT_TOKEN
+
+InjectionToken that allows replacing the default `SearchbarStandardComponent` with a custom implementation. Provide a component class extending `SearchbarBaseComponent` under `SEARCHBAR_STANDARD_COMPONENT_TOKEN`; every `<smart-searchbar>` below that injector renders it.
 
 ```typescript
 import { SEARCHBAR_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
-```
 
-InjectionToken that allows replacing the default `SearchbarStandardComponent` with a custom implementation. Provide a `Type<SearchbarBaseComponent>` to override.
-
-```typescript
-// In your app module or component providers:
 providers: [
   {
     provide: SEARCHBAR_STANDARD_COMPONENT_TOKEN,
@@ -82,7 +89,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -111,9 +117,6 @@ import { SearchbarBaseComponent } from '@smartsoft001/angular';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyCustomSearchbarComponent extends SearchbarBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   containerClasses = computed(() => {
     const classes = ['my-searchbar-container'];
     const extra = this.cssClass();
@@ -123,10 +126,7 @@ export class MyCustomSearchbarComponent extends SearchbarBaseComponent {
 }
 ```
 
-When extending the base directly, remember to:
-
-- declare `cssClass = input<string>('')` explicitly (no `class` alias) if the component is used via `NgComponentOutlet` through `SEARCHBAR_STANDARD_COMPONENT_TOKEN`, because `NgComponentOutlet` passes inputs by canonical name (not by alias),
-- let the base class handle the `control.valueChanges` subscription — do not re-subscribe to emit into `text`.
+When extending the base directly, let the base class handle the `control.valueChanges` subscription; do not re-subscribe to emit into `text`.
 
 ## Usage Examples
 
@@ -149,13 +149,6 @@ When extending the base directly, remember to:
 
 <!-- With external class -->
 <smart-searchbar class="smart:max-w-md" [(text)]="searchText" />
-
-<!-- Two-way binding on both show and text -->
-<smart-searchbar
-  [(show)]="isSearchOpen"
-  [(text)]="query"
-  [options]="{ placeholder: 'search.products', debounceTime: 500, showToggleButton: true }"
-/>
 ```
 
 ## File Locations

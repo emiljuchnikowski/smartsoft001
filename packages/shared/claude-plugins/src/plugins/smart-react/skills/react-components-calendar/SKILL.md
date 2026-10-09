@@ -45,7 +45,7 @@ The preset's class helpers (`getCalendarPresetDayClasses`, `CALENDAR_PRESET_CONT
 
 ### `SmartCalendarOptions`
 
-`ICalendarOptions` with `dayCellTpl` as a render function, called for every day with `SmartCalendarDayCellContext`. `toolbarActionsTpl` has no context, so it stays a `ReactNode`. `eventListTpl`, `sidePanelTpl`, `eventTpl` and `monthsCount` are accepted, but no variant renders them. Extends `Omit< ICalendarOptions`, `'dayCellTpl' >`.
+`ICalendarOptions` with `dayCellTpl` as a render function, called for every day with `SmartCalendarDayCellContext`. `toolbarActionsTpl` has no context, so it stays a `ReactNode`. `eventListTpl`, `sidePanelTpl`, `eventTpl` and `monthsCount` are not read by the built-in implementations; they are available to a custom implementation. Extends `Omit<ICalendarOptions, 'dayCellTpl'>`.
 
 | Field         | Type                                                  | Default | Description                            |
 | ------------- | ----------------------------------------------------- | ------- | -------------------------------------- |
@@ -58,14 +58,14 @@ The base options; `SmartCalendarOptions` replaces its `dayCellTpl` with a render
 | Field                | Type                | Default   | Description                                                                               |
 | -------------------- | ------------------- | --------- | ----------------------------------------------------------------------------------------- |
 | `view?`              | `SmartCalendarView` | `'month'` | The period Prev / Next move by (month, week, day, year). The grid is always a month grid. |
-| `monthsCount?`       | `1 \| 2 \| 12`      | —         | Accepted, not rendered by any variant.                                                    |
+| `monthsCount?`       | `1 \| 2 \| 12`      | —         | Not read by the built-in implementations; available to a custom implementation.           |
 | `weekStart?`         | `0 \| 1`            | `1`       | `1` Monday, `0` Sunday.                                                                   |
 | `showToolbar?`       | `boolean`           | `true`    | Shows the Prev / Today / Next toolbar.                                                    |
 | `toolbarActionsTpl?` | `ReactNode`         | —         | Extra content in the toolbar of the standard calendar (the preset does not render it).    |
-| `eventListTpl?`      | `ReactNode`         | —         | Accepted, not rendered by any variant.                                                    |
-| `sidePanelTpl?`      | `ReactNode`         | —         | Accepted, not rendered by any variant.                                                    |
+| `eventListTpl?`      | `ReactNode`         | —         | Not read by the built-in implementations; available to a custom implementation.           |
+| `sidePanelTpl?`      | `ReactNode`         | —         | Not read by the built-in implementations; available to a custom implementation.           |
 | `dayCellTpl?`        | `ReactNode`         | —         | Overridden by `SmartCalendarOptions.dayCellTpl` (a render function).                      |
-| `eventTpl?`          | `ReactNode`         | —         | Accepted, not rendered by any variant.                                                    |
+| `eventTpl?`          | `ReactNode`         | —         | Not read by the built-in implementations; available to a custom implementation.           |
 
 ### `SmartCalendarDayCellContext`
 
@@ -91,13 +91,13 @@ One day of the month grid.
 
 An event shown on the day of its `start`.
 
-| Field    | Type                      | Default  | Description                                    |
-| -------- | ------------------------- | -------- | ---------------------------------------------- |
-| `id`     | `string \| number`        | required | Identifies the event.                          |
-| `start`  | `Date`                    | required | Start; decides the day the event is listed on. |
-| `end?`   | `Date`                    | —        | End (informational).                           |
-| `title?` | `string`                  | —        | Title, used in the day's accessible name.      |
-| `meta?`  | `Record<string, unknown>` | —        | Free data for your `dayCellTpl`.               |
+| Field    | Type                      | Default  | Description                                                                                                                                                 |
+| -------- | ------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`     | `string \| number`        | required | Identifies the event.                                                                                                                                       |
+| `start`  | `Date`                    | required | Start; decides the day the event is listed on.                                                                                                              |
+| `end?`   | `Date`                    | —        | Not read by the built-in implementations; available to a custom implementation or your `dayCellTpl`.                                                        |
+| `title?` | `string`                  | —        | Not rendered by the built-in implementations (the day's accessible name only counts the events); available to a custom implementation or your `dayCellTpl`. |
+| `meta?`  | `Record<string, unknown>` | —        | Free data for a custom implementation or your `dayCellTpl`.                                                                                                 |
 
 ### Related types
 
@@ -173,7 +173,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
 }
 ```
 
-`SmartCalendarPreset` is the styled (preset) implementation: register it as above, render it directly in place of `SmartCalendar`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
+`SmartCalendarPreset` is the styled (preset) implementation: register it under the `'calendar'` key of `SmartProvider`'s `components`, render it directly in place of `SmartCalendar`, or spread `SMART_PRESET_COMPONENTS` on the provider to register every preset at once (see the `react-provider` skill). Pass `components` as a stable object (a module constant or a memoised value), or the context changes on every render.
 
 ### The `useCalendar` hook
 

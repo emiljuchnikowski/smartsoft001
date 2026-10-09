@@ -25,9 +25,9 @@ Barebones placeholder concrete implementation. Renders a wrapper `<div>` contain
 
 ### FeedPresetComponent (`<smart-feed-preset>`)
 
-Styled variation that extends `FeedBaseComponent` and is a drop-in replacement for `FeedStandardComponent`. Register it via `FEED_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-feed>`, or use the `<smart-feed-preset>` selector directly. It renders the Preline timeline look in vanilla Tailwind: a vertical rail (drawn with an `after:` pseudo-element, hidden on the last item) with a per-event circular marker, a left-hand side timestamp column, the event title (rendered as a link when `href` is set), an event description, and nested comments shown as Preline-style author rows. The marker chooses `iconTpl` first, then `avatarUrl` (image), then a default dot. Comments render the author avatar when `authorAvatarUrl` is set, otherwise an initials fallback derived from the first letter of `authorName`. The `emptyTpl`, `commentSubmitTpl`, and `footerTpl` slots are honored. All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants; the class recipes live in `preset/preset-classes.util.ts`.
+Styled variation that extends `FeedBaseComponent` and is a drop-in replacement for `FeedStandardComponent`. Register it for `FEED_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-feed>` (or every preset at once with `provideSmartPresets()`), or use the `<smart-feed-preset>` selector directly. It renders the Preline timeline look in vanilla Tailwind: a vertical rail (drawn with an `after:` pseudo-element, hidden on the last item) with a per-event circular marker, a left-hand side timestamp column, the event title (rendered as a link when `href` is set), an event description, and nested comments shown as Preline-style author rows. The marker chooses `iconTpl` first, then `avatarUrl` (image), then a default dot. Comments render the author avatar when `authorAvatarUrl` is set, otherwise an initials fallback derived from the first letter of `authorName`. The `emptyTpl`, `commentSubmitTpl`, and `footerTpl` slots are honored. All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants; the class recipes are internal (not exported from `@smartsoft001/angular`).
 
-> Because `FeedComponent` renders injected components via `NgComponentOutlet` (which passes inputs by canonical name), `FeedPresetComponent` overrides `cssClass` as `input<string>('')` **without** the `class` alias. Bind it as `[cssClass]` when using the `<smart-feed-preset>` selector directly, or just pass `class` on `<smart-feed>` (the wrapper forwards it).
+> The preset declares `cssClass` without the `class` alias, so bind `[cssClass]` when you use the `<smart-feed-preset>` selector directly; `class` on `<smart-feed>` reaches it through the wrapper.
 
 ### FeedBaseComponent (abstract)
 
@@ -37,12 +37,49 @@ Abstract base directive for extending custom feed implementations. Exposes `opti
 
 ### Inputs
 
-| Input     | Type                                     | Default | Description                                                         |
-| --------- | ---------------------------------------- | ------- | ------------------------------------------------------------------- |
-| `options` | `InputSignal<IFeedOptions \| undefined>` | -       | Optional configuration (title, description, events, slots, variant) |
-| `class`   | `InputSignal<string>`                    | `''`    | External CSS classes (alias for `cssClass`)                         |
+| Input     | Type                                     | Default | Description                                                   |
+| --------- | ---------------------------------------- | ------- | ------------------------------------------------------------- |
+| `options` | `InputSignal<IFeedOptions \| undefined>` | -       | Header, events and slots                                      |
+| `class`   | `InputSignal<string>`                    | `''`    | Classes on the root element (`cssClass` input, alias `class`) |
 
 ### IFeedOptions
+
+| Field              | Type                   | Default | Description                                                                     |
+| ------------------ | ---------------------- | ------- | ------------------------------------------------------------------------------- |
+| `title`            | `string`               | -       | Heading above the feed.                                                         |
+| `description`      | `string`               | -       | Text under the heading.                                                         |
+| `events`           | `IFeedEvent[]`         | `[]`    | The events, in the order shown.                                                 |
+| `emptyTpl`         | `TemplateRef<unknown>` | -       | Rendered instead of the list when there are no events.                          |
+| `commentSubmitTpl` | `TemplateRef<unknown>` | -       | A slot below the feed, e.g. a comment form.                                     |
+| `footerTpl`        | `TemplateRef<unknown>` | -       | A slot at the end.                                                              |
+| `variant`          | `SmartFeedVariant`     | -       | Not read by the built-in implementations; available to a custom implementation. |
+
+`SmartFeedVariant` is `'simple' | 'with-comments' | 'multiple-types'`.
+
+### IFeedEvent
+
+| Field         | Type                   | Default  | Description                                                                     |
+| ------------- | ---------------------- | -------- | ------------------------------------------------------------------------------- |
+| `id`          | `string`               | -        | Track key of the event.                                                         |
+| `title`       | `string`               | required | Event title; a link when `href` is set.                                         |
+| `description` | `string`               | -        | Event text.                                                                     |
+| `timestamp`   | `string`               | -        | Display text for the time (e.g. "2h ago").                                      |
+| `iconTpl`     | `TemplateRef<unknown>` | -        | Marker icon; wins over `avatarUrl`.                                             |
+| `avatarUrl`   | `string`               | -        | Marker avatar.                                                                  |
+| `href`        | `string`               | -        | Makes the title a link.                                                         |
+| `comments`    | `IFeedComment[]`       | -        | Comments listed under the event.                                                |
+| `ariaLabel`   | `string`               | -        | Accessible name of the event.                                                   |
+| `type`        | `string`               | -        | Not read by the built-in implementations; available to a custom implementation. |
+
+### IFeedComment
+
+| Field             | Type     | Default  | Description                                                      |
+| ----------------- | -------- | -------- | ---------------------------------------------------------------- |
+| `id`              | `string` | -        | Track key of the comment.                                        |
+| `authorName`      | `string` | required | Author shown with the comment (initials fallback in the preset). |
+| `authorAvatarUrl` | `string` | -        | Author avatar.                                                   |
+| `content`         | `string` | required | Comment text.                                                    |
+| `timestamp`       | `string` | -        | Display text for the time.                                       |
 
 ```typescript
 interface IFeedOptions {
@@ -77,7 +114,7 @@ interface IFeedComment {
 }
 ```
 
-All properties are optional except `IFeedEvent.title` and `IFeedComment.{authorName, content}`. The default `FeedStandardComponent` consumes every property; a section is rendered only when its template/string is provided. Within an event, `iconTpl` takes precedence over `avatarUrl` when both are set. `variant` is a hint for custom implementations registered via the token.
+Both the standard and the preset read every field except `IFeedOptions.variant` and `IFeedEvent.type`; a section is rendered only when its template/string is provided. Within an event, `iconTpl` takes precedence over `avatarUrl` when both are set.
 
 ## FEED_STANDARD_COMPONENT_TOKEN
 
@@ -85,7 +122,7 @@ All properties are optional except `IFeedEvent.title` and `IFeedComment.{authorN
 import { FEED_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
 ```
 
-InjectionToken that allows replacing the default `FeedStandardComponent` with a custom implementation. Provide a `Type<FeedBaseComponent>` to override.
+InjectionToken that allows replacing the default `FeedStandardComponent` with a custom implementation. Provide a `Type<FeedBaseComponent>` to override; the wrapper passes `options` and the class on.
 
 ```typescript
 providers: [
@@ -100,7 +137,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
@@ -131,9 +167,6 @@ import { FeedBaseComponent } from '@smartsoft001/angular';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyCustomFeedComponent extends FeedBaseComponent {
-  // NgComponentOutlet passes 'cssClass' by canonical name, not the 'class' alias.
-  override cssClass = input<string>('');
-
   containerClasses = computed(() => {
     const classes = ['my-feed'];
     const extra = this.cssClass();

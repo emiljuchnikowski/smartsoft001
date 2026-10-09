@@ -17,25 +17,25 @@ The `<smart-paging>` component provides a flexible pagination wrapper with an In
 
 ### PagingComponent (`<smart-paging>`)
 
-Main wrapper component. Renders `PagingStandardComponent` by default. When `PAGING_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`.
+Main wrapper component. Renders `PagingStandardComponent` by default, or the component provided for `PAGING_STANDARD_COMPONENT_TOKEN`. It creates that component once with `ViewContainerRef.createComponent` (not `NgComponentOutlet`), marks its host with `data-smart-paging-host="standard"` or `"injected"`, and re-emits its `pageChange` as its own. On every change it hands `currentPage`, `totalPages`, `pageSize`, `totalItems`, `variant` and `class` to the rendered component with `setInput`, resolved to the names that component declares: a custom implementation that redeclares `cssClass` without the `class` alias still gets the classes, and an input the component does not declare is skipped.
+
+The page is **owned by the parent**: bind `currentPage` and update it from `(pageChange)`. `goToPage` emits any page from 1 to `totalPages` (the current one included) and ignores the rest; `nextPage` and `previousPage` do nothing on the last or first page.
 
 ### PagingStandardComponent (`<smart-paging-standard>`)
 
-Default concrete implementation. Simple Tailwind-styled pagination placeholder with prev/next buttons, numeric page buttons (with ellipsis handling) and `aria-current` for the active page. Supports dark mode and disabled states.
+Default concrete implementation: a `<nav>` with prev/next buttons (translated through the `prev` and `next` keys), numeric page buttons with `'...'` gaps and `aria-current="page"` on the active page, styled with `smart:` Tailwind classes including dark mode and disabled states. The `class` input goes on the `<nav>`. It renders no results summary, so `pageSize` and `totalItems` change nothing here, and `variant` only shows up as the `data-variant` attribute of the `<nav>`.
 
 ### PagingPresetComponent (`<smart-paging-preset>`)
 
-Styled variation that extends `PagingBaseComponent` and is a drop-in replacement for `PagingStandardComponent`. Register it via `PAGING_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-paging>`, or use the `<smart-paging-preset>` selector directly. Translates the Preline pagination examples into `smart:`-prefixed vanilla Tailwind classes with explicit `dark:` variants. It drives page state purely through the inherited signals/methods (`pages`, `canGoBack`, `canGoForward`, `goToPage`, `nextPage`, `previousPage`) — no Preline JS runtime is required. The `variant` input selects the layout:
+Styled variation that extends `PagingBaseComponent` and is a drop-in replacement for `PagingStandardComponent`. Register it via `PAGING_STANDARD_COMPONENT_TOKEN` (or register every preset at once with `provideSmartPresets()`) to restyle every `<smart-paging>`, or use the `<smart-paging-preset>` selector directly. Translates the Preline pagination examples into `smart:`-prefixed vanilla Tailwind classes with explicit `dark:` variants. It drives page state purely through the inherited signals/methods (`pages`, `canGoBack`, `canGoForward`, `goToPage`, `nextPage`, `previousPage`) — no Preline JS runtime is required. The `variant` input selects the layout:
 
-- `card-footer` — a "Showing X to Y of Z results" summary (built from `showingFrom`/`showingTo`/`totalItems`) alongside the nav, justified between on `sm`+ screens;
+- `card-footer` — a "Showing X to Y of Z results" summary (built from `showingFrom`/`showingTo`/`totalItems`, so it needs `pageSize` and `totalItems`) alongside the nav, justified between on `sm`+ screens;
 - `centered` — the nav centered horizontally;
 - `simple` — the bare nav.
 
-The per-variant class recipes live in `preset/preset-classes.util.ts` (`getPagingContainerClasses`, `getPagingNavClasses`, `getPagingPageClasses`, plus the `PAGING_*` const class strings); they are kept out of the public barrel and prefixed with the component name.
+The "Showing … results", "Previous" and "Next" texts of the preset are plain English, not translated. The `class` input goes on the outer container `<div>`, not on the `<nav>`. The per-variant class recipes are internal to the preset (not exported from `@smartsoft001/angular`).
 
-> Unlike most preset components, `PagingPresetComponent` keeps the inherited `cssClass` **with** its `class` alias. `PagingComponent` instantiates the injected component with `ViewContainerRef.createComponent` and forwards inputs via `setInput('class', …)` (the public alias) — not `NgComponentOutlet` — so dropping the alias would break the forwarded class binding. Bind `class` on either `<smart-paging>` or `<smart-paging-preset>`.
->
-> `PagingComponent` forwards the `variant` input (via `setInput('variant', …)`, including later changes), so `<smart-paging variant="centered">` selects the preset layout when the preset is registered. The standard component ignores it visually and only exposes it as a `data-variant` attribute on its `<nav>`.
+`PagingPresetComponent` keeps the inherited `cssClass` input with its `class` alias, so `class` works the same on `<smart-paging>` and on `<smart-paging-preset>`. `<smart-paging variant="centered">` selects the preset layout when the preset is registered, and later changes of `variant` reach it too.
 
 ### PagingBaseComponent (abstract)
 
@@ -49,16 +49,16 @@ Abstract base directive for extending custom paging implementations. Provides si
 | ------------- | ---------------------------- | --------------- | ------------------------------------------------------------------------------- |
 | `currentPage` | `InputSignal<number>`        | `1`             | Current active page                                                             |
 | `totalPages`  | `InputSignal<number>`        | `1`             | Total number of pages                                                           |
-| `pageSize`    | `InputSignal<number>`        | `10`            | Items per page                                                                  |
-| `totalItems`  | `InputSignal<number>`        | `0`             | Total number of items                                                           |
+| `pageSize`    | `InputSignal<number>`        | `10`            | Items per page; only the preset's `card-footer` summary uses it                 |
+| `totalItems`  | `InputSignal<number>`        | `0`             | Total number of items; only the preset's `card-footer` summary uses it          |
 | `variant`     | `InputSignal<PagingVariant>` | `'card-footer'` | Layout variant, styled by the preset; the standard exposes it as `data-variant` |
-| `class`       | `InputSignal<string>`        | `''`            | External CSS classes (alias for `cssClass`)                                     |
+| `class`       | `InputSignal<string>`        | `''`            | External CSS classes (alias for `cssClass`), forwarded to the rendered paging   |
 
 ### Outputs
 
-| Output       | Type                    | Description                     |
-| ------------ | ----------------------- | ------------------------------- |
-| `pageChange` | `OutputEmitter<number>` | Emits the requested page number |
+| Output       | Type                    | Description                                         |
+| ------------ | ----------------------- | --------------------------------------------------- |
+| `pageChange` | `OutputEmitter<number>` | Emits the requested page number (1 to `totalPages`) |
 
 ### PagingVariant
 
@@ -72,7 +72,7 @@ type PagingVariant = 'card-footer' | 'centered' | 'simple';
 import { PAGING_STANDARD_COMPONENT_TOKEN } from '@smartsoft001/angular';
 ```
 
-InjectionToken that allows replacing the default `PagingStandardComponent` with a custom implementation. Provide a `Type<PagingBaseComponent>` to override.
+InjectionToken that allows replacing the default `PagingStandardComponent` with a custom implementation. Provide a `Type<PagingBaseComponent>` to override; `provideSmartPresets()` provides `PagingPresetComponent` for it together with every other preset.
 
 ```typescript
 // In your app module or component providers:
@@ -85,6 +85,8 @@ providers: [
 ```
 
 ## Extending the Base Class
+
+The base class brings every input, the `pageChange` output, the computed helpers and the navigation methods. The `class` passed to `<smart-paging>` arrives in the inherited `cssClass` input, so a custom implementation only adds its template.
 
 ```typescript
 import { Component, ViewEncapsulation } from '@angular/core';
