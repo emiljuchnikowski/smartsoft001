@@ -40,7 +40,9 @@ Add a import to the settings page, using @smartsoft001/angular.
 
 {% /tabs %}
 
-{% storybook project="angular" story="components-import--playground" height=320 /%}
+{% storybook project="angular" story="docs-usage-examples--import" height=320 /%}
+
+The preview renders the code above in an application that registers every preset (`provideSmartPresets()`, see [Installation](/docs/installation#set-up-the-root)) and the English translations; without the presets, a component that has one renders its standard implementation instead, for most components unstyled markup.
 
 ## Components
 
@@ -56,10 +58,10 @@ The base directive. `onFileSelected(event)` reads the first selected file, clear
 
 ### Inputs
 
-| Input    | Type                               | Default              | Description                                                                         |
-| -------- | ---------------------------------- | -------------------- | ----------------------------------------------------------------------------------- |
-| `accept` | `InputSignal<string \| undefined>` | `'application/json'` | Value of the `accept` attribute on the hidden file input; filters the native dialog |
-| `class`  | `InputSignal<string>`              | `''`                 | Extra CSS classes (alias for `cssClass`)                                            |
+| Input    | Type                               | Default              | Description                                                                                         |
+| -------- | ---------------------------------- | -------------------- | --------------------------------------------------------------------------------------------------- |
+| `accept` | `InputSignal<string \| undefined>` | `'application/json'` | Value of the `accept` attribute on the hidden file input; filters the native dialog                 |
+| `class`  | `InputSignal<string>`              | `''`                 | Classes on a `<span>` around the button and the hidden file input (`cssClass` input, alias `class`) |
 
 ### Outputs
 

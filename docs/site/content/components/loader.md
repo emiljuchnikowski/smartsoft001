@@ -40,13 +40,15 @@ Add a loader to the settings page, using @smartsoft001/angular.
 
 {% /tabs %}
 
-{% storybook project="angular" story="components-loader--playground" height=320 /%}
+{% storybook project="angular" story="docs-usage-examples--loader" height=320 /%}
+
+The preview renders the code above in an application that registers every preset (`provideSmartPresets()`, see [Installation](/docs/installation#set-up-the-root)) and the English translations; without the presets, a component that has one renders its standard implementation instead, for most components unstyled markup.
 
 ## Components
 
 ### LoaderComponent (`<smart-loader>`)
 
-The wrapper. Renders `LoaderStandardComponent` by default. When `LOADER_STANDARD_COMPONENT_TOKEN` is provided, it renders the injected component through `NgComponentOutlet` and forwards `show`, `size`, `color` and `cssClass` to it by their canonical names.
+The wrapper. Renders `LoaderStandardComponent` by default. When `LOADER_STANDARD_COMPONENT_TOKEN` is provided, it renders the injected component through `NgComponentOutlet` and forwards `show`, `size`, `color` and `class` to it, resolved to the names that component declares, so a custom implementation extending `LoaderBaseComponent` receives the class in its inherited `cssClass` input.
 
 ### LoaderStandardComponent (`<smart-loader-standard>`)
 
@@ -54,7 +56,7 @@ The default implementation: an SVG spinner that gets its size class from `size` 
 
 ### LoaderPresetComponent (`<smart-loader-preset>`)
 
-A styled, drop-in variation that renders the Preline default spinner (a bordered ring with a transparent top border). Register it through `LOADER_STANDARD_COMPONENT_TOKEN` to restyle every `<smart-loader>`, or use its selector directly. Because the wrapper passes inputs by canonical name, the preset declares `cssClass` as a plain input without the `class` alias.
+A styled, drop-in variation that renders the Preline default spinner (a bordered ring with a transparent top border). Register it through `LOADER_STANDARD_COMPONENT_TOKEN` (or register every preset at once with `provideSmartPresets()`) to restyle every `<smart-loader>`, or use its selector directly. The preset declares `cssClass` without the `class` alias: through `<smart-loader>` the class still reaches it; used directly, `<smart-loader-preset>` takes extra classes as `[cssClass]`.
 
 ### LoaderBaseComponent (abstract)
 
@@ -69,11 +71,11 @@ The base directive the variations extend. It owns the inputs and the `spinnerCla
 | `show`  | `InputSignal<boolean>`    | `false`    | Whether the spinner is visible                                       |
 | `size`  | `InputSignal<SmartSize>`  | `'md'`     | One of `xs`, `sm`, `md`, `lg`, `xl`; maps to a `smart:size-*` class  |
 | `color` | `InputSignal<SmartColor>` | `'indigo'` | Any colour of the shared palette; maps to a `smart:text-*-600` class |
-| `class` | `InputSignal<string>`     | `''`       | Extra CSS classes (alias for `cssClass`)                             |
+| `class` | `InputSignal<string>`     | `''`       | Extra CSS classes (`cssClass` input, alias `class`)                  |
 
 ### LOADER_STANDARD_COMPONENT_TOKEN
 
-An injection token from `@smartsoft001/angular`. Provide a `Type<LoaderBaseComponent>` (for example `LoaderPresetComponent` or your own subclass) in your application or component providers to replace the default spinner everywhere `<smart-loader>` is used.
+An injection token from `@smartsoft001/angular`. Provide a `Type<LoaderBaseComponent>` (for example `LoaderPresetComponent` or your own subclass) in your application or component providers to replace the default spinner everywhere `<smart-loader>` is used; `provideSmartPresets()` provides `LoaderPresetComponent` for it together with every other preset.
 
 ## Source
 
