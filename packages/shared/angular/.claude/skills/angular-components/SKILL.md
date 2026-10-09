@@ -1,6 +1,12 @@
 ---
 name: angular-components
 description: Create and modify Angular UI components with full stack (tests, Storybook, docs, dark/light mode). Use when creating new UI components or modifying existing ones in @smartsoft001/angular.
+paths:
+  - 'packages/shared/angular/**'
+  - 'packages/crud/shell/angular/**'
+  - 'docs/examples/angular/**'
+  - 'src/**'
+  - '.storybook/**'
 allowed-tools:
   - Agent
   - Bash
@@ -75,7 +81,7 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { <ComponentName>BaseComponent } from '../base/base.component';
 
 @Component({
-  selector: 'lib-<component-name>-standard',
+  selector: 'smart-<component-name>-standard',
   templateUrl: './standard.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -195,10 +201,10 @@ export interface I<ComponentName>Options {
 
 ## MANDATORY: Plugin Sync
 
-Every time you **create or modify** a component, you MUST update the plugin smart:
+Every time you **create or modify** a component, you MUST update the `smart-angular` plugin:
 
-1. **Per-component skill** — `packages/shared/claude-plugins/src/plugins/smart/skills/angular-components-<name>/SKILL.md` (consumer-facing API docs)
-2. **Agent** — `packages/shared/claude-plugins/src/plugins/smart/agents/angular-components/AGENT.md` (add/update "Available Components" table and "Skills to Use" list)
+1. **Per-component skill** — `packages/shared/claude-plugins/src/plugins/smart-angular/skills/angular-components-<name>/SKILL.md` (consumer-facing API docs)
+2. **Agent** — `packages/shared/claude-plugins/src/plugins/smart-angular/agents/angular-components.md` (add/update "Available Components" table and "Skills to Use" list)
 
 These files are distributed with `@smartsoft001/angular` and used by end-user projects to consume the components.
 
@@ -216,8 +222,8 @@ Execute each step in order. Use `shared-tdd-developer` agent for all code implem
 - [ ] **8. Update components index** — add `export * from './<component-name>'` to `components/index.ts`
 - [ ] **9. Create Storybook stories** — exactly 2 stories: `Playground` (interactive Controls) and `AllVariants` (static showcase). See [Storybook Requirements](#storybook-requirements)
 - [ ] **10. Update README** — add component section to `packages/shared/angular/README.md`
-- [ ] **11. Create per-component plugin skill** — `packages/shared/claude-plugins/src/plugins/smart/skills/angular-components-<component-name>/SKILL.md` with component API, variants, usage examples (for **using** the component)
-- [ ] **12. Update plugin agent** — add component to "Available Components" table in `packages/shared/claude-plugins/src/plugins/smart/agents/angular-components/AGENT.md`
+- [ ] **11. Create per-component plugin skill** — `packages/shared/claude-plugins/src/plugins/smart-angular/skills/angular-components-<component-name>/SKILL.md` with component API, variants, usage examples (for **using** the component)
+- [ ] **12. Update plugin agent** — add component to "Available Components" table in `packages/shared/claude-plugins/src/plugins/smart-angular/agents/angular-components.md`
 - [ ] **13. Verify** — run tests (`nx test angular`), lint, build
 - [ ] **14. Public documentation** — run the `docs` skill's component flow (`/docs component <component-name>`). The public page is generated from the per-component plugin skill, so the work here is the `usage` region in the stories (rule R9 fails `docs:check` without it) and, when the skill documents an extension, `docs/examples/angular/src/components/<component-name>/custom.example.ts` plus its spec. A component is not done until `npx nx run docs:check` passes.
 
@@ -242,6 +248,8 @@ Execute each step in order. Use `shared-tdd-developer` agent for all code implem
 - `track` on all `@for` loops
 
 ## Testing Requirements
+
+The spec conventions (TestBed, `setInput`, outputs, `HttpTestingController`) are in the `angular-test-unit` skill next to this one (`packages/shared/angular/.claude/skills/angular-test-unit/SKILL.md`).
 
 - Jest with AAA pattern (Arrange-Act-Assert)
 - Test file naming: `<name>.component.spec.ts` alongside source

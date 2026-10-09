@@ -83,6 +83,10 @@ describe('@smartsoft001/package-name: DataService', () => {
 });
 ```
 
+## Conventions
+
+The full conventions are in the `angular-test-unit` skill (`packages/shared/angular/.claude/skills/angular-test-unit/SKILL.md`) and the shared `test-unit` skill.
+
 ## Naming Convention
 
 - **Describe blocks**: `@smartsoft001/{package-name}: ClassName`

@@ -51,7 +51,8 @@ For a new (or undocumented) `@smartsoft001/<alias>` library.
 - [ ] **1. Read the package** — its `package.json`, `README.md`, `src/index.ts` and the main service or
       module. The page describes what the package does today, not what its README claimed a year ago.
 - [ ] **2. Pick the example project** — an Angular library (its manifest is under `packages/**/angular/`)
-      goes to `docs-examples-angular`, everything else to `docs-examples-node`. Ask when it is ambiguous.
+      goes to `docs-examples-angular`, a React library (`packages/**/react/`) to `docs-examples-react`
+      (`.example.tsx` files), everything else to `docs-examples-node`. Ask when it is ambiguous.
 - [ ] **3. Write the example first** — `docs/examples/<project>/src/<alias>/<topic>.example.ts`, the whole
       file wrapped in `// #region usage` … `// #endregion`, importing from `@smartsoft001/<alias>` exactly
       as a consumer would. No network, no database, no timers left running.
@@ -76,11 +77,12 @@ where the code lives. R8 accepts either.
 ## Flow: component
 
 For a UI component of `@smartsoft001/angular`. Component pages are **generated** from the plugin skill
-`packages/shared/claude-plugins/src/plugins/smart/skills/angular-components-<name>/SKILL.md` and are
+`packages/shared/claude-plugins/src/plugins/smart-angular/skills/angular-components-<name>/SKILL.md` and are
 git-ignored, so the work is in the sources the generator reads.
 
 - [ ] **1. Check the skill exists** — if it does not, the component page cannot be generated. Write the
-      per-component skill first (the `angular-components` skill owns that step), or, for a component that
+      per-component skill first (the `angular-components` skill in
+      `packages/shared/angular/.claude/skills/` owns that step), or, for a component that
       will never have one, write `docs/site/content/components/<name>.md` from the component template.
 - [ ] **2. Mark the usage region** — wrap the primary story of
       `packages/shared/angular/src/lib/components/<name>/<name>.component.stories.ts` in the markers shown
@@ -110,8 +112,9 @@ export const Playground: Story = {
 ## Flow: skill
 
 For a plugin skill a user can invoke. Rule R3 requires a page under `docs/skills/` for every skill of the
-`smart@smartsoft` plugin whose frontmatter says `user-invocable: true`. The repository's own skills in
-`.claude/skills` are tooling for working on the framework and have no page on the public site.
+`smart-core`, `smart-angular` and `smart-react` plugins (`@smartsoft` marketplace) whose frontmatter says
+`user-invocable: true`. The repository's own skills, in `.claude/skills` and in the libraries'
+`<package>/.claude/skills`, are tooling for working on the framework and have no page on the public site.
 
 - [ ] **1. Copy the template** to the destination from the table above.
 - [ ] **2. Set `title` and `skill` to the skill name** exactly as in the skill's own frontmatter. Rule R10
@@ -130,7 +133,7 @@ Run all of these before committing; they are what the pull request pipeline runs
 
 ```bash
 npx nx run docs:check
-npx nx run-many -t test build lint -p docs docs-examples-angular docs-examples-node
+npx nx run-many -t test build lint -p docs docs-examples-angular docs-examples-node docs-examples-react
 npx nx format:check
 ```
 
@@ -193,5 +196,6 @@ undefined (reading 'toLowerCase')` and names the page but not the line. Use `tex
 
 ## Related
 
-- `angular-components` skill — creating or changing a component; its last step calls this skill.
+- `angular-components` skill (`packages/shared/angular/.claude/skills/`) — creating or changing an
+  Angular component; its last step calls this skill.
 - `nx-conventions`, `test-unit` — the repository conventions the examples follow.

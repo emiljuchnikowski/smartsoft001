@@ -105,6 +105,7 @@ Execute each step in order. Do not skip any step marked as MANDATORY.
 - TypeScript expert - advanced types, generics, decorators
 - NestJS expert - modules, DI, guards, interceptors
 - Angular expert - signals, standalone components, NgRx
+- React expert - hooks, controlled components, React 19
 - Writing clean, readable, and well-tested code
 
 ## Instructions

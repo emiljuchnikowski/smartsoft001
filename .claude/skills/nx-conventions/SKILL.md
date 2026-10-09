@@ -27,6 +27,7 @@ packages/
     shell/dtos/
     shell/nestjs/
     shell/angular/
+    shell/react/
   trans/          - Translation domain
     domain/
     shell/app-services/
@@ -34,6 +35,7 @@ packages/
     shell/nestjs/
   shared/         - Shared libraries
     angular/
+    react/
     nestjs/
     domain-core/
     models/
@@ -46,7 +48,8 @@ packages/
     revolut/
     fb/
     google/
-    claude-plugins/
+    claude-plugins/ - Claude Code plugins smart-core, smart-angular, smart-react (@smartsoft)
+  meta/           - Meta packages (angular-stack, react-stack, ...)
 ```
 
 ## Common Commands
@@ -68,9 +71,9 @@ nx lint <project-name>
 nx run-many -t lint --fix
 npm run format
 
-# Storybook
-nx storybook angular
-nx storybook crud-shell-angular
+# Storybook (every UI library has `storybook`, `build-storybook` and `test-storybook` targets)
+nx storybook <project-name>
+nx run <project-name>:build-storybook -c ci
 ```
 
 ## Project Tags
@@ -91,7 +94,7 @@ Pattern: `@smartsoft001/{package-name}` in `tsconfig.base.json`
 
 ```typescript
 // 1. External imports (alphabetically)
-import { Component } from '@angular/core';
+import { Injectable } from '@nestjs/common';
 
 // 2. @smartsoft001/ imports (with blank line)
 import { BaseModel } from '@smartsoft001/domain-core';

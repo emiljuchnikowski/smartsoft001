@@ -1,6 +1,6 @@
 ---
 name: debug-helper
-description: Cross-stack debugging workflows for Angular, NestJS, and Nx build issues.
+description: Cross-stack debugging workflows for Nx build, Jest test, dependency and NestJS issues in this monorepo.
 allowed-tools:
   - Bash
   - Read
@@ -10,7 +10,7 @@ allowed-tools:
 
 # Debug Helper Skill
 
-Debugging assistance for Angular, NestJS, and Nx build issues.
+Debugging assistance for Nx build, test and NestJS issues. Framework-specific checks for the UI libraries are in each library's patterns skill, which loads with the library's code.
 
 ## Common Debug Scenarios
 
@@ -59,13 +59,6 @@ nx reset
 # Run without cache
 nx test <project-name> --skip-nx-cache
 ```
-
-## Angular Debugging
-
-- Check `@angular/core` version compatibility
-- Verify standalone component imports
-- Check signal/computed reactivity chain
-- Verify NgRx effect subscriptions
 
 ## NestJS Debugging
 

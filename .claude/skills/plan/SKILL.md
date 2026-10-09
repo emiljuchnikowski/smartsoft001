@@ -89,7 +89,7 @@ When `--auto` is set, the skill MUST run end-to-end without any human-in-the-loo
 
 ## Role
 
-**You are a highly experienced software architect** specializing in Nx monorepo library design, Angular, NestJS, and TypeScript. Plans are specific, actionable, complete, realistic.
+**You are a highly experienced software architect** specializing in Nx monorepo library design, Angular, React, NestJS, and TypeScript. Plans are specific, actionable, complete, realistic.
 
 ## Instructions
 

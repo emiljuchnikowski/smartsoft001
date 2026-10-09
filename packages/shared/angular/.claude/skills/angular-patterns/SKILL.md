@@ -1,6 +1,13 @@
 ---
 name: angular-patterns
-description: Angular 20 modern patterns including signals, standalone components, and new control flow syntax
+description: Angular 20 modern patterns including signals, standalone components, and new control flow syntax. Use when writing or reviewing Angular code in @smartsoft001/angular or @smartsoft001/crud-shell-angular.
+paths:
+  - 'packages/shared/angular/**'
+  - 'packages/crud/shell/angular/**'
+  - 'docs/examples/angular/**'
+  - 'docs/examples/app/apps/web/**'
+  - 'src/**'
+  - '.storybook/**'
 ---
 
 # Angular 20 Modern Patterns
@@ -87,7 +94,7 @@ export class FormFieldComponent {
 
 ## 5. Standalone Components
 
-No explicit `standalone: true` needed in Angular 19+. Components use `smart` prefix for CRUD shell, `lib` prefix for shared Angular library.
+No explicit `standalone: true` needed in Angular 19+. Selectors use the `smart-` prefix in both libraries (`smart-button`, `smart-button-standard`, `smart-crud-list-page`).
 
 ## 6. Performance Guidelines
 
@@ -115,6 +122,13 @@ import { BaseModel } from '@smartsoft001/domain-core';
 // 3. Relative imports (with blank line)
 import { LocalComponent } from './local.component';
 ```
+
+## 9. Debugging
+
+- Check `@angular/core` version compatibility
+- Verify standalone component imports
+- Check signal/computed reactivity chain
+- Verify NgRx effect subscriptions
 
 ## Reference implementation
 
