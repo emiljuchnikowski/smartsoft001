@@ -1,4 +1,4 @@
-<h1 align="center">Smartsoft - A collection of libraries for Angular, NestJS and Ionic projects</h1>
+<h1 align="center">Smartsoft - A collection of libraries for Angular, React, NestJS and Ionic projects</h1>
 
 ![Last Commit](https://img.shields.io/github/last-commit/emiljuchnikowski/smartsoft001)
 ![Last Commit](https://img.shields.io/github/issues/emiljuchnikowski/smartsoft001)
@@ -62,6 +62,12 @@ npx nx storybook angular
 
 # CRUD shell Angular components (http://localhost:4401)
 npx nx storybook crud-shell-angular
+
+# Shared React components (http://localhost:4402)
+npx nx storybook react
+
+# CRUD shell React components (http://localhost:4403)
+npx nx storybook crud-shell-react
 ```
 
 Build a static Storybook (output in `dist/storybook/<project>`):
@@ -69,6 +75,8 @@ Build a static Storybook (output in `dist/storybook/<project>`):
 ```
 npx nx build-storybook angular
 npx nx build-storybook crud-shell-angular
+npx nx build-storybook react
+npx nx build-storybook crud-shell-react
 ```
 
 Serve the static build or run the interaction tests (requires a running Storybook on port 4400):
