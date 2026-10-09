@@ -1,10 +1,9 @@
 import { SmartDescriptionListProps } from '../description-list.types';
 
 /**
- * The default description list rendering (`<smart-description-list-standard>`):
- * an unstyled title, description, a `<dl>` of label/value items (`valueTpl`
- * wins over `value`, `actionTpl` follows the value) and the attachments and
- * footer slots.
+ * The default description list rendering: an unstyled title, description, a
+ * `<dl>` of label/value items (`valueTpl` wins over `value`, `actionTpl`
+ * follows the value) and the attachments and footer slots.
  */
 export function SmartDescriptionListStandard({
   options,

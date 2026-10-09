@@ -10,8 +10,8 @@ const SIZE_CLASS_MAP: Record<SmartSize, string> = {
 };
 
 /**
- * The spinner text colour per `SmartColor`. Angular built it as
- * `smart:text-${color}-600`; spelled out here so Tailwind finds every class.
+ * The spinner text colour per `SmartColor` (`smart:text-<color>-600`), spelled
+ * out so Tailwind finds every class.
  */
 const COLOR_CLASS_MAP: Record<SmartColor, string> = {
   slate: 'smart:text-slate-600',
@@ -39,9 +39,8 @@ const COLOR_CLASS_MAP: Record<SmartColor, string> = {
 };
 
 /**
- * The behaviour every loader variant shares (the Angular
- * `LoaderBaseComponent`): the spinner classes for `size` and `color`, with
- * `className` appended.
+ * The behaviour every loader variant shares: the spinner classes for `size` and
+ * `color`, with `className` appended.
  */
 export function useLoader({
   size = 'md',

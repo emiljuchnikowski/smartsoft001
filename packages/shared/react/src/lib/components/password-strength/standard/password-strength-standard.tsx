@@ -3,7 +3,7 @@ import { cn } from '../../../utils/class-names';
 import { SmartPasswordStrengthProps } from '../password-strength.types';
 import { usePasswordStrength } from '../use-password-strength';
 
-/** The default password strength meter (`<smart-password-strength-standard>`). */
+/** The default password strength meter. */
 export function SmartPasswordStrengthStandard(
   props: SmartPasswordStrengthProps,
 ) {

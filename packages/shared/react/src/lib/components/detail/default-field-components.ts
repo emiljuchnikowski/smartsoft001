@@ -26,11 +26,10 @@ export type SmartDetailFieldComponents = Partial<
 let defaults: SmartDetailFieldComponents | null = null;
 
 /**
- * The detail component of every `FieldType` (the Angular `baseMap` of
- * `DetailComponent`). Built on first use rather than at module load: the
- * `object` and `array` details render `<SmartDetails>`, which renders details
- * again, and a map built while those modules are still loading would hold
- * `undefined` for them.
+ * The detail component of every `FieldType`. Built on first use rather than at
+ * module load: the `object` and `array` details render `<SmartDetails>`, which
+ * renders details again, and a map built while those modules are still loading
+ * would hold `undefined` for them.
  */
 export function getDefaultDetailFieldComponents(): SmartDetailFieldComponents {
   defaults ??= {

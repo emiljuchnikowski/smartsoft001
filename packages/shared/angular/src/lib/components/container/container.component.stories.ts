@@ -33,8 +33,7 @@ const meta: Meta<ContainerArgs> = {
   decorators: [
     moduleMetadata({
       // ContainerPresetComponent must be imported because the story templates
-      // use the <smart-container-preset> selector directly — <smart-container>
-      // dispatches through NgComponentOutlet, which drops projected content.
+      // use the <smart-container-preset> selector directly.
       imports: [ContainerComponent, ContainerPresetComponent],
       // The token registration below additionally swaps the preset in for
       // any <smart-container> usage rendered through the standard wrapper.

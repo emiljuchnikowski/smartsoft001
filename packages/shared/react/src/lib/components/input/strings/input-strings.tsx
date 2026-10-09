@@ -14,14 +14,13 @@ interface StringsItem {
 }
 
 /**
- * `<smart-input-strings>` (Angular `InputStringsComponent`): an input per
- * string of the control's list, followed by an empty one to add a string; a
- * `×` button removes a string.
+ * The `strings` field: an input per string of the control's list, followed by
+ * an empty one to add a string; a `×` button removes a string.
  *
- * As in Angular, the control is updated when an input's change is committed
- * (the native `change`: leaving the input or pressing Enter), keeping only
- * the non-empty strings and marking it touched and dirty, which also happens
- * once when the field is rendered. The label is bound to the first input.
+ * The control is updated when an input's change is committed (the native
+ * `change`: leaving the input or pressing Enter), keeping only the non-empty
+ * strings and marking it touched and dirty, which also happens once when the
+ * field is rendered. The label is bound to the first input.
  */
 export function SmartInputStrings<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

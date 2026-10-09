@@ -34,11 +34,10 @@ import { SmartInputText } from './text/input-text';
 import { SmartInputVideo } from './video/input-video';
 
 /**
- * The field component of every `FieldType`, by type: the map
- * `<SmartInput>` falls back to (the Angular `baseMap` of `InputComponent`).
- * Built on first use rather than at module load: the `object` and `array`
- * fields render a form, which renders inputs, and a map built while those
- * modules are still loading would hold `undefined` for them.
+ * The field component of every `FieldType`, by type: the map `<SmartInput>`
+ * falls back to. Built on first use rather than at module load: the `object`
+ * and `array` fields render a form, which renders inputs, and a map built while
+ * those modules are still loading would hold `undefined` for them.
  */
 let defaults: Partial<Record<FieldTypeDef, ComponentType<any>>> | null = null;
 

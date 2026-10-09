@@ -3,10 +3,9 @@ import { useCallback, useState } from 'react';
 import { SelectMenuValue, SmartSelectMenuProps } from './select-menu.types';
 
 /**
- * The behaviour every select menu variant shares (the Angular
- * `SelectMenuBaseComponent`): the `value`, controlled through `value` /
- * `onValueChange` or kept internally from `defaultValue`, and `select()`,
- * which ignores the choice while `disabled`.
+ * The behaviour every select menu variant shares: the `value`, controlled
+ * through `value` / `onValueChange` or kept internally from `defaultValue`, and
+ * `select()`, which ignores the choice while `disabled`.
  */
 export function useSelectMenu({
   value: valueProp,

@@ -4,7 +4,7 @@ import { SmartNavLink } from '../../navbar/nav-link';
 import { SmartSidebarNavigationProps } from '../sidebar-navigation.types';
 import { useSidebarNavigation } from '../use-sidebar-navigation';
 
-/** The default sidebar navigation rendering (`<smart-sidebar-navigation-standard>`). */
+/** The default sidebar navigation rendering. */
 export function SmartSidebarNavigationStandard(
   props: SmartSidebarNavigationProps,
 ) {

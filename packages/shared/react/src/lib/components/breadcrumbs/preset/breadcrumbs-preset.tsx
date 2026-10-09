@@ -12,8 +12,8 @@ import {
 } from './preset-classes';
 
 /**
- * Styled breadcrumbs variation (preset, `<smart-breadcrumbs-preset>`).
- * Register it as `components.breadcrumbs` on `SmartProvider` to restyle every
+ * Styled breadcrumbs variation (preset). Register it as
+ * `components.breadcrumbs` on `SmartProvider` to restyle every
  * `<SmartBreadcrumbs>`, or render it directly.
  *
  * Translates the Preline breadcrumb: muted links that brighten on

@@ -6,9 +6,9 @@ import { useCrudFilter } from '../base/use-crud-filter';
 import { CrudFilterPossibility, SmartCrudFilterProps } from '../filter.types';
 
 /**
- * A checkbox with the Angular `[checked]` property binding: the box follows
- * the user's click right away, and `checked` is written to it whenever it
- * changes (the read is debounced, so the value follows 500 ms later).
+ * A checkbox that follows the user's click right away and gets `checked`
+ * written to it whenever it changes (the read is debounced, so the value
+ * follows 500 ms later).
  */
 function FilterCheckbox({
   checked,
@@ -35,9 +35,8 @@ function FilterCheckbox({
 }
 
 /**
- * `<smart-crud-filter-check>` (Angular `FilterCheckComponent`): a checkbox
- * per possibility, checked when its id is among the item's values, and a
- * clear button while any is checked. Each value is its own query entry.
+ * The check filter: a checkbox per possibility, checked when its id is among
+ * the item's values, and a clear button while any is checked. Each value is its own query entry.
  */
 export function SmartCrudFilterCheck(props: SmartCrudFilterProps) {
   const t = useTranslate();

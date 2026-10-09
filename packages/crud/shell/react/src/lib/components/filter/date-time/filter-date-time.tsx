@@ -3,28 +3,28 @@ import { useId } from 'react';
 import { useTranslate } from '@smartsoft001/react';
 
 import { useCrudFilterDate } from '../date/use-crud-filter-date';
-import { useCrudFilterNgModel } from '../date/use-crud-filter-ng-model';
+import { useCrudFilterValue } from '../date/use-crud-filter-value';
 import { SmartCrudFilterProps } from '../filter.types';
 
 /** One end of the range: a label, a `datetime-local` input and its clear. */
 function DateTimeRangeRow({
   label,
-  model,
-  onModelChange,
+  value,
+  onValueChange,
   clearLabel,
   showClear,
   onClear,
 }: {
   label: string;
-  model: any;
-  onModelChange: (value: any) => void;
+  value: any;
+  onValueChange: (value: any) => void;
   clearLabel: string;
   showClear: boolean;
   onClear: () => void;
 }) {
   const t = useTranslate();
   const id = useId();
-  const [value, setValue] = useCrudFilterNgModel(model, onModelChange);
+  const [shown, setShown] = useCrudFilterValue(value, onValueChange);
 
   return (
     <div className="smart:flex smart:w-full smart:items-end smart:gap-2">
@@ -35,8 +35,8 @@ function DateTimeRangeRow({
         id={id}
         type="datetime-local"
         className="smart:flex-1 smart:rounded smart:border smart:border-gray-300 smart:px-2 smart:py-1"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
+        value={shown}
+        onChange={(e) => setShown(e.target.value)}
       />
       {showClear && (
         <button
@@ -53,10 +53,9 @@ function DateTimeRangeRow({
 }
 
 /**
- * `<smart-crud-filter-date-time>` (Angular `FilterDateTimeComponent`): the
- * item label and a "from" / "to" pair of native `datetime-local` inputs for
- * the `>=` / `<=` values, each with its clear button. As in Angular, a valid
- * date-time is stored as its `YYYY-MM-DD` day.
+ * The date-time filter: the item label and a "from" / "to" pair of native
+ * `datetime-local` inputs for the `>=` / `<=` values, each with its clear
+ * button. A valid date-time is stored as its `YYYY-MM-DD` day.
  */
 export function SmartCrudFilterDateTime(props: SmartCrudFilterProps) {
   const t = useTranslate();
@@ -78,16 +77,16 @@ export function SmartCrudFilterDateTime(props: SmartCrudFilterProps) {
       <div className="smart:flex smart:w-full smart:flex-col smart:gap-2">
         <DateTimeRangeRow
           label="from"
-          model={customMinValue || ''}
-          onModelChange={setCustomMinValue}
+          value={customMinValue || ''}
+          onValueChange={setCustomMinValue}
           clearLabel="clear-from"
           showClear={hasMinValue}
           onClear={() => refresh(null, '>=')}
         />
         <DateTimeRangeRow
           label="to"
-          model={customMaxValue || ''}
-          onModelChange={setCustomMaxValue}
+          value={customMaxValue || ''}
+          onValueChange={setCustomMaxValue}
           clearLabel="clear-to"
           showClear={hasMaxValue}
           onClear={() => refresh(null, '<=')}

@@ -204,7 +204,7 @@ describe('@smartsoft001/crud-shell-react: SmartCrudFilterCheck', () => {
     ).toEqual([false, false]);
   });
 
-  it('should render the Angular host and fieldset classes', () => {
+  it('should render the root and fieldset classes', () => {
     const { view } = setup();
 
     expect(view.container.firstElementChild).toHaveClass(

@@ -26,9 +26,8 @@ function SmartDateRangeVariant({
 }
 
 /**
- * The control binding of the Angular `ControlValueAccessor`: the control's
- * value is shown; a change sets the value and marks the control dirty and
- * touched.
+ * Binds the picker to a form control: the control's value is shown; a change
+ * sets the value and marks the control dirty and touched.
  */
 function SmartDateRangeBound({
   control,
@@ -57,10 +56,9 @@ function SmartDateRangeBound({
 }
 
 /**
- * `<smart-date-range>`: the date-range picker in the `variant` rendering
- * (`standard`, a trigger opening a scrollable calendar modal, by default; or
- * `preset`, a calendar popover). Bind it with `value` + `onValueChange` (the
- * Angular `ngModel`), or pass a form `control` (the Angular `[formControl]`).
+ * The date-range picker in the `variant` rendering (`standard`, a trigger
+ * opening a scrollable calendar modal, by default; or `preset`, a calendar
+ * popover). Bind it with `value` + `onValueChange`, or pass a form `control`.
  */
 export function SmartDateRange({ control, ...props }: SmartDateRangeProps) {
   if (control) return <SmartDateRangeBound {...props} control={control} />;

@@ -7,13 +7,12 @@ import { CrudStore } from './crud.store';
 import { CrudService } from '../services/crud/crud.service';
 
 /**
- * The side effects of the CRUD actions, ported from the Angular
- * `CrudEffects`: each request action calls the service and dispatches its
- * success or failure; a successful write reloads the list from the first page
- * (and re-selects the updated item).
+ * The side effects of the CRUD actions: each request action calls the
+ * service and dispatches its success or failure; a successful write reloads
+ * the list from the first page (and re-selects the updated item).
  *
- * Unlike the Angular effects, which warned about every action they did not
- * handle (including other entities' actions), unhandled actions are ignored.
+ * Actions the effects do not handle (including other entities' actions) are
+ * ignored.
  */
 export class CrudEffects<T extends IEntity<string>> {
   /** Public so a feature can switch to a new service, e.g. a new `apiUrl`. */
@@ -113,8 +112,8 @@ export class CrudEffects<T extends IEntity<string>> {
           );
         break;
 
-      // The Angular effects sent a full update as a PATCH too; kept as is,
-      // since the NestJS shell treats both the same way.
+      // A full update is sent as a PATCH too, since the NestJS shell treats
+      // both the same way.
       case `[${entity}] Update`:
         this.service
           .updatePartial(action['item'])

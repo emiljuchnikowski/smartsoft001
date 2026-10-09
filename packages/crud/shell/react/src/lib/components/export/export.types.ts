@@ -1,4 +1,4 @@
-/** The props of `<SmartCrudExport>` (`<smart-crud-export>`). */
+/** The props of `<SmartCrudExport>`. */
 export interface SmartCrudExportProps {
   /**
    * Closes the overlay the component is shown in. `ModalService` passes it

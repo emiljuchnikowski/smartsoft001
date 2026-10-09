@@ -3,8 +3,7 @@ import type { SmartTranslations } from '../src';
 /**
  * Story models use field names outside the library's MODEL section — these
  * labels exist only for Storybook so model labels are translated (uppercase
- * entries cover list-table header keys). The same labels as the Angular
- * Storybook, so both render the same text.
+ * entries cover list-table header keys).
  */
 export const STORYBOOK_MODEL_LABELS = {
   pl: {
@@ -75,7 +74,7 @@ export const STORYBOOK_MODEL_LABELS = {
 
 /**
  * Merged by `SmartProvider` over the library's Polish defaults: every story
- * renders in 'pl' for deterministic screenshots, as in the Angular Storybook.
+ * renders in 'pl' for deterministic screenshots.
  */
 export const STORYBOOK_TRANSLATIONS: SmartTranslations = {
   MODEL: STORYBOOK_MODEL_LABELS.pl,

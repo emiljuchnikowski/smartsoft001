@@ -10,9 +10,8 @@ export interface IAlertRequest {
 /**
  * Shows an alert dialog and resolves with the button the user chose (`null`
  * on Escape or a backdrop click without a cancel button), after that button's
- * handler has run. `SmartProvider` renders the dialogs through the registered
- * `alert` component, as the Angular service did through
- * `ALERT_STANDARD_COMPONENT_TOKEN`, and gives the focus back to the element
+ * handler has run. `SmartProvider` renders the dialogs through the component
+ * registered under the `alert` key, and gives the focus back to the element
  * that had it.
  */
 export class AlertService {

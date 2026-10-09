@@ -9,6 +9,6 @@ export interface SmartExportProps {
    * handlers keep working.
    */
   handler: (value: any, fileName?: string) => void;
-  /** Extra CSS classes applied to the button and to the host element around it. */
+  /** Extra CSS classes applied to the button and to the `<span>` around it. */
   className?: string;
 }

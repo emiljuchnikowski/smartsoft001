@@ -2,8 +2,8 @@ import { SmartButtonGroupProps } from '../button-group.types';
 import { useButtonGroup } from '../use-button-group';
 
 /**
- * The default button group rendering (`<smart-button-group-standard>`): an
- * unstyled `role="group"` of toggle buttons with their label and count.
+ * The default button group rendering: an unstyled `role="group"` of toggle
+ * buttons with their label and count.
  */
 export function SmartButtonGroupStandard(props: SmartButtonGroupProps) {
   const { buttons = [], className } = props;

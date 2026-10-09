@@ -4,10 +4,9 @@ import type { FormEvent } from 'react';
 import { SmartSignInFormProps } from './sign-in-form.types';
 
 /**
- * The form logic every sign-in form variant shares (the Angular
- * `SignInFormStandardComponent`, which the preset extends): the typed email
- * and password, `submit()` reporting them with the mode, and `socialClick()`;
- * both are ignored while `disabled`.
+ * The form logic every sign-in form variant shares: the typed email and
+ * password, `submit()` reporting them with the mode, and `socialClick()`; both
+ * are ignored while `disabled`.
  */
 export function useSignInForm({
   mode = 'sign-in',

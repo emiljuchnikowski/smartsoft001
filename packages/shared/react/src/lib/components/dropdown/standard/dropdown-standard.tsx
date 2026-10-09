@@ -1,7 +1,7 @@
 import { SmartDropdownProps } from '../dropdown.types';
 import { useDropdown } from '../use-dropdown';
 
-/** The default dropdown rendering (`<smart-dropdown-standard>`). */
+/** The default dropdown rendering. */
 export function SmartDropdownStandard(props: SmartDropdownProps) {
   const { items = [], triggerLabel, options, className, children } = props;
   const { open, toggle, selectItem } = useDropdown(props);

@@ -5,9 +5,10 @@ import {
 } from './translations-default';
 
 /**
- * Translates `key`, with `{{name}}` placeholders filled from `params`. Like
- * ngx-translate's `instant`, it returns the key itself when there is no
- * translation, which is what the label helpers rely on to detect a miss.
+ * Translates `key`, with `{{name}}` placeholders filled from `params`. It
+ * returns the key itself when there is no translation, which is what the
+ * label helpers rely on to detect a miss; a replacement (e.g. i18next's `t`)
+ * should do the same.
  */
 export type SmartTranslateFn = (
   key: string,
@@ -61,7 +62,11 @@ function lookup(dictionary: SmartTranslations, key: string): unknown {
   return current;
 }
 
-/** A translator over a nested dictionary, ngx-translate style. */
+/**
+ * A translator over a nested dictionary: `'MODEL.name'` is looked up as a
+ * flat key first, then path by path. A placeholder without a matching param
+ * is left as is.
+ */
 export function createTranslator(
   dictionary: SmartTranslations,
 ): SmartTranslateFn {

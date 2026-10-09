@@ -3,8 +3,8 @@ import { SmartDetailFieldProps } from '../detail.types';
 import { useDetailAddress } from './use-detail-address';
 
 /**
- * `<smart-detail-address>` (`DetailAddressComponent`): street and
- * building/flat, then zip code and city on the next line.
+ * The address detail: street and building/flat, then zip code and city on the
+ * next line.
  */
 export function SmartDetailAddress<T>(props: SmartDetailFieldProps<T>) {
   const { className } = props;

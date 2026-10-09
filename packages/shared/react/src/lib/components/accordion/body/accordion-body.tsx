@@ -1,7 +1,7 @@
 import { cn } from '../../../utils/class-names';
 import { SmartAccordionBodyProps } from '../accordion.types';
 
-/** `<smart-accordion-body>`: the padded content of an open accordion. */
+/** The padded content of an open accordion. */
 export function SmartAccordionBody({
   className,
   children,

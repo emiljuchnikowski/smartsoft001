@@ -9,11 +9,10 @@ export type SmartInputAddressPart =
   'city' | 'zipCode' | 'street' | 'buildingNumber' | 'flatNumber';
 
 /**
- * Binds the input of one part of an address group to its control, as the
- * Angular `formControlName` did: the input shows the part's value, typing
- * sets it and marks it dirty, leaving the input marks it touched, and the
- * input is disabled with the part. `id` is for the input, so its label can
- * point at it.
+ * Binds the input of one part of an address group to its control: the input
+ * shows the part's value, typing sets it and marks it dirty, leaving the input
+ * marks it touched, and the input is disabled with the part. `id` is for the
+ * input, so its label can point at it.
  */
 export function useInputAddressPart(
   group: SmartAbstractControl | null,

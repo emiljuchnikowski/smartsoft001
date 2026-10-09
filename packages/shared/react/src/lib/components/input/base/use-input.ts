@@ -5,11 +5,10 @@ import { useModelLabel } from '../../../utils/hooks';
 import { SmartInputFieldProps } from '../input.types';
 
 /**
- * What every field component shares (the Angular `InputBaseComponent`): the
- * control and its live state, whether it is required, the translated label
- * and the handlers that bind an element to the control the way the
- * `formControl` directive does (a change sets the value and marks the control
- * dirty, a blur marks it touched).
+ * What every field component shares: the control and its live state, whether it
+ * is required, the translated label and the handlers that bind an element to
+ * the control (a change sets the value and marks the control dirty, a blur
+ * marks it touched).
  */
 export function useInput<T = any>({
   options,
@@ -27,8 +26,8 @@ export function useInput<T = any>({
     (value: unknown) => {
       if (!control) return;
 
-      // Dirty first, as Angular's `formControl` directive does, so listeners
-      // of the value change already see the control as edited.
+      // Dirty first, so listeners of the value change already see the control
+      // as edited.
       control.markAsDirty();
       control.setValue(value);
     },

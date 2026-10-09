@@ -6,12 +6,11 @@ import { IButtonOptions } from '../../models';
 import { SmartButton } from '../button/button';
 
 /**
- * `<smart-import>`: an upload-icon `SmartButton` that opens a hidden file
- * input and passes the picked file to `onSet` (the Angular `set` output).
+ * An upload-icon `SmartButton` that opens a hidden file input and passes the
+ * picked file to `onSet`.
  *
- * The Angular `class` only styled the `<smart-import>` host element (the
- * component never read it), an inline box around the button and the input;
- * a `<span>` stands in for that host and gets `className`.
+ * `className` goes on a `<span>`, an inline box around the button and the
+ * input.
  */
 export function SmartImport(props: SmartImportProps) {
   const { accept = 'application/json', className } = props;

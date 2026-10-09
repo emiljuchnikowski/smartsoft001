@@ -5,8 +5,7 @@ import { ICommand } from '../../models';
 
 /**
  * A value that is controlled when `value` is defined and kept in state
- * otherwise; `onChange` is called only when the value actually changes, like
- * an Angular `model()`.
+ * otherwise; `onChange` is called only when the value actually changes.
  */
 function useModel<T>(
   value: T | undefined,
@@ -31,11 +30,10 @@ function useModel<T>(
 }
 
 /**
- * The behaviour every command-palette variant shares (the Angular
- * `CommandPaletteBaseComponent`): the `open` and `query` models (controlled
- * or uncontrolled), the commands filtered by a case-insensitive label
- * substring, and `selectCommand`, which reports the command through
- * `onRunCommand` and closes the palette.
+ * The behaviour every command-palette variant shares: the `open` and `query`
+ * models (controlled or uncontrolled), the commands filtered by a
+ * case-insensitive label substring, and `selectCommand`, which reports the
+ * command through `onRunCommand` and closes the palette.
  */
 export function useCommandPalette({
   commands = [],

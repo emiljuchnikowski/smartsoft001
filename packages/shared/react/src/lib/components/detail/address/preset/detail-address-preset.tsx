@@ -3,8 +3,7 @@ import { SmartDetailFieldProps } from '../../detail.types';
 import { useDetailAddress } from '../use-detail-address';
 
 /**
- * Styled address detail (preset, `DetailAddressPresetComponent`): the
- * address next to a map-pin icon.
+ * Styled address detail (preset): the address next to a map-pin icon.
  */
 export function SmartDetailAddressPreset<T>(props: SmartDetailFieldProps<T>) {
   const { className } = props;

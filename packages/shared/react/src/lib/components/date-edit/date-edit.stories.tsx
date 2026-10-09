@@ -26,7 +26,7 @@ const meta: Meta<DateEditArgs> = {
 export default meta;
 type Story = StoryObj<DateEditArgs>;
 
-/** The Angular `[(ngModel)]="value"` binding: the story keeps the value. */
+/** A controlled date: the story keeps the value in its state. */
 const PlaygroundExample = ({ value: initial, cssClass }: DateEditArgs) => {
   const [value, setValue] = useState(initial);
 

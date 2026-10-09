@@ -15,9 +15,9 @@ const ITEM_LABEL_CLASSES =
   'smart:text-sm smart:ms-3 smart:text-gray-500 smart:dark:text-gray-400';
 
 /**
- * Styled radio field (preset, Angular `InputRadioPresetComponent`): Preline
- * radios in a column, the first one autofocused when the field is
- * `focused`. Each label is bound to its radio by `htmlFor`.
+ * Styled radio field (preset): Preline radios in a column, the first one
+ * autofocused when the field is `focused`. Each label is bound to its radio by
+ * `htmlFor`.
  */
 export function SmartInputRadioPreset<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

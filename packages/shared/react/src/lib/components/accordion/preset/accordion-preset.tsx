@@ -11,13 +11,13 @@ import {
 } from './preset-classes';
 
 /**
- * Styled accordion variation (preset, `<smart-accordion-preset>`), based on
- * the Preline bordered accordion.
+ * Styled accordion variation (preset), based on the Preline bordered
+ * accordion.
  *
- * The accordion has no registry key (no Angular component token): render it
- * directly with the same `headerTpl` / `bodyTpl`, `show` and `className`
- * contract as `SmartAccordionDefault`. The toggle button carries
- * `aria-expanded` / `aria-controls`; the open body is a `region`.
+ * The accordion has no registry key: render it directly with the same
+ * `headerTpl` / `bodyTpl`, `show` and `className` contract as
+ * `SmartAccordionDefault`. The toggle button carries `aria-expanded` /
+ * `aria-controls`; the open body is a `region`.
  */
 export function SmartAccordionPreset(props: SmartAccordionBaseProps) {
   const { options, className, headerTpl, bodyTpl } = props;

@@ -4,8 +4,8 @@ import { SmartDetailFieldProps } from '../../detail.types';
 import { useDetailObject } from '../use-detail-object';
 
 /**
- * Styled object detail (preset, `DetailObjectPresetComponent`): the nested
- * details inside a card, an em dash without a nested object.
+ * Styled object detail (preset): the nested details inside a card, an em dash
+ * without a nested object.
  */
 export function SmartDetailObjectPreset<T>(props: SmartDetailFieldProps<T>) {
   const { className } = props;

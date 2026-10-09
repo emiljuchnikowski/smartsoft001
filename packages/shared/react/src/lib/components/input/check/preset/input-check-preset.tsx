@@ -16,9 +16,8 @@ const OPTION_LABEL_CLASSES =
   'smart:text-sm smart:ms-3 smart:text-gray-500 smart:dark:text-gray-400';
 
 /**
- * Styled check field (preset, Angular `InputCheckPresetComponent`): Preline
- * checkboxes, each followed by its (translated) text rendered as sanitised
- * HTML in a `<span>`, as in Angular.
+ * Styled check field (preset): Preline checkboxes, each followed by its
+ * (translated) text rendered as sanitised HTML in a `<span>`.
  */
 export function SmartInputCheckPreset<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

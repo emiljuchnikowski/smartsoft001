@@ -4,13 +4,13 @@ import { IDrawerOptions } from '../../models';
 
 export interface SmartDrawerProps {
   /**
-   * Whether the drawer is shown (the Angular `open` model). Leave it
-   * `undefined` for an uncontrolled drawer that starts from `defaultOpen`.
+   * Whether the drawer is shown. Leave it `undefined` for an uncontrolled
+   * drawer that starts from `defaultOpen`.
    */
   open?: boolean;
   /** Initial `open` of an uncontrolled drawer. */
   defaultOpen?: boolean;
-  /** The `openChange` half of the Angular `[(open)]` binding. */
+  /** Called when the drawer opens or closes. */
   onOpenChange?: (open: boolean) => void;
   title?: string;
   options?: IDrawerOptions;

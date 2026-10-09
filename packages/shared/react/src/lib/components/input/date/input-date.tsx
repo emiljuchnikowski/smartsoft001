@@ -38,14 +38,11 @@ const INPUT_CLASSES = [
 ].join(' ');
 
 /**
- * The `date` field (the Angular `InputDateComponent`,
- * `<smart-input-date>`): the model label and a native `type="date"` input
- * bound to the control (`YYYY-MM-DD`). `className` is appended to the input's
- * classes.
+ * The `date` field: the model label and a native `type="date"` input bound to
+ * the control (`YYYY-MM-DD`). `className` is appended to the input's classes.
  *
- * The Angular component's `valueChanges` subscription re-formatted a value
- * that is not 10 characters long with moment, but that call is commented out
- * there (`TODO: re-enable moment`), so the value is bound as it is here too.
+ * The value is bound as it is: a value that is not 10 characters long is not
+ * re-formatted.
  */
 export function SmartInputDate<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

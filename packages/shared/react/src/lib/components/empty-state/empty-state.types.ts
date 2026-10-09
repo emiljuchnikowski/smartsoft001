@@ -1,11 +1,11 @@
 import { IEmptyStateOptions } from '../../models';
 
-/** Payload of `onActionClick` (the Angular `actionClick` output). */
+/** Payload of `onActionClick`. */
 export interface IEmptyStateActionClick {
   actionId: string;
 }
 
-/** Payload of `onItemClick` (the Angular `itemClick` output). */
+/** Payload of `onItemClick`. */
 export interface IEmptyStateItemClick {
   itemId: string;
 }

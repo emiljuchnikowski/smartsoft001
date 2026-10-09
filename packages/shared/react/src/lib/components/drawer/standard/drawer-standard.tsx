@@ -1,7 +1,7 @@
 import { SmartDrawerProps } from '../drawer.types';
 import { useDrawer } from '../use-drawer';
 
-/** The default drawer rendering (`<smart-drawer-standard>`). */
+/** The default drawer rendering. */
 export function SmartDrawerStandard(props: SmartDrawerProps) {
   const { title, options, className, children } = props;
   const { open, close } = useDrawer(props);

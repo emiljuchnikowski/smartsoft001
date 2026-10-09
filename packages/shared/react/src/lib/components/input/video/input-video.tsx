@@ -22,12 +22,10 @@ const GROUP_CLASSES = [
 ].join(' ');
 
 /**
- * The `video` field (the Angular `InputVideoComponent`,
- * `<smart-input-video>`): plain add / change, play and delete buttons (they
- * run the button options directly, so delete asks no confirmation, as in
- * Angular), a hidden `.mp4` input whose file is uploaded, the upload
- * progress and the player ({@link useInputVideo}). `className` is appended
- * to the group's classes.
+ * The `video` field: plain add / change, play and delete buttons (they run the
+ * button options directly, so delete asks no confirmation), a hidden `.mp4`
+ * input whose file is uploaded, the upload progress and the player
+ * ({@link useInputVideo}). `className` is appended to the group's classes.
  */
 export function SmartInputVideo<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

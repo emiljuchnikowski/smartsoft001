@@ -29,7 +29,7 @@ Fully-styled variation that extends `DrawerBaseComponent` and is a drop-in repla
 
 > Because `DrawerComponent` renders injected components via `NgComponentOutlet` (which passes inputs by canonical name), `DrawerPresetComponent` overrides `cssClass` as `input<string>('')` **without** the `class` alias. Bind it as `[cssClass]` when using the `<smart-drawer-preset>` selector directly, or just pass `class` on `<smart-drawer>` (the wrapper forwards it).
 >
-> The preset uses `<ng-content />` for its body, which works with the `<smart-drawer-preset>` selector directly but is **not** propagated when rendered through `DRAWER_STANDARD_COMPONENT_TOKEN` (see "Content Projection Limitation"). It does not consume `options.stickyFooter` (no footer slot in the base API) or `options.variant` (content-type variants are projected via `<ng-content />`, not built into the offcanvas shell). Top/bottom placements from the Preline reference are not expressible — `IDrawerOptions.position` is `left | right` only.
+> The preset uses `<ng-content />` for its body, which receives the content projected into `<smart-drawer>` when the preset is registered through `DRAWER_STANDARD_COMPONENT_TOKEN`, as well as with the `<smart-drawer-preset>` selector directly (see "Content Projection"). It does not consume `options.stickyFooter` (no footer slot in the base API) or `options.variant` (content-type variants are projected via `<ng-content />`, not built into the offcanvas shell). Top/bottom placements from the Preline reference are not expressible — `IDrawerOptions.position` is `left | right` only.
 
 ### DrawerBaseComponent (abstract)
 
@@ -122,7 +122,7 @@ import { DrawerBaseComponent } from '@smartsoft001/angular';
             </button>
           </header>
         }
-        <!-- Custom implementations should expose data inputs instead of ng-content -->
+        <ng-content />
       </aside>
     }
   `,
@@ -148,9 +148,9 @@ When extending the base directly, remember to:
 - declare `cssClass = input<string>('')` explicitly (no `class` alias) if the component is used via `NgComponentOutlet` through `DRAWER_STANDARD_COMPONENT_TOKEN`, because `NgComponentOutlet` passes inputs by canonical name (not by alias),
 - call `this.close()` from your close affordances — it sets `open` to `false` and emits `closed` for you.
 
-### Content Projection Limitation
+### Content Projection
 
-`DrawerStandardComponent` uses `<ng-content />` to project arbitrary children, but **`NgComponentOutlet` does not propagate projected content** to dynamically rendered components. When supplying a custom implementation via `DRAWER_STANDARD_COMPONENT_TOKEN`, do **not** rely on `<ng-content />`. Instead, expose data inputs (e.g. additional `input()` properties) on your subclass and render them inside the component template. Consumers then pass structured data to `<smart-drawer>` rather than projected DOM nodes.
+`DrawerStandardComponent` uses `<ng-content />` to project arbitrary children. A custom implementation registered via `DRAWER_STANDARD_COMPONENT_TOKEN` receives the same content in its default `<ng-content />` slot, so it can show or hide the slot with `@if (open())` like the standard drawer, and control flow at the root of the projected content keeps working. The content arrives wrapped in one `display: contents` element: selectors on the slot's parent that target its direct children (`space-y-*`, `divide-*`, `> *`) do not reach the projected nodes.
 
 ## Accessibility
 

@@ -13,11 +13,10 @@
     straight into <head>, outside the Vite/PostCSS pipeline that processes
     styles.css.
 
-    (Note: `packages/shared/angular/tailwind.config.js` excludes *.stories.ts
-    from its content globs, but that file is unreferenced dead config — the
-    `@config` in styles.css points at the ROOT tailwind.config.js, which has no
-    `content` key, so Tailwind v4 automatic source detection is active and does
-    scan story files. `smart:` classes used only in stories DO compile.)
+    (Note: the `@config` in styles.css points at the ROOT tailwind.config.js,
+    which has no `content` key, so Tailwind v4 automatic source detection is
+    active and does scan story files. `smart:` classes used only in stories DO
+    compile.)
   */
   html,
   body {

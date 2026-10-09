@@ -209,7 +209,7 @@ describe('@smartsoft001/react: getDefaultDetailFieldComponents', () => {
     FieldType.text,
   ];
 
-  it('should map every field type of the Angular map to a component', () => {
+  it('should map every field type to a component', () => {
     const map = getDefaultDetailFieldComponents();
 
     expect(TYPES.filter((type) => typeof map[type] !== 'function')).toEqual([]);

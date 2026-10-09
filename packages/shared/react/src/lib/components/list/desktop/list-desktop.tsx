@@ -16,11 +16,10 @@ import { SmartListModeProps } from '../list.types';
 import { useListFileUrl } from '../use-list';
 
 /**
- * The desktop list (the Angular `<smart-list-desktop>`,
- * `ListDesktopComponent`): a table with one column per list field, plus the
- * multi-select, remove and item columns, the `top` component factory above
- * it and the paging below it (`PaginationMode.singlePage`). The CDK table is
- * plain table markup with the same classes; the header row stays sticky.
+ * The desktop list: a table with one column per list field, plus the
+ * multi-select, remove and item columns, the `top` component factory above it
+ * and the paging below it (`PaginationMode.singlePage`). The header row stays
+ * sticky.
  */
 export function SmartListDesktop<T extends IEntity<string>>(
   props: SmartListModeProps<T>,

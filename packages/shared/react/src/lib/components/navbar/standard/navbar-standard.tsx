@@ -4,7 +4,7 @@ import { SmartNavLink } from '../nav-link';
 import { SmartNavbarProps } from '../navbar.types';
 import { useNavbar } from '../use-navbar';
 
-/** The default navbar rendering (`<smart-navbar-standard>`). */
+/** The default navbar rendering. */
 export function SmartNavbarStandard(props: SmartNavbarProps) {
   const { options, className } = props;
   const { mobileMenuOpen, toggleMobileMenu, itemClick } = useNavbar(props);

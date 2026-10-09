@@ -8,8 +8,8 @@ import { CrudFullConfig } from '../../crud.config';
 import { CrudProvider } from '../../crud.provider';
 import { ICrudListGroup } from '../../models';
 
-// `IModelFilter.possibilities` is typed as an Angular signal; a function
-// returning the list is what the React filters read.
+// The filters read `IModelFilter.possibilities` as a function returning the
+// list.
 const possibilities = (items: { id: string; text: string }[]) =>
   (() => items) as unknown as IModelFilter['possibilities'];
 

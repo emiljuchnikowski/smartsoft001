@@ -23,11 +23,11 @@ function toDateString(date: moment.Moment): IDateRange['start'] {
 }
 
 /**
- * The Angular `ngModel` model: controlled while `value` is defined, otherwise
- * kept here. A new `value` from the parent always wins, as a `model()` input
- * does, so resetting the parent's state to `undefined` also clears the range.
+ * The range value: controlled while `value` is defined, otherwise kept here.
+ * A new `value` from the parent always wins, so resetting the parent's state
+ * to `undefined` also clears the range.
  */
-function useNgModel(
+function useControllableValue(
   value: DateRangeValue,
   defaultValue: DateRangeValue,
   onValueChange?: (value: IDateRange | undefined) => void,
@@ -42,32 +42,35 @@ function useNgModel(
     setInnerValue(value);
   }
 
-  const ngModel = value === undefined ? innerValue : value;
+  const currentValue = value === undefined ? innerValue : value;
 
-  const setNgModel = useCallback(
+  const setValue = useCallback(
     (next: IDateRange | undefined) => {
-      if (next === ngModel) return;
+      if (next === currentValue) return;
 
       setInnerValue(next);
       onValueChange?.(next);
     },
-    [ngModel, onValueChange],
+    [currentValue, onValueChange],
   );
 
-  return [ngModel ?? undefined, setNgModel] as const;
+  return [currentValue ?? undefined, setValue] as const;
 }
 
 /**
- * The behaviour every date-range variant shares (the Angular
- * `DateRangeBaseComponent`): the range model, the open state of the picker
- * and the calendar state the picker is reopened with.
+ * The behaviour every date-range variant shares: the range value, the open
+ * state of the picker and the calendar state the picker is reopened with.
  */
 export function useDateRange({
   value,
   defaultValue,
   onValueChange,
 }: SmartDateRangeVariantProps) {
-  const [ngModel, setNgModel] = useNgModel(value, defaultValue, onValueChange);
+  const [currentValue, setValue] = useControllableValue(
+    value,
+    defaultValue,
+    onValueChange,
+  );
   const [isOpen, setIsOpen] = useState(false);
   const [calendarData, setCalendarData] =
     useState<CalendarState>(EMPTY_CALENDAR_DATA);
@@ -75,18 +78,18 @@ export function useDateRange({
   const onClick = useCallback(() => {
     setCalendarData((data) => ({
       ...data,
-      ...(ngModel?.start ? { dateFrom: moment(ngModel.start) } : {}),
-      ...(ngModel?.end ? { dateTo: moment(ngModel.end) } : {}),
+      ...(currentValue?.start ? { dateFrom: moment(currentValue.start) } : {}),
+      ...(currentValue?.end ? { dateTo: moment(currentValue.end) } : {}),
     }));
     setIsOpen(true);
-  }, [ngModel]);
+  }, [currentValue]);
 
   const onModalApply = useCallback(
     (data: CalendarState) => {
       setCalendarData(data);
 
       if (data.dateFrom) {
-        setNgModel({
+        setValue({
           start: toDateString(data.dateFrom),
           end: toDateString(data.dateTo ?? data.dateFrom),
         });
@@ -94,18 +97,18 @@ export function useDateRange({
 
       setIsOpen(false);
     },
-    [setNgModel],
+    [setValue],
   );
 
   const onModalDismiss = useCallback(() => setIsOpen(false), []);
 
   const onClear = useCallback(() => {
     setCalendarData((data) => ({ ...data, dateFrom: null, dateTo: null }));
-    setNgModel(undefined);
-  }, [setNgModel]);
+    setValue(undefined);
+  }, [setValue]);
 
   return {
-    value: ngModel,
+    value: currentValue,
     isOpen,
     calendarData,
     onClick,

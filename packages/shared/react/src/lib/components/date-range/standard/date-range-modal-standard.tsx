@@ -15,10 +15,9 @@ function filterButtonClasses(selected: boolean): string {
 }
 
 /**
- * The date-range picker modal (`<smart-date-range-modal-standard>`): a
- * scrollable calendar of the months around today. Rendered inline by
- * `<SmartDateRangeStandard>`, as in Angular; it is `fixed` positioned, and a
- * backdrop click or the close button dismisses it.
+ * The date-range picker modal: a scrollable calendar of the months around
+ * today. Rendered inline by `<SmartDateRangeStandard>`; it is `fixed`
+ * positioned, and a backdrop click or the close button dismisses it.
  */
 export function SmartDateRangeModalStandard(props: SmartDateRangeModalProps) {
   const { showFilterBtns = false, restrictSelectionTo = 0 } = props;

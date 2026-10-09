@@ -255,10 +255,9 @@ function toggle(
 
 /**
  * Runs `command` on the selection of `editor`. Formats the browser has a
- * command for go through `document.execCommand`, links and images are
- * inserted as escaped HTML; removing code, quotes, links and colours edits
- * the DOM directly. Choosing the active heading again turns it back into a paragraph,
- * as in `ngx-editor`.
+ * command for go through `document.execCommand`, links and images are inserted
+ * as escaped HTML; removing code, quotes, links and colours edits the DOM
+ * directly. Choosing the active heading again turns it back into a paragraph.
  */
 export function applyRichTextCommand(
   editor: HTMLElement,

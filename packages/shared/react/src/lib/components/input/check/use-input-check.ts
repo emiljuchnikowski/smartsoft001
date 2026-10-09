@@ -8,12 +8,11 @@ import { useInputPossibilities } from '../base/use-input-possibilities';
 import { SmartInputFieldProps } from '../input.types';
 
 /**
- * The possibilities with `checked` set from the control value (the Angular
- * `syncCheckedWithControl`): a possibility whose `id` is an object with an
- * `id` is checked when the value holds an object with that `id`, and then
- * takes that object as its `id`, so the value keeps the stored objects; any
- * other possibility is checked when its `id` is in the value (or is the
- * value).
+ * The possibilities with `checked` set from the control value: a possibility
+ * whose `id` is an object with an `id` is checked when the value holds an
+ * object with that `id`, and then takes that object as its `id`, so the value
+ * keeps the stored objects; any other possibility is checked when its `id` is
+ * in the value (or is the value).
  */
 export function syncInputCheckPossibilities(
   possibilities: SmartPossibility[] | null,
@@ -42,12 +41,10 @@ export function syncInputCheckPossibilities(
 }
 
 /**
- * What both check fields share (the Angular `InputCheckComponent` logic on
- * top of `InputPossibilitiesBaseComponent`): the possibilities of the
- * provider or the input options, or else the model field's `possibilities`,
- * kept checked in line with the control value, and `toggle(item)`, which
- * sets the ids of the checked possibilities as the value and marks the
- * control dirty and touched.
+ * What both check fields share: the possibilities of the provider or the input
+ * options, or else the model field's `possibilities`, kept checked in line with
+ * the control value, and `toggle(item)`, which sets the ids of the checked
+ * possibilities as the value and marks the control dirty and touched.
  */
 export function useInputCheck<T>(props: SmartInputFieldProps<T>) {
   const input = useInput(props);

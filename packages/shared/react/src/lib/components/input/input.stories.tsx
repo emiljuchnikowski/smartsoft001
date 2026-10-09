@@ -393,7 +393,7 @@ const meta: Meta<InputArgs> = {
       control: 'select',
       options: VARIANTS.map((x) => x.key),
       description:
-        'Field of the fixture model to render. Its FieldType selects which component <smart-input> dispatches to.',
+        'Field of the fixture model to render. Its FieldType selects which component <SmartInput> dispatches to.',
     },
     required: {
       control: 'boolean',
@@ -402,7 +402,7 @@ const meta: Meta<InputArgs> = {
     touched: {
       control: 'boolean',
       description:
-        'Marks the control touched — combined with `required`, this reveals the <smart-input-error> message.',
+        'Marks the control touched — combined with `required`, this reveals the <SmartInputError> message.',
     },
     cssClass: { control: 'text', description: 'Passed through as `class`.' },
   },

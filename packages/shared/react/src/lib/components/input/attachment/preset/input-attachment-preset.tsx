@@ -69,8 +69,7 @@ const PREVIEW_CLASSES = [
 ].join(' ');
 
 /**
- * Styled `attachment` field (preset, the Angular
- * `InputAttachmentPresetComponent`): a Preline drop zone ("drop file here or
+ * Styled `attachment` field (preset): a Preline drop zone ("drop file here or
  * browse") that opens the hidden file input on click / Enter / Space and
  * uploads a dropped file ({@link useInputFileDropZone}), a preview card with
  * the file name and the download / delete buttons, and the upload progress.

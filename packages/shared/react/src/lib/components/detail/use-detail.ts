@@ -4,8 +4,8 @@ import { useTranslate } from '../../providers/hooks';
 import { getListCell } from '../../utils/model';
 
 /**
- * What every detail field shares (the Angular `DetailBaseComponent`): the
- * item, the key of the field and its value, unwrapped from `options`.
+ * What every detail field shares: the item, the key of the field and its value,
+ * unwrapped from `options`.
  */
 export function useDetail<T>({ options }: SmartDetailFieldProps<T>) {
   const item = options?.item ?? null;
@@ -23,8 +23,8 @@ export function useDetail<T>({ options }: SmartDetailFieldProps<T>) {
 }
 
 /**
- * The value a text-like detail renders: `item | smartListCell: key : cellPipe`,
- * the cell pipe's result (or the raw value), translated when it is a string.
+ * The value a text-like detail renders: the list cell of `key` in `item`, the
+ * cell pipe's result (or the raw value), translated when it is a string.
  */
 export function useDetailCellValue<T>(props: SmartDetailFieldProps<T>): any {
   const translate = useTranslate();

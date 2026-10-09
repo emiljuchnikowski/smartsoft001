@@ -14,7 +14,7 @@ import { useStore } from '../../store/store';
 const NO_MENU_ITEMS: IMenuItem[] = [];
 
 /**
- * The Angular `AppBaseComponent`, the logic of an application shell:
+ * The logic of an application shell:
  *
  * - puts `options.menu.items` on the `MenuService` and returns its items
  *   (none without `options.menu`) and `showMenu` (logged in or
@@ -29,8 +29,7 @@ const NO_MENU_ITEMS: IMenuItem[] = [];
  *   `logo` on the `#app-favicon` link.
  *
  * Attach `rootRef` to the shell's root element. `endContent` is what
- * `MenuService.openEnd` asked to show in the end menu (the Angular
- * `endMenuContainer`).
+ * `MenuService.openEnd` asked to show in the end menu.
  */
 export function useApp({ options, className }: SmartAppProps) {
   const appService = useAppService();

@@ -7,8 +7,7 @@ import { SmartListModeProps } from '../list.types';
 import { useList } from '../use-list';
 
 /**
- * The masonry-grid logic (the Angular `ListMasonryGridComponent` over
- * `ListBaseComponent`): `useList` plus `listWithImages`, every item paired
+ * The masonry-grid logic: `useList` plus `listWithImages`, every item paired
  * with the value of the model's first image field.
  */
 export function useListMasonryGrid<T extends IEntity<string>>(

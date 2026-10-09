@@ -54,7 +54,7 @@ const meta: Meta<SearchbarArgs> = {
 export default meta;
 type Story = StoryObj<SearchbarArgs>;
 
-/** The `[(show)]` and `[(text)]` bindings of the Angular story. */
+/** Controlled `show` and `text`: the story keeps both in its state. */
 const SearchbarPlayground = (args: SearchbarArgs) => {
   const [isShown, setIsShown] = useState(args.show);
   const [textModel, setTextModel] = useState('');

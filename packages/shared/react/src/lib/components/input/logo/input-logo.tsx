@@ -14,13 +14,11 @@ const LABEL_CLASSES = [
 ].join(' ');
 
 /**
- * The `logo` field (the Angular `InputLogoComponent`, `<smart-input-logo>`).
- * It does not upload: the picked image is read in the browser and stored as
- * a `data:image/jpeg;base64, ...` URL (with the space after the comma, as the
- * Angular field wrote it). Without a value a "Wybierz plik" button (not
- * translated in Angular either) opens the hidden input; with one, the image
- * opens it and "×" clears the value. `className` is appended to the group's
- * classes.
+ * The `logo` field. It does not upload: the picked image is read in the browser
+ * and stored as a `data:image/jpeg;base64, ...` URL (with the space after the
+ * comma). Without a value a "Wybierz plik" button (not translated) opens the
+ * hidden input; with one, the image opens it and "×" clears the value.
+ * `className` is appended to the group's classes.
  */
 export function SmartInputLogo<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

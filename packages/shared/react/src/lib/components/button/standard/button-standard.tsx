@@ -4,7 +4,7 @@ import { SmartIcon } from '../../icon';
 import { SmartButtonProps } from '../button.types';
 import { useButton } from '../use-button';
 
-/** The default button rendering (`<smart-button-standard>`). */
+/** The default button rendering. */
 export function SmartButtonStandard(props: SmartButtonProps) {
   const { options, disabled = false, className, children } = props;
   const t = useTranslate();

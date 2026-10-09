@@ -58,7 +58,7 @@ const meta: Meta<SelectMenuArgs> = {
 export default meta;
 type Story = StoryObj<SelectMenuArgs>;
 
-/** The `[(value)]` binding of the Angular story. */
+/** A controlled `value`: the story keeps it in its state. */
 const SelectMenuPlayground = (args: SelectMenuArgs) => {
   const [selected, setSelected] = useState<SelectMenuValue>(args.value || null);
 

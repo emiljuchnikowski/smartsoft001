@@ -3,9 +3,8 @@ import { SmartIcon } from '../../icon';
 import { SmartAccordionHeaderProps } from '../accordion.types';
 
 /**
- * `<smart-accordion-header>`: the header button of `SmartAccordionDefault`,
- * with a chevron pointing up while `open`. The click is handled by the
- * accordion around it.
+ * The header button of `SmartAccordionDefault`, with a chevron pointing up
+ * while `open`. The click is handled by the accordion around it.
  */
 export function SmartAccordionHeader({
   open = false,

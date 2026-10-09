@@ -38,10 +38,9 @@ const INPUT_CLASSES = [
 ].join(' ');
 
 /**
- * The `phoneNumber` field (the Angular `InputPhoneNumberComponent`,
- * `<smart-input-phone-number>`): the model label and a `type="tel"` input
- * bound to the control, without a mask or a format check, as in Angular.
- * `className` is appended to the input's classes.
+ * The `phoneNumber` field: the model label and a `type="tel"` input bound to
+ * the control, without a mask or a format check. `className` is appended to the
+ * input's classes.
  */
 export function SmartInputPhoneNumber<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

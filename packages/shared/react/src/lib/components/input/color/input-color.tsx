@@ -8,10 +8,8 @@ const LABEL_CLASSES =
   'smart:block smart:text-sm/6 smart:font-medium smart:text-gray-900 smart:dark:text-white';
 
 /**
- * The colour field (`<smart-input-color>`, Angular `InputColorComponent`): a
- * swatch of the colour, a picker and a `×` button that clears it. Angular
- * opened the `ngx-color-picker` popup on the input; this uses the browser's
- * native `<input type="color">` instead.
+ * The colour field: a swatch of the colour, the browser's native colour picker
+ * (`<input type="color">`) and a `×` button that clears it.
  */
 export function SmartInputColor<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

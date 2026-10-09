@@ -1,9 +1,9 @@
 import { SmartStatsProps } from '../stats.types';
 
 /**
- * The default stats rendering (`<smart-stats-standard>`): an unstyled title
- * and a `<dl>` with one item per stat (icon, label, value, previous value,
- * change tagged with `data-trend`, action).
+ * The default stats rendering: an unstyled title and a `<dl>` with one item per
+ * stat (icon, label, value, previous value, change tagged with `data-trend`,
+ * action).
  */
 export function SmartStatsStandard({ options, className }: SmartStatsProps) {
   return (

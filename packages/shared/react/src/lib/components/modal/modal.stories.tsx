@@ -67,9 +67,8 @@ const meta: Meta<ModalArgs> = {
 export default meta;
 type Story = StoryObj<ModalArgs>;
 
-// The Angular stories bind `[open]` one way into the modal's `open` model, so
-// the modal can still close itself: `defaultOpen` (re-mounted when the control
-// changes) is the React counterpart.
+// The `open` control sets `defaultOpen` (the modal is re-mounted when the
+// control changes) rather than `open`, so the modal can still close itself.
 
 // #region usage
 export const Playground: Story = {

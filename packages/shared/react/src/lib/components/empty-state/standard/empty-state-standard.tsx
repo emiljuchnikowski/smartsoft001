@@ -33,10 +33,10 @@ function EmptyStateStandardItemContent({ item }: { item: IEmptyStateItem }) {
 }
 
 /**
- * The default empty-state rendering (`<smart-empty-state-standard>`): icon,
- * title, description, form slot, actions (anchors when `href` is set,
- * otherwise buttons calling `onActionClick`), an optional items list (anchors
- * or buttons calling `onItemClick`) and a footer link.
+ * The default empty-state rendering: icon, title, description, form slot,
+ * actions (anchors when `href` is set, otherwise buttons calling
+ * `onActionClick`), an optional items list (anchors or buttons calling
+ * `onItemClick`) and a footer link.
  */
 export function SmartEmptyStateStandard({
   options,

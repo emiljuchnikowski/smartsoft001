@@ -1206,7 +1206,7 @@ providers: [
 ];
 ```
 
-> `NgComponentOutlet` does not propagate projected content. When a custom modal is registered via the token, content projected through the wrapper's `<ng-content>` is not forwarded — custom impls should rely on inputs (e.g. structured `data` extension) instead of `<ng-content>`.
+> Content projected into `<smart-modal>` reaches a custom modal registered via the token too: the wrapper passes it to the custom component's default `<ng-content>` slot, wrapped in one `display: contents` element (so selectors on the slot's parent such as `space-y-*` or `> *` do not reach the projected nodes).
 
 ### MultiColumnLayoutBaseComponent
 
@@ -3167,7 +3167,7 @@ The `<smart-container>` component is a pure layout wrapper that constrains width
 **Default:** `ContainerStandardComponent` (selector: `smart-container-standard`)
 **Token:** `CONTAINER_STANDARD_COMPONENT_TOKEN` — provide a `Type<ContainerBaseComponent>` to override the default.
 
-> `NgComponentOutlet` does not propagate projected content. When a custom container is registered via the token, `<ng-content>` is dropped — custom impls should rely on inputs.
+> Content projected into `<smart-container>` reaches a custom container registered via the token too: the wrapper passes it to the custom component's default `<ng-content>` slot, wrapped in one `display: contents` element (so selectors on the slot's parent such as `space-y-*` or `> *` do not reach the projected nodes).
 
 ### DividerBaseComponent
 
@@ -3199,7 +3199,7 @@ The `<smart-drawer>` component renders a slide-out `<aside role="dialog" aria-mo
 **Default:** `DrawerStandardComponent` (selector: `smart-drawer-standard`)
 **Token:** `DRAWER_STANDARD_COMPONENT_TOKEN` — provide a `Type<DrawerBaseComponent>` to override the default.
 
-> Slide animations are deferred to custom implementations. Content projection works in default mode but is dropped when a custom impl is provided via the token.
+> Slide animations are deferred to custom implementations. Projected content reaches a custom impl provided via the token too, in its default `<ng-content>` slot.
 
 ### DropdownBaseComponent
 

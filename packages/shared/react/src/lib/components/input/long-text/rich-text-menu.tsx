@@ -51,7 +51,7 @@ const DROPDOWN_ACTIVE_CLASSES = 'smart:bg-blue-50 smart:dark:bg-white/15';
 type SmartRichTextPopup =
   'heading' | 'link' | 'image' | 'text_color' | 'background_color';
 
-/** An `ngx-editor` menu icon. */
+/** A menu icon. */
 export function SmartRichTextIcon({ name }: { name: SmartRichTextIconName }) {
   return (
     <svg
@@ -79,10 +79,9 @@ export interface SmartRichTextMenuProps {
 }
 
 /**
- * The menu bar of `SmartRichTextEditor` (the `ngx-editor-menu` of the Angular
- * field): the toolbar's groups of items, separated. Toggles press while their
- * format is at the selection; headings open a listbox, links, images and
- * colours a popup.
+ * The menu bar of `SmartRichTextEditor`: the toolbar's groups of items,
+ * separated. Toggles press while their format is at the selection; headings
+ * open a listbox, links, images and colours a popup.
  */
 export function SmartRichTextMenu({
   toolbar,
@@ -95,7 +94,7 @@ export function SmartRichTextMenu({
   const [selectedText, setSelectedText] = useState('');
   const openItemRef = useRef<HTMLDivElement>(null);
 
-  // A press outside the open item closes its popup, as in `ngx-editor`.
+  // A press outside the open item closes its popup.
   useEffect(() => {
     if (!open) return undefined;
 

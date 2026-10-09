@@ -8,14 +8,13 @@ import { SmartInfo } from '../info/info';
 import { SmartDetailText } from './text/detail-text';
 
 /**
- * `<smart-detail>` (`DetailComponent`): the label of a field and its value,
- * rendered by the detail component of the field type, with the field's info
- * tooltip and a skeleton while there is no item yet.
+ * The label of a field and its value, rendered by the detail component of the
+ * field type, with the field's info tooltip and a skeleton while there is no
+ * item yet.
  *
- * Field components are resolved from `detailFieldComponents` on
- * `SmartProvider` (the Angular `DETAIL_FIELD_COMPONENTS_TOKEN`) over the
- * library's own; register `DETAIL_PRESET_FIELD_COMPONENTS` there for the
- * preset look. A type without a component renders `SmartDetailText`.
+ * Field components are resolved from `detailFieldComponents` on `SmartProvider`
+ * over the library's own; register `DETAIL_PRESET_FIELD_COMPONENTS` there for
+ * the preset look. A type without a component renders `SmartDetailText`.
  */
 export function SmartDetail<T>({
   options,

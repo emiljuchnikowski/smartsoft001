@@ -16,6 +16,30 @@ class MockInjectedComponent extends DropdownBaseComponent {
 }
 
 @Component({
+  selector: 'smart-test-dropdown-with-slot',
+  changeDetection: ChangeDetectionStrategy.Eager,
+  template: '<button class="custom-dropdown"><ng-content /></button>',
+})
+class MockSlotComponent extends DropdownBaseComponent {
+  override cssClass = input<string>('');
+}
+
+const PROJECTION_HOST_TEMPLATE = `
+  <smart-dropdown>Projected text</smart-dropdown>
+`;
+
+@Component({
+  selector: 'smart-test-dropdown-host',
+  imports: [DropdownComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  providers: [
+    { provide: DROPDOWN_STANDARD_COMPONENT_TOKEN, useValue: MockSlotComponent },
+  ],
+  template: PROJECTION_HOST_TEMPLATE,
+})
+class InjectedHostComponent {}
+
+@Component({
   selector: 'smart-test-dropdown-label-host',
   imports: [DropdownComponent],
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -196,6 +220,19 @@ describe('@smartsoft001/shared-angular: DropdownComponent', () => {
 
         expect(fixture.componentInstance.open()).toBe(true);
       });
+    });
+  });
+
+  describe('projected content', () => {
+    it('should render the projected content inside the implementation registered through DROPDOWN_STANDARD_COMPONENT_TOKEN', () => {
+      const fixture = TestBed.createComponent(InjectedHostComponent);
+      fixture.detectChanges();
+
+      const slot = fixture.nativeElement.querySelector(
+        'button.custom-dropdown',
+      );
+
+      expect(slot?.textContent.trim()).toBe('Projected text');
     });
   });
 });

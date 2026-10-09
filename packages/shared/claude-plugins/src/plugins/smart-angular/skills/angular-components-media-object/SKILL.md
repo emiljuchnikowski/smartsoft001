@@ -41,7 +41,7 @@ Abstract base directive for extending custom media-object implementations. Decla
 
 ### Content Projection
 
-The wrapper projects body content via `<ng-content />` into the `.smart-media-object-body` slot of the standard component.
+The wrapper projects body content via `<ng-content />` into the `.smart-media-object-body` slot of the standard component, or into the default `<ng-content />` of a component registered through `MEDIA_OBJECT_STANDARD_COMPONENT_TOKEN` (`MediaObjectPresetComponent` renders it in its body).
 
 ### IMediaObjectOptions
 

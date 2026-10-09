@@ -11,10 +11,9 @@ import { CrudState } from './crud.reducer';
 import { CrudStore } from './crud.store';
 
 /**
- * The API the pages and components use to read and change a CRUD feature,
- * with the method names of the Angular `CrudFacade`. The state is read through
- * getters (`facade.list`), and `useCrudState` re-renders a component when it
- * changes, where the Angular facade exposed signals.
+ * The API the pages and components use to read and change a CRUD feature.
+ * The state is read through getters (`facade.list`), and `useCrudState`
+ * re-renders a component when it changes.
  */
 export class CrudFacade<T extends IEntity<string>> {
   constructor(

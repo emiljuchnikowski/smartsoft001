@@ -19,7 +19,7 @@ import { useCrudConfig, useCrudFacade } from '../../../crud.context';
 import { ICrudFilter, ICrudFilterQueryItem } from '../../../models';
 import { CrudFilterPossibility, SmartCrudFilterProps } from '../filter.types';
 
-/** The wait of the Angular `@Debounce(500)` on `refresh`. */
+/** How long `refresh` waits, in ms, before it reads the list. */
 export const CRUD_FILTER_REFRESH_DEBOUNCE = 500;
 
 type QueryType = ICrudFilterQueryItem['type'];
@@ -30,7 +30,7 @@ interface PendingFilter {
   filter: ICrudFilter;
 }
 
-/** What `useCrudFilter` returns (the API of the Angular `BaseComponent`). */
+/** What `useCrudFilter` returns. */
 export interface UseCrudFilterResult {
   /** The item's value (a list for a check filter); `null` without a query. */
   value: any;
@@ -38,11 +38,11 @@ export interface UseCrudFilterResult {
   minValue: any;
   /** The item's `<=` value (range "to"). */
   maxValue: any;
-  /** Debounced `refresh(val)` (the Angular `value` setter). */
+  /** Debounced `refresh(val)`. */
   setValue: (val: any) => void;
-  /** Debounced `refresh(val, '>=')` (the Angular `minValue` setter). */
+  /** Debounced `refresh(val, '>=')`. */
   setMinValue: (val: any) => void;
-  /** Debounced `refresh(val, '<=')` (the Angular `maxValue` setter). */
+  /** Debounced `refresh(val, '<=')`. */
   setMaxValue: (val: any) => void;
   /** The item's entry has a non-empty value. */
   hasValue: boolean;
@@ -77,8 +77,8 @@ export interface UseCrudFilterResult {
 }
 
 /**
- * The item's own possibilities: an Angular-style signal (as typed in
- * `IModelFilter`) or a plain list.
+ * The item's own possibilities: a function returning the list (as
+ * `IModelFilter` types it) or a plain list.
  */
 function readItemPossibilities(
   source: unknown,
@@ -124,9 +124,9 @@ function cloneFilter(
 }
 
 /**
- * The value of the item's query entry of `type` (the Angular `value`,
- * `minValue` and `maxValue` getters): `null` without a query, the list of
- * matching values for a check filter, otherwise the first match's value.
+ * The value of the item's query entry of `type` (`value`, `minValue` and
+ * `maxValue`): `null` without a query, the list of matching values for a
+ * check filter, otherwise the first match's value.
  */
 function readQueryValue(
   filter: ICrudFilter | null | undefined,
@@ -182,9 +182,9 @@ function refreshArrayFilter(
 }
 
 /**
- * The filter after `refresh(val, type)` (the Angular `refresh` body): back on
- * the first page, with the item's entry of the slot set to `val`, or removed
- * for an empty value. `null` when there is nothing to read.
+ * The filter after `refresh(val, type)`: back on the first page, with the
+ * item's entry of the slot set to `val`, or removed for an empty value.
+ * `null` when there is nothing to read.
  */
 function refreshFilter(
   source: ICrudFilter | null | undefined,
@@ -238,8 +238,7 @@ function clearFilter(
 
 /**
  * The options of the item: the ones the model possibilities provider returns
- * for the model type and the item key (where the Angular filter asked the
- * deprecated `CRUD_MODEL_POSSIBILITIES_PROVIDER`), otherwise the item's own.
+ * for the model type and the item key, otherwise the item's own.
  */
 function useFilterPossibilities(
   item: IModelFilter | undefined,
@@ -275,15 +274,13 @@ function useFilterPossibilities(
 }
 
 /**
- * The behaviour every filter field shares (the Angular filter
- * `BaseComponent`): the item's values in the current filter, and `refresh` /
- * `clear`, which read the list through the facade with a changed copy of the
- * filter. Until the store's new filter comes back through the `filter` prop,
- * the values are read from that copy.
+ * The behaviour every filter field shares: the item's values in the current
+ * filter, and `refresh` / `clear`, which read the list through the facade
+ * with a changed copy of the filter. Until the store's new filter comes back
+ * through the `filter` prop, the values are read from that copy.
  *
- * `refresh` is debounced by 500 ms like the Angular `@Debounce(500)`: only
- * the last call within the wait is applied, and a pending call still runs
- * after the field unmounts.
+ * `refresh` is debounced by 500 ms: only the last call within the wait is
+ * applied, and a pending call still runs after the field unmounts.
  */
 export function useCrudFilter({
   item,
@@ -398,12 +395,11 @@ export function useCrudFilter({
 }
 
 /**
- * A form control bridged to one query slot of a filter (the Angular
- * `bindControl(type)`; `bindValueControl()` is `type` `null`): seeded once with
- * the slot's current value (`null` = `value`, `'>='` = `minValue`, `'<='` =
+ * A form control bridged to one query slot of a filter: seeded once with the
+ * slot's current value (`null` = `value`, `'>='` = `minValue`, `'<='` =
  * `maxValue`), and every change runs the debounced `refresh` for the slot.
- * As in Angular, the control is not re-synced when the filter changes
- * elsewhere (TODO GAP-19).
+ * The control is not re-synced when the filter changes elsewhere
+ * (TODO GAP-19).
  */
 export function useCrudFilterControl(
   {

@@ -31,10 +31,9 @@ export interface UseCrudFilterDateResult extends UseCrudFilterResult {
 }
 
 /**
- * What the date filters share (the Angular `FilterDateComponent`, which the
- * date-time and date-with-edit filters extend): `useCrudFilter` with the
- * `customValue` / `customMinValue` / `customMaxValue` accessors, whose
- * setters store a valid date as `YYYY-MM-DD`.
+ * What the date, date-time and date-with-edit filters share: `useCrudFilter`
+ * with the `customValue` / `customMinValue` / `customMaxValue` accessors,
+ * whose setters store a valid date as `YYYY-MM-DD`.
  */
 export function useCrudFilterDate(
   props: SmartCrudFilterProps,

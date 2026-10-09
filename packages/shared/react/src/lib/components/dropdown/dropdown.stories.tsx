@@ -61,9 +61,8 @@ const meta: Meta<DropdownArgs> = {
 export default meta;
 type Story = StoryObj<DropdownArgs>;
 
-// The Angular stories bind `[open]` one way into the dropdown's `open` model,
-// so the menu can still be toggled: `defaultOpen` (re-mounted when the
-// control changes) is the React counterpart.
+// The `open` control sets `defaultOpen` (the dropdown is re-mounted when the
+// control changes) rather than `open`, so the menu can still be toggled.
 
 // #region usage
 export const Playground: Story = {

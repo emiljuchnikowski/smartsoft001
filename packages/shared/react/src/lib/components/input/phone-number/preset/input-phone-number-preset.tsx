@@ -8,8 +8,7 @@ import { useInput } from '../../base/use-input';
 import { SmartInputFieldProps } from '../../input.types';
 
 /**
- * Styled `phoneNumber` field (preset, the Angular
- * `InputPhoneNumberPresetComponent`): the Preline look of
+ * Styled `phoneNumber` field (preset): the Preline look of
  * {@link SmartInputPhoneNumber}. Register it as
  * `inputFieldComponents[FieldType.phoneNumber]` on `SmartProvider`.
  */

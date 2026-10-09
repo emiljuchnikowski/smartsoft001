@@ -2,8 +2,7 @@ import { SmartAppProps } from '../app.types';
 import { useApp } from '../use-app';
 
 /**
- * The default application shell: the Angular `AppBaseComponent` has no
- * template, so this renders only its host, a root element running `useApp`
+ * The default application shell: only a root element running `useApp`
  * (title, menu items, style, permission classes, favicon) around `children`.
  * Register an implementation of your own as `components.app`, built on
  * `useApp`, to render the menu, logo and user.

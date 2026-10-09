@@ -19,9 +19,9 @@ const meta: Meta<SidebarLayoutArgs> = {
   tags: ['autodocs'],
   decorators: [
     moduleMetadata({
-      // SidebarLayoutPresetComponent is used through its own selector because
-      // <smart-sidebar-layout> dispatches through NgComponentOutlet once the
-      // token is registered, which drops the projected main content.
+      // The stories render SidebarLayoutPresetComponent through its own
+      // selector; the token registration makes every <smart-sidebar-layout>
+      // render it too, projected main content included.
       imports: [SidebarLayoutComponent, SidebarLayoutPresetComponent],
       providers: [
         {

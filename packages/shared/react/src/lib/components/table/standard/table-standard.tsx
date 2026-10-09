@@ -2,11 +2,11 @@ import { renderTableCell } from '../table-cell';
 import { SmartTableProps } from '../table.types';
 
 /**
- * The default table rendering (`<smart-table-standard>`): an unstyled title,
- * description and toolbar, a `<table>` (only when there are columns) with an
- * optional checkbox column, the `emptyTpl` row when there are no rows, and
- * the footer slot. The checkboxes are plain, unbound inputs, as in Angular;
- * sorting and selection are handled by the preset only.
+ * The default table rendering: an unstyled title, description and toolbar, a
+ * `<table>` (only when there are columns) with an optional checkbox column, the
+ * `emptyTpl` row when there are no rows, and the footer slot. The checkboxes
+ * are plain, unbound inputs; sorting and selection are handled by the preset
+ * only.
  */
 export function SmartTableStandard({ options, className }: SmartTableProps) {
   const columns = options?.columns ?? [];

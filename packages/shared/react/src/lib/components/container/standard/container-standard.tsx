@@ -1,9 +1,9 @@
 import { SmartContainerProps } from '../container.types';
 
 /**
- * The default container rendering (`<smart-container-standard>`): a neutral
- * `div` exposing `options.mode` / `options.padding` as `data-mode` /
- * `data-padding` for the application's own styling.
+ * The default container rendering: a neutral `div` exposing `options.mode` /
+ * `options.padding` as `data-mode` / `data-padding` for the application's own
+ * styling.
  */
 export function SmartContainerStandard({
   options,

@@ -68,10 +68,8 @@ export const Playground: Story = {
 };
 // #endregion
 
-// In Angular every card renders inside its host element (<smart-card-preset>),
-// and that element, not the card, is the grid item, so the card keeps its
-// natural height instead of stretching to the row. This <div> plays the part
-// of the host element.
+// Every card is wrapped in a <div>, and that wrapper, not the card, is the grid
+// item, so the card keeps its natural height instead of stretching to the row.
 const Host = ({ children }: { children: ReactNode }) => <div>{children}</div>;
 
 export const AllVariants: Story = {

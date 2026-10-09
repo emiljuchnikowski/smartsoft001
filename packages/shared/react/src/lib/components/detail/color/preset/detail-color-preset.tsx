@@ -3,8 +3,7 @@ import { SmartDetailFieldProps } from '../../detail.types';
 import { useDetail } from '../../use-detail';
 
 /**
- * Styled colour detail (preset, `DetailColorPresetComponent`): a swatch next
- * to the colour code.
+ * Styled colour detail (preset): a swatch next to the colour code.
  */
 export function SmartDetailColorPreset<T>(props: SmartDetailFieldProps<T>) {
   const { className } = props;

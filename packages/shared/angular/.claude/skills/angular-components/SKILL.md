@@ -111,31 +111,36 @@ import {
   computed,
   inject,
   input,
+  TemplateRef,
+  viewChild,
   ViewEncapsulation,
 } from '@angular/core';
 
 import { I<ComponentName>Options } from '../../models';
 import { <COMPONENT_NAME>_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { outletContent } from '../base/outlet-content';
 import { <ComponentName>StandardComponent } from './standard/standard.component';
 
 @Component({
   selector: 'smart-<component-name>',
   template: `
+    <ng-template #content><ng-content /></ng-template>
     @if (componentType()) {
       <ng-container
-        *ngComponentOutlet="componentType(); inputs: componentInputs()"
+        *ngComponentOutlet="
+          componentType();
+          inputs: componentInputs();
+          content: projectedContent()
+        "
       />
     } @else {
       <smart-<component-name>-standard
         [options]="options()"
         [class]="cssClass()"
       >
-        <ng-container [ngTemplateOutlet]="contentRef"></ng-container>
+        <ng-container [ngTemplateOutlet]="content" />
       </smart-<component-name>-standard>
     }
-    <ng-template #contentRef>
-      <ng-content></ng-content>
-    </ng-template>
   `,
   encapsulation: ViewEncapsulation.None,
   imports: [<ComponentName>StandardComponent, NgComponentOutlet, NgTemplateOutlet],
@@ -154,10 +159,14 @@ export class <ComponentName>Component {
     options: this.options(),
     cssClass: this.cssClass(),
   }));
+
+  private readonly contentTemplate =
+    viewChild.required<TemplateRef<unknown>>('content');
+  protected readonly projectedContent = outletContent(this.contentTemplate);
 }
 ```
 
-If the component needs projected content to flow into the injected component, wrap `<ng-content>` in local `<ng-template #headerTpl/#bodyTpl/#footerTpl>`, read them with `viewChild.required<TemplateRef<unknown>>('...')`, and include the refs in `componentInputs()`. See `card/card.component.ts` for that pattern.
+The `<ng-content>` is captured once in `<ng-template #content>`: the standard branch renders it with `ngTemplateOutlet`, and `outletContent` (`components/base/outlet-content.ts`) hands it to the injected component's default `<ng-content>` slot, wrapped in one `<span style="display: contents">`. Because of that wrapper element, selectors on the slot's parent that target its direct children (`> *`, `space-y-*`, `divide-*`, `*:` variants) do not reach the projected nodes. Drop the template, the two fields and the `content:` binding when the component has no `<ng-content>`. For several named slots, wrap each `<ng-content select>` in its own `<ng-template #headerTpl/#bodyTpl/#footerTpl>`, read them with `viewChild.required<TemplateRef<unknown>>('...')`, and include the refs in `componentInputs()` — see `card/card.component.ts`.
 
 ## External `class` Input Pattern
 
@@ -270,7 +279,7 @@ Every component MUST have exactly **2 stories**: `Playground` and `AllVariants`.
 3. **Import sub-components via `moduleMetadata`** — standalone components go in `moduleMetadata({ imports: [...] })`. Preset components are **not** part of the `COMPONENTS` array in `components.module.ts`, so they must be imported by class.
 4. **AllVariants must disable all Controls** — use `parameters: { controls: { disable: true } }` on the story. (Per-arg `argTypes: { propName: { table: { disable: true } } }` also works but has to be repeated for every arg.)
 5. **Register the preset on the token in `meta`** — see [Showing the preset skin](#showing-the-preset-skin).
-6. **A wrapper that dispatches through `NgComponentOutlet` drops projected content.** If the component takes `<ng-content>` (container, media-object, multi-column-layout, sidebar-layout, stacked-layout), render the preset through its own selector (`<smart-container-preset>`) rather than the wrapper, or the body silently disappears.
+6. **Projected content reaches the preset registered on the token.** The wrappers pass their `<ng-content>` to the injected component (`outletContent`), so rendering `<smart-container>` with the preset on the token shows the body. It arrives wrapped in one `display: contents` element, so a preset slot whose parent styles its direct children (`space-y-*`, `divide-*`, `> *`) does not style the projected nodes.
 
 ### Meta configuration template
 

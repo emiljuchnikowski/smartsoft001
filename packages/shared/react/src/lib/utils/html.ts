@@ -5,8 +5,8 @@ import { RemoveHtmlService } from '@smartsoft001/utils';
 const TRUSTED = Symbol.for('smartsoft:trusted-html');
 
 /**
- * HTML the application vouches for, rendered as is. The React counterpart of
- * returning `SafeHtml` from `DomSanitizer.bypassSecurityTrustHtml`.
+ * HTML the application vouches for, rendered as is. Create it with
+ * `trustHtml`; any other string a component renders as HTML is sanitised.
  */
 export interface SmartTrustedHtml {
   readonly [TRUSTED]: true;
@@ -29,9 +29,8 @@ export function isTrustedHtml(value: unknown): value is SmartTrustedHtml {
 /**
  * Removes everything active from `html`: scripts, event handlers, iframes,
  * SVG and MathML, inline `style` attributes and `javascript:` URLs, keeping
- * the formatting and safe links. This is the protection Angular's sanitizer
- * gave the text details; React renders HTML verbatim, so the components call
- * this before `dangerouslySetInnerHTML`.
+ * the formatting and safe links. React renders `dangerouslySetInnerHTML`
+ * verbatim, so the components pass HTML through this first.
  *
  * Without a DOM (server rendering) the markup cannot be parsed safely, so the
  * tags are dropped and the text is escaped.

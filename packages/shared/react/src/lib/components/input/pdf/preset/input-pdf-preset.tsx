@@ -69,12 +69,11 @@ const PREVIEW_CLASSES = [
 ].join(' ');
 
 /**
- * Styled `pdf` field (preset, the Angular `InputPdfPresetComponent`): a
- * Preline drop zone ("drop file here or browse") that opens the hidden
- * `.pdf` input on click / Enter / Space and uploads a dropped file
- * ({@link useInputFileDropZone}), a preview card with the file name and the
- * show / delete buttons, and the upload progress. `className` is appended to
- * the group's classes.
+ * Styled `pdf` field (preset): a Preline drop zone ("drop file here or browse")
+ * that opens the hidden `.pdf` input on click / Enter / Space and uploads a
+ * dropped file ({@link useInputFileDropZone}), a preview card with the file
+ * name and the show / delete buttons, and the upload progress. `className` is
+ * appended to the group's classes.
  */
 export function SmartInputPdfPreset<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

@@ -15,9 +15,8 @@ import {
 type AvatarMode = 'image' | 'initials' | 'icon';
 
 /**
- * Styled avatar variation (preset, `<smart-avatar-preset>`). Register it as
- * `components.avatar` on `SmartProvider` to restyle every `<SmartAvatar>`, or
- * render it directly.
+ * Styled avatar variation (preset). Register it as `components.avatar` on
+ * `SmartProvider` to restyle every `<SmartAvatar>`, or render it directly.
  *
  * Renders an image, initials or icon placeholder across the `SmartAvatarSize`
  * scale in `circle` / `rounded` shapes, with an optional corner status dot

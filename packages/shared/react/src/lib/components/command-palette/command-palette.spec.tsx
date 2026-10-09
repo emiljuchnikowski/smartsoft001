@@ -558,7 +558,7 @@ describe('@smartsoft001/react: SmartCommandPalette', () => {
       );
     });
 
-    it('should render the result count as one text node, like the Angular interpolation', () => {
+    it('should render the result count as one text node', () => {
       const { container } = renderVariant('with-footer');
 
       const count = zoneOrFail(container, 'footer').firstElementChild;

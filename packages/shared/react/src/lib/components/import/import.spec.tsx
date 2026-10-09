@@ -69,7 +69,7 @@ describe('@smartsoft001/react: SmartImport', () => {
     expect(onSet).toHaveBeenCalledWith(file);
   });
 
-  it('should apply className to the host element around the button', () => {
+  it('should apply className to the wrapper around the button', () => {
     render(<SmartImport className="my-import" />);
 
     expect(screen.getByRole('button').parentElement).toHaveClass('my-import');
@@ -107,7 +107,7 @@ describe('@smartsoft001/react: SmartImport', () => {
 
       expect(() =>
         result.current.onFileSelected({ target: inputWithFiles([]) }),
-      ).toThrow('ImportBaseComponent: File not found');
+      ).toThrow('SmartImport: File not found');
     });
 
     it('should click the given input on triggerFileInput', () => {

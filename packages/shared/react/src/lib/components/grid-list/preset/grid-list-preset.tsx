@@ -38,9 +38,8 @@ const FOOTER_CLASSES = 'smart:mt-4';
  * `layout` (media on top for `cards`, inline row for `horizontal`, centered
  * logo for `logos`), a title (link when `href` is set) with an optional badge
  * beside it, a description, and an action slot in the tile footer. Shows the
- * `emptyTpl` (or a centered default, "No items to display." as in Angular,
- * untranslated) when there are no items, plus a `footerTpl` zone below the
- * grid.
+ * `emptyTpl` (or a centered, untranslated default, "No items to display.") when
+ * there are no items, plus a `footerTpl` zone below the grid.
  */
 export function SmartGridListPreset({
   options,

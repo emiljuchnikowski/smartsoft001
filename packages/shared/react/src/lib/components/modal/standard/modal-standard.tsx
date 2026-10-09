@@ -2,9 +2,9 @@ import { SmartModalProps } from '../modal.types';
 import { useModal } from '../use-modal';
 
 /**
- * The default modal rendering (`<smart-modal-standard>`): a native `<dialog>`
- * always in the DOM, shown through its `open` attribute (not `showModal()`).
- * Its native `close` event closes the modal as well.
+ * The default modal rendering: a native `<dialog>` always in the DOM, shown
+ * through its `open` attribute (not `showModal()`). Its native `close` event
+ * closes the modal as well.
  */
 export function SmartModalStandard(props: SmartModalProps) {
   const {

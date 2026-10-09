@@ -70,8 +70,9 @@ type Story = StoryObj<TabsArgs>;
 // #region usage
 export const Playground: Story = {
   name: 'Playground',
-  // `selectedId` is a model in Angular: the tabs keep the clicked tab until
-  // the control changes it again.
+  // The control sets `defaultSelectedId` (the tabs are re-mounted when it
+  // changes), so the tabs keep the clicked tab until the control changes it
+  // again.
   render: (args) => (
     <div style={{ padding: 40, minWidth: 480 }}>
       <SmartTabs

@@ -14,6 +14,38 @@ class MockInjectedComponent extends ModalBaseComponent {
   override cssClass = input<string>('');
 }
 
+@Component({
+  selector: 'smart-test-modal-with-slot',
+  changeDetection: ChangeDetectionStrategy.Eager,
+  template: '@if (open()) { <div class="custom-modal"><ng-content /></div> }',
+})
+class MockSlotComponent extends ModalBaseComponent {
+  override cssClass = input<string>('');
+}
+
+const PROJECTION_HOST_TEMPLATE = `
+  <smart-modal [open]="true">Projected text</smart-modal>
+`;
+
+@Component({
+  selector: 'smart-test-modal-standard-host',
+  imports: [ModalComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  template: PROJECTION_HOST_TEMPLATE,
+})
+class StandardHostComponent {}
+
+@Component({
+  selector: 'smart-test-modal-host',
+  imports: [ModalComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  providers: [
+    { provide: MODAL_STANDARD_COMPONENT_TOKEN, useValue: MockSlotComponent },
+  ],
+  template: PROJECTION_HOST_TEMPLATE,
+})
+class InjectedHostComponent {}
+
 describe('@smartsoft001/shared-angular: ModalComponent', () => {
   describe('without token', () => {
     let fixture: ComponentFixture<ModalComponent>;
@@ -148,6 +180,28 @@ describe('@smartsoft001/shared-angular: ModalComponent', () => {
 
         expect(fixture.componentInstance.open()).toEqual(true);
       });
+    });
+  });
+
+  describe('projected content', () => {
+    it('should render the projected content inside smart-modal-standard', () => {
+      const fixture = TestBed.createComponent(StandardHostComponent);
+      fixture.detectChanges();
+
+      const slot = fixture.nativeElement.querySelector(
+        'smart-modal-standard dialog',
+      );
+
+      expect(slot?.textContent.trim()).toBe('Projected text');
+    });
+
+    it('should render the projected content inside the implementation registered through MODAL_STANDARD_COMPONENT_TOKEN', () => {
+      const fixture = TestBed.createComponent(InjectedHostComponent);
+      fixture.detectChanges();
+
+      const slot = fixture.nativeElement.querySelector('div.custom-modal');
+
+      expect(slot?.textContent.trim()).toBe('Projected text');
     });
   });
 });

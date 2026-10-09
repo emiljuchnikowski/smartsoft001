@@ -2,7 +2,7 @@ export * from './base/use-crud-filter';
 export * from './check/filter-check';
 export * from './date/filter-date';
 export * from './date/use-crud-filter-date';
-export * from './date/use-crud-filter-ng-model';
+export * from './date/use-crud-filter-value';
 export * from './date-time/filter-date-time';
 export * from './date-with-edit/filter-date-with-edit';
 export * from './filter';

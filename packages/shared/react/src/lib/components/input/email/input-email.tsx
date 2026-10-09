@@ -38,9 +38,8 @@ const INPUT_CLASSES = [
 ].join(' ');
 
 /**
- * The `email` field (the Angular `InputEmailComponent`,
- * `<smart-input-email>`): the model label and a `type="email"` input bound
- * to the control. `className` is appended to the input's classes.
+ * The `email` field: the model label and a `type="email"` input bound to the
+ * control. `className` is appended to the input's classes.
  */
 export function SmartInputEmail<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

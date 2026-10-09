@@ -3,10 +3,9 @@ import { useCallback, useState } from 'react';
 import { SmartDrawerProps } from './drawer.types';
 
 /**
- * The behaviour every drawer variant shares (the Angular
- * `DrawerBaseComponent`): the `open` state, controlled through `open` /
- * `onOpenChange` or kept internally from `defaultOpen`, and `close()`, which
- * hides the drawer and reports `onClosed`.
+ * The behaviour every drawer variant shares: the `open` state, controlled
+ * through `open` / `onOpenChange` or kept internally from `defaultOpen`, and
+ * `close()`, which hides the drawer and reports `onClosed`.
  */
 export function useDrawer({
   open: openProp,

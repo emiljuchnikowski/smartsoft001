@@ -51,11 +51,9 @@ const TOGGLE_BUTTON_CLASSES = [
 ];
 
 /**
- * The default searchbar (`<smart-searchbar-standard>`): a search input bound
- * to the hook's `control`, hidden on blur while empty. While hidden it
- * renders a magnifier button that shows it again when
- * `options.showToggleButton` is set. `className` goes on the input, as in
- * Angular.
+ * The default searchbar: a search input bound to the hook's `control`, hidden
+ * on blur while empty. While hidden it renders a magnifier button that shows it
+ * again when `options.showToggleButton` is set. `className` goes on the input.
  */
 export function SmartSearchbarStandard(props: SmartSearchbarProps) {
   const { options, className } = props;

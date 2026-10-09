@@ -5,8 +5,7 @@ import { SmartDetailFieldProps } from '../../detail.types';
 import { useDetailCellValue } from '../../use-detail';
 
 /**
- * Styled phone detail (preset, `DetailPhoneNumberPlPresetComponent`): the
- * `tel:` link as a soft blue badge.
+ * Styled phone detail (preset): the `tel:` link as a soft blue badge.
  */
 export function SmartDetailPhoneNumberPlPreset<T>(
   props: SmartDetailFieldProps<T>,

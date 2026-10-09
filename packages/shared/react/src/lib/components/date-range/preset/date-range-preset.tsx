@@ -48,8 +48,8 @@ function getWeeks(month: moment.Moment): moment.Moment[][] {
 
 /**
  * Styled date-range variation (preset) based on the Preline "single calendar
- * range" datepicker (`<smart-date-range-preset>`). Rendered by
- * `<SmartDateRange>` for `variant="preset"`, or usable directly.
+ * range" datepicker. Rendered by `<SmartDateRange>` for `variant="preset"`, or
+ * usable directly.
  *
  * The trigger opens a popover calendar: pick a start and an end day (the
  * range is highlighted), then apply or cancel.

@@ -34,7 +34,7 @@ class MockModelLabelProvider extends IModelLabelProvider {
 
 const LABELS = new MockModelLabelProvider();
 
-/** Stands in for the form body, as the Angular spec's stub form did. */
+/** Stands in for the form body. */
 const received: IFormOptions<unknown>[] = [];
 function StubForm({ options }: SmartFormBaseProps) {
   received.push(options);

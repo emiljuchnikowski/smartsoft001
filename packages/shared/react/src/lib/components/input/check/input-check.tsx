@@ -8,10 +8,9 @@ const LABEL_CLASSES =
   'smart:block smart:text-sm/6 smart:font-medium smart:text-gray-900 smart:dark:text-white';
 
 /**
- * `<smart-input-check>` (Angular `InputCheckComponent`): a fieldset with a
- * checkbox per possibility; the control holds the ids of the checked ones.
- * The (translated) texts are rendered as sanitised HTML. `className` goes on
- * the group of checkboxes.
+ * The `check` field: a fieldset with a checkbox per possibility; the control
+ * holds the ids of the checked ones. The (translated) texts are rendered as
+ * sanitised HTML. `className` goes on the group of checkboxes.
  */
 export function SmartInputCheck<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

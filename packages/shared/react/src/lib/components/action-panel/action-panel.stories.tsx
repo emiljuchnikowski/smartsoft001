@@ -113,10 +113,9 @@ export const Playground: Story = {
 };
 // #endregion
 
-// In Angular every panel renders inside its host element
-// (<smart-action-panel-preset>), and that element, not the panel card, is the
-// grid item, so the card keeps its natural height instead of stretching to the
-// row. This <div> plays the part of the host element.
+// Every panel is wrapped in a <div>, and that wrapper, not the panel card, is
+// the grid item, so the card keeps its natural height instead of stretching to
+// the row.
 const Host = ({ children }: { children: ReactNode }) => <div>{children}</div>;
 
 const panel = (

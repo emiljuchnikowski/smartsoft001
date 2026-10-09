@@ -8,11 +8,11 @@ import { useInputPossibilities } from '../base/use-input-possibilities';
 import { SmartInputFieldProps } from '../input.types';
 
 /**
- * The `possibilities` of the model field as a list, when they are an object
- * map `{ text: id }` (e.g. an enum): what the Angular radio and enum preset
- * fields fell back to when neither the provider nor the input options had any.
- * The field options of an array model are read through its first item. An
- * array (or nothing) yields `null`, as in Angular.
+ * The `possibilities` of the model field as a list, when they are an object map
+ * `{ text: id }` (e.g. an enum): what the radio and enum preset fields fall
+ * back to when neither the provider nor the input options have any. The field
+ * options of an array model are read through its first item. An array (or
+ * nothing) yields `null`.
  */
 export function getModelFieldPossibilitiesList(
   model: unknown,
@@ -40,10 +40,9 @@ export function getModelFieldPossibilitiesList(
 }
 
 /**
- * What both radio fields share (the Angular `InputRadioComponent` logic on
- * top of `InputPossibilitiesBaseComponent`): the input state, and the
- * possibilities of the provider or the input options, or else the object map
- * of the model field's `possibilities`.
+ * What both radio fields share: the input state, and the possibilities of the
+ * provider or the input options, or else the object map of the model field's
+ * `possibilities`.
  */
 export function useInputRadio<T>(props: SmartInputFieldProps<T>) {
   const input = useInput(props);

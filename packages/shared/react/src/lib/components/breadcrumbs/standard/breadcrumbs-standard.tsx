@@ -4,9 +4,9 @@ import { SmartBreadcrumbsProps } from '../breadcrumbs.types';
 import { useBreadcrumbs } from '../use-breadcrumbs';
 
 /**
- * The default breadcrumbs rendering (`<smart-breadcrumbs-standard>`):
- * semantic markup with `breadcrumbs-*` class hooks; items with `href` are
- * links, the others buttons reporting `onItemClick`.
+ * The default breadcrumbs rendering: semantic markup with `breadcrumbs-*` class
+ * hooks; items with `href` are links, the others buttons reporting
+ * `onItemClick`.
  */
 export function SmartBreadcrumbsStandard(props: SmartBreadcrumbsProps) {
   const { options, className } = props;

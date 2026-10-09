@@ -34,7 +34,7 @@ const NO_FIELDS: ListField[] = [];
  * The column keys of the list: the fields the user may see (list
  * `permissions`), with a `dynamic` field expanded into one
  * `__array.<key>.<index>.<headerKey>.<rowKey>` column per entry of the first
- * item (the Angular `ListBaseComponent.initKeys`).
+ * item.
  */
 function getListKeys(
   fields: ListField[],
@@ -78,8 +78,8 @@ function getListKeys(
 }
 
 /**
- * The `smartFileUrl` pipe for the image cells: the download URL of an
- * attachment (`{ id }`), `''` without a file service.
+ * The URL of an image cell: the download URL of an attachment (`{ id }`), `''`
+ * without a file service.
  */
 export function useListFileUrl(): (
   file: { id: any } | null | undefined,
@@ -92,7 +92,7 @@ export function useListFileUrl(): (
   );
 }
 
-/** `routingPrefix` + `id` as one path, the way the Angular router joined them. */
+/** `routingPrefix` + `id` as one path, with a single `/` between them. */
 function getItemUrl(routingPrefix: string, id: string): string {
   const prefix = routingPrefix.replace('//', '/');
 
@@ -100,10 +100,10 @@ function getItemUrl(routingPrefix: string, id: string): string {
 }
 
 /**
- * The behaviour every list mode shares (the Angular `ListBaseComponent`):
- * the column `keys` (permissions via `useAuthService()`, dynamic `__array`
- * columns), the provider `list` and `loading`, the `sort` options, the remove
- * flow (a confirm alert, then `remove.provider.invoke(id)`), item navigation
+ * The behaviour every list mode shares: the column `keys` (permissions via
+ * `useAuthService()`, dynamic `__array` columns), the provider `list` and
+ * `loading`, the `sort` options, the remove flow (a confirm alert, then
+ * `remove.provider.invoke(id)`), item navigation
  * (`useNavigation().navigate(routingPrefix + id)` or `item.options.select`),
  * the details provider (`select` / `unselect`, `detailsComponent` and its
  * props) and the pagination (`loadNextPage` / `loadPrevPage`,
@@ -130,7 +130,7 @@ export function useList<T extends IEntity<string>>({
   const providerList = provider?.list ?? null;
   const loading = provider?.loading;
 
-  // Ids hidden from the list (the Angular `removed` set).
+  // Ids hidden from the list (the removed items).
   const [removed] = useState(() => new Set<string>());
 
   const keys = useMemo(

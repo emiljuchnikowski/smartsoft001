@@ -15,6 +15,41 @@ class MockInjectedComponent extends SidebarLayoutBaseComponent {
   override cssClass = input<string>('');
 }
 
+@Component({
+  selector: 'smart-test-sidebar-layout-with-slot',
+  changeDetection: ChangeDetectionStrategy.Eager,
+  template: '<main class="custom-sidebar-layout"><ng-content /></main>',
+})
+class MockSlotComponent extends SidebarLayoutBaseComponent {
+  override cssClass = input<string>('');
+}
+
+const PROJECTION_HOST_TEMPLATE = `
+  <smart-sidebar-layout>Projected text</smart-sidebar-layout>
+`;
+
+@Component({
+  selector: 'smart-test-sidebar-layout-standard-host',
+  imports: [SidebarLayoutComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  template: PROJECTION_HOST_TEMPLATE,
+})
+class StandardHostComponent {}
+
+@Component({
+  selector: 'smart-test-sidebar-layout-host',
+  imports: [SidebarLayoutComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  providers: [
+    {
+      provide: SIDEBAR_LAYOUT_STANDARD_COMPONENT_TOKEN,
+      useValue: MockSlotComponent,
+    },
+  ],
+  template: PROJECTION_HOST_TEMPLATE,
+})
+class InjectedHostComponent {}
+
 describe('@smartsoft001/shared-angular: SidebarLayoutComponent', () => {
   describe('without token', () => {
     let fixture: ComponentFixture<SidebarLayoutComponent>;
@@ -85,6 +120,30 @@ describe('@smartsoft001/shared-angular: SidebarLayoutComponent', () => {
       );
 
       expect(standard).toBeNull();
+    });
+  });
+
+  describe('projected content', () => {
+    it('should render the projected content inside smart-sidebar-layout-standard', () => {
+      const fixture = TestBed.createComponent(StandardHostComponent);
+      fixture.detectChanges();
+
+      const slot = fixture.nativeElement.querySelector(
+        'smart-sidebar-layout-standard main',
+      );
+
+      expect(slot?.textContent.trim()).toBe('Projected text');
+    });
+
+    it('should render the projected content inside the implementation registered through SIDEBAR_LAYOUT_STANDARD_COMPONENT_TOKEN', () => {
+      const fixture = TestBed.createComponent(InjectedHostComponent);
+      fixture.detectChanges();
+
+      const slot = fixture.nativeElement.querySelector(
+        'main.custom-sidebar-layout',
+      );
+
+      expect(slot?.textContent.trim()).toBe('Projected text');
     });
   });
 });

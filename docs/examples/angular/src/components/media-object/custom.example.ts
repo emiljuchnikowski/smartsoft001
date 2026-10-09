@@ -37,10 +37,10 @@ import {
       />
 
       <!--
-        smart-media-object renders a custom implementation through
-        NgComponentOutlet, which does not forward projected content. Only
-        mediaUrl, mediaAlt, options and cssClass arrive here, so a custom media
-        object renders its own body instead of relying on ng-content.
+        smart-media-object passes mediaUrl, mediaAlt, options and cssClass to a
+        custom implementation, and its projected content to the
+        implementation's default ng-content. This one renders a fixed body, so
+        it declares no ng-content.
       -->
       <div class="docs-media-object__body">
         <h3 class="docs-media-object__title">Lindsay Walton</h3>

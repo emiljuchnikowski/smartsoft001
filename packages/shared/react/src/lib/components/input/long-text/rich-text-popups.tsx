@@ -50,9 +50,9 @@ export interface SmartRichTextLink {
 }
 
 /**
- * The link popup of the menu (the `ngx-link` form): URL, text (the selected
- * text, locked, when there is one) and whether the link opens in a new tab.
- * Not a `<form>`: the field usually sits in one.
+ * The link popup of the menu: URL, text (the selected text, locked, when there
+ * is one) and whether the link opens in a new tab. Not a `<form>`: the field
+ * usually sits in one.
  */
 export function SmartRichTextLinkPopup({
   selectedText,
@@ -146,8 +146,7 @@ export interface SmartRichTextImage {
 }
 
 /**
- * The image popup of the menu (the `ngx-image` form): the image URL, its
- * alternative text and title.
+ * The image popup of the menu: the image URL, its alternative text and title.
  */
 export function SmartRichTextImagePopup({
   onInsert,
@@ -229,7 +228,7 @@ export function SmartRichTextImagePopup({
   );
 }
 
-/** Black or white, whichever reads better on `hex` (as `ngx-editor`). */
+/** Black or white, whichever reads better on `hex`. */
 export function getContrastYIQ(hex: string): 'black' | 'white' {
   const color = hex.replace('#', '');
   const r = parseInt(color.substring(0, 2), 16);
@@ -252,9 +251,8 @@ const COLOR_ROWS = RICH_TEXT_COLOR_PRESETS.reduce<string[][]>(
 );
 
 /**
- * The colour popup of the menu (the `ngx-color-picker` of `ngx-editor`): the
- * presets in rows of 8, the colour of the selection checked, and a button
- * removing that colour.
+ * The colour popup of the menu: the presets in rows of 8, the colour of the
+ * selection checked, and a button removing that colour.
  */
 export function SmartRichTextColorPopup({
   kind,

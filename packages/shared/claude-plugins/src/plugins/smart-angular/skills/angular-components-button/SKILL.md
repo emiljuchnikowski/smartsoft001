@@ -38,7 +38,7 @@ providers: [
 ];
 ```
 
-Because `ButtonComponent` renders the injected component via `NgComponentOutlet`, inputs are passed by **canonical name** — `ButtonPresetComponent` therefore overrides `cssClass` as a plain `input<string>('')` (dropping the inherited `class` alias). Note that `NgComponentOutlet` does not project `<ng-content>`, so a button label set via content only shows when the preset is used directly through `<smart-button-preset>` (not through the token path).
+Because `ButtonComponent` renders the injected component via `NgComponentOutlet`, inputs are passed by **canonical name** — `ButtonPresetComponent` therefore overrides `cssClass` as a plain `input<string>('')` (dropping the inherited `class` alias). The wrapper passes its projected content (the label) to the injected component's `<ng-content>`, so the label shows through the token path as well as with `<smart-button-preset>` used directly.
 
 ### ButtonBaseComponent (abstract)
 

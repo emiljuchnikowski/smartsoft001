@@ -3,11 +3,10 @@ import { useCallback, useState } from 'react';
 import { SmartTextareaProps } from './textarea.types';
 
 /**
- * The behaviour every textarea variant shares (the Angular
- * `TextareaBaseComponent` and the handlers its variants repeat): the `value`,
- * controlled through `value` / `onValueChange` or kept internally from
- * `defaultValue`, and `actionClick()`, which reports an action with the
- * current text unless `disabled`.
+ * The behaviour every textarea variant shares: the `value`, controlled through
+ * `value` / `onValueChange` or kept internally from `defaultValue`, and
+ * `actionClick()`, which reports an action with the current text unless
+ * `disabled`.
  */
 export function useTextarea({
   value: valueProp,

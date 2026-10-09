@@ -5,11 +5,10 @@ import { SmartCrudGroupProps } from './group.types';
 import { useCrudGroup } from './use-crud-group';
 
 /**
- * `<smart-crud-group>`: the list grouped by `groups` (the Angular
- * `GroupComponent`), each group an accessible disclosure — a button with
- * `aria-expanded` / `aria-controls` and its region. An open group shows the
- * list with `listOptions`, or its `children` groups. Render it inside
- * `<CrudProvider>`.
+ * The list grouped by `groups`, each group an accessible disclosure — a
+ * button with `aria-expanded` / `aria-controls` and its region. An open group
+ * shows the list with `listOptions`, or its `children` groups. Render it
+ * inside `<CrudProvider>`.
  */
 export function SmartCrudGroup<T extends IEntity<string>>(
   props: SmartCrudGroupProps<T>,

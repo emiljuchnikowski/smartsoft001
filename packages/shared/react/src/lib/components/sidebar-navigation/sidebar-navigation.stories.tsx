@@ -65,7 +65,7 @@ const meta: Meta<SidebarNavigationArgs> = {
       control: 'select',
       options: LAYOUTS,
       description:
-        'Layout hint for implementations registered through SIDEBAR_NAVIGATION_STANDARD_COMPONENT_TOKEN; ignored by the standard component.',
+        "Layout hint for implementations registered as components['sidebar-navigation']; ignored by the standard component.",
     },
     ariaLabel: {
       control: 'text',

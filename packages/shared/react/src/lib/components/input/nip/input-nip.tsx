@@ -38,10 +38,9 @@ const INPUT_CLASSES = [
 ].join(' ');
 
 /**
- * The `nip` field (the Angular `InputNipComponent`, `<smart-input-nip>`):
- * the model label and a text input bound to the control, which also gets the
- * NIP check (`invalidNip`, see {@link useInputNip}). `className` is appended
- * to the input's classes.
+ * The `nip` field: the model label and a text input bound to the control, which
+ * also gets the NIP check (`invalidNip`, see {@link useInputNip}). `className`
+ * is appended to the input's classes.
  */
 export function SmartInputNip<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

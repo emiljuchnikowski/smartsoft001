@@ -17,8 +17,7 @@ const CHIP_CLASSES = [
 ].join(' ');
 
 /**
- * Styled date range detail (preset, `DetailDateRangePresetComponent`): the
- * start and the end as two chips.
+ * Styled date range detail (preset): the start and the end as two chips.
  */
 export function SmartDetailDateRangePreset<T>(props: SmartDetailFieldProps<T>) {
   const { className } = props;

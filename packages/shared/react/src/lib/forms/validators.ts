@@ -20,14 +20,15 @@ function hasValidLength(value: unknown): value is { length: number } {
   );
 }
 
-// The same pattern Angular's `Validators.email` uses (WHATWG, with a length cap).
+// The WHATWG email pattern, capped at 254 characters in all and 64 before `@`.
 const EMAIL_REGEXP =
   /^(?=.{1,254}$)(?=.{1,64}@)[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
 /**
- * The built-in validators, with the error keys and payloads of Angular's
- * `Validators`, so error messages and custom validator providers written for
- * the Angular library read the same errors here.
+ * The built-in validators. Their error keys and payloads (`required`,
+ * `min: { min, actual }`, `minlength: { requiredLength, actualLength }`, ...)
+ * are what the input error messages read, so a custom validator that reports
+ * the same keys gets the same messages.
  */
 export class SmartValidators {
   static required(control: SmartAbstractControl): SmartValidationErrors | null {
@@ -134,9 +135,9 @@ export class SmartValidators {
 
 /**
  * True when the control's validators report `required` for an empty value.
- * This is how the Angular inputs decide whether to draw the asterisk: they
- * call the composed validator with an empty control, which also catches a
- * required rule added by a custom validators provider.
+ * The inputs use it to decide whether to draw the asterisk: it calls the
+ * composed validator with an empty control, which also catches a required
+ * rule added by a custom validators provider.
  */
 export function isControlRequired(
   control: SmartAbstractControl | null | undefined,

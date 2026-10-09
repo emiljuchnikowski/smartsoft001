@@ -3,10 +3,9 @@ import { useCallback, useState } from 'react';
 import { SmartToggleProps } from './toggle.types';
 
 /**
- * The behaviour every toggle variant shares (the Angular
- * `ToggleBaseComponent`): the `value`, controlled through `value` /
- * `onValueChange` or kept internally from `defaultValue`, and `toggle()`,
- * which flips it unless `disabled`.
+ * The behaviour every toggle variant shares: the `value`, controlled through
+ * `value` / `onValueChange` or kept internally from `defaultValue`, and
+ * `toggle()`, which flips it unless `disabled`.
  */
 export function useToggle({
   value: valueProp,

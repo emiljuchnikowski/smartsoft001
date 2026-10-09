@@ -36,11 +36,10 @@ const SELECT_CLASSES = [
 ];
 
 /**
- * Styled enum field (preset, Angular `InputEnumPresetComponent`): a Preline
- * select with one option per possibility (from the provider, the input
- * options, or the object map of the model field's `possibilities`); the
- * control holds the chosen possibility's `id`, of any type. As with
- * Angular's `ngValue`, no option is selected while the value matches none.
+ * Styled enum field (preset): a Preline select with one option per possibility
+ * (from the provider, the input options, or the object map of the model field's
+ * `possibilities`); the control holds the chosen possibility's `id`, of any
+ * type. No option is selected while the value matches none.
  */
 export function SmartInputEnumPreset<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

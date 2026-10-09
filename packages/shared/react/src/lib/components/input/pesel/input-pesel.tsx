@@ -38,11 +38,9 @@ const INPUT_CLASSES = [
 ].join(' ');
 
 /**
- * The `pesel` field (the Angular `InputPeselComponent`,
- * `<smart-input-pesel>`): the model label and a text input bound to the
- * control. Like the Angular one it does not check the PESEL; only
- * {@link SmartInputPeselPreset} does. `className` is appended to the input's
- * classes.
+ * The `pesel` field: the model label and a text input bound to the control. It
+ * does not check the PESEL; only {@link SmartInputPeselPreset} does.
+ * `className` is appended to the input's classes.
  */
 export function SmartInputPesel<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

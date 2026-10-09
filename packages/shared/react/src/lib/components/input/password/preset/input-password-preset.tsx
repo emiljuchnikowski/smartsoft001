@@ -122,18 +122,16 @@ function getRuleClasses(passed: boolean): string {
 }
 
 /**
- * Styled `password` field (preset, the Angular
- * `InputPasswordPresetComponent`): the Preline "Strong Password" look. With
+ * Styled `password` field (preset): the Preline "Strong Password" look. With
  * `fieldOptions.possibilities.strength` it renders a five-bar meter under the
  * input and, while the input has focus, the level and the rules the password
  * meets (at least 6 characters, a lowercase letter, an uppercase letter, a
  * number, a special character). Until all five pass the control has the
  * `passwordStrength` error (see {@link useInputPassword}).
  *
- * The texts are English literals, as in Angular. The rating follows the
- * control's value, so it also follows a value set from code (Angular only
- * re-rated on typing). A `<key>Confirm` control renders through it the same
- * way as through {@link SmartInputPassword}. Register it as
+ * The texts are English literals. The rating follows the control's value, so it
+ * also follows a value set from code. A `<key>Confirm` control renders through
+ * it the same way as through {@link SmartInputPassword}. Register it as
  * `inputFieldComponents[FieldType.password]` on `SmartProvider`.
  */
 export function SmartInputPasswordPreset<T>(props: SmartInputFieldProps<T>) {

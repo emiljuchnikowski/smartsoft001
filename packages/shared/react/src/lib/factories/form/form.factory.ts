@@ -56,8 +56,7 @@ interface EnabledDefinition {
 
 /**
  * Builds a form from a `@Model` instance: one control per `@Field` the mode
- * includes, with the validators its options call for. The port keeps every
- * rule of the Angular `FormFactory`:
+ * includes, with the validators its options call for. The rules:
  *
  * - the mode picks the fields (`create`, `update`, `multiUpdate` for fields
  *   with `update.multi`, or a custom mode listed in `customs`) and merges the
@@ -108,8 +107,8 @@ export class FormFactory {
     const evaluators: Array<() => void> = [];
     const result = await this.build(obj, ops, evaluators);
 
-    // The Angular factory only evaluated `enabled` once the form emitted its
-    // first change. Running it here gives the form its final shape before
+    // Evaluate every `enabled` specification once now, rather than waiting
+    // for the form's first change, so the form has its final shape before
     // anything renders it, nested groups included.
     if (!ops.root) evaluators.forEach((evaluate) => evaluate());
 
@@ -220,8 +219,8 @@ export class FormFactory {
           (c) => (c.value !== original.value ? { confirm: true } : null),
         ]);
 
-        // The Angular confirm control only re-checked itself when it changed,
-        // so editing the original field afterwards left a stale result.
+        // Re-check the confirmation whenever the original field changes too,
+        // or editing it after the confirmation would leave a stale result.
         original.valueChanges.subscribe(() =>
           confirmControl.updateValueAndValidity(),
         );

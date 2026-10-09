@@ -48,9 +48,9 @@ const meta: Meta<MediaObjectArgs> = {
   tags: ['autodocs'],
   decorators: [
     moduleMetadata({
-      // MediaObjectPresetComponent is used through its own selector because
-      // <smart-media-object> dispatches through NgComponentOutlet once the
-      // token is registered, which drops the projected body.
+      // The stories render MediaObjectPresetComponent through its own
+      // selector; the token registration makes every <smart-media-object>
+      // render it too, projected body included.
       imports: [MediaObjectComponent, MediaObjectPresetComponent],
       providers: [
         {

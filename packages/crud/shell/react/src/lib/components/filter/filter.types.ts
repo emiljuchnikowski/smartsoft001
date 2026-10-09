@@ -2,10 +2,7 @@ import { IModelFilter } from '@smartsoft001/models';
 
 import { ICrudFilter } from '../../models';
 
-/**
- * The props of `SmartCrudFilter` and of every filter field (the inputs of the
- * Angular filter `BaseComponent`).
- */
+/** The props of `SmartCrudFilter` and of every filter field. */
 export interface SmartCrudFilterProps {
   /** The filter definition of the model (`IModelOptions.filters` item). */
   item?: IModelFilter;

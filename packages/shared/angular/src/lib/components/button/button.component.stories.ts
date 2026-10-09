@@ -37,9 +37,9 @@ const meta: Meta<ButtonArgs> = {
   tags: ['autodocs'],
   decorators: [
     moduleMetadata({
-      // ButtonPresetComponent is rendered directly (via its own selector) so
-      // the projected text label is visible; the token registration mirrors how
-      // the preset becomes the drop-in replacement for every <smart-button>.
+      // The stories render ButtonPresetComponent through its own selector; the
+      // token registration mirrors how the preset becomes the drop-in
+      // replacement for every <smart-button>, projected label included.
       imports: [
         ButtonComponent,
         ButtonPresetComponent,

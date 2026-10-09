@@ -6,8 +6,8 @@ import { useCrudFilter, useCrudFilterControl } from '../base/use-crud-filter';
 import { SmartCrudFilterProps } from '../filter.types';
 
 /**
- * `<smart-crud-filter-text>` (Angular `FilterTextComponent`): the shared text
- * field bound to the item's value, and a clear button while it has one.
+ * The text filter: the shared text field bound to the item's value, and a
+ * clear button while it has one.
  * Typing reads the list 500 ms after the last change.
  */
 export function SmartCrudFilterText(props: SmartCrudFilterProps) {

@@ -66,7 +66,7 @@ function toItemOfType<T>(item: T | null | undefined, type: any) {
 }
 
 /**
- * The logic every details variant shares (the Angular `DetailsBaseComponent`):
+ * The logic every details variant shares:
  *
  * - `fields`: the fields of `options.type` marked `@Field({ details })`,
  *   without those whose `details.permissions` the user lacks and those whose

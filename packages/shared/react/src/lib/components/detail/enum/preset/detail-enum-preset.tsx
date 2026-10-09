@@ -5,8 +5,7 @@ import { SmartDetailFieldProps } from '../../detail.types';
 import { useDetailEnum } from '../use-detail-enum';
 
 /**
- * Styled enum detail (preset, `DetailEnumPresetComponent`): a soft blue
- * badge per translated value.
+ * Styled enum detail (preset): a soft blue badge per translated value.
  */
 export function SmartDetailEnumPreset<T>(props: SmartDetailFieldProps<T>) {
   const { className } = props;

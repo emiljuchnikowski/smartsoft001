@@ -91,8 +91,9 @@ git-ignored, so the work is in the sources the generator reads.
 - [ ] **3. Optional, the extending example** — when the skill has an "Extending the Base Class" section,
       add `docs/examples/angular/src/components/<name>/custom.example.ts` (+ spec) and the generator
       replaces the skill's snippet with it. Register the custom class through
-      `<NAME>_STANDARD_COMPONENT_TOKEN` in a host component and assert through the wrapper; outputs and
-      projected content do not cross `NgComponentOutlet`, so assert those on the custom instance.
+      `<NAME>_STANDARD_COMPONENT_TOKEN` in a host component and assert through the wrapper: it re-emits
+      its own outputs from the custom instance (`forwardOutletOutputs`) and passes its projected content
+      to the custom instance's default `<ng-content>` (`outletContent`).
 - [ ] **4. Generate and look at the result** — `npx nx run docs:generate-components`, then read
       `docs/site/src/app/docs/components/<name>/page.md`. The generator prints every code fence it dropped
       from the skill; a fence that carried real information belongs in an example, not in prose.

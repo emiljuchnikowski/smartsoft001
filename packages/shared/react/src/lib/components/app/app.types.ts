@@ -4,7 +4,7 @@ import { IAppOptions } from '../../models';
 
 export interface SmartAppProps {
   options: IAppOptions;
-  /** Classes of the root element (the Angular component's host). */
+  /** Classes of the root element. */
   className?: string;
   children?: ReactNode;
 }

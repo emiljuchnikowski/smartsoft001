@@ -78,8 +78,7 @@ const buildOptions = (
   mode: 'create' | 'update' = 'create',
 ): IFormOptions<any> => ({ model: MODELS[model](), mode }) as IFormOptions<any>;
 
-// Keeps the validators the form factory derives from the field options (the
-// Angular story provides it because Angular has no library-side default).
+// Keeps the validators the form factory derives from the field options.
 const MODEL_VALIDATORS_PROVIDER: IModelValidatorsProvider = {
   get: (options: IModelValidatorsOptions) =>
     Promise.resolve(options.base ?? {}),

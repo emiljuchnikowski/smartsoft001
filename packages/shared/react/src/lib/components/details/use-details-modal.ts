@@ -3,7 +3,7 @@ import type { ComponentType } from 'react';
 
 import { useModalService } from '../../providers/hooks';
 
-/** The `[smartDetails]` input of the Angular `DetailsDirective`. */
+/** What `useDetailsModal` opens: a component and its params. */
 export interface IDetailsModalOptions {
   /** Rendered in the modal, with `params` as its `value` prop. */
   component: ComponentType<any>;
@@ -12,18 +12,17 @@ export interface IDetailsModalOptions {
   mode?: 'bottom' | 'default';
 }
 
-/** The outputs of the Angular `DetailsDirective`. */
+/** The callbacks of `useDetailsModal`. */
 export interface UseDetailsModalCallbacks {
-  /** Once the modal is open (`smartDetailsShowed`). */
+  /** Once the modal is open. */
   onShowed?: () => void;
-  /** Once the modal is closed (`smartDetailsDismissed`). */
+  /** Once the modal is closed. */
   onDismissed?: () => void;
 }
 
 /**
- * The Angular `DetailsDirective` (`[smartDetails]`) as a hook: returns a
- * handler for the element's `onClick` that opens `options.component` in a
- * modal with `{ value: options.params }` as props (e.g. `SmartDetailsPage`
+ * Returns a handler for an element's `onClick` that opens `options.component`
+ * in a modal with `{ value: options.params }` as props (e.g. `SmartDetailsPage`
  * with `IDetailsOptions`), and resolves once the modal is closed.
  *
  * Without `options` or `options.component` it does nothing.

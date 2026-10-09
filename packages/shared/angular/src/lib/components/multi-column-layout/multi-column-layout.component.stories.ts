@@ -22,10 +22,10 @@ const meta: Meta<MultiColumnLayoutArgs> = {
   tags: ['autodocs'],
   decorators: [
     moduleMetadata({
-      // MultiColumnLayoutPresetComponent is used through its own selector
-      // because <smart-multi-column-layout> dispatches through
-      // NgComponentOutlet once the token is registered, which drops the
-      // projected main content.
+      // The stories render MultiColumnLayoutPresetComponent through its own
+      // selector; the token registration makes every
+      // <smart-multi-column-layout> render it too, projected main content
+      // included.
       imports: [MultiColumnLayoutComponent, MultiColumnLayoutPresetComponent],
       providers: [
         {

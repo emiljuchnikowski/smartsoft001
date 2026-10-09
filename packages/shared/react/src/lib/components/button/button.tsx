@@ -3,9 +3,8 @@ import { SmartButtonStandard } from './standard/button-standard';
 import { useSmartComponent } from '../../providers/hooks';
 
 /**
- * `<smart-button>`: renders the implementation registered as
- * `components.button` on `SmartProvider` (the Angular
- * `BUTTON_STANDARD_COMPONENT_TOKEN`), `SmartButtonStandard` by default.
+ * Renders the implementation registered as `components.button` on
+ * `SmartProvider`, `SmartButtonStandard` by default.
  */
 export function SmartButton(props: SmartButtonProps) {
   const Component = useSmartComponent('button', SmartButtonStandard);

@@ -46,12 +46,11 @@ const PLACEHOLDER_CLASSES = [
 ].join(' ');
 
 /**
- * Styled `logo` field (preset, the Angular `InputLogoPresetComponent`).
- * Unlike {@link SmartInputLogo} it uploads the picked `.jpg,.png,.jpeg` file
- * like the image field ({@link useInputImage}) and shows it as a circular
- * avatar (a person placeholder without a value), with add / change / delete
- * buttons and the upload progress. `className` is appended to the group's
- * classes.
+ * Styled `logo` field (preset). Unlike {@link SmartInputLogo} it uploads the
+ * picked `.jpg,.png,.jpeg` file like the image field ({@link useInputImage})
+ * and shows it as a circular avatar (a person placeholder without a value),
+ * with add / change / delete buttons and the upload progress. `className` is
+ * appended to the group's classes.
  */
 export function SmartInputLogoPreset<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

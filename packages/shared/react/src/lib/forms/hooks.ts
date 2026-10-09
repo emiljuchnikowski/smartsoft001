@@ -76,7 +76,7 @@ export function useControlState<TValue = any>(
 
   return useMemo(
     () => (control ? snapshot(control) : null),
-    // `version` is the change signal: the control is mutable.
+    // `version` moves on every change; the control itself is mutable.
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [control, version],
   );
@@ -92,9 +92,8 @@ export interface SmartControlBinding<
 }
 
 /**
- * Binds an input element to a control the way Angular's `formControl`
- * directive does: a change sets the value and marks the control dirty, a blur
- * marks it touched.
+ * Binds an input element to a control: a change sets the value and marks the
+ * control dirty, a blur marks it touched.
  */
 export function useControlBinding<TValue = any>(
   control: SmartAbstractControl<TValue>,
@@ -102,8 +101,8 @@ export function useControlBinding<TValue = any>(
   const state = useControlState(control);
   const onChange = useCallback(
     (value: TValue) => {
-      // Dirty first, as Angular's `formControl` directive does, so listeners
-      // of the value change already see the control as edited.
+      // Dirty first, so listeners of the value change already see the
+      // control as edited.
       control.markAsDirty();
       control.setValue(value);
     },

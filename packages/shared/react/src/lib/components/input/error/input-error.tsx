@@ -9,7 +9,7 @@ export interface SmartInputErrorProps {
 const ERROR_CLASSES =
   'smart:block smart:text-sm smart:text-red-600 smart:dark:text-red-400 smart:mt-1';
 
-/** `<smart-input-error>`: the messages of a field's validation errors. */
+/** The messages of a field's validation errors. */
 export function SmartInputError({ errors }: SmartInputErrorProps) {
   const t = useTranslate();
 

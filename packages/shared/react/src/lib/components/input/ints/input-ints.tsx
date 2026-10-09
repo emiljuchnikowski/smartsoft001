@@ -15,9 +15,8 @@ const REMOVE_CLASSES =
   'smart:rounded-md smart:bg-red-600 smart:px-2 smart:py-1 smart:text-xs smart:font-semibold smart:text-white smart:hover:bg-red-500';
 
 /**
- * The list of integers field (`<smart-input-ints>`, Angular
- * `InputIntsComponent`): a number input per value with a `×` button to remove
- * it, and a trailing input to add one (see `useInputInts`).
+ * The list of integers field: a number input per value with a `×` button to
+ * remove it, and a trailing input to add one (see `useInputInts`).
  */
 export function SmartInputInts<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

@@ -1,7 +1,7 @@
 import { SmartStackedLayoutProps } from '../stacked-layout.types';
 
 /**
- * Barebones native-HTML stacked layout (`<smart-stacked-layout-standard>`).
+ * Barebones native-HTML stacked layout.
  *
  * Renders `options.navTpl` in a `<header><nav>`, then `options.headerTpl` —
  * or, without it, `options.title` as `<header><h1 data-role="title">` — and

@@ -3,10 +3,9 @@ import { useCallback, useState } from 'react';
 import { SmartButtonGroupProps } from './button-group.types';
 
 /**
- * The behaviour every button group variant shares (the Angular
- * `ButtonGroupBaseComponent`): the selected button id, controlled through
- * `selected` / `onSelectedChange` or kept internally, and `select(id)`, which
- * selects a button and emits `onButtonClick`.
+ * The behaviour every button group variant shares: the selected button id,
+ * controlled through `selected` / `onSelectedChange` or kept internally, and
+ * `select(id)`, which selects a button and emits `onButtonClick`.
  */
 export function useButtonGroup({
   selected: controlledSelected,

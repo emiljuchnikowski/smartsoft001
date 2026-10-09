@@ -7,9 +7,8 @@ const LABEL_CLASSES =
   'smart:block smart:text-sm/6 smart:font-medium smart:text-gray-900 smart:dark:text-white';
 
 /**
- * `<smart-input-radio>` (Angular `InputRadioComponent`): a fieldset with one
- * radio per possibility, bound to the control by the possibility's `id`.
- * `className` goes on the group of radios.
+ * The `radio` field: a fieldset with one radio per possibility, bound to the
+ * control by the possibility's `id`. `className` goes on the group of radios.
  */
 export function SmartInputRadio<T>(props: SmartInputFieldProps<T>) {
   const { className } = props;

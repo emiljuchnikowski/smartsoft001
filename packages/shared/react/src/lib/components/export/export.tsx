@@ -6,12 +6,11 @@ import { IButtonOptions } from '../../models';
 import { SmartButton } from '../button/button';
 
 /**
- * `<smart-export>`: a download-icon `SmartButton` that calls
- * `handler(value, fileName)`. Disabled while `value` is empty.
+ * A download-icon `SmartButton` that calls `handler(value, fileName)`. Disabled
+ * while `value` is empty.
  *
- * `className` goes on the button (the Angular `cssClass` input) and on a
- * `<span>` around it that stands in for the `<smart-export>` host element,
- * where Angular also put a `class` written on the tag.
+ * `className` goes on the button and on a `<span>` around it, so it also styles
+ * the box around the button.
  */
 export function SmartExport(props: SmartExportProps) {
   const { value, className } = props;

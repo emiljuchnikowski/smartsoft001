@@ -17,7 +17,7 @@ The `<smart-list-container>` component is a presentational layout wrapper that g
 
 ### ListContainerComponent (`<smart-list-container>`)
 
-Main wrapper component. Renders `ListContainerStandardComponent` by default. When `LIST_CONTAINER_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`. Supports content projection through `<ng-content />` in the default branch, so children placed inside `<smart-list-container>` are rendered inside the standard list container.
+Main wrapper component. Renders `ListContainerStandardComponent` by default. When `LIST_CONTAINER_STANDARD_COMPONENT_TOKEN` is provided, renders the injected component via `NgComponentOutlet`. Children placed inside `<smart-list-container>` are projected into the standard list container or, when the token is provided, into the injected component's default `<ng-content />`.
 
 ### ListContainerStandardComponent (`<smart-list-container-standard>`)
 

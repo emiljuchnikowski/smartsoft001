@@ -10,9 +10,8 @@ import { SmartListModeProps } from '../list.types';
 import { useList } from '../use-list';
 
 /**
- * The mobile list (the Angular `<smart-list-mobile>`, `ListMobileComponent`):
- * a stacked list with one paragraph per cell and the remove / item buttons,
- * the `top` component factory above it and the paging below it
+ * The mobile list: a stacked list with one paragraph per cell and the remove /
+ * item buttons, the `top` component factory above it and the paging below it
  * (`PaginationMode.singlePage`).
  */
 export function SmartListMobile<T extends IEntity<string>>(
