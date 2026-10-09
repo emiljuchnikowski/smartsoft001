@@ -157,6 +157,23 @@ describe('@smartsoft001/shared-angular: InputErrorPresetComponent', () => {
     expect(text).toContain('INPUT.ERRORS.invalidPeselFormat');
   });
 
+  it('should render one INPUT.ERRORS.invalidPeselFormat message for the pesel preset invalidPesel error', () => {
+    // Arrange
+    host.errors = { pesel: true, invalidPesel: true };
+
+    // Act
+    fixture.detectChanges();
+
+    // Assert
+    const messages = (fixture.nativeElement as HTMLElement).querySelectorAll(
+      '[data-role="error-message"]',
+    );
+    expect(messages).toHaveLength(1);
+    expect(messages[0].textContent).toContain(
+      'INPUT.ERRORS.invalidPeselFormat',
+    );
+  });
+
   it('should render INPUT.ERRORS.invalidMinLength with requiredLength when errors.minlength is set', () => {
     host.errors = { minlength: { requiredLength: 5 } };
     fixture.detectChanges();

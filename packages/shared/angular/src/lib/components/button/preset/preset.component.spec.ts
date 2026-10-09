@@ -181,7 +181,7 @@ describe('@smartsoft001/shared-angular: ButtonPresetComponent', () => {
     expect(button().disabled).toBe(true);
   });
 
-  it('should apply cssClass on the button (canonical name for NgComponentOutlet)', () => {
+  it('should apply cssClass on the button', () => {
     fixture.componentRef.setInput('cssClass', 'my-extra-class');
     fixture.detectChanges();
 

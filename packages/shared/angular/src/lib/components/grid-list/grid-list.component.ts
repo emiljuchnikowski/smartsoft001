@@ -11,6 +11,7 @@ import {
 import { GridListStandardComponent } from './standard';
 import { IGridListOptions } from '../../models';
 import { GRID_LIST_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { outletInputs } from '../base/outlet-inputs';
 
 @Component({
   selector: 'smart-grid-list',
@@ -38,8 +39,10 @@ export class GridListComponent {
 
   componentType = computed(() => this.injectedComponent ?? null);
 
-  componentInputs = computed(() => ({
-    options: this.options(),
-    cssClass: this.cssClass(),
-  }));
+  componentInputs = computed(() =>
+    outletInputs(this.componentType(), {
+      options: this.options(),
+      cssClass: this.cssClass(),
+    }),
+  );
 }

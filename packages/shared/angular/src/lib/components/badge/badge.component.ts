@@ -14,6 +14,7 @@ import { BadgeStandardComponent } from './standard/standard.component';
 import { IBadgeOptions, SmartBadgeColor } from '../../models';
 import { BADGE_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
+import { outletInputs } from '../base/outlet-inputs';
 
 @Component({
   selector: 'smart-badge',
@@ -53,13 +54,15 @@ export class BadgeComponent {
 
   componentType = computed(() => this.injectedComponent ?? null);
 
-  componentInputs = computed(() => ({
-    text: this.text(),
-    color: this.color(),
-    size: this.size(),
-    options: this.options(),
-    cssClass: this.cssClass(),
-  }));
+  componentInputs = computed(() =>
+    outletInputs(this.componentType(), {
+      text: this.text(),
+      color: this.color(),
+      size: this.size(),
+      options: this.options(),
+      cssClass: this.cssClass(),
+    }),
+  );
 
   private readonly outlet = viewChild(NgComponentOutlet);
 

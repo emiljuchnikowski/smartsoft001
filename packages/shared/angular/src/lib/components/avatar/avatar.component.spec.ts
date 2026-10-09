@@ -1,4 +1,4 @@
-import { Component, input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AvatarComponent } from './avatar.component';
@@ -10,10 +10,7 @@ import { AVATAR_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
   changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="injected-avatar">injected</div>',
 })
-class MockInjectedComponent extends AvatarBaseComponent {
-  // NgComponentOutlet passes 'cssClass' (not aliased 'class') so declare it explicitly
-  override cssClass = input<string>('');
-}
+class MockInjectedComponent extends AvatarBaseComponent {}
 
 describe('@smartsoft001/shared-angular: AvatarComponent', () => {
   describe('without token', () => {

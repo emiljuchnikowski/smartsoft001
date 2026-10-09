@@ -18,6 +18,7 @@ import { SidebarNavigationStandardComponent } from './standard';
 import { ISidebarNavOptions } from '../../models';
 import { SIDEBAR_NAVIGATION_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
+import { outletInputs } from '../base/outlet-inputs';
 
 @Component({
   selector: 'smart-sidebar-navigation',
@@ -56,10 +57,12 @@ export class SidebarNavigationComponent {
 
   componentType = computed(() => this.injectedComponent ?? null);
 
-  componentInputs = computed(() => ({
-    options: this.options(),
-    cssClass: this.cssClass(),
-  }));
+  componentInputs = computed(() =>
+    outletInputs(this.componentType(), {
+      options: this.options(),
+      cssClass: this.cssClass(),
+    }),
+  );
 
   private readonly outlet = viewChild(NgComponentOutlet);
 

@@ -44,9 +44,10 @@ import { NavbarBaseComponent } from '../base';
   imports: [NgTemplateOutlet],
 })
 export class NavbarPresetComponent extends NavbarBaseComponent {
-  // NgComponentOutlet (used by NavbarComponent when this is registered through
-  // NAVBAR_STANDARD_COMPONENT_TOKEN) passes inputs by canonical name, so the
-  // inherited `class` alias must be dropped for `cssClass` to bind.
+  // Declared without the inherited `class` alias. <smart-navbar> resolves its
+  // inputs to the names this component declares (outletInputs), so the class
+  // passed to the wrapper still lands here; used directly, the preset takes the
+  // extra classes as `[cssClass]`.
   override cssClass = input<string>('');
 
   // Static template constants exposed to the view.

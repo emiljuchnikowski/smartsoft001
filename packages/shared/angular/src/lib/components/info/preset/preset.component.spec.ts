@@ -143,7 +143,7 @@ describe('@smartsoft001/shared-angular: InfoPresetComponent', () => {
     expect(button().getAttribute('aria-describedby')).toBeNull();
   });
 
-  it('should apply cssClass on the container (canonical name for NgComponentOutlet)', () => {
+  it('should apply cssClass on the container (declared without the class alias)', () => {
     fixture.componentRef.setInput('cssClass', 'my-extra-class');
     fixture.detectChanges();
 

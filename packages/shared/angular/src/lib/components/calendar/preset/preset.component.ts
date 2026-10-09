@@ -44,9 +44,9 @@ const WEEKDAY_LABELS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
   imports: [NgTemplateOutlet],
 })
 export class CalendarPresetComponent extends CalendarBaseComponent {
-  // NgComponentOutlet (used by CalendarComponent when this is registered through
-  // CALENDAR_STANDARD_COMPONENT_TOKEN) passes inputs by canonical name, so the
-  // inherited `class` alias must be dropped for `cssClass` to bind.
+  // Redeclared without an alias so `[cssClass]` also binds when the preset is
+  // used directly; the inherited `class` alias keeps working, and the wrapper
+  // reaches either name through outletInputs().
   override cssClass = input<string>('');
 
   protected readonly containerClass = CALENDAR_PRESET_CONTAINER;

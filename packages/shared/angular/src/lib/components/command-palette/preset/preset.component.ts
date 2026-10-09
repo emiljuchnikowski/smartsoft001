@@ -49,9 +49,9 @@ interface ICommandGroup {
   imports: [NgTemplateOutlet],
 })
 export class CommandPalettePresetComponent extends CommandPaletteStandardComponent {
-  // NgComponentOutlet (used by CommandPaletteComponent when this preset is
-  // registered through the token) passes inputs by canonical name, so the
-  // inherited `class` alias must be dropped for `cssClass` to bind.
+  // Redeclared without an alias so `[cssClass]` also binds when the preset is
+  // used directly; the inherited `class` alias keeps working, and the wrapper
+  // reaches either name through outletInputs().
   override cssClass = input<string>('');
 
   private readonly previewOverride = signal<ICommand | null>(null);

@@ -13,6 +13,7 @@ import {
 import { ICardOptions } from '../../models';
 import { CARD_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { CardStandardComponent } from './standard/standard.component';
+import { outletInputs } from '../base/outlet-inputs';
 
 @Component({
   selector: 'smart-card',
@@ -64,13 +65,15 @@ export class CardComponent {
 
   componentType = computed(() => this.injectedComponent ?? null);
 
-  componentInputs = computed(() => ({
-    options: this.options(),
-    hasHeader: this.hasHeader(),
-    hasFooter: this.hasFooter(),
-    cssClass: this.cssClass(),
-    headerTpl: this.headerTplRef(),
-    bodyTpl: this.bodyTplRef(),
-    footerTpl: this.footerTplRef(),
-  }));
+  componentInputs = computed(() =>
+    outletInputs(this.componentType(), {
+      options: this.options(),
+      hasHeader: this.hasHeader(),
+      hasFooter: this.hasFooter(),
+      cssClass: this.cssClass(),
+      headerTpl: this.headerTplRef(),
+      bodyTpl: this.bodyTplRef(),
+      footerTpl: this.footerTplRef(),
+    }),
+  );
 }

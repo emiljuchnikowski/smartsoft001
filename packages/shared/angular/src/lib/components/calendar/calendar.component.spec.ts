@@ -1,4 +1,4 @@
-import { Component, input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CalendarBaseComponent } from './base/base.component';
@@ -10,10 +10,7 @@ import { CALENDAR_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
   changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="injected-calendar">injected</div>',
 })
-class MockInjectedComponent extends CalendarBaseComponent {
-  // NgComponentOutlet passes 'cssClass' (not aliased 'class') so declare it explicitly
-  override cssClass = input<string>('');
-}
+class MockInjectedComponent extends CalendarBaseComponent {}
 
 describe('@smartsoft001/shared-angular: CalendarComponent', () => {
   describe('without token', () => {

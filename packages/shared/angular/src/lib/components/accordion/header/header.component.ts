@@ -21,7 +21,7 @@ import { IconComponent } from '../../icon';
       <ng-content></ng-content>
       <smart-icon
         [name]="open() ? 'chevron-up' : 'chevron-down'"
-        cssClass="smart:text-gray-400 smart:transition-transform smart:duration-200"
+        class="smart:text-gray-400 smart:transition-transform smart:duration-200"
       />
     </button>
   `,

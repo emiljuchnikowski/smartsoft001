@@ -260,11 +260,11 @@ export const TRANSLATE_DATA_ENG: ITranslateData = {
       invalidMax: 'max value',
       upperLetters: 'upper letters',
       lowerLetters: 'lower letters',
-      symbols: 'string',
+      symbols: 'special characters',
     },
     'PASSWORD-STRENGTH': {
       poor: 'poor',
-      notGood: 'not ood',
+      notGood: 'not good',
       good: 'good',
     },
   },

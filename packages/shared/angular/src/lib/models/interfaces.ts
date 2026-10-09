@@ -47,6 +47,7 @@ export interface IIconButtonOptions {
   icon: string;
   text?: string;
   handler?: () => void;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   component?: any;
   type?: 'default' | 'popover';
   disabled$?: Observable<boolean>;
@@ -111,6 +112,7 @@ export interface IDynamicComponentData {
 
 export interface IFormOptions<T> {
   model: T;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   show: boolean;
   treeLevel?: number;
   control?: AbstractControl;
@@ -125,6 +127,7 @@ export interface IFormOptions<T> {
   inputComponents?: {
     [key: string]: InputBaseComponentType<T>;
   };
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   fieldOptions?: IFieldOptions;
   modelOptions?: IModelOptions;
 }
@@ -154,6 +157,7 @@ export interface IDetailsOptions<T extends IEntity<string>> {
   cellPipe?: ICellPipe<T>;
   type: any;
   item: Signal<T>;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   loading?: Signal<boolean>;
   itemHandler?: ((id: string) => void) | null;
   removeHandler?: ((item: T) => void) | null;
@@ -273,6 +277,7 @@ export interface IEmptyStateItem {
 export interface IEmptyStateOptions {
   title?: string;
   description?: string;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   layout?: SmartEmptyStateLayout;
   iconTpl?: TemplateRef<unknown>;
   actions?: IEmptyStateAction[];
@@ -301,6 +306,7 @@ export interface INavbarItem {
 }
 
 export interface INavbarOptions {
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   layout?: SmartNavbarLayout;
   dark?: boolean;
   menuButtonOnLeft?: boolean;
@@ -379,6 +385,10 @@ export interface IProgressBarsOptions {
   columns?: IProgressBarColumn[];
 }
 
+/**
+ * The preset's layouts. `'simple-with-chevrons'` looks the same as the default
+ * layout, since the chevron is already the default separator.
+ */
 export type SmartBreadcrumbsLayout =
   | 'contained'
   | 'full-width-bar'
@@ -428,6 +438,7 @@ export interface IVerticalNavGroup {
 }
 
 export interface IVerticalNavOptions {
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   layout?: SmartVerticalNavLayout;
   ariaLabel?: string;
   items?: IVerticalNavItem[];
@@ -444,6 +455,7 @@ export interface IButtonOptions {
   color?: SmartColor;
   rounded?: boolean;
   circular?: boolean;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   iconPosition?: 'leading' | 'trailing';
 }
 
@@ -453,6 +465,7 @@ export interface IInfoOptions {
 
 export interface ISearchbarOptions {
   placeholder?: string;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   label?: string;
   debounceTime?: number;
   showToggleButton?: boolean;
@@ -482,6 +495,7 @@ export interface ICommand {
   label: string;
   icon?: string;
   group?: string;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   href?: string;
   description?: string;
   imageUrl?: string;
@@ -538,6 +552,7 @@ export interface IDrawerOptions {
   wide?: boolean;
   withOverlay?: boolean;
   brandedHeader?: boolean;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   stickyFooter?: boolean;
   variant?: SmartDrawerVariant;
 }
@@ -617,6 +632,7 @@ export interface IDropdownItem {
   id: string;
   label: string;
   icon?: string;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   href?: string;
   disabled?: boolean;
   divider?: boolean;
@@ -660,6 +676,7 @@ export type SmartListContainerVariant =
 
 export interface IListContainerOptions {
   variant?: SmartListContainerVariant;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   fullWidthOnMobile?: boolean;
 }
 
@@ -783,8 +800,11 @@ export type SmartCalendarView = 'month' | 'week' | 'day' | 'year';
 export interface ICalendarEvent {
   id: string | number;
   start: Date;
+  /** Not rendered by the built-in implementations (they show a dot or a count per day); available to `dayCellTpl` and to a custom implementation. */
   end?: Date;
+  /** Not rendered by the built-in implementations (they show a dot or a count per day); available to `dayCellTpl` and to a custom implementation. */
   title?: string;
+  /** Not rendered by the built-in implementations (they show a dot or a count per day); available to `dayCellTpl` and to a custom implementation. */
   meta?: Record<string, unknown>;
 }
 
@@ -797,6 +817,7 @@ export interface ICalendarDayCell {
 
 export interface ICalendarOptions {
   view?: SmartCalendarView;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   monthsCount?: 1 | 2 | 12;
   weekStart?: 0 | 1;
   showToolbar?: boolean;
@@ -804,6 +825,7 @@ export interface ICalendarOptions {
   eventListTpl?: TemplateRef<unknown>;
   sidePanelTpl?: TemplateRef<unknown>;
   dayCellTpl?: TemplateRef<unknown>;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   eventTpl?: TemplateRef<unknown>;
 }
 
@@ -910,6 +932,7 @@ export type SmartSelectMenuVariant =
 export interface ISelectMenuItem {
   value: string | number;
   label: string;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   avatarUrl?: string;
   iconTpl?: TemplateRef<unknown>;
   secondary?: string;
@@ -921,6 +944,7 @@ export interface ISelectMenuItem {
 export interface ISelectMenuOptions {
   items?: ISelectMenuItem[];
   placeholder?: string;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   variant?: SmartSelectMenuVariant;
   emptyTpl?: TemplateRef<unknown>;
   ariaLabel?: string;
@@ -944,6 +968,7 @@ export interface IFeedEvent {
   iconTpl?: TemplateRef<unknown>;
   avatarUrl?: string;
   href?: string;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   type?: string;
   comments?: IFeedComment[];
   ariaLabel?: string;
@@ -953,6 +978,7 @@ export interface IFeedOptions {
   title?: string;
   description?: string;
   events?: IFeedEvent[];
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   variant?: SmartFeedVariant;
   commentSubmitTpl?: TemplateRef<unknown>;
   emptyTpl?: TemplateRef<unknown>;
@@ -1055,6 +1081,7 @@ export interface ISidebarNavProfile {
 }
 
 export interface ISidebarNavOptions {
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   layout?: SmartSidebarNavLayout;
   ariaLabel?: string;
   logo?: ISidebarNavLogo;
@@ -1070,6 +1097,7 @@ export interface ISidebarLayoutOptions {
   sidebarTpl?: TemplateRef<unknown>;
   headerTpl?: TemplateRef<unknown>;
   sidebarPosition?: 'left' | 'right';
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   mobileBreakpoint?: SmartSidebarLayoutMobileBreakpoint;
   condensed?: boolean;
 }
@@ -1079,6 +1107,7 @@ export interface IDetailOptions<T> {
   item?: Signal<T>;
   options: IFieldOptions;
   cellPipe?: ICellPipe<T>;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   loading?: Signal<boolean>;
 }
 
@@ -1109,6 +1138,7 @@ export interface IPageOptions {
   logoTpl?: TemplateRef<unknown>;
   statsTpl?: TemplateRef<unknown>;
   subtitleTpl?: TemplateRef<unknown>;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   navTpl?: TemplateRef<unknown>;
   sidebarTpl?: TemplateRef<unknown>;
 }
@@ -1123,6 +1153,7 @@ export interface IListProvider<T> {
 
 export interface IListPaginationOptions {
   mode?: PaginationMode;
+  /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   limit: number;
   loadNextPage: () => Promise<boolean>;
   loadPrevPage: () => Promise<boolean>;

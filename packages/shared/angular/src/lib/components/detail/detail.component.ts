@@ -32,6 +32,7 @@ import { DetailPdfComponent } from './pdf/pdf.component';
 import { DetailPhoneNumberPlComponent } from './phone-number-pl/phone-number-pl.component';
 import { DetailTextComponent } from './text/text.component';
 import { DetailVideoComponent } from './video/video.component';
+import { outletInputs } from '../base/outlet-inputs';
 
 const baseMap: Partial<Record<FieldTypeDef, Type<DetailBaseComponent<any>>>> = {
   [FieldType.email]: DetailEmailComponent,
@@ -78,8 +79,10 @@ export class DetailComponent<T extends IEntity<string> | undefined> {
   // The host is `display: contents`, so an external class has to be forwarded
   // to the field component to have any effect. DetailBaseComponent aliases it
   // back to `class`, so the key here is `class`, matching ListComponent.
-  componentInputs = computed(() => ({
-    options: this.options(),
-    class: this.cssClass(),
-  }));
+  componentInputs = computed(() =>
+    outletInputs(this.component(), {
+      options: this.options(),
+      class: this.cssClass(),
+    }),
+  );
 }

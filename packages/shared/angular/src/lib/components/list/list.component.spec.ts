@@ -179,8 +179,8 @@ describe('@smartsoft001/shared-angular: ListComponent', () => {
 
       const inputs = component.componentInputs();
 
-      expect(inputs.class).toBe('my-class');
-      expect(inputs.options).toBeTruthy();
+      expect(inputs['class']).toBe('my-class');
+      expect(inputs['options']).toBeTruthy();
     });
 
     it('should default cssClass to empty string', () => {

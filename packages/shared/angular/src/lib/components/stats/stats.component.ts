@@ -11,6 +11,7 @@ import {
 import { StatsStandardComponent } from './standard';
 import { IStatsOptions } from '../../models';
 import { STATS_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { outletInputs } from '../base/outlet-inputs';
 
 @Component({
   selector: 'smart-stats',
@@ -38,8 +39,10 @@ export class StatsComponent {
 
   componentType = computed(() => this.injectedComponent ?? null);
 
-  componentInputs = computed(() => ({
-    options: this.options(),
-    cssClass: this.cssClass(),
-  }));
+  componentInputs = computed(() =>
+    outletInputs(this.componentType(), {
+      options: this.options(),
+      cssClass: this.cssClass(),
+    }),
+  );
 }

@@ -14,6 +14,7 @@ import { AlertStandardComponent } from './standard/standard.component';
 import { IAlertButton, IAlertOptions } from '../../models';
 import { ALERT_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
+import { outletInputs } from '../base/outlet-inputs';
 
 @Component({
   selector: 'smart-alert',
@@ -47,10 +48,12 @@ export class AlertComponent {
 
   componentType = computed(() => this.injectedComponent ?? null);
 
-  componentInputs = computed(() => ({
-    options: this.options(),
-    cssClass: this.cssClass(),
-  }));
+  componentInputs = computed(() =>
+    outletInputs(this.componentType(), {
+      options: this.options(),
+      cssClass: this.cssClass(),
+    }),
+  );
 
   private readonly outlet = viewChild(NgComponentOutlet);
 

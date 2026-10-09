@@ -83,7 +83,14 @@
         "ci": {
           "quiet": true
         }
-      }
+      },
+      "inputs": [
+        "default",
+        "^default",
+        "{projectRoot}/.storybook/**/*",
+        "{projectRoot}/tsconfig.storybook.json",
+        "{workspaceRoot}/docs/examples/angular/src/components/**/*"
+      ]
     },
     "test-storybook": {
       "executor": "nx:run-commands",

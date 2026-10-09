@@ -58,8 +58,9 @@ const meta: Meta<PageHeadingArgs> = {
 export default meta;
 type Story = StoryObj<PageHeadingArgs>;
 
-// The preset consumes only logoTpl, navTpl, actionsTpl and avatarTpl — the
-// remaining IPageHeadingOptions slots are standard-skin only.
+// The preset renders the logoTpl, title, subtitle, navTpl, actionsTpl and
+// avatarTpl — the breadcrumbs, banner, meta, stats and filters slots are
+// rendered by the standard page heading only.
 const SLOTS = `
   <ng-template #logo>
     <a class="smart:block smart:text-teal-600 smart:dark:text-teal-300" href="#">
@@ -155,6 +156,11 @@ export const AllVariants: Story = {
         ${section(
           'Nav without actions',
           `{ logoTpl: logo, navTpl: nav, presentation: { layout: 'links-left' } }`,
+        )}
+
+        ${section(
+          'Title and subtitle',
+          `{ title: 'Back End Developer', subtitle: 'Full-time, remote', actionsTpl: actions, presentation: { layout: 'links-left' } }`,
         )}
 
       </div>

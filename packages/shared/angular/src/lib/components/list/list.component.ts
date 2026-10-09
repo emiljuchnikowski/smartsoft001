@@ -29,6 +29,7 @@ import { ListBaseComponent } from './base/base.component';
 import { ListDesktopComponent } from './desktop/desktop.component';
 import { ListMasonryGridComponent } from './masonry-grid/masonry-grid.component';
 import { ListMobileComponent } from './mobile/mobile.component';
+import { outletInputs } from '../base/outlet-inputs';
 
 const baseMap: Partial<Record<ListMode, Type<ListBaseComponent<any>>>> = {
   [ListMode.desktop]: ListDesktopComponent,
@@ -72,10 +73,12 @@ export class ListComponent<T extends IEntity<string>> {
     return map[this.mode()] ?? ListDesktopComponent;
   });
 
-  componentInputs = computed(() => ({
-    options: this._options(),
-    class: this.cssClass(),
-  }));
+  componentInputs = computed(() =>
+    outletInputs(this.componentType(), {
+      options: this._options(),
+      class: this.cssClass(),
+    }),
+  );
 
   constructor() {
     effect(() => {

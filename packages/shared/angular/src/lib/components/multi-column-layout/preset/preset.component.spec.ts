@@ -79,7 +79,7 @@ describe('@smartsoft001/shared-angular: MultiColumnLayoutPresetComponent', () =>
       expect(root?.className).toContain('smart:dark:bg-gray-900');
     });
 
-    it('should merge cssClass onto the root zone (canonical name)', async () => {
+    it('should merge cssClass onto the root zone (declared without the class alias)', async () => {
       fixture.componentInstance.cssClass = 'my-extra-class';
       await apply();
 

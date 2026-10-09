@@ -1,11 +1,12 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+// The preset's variant and size types come from the icon entry point, the way
+// a consumer imports them from `@smartsoft001/angular`.
+import type { IconPresetSize, IconPresetVariant } from '..';
 import {
   getIconContainerClasses,
   getIconSizeClasses,
-  IconPresetSize,
-  IconPresetVariant,
 } from './preset-classes.util';
 import { IconPresetComponent } from './preset.component';
 

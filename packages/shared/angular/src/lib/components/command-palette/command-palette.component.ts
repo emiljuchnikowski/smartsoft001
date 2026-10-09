@@ -15,6 +15,7 @@ import { CommandPaletteStandardComponent } from './standard/standard.component';
 import { ICommand, ICommandPaletteOptions } from '../../models';
 import { COMMAND_PALETTE_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
+import { outletInputs } from '../base/outlet-inputs';
 
 @Component({
   selector: 'smart-command-palette',
@@ -54,13 +55,15 @@ export class CommandPaletteComponent {
 
   componentType = computed(() => this.injectedComponent ?? null);
 
-  componentInputs = computed(() => ({
-    commands: this.commands(),
-    open: this.open(),
-    query: this.query(),
-    options: this.options(),
-    cssClass: this.cssClass(),
-  }));
+  componentInputs = computed(() =>
+    outletInputs(this.componentType(), {
+      commands: this.commands(),
+      open: this.open(),
+      query: this.query(),
+      options: this.options(),
+      cssClass: this.cssClass(),
+    }),
+  );
 
   private readonly outlet = viewChild(NgComponentOutlet);
 

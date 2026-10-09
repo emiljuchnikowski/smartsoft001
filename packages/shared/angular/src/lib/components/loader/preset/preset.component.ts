@@ -28,9 +28,10 @@ import { getLoaderSpinnerClasses } from './preset-classes.util';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoaderPresetComponent extends LoaderBaseComponent {
-  // NgComponentOutlet (used by LoaderComponent when this is registered through
-  // LOADER_STANDARD_COMPONENT_TOKEN) passes inputs by canonical name, so the
-  // inherited `class` alias must be dropped for `cssClass` to bind.
+  // Declared without the inherited `class` alias. <smart-loader> resolves its
+  // inputs to the names this component declares (outletInputs), so the class
+  // passed to the wrapper still lands here; used directly, the preset takes
+  // the extra classes as `[cssClass]`.
   override cssClass = input<string>('');
 
   protected spinnerClass = computed(() =>

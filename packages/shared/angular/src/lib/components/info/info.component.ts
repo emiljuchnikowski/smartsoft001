@@ -11,6 +11,7 @@ import {
 import { IInfoOptions } from '../../models';
 import { INFO_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { InfoStandardComponent } from './standard/standard.component';
+import { outletInputs } from '../base/outlet-inputs';
 
 @Component({
   selector: 'smart-info',
@@ -38,8 +39,10 @@ export class InfoComponent {
 
   componentType = computed(() => this.injectedComponent ?? null);
 
-  componentInputs = computed(() => ({
-    options: this.options(),
-    cssClass: this.cssClass(),
-  }));
+  componentInputs = computed(() =>
+    outletInputs(this.componentType(), {
+      options: this.options(),
+      cssClass: this.cssClass(),
+    }),
+  );
 }

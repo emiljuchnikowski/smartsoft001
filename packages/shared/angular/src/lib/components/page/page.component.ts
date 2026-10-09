@@ -15,6 +15,7 @@ import { IPageOptions, SmartPageVariant } from '../../models';
 import { PAGE_VARIANT_COMPONENTS_TOKEN } from '../../shared.inectors';
 import { PageBaseComponent } from './base/base.component';
 import { PageStandardComponent } from './standard/standard.component';
+import { outletInputs } from '../base/outlet-inputs';
 
 const baseMap: Partial<Record<SmartPageVariant, Type<PageBaseComponent>>> = {
   standard: PageStandardComponent,
@@ -57,8 +58,10 @@ export class PageComponent {
     return { ...opts, bodyTpl: opts.bodyTpl ?? this.defaultBodyRef() };
   });
 
-  componentInputs = computed(() => ({
-    options: this.mergedOptions(),
-    cssClass: this.cssClass(),
-  }));
+  componentInputs = computed(() =>
+    outletInputs(this.component(), {
+      options: this.mergedOptions(),
+      cssClass: this.cssClass(),
+    }),
+  );
 }

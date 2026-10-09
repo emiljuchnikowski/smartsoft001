@@ -14,6 +14,7 @@ import { IButtonOptions } from '../../models';
 import { BUTTON_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { ButtonStandardComponent } from './standard/standard.component';
 import { outletContent } from '../base/outlet-content';
+import { outletInputs } from '../base/outlet-inputs';
 
 @Component({
   selector: 'smart-button',
@@ -53,11 +54,13 @@ export class ButtonComponent {
 
   componentType = computed(() => this.injectedComponent ?? null);
 
-  componentInputs = computed(() => ({
-    options: this.options(),
-    disabled: this.disabled(),
-    cssClass: this.cssClass(),
-  }));
+  componentInputs = computed(() =>
+    outletInputs(this.componentType(), {
+      options: this.options(),
+      disabled: this.disabled(),
+      cssClass: this.cssClass(),
+    }),
+  );
 
   /** The wrapper's `<ng-content>`, captured once for whichever branch renders. */
   private readonly contentTemplate =

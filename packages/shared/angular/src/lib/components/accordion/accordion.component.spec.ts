@@ -172,6 +172,19 @@ describe('AccordionHeaderComponent', () => {
     expect(svg.getAttribute('d')).toContain('14.78 11.78');
   });
 
+  it('should color the chevron icon gray', () => {
+    // Arrange
+    fixture.componentRef.setInput('open', false);
+
+    // Act
+    fixture.detectChanges();
+
+    // Assert
+    const svg: SVGElement =
+      fixture.nativeElement.querySelector('smart-icon svg');
+    expect(svg.classList.contains('smart:text-gray-400')).toBe(true);
+  });
+
   it('should apply disabled classes when disabled', () => {
     fixture.componentRef.setInput('disabled', true);
     fixture.detectChanges();

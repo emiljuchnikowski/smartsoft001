@@ -125,7 +125,7 @@ describe('@smartsoft001/shared-angular: BadgePresetComponent', () => {
     expect(emitted).toBe(true);
   });
 
-  it('should apply cssClass on the host span (canonical name for NgComponentOutlet)', () => {
+  it('should apply cssClass on the host span', () => {
     fixture.componentRef.setInput('cssClass', 'my-extra-class');
     fixture.detectChanges();
 

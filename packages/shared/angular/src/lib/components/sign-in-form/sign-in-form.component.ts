@@ -19,6 +19,7 @@ import {
 } from '../../models';
 import { SIGN_IN_FORM_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
+import { outletInputs } from '../base/outlet-inputs';
 
 @Component({
   selector: 'smart-sign-in-form',
@@ -58,12 +59,14 @@ export class SignInFormComponent {
 
   componentType = computed(() => this.injectedComponent ?? null);
 
-  componentInputs = computed(() => ({
-    mode: this.mode(),
-    disabled: this.disabled(),
-    options: this.options(),
-    cssClass: this.cssClass(),
-  }));
+  componentInputs = computed(() =>
+    outletInputs(this.componentType(), {
+      mode: this.mode(),
+      disabled: this.disabled(),
+      options: this.options(),
+      cssClass: this.cssClass(),
+    }),
+  );
 
   private readonly outlet = viewChild(NgComponentOutlet);
 

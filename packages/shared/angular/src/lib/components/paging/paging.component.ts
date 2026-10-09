@@ -20,6 +20,7 @@ import {
 import { PAGING_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { PagingBaseComponent, PagingVariant } from './base/base.component';
 import { PagingStandardComponent } from './standard/standard.component';
+import { outletInputs } from '../base/outlet-inputs';
 
 @Component({
   selector: 'smart-paging',
@@ -72,12 +73,18 @@ export class PagingComponent {
         this.injectedComponent ? 'injected' : 'standard',
       );
 
-      this.componentRef.setInput('currentPage', this.currentPage());
-      this.componentRef.setInput('totalPages', this.totalPages());
-      this.componentRef.setInput('pageSize', this.pageSize());
-      this.componentRef.setInput('totalItems', this.totalItems());
-      this.componentRef.setInput('variant', this.variant());
-      this.componentRef.setInput('class', this.cssClass());
+      const inputs = outletInputs(target, {
+        currentPage: this.currentPage(),
+        totalPages: this.totalPages(),
+        pageSize: this.pageSize(),
+        totalItems: this.totalItems(),
+        variant: this.variant(),
+        cssClass: this.cssClass(),
+      });
+
+      for (const [name, value] of Object.entries(inputs)) {
+        this.componentRef.setInput(name, value);
+      }
     });
   }
 }

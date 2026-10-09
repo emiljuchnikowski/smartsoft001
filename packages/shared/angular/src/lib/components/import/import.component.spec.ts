@@ -52,4 +52,19 @@ describe('ImportComponent (pro)', () => {
 
     expect(emitSpy).toHaveBeenCalledWith(mockFile);
   });
+
+  it('should apply the class to the box around the button and the input', () => {
+    // Arrange
+    fixture.componentRef.setInput('class', 'my-import');
+
+    // Act
+    fixture.detectChanges();
+
+    // Assert
+    const box: HTMLElement =
+      fixture.nativeElement.querySelector('span.my-import');
+    expect(box).toBeTruthy();
+    expect(box.querySelector('smart-button')).toBeTruthy();
+    expect(box.querySelector('input[type="file"]')).toBeTruthy();
+  });
 });

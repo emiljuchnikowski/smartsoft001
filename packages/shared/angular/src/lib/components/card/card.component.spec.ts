@@ -1,4 +1,4 @@
-import { Component, input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CardComponent } from './card.component';
@@ -11,10 +11,7 @@ import { CardBaseComponent } from './base/base.component';
   changeDetection: ChangeDetectionStrategy.Eager,
   template: '<div class="injected-card">injected</div>',
 })
-class MockInjectedComponent extends CardBaseComponent {
-  // NgComponentOutlet passes 'cssClass' (not aliased 'class') so declare it explicitly
-  override cssClass = input<string>('');
-}
+class MockInjectedComponent extends CardBaseComponent {}
 
 @Component({
   selector: 'smart-test-host',
@@ -165,7 +162,7 @@ describe('@smartsoft001/shared-angular: CardComponent', () => {
       expect(standard).toBeFalsy();
     });
 
-    it('should expose componentInputs with options, hasHeader, hasFooter, cssClass', () => {
+    it('should expose componentInputs keyed by the injected component public names (class for cssClass)', () => {
       const opts: ICardOptions = { title: 'Hi' };
       fixture.componentRef.setInput('options', opts);
       fixture.componentRef.setInput('hasHeader', true);
@@ -178,10 +175,26 @@ describe('@smartsoft001/shared-angular: CardComponent', () => {
       expect(inputs['options']).toEqual(opts);
       expect(inputs['hasHeader']).toBe(true);
       expect(inputs['hasFooter']).toBe(true);
-      expect(inputs['cssClass']).toBe('my-class');
+      expect(inputs['class']).toBe('my-class');
+      expect(inputs['cssClass']).toBeUndefined();
       expect(inputs['headerTpl']).toBeDefined();
       expect(inputs['bodyTpl']).toBeDefined();
       expect(inputs['footerTpl']).toBeDefined();
+    });
+
+    it('should hand the class to an injected component that keeps the class alias', async () => {
+      // Arrange
+      fixture.componentRef.setInput('class', 'my-class');
+
+      // Act
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      // Assert
+      const injected: MockInjectedComponent = fixture.debugElement.query(
+        (el) => el.componentInstance instanceof MockInjectedComponent,
+      ).componentInstance;
+      expect(injected.cssClass()).toBe('my-class');
     });
   });
 });

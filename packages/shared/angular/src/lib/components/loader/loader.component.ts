@@ -11,6 +11,7 @@ import {
 import { SmartColor, SmartSize } from '../../models';
 import { LOADER_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { LoaderStandardComponent } from './standard/standard.component';
+import { outletInputs } from '../base/outlet-inputs';
 
 @Component({
   selector: 'smart-loader',
@@ -45,10 +46,12 @@ export class LoaderComponent {
 
   componentType = computed(() => this.injectedComponent ?? null);
 
-  componentInputs = computed(() => ({
-    show: this.show(),
-    size: this.size(),
-    color: this.color(),
-    cssClass: this.cssClass(),
-  }));
+  componentInputs = computed(() =>
+    outletInputs(this.componentType(), {
+      show: this.show(),
+      size: this.size(),
+      color: this.color(),
+      cssClass: this.cssClass(),
+    }),
+  );
 }

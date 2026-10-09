@@ -34,9 +34,9 @@ import { CardBaseComponent } from '../base/base.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardPresetComponent extends CardBaseComponent {
-  // NgComponentOutlet (used by CardComponent when this is registered through
-  // CARD_STANDARD_COMPONENT_TOKEN) passes inputs by canonical name, so the
-  // inherited `class` alias must be dropped for `cssClass` to bind.
+  // Redeclared without an alias so `[cssClass]` also binds when the preset is
+  // used directly; the inherited `class` alias keeps working, and the wrapper
+  // reaches either name through outletInputs().
   override cssClass = input<string>('');
 
   protected containerClasses = computed(() =>

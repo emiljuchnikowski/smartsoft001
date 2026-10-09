@@ -18,6 +18,7 @@ import { IModalAction, IModalOptions } from '../../models';
 import { MODAL_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 import { outletContent } from '../base/outlet-content';
+import { outletInputs } from '../base/outlet-inputs';
 
 @Component({
   selector: 'smart-modal',
@@ -68,14 +69,16 @@ export class ModalComponent {
 
   componentType = computed(() => this.injectedComponent ?? null);
 
-  componentInputs = computed(() => ({
-    open: this.open(),
-    title: this.title(),
-    description: this.description(),
-    actions: this.actions(),
-    options: this.options(),
-    cssClass: this.cssClass(),
-  }));
+  componentInputs = computed(() =>
+    outletInputs(this.componentType(), {
+      open: this.open(),
+      title: this.title(),
+      description: this.description(),
+      actions: this.actions(),
+      options: this.options(),
+      cssClass: this.cssClass(),
+    }),
+  );
 
   private readonly outlet = viewChild(NgComponentOutlet);
 

@@ -13,6 +13,7 @@ import {
 import { PasswordStrengthStandardComponent } from './standard';
 import { PASSWORD_STRENGTH_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
+import { outletInputs } from '../base/outlet-inputs';
 
 @Component({
   selector: 'smart-password-strength',
@@ -49,11 +50,13 @@ export class PasswordStrengthComponent {
 
   componentType = computed(() => this.injectedComponent ?? null);
 
-  componentInputs = computed(() => ({
-    passwordToCheck: this.passwordToCheck(),
-    showHint: this.showHint(),
-    cssClass: this.cssClass(),
-  }));
+  componentInputs = computed(() =>
+    outletInputs(this.componentType(), {
+      passwordToCheck: this.passwordToCheck(),
+      showHint: this.showHint(),
+      cssClass: this.cssClass(),
+    }),
+  );
 
   private readonly outlet = viewChild(NgComponentOutlet);
 

@@ -11,6 +11,7 @@ import {
 import { StackedListStandardComponent } from './standard';
 import { IStackedListOptions } from '../../models';
 import { STACKED_LIST_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { outletInputs } from '../base/outlet-inputs';
 
 @Component({
   selector: 'smart-stacked-list',
@@ -38,8 +39,10 @@ export class StackedListComponent {
 
   componentType = computed(() => this.injectedComponent ?? null);
 
-  componentInputs = computed(() => ({
-    options: this.options(),
-    cssClass: this.cssClass(),
-  }));
+  componentInputs = computed(() =>
+    outletInputs(this.componentType(), {
+      options: this.options(),
+      cssClass: this.cssClass(),
+    }),
+  );
 }

@@ -16,6 +16,7 @@ import { TextareaStandardComponent } from './standard';
 import { ITextareaOptions } from '../../models';
 import { TEXTAREA_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
+import { outletInputs } from '../base/outlet-inputs';
 
 @Component({
   selector: 'smart-textarea',
@@ -55,13 +56,15 @@ export class TextareaComponent {
 
   componentType = computed(() => this.injectedComponent ?? null);
 
-  componentInputs = computed(() => ({
-    value: this.value(),
-    placeholder: this.placeholder(),
-    disabled: this.disabled(),
-    options: this.options(),
-    cssClass: this.cssClass(),
-  }));
+  componentInputs = computed(() =>
+    outletInputs(this.componentType(), {
+      value: this.value(),
+      placeholder: this.placeholder(),
+      disabled: this.disabled(),
+      options: this.options(),
+      cssClass: this.cssClass(),
+    }),
+  );
 
   private readonly outlet = viewChild(NgComponentOutlet);
 

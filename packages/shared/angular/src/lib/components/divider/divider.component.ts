@@ -14,6 +14,7 @@ import { DividerStandardComponent } from './standard/standard.component';
 import { IDividerOptions } from '../../models';
 import { DIVIDER_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
+import { outletInputs } from '../base/outlet-inputs';
 
 @Component({
   selector: 'smart-divider',
@@ -55,14 +56,16 @@ export class DividerComponent {
 
   componentType = computed(() => this.injectedComponent ?? null);
 
-  componentInputs = computed(() => ({
-    label: this.label(),
-    iconName: this.iconName(),
-    title: this.title(),
-    actionLabel: this.actionLabel(),
-    options: this.options(),
-    cssClass: this.cssClass(),
-  }));
+  componentInputs = computed(() =>
+    outletInputs(this.componentType(), {
+      label: this.label(),
+      iconName: this.iconName(),
+      title: this.title(),
+      actionLabel: this.actionLabel(),
+      options: this.options(),
+      cssClass: this.cssClass(),
+    }),
+  );
 
   private readonly outlet = viewChild(NgComponentOutlet);
 

@@ -73,7 +73,8 @@ import { TranslatePipe } from '@ngx-translate/core';
       </p>
     }
 
-    @if (errors()?.pesel) {
+    <!-- pesel: form factory check; invalidPesel: pesel preset field check -->
+    @if (errors()?.pesel || errors()?.invalidPesel) {
       <p [class]="rowClasses()" data-role="error-message" role="alert">
         <ng-container [ngTemplateOutlet]="errIcon"></ng-container>
         <span>{{ 'INPUT.ERRORS.invalidPeselFormat' | translate }}</span>

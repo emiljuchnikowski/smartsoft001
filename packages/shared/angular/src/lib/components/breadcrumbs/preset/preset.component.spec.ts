@@ -124,7 +124,7 @@ describe('@smartsoft001/shared-angular: BreadcrumbsPresetComponent', () => {
     expect(nav().getAttribute('aria-label')).toBe('Path');
   });
 
-  it('should apply cssClass on the nav (canonical name for NgComponentOutlet)', () => {
+  it('should apply cssClass on the nav', () => {
     fixture.componentRef.setInput('cssClass', 'my-extra-class');
     fixture.detectChanges();
 

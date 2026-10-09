@@ -1,3 +1,4 @@
+import { signal } from '@angular/core';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
@@ -29,10 +30,9 @@ const meta: Meta<PagingArgs> = {
   decorators: [
     moduleMetadata({
       // Register the preset variation as the replacement for the standard
-      // paging, so every <smart-paging> renders PagingPresetComponent. The
-      // preset selector is imported directly for the variant showcase because
-      // <smart-paging> does not forward the `variant` input.
-      imports: [PagingComponent, PagingPresetComponent],
+      // paging, so every <smart-paging> renders PagingPresetComponent; the
+      // wrapper forwards every input, `variant` included.
+      imports: [PagingComponent],
       providers: [
         {
           provide: PAGING_STANDARD_COMPONENT_TOKEN,
@@ -66,18 +66,20 @@ export const Playground: Story = {
   render: (args) => ({
     props: {
       ...args,
-      onPageChange: (page: number) => (args.currentPage = page),
+      // The page is owned by the parent: keep it in a signal and move it on
+      // `pageChange`, so a click on a page makes it the current one.
+      page: signal(args.currentPage),
     },
     template: `
       <div style="padding: 40px;">
-        <smart-paging-preset
-          [currentPage]="currentPage"
+        <smart-paging
+          [currentPage]="page()"
           [totalPages]="totalPages"
           [pageSize]="pageSize"
           [totalItems]="totalItems"
           [variant]="variant"
-          (pageChange)="onPageChange($event)"
-        ></smart-paging-preset>
+          (pageChange)="page.set($event)"
+        ></smart-paging>
       </div>
     `,
   }),
@@ -87,13 +89,14 @@ export const Playground: Story = {
 const variantSection = (variant: PagingVariant) => `
   <section>
     <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">${VARIANT_LABELS[variant]}</h3>
-    <smart-paging-preset
-      [currentPage]="3"
+    <smart-paging
+      [currentPage]="page['${variant}']()"
       [totalPages]="10"
       [pageSize]="10"
       [totalItems]="98"
       variant="${variant}"
-    ></smart-paging-preset>
+      (pageChange)="page['${variant}'].set($event)"
+    ></smart-paging>
   </section>
 `;
 
@@ -101,6 +104,10 @@ export const AllVariants: Story = {
   name: 'All variants',
   parameters: { controls: { disable: true } },
   render: () => ({
+    // One page signal per variant, so each pager moves on its own clicks.
+    props: {
+      page: Object.fromEntries(VARIANTS.map((variant) => [variant, signal(3)])),
+    },
     template: `
       <div style="display: flex; flex-direction: column; gap: 32px; padding: 24px;">
         ${VARIANTS.map((variant) => variantSection(variant)).join('\n')}

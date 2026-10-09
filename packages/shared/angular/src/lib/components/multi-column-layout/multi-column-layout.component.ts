@@ -14,6 +14,7 @@ import { MultiColumnLayoutStandardComponent } from './standard/standard.componen
 import { IMultiColumnLayoutOptions } from '../../models';
 import { MULTI_COLUMN_LAYOUT_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { outletContent } from '../base/outlet-content';
+import { outletInputs } from '../base/outlet-inputs';
 
 @Component({
   selector: 'smart-multi-column-layout',
@@ -58,10 +59,12 @@ export class MultiColumnLayoutComponent {
 
   componentType = computed(() => this.injectedComponent ?? null);
 
-  componentInputs = computed(() => ({
-    options: this.options(),
-    cssClass: this.cssClass(),
-  }));
+  componentInputs = computed(() =>
+    outletInputs(this.componentType(), {
+      options: this.options(),
+      cssClass: this.cssClass(),
+    }),
+  );
 
   /** The wrapper's `<ng-content>`, captured once for whichever branch renders. */
   private readonly contentTemplate =

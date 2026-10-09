@@ -14,7 +14,8 @@ import { InfoStandardComponent } from './standard/standard.component';
   template: '<div class="injected-info">injected</div>',
 })
 class MockInjectedInfoComponent extends InfoBaseComponent {
-  // NgComponentOutlet passes 'cssClass' (not aliased 'class') so declare it explicitly
+  // Declared without the `class` alias, like the presets: the wrapper resolves
+  // its inputs through outletInputs(), so this still receives the class.
   override cssClass = input<string>('');
 }
 

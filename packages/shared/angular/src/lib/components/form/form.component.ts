@@ -29,6 +29,7 @@ import { MODEL_IMPORT_PROVIDER } from '../../providers';
 import { SmartFormGroup } from '../../services';
 import { FORM_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
+import { outletInputs } from '../base/outlet-inputs';
 // TODO: ExportComponent moved to @smartsoft001-pro/angular (FRA-113)
 // import { ExportDefaultComponent } from '../export';
 // TODO: ImportComponent moved to @smartsoft001-pro/angular (FRA-116)
@@ -116,18 +117,20 @@ export class FormComponent<T> implements OnDestroy {
   options = input.required<IFormOptions<T>>();
   cssClass = input<string>('', { alias: 'class' });
 
-  invokeSubmit = output();
+  invokeSubmit = output<T>();
   valueChange = output<T>();
   valuePartialChange = output<Partial<T>>();
   validChange = output<boolean>();
 
   componentType = computed(() => this.injectedComponent ?? null);
 
-  componentInputs = computed(() => ({
-    options: this.options(),
-    form: this.form,
-    class: this.cssClass(),
-  }));
+  componentInputs = computed(() =>
+    outletInputs(this.componentType(), {
+      options: this.options(),
+      form: this.form,
+      class: this.cssClass(),
+    }),
+  );
 
   private readonly outlet = viewChild(NgComponentOutlet);
 

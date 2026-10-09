@@ -14,6 +14,7 @@ import { SearchbarStandardComponent } from './standard';
 import { ISearchbarOptions } from '../../models';
 import { SEARCHBAR_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
+import { outletInputs } from '../base/outlet-inputs';
 
 @Component({
   selector: 'smart-searchbar',
@@ -48,12 +49,14 @@ export class SearchbarComponent {
 
   componentType = computed(() => this.injectedComponent ?? null);
 
-  componentInputs = computed(() => ({
-    options: this.options(),
-    show: this.show(),
-    text: this.text(),
-    cssClass: this.cssClass(),
-  }));
+  componentInputs = computed(() =>
+    outletInputs(this.componentType(), {
+      options: this.options(),
+      show: this.show(),
+      text: this.text(),
+      cssClass: this.cssClass(),
+    }),
+  );
 
   private readonly outlet = viewChild(NgComponentOutlet);
 

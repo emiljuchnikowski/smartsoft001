@@ -14,6 +14,7 @@ import { ListContainerStandardComponent } from './standard/standard.component';
 import { IListContainerOptions } from '../../models';
 import { LIST_CONTAINER_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { outletContent } from '../base/outlet-content';
+import { outletInputs } from '../base/outlet-inputs';
 
 @Component({
   selector: 'smart-list-container',
@@ -52,10 +53,12 @@ export class ListContainerComponent {
 
   componentType = computed(() => this.injectedComponent ?? null);
 
-  componentInputs = computed(() => ({
-    options: this.options(),
-    cssClass: this.cssClass(),
-  }));
+  componentInputs = computed(() =>
+    outletInputs(this.componentType(), {
+      options: this.options(),
+      cssClass: this.cssClass(),
+    }),
+  );
 
   /** The wrapper's `<ng-content>`, captured once for whichever branch renders. */
   private readonly contentTemplate =

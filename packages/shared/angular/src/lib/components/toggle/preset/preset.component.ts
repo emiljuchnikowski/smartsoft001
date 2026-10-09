@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -18,6 +19,8 @@ import {
   TOGGLE_INPUT_CLASSES,
 } from './preset-classes.util';
 
+let nextTogglePresetId = 0;
+
 /**
  * Styled toggle (switch) variation (preset).
  *
@@ -28,19 +31,27 @@ import {
  * Renders the Preline default switch: a hidden, accessible checkbox drives the
  * track / thumb visuals via `peer-*` states, while the `value` model holds the
  * checked state. Optional `options.label` / `options.description` render beside
- * the switch on the side given by `options.labelPosition` (defaults to right).
+ * the switch on the side given by `options.labelPosition` (defaults to right):
+ * the label is a `<label for>` of the checkbox (its accessible name) and the
+ * description is referenced by the checkbox's `aria-describedby`.
+ * `options.ariaLabel` names the checkbox only when there is no `label`.
  */
 @Component({
   selector: 'smart-toggle-preset',
   templateUrl: './preset.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [NgTemplateOutlet],
 })
 export class TogglePresetComponent extends ToggleBaseComponent {
   // NgComponentOutlet (used by ToggleComponent when this is registered through
   // TOGGLE_STANDARD_COMPONENT_TOKEN) passes inputs by canonical name, so the
   // inherited `class` alias must be dropped for `cssClass` to bind.
   override cssClass = input<string>('');
+
+  private readonly instanceId = `smart-toggle-preset-${nextTogglePresetId++}`;
+  protected readonly inputId = `${this.instanceId}-input`;
+  protected readonly descriptionId = `${this.instanceId}-description`;
 
   protected readonly inputClasses = TOGGLE_INPUT_CLASSES;
 

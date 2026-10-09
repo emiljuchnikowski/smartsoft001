@@ -134,7 +134,7 @@ describe('@smartsoft001/shared-angular: NotificationPresetComponent', () => {
     expect(emitted).toBe(true);
   });
 
-  it('should apply cssClass on the host (canonical name for NgComponentOutlet)', () => {
+  it('should apply cssClass on the host (declared without the class alias)', () => {
     fixture.componentRef.setInput('cssClass', 'my-extra-class');
     fixture.detectChanges();
 

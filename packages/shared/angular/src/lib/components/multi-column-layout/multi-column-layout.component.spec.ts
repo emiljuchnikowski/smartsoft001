@@ -11,7 +11,8 @@ import { MULTI_COLUMN_LAYOUT_STANDARD_COMPONENT_TOKEN } from '../../shared.inect
   template: '<div class="injected-multi-column-layout">injected</div>',
 })
 class MockInjectedComponent extends MultiColumnLayoutBaseComponent {
-  // NgComponentOutlet passes 'cssClass' (not aliased 'class') so declare it explicitly
+  // Declared without the `class` alias, like the presets: the wrapper resolves
+  // its inputs through outletInputs(), so this still receives the class.
   override cssClass = input<string>('');
 }
 

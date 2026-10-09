@@ -14,6 +14,7 @@ import { ToggleStandardComponent } from './standard/standard.component';
 import { IToggleOptions } from '../../models';
 import { TOGGLE_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
+import { outletInputs } from '../base/outlet-inputs';
 
 @Component({
   selector: 'smart-toggle',
@@ -48,12 +49,14 @@ export class ToggleComponent {
 
   componentType = computed(() => this.injectedComponent ?? null);
 
-  componentInputs = computed(() => ({
-    value: this.value(),
-    disabled: this.disabled(),
-    options: this.options(),
-    cssClass: this.cssClass(),
-  }));
+  componentInputs = computed(() =>
+    outletInputs(this.componentType(), {
+      value: this.value(),
+      disabled: this.disabled(),
+      options: this.options(),
+      cssClass: this.cssClass(),
+    }),
+  );
 
   private readonly outlet = viewChild(NgComponentOutlet);
 

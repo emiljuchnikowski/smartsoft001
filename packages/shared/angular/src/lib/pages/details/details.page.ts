@@ -1,6 +1,5 @@
 import {
   Component,
-  computed,
   ElementRef,
   inject,
   OnInit,
@@ -67,11 +66,9 @@ export class DetailsPage<T extends IEntity<string>> implements OnInit {
     if (this.detailsOptions.removeHandler) {
       buttons.push({
         handler: () => {
-          computed(() => {
-            const item = this.detailsOptions.item();
-            this.detailsOptions?.removeHandler?.(item);
-            this.modalService.dismiss();
-          });
+          const item = this.detailsOptions.item?.();
+          if (item) this.detailsOptions.removeHandler?.(item);
+          this.modalService.dismiss();
         },
         icon: 'trash',
       });
@@ -80,11 +77,9 @@ export class DetailsPage<T extends IEntity<string>> implements OnInit {
     if (this.detailsOptions.itemHandler) {
       buttons.push({
         handler: () => {
-          computed(() => {
-            const item = this.detailsOptions.item();
-            this.detailsOptions?.removeHandler?.(item);
-            this.modalService.dismiss();
-          });
+          const item = this.detailsOptions.item?.();
+          if (item) this.detailsOptions.itemHandler?.(item.id);
+          this.modalService.dismiss();
         },
         icon: 'arrow-forward-outline',
       });
