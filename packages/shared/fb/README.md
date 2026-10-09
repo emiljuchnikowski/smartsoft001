@@ -39,6 +39,11 @@ and a non-empty `data.user_id`. `getData` additionally requires the `/me` id to 
 `user_id`. An empty `appIds`, a missing app id or secret, or an empty token or one longer than 8192
 characters fails closed before any request is made.
 
+`getData` signs its `/me` request with `appsecret_proof`, the hex HMAC-SHA256 of the user access
+token keyed with the app secret, when the token was issued to the app in `credentials`. A token of
+another app in `appIds` has no configured secret, so its `/me` request goes without a proof, as
+before. Neither the secret nor the proof is logged.
+
 Every failure is an `UnauthorizedException`. The token and the app access token are URL-encoded, and
 HTTP errors are replaced with `Invalid Facebook token`, so request URLs that carry the token and the
 app secret never reach logs.

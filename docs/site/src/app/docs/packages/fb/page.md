@@ -52,6 +52,8 @@ Every value in a url is URL-encoded. `appIds` is a required `readonly string[]`:
 
 `getUserId` makes that one request and returns `data.user_id`, which is the app-scoped id that `/me` would also report. `getData` reads `/me` only once the token has passed, requires the profile `id` to equal the verified `user_id`, and returns the profile body otherwise unchanged. An account that has not granted the email permission answers without an `email`, and the call still succeeds.
 
+When `data.app_id` equals `credentials.appId`, `getData` adds `&appsecret_proof={proof}` to the `/me` request, where the proof is the hex HMAC-SHA256 of the user access token keyed with `credentials.appSecret`. Graph then accepts the call only from a server that holds the secret of the app the token was issued to, which is what Facebook's "Require App Secret" setting enforces. A token of another app in `appIds` has no configured secret, so its `/me` request is sent without a proof, as before. Neither the secret nor the proof is logged.
+
 Every failure is an `UnauthorizedException` from `@nestjs/common`. An empty `appIds`, a missing app id or secret, an empty token or one longer than 8192 characters fails closed with `Invalid Facebook token or app configuration` before any request is made. A `debug_token` answer that fails the checks above, a mismatched profile, and any error from either request become `Invalid Facebook token`. The original HTTP error is dropped on purpose, because its request url carries the access token and the app secret. There is no retry and no timeout of their own.
 
 {% callout type="warning" title="Migrating from 2.188.0 or earlier" %}

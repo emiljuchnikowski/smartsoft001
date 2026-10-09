@@ -8,6 +8,9 @@ const appIds = ['test-app'];
 const credentials = { appId: 'test-app', appSecret: 'test-secret' };
 const debugUrl =
   'https://graph.facebook.com/debug_token?input_token=test-token&access_token=test-app%7Ctest-secret';
+// HMAC-SHA256('test-token', 'test-secret') as hex.
+const testProof =
+  '4bd72343ca044f8aab1d98f07606cdb1cf47df0c089ff7b5b2df44e40d869970';
 const debugResponse = {
   data: { data: { is_valid: true, app_id: 'test-app', user_id: '123456789' } },
 };
@@ -87,6 +90,29 @@ describe('FbService', () => {
         email: 'test@example.com',
       });
       expect(mockHttpService.get).toHaveBeenNthCalledWith(1, debugUrl);
+      expect(mockHttpService.get).toHaveBeenNthCalledWith(
+        2,
+        'https://graph.facebook.com/me?fields=email,id&access_token=' +
+          mockToken +
+          '&appsecret_proof=' +
+          testProof,
+      );
+    });
+
+    it('should not send appsecret_proof for a token of an app without configured credentials', async () => {
+      const mockToken = 'test-token';
+      mockHttpService.get
+        .mockReturnValueOnce(
+          of({
+            data: {
+              data: { is_valid: true, app_id: 'second-app', user_id: '123' },
+            },
+          }),
+        )
+        .mockReturnValueOnce(of({ data: { id: '123', email: 'a@b.c' } }));
+
+      await service.getData(mockToken, ['test-app', 'second-app'], credentials);
+
       expect(mockHttpService.get).toHaveBeenNthCalledWith(
         2,
         'https://graph.facebook.com/me?fields=email,id&access_token=' +
