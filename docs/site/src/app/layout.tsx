@@ -25,10 +25,10 @@ const lexend = localFont({
 export const metadata: Metadata = {
   title: {
     template: '%s - Smartsoft Docs',
-    default: 'Smartsoft — libraries for Angular and NestJS',
+    default: 'Smartsoft — libraries for Angular, React and NestJS',
   },
   description:
-    'Documentation for the @smartsoft001 framework: shared libraries, CRUD, auth and payment transactions for Angular and NestJS projects.',
+    'Documentation for the @smartsoft001 framework: shared libraries, CRUD, auth and payment transactions for Angular, React and NestJS projects.',
 }
 
 export default function RootLayout({
