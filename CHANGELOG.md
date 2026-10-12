@@ -1,3 +1,13 @@
+## 2.203.0 (2026-10-12)
+
+### 🚀 Features
+
+- **shared:** real Angular modals, list sorting, details and infinite scroll ([#140](https://github.com/emiljuchnikowski/smartsoft001/pull/140))
+
+### ❤️ Thank You
+
+- Emil Juchnikowski
+
 ## 2.202.0 (2026-10-09)
 
 ### 🩹 Fixes
