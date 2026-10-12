@@ -131,6 +131,8 @@ Each UI library keeps its framework instructions next to its code: a `CLAUDE.md`
 
 Shared rules for both: Tailwind CSS 4 utilities carry the `smart:` prefix, dark mode follows a `.dark` class on an ancestor, and every component of the shared libraries has a Storybook story whose `Playground` sits in a `// #region usage` block.
 
+The two libraries keep the same components with the same options: a new component, option, variant or behaviour lands in Angular and React in the same pull request, and rules R18 (components) and R19 (shared models) of `npx nx run docs:check` fail the pull request otherwise. The only exceptions are the entries of `docs/site/tools/framework-parity.mjs`, each with a reason.
+
 ## Git Conventions
 
 - Conventional commits with commitlint

@@ -39,6 +39,10 @@ There are no React-specific agents. Delegate to the shared agents and pass them 
 | `shared-build-verifier`    | `npx nx build react`, the Storybook build                                  |
 | `shared-coverage-enforcer` | `npx nx test react --coverage`                                             |
 
+## Conventions
+
+- Framework parity: every component and every option, variant and behaviour of it also exists in `@smartsoft001/angular` (`packages/shared/angular`, see its `CLAUDE.md`), changed in the same pull request. Rules R18 and R19 of `npx nx run docs:check` enforce it; the only exceptions are the entries of `docs/site/tools/framework-parity.mjs`, each with a reason. The `react-components` skill maps every file to its Angular counterpart.
+
 ## Commands
 
 ```bash

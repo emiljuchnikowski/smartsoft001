@@ -34,6 +34,39 @@ Read `react-patterns` (hooks, controlled props, forms, stores, services) and `re
 - `component-name` — kebab-case name of the folder and the registry key (e.g. `button`, `card-heading`, `media-object`)
 - `description` — what the component shows and which options and variations it needs
 
+## Parity with the other framework
+
+`@smartsoft001/angular` (`packages/shared/angular`) has the same components with the same options. Plan both sides before writing code: a new component, or a new or changed option, variant, prop, callback or behaviour, lands in both libraries in the same pull request:
+
+1. **Component** — component, standard, preset and registry key here; wrapper, standard and preset in Angular.
+2. **Story** — `Playground` inside the `usage` region, plus `AllVariants`, in each library.
+3. **Usage example** — with its spec, in `docs/examples/react` and `docs/examples/angular`, showing the same scenario.
+4. **Skills** — `react-components-<name>` in `smart-react` and `angular-components-<name>` in `smart-angular`, each named in its plugin's agent.
+5. **Shared models** — `src/lib/models/*.ts` stay equal: the same declaration names, members, optionality and literal unions (`SmartModalVariant` lists the same variants on both sides). A React member `foo` is `foo$` in Angular when Angular takes an `Observable`; other member types follow each framework (`ReactNode` / `TemplateRef`, `T` / `Signal<T>`).
+
+The Angular side follows the `angular-components` skill (`packages/shared/angular/.claude/skills/angular-components/SKILL.md`). It loads only once a file below `packages/shared/angular` is read, so read it directly. The only alternative to the counterpart is an entry in `docs/site/tools/framework-parity.mjs` with a reason saying why the frameworks differ. `npx nx run docs:check` enforces this on every pull request: R18 fails a component or component skill one library lacks, R19 a model declaration, member or literal one side lacks.
+
+| Artifact          | React                                                                                    | Angular                                                                                         |
+| ----------------- | ---------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| Component folder  | `packages/shared/react/src/lib/components/<name>/`                                       | `packages/shared/angular/src/lib/components/<name>/`                                            |
+| Wrapper           | `<name>.tsx` (`Smart<Name>`)                                                             | `<name>.component.ts` (`<smart-<name>>`)                                                        |
+| Shared logic      | `use-<name>.ts`                                                                          | `base/base.component.ts`                                                                        |
+| Standard / preset | `standard/<name>-standard.tsx`, `preset/<name>-preset.tsx`                               | `standard/standard.component.{ts,html}`, `preset/preset.component.{ts,html}`                    |
+| Preset classes    | `preset/preset-classes.ts`                                                               | `preset/preset-classes.util.ts`                                                                 |
+| Swap point        | registry key `'<name>'` in `DynamicComponentType`                                        | `<COMPONENT_NAME>_STANDARD_COMPONENT_TOKEN` in `shared.inectors.ts`                             |
+| Preset registry   | `SMART_PRESET_COMPONENTS` in `components/presets/presets.ts`                             | `SMART_PRESET_PROVIDERS` in `components/presets/presets.ts`                                     |
+| Specs             | `<name>.spec.tsx`                                                                        | `*.component.spec.ts`                                                                           |
+| Story             | `<name>.stories.tsx`                                                                     | `<name>.component.stories.ts`                                                                   |
+| Models            | `src/lib/models/{interfaces,colors,style}.ts`                                            | `src/lib/models/{interfaces,colors,style}.ts`                                                   |
+| Translations      | `src/lib/i18n/translations-default.ts`                                                   | `src/lib/translations-default.ts`                                                               |
+| Usage example     | `docs/examples/react/src/components/<name>/usage.example.tsx` + `usage.example.spec.tsx` | `docs/examples/angular/src/components/<name>/usage.example.{html,ts}` + `usage.example.spec.ts` |
+| Live preview      | `docs/examples/react/src/components/usage-examples.stories.tsx`                          | `docs/examples/angular/src/components/usage-examples.stories.ts`                                |
+| Plugin skill      | `plugins/smart-react/skills/react-components-<name>/SKILL.md`                            | `plugins/smart-angular/skills/angular-components-<name>/SKILL.md`                               |
+| Plugin agent      | `plugins/smart-react/agents/react-components.md`                                         | `plugins/smart-angular/agents/angular-components.md`                                            |
+| Package docs      | `packages/shared/react/README.md`, `docs/site/src/app/docs/packages/react/page.md`       | `packages/shared/angular/README.md`, `docs/site/src/app/docs/packages/angular/page.md`          |
+
+The plugins live in `packages/shared/claude-plugins/src/plugins/`. A prop of `Smart<Name>Props` is an `input()` in Angular, an `on<Event>` callback such as `onClosed` an `output()` (`closed`).
+
 ## Component layout
 
 ```text
@@ -248,7 +281,7 @@ The `smart-react` plugin documents each component for applications that use the 
 
 Delegate code to `shared-tdd-developer` (RED → GREEN → REFACTOR) with the React instructions in [Agent Delegation](#agent-delegation).
 
-- [ ] **1. Options** — `I<Name>Options` in `models/interfaces.ts`, the key in `DynamicComponentType`
+- [ ] **1. Options** — `I<Name>Options` in `models/interfaces.ts`, the key in `DynamicComponentType`, both the same in `packages/shared/angular/src/lib/models/interfaces.ts` (R19)
 - [ ] **2. Types** — `<name>.types.ts`
 - [ ] **3. Hook** — `use-<name>.ts`, spec first through `renderHook`
 - [ ] **4. Standard** — `standard/<name>-standard.tsx`
@@ -260,7 +293,8 @@ Delegate code to `shared-tdd-developer` (RED → GREEN → REFACTOR) with the Re
 - [ ] **10. Story** — `Playground` (in the `usage` region) and `AllVariants`
 - [ ] **11. Docs** — README, package page, the usage example and its story in `usage-examples.stories.tsx`
 - [ ] **12. Plugin sync** — `smart-react` per-component skill and agent
-- [ ] **13. Verify** — the commands below
+- [ ] **13. Parity** — the Angular counterpart of every change from [Parity with the other framework](#parity-with-the-other-framework) is in the same pull request (component, story, usage example, `angular-components-<name>` skill, models), or `docs/site/tools/framework-parity.mjs` has an entry with its reason
+- [ ] **14. Verify** — the commands below
 
 ## Verification
 
@@ -275,7 +309,7 @@ npx prettier --write <changed files>
 npx nx format:check
 ```
 
-When the docs changed, also run `npx nx run-many -t test build lint -p docs-examples-react` and `npx nx run docs:check`. For `crud-shell-react` the same targets exist under that project name.
+Run `npx nx test angular`, `npx nx lint angular` and `npx nx build angular` for the Angular counterpart, and `npx nx run docs:check` after every component change: R18 and R19 compare the two libraries. When the docs changed, also run `npx nx run-many -t test build lint -p docs-examples-react docs-examples-angular`. For `crud-shell-react` the same targets exist under that project name.
 
 ## Agent Delegation
 
@@ -289,6 +323,8 @@ The repository's agents are framework-neutral; pass them the React specifics:
 | Lint and format     | `shared-style-enforcer`    | `npx nx lint react`, import order, the `react-hooks` rules                                                                                      |
 | Build and Storybook | `shared-build-verifier`    | `npx nx build react`, `npx nx run react:build-storybook -c ci`, `npx nx run react:test-storybook`                                               |
 | Coverage            | `shared-coverage-enforcer` | `npx nx test react --coverage`                                                                                                                  |
+
+Every brief covers both libraries: give `shared-tdd-developer` the Angular counterpart from the [parity table](#parity-with-the-other-framework) as well, built with the `angular-components` skill (signal inputs and outputs, TestBed specs in `*.component.spec.ts`, `npx nx test angular`), and the other agents both projects (`react` and `angular`).
 
 ## Reference Components
 
