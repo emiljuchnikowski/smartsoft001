@@ -115,8 +115,9 @@ function getDetailsComponents(config: CrudFullConfig<any>) {
  * - `listOptions` for `SmartList`: the feature's items and loading, details
  *   through the facade, item links to `<basePath>/<id>`, remove through the
  *   facade (the list confirms it), the pagination of
- *   `useCrudListPagination`, sort and the multi selection (it opens
- *   `SmartCrudMultiselect` in the end menu);
+ *   `useCrudListPagination`, the sort of the feature's filter (a header click
+ *   reads again through `provider.getData`) and the multi selection (it
+ *   opens `SmartCrudMultiselect` in the end menu);
  * - `filter`: the feature's filter (the page renders once it is set);
  * - `TopComponent`: `config.list.components.top`.
  *
@@ -293,6 +294,17 @@ export function useCrudListPage<T extends IEntity<string>>({
     [config, filter, facade, getFilter, endButtons],
   );
 
+  // The sort the list headers show: the one of the feature's filter, which a
+  // header click changes through `provider.getData({ offset: 0, sortBy,
+  // sortDesc })`.
+  const sortBy = filter?.sortBy;
+  const sortDesc = filter?.sortDesc;
+  const sort = useMemo<IListOptions<T>['sort']>(
+    () =>
+      config.sort ? { default: sortBy, defaultDesc: sortDesc } : undefined,
+    [config.sort, sortBy, sortDesc],
+  );
+
   const pagination = useCrudListPagination({
     mode: config.list?.paginationMode,
     limit: config.pagination?.limit ?? 0,
@@ -364,7 +376,7 @@ export function useCrudListPage<T extends IEntity<string>>({
           }
         : undefined,
       pagination,
-      sort: config.sort,
+      sort,
       select,
     };
   }, [
@@ -380,6 +392,7 @@ export function useCrudListPage<T extends IEntity<string>>({
     path,
     modelOptions,
     pagination,
+    sort,
     select,
   ]);
 

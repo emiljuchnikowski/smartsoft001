@@ -649,7 +649,12 @@ describe('@smartsoft001/crud-shell-react: SmartCrudListPage', () => {
         get().sort,
         get().pagination?.limit,
         get().pagination?.mode,
-      ]).toEqual([ListMode.mobile, true, 25, PaginationMode.singlePage]);
+      ]).toEqual([
+        ListMode.mobile,
+        { default: undefined, defaultDesc: undefined },
+        25,
+        PaginationMode.singlePage,
+      ]);
     });
 
     it('should read the list with the current filter merged with the one asked for', async () => {
@@ -670,6 +675,70 @@ describe('@smartsoft001/crud-shell-react: SmartCrudListPage', () => {
         sortBy: 'title',
         sortDesc: true,
       });
+    });
+  });
+
+  describe('sort', () => {
+    function bodyHeader(): HTMLElement {
+      return screen
+        .getByRole('button', { name: 'body' })
+        .closest('th') as HTMLElement;
+    }
+
+    it('should render plain headers without config.sort', async () => {
+      await renderPage(createConfig());
+      await screen.findByText('First note');
+
+      expect(
+        screen.queryByRole('button', { name: 'body' }),
+      ).not.toBeInTheDocument();
+    });
+
+    it('should start the headers from the default sort of the config', async () => {
+      const { service } = await renderPage(
+        createConfig({ sort: { default: 'body', defaultDesc: true } }),
+      );
+      await screen.findByText('First note');
+
+      expect(lastFilter(service)).toMatchObject({
+        sortBy: 'body',
+        sortDesc: true,
+      });
+      expect(bodyHeader()).toHaveAttribute('aria-sort', 'descending');
+    });
+
+    it('should read the list sorted by a clicked header from the first page', async () => {
+      const { service } = await renderPage(
+        createConfig({ sort: true, pagination: { limit: 25 } }),
+      );
+      await screen.findByText('First note');
+
+      fireEvent.click(screen.getByRole('button', { name: 'body' }));
+      await settle();
+
+      expect(lastFilter(service)).toMatchObject({
+        limit: 25,
+        offset: 0,
+        sortBy: 'body',
+        sortDesc: false,
+      });
+      expect(bodyHeader()).toHaveAttribute('aria-sort', 'ascending');
+    });
+
+    it('should read the list in the other direction on a second click', async () => {
+      const { service } = await renderPage(createConfig({ sort: true }));
+      await screen.findByText('First note');
+
+      fireEvent.click(screen.getByRole('button', { name: 'body' }));
+      await settle();
+      fireEvent.click(screen.getByRole('button', { name: 'body' }));
+      await settle();
+
+      expect(lastFilter(service)).toMatchObject({
+        sortBy: 'body',
+        sortDesc: true,
+      });
+      expect(bodyHeader()).toHaveAttribute('aria-sort', 'descending');
     });
   });
 
