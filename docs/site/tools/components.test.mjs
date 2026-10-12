@@ -15,7 +15,6 @@ import {
   findUsage,
   indefiniteArticle,
   renderIndexPage,
-  transformContentToPage,
   transformSkillToPage,
   usageExampleStoryId,
 } from './components.mjs'
@@ -30,13 +29,6 @@ const skillsDir = path.join(
 function skill(name) {
   return fs.readFileSync(
     path.join(skillsDir, `angular-components-${name}`, 'SKILL.md'),
-    'utf8',
-  )
-}
-
-function content(name) {
-  return fs.readFileSync(
-    path.join(fixtureRoot, 'docs/site/content/components', `${name}.md`),
     'utf8',
   )
 }
@@ -557,53 +549,6 @@ describe('transformSkillToPage extending at level three', () => {
   })
 })
 
-describe('transformContentToPage', () => {
-  test('keeps the hand written body and adds the computed frontmatter', () => {
-    const { content: page } = transformContentToPage({
-      name: 'loader',
-      order: 3,
-      source: content('loader'),
-    })
-
-    assert.ok(
-      page.startsWith(
-        [
-          '---',
-          'title: Loader',
-          'nextjs:',
-          '  metadata:',
-          '    title: Loader',
-          '    description: The loader overlay, shown while a page waits for data.',
-          'section: Components',
-          'order: 3',
-          'component: loader',
-          '---',
-          '',
-        ].join('\n'),
-      ),
-      page.slice(0, 400),
-    )
-    assert.ok(
-      page.endsWith(
-        '{% snippet file="angular/src/components/loader/basic.example.ts" region="usage" /%}\n',
-      ),
-    )
-  })
-
-  test('reads the description out of the hand written frontmatter', () => {
-    const { description } = transformContentToPage({
-      name: 'loader',
-      order: 3,
-      source: content('loader'),
-    })
-
-    assert.equal(
-      description,
-      'The loader overlay, shown while a page waits for data.',
-    )
-  })
-})
-
 describe('findStory', () => {
   test('finds the stories file carrying the usage region and builds its id', () => {
     assert.deepEqual(findStory(fixtureRoot, 'widget'), {
@@ -707,17 +652,27 @@ describe('collectComponents', () => {
     assert.ok(pages[3].content.includes('\norder: 4\n'))
   })
 
-  test('prefers the hand written content file over a skill', () => {
-    const { pages } = collectComponents(fixtureRoot)
-    const loader = pages.find((page) => page.name === 'loader')
+  test('builds every page from the skill, ignoring a hand written page left in docs/site/content', () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'components-'))
 
-    const angular = loader.content.slice(
-      0,
-      loader.content.indexOf('{% framework name="react" %}'),
+    fs.cpSync(fixtureRoot, root, { recursive: true })
+    fs.mkdirSync(path.join(root, 'docs/site/content/components'), {
+      recursive: true,
+    })
+    fs.writeFileSync(
+      path.join(root, 'docs/site/content/components/loader.md'),
+      '---\ntitle: Loader\n---\n\nA stale hand written page.\n',
     )
 
-    assert.ok(angular.includes('The `<smart-loader>` component covers'))
-    assert.ok(!angular.includes('## Source'))
+    const { pages } = collectComponents(root)
+    const loader = pages.find((page) => page.name === 'loader').content
+
+    assert.ok(!loader.includes('A stale hand written page.'))
+    assert.ok(loader.includes('The `<smart-loader>` component covers'))
+    assert.deepEqual(parseFrontmatter(loader).data.frameworks, [
+      'angular',
+      'react',
+    ])
   })
 
   test('reports the components whose stories carry no usage region', () => {
@@ -725,7 +680,10 @@ describe('collectComponents', () => {
 
     assert.deepEqual(
       report.filter((entry) => entry.missing),
-      [{ component: 'gadget', missing: 'usage-region' }],
+      [
+        { component: 'gadget', missing: 'usage-region' },
+        { component: 'loader', missing: 'usage-region' },
+      ],
     )
   })
 
@@ -820,7 +778,13 @@ describe('generate-components CLI', () => {
   test('warns about a component nothing can be written from', () => {
     const root = workspace()
 
-    fs.rmSync(path.join(root, 'docs/site/content/components/loader.md'))
+    fs.rmSync(
+      path.join(
+        root,
+        'packages/shared/claude-plugins/src/plugins/smart-angular/skills/angular-components-loader',
+      ),
+      { recursive: true },
+    )
 
     const output = run(root)
 
@@ -1008,24 +972,6 @@ describe('the React variant', () => {
 
     assert.ok(!source.includes('{% framework'))
     assert.equal(parseFrontmatter(source).data.frameworks, undefined)
-  })
-})
-
-describe('the React variant of a hand written page', () => {
-  test('wraps the hand written body as Angular and adds the React skill', () => {
-    const { pages } = collectComponents(fixtureRoot)
-    const loader = pages.find((page) => page.name === 'loader').content
-    const angular = loader.slice(
-      loader.indexOf('{% framework name="angular" %}'),
-      loader.indexOf('{% framework name="react" %}'),
-    )
-
-    assert.ok(angular.includes('The `<smart-loader>` component covers'))
-    assert.ok(loader.includes('`SmartLoader` covers its parent'))
-    assert.deepEqual(parseFrontmatter(loader).data.frameworks, [
-      'angular',
-      'react',
-    ])
   })
 })
 

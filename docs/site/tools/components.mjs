@@ -32,7 +32,6 @@ import { parseFrontmatter } from './navigation.mjs'
 import { PLUGINS_DIR } from './skills.mjs'
 
 const REPO_URL = 'https://github.com/emiljuchnikowski/smartsoft001/tree/main'
-const CONTENT_DIR = 'docs/site/content/components'
 const EXAMPLES_DIR = 'docs/examples'
 const USAGE_REGION = 'usage'
 
@@ -770,43 +769,6 @@ function frameworksOf(variants) {
     : {}
 }
 
-/**
- * Hand written pages keep their body word for word; only the frontmatter the
- * generator owns (order, section, component) is added.
- */
-export function transformContentToPage({ name, order, source, react = null }) {
-  const { data, body } = parseFrontmatter(source)
-  const title = data.title ?? startCase(name)
-  const description = data.nextjs?.metadata?.description ?? data.description
-  const variants = [{ framework: 'angular', lines: body.split('\n') }]
-  const report = []
-
-  // The hand written page is the Angular variant; the React one comes from
-  // the React skill like on every other page.
-  if (react) {
-    const variant = renderVariant('react', react)
-
-    variants.push({ framework: 'react', ...variant })
-    report.push(...variant.report)
-  }
-
-  return {
-    title,
-    description,
-    report,
-    content:
-      frontmatter({
-        ...data,
-        section: 'Components',
-        order,
-        component: name,
-        ...frameworksOf(variants),
-      }) +
-      '\n' +
-      tidy(renderVariants(variants)),
-  }
-}
-
 const INDEX_LEAD =
   'Every component has the same options, behaviour and Tailwind classes in ' +
   '`@smartsoft001/angular` (`<smart-button>`) and `@smartsoft001/react` ' +
@@ -965,7 +927,6 @@ export function collectComponents(
   let order = 0
 
   for (const name of names) {
-    const content = readIfExists(path.join(repoRoot, CONTENT_DIR, `${name}.md`))
     const skill = readIfExists(
       path.join(
         repoRoot,
@@ -975,7 +936,7 @@ export function collectComponents(
       ),
     )
 
-    if (!content && !skill) {
+    if (!skill) {
       warnings.push(`no source for component ${name}`)
       continue
     }
@@ -983,17 +944,15 @@ export function collectComponents(
     order += 1
 
     const react = reactVariant(repoRoot, name)
-    const page = content
-      ? transformContentToPage({ name, order, source: content, react })
-      : transformSkillToPage({
-          name,
-          order,
-          source: skill,
-          story: findStory(repoRoot, name),
-          usage: findUsage(repoRoot, name),
-          example: findExample(repoRoot, name),
-          react,
-        })
+    const page = transformSkillToPage({
+      name,
+      order,
+      source: skill,
+      story: findStory(repoRoot, name),
+      usage: findUsage(repoRoot, name),
+      example: findExample(repoRoot, name),
+      react,
+    })
 
     pages.push({ name, content: page.content })
     entries.push({ name, description: page.description })
