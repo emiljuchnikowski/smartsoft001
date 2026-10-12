@@ -161,6 +161,16 @@ Props of the rich-text editor of `longText` fields.
 
 Uploading fields need a file service: give `SmartProvider` a `fileServiceConfig` (`{ apiUrl }`) or a `fileService`; without one, a picked file is not uploaded. Files go to `<apiUrl>/attachments`.
 
+## Possibilities
+
+The `radio` and `check` fields (standard and preset) and the preset `enum` list their possibilities from, in this order of precedence:
+
+1. the model possibilities provider (`modelPossibilitiesProvider` on `SmartProvider`), asked with `{ type, key, instance }` (the model's class, the field key and the form's value) when the field mounts and again 500 ms after the form's value last changed, as long as it returns a list or a promise of one (a `null` or `undefined` result is ignored);
+2. else `options.possibilities`;
+3. else the field's own `possibilities` (read through the first item of an array model): an object map `{ text: id }`, such as an enum, as a list for `radio` and the preset `enum`, a list as it is for `check`.
+
+The `check` fields check each possibility whose `id` is in the value (or equals it). The standard `enum` lists the keys of the enum in `fieldOptions.possibilities` and asks no provider. `useInputPossibilities` returns the first two sources (the provider's, else the input options'), so a custom field adds its own fallback.
+
 ## Labels, info and messages
 
 - The label is the label provider's (`modelLabelProvider` on `SmartProvider`) or the translation of `MODEL.<key>` (see `react-provider`).

@@ -22,7 +22,7 @@ Main wrapper component. Always renders via `NgComponentOutlet`, forwarding `opti
 
 ### PageStandardComponent (`<smart-page-standard>`)
 
-Default concrete implementation and the value for `baseMap['standard']`. Renders a Tailwind-styled header with the translated title, optional back button, optional search input, `endButtons` via `<smart-button>`, and a body section driven by `options.bodyTpl`. It renders no wrapper element and does not apply the `class` (header and body are siblings); of the slot templates it renders only `bodyTpl`.
+Default concrete implementation and the value for `baseMap['standard']`. Renders a Tailwind-styled header with the translated title, optional back button, optional search input, `endButtons` via `<smart-button>`, and a body section driven by `options.bodyTpl`. Header and body sit in one root element (`data-role="page"`) that takes the `class` (`cssClass`, declared without the alias like the preset's); of the slot templates it renders only `bodyTpl`.
 
 ### PageBaseComponent (abstract)
 
@@ -32,10 +32,10 @@ Abstract base directive for extending custom page variants. Exposes `options`, `
 
 ### Inputs
 
-| Input     | Type                              | Default | Description                                                                                                                                |
-| --------- | --------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| `options` | `InputSignal<IPageOptions\|null>` | -       | Page configuration (see `IPageOptions`)                                                                                                    |
-| `class`   | `InputSignal<string>`             | `''`    | External CSS classes (alias for `cssClass`), forwarded to the variant; the preset puts them on its root, the standard variant ignores them |
+| Input     | Type                              | Default | Description                                                                                                                                         |
+| --------- | --------------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `options` | `InputSignal<IPageOptions\|null>` | -       | Page configuration (see `IPageOptions`)                                                                                                             |
+| `class`   | `InputSignal<string>`             | `''`    | External CSS classes (alias for `cssClass`), forwarded to the variant; the standard and preset variants put them on their root (`data-role="page"`) |
 
 ### SmartPageVariant
 
@@ -216,6 +216,8 @@ export class MyCustomPageComponent extends PageBaseComponent {}
   <p>Body</p>
 </smart-page>
 ```
+
+The class lands on the root element of the variant (`data-role="page"`), in the standard page and in the preset alike.
 
 ## Preset
 

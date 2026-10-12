@@ -45,10 +45,10 @@ Extends `SmartPageVariantProps`.
 
 The props of a page variant (what `<SmartPage>` hands to the resolved component): the options, with `bodyTpl` already merged with the wrapper's children, and the CSS class.
 
-| Prop         | Type                   | Default | Description                                                                   |
-| ------------ | ---------------------- | ------- | ----------------------------------------------------------------------------- |
-| `options?`   | `IPageOptions \| null` | —       | The page options, with `bodyTpl` already set from `children`.                 |
-| `className?` | `string`               | —       | Classes of the page root (the standard rendering has no root and ignores it). |
+| Prop         | Type                   | Default | Description                                                   |
+| ------------ | ---------------------- | ------- | ------------------------------------------------------------- |
+| `options?`   | `IPageOptions \| null` | —       | The page options, with `bodyTpl` already set from `children`. |
+| `className?` | `string`               | —       | Classes of the page root (`data-role="page"`).                |
 
 ### `IPageOptions`
 
@@ -208,7 +208,7 @@ function usePage();
 
 ## Styling
 
-- `SmartPageStandard` renders no wrapper element (header and body are siblings) and does not apply `className`.
+- `SmartPageStandard` renders the header and the body in one root element (`data-role="page"`) and puts `className` on it.
 - `SmartPagePreset` appends `className` to its root and renders a gray page body with the content in a card, with `smart:dark:` variants.
 
 ## File Locations

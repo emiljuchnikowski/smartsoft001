@@ -81,7 +81,7 @@ Payload of `onActionClick`.
 
 ## Opening a component in a modal from code
 
-`useModalService().show({ component, props })` opens `component` inside a `SmartModal` rendered by the modal host of `SmartProvider` (see `react-components-overlays`). The component receives its `props` and a `dismiss(data)` prop; `onDidDismiss()` resolves with `{ data }`. `useModalService().dismiss(data)` closes the modal opened last.
+`useModalService().show({ component, props })` opens `component` inside a `SmartModal` with its close button, rendered by the modal host of `SmartProvider` (see `react-components-overlays`, which also describes `mode`, `cssClass` and `backdropDismiss`). The component receives its `props` and a `dismiss(data)` prop; `onDidDismiss()` resolves with `{ data }`, `{ data: null }` when the modal closed itself. `useModalService().dismiss(data)` closes the modal opened last.
 
 ```tsx
 import { SmartButton, useModalService } from '@smartsoft001/react';
@@ -247,12 +247,12 @@ export function CustomModal(props: SmartModalProps) {
 }
 ```
 
-Registered as `components={{ modal: CustomModal }}`, it renders both the `SmartModal`s placed by hand and the modals of `ModalService.show` (which pass `open`, `className` from `cssClass`, `onClosed` and the component as `children`).
+Registered as `components={{ modal: CustomModal }}`, it renders both the `SmartModal`s placed by hand and the modals of `ModalService.show` (which pass `open`, `className` from `cssClass`, `options` with `withDismiss: true`, `onClosed` and the component as `children`).
 
 ## Styling
 
 - `SmartModalStandard` is always in the DOM as a `<dialog>` and shown through its `open` attribute; its native `close` event closes the modal too. Action buttons carry `data-variant`.
-- `SmartModalPreset` renders inline with a `fixed` backdrop over the viewport; a click on the backdrop itself or Escape closes it. It carries `smart:dark:` variants.
+- `SmartModalPreset` renders inline with a `fixed` backdrop over the viewport; a click on the backdrop itself or Escape closes it; with preset modals stacked, Escape closes only the one on top. It carries `smart:dark:` variants.
 
 ## File Locations
 

@@ -12,6 +12,7 @@ The `<smart-modal>` component provides a dialog overlay with title, description,
 
 - Developer wants to use or customize the modal/dialog component
 - Developer asks about `<smart-modal>`, `ModalComponent`, `ModalStandardComponent`, or `ModalBaseComponent`
+- Developer wants to open a component in a modal from code and await its result (`ModalService`)
 
 ## Components
 
@@ -27,7 +28,7 @@ Barebones placeholder concrete implementation. Renders a native `<dialog [open] 
 
 Styled variation that extends `ModalBaseComponent` and is a drop-in replacement for `ModalStandardComponent`. Register it via `MODAL_STANDARD_COMPONENT_TOKEN` (or with `provideSmartPresets()`) to restyle every `<smart-modal>`, or use the `<smart-modal-preset>` selector directly. It renders a translated Preline overlay — a full-screen scrollable backdrop hosting a `rounded-xl` card with a header (`title` + optional dismiss `×`), a body (`description` + projected content), and a footer of action buttons. The look is selected through `options.variant` (default `'centered'`): `centered`/`alert` are vertically centered (`alert` is narrower), `wide` is a top-aligned large dialog, and `left-aligned-buttons` left-aligns the footer. `options.footerStyle: 'gray'` tints the footer, and action buttons are styled by their `variant` (`primary`/`secondary`/`danger`). All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants; the class recipes are internal to the preset (not exported).
 
-> **Preline JS is NOT used.** Open/close is driven entirely by the existing `open` model signal + `@if` (no `HSOverlay`, no `data-hs-*`). The component binds its own dismiss UX: clicking the backdrop and pressing `Escape` both call `close()` (which sets `open` to `false` and emits `closed`). The dialog ARIA contract is preserved (`role="dialog"`, `aria-modal="true"`, `aria-labelledby` when `title` is set, else `aria-label` from `options.ariaLabel`). The header dismiss `×` button is only shown when `options.withDismiss` is `true`.
+> **Preline JS is NOT used.** Open/close is driven entirely by the existing `open` model signal + `@if` (no `HSOverlay`, no `data-hs-*`). The component binds its own dismiss UX: clicking the backdrop and pressing `Escape` both call `close()` (which sets `open` to `false` and emits `closed`). With preset modals stacked (a modal opened from a modal), `Escape` closes only the one on top. The dialog ARIA contract is preserved (`role="dialog"`, `aria-modal="true"`, `aria-labelledby` when `title` is set, else `aria-label` from `options.ariaLabel`). The header dismiss `×` button is only shown when `options.withDismiss` is `true`.
 >
 > `ModalPresetComponent` declares `cssClass` without the `class` alias (applied to the centering wrapper): bind it as `[cssClass]` on the `<smart-modal-preset>` selector, or pass `class` on `<smart-modal>` (the wrapper forwards it).
 
@@ -181,6 +182,58 @@ The inherited `cssClass` (input alias `class`) receives the class passed to `<sm
 <smart-modal [(open)]="open" class="smart:p-4" />
 ```
 
+## Opening a component in a modal from code
+
+`ModalService.show(options)` (provided by `SharedServicesModule`) creates `options.component` inside a `<smart-modal>` at the end of `<body>` and resolves with an `IModal`. The modal is the implementation registered for `MODAL_STANDARD_COMPONENT_TOKEN` (the preset with `provideSmartPresets()`) and shows its close button (`withDismiss`). `props` become the component's inputs (keys it does not declare as inputs are left out), and a component that declares a `dismiss` input gets the function that closes its modal. A component can also inject `ModalService` and call `dismiss(data)`: it resolves to the service that opened it. The modals stack; `ModalService.dismiss(data)` closes the one opened last. Closing a modal restores the focus to the element focused before it opened.
+
+| Option            | Type                    | Default     | Description                                                                                                                      |
+| ----------------- | ----------------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `component`       | `any`                   | required    | The component rendered in the modal.                                                                                             |
+| `props`           | `any`                   | -           | Its inputs, by input name.                                                                                                       |
+| `mode`            | `'default' \| 'bottom'` | `'default'` | `'bottom'` adds the `smart-modal-bottom` class to the modal for the application to style; the modal element carries `data-mode`. |
+| `cssClass`        | `string[]`              | -           | Classes passed to the modal as `class`.                                                                                          |
+| `backdropDismiss` | `boolean`               | `true`      | `false` keeps the modal open on a click on its backdrop and on Escape; its close button and `dismiss()` still close it.          |
+| `injector`        | `Injector`              | -           | The injector the component resolves its dependencies from (e.g. the opener's `inject(Injector)`), the service's otherwise.       |
+
+| `IModal` member  | Type                           | Description                                                                                                                         |
+| ---------------- | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `dismiss(data?)` | `(data?: any) => void`         | Closes the modal.                                                                                                                   |
+| `onDidDismiss()` | `() => Promise<{ data: any }>` | Resolves once the modal is closed, with the data it was closed with; `{ data: null }` for its close button, the backdrop or Escape. |
+
+```typescript
+import { Component, inject, input } from '@angular/core';
+
+import { ModalService } from '@smartsoft001/angular';
+
+@Component({
+  selector: 'app-rename-form',
+  template: `
+    <input #name [value]="name()" />
+    <button type="button" (click)="dismiss()?.(name.value)">Save</button>
+  `,
+})
+export class RenameFormComponent {
+  name = input('');
+  dismiss = input<(data?: unknown) => void>();
+}
+
+export class RenameAction {
+  private modalService = inject(ModalService);
+
+  async rename(name: string): Promise<string | null> {
+    const modal = await this.modalService.show({
+      component: RenameFormComponent,
+      props: { name },
+    });
+    const { data } = await modal.onDidDismiss();
+
+    return typeof data === 'string' ? data : null;
+  }
+}
+```
+
+`[smartDetails]` and `DetailsPage` (see `angular-components-details`) open details through the same service.
+
 ## File Locations
 
 - Wrapper: `packages/shared/angular/src/lib/components/modal/modal.component.ts`
@@ -191,3 +244,4 @@ The inherited `cssClass` (input alias `class`) receives the class passed to `<sm
 - Stories: `packages/shared/angular/src/lib/components/modal/modal.component.stories.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`MODAL_STANDARD_COMPONENT_TOKEN`)
 - Interfaces: `packages/shared/angular/src/lib/models/interfaces.ts` (`IModalAction`, `IModalOptions`)
+- Service: `packages/shared/angular/src/lib/services/modal/modal.service.ts` (`ModalService`, `IModalServiceOptions`, `IModal`)
