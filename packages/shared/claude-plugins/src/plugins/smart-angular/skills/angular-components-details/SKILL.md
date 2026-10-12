@@ -139,11 +139,11 @@ export class MyCustomDetailsComponent extends DetailsBaseComponent<any> {}
 
 The `[smartDetails]` directive (`DetailsDirective`) opens a component in a modal on click, through `ModalService` (see `angular-components-modal`), with its `params` as the `value` input. It emits `smartDetailsShowed` once the modal is open and `smartDetailsDismissed` once it is closed; the browser's back button (`HardwareService.onBackButtonClick`, the window's `popstate`) closes the modal as well. `showDetailsModal(services, options, callbacks)` does the same from code, and is what `<smart-list>` uses for its `details` option (see `angular-components-list`).
 
-| `[smartDetails]` field | Type                    | Default    | Description                                   |
-| ---------------------- | ----------------------- | ---------- | --------------------------------------------- |
-| `component`            | `any`                   | required   | Rendered in the modal, e.g. `DetailsPage`.    |
-| `params`               | `any`                   | required   | Its `value` input, e.g. an `IDetailsOptions`. |
-| `mode`                 | `'bottom' \| 'default'` | `'bottom'` | Passed to `ModalService.show` as `mode`.      |
+| `[smartDetails]` field | Type                    | Default    | Description                                                               |
+| ---------------------- | ----------------------- | ---------- | ------------------------------------------------------------------------- |
+| `component`            | `any`                   | required   | Rendered in the modal, e.g. `DetailsPage`.                                |
+| `params`               | `any`                   | required   | Its `value` input, e.g. an `IDetailsOptions`.                             |
+| `mode`                 | `'bottom' \| 'default'` | `'bottom'` | Passed to `ModalService.show` as `mode`; `'bottom'` opens a bottom sheet. |
 
 ```html
 <button

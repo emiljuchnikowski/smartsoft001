@@ -182,6 +182,39 @@ describe('@smartsoft001/shared-angular: ModalStandardComponent', () => {
       expect(component.open()).toBe(false);
     });
 
+    it('should expose options.variant as data-variant on the dialog', () => {
+      fixture.componentRef.setInput('options', { variant: 'wide' });
+      fixture.detectChanges();
+
+      const dialog = fixture.nativeElement.querySelector('dialog');
+
+      expect(dialog.getAttribute('data-variant')).toBe('wide');
+      expect(dialog.className).toBe('');
+    });
+
+    it('should dock the dialog to the bottom of the viewport for the bottom-sheet variant', () => {
+      fixture.componentRef.setInput('options', { variant: 'bottom-sheet' });
+      fixture.componentRef.setInput('class', 'my-extra-class');
+      fixture.detectChanges();
+
+      const dialog: HTMLDialogElement =
+        fixture.nativeElement.querySelector('dialog');
+
+      expect(dialog.getAttribute('data-variant')).toBe('bottom-sheet');
+      expect(Array.from(dialog.classList)).toEqual(
+        expect.arrayContaining([
+          'smart:fixed',
+          'smart:bottom-0',
+          'smart:w-full',
+          'smart:max-h-[85dvh]',
+          'smart:overflow-y-auto',
+          'smart:sm:max-w-2xl',
+          'smart:sm:rounded-t-xl',
+        ]),
+      );
+      expect(dialog.classList).toContain('my-extra-class');
+    });
+
     it('should include external cssClass on the dialog when provided', () => {
       fixture.componentRef.setInput('class', 'my-extra-class');
       fixture.detectChanges();

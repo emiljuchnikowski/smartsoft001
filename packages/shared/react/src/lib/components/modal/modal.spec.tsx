@@ -54,6 +54,34 @@ describe('@smartsoft001/react: SmartModal', () => {
 
       expect(screen.getByTestId('custom')).toHaveTextContent('Confirmbody');
     });
+
+    it('should render the standard dialog as a bottom sheet for the bottom-sheet variant', () => {
+      render(<SmartModal open options={{ variant: 'bottom-sheet' }} />);
+
+      const dialog = screen.getByRole('dialog');
+      expect(dialog.tagName).toBe('DIALOG');
+      expect(dialog).toHaveAttribute('data-variant', 'bottom-sheet');
+      expect(dialog).toHaveClass('smart:bottom-0');
+    });
+
+    it('should render the preset registered as components.modal as a bottom sheet', () => {
+      render(
+        <SmartProvider components={{ modal: SmartModalPreset }}>
+          <SmartModal
+            open
+            className="smart-modal-bottom"
+            options={{ variant: 'bottom-sheet' }}
+          />
+        </SmartProvider>,
+      );
+
+      const panel = screen.getByRole('dialog');
+      expect(panel).toHaveClass('smart:max-h-[85dvh]');
+      expect(panel.parentElement).toHaveClass(
+        'smart:bottom-0',
+        'smart-modal-bottom',
+      );
+    });
   });
 
   describe('standard', () => {
@@ -253,6 +281,38 @@ describe('@smartsoft001/react: SmartModal', () => {
       );
 
       expect(dialog(container)).toHaveClass('my-extra-class');
+    });
+
+    it('should expose options.variant as data-variant on the dialog', () => {
+      const { container } = render(
+        <SmartModalStandard open options={{ variant: 'wide' }} />,
+      );
+
+      expect(dialog(container)).toHaveAttribute('data-variant', 'wide');
+      expect(dialog(container)).not.toHaveAttribute('class');
+    });
+
+    it('should dock the dialog to the bottom of the viewport for the bottom-sheet variant', () => {
+      const { container } = render(
+        <SmartModalStandard
+          open
+          className="my-extra-class"
+          options={{ variant: 'bottom-sheet' }}
+        />,
+      );
+
+      const el = dialog(container);
+      expect(el).toHaveAttribute('data-variant', 'bottom-sheet');
+      expect(el).toHaveClass(
+        'smart:fixed',
+        'smart:bottom-0',
+        'smart:w-full',
+        'smart:max-h-[85dvh]',
+        'smart:overflow-y-auto',
+        'smart:sm:max-w-2xl',
+        'smart:sm:rounded-t-xl',
+      );
+      expect(el.classList[el.classList.length - 1]).toBe('my-extra-class');
     });
 
     it('should render children inside the dialog', () => {
@@ -537,6 +597,68 @@ describe('@smartsoft001/react: SmartModal', () => {
       expect(screen.getByRole('dialog').parentElement).toHaveClass(
         'my-extra-class',
       );
+    });
+
+    describe('bottom-sheet variant', () => {
+      const renderSheet = (props: Partial<SmartModalProps> = {}) =>
+        render(
+          <SmartModalPreset
+            open
+            options={{ variant: 'bottom-sheet', footerStyle: 'gray' }}
+            actions={[{ id: 'ok', label: 'OK' }]}
+            {...props}
+          />,
+        );
+
+      it('should dock the wrapper to the bottom of the viewport at full width', () => {
+        renderSheet();
+
+        const wrapper = screen.getByRole('dialog').parentElement;
+        expect(wrapper).toHaveClass(
+          'smart:fixed',
+          'smart:bottom-0',
+          'smart:w-full',
+          'smart:sm:max-w-2xl',
+        );
+        expect(wrapper).not.toHaveClass('smart:m-3', 'smart:items-center');
+      });
+
+      it('should cap the height of the panel and round its top corners from sm', () => {
+        renderSheet();
+
+        const panel = screen.getByRole('dialog');
+        expect(panel).toHaveClass(
+          'smart:max-h-[85dvh]',
+          'smart:sm:rounded-t-xl',
+        );
+        expect(panel).not.toHaveClass('smart:rounded-xl');
+      });
+
+      it('should not round the bottom of the gray footer', () => {
+        renderSheet();
+
+        const footer = screen.getByRole('button', { name: 'OK' }).parentElement;
+        expect(footer).toHaveClass('smart:bg-gray-50');
+        expect(footer).not.toHaveClass('smart:rounded-b-xl');
+      });
+
+      it('should close on a click on the backdrop', () => {
+        const onClosed = jest.fn();
+        const { container } = renderSheet({ onClosed });
+
+        fireEvent.click(backdrop(container));
+
+        expect(onClosed).toHaveBeenCalledTimes(1);
+      });
+
+      it('should close on Escape', () => {
+        const onClosed = jest.fn();
+        renderSheet({ onClosed });
+
+        fireEvent.keyDown(document, { key: 'Escape' });
+
+        expect(onClosed).toHaveBeenCalledTimes(1);
+      });
     });
   });
 });

@@ -26,11 +26,21 @@ export const MODAL_BACKDROP = [
 
 const WRAPPER_BASE = ['smart:m-3', 'smart:sm:mx-auto'].join(' ');
 
+// The bottom sheet is docked to the bottom edge of the viewport: full width on
+// small screens, centred under its max width from `sm`.
+const WRAPPER_BOTTOM_SHEET = [
+  'smart:fixed',
+  'smart:inset-x-0',
+  'smart:bottom-0',
+  'smart:sm:mx-auto',
+].join(' ');
+
 const WRAPPER_WIDTH_BY_VARIANT: Record<SmartModalVariant, string> = {
   centered: 'smart:sm:max-w-lg smart:sm:w-full',
   wide: 'smart:lg:max-w-4xl smart:lg:w-full',
   alert: 'smart:sm:max-w-md smart:sm:w-full',
   'left-aligned-buttons': 'smart:sm:max-w-lg smart:sm:w-full',
+  'bottom-sheet': 'smart:w-full smart:sm:max-w-2xl',
 };
 
 // Vertically-centered variants need the flex + min-height treatment.
@@ -50,6 +60,26 @@ const PANEL_BASE = [
   'smart:dark:border-gray-700',
   'smart:shadow-2xs',
   'smart:rounded-xl',
+  'smart:pointer-events-auto',
+].join(' ');
+
+// The sheet's panel: flush with the bottom edge (a top border only on small
+// screens, rounded top corners from `sm`), at most 85% of the viewport high so
+// the body scrolls, and padded by the bottom safe area of notched phones.
+const PANEL_BOTTOM_SHEET = [
+  'smart:flex',
+  'smart:flex-col',
+  'smart:w-full',
+  'smart:max-h-[85dvh]',
+  'smart:pb-[env(safe-area-inset-bottom)]',
+  'smart:bg-white',
+  'smart:dark:bg-gray-800',
+  'smart:border-t',
+  'smart:sm:border-x',
+  'smart:border-gray-200',
+  'smart:dark:border-gray-700',
+  'smart:shadow-lg',
+  'smart:sm:rounded-t-xl',
   'smart:pointer-events-auto',
 ].join(' ');
 
@@ -110,11 +140,11 @@ const FOOTER_BASE = [
   'smart:dark:border-gray-700',
 ].join(' ');
 
-const FOOTER_GRAY = [
-  'smart:bg-gray-50',
-  'smart:dark:bg-gray-800/50',
-  'smart:rounded-b-xl',
-].join(' ');
+const FOOTER_GRAY = ['smart:bg-gray-50', 'smart:dark:bg-gray-800/50'].join(' ');
+
+// The gray footer follows the rounded bottom corners of the card; the bottom
+// sheet has none.
+const FOOTER_GRAY_ROUNDED = 'smart:rounded-b-xl';
 
 const ACTION_BASE = [
   'smart:py-2',
@@ -143,9 +173,13 @@ function isCentered(variant: SmartModalVariant): boolean {
   return variant === 'centered' || variant === 'alert';
 }
 
+function isBottomSheet(variant: SmartModalVariant): boolean {
+  return variant === 'bottom-sheet';
+}
+
 export function getModalWrapperClasses(variant: SmartModalVariant): string {
   return [
-    WRAPPER_BASE,
+    isBottomSheet(variant) ? WRAPPER_BOTTOM_SHEET : WRAPPER_BASE,
     WRAPPER_WIDTH_BY_VARIANT[variant],
     isCentered(variant) ? WRAPPER_CENTERED : '',
   ]
@@ -154,6 +188,8 @@ export function getModalWrapperClasses(variant: SmartModalVariant): string {
 }
 
 export function getModalPanelClasses(variant: SmartModalVariant): string {
+  if (isBottomSheet(variant)) return PANEL_BOTTOM_SHEET;
+
   // Centered wrappers stretch the panel to the wrapper width.
   return [PANEL_BASE, isCentered(variant) ? 'smart:w-full' : '']
     .filter(Boolean)
@@ -168,7 +204,14 @@ export function getModalFooterClasses(
     variant === 'left-aligned-buttons'
       ? 'smart:justify-start'
       : 'smart:justify-end';
-  return [FOOTER_BASE, alignment, footerStyle === 'gray' ? FOOTER_GRAY : '']
+  const gray = footerStyle === 'gray';
+
+  return [
+    FOOTER_BASE,
+    alignment,
+    gray ? FOOTER_GRAY : '',
+    gray && !isBottomSheet(variant) ? FOOTER_GRAY_ROUNDED : '',
+  ]
     .filter(Boolean)
     .join(' ');
 }

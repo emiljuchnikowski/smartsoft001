@@ -493,7 +493,7 @@ export class ItemComponent<T extends IEntity<string>>
 
     this.toastService.info({
       title: this.translateService.instant('INPUT.ERRORS.requires'),
-      message: invalidFields.slice(0, 3).join('<br/>'),
+      message: invalidFields.slice(0, 3).join(', '),
     });
 
     return true;

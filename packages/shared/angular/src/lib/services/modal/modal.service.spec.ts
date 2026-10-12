@@ -170,10 +170,27 @@ describe('@smartsoft001/angular: ModalService', () => {
       });
 
       const modal = modals()[0];
+      const dialog = modal.querySelector('dialog');
       expect(modal.getAttribute('data-mode')).toBe('bottom');
-      expect(modal.querySelector('dialog')?.className).toBe(
-        'my-modal smart-modal-bottom',
-      );
+      expect(dialog?.classList).toContain('my-modal');
+      expect(dialog?.classList).toContain('smart-modal-bottom');
+    });
+
+    it('should open the bottom mode as the bottom-sheet variant', async () => {
+      await service.show({ component: BodyComponent, mode: 'bottom' });
+
+      const dialog = modals()[0].querySelector('dialog');
+      expect(dialog?.getAttribute('data-variant')).toBe('bottom-sheet');
+      expect(dialog?.classList).toContain('smart:bottom-0');
+      expect(dialog?.classList).toContain('smart:max-h-[85dvh]');
+    });
+
+    it('should open the default mode without a variant', async () => {
+      await service.show({ component: BodyComponent, cssClass: ['my-modal'] });
+
+      const dialog = modals()[0].querySelector('dialog');
+      expect(dialog?.hasAttribute('data-variant')).toBe(false);
+      expect(dialog?.className).toBe('my-modal');
     });
 
     it('should resolve the dependencies of the component from the given injector', async () => {
@@ -268,6 +285,34 @@ describe('@smartsoft001/angular: ModalService', () => {
 
       expect(dismissed).not.toHaveBeenCalled();
       expect(backdrop()).toBeTruthy();
+    });
+
+    it('should render the bottom mode as a bottom sheet', async () => {
+      await service.show({
+        component: BodyComponent,
+        props: { name: 'Ada' },
+        mode: 'bottom',
+      });
+      await render();
+
+      const panel = backdrop().querySelector('[role="dialog"]') as HTMLElement;
+      const wrapper = panel.parentElement as HTMLElement;
+      expect(wrapper.classList).toContain('smart:bottom-0');
+      expect(wrapper.classList).toContain('smart-modal-bottom');
+      expect(panel.classList).toContain('smart:sm:rounded-t-xl');
+      expect(panel.textContent).toContain('Hello Ada');
+    });
+
+    it('should close the bottom sheet on a backdrop click', async () => {
+      const modal = await service.show({
+        component: BodyComponent,
+        mode: 'bottom',
+      });
+      await render();
+
+      backdrop().click();
+
+      await expect(modal.onDidDismiss()).resolves.toEqual({ data: null });
     });
 
     it('should still close on its close button without backdropDismiss', async () => {

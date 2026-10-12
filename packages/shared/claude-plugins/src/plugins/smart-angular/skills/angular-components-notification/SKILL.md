@@ -1,6 +1,6 @@
 ---
 name: angular-components-notification
-description: Notification component API with InjectionToken pattern for custom implementations.
+description: Notification component API with InjectionToken pattern for custom implementations, and ToastService for showing toasts from code.
 user-invocable: false
 ---
 
@@ -12,6 +12,7 @@ The `<smart-notification>` component displays a transient or persistent message 
 
 - Developer wants to use or customize the notification component
 - Developer asks about `<smart-notification>`, `NotificationComponent`, `NotificationStandardComponent`, or `NotificationBaseComponent`
+- Developer wants to show a toast from code (`ToastService`), or toasts and `ErrorService` errors do not appear
 
 ## Components
 
@@ -185,6 +186,54 @@ The inherited `cssClass` (input alias `class`) receives the class passed to `<sm
 - The dismiss button carries `aria-label="Close"` since its visible content is the `×` glyph.
 - Custom implementations should preserve `role="status"` and `aria-live` to keep this contract.
 
+## Toasts from code
+
+`ToastService` (provided by `SharedServicesModule`) shows short messages at the bottom of the screen. While it has toasts it mounts one host at the end of `<body>`: a stack fixed to the bottom of the viewport (centred, right-aligned from `sm`, above the modals), every toast rendered through `<smart-notification>`. The implementation registered for `NOTIFICATION_STANDARD_COMPONENT_TOKEN` (the preset with `provideSmartPresets()`) therefore restyles the toasts too; the standard one renders them unstyled. A toast shows its `title` as the heading with the `message` under it, or the `message` alone, and its `buttons` as the notification's actions. It closes itself after `duration` ms, on its close button, or once the handler of one of its buttons ran. `ErrorService.log(error)` and the file inputs report their errors through it.
+
+| Member                                         | What it does                                                                                                                                                                                          |
+| ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `info(options: IToastOptions): Promise<void>`  | Shows an info toast, announced politely (`aria-live="polite"`).                                                                                                                                       |
+| `error(options: IToastOptions): Promise<void>` | Shows an error toast, announced assertively (`aria-live="assertive"`), unless an error lock is held.                                                                                                  |
+| `dismiss(id: number): void`                    | Closes a toast.                                                                                                                                                                                       |
+| `addLockError()` / `removeLockError()`         | Holds / releases an error lock, counted in the static `ToastService.lockError` (never below zero). While a lock is held, error toasts are swallowed, e.g. during a sign-out that makes requests fail. |
+| `toasts: Signal<IToast[]>`                     | The toasts shown, oldest first (`IToast` adds `id` and `type: 'error' \| 'info'` to the options).                                                                                                     |
+
+| `IToastOptions` field | Type             | Default  | Description                                                                                                                                                             |
+| --------------------- | ---------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `title`               | `string`         | -        | The heading; the message goes under it.                                                                                                                                 |
+| `message`             | `string`         | required | The text; the heading when there is no title.                                                                                                                           |
+| `duration`            | `number`         | `2000`   | Milliseconds before the toast closes itself; a missing, zero or negative value means 2000.                                                                              |
+| `buttons`             | `IToastButton[]` | -        | `{ text, position: 'start' \| 'end', handler }`: a click runs `handler`, then closes the toast. `position` is kept for compatibility; the actions keep the given order. |
+
+A toast without buttons renders in the `simple` notification variant, a message with buttons in `condensed`, and a title with a message and buttons in `with-actions-below`, which keeps the message under the title.
+
+```typescript
+import { inject, Injectable } from '@angular/core';
+
+import { ToastService } from '@smartsoft001/angular';
+
+@Injectable()
+export class SaveAction {
+  private toastService = inject(ToastService);
+
+  async run(save: () => Promise<void>, undo: () => void): Promise<void> {
+    try {
+      await save();
+      await this.toastService.info({
+        message: 'Saved',
+        buttons: [{ text: 'Undo', position: 'end', handler: undo }],
+      });
+    } catch {
+      await this.toastService.error({
+        title: 'Saving failed',
+        message: 'Try again in a moment.',
+        duration: 5000,
+      });
+    }
+  }
+}
+```
+
 ## Usage Examples
 
 ```html
@@ -231,3 +280,4 @@ The inherited `cssClass` (input alias `class`) receives the class passed to `<sm
 - Base class: `packages/shared/angular/src/lib/components/notification/base/base.component.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`NOTIFICATION_STANDARD_COMPONENT_TOKEN`)
 - Interfaces: `packages/shared/angular/src/lib/models/interfaces.ts` (`INotificationAction`, `INotificationOptions`, `SmartNotificationVariant`)
+- Toasts: `packages/shared/angular/src/lib/services/toast/toast.service.ts` (`ToastService`, `IToastOptions`, `IToastButton`, `IToast`) and its host `toast-host.component.ts`

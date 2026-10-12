@@ -230,7 +230,7 @@ export function useCrudItemPage<T extends IEntity<string>>({
 
     void toastService.info({
       title: t('INPUT.ERRORS.requires'),
-      message: invalidFields.slice(0, 3).join('<br/>'),
+      message: invalidFields.slice(0, 3).join(', '),
     });
 
     return true;

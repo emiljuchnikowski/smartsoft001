@@ -59,7 +59,7 @@ Methods:
 - `initKeys()` (protected) — populates `keys` from the resolved fields
 - `handlePageChange(page: number)` — calls `loadNextPage()` for a later page and `loadPrevPage()` for an earlier one
 - `isSortable(key)`, `sortBy(key)`, `ariaSort(key)`, `sortIndicator(key)` — whether a header sorts (every field column with `sort`, not the `__array` columns of a `dynamic` field), sort by it (calls `provider.getData({ offset: 0, sortBy, sortDesc })`), its `aria-sort` (`'ascending'` / `'descending'` on the active header, `null` otherwise) and its arrow (`↑`, `↓`, `↕`)
-- `openDetails(item)` — clears the details provider (`unselect()`), opens `detailsComponent ?? DetailsPage` in a `'bottom'` modal through `showDetailsModal` with `{ value: detailsComponentProps }`, then calls `select(item.id)`
+- `openDetails(item)` — clears the details provider (`unselect()`), opens `detailsComponent ?? DetailsPage` in a `'bottom'` modal (a bottom sheet) through `showDetailsModal` with `{ value: detailsComponentProps }`, then calls `select(item.id)`
 
 ## API
 
@@ -188,7 +188,7 @@ With `sort` set (`true`, or `{ default?, defaultDesc? }`), every field header of
 
 ## Details
 
-With `details: { provider }`, every item gets a details action, labelled with the `show` translation (`data-role="details"`): a column of the desktop table and a button in the mobile rows and the masonry tiles (standard and presets). It clears the provider (`clearData()`), opens `details.component`, or `DetailsPage` by default, in a modal through `ModalService` (mode `'bottom'`, see `angular-components-modal`) with `{ value: detailsComponentProps }`, and asks the provider for the item (`getData(id)`). `detailsComponentProps` is an `IDetailsOptions`: `item` and `loading` from the provider (signals, so the modal shows the item once it is loaded), `type`, the list's `itemHandler` and `removeHandler` and `details.componentFactories`. The browser's back button closes the modal. Without a `provider`, setting `details` throws `Must set details provider`.
+With `details: { provider }`, every item gets a details action, labelled with the `show` translation (`data-role="details"`): a column of the desktop table and a button in the mobile rows and the masonry tiles (standard and presets). It clears the provider (`clearData()`), opens `details.component`, or `DetailsPage` by default, in a bottom sheet through `ModalService` (mode `'bottom'`, see `angular-components-modal`) with `{ value: detailsComponentProps }`, and asks the provider for the item (`getData(id)`). `detailsComponentProps` is an `IDetailsOptions`: `item` and `loading` from the provider (signals, so the modal shows the item once it is loaded), `type`, the list's `itemHandler` and `removeHandler` and `details.componentFactories`. The browser's back button closes the modal. Without a `provider`, setting `details` throws `Must set details provider`.
 
 ## Infinite scroll
 

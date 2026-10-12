@@ -22,11 +22,11 @@ Main wrapper component. Renders `ModalStandardComponent` by default. When `MODAL
 
 ### ModalStandardComponent (`<smart-modal-standard>`)
 
-Barebones placeholder concrete implementation. Renders a native `<dialog [open] role="dialog" aria-modal="true">` containing an optional `<h2 id="smart-modal-title">`, an optional `<p>` description, an `<ng-content>` slot for arbitrary body content, an optional dismiss `<button>` (when `options.withDismiss` is `true`), and a `<footer>` with one `<button data-variant>` per action. It does not include Tailwind UI styling — it exists solely as the default structural placeholder until a custom implementation is registered through the token.
+Barebones placeholder concrete implementation. Renders a native `<dialog [open] role="dialog" aria-modal="true">` containing an optional `<h2 id="smart-modal-title">`, an optional `<p>` description, an `<ng-content>` slot for arbitrary body content, an optional dismiss `<button>` (when `options.withDismiss` is `true`), and a `<footer>` with one `<button data-variant>` per action. The dialog carries `options.variant` as `data-variant`. It does not include Tailwind UI styling — it exists solely as the default structural placeholder until a custom implementation is registered through the token — except for the `bottom-sheet` variant, which it docks to the bottom of the viewport (see the Variants table).
 
 ### ModalPresetComponent (`<smart-modal-preset>`)
 
-Styled variation that extends `ModalBaseComponent` and is a drop-in replacement for `ModalStandardComponent`. Register it via `MODAL_STANDARD_COMPONENT_TOKEN` (or with `provideSmartPresets()`) to restyle every `<smart-modal>`, or use the `<smart-modal-preset>` selector directly. It renders a translated Preline overlay — a full-screen scrollable backdrop hosting a `rounded-xl` card with a header (`title` + optional dismiss `×`), a body (`description` + projected content), and a footer of action buttons. The look is selected through `options.variant` (default `'centered'`): `centered`/`alert` are vertically centered (`alert` is narrower), `wide` is a top-aligned large dialog, and `left-aligned-buttons` left-aligns the footer. `options.footerStyle: 'gray'` tints the footer, and action buttons are styled by their `variant` (`primary`/`secondary`/`danger`). All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants; the class recipes are internal to the preset (not exported).
+Styled variation that extends `ModalBaseComponent` and is a drop-in replacement for `ModalStandardComponent`. Register it via `MODAL_STANDARD_COMPONENT_TOKEN` (or with `provideSmartPresets()`) to restyle every `<smart-modal>`, or use the `<smart-modal-preset>` selector directly. It renders a translated Preline overlay — a full-screen scrollable backdrop hosting a `rounded-xl` card with a header (`title` + optional dismiss `×`), a body (`description` + projected content), and a footer of action buttons. The look is selected through `options.variant` (default `'centered'`): `centered`/`alert` are vertically centered (`alert` is narrower), `wide` is a top-aligned large dialog, `left-aligned-buttons` left-aligns the footer, and `bottom-sheet` docks the card to the bottom of the viewport (see the Variants table). `options.footerStyle: 'gray'` tints the footer, and action buttons are styled by their `variant` (`primary`/`secondary`/`danger`). All classes are `smart:`-prefixed Tailwind with explicit `dark:` variants; the class recipes are internal to the preset (not exported).
 
 > **Preline JS is NOT used.** Open/close is driven entirely by the existing `open` model signal + `@if` (no `HSOverlay`, no `data-hs-*`). The component binds its own dismiss UX: clicking the backdrop and pressing `Escape` both call `close()` (which sets `open` to `false` and emits `closed`). With preset modals stacked (a modal opened from a modal), `Escape` closes only the one on top. The dialog ARIA contract is preserved (`role="dialog"`, `aria-modal="true"`, `aria-labelledby` when `title` is set, else `aria-label` from `options.ariaLabel`). The header dismiss `×` button is only shown when `options.withDismiss` is `true`.
 >
@@ -74,23 +74,36 @@ interface IModalAction {
 
 ### IModalOptions
 
-| Field         | Type                                                        | Default      | Description                                                                                                                                                 |
-| ------------- | ----------------------------------------------------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `variant`     | `'centered' \| 'wide' \| 'alert' \| 'left-aligned-buttons'` | `'centered'` | Preset only: `centered` and `alert` (narrower) are vertically centred, `wide` is a top-aligned large dialog, `left-aligned-buttons` left-aligns the footer. |
-| `withDismiss` | `boolean`                                                   | `false`      | Renders a close (×) button that calls `close()`.                                                                                                            |
-| `footerStyle` | `'default' \| 'gray'`                                       | `'default'`  | Preset only: `gray` gives the footer a gray background.                                                                                                     |
-| `ariaLabel`   | `string`                                                    | -            | The `aria-label` of the dialog when there is no `title`.                                                                                                    |
+| Field         | Type                  | Default      | Description                                                                                                                                                         |
+| ------------- | --------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `variant`     | `SmartModalVariant`   | `'centered'` | The layout, one of the variants in the Variants table. The preset styles each of them; the standard exposes it as `data-variant` and positions only `bottom-sheet`. |
+| `withDismiss` | `boolean`             | `false`      | Renders a close (×) button that calls `close()`.                                                                                                                    |
+| `footerStyle` | `'default' \| 'gray'` | `'default'`  | Preset only: `gray` gives the footer a gray background.                                                                                                             |
+| `ariaLabel`   | `string`              | -            | The `aria-label` of the dialog when there is no `title`.                                                                                                            |
 
 ```typescript
 interface IModalOptions {
-  variant?: 'centered' | 'wide' | 'alert' | 'left-aligned-buttons';
+  variant?:
+    'centered' | 'wide' | 'alert' | 'left-aligned-buttons' | 'bottom-sheet';
   withDismiss?: boolean;
   footerStyle?: 'default' | 'gray';
   ariaLabel?: string;
 }
 ```
 
-The default `ModalStandardComponent` consumes `withDismiss` and `ariaLabel`; `variant` and `footerStyle` are read by `ModalPresetComponent` (and are available to a custom implementation).
+The default `ModalStandardComponent` consumes `withDismiss` and `ariaLabel`, exposes `variant` as `data-variant` on the dialog and positions the `bottom-sheet` variant; `footerStyle` is read by `ModalPresetComponent` only. A custom implementation receives every field.
+
+### Variants
+
+`SmartModalVariant` (from `@smartsoft001/angular`) names the layouts of `options.variant`.
+
+| Variant                | `ModalPresetComponent`                                                                                                                                                                                                                                                  | `ModalStandardComponent`                                                                                                                                                   |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `centered` (default)   | A card centred vertically, `max-w-lg` from `sm`.                                                                                                                                                                                                                        | The browser's dialog layout.                                                                                                                                               |
+| `wide`                 | A top-aligned card, `max-w-4xl` from `lg`.                                                                                                                                                                                                                              | The browser's dialog layout.                                                                                                                                               |
+| `alert`                | A narrower centred card, `max-w-md` from `sm`.                                                                                                                                                                                                                          | The browser's dialog layout.                                                                                                                                               |
+| `left-aligned-buttons` | Like `centered`, with the footer buttons aligned to the left.                                                                                                                                                                                                           | The browser's dialog layout.                                                                                                                                               |
+| `bottom-sheet`         | A sheet docked to the bottom of the viewport: full width, centred under `max-w-2xl` with rounded top corners from `sm`, at most 85% of the viewport high with the body scrolling, padded by the bottom safe area. Same backdrop, Escape and close button as the others. | The `<dialog>` fixed to the bottom of the viewport (`z-[80]`), full width, `max-w-2xl` with rounded top corners from `sm`, at most 85% of the viewport high and scrolling. |
 
 ## MODAL_STANDARD_COMPONENT_TOKEN
 
@@ -154,7 +167,8 @@ export class MyCustomModalComponent extends ModalBaseComponent {}
 The inherited `cssClass` (input alias `class`) receives the class passed to `<smart-modal>`. When extending the base directly, remember to:
 
 - call `invokeAction(id)` to emit `actionClick`, and `close()` to emit `closed` and set `open.set(false)`,
-- implement `Escape` key handling and backdrop click yourself if you want native UX — the base does not bind any keyboard or backdrop listeners.
+- implement `Escape` key handling and backdrop click yourself if you want native UX — the base does not bind any keyboard or backdrop listeners,
+- lay out `options()?.variant === 'bottom-sheet'` as a bottom sheet: `ModalService` opens `mode: 'bottom'` with that variant.
 
 ## Usage Examples
 
@@ -186,14 +200,14 @@ The inherited `cssClass` (input alias `class`) receives the class passed to `<sm
 
 `ModalService.show(options)` (provided by `SharedServicesModule`) creates `options.component` inside a `<smart-modal>` at the end of `<body>` and resolves with an `IModal`. The modal is the implementation registered for `MODAL_STANDARD_COMPONENT_TOKEN` (the preset with `provideSmartPresets()`) and shows its close button (`withDismiss`). `props` become the component's inputs (keys it does not declare as inputs are left out), and a component that declares a `dismiss` input gets the function that closes its modal. A component can also inject `ModalService` and call `dismiss(data)`: it resolves to the service that opened it. The modals stack; `ModalService.dismiss(data)` closes the one opened last. Closing a modal restores the focus to the element focused before it opened.
 
-| Option            | Type                    | Default     | Description                                                                                                                      |
-| ----------------- | ----------------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| `component`       | `any`                   | required    | The component rendered in the modal.                                                                                             |
-| `props`           | `any`                   | -           | Its inputs, by input name.                                                                                                       |
-| `mode`            | `'default' \| 'bottom'` | `'default'` | `'bottom'` adds the `smart-modal-bottom` class to the modal for the application to style; the modal element carries `data-mode`. |
-| `cssClass`        | `string[]`              | -           | Classes passed to the modal as `class`.                                                                                          |
-| `backdropDismiss` | `boolean`               | `true`      | `false` keeps the modal open on a click on its backdrop and on Escape; its close button and `dismiss()` still close it.          |
-| `injector`        | `Injector`              | -           | The injector the component resolves its dependencies from (e.g. the opener's `inject(Injector)`), the service's otherwise.       |
+| Option            | Type                    | Default     | Description                                                                                                                                                                                                        |
+| ----------------- | ----------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `component`       | `any`                   | required    | The component rendered in the modal.                                                                                                                                                                               |
+| `props`           | `any`                   | -           | Its inputs, by input name.                                                                                                                                                                                         |
+| `mode`            | `'default' \| 'bottom'` | `'default'` | `'bottom'` opens the modal as a bottom sheet (the `bottom-sheet` variant, see the Variants table) and adds the `smart-modal-bottom` class for an application's own styling; the modal element carries `data-mode`. |
+| `cssClass`        | `string[]`              | -           | Classes passed to the modal as `class`.                                                                                                                                                                            |
+| `backdropDismiss` | `boolean`               | `true`      | `false` keeps the modal open on a click on its backdrop and on Escape; its close button and `dismiss()` still close it.                                                                                            |
+| `injector`        | `Injector`              | -           | The injector the component resolves its dependencies from (e.g. the opener's `inject(Injector)`), the service's otherwise.                                                                                         |
 
 | `IModal` member  | Type                           | Description                                                                                                                         |
 | ---------------- | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
@@ -232,7 +246,7 @@ export class RenameAction {
 }
 ```
 
-`[smartDetails]` and `DetailsPage` (see `angular-components-details`) open details through the same service.
+`[smartDetails]` and `DetailsPage` (see `angular-components-details`) open details through the same service, as a bottom sheet by default; so does the `details` option of `<smart-list>`.
 
 ## File Locations
 
@@ -243,5 +257,5 @@ export class RenameAction {
 - Base class: `packages/shared/angular/src/lib/components/modal/base/base.component.ts`
 - Stories: `packages/shared/angular/src/lib/components/modal/modal.component.stories.ts`
 - Token: `packages/shared/angular/src/lib/shared.inectors.ts` (`MODAL_STANDARD_COMPONENT_TOKEN`)
-- Interfaces: `packages/shared/angular/src/lib/models/interfaces.ts` (`IModalAction`, `IModalOptions`)
+- Interfaces: `packages/shared/angular/src/lib/models/interfaces.ts` (`IModalAction`, `IModalOptions`, `SmartModalVariant`)
 - Service: `packages/shared/angular/src/lib/services/modal/modal.service.ts` (`ModalService`, `IModalServiceOptions`, `IModal`)

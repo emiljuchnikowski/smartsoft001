@@ -1203,12 +1203,12 @@ The `<smart-modal>` component renders a dialog overlay with optional title, desc
 
 | Property      | Type                                                          | Default | Description                                                  |
 | ------------- | ------------------------------------------------------------- | ------- | ------------------------------------------------------------ |
-| `variant`     | `'centered' \| 'wide' \| 'alert' \| 'left-aligned-buttons'` | -       | Layout variant (consumed by custom impls)                   |
+| `variant`     | `'centered' \| 'wide' \| 'alert' \| 'left-aligned-buttons' \| 'bottom-sheet'` | -       | Layout variant; the standard reads only `'bottom-sheet'` (docked to the bottom of the viewport) |
 | `withDismiss` | `boolean`                                                     | `false` | Show top-right dismiss `×` button                            |
 | `footerStyle` | `'default' \| 'gray'`                                         | -       | Footer styling variant (consumed by custom impls)            |
 | `ariaLabel`   | `string`                                                      | -       | Accessible label rendered as `aria-label` (when no `title`)  |
 
-The default `ModalStandardComponent` consumes `withDismiss` and `ariaLabel`. The `variant` and `footerStyle` selectors are reserved for custom implementations registered via `MODAL_STANDARD_COMPONENT_TOKEN`.
+The default `ModalStandardComponent` consumes `withDismiss`, `ariaLabel` and the `'bottom-sheet'` variant, which `ModalService` sets for `mode: 'bottom'`. The preset reads every `variant` and `footerStyle`; a custom implementation registered via `MODAL_STANDARD_COMPONENT_TOKEN` may read them too.
 
 #### Overriding with Custom Implementation
 

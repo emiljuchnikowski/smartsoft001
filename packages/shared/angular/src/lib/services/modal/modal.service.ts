@@ -13,6 +13,7 @@ import {
 } from '@angular/core';
 
 import { ModalComponent } from '../../components/modal/modal.component';
+import { IModalOptions } from '../../models';
 
 export interface IModalServiceOptions {
   /** The component rendered in the modal. */
@@ -22,7 +23,11 @@ export interface IModalServiceOptions {
    * declare as inputs are left out.
    */
   props?: any;
-  /** `'bottom'` adds the `smart-modal-bottom` class to the modal. */
+  /**
+   * `'bottom'` opens the modal as a bottom sheet (the `'bottom-sheet'` modal
+   * variant: docked to the bottom of the viewport, full width up to a max
+   * width) and adds the `smart-modal-bottom` class to it.
+   */
   mode?: 'default' | 'bottom';
   /** Classes added to the modal (`<smart-modal class>`). */
   cssClass?: string[];
@@ -50,6 +55,15 @@ interface IModalEntry {
   options: IModalServiceOptions;
 }
 
+/** The modals of the service show their close button. */
+const MODAL_OPTIONS: IModalOptions = { withDismiss: true };
+
+/** `mode: 'bottom'`: the bottom sheet, with its close button. */
+const BOTTOM_SHEET_MODAL_OPTIONS: IModalOptions = {
+  withDismiss: true,
+  variant: 'bottom-sheet',
+};
+
 /**
  * Opens a component in a `<smart-modal>` at the end of `<body>` (the
  * implementation registered for `MODAL_STANDARD_COMPONENT_TOKEN`, so the
@@ -58,7 +72,8 @@ interface IModalEntry {
  *
  * The component gets `props` as its inputs and, when it declares one, a
  * `dismiss` input with the function that closes its modal. It can also inject
- * `ModalService` and call `dismiss(data)`. The modal shows its close button;
+ * `ModalService` and call `dismiss(data)`. `mode: 'bottom'` opens it as a
+ * bottom sheet (the `'bottom-sheet'` variant). The modal shows its close button;
  * closing it by the close button, the backdrop or Escape (as the modal
  * implementation provides them) resolves `onDidDismiss()` with
  * `{ data: null }`.
@@ -145,7 +160,10 @@ export class ModalService implements OnDestroy {
     });
 
     ref.setInput('open', true);
-    ref.setInput('options', { withDismiss: true });
+    ref.setInput(
+      'options',
+      options.mode === 'bottom' ? BOTTOM_SHEET_MODAL_OPTIONS : MODAL_OPTIONS,
+    );
     ref.setInput('class', this.getClasses(options).join(' '));
     ref.instance.closed.subscribe(() => entry.modal.dismiss());
 

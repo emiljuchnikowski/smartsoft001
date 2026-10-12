@@ -6,7 +6,7 @@ user-invocable: false
 
 # Modal (`SmartModal`)
 
-`SmartModal` is a dialog with a title, a description, a body (`children`) and footer buttons (`actions`). A footer button reports `onActionClick({ actionId })` and **keeps the modal open**: close it yourself (set `open` to `false`). The open state is controlled (`open` + `onOpenChange`) or kept inside (`defaultOpen`); closing through the dismiss button, the backdrop or Escape calls `onClosed`. `SmartModalStandard` is a native `<dialog>` shown through its `open` attribute; `SmartModalPreset` is a styled overlay with four variants. The modal host of `SmartProvider` renders `useModalService().show(...)` requests through the same `modal` key.
+`SmartModal` is a dialog with a title, a description, a body (`children`) and footer buttons (`actions`). A footer button reports `onActionClick({ actionId })` and **keeps the modal open**: close it yourself (set `open` to `false`). The open state is controlled (`open` + `onOpenChange`) or kept inside (`defaultOpen`); closing through the dismiss button, the backdrop or Escape calls `onClosed`. `SmartModalStandard` is a native `<dialog>` shown through its `open` attribute; `SmartModalPreset` is a styled overlay with five variants, one of them a bottom sheet (`bottom-sheet`), which the standard docks to the bottom of the viewport as well. The modal host of `SmartProvider` renders `useModalService().show(...)` requests through the same `modal` key.
 
 ## When to Use This Skill
 
@@ -50,12 +50,24 @@ The preset's class helpers (`getModalWrapperClasses`, `getModalPanelClasses`, `g
 
 ### `IModalOptions`
 
-| Field          | Type                    | Default      | Description                                                           |
-| -------------- | ----------------------- | ------------ | --------------------------------------------------------------------- |
-| `variant?`     | `SmartModalVariant`     | `'centered'` | Preset layout: `centered`, `wide`, `alert` or `left-aligned-buttons`. |
-| `withDismiss?` | `boolean`               | —            | Shows a close (×) button that closes the modal.                       |
-| `footerStyle?` | `SmartModalFooterStyle` | `'default'`  | Preset: `gray` gives the footer a gray background.                    |
-| `ariaLabel?`   | `string`                | —            | Accessible name when there is no title.                               |
+| Field          | Type                    | Default      | Description                                                                                                                         |
+| -------------- | ----------------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `variant?`     | `SmartModalVariant`     | `'centered'` | The layout, one of the variants in the Variants table; the standard exposes it as `data-variant` and positions only `bottom-sheet`. |
+| `withDismiss?` | `boolean`               | —            | Shows a close (×) button that closes the modal.                                                                                     |
+| `footerStyle?` | `SmartModalFooterStyle` | `'default'`  | Preset: `gray` gives the footer a gray background.                                                                                  |
+| `ariaLabel?`   | `string`                | —            | Accessible name when there is no title.                                                                                             |
+
+### Variants
+
+The values of `SmartModalVariant`, the layouts of `options.variant`.
+
+| Variant                | `SmartModalPreset`                                                                                                                                                                                                                                                      | `SmartModalStandard`                                                                                                                                                       |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `centered` (default)   | A card centred vertically, `max-w-lg` from `sm`.                                                                                                                                                                                                                        | The browser's dialog layout.                                                                                                                                               |
+| `wide`                 | A top-aligned card, `max-w-4xl` from `lg`.                                                                                                                                                                                                                              | The browser's dialog layout.                                                                                                                                               |
+| `alert`                | A narrower centred card, `max-w-md` from `sm`.                                                                                                                                                                                                                          | The browser's dialog layout.                                                                                                                                               |
+| `left-aligned-buttons` | Like `centered`, with the footer buttons aligned to the left.                                                                                                                                                                                                           | The browser's dialog layout.                                                                                                                                               |
+| `bottom-sheet`         | A sheet docked to the bottom of the viewport: full width, centred under `max-w-2xl` with rounded top corners from `sm`, at most 85% of the viewport high with the body scrolling, padded by the bottom safe area. Same backdrop, Escape and close button as the others. | The `<dialog>` fixed to the bottom of the viewport (`z-[80]`), full width, `max-w-2xl` with rounded top corners from `sm`, at most 85% of the viewport high and scrolling. |
 
 ### `IModalActionClick`
 
@@ -76,12 +88,12 @@ Payload of `onActionClick`.
 ### Related types
 
 - `SmartModalActionVariant`: `'primary' \| 'secondary' \| 'danger'`
-- `SmartModalVariant`: `'centered' \| 'wide' \| 'alert' \| 'left-aligned-buttons'`
+- `SmartModalVariant`: `'centered' \| 'wide' \| 'alert' \| 'left-aligned-buttons' \| 'bottom-sheet'`
 - `SmartModalFooterStyle`: `'default' \| 'gray'`
 
 ## Opening a component in a modal from code
 
-`useModalService().show({ component, props })` opens `component` inside a `SmartModal` with its close button, rendered by the modal host of `SmartProvider` (see `react-components-overlays`, which also describes `mode`, `cssClass` and `backdropDismiss`). The component receives its `props` and a `dismiss(data)` prop; `onDidDismiss()` resolves with `{ data }`, `{ data: null }` when the modal closed itself. `useModalService().dismiss(data)` closes the modal opened last.
+`useModalService().show({ component, props })` opens `component` inside a `SmartModal` with its close button, rendered by the modal host of `SmartProvider` (see `react-components-overlays`, which also describes `mode`, `cssClass` and `backdropDismiss`). `mode: 'bottom'` opens it as a bottom sheet (the `bottom-sheet` variant); `SmartList` opens its details that way. The component receives its `props` and a `dismiss(data)` prop; `onDidDismiss()` resolves with `{ data }`, `{ data: null }` when the modal closed itself. `useModalService().dismiss(data)` closes the modal opened last.
 
 ```tsx
 import { SmartButton, useModalService } from '@smartsoft001/react';
@@ -247,12 +259,12 @@ export function CustomModal(props: SmartModalProps) {
 }
 ```
 
-Registered as `components={{ modal: CustomModal }}`, it renders both the `SmartModal`s placed by hand and the modals of `ModalService.show` (which pass `open`, `className` from `cssClass`, `options` with `withDismiss: true`, `onClosed` and the component as `children`).
+Registered as `components={{ modal: CustomModal }}`, it renders both the `SmartModal`s placed by hand and the modals of `ModalService.show` (which pass `open`, `className` from `cssClass`, `options` with `withDismiss: true` and, for `mode: 'bottom'`, `variant: 'bottom-sheet'`, `onClosed` and the component as `children`). Lay out the `bottom-sheet` variant as a bottom sheet so those modals keep their look.
 
 ## Styling
 
-- `SmartModalStandard` is always in the DOM as a `<dialog>` and shown through its `open` attribute; its native `close` event closes the modal too. Action buttons carry `data-variant`.
-- `SmartModalPreset` renders inline with a `fixed` backdrop over the viewport; a click on the backdrop itself or Escape closes it; with preset modals stacked, Escape closes only the one on top. It carries `smart:dark:` variants.
+- `SmartModalStandard` is always in the DOM as a `<dialog>` and shown through its `open` attribute; its native `close` event closes the modal too. The dialog carries `options.variant` as `data-variant`, action buttons their own `data-variant`. Only the `bottom-sheet` variant is positioned (fixed to the bottom of the viewport, full width up to `max-w-2xl`, at most 85% of the viewport high and scrolling); `className` comes after its classes.
+- `SmartModalPreset` renders inline with a `fixed` backdrop over the viewport; a click on the backdrop itself or Escape closes it; with preset modals stacked, Escape closes only the one on top. The `bottom-sheet` variant docks the panel to the bottom of the viewport, with a max height and a scrolling body. It carries `smart:dark:` variants.
 
 ## File Locations
 

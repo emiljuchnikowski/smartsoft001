@@ -1,6 +1,7 @@
 <dialog
   [open]="open()"
-  [class]="cssClass()"
+  [class]="dialogClasses()"
+  [attr.data-variant]="options()?.variant ?? null"
   role="dialog"
   aria-modal="true"
   [attr.aria-labelledby]="title() ? 'smart-modal-title' : null"

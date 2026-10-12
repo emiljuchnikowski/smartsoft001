@@ -13,6 +13,7 @@ const VARIANTS: SmartModalVariant[] = [
   'wide',
   'alert',
   'left-aligned-buttons',
+  'bottom-sheet',
 ];
 
 // Showcase headings read as prose, not as the raw option value.
@@ -21,6 +22,7 @@ const VARIANT_LABELS: Record<SmartModalVariant, string> = {
   wide: 'Wide',
   alert: 'Alert',
   'left-aligned-buttons': 'Buttons aligned to the left',
+  'bottom-sheet': 'Bottom sheet',
 };
 
 const ACTIONS: IModalAction[] = [

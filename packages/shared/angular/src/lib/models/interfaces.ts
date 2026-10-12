@@ -509,7 +509,7 @@ export interface ICommandPaletteOptions {
 }
 
 export type SmartModalVariant =
-  'centered' | 'wide' | 'alert' | 'left-aligned-buttons';
+  'centered' | 'wide' | 'alert' | 'left-aligned-buttons' | 'bottom-sheet';
 
 export type SmartModalActionVariant = 'primary' | 'secondary' | 'danger';
 

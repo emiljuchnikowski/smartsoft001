@@ -40,11 +40,11 @@ All from `@smartsoft001/react`.
 
 What `useDetailsModal` opens: a component and its params.
 
-| Field       | Type                    | Default    | Description                                                                                 |
-| ----------- | ----------------------- | ---------- | ------------------------------------------------------------------------------------------- |
-| `component` | `ComponentType<any>`    | required   | Rendered in the modal, with `params` as its `value` prop.                                   |
-| `params`    | `any`                   | required   | Passed to the component as its `value` prop.                                                |
-| `mode?`     | `'bottom' \| 'default'` | `'bottom'` | Passed to `ModalService.show`; `'bottom'` adds the `smart-modal-bottom` class to the modal. |
+| Field       | Type                    | Default    | Description                                                                                                                      |
+| ----------- | ----------------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `component` | `ComponentType<any>`    | required   | Rendered in the modal, with `params` as its `value` prop.                                                                        |
+| `params`    | `any`                   | required   | Passed to the component as its `value` prop.                                                                                     |
+| `mode?`     | `'bottom' \| 'default'` | `'bottom'` | Passed to `ModalService.show`; `'bottom'` opens a bottom sheet (the `bottom-sheet` variant) with the `smart-modal-bottom` class. |
 
 ### `IDetailsOptions<T extends IEntity<string>>`
 

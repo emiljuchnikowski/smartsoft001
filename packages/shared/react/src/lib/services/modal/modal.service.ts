@@ -6,7 +6,11 @@ export interface IModalServiceOptions {
   /** Rendered in the modal with `props` and a `dismiss(data)` prop. */
   component: ComponentType<any>;
   props?: Record<string, unknown>;
-  /** `'bottom'` adds the `smart-modal-bottom` class to the modal. */
+  /**
+   * `'bottom'` opens the modal as a bottom sheet (the `'bottom-sheet'` modal
+   * variant: docked to the bottom of the viewport, full width up to a max
+   * width) and adds the `smart-modal-bottom` class to it.
+   */
   mode?: 'default' | 'bottom';
   /** Classes added to the modal (`<SmartModal className>`). */
   cssClass?: string[];
