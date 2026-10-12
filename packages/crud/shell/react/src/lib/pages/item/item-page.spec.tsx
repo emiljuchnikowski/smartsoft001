@@ -669,7 +669,7 @@ describe('@smartsoft001/crud-shell-react: SmartCrudItemPage', () => {
           ' > MODEL.address > MODEL.shelf',
           ' > MODEL.tags(1)',
           ' > MODEL.code (too short)',
-        ].join('<br/>'),
+        ].join(', '),
       );
     });
 
