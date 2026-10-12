@@ -41,7 +41,7 @@ These have `user-invocable: false` in their frontmatter. Claude reads them when 
 | `project-conventions`  | `smart-core`    | The monorepo layout, naming and architecture rules Claude follows when it edits this repository.                                                      |
 | `safety-check`         | `smart-core`    | The list of blocked commands and sensitive paths that `safety_validator` and `sensitive_file_blocker` enforce.                                        |
 | `smart-crud`           | `smart-angular` | The `crud` family's Angular configuration API. Its content is documented for people in the [CRUD](/docs/crud/overview) section.                       |
-| `angular-components-*` | `smart-angular` | 54 component skills, the source of the generated [Components](/docs/components) pages.                                                                |
+| `angular-components-*` | `smart-angular` | 57 component skills, one per `@smartsoft001/angular` component, the source of the generated [Components](/docs/components) pages.                     |
 | `smart-crud-react`     | `smart-react`   | The `crud` family's React screens, `@smartsoft001/crud-shell-react`.                                                                                  |
 | `react-components-*`   | `smart-react`   | 59 component skills, one per `@smartsoft001/react` component, which the [`react-components` agent](/docs/skills/react-components-agent) delegates to. |
 | `react-provider`       | `smart-react`   | `SmartProvider`: the component registry and presets, translations, navigation, services and model providers.                                          |
