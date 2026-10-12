@@ -2,7 +2,12 @@
 import { useMemo, useState } from 'react';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
-import { IListOptions, ListMode, SmartList } from '@smartsoft001/react';
+import {
+  IListOptions,
+  IListSortFilter,
+  ListMode,
+  SmartList,
+} from '@smartsoft001/react';
 
 @Model({})
 class Member {
@@ -39,15 +44,36 @@ const members: Member[] = [
   },
 ];
 
+// Stands in for the server: the rows of `members` in the order asked for.
+function sortMembers(key: string, desc: boolean): Member[] {
+  const field = key as keyof Member;
+
+  return [...members].sort(
+    (a, b) => a[field].localeCompare(b[field]) * (desc ? -1 : 1),
+  );
+}
+
+// The headers sort the list, starting from the last name. A constant, so the
+// list keeps the sort a header click chose.
+const SORT = { default: 'lastName' };
+
 export function ListUsageExample() {
   const [selected, setSelected] = useState<Member | null>(null);
+  const [list, setList] = useState(() => sortMembers('lastName', false));
 
   // The provider is the data source; in an app it usually comes from a store.
   const options = useMemo<IListOptions<Member>>(
     () => ({
       type: Member,
       mode: ListMode.desktop,
-      provider: { list: members, loading: false, getData: () => undefined },
+      provider: {
+        list,
+        loading: false,
+        // A click on a column header asks for the rows sorted by that column.
+        getData: ({ sortBy, sortDesc }: IListSortFilter) =>
+          setList(sortMembers(sortBy, sortDesc)),
+      },
+      sort: SORT,
       // The item action of a row calls `select` with the row's id.
       item: {
         options: {
@@ -57,7 +83,7 @@ export function ListUsageExample() {
         },
       },
     }),
-    [],
+    [list],
   );
 
   return (

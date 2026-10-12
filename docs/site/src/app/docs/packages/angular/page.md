@@ -99,29 +99,29 @@ Its spec mounts the component, finds the rendered `button` element, checks that 
 
 Seven services are `providedIn: 'root'` and need no registration. The rest come from `SharedServicesModule`, except the three at the bottom, which no shipped module provides.
 
-| Service                          | `providedIn` | What it does                                                                                                                                               |
-| -------------------------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `AppService`                     | `'root'`     | The application title and the header end buttons, as `title$` and `endButtons$` over static subjects, plus `addEndButton`, `removeEndButton`, `initTitle`. |
-| `AuthService`                    | `'root'`     | The JWT held in `StorageService`. `isAuthenticated`, `expectPermissions`, `getPermissions`, `getTokenPayload`, `setToken`, `removeToken`.                  |
-| `CalendarService`                | `'root'`     | Month generation for `smart-calendar`, over `moment`.                                                                                                      |
-| `DetailsService`                 | `'root'`     | Holds the root object a detail view renders, as `$root`, `init` and `setRoot`.                                                                             |
-| `DynamicComponentLoader<T>`      | `'root'`     | `getComponentsWithFactories`, which resolves component types to factories and remembers them in the static `declaredComponents`.                           |
-| `MenuService`                    | `'root'`     | The menu items and their state, as signals, plus `openEnd`, `closeStart` and `closeEnd`.                                                                   |
-| `StorageService`                 | `'root'`     | `setItem`, `getItem`, `removeItem`, `clear` over local storage.                                                                                            |
-| `FileService`                    | Module       | `upload`, `download`, `delete` and `getUrl` against `FILE_SERVICE_CONFIG.apiUrl` + `/attachments`. Requires that token.                                    |
-| `StyleService`                   | Module       | Writes an `IStyle` map onto an element as CSS variables. `init`, `set`, and the static `create`.                                                           |
-| `ToastService`                   | Module       | `error` and `info`, plus the `addLockError` / `removeLockError` counter that suppresses errors.                                                            |
-| `AlertService`                   | Module       | `show(options: IAlertOptions)`.                                                                                                                            |
-| `ModalService`                   | Module       | `show(options: IModalServiceOptions)` and `dismiss`.                                                                                                       |
-| `PopoverService`                 | Module       | `close()`.                                                                                                                                                 |
-| `HardwareService`                | Module       | `isMobile`, `isMobileWeb` and `onBackButtonClick`.                                                                                                         |
-| `UIService`                      | Module       | `showAlertWithDismissCallback`.                                                                                                                            |
-| `ErrorService`                   | Neither      | `log(obj)`. Translates an HTTP error into a message and forwards it to `ToastService`.                                                                     |
-| `NgrxStoreService`               | Neither      | Provided by `NgrxSharedModule`. `connect(store)` and the static `store` and `addReducer`.                                                                  |
-| `DynamicComponentStorageService` | Neither      | Not injectable at all. The static `get(key, moduleRef)` reads `DYNAMIC_COMPONENTS_STORE` and returns the components whose `smartType` matches.             |
+| Service                          | `providedIn` | What it does                                                                                                                                                                                               |
+| -------------------------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AppService`                     | `'root'`     | The application title and the header end buttons, as `title$` and `endButtons$` over static subjects, plus `addEndButton`, `removeEndButton`, `initTitle`.                                                 |
+| `AuthService`                    | `'root'`     | The JWT held in `StorageService`. `isAuthenticated`, `expectPermissions`, `getPermissions`, `getTokenPayload`, `setToken`, `removeToken`.                                                                  |
+| `CalendarService`                | `'root'`     | Month generation for `smart-calendar`, over `moment`.                                                                                                                                                      |
+| `DetailsService`                 | `'root'`     | Holds the root object a detail view renders, as `$root`, `init` and `setRoot`.                                                                                                                             |
+| `DynamicComponentLoader<T>`      | `'root'`     | `getComponentsWithFactories`, which resolves component types to factories and remembers them in the static `declaredComponents`.                                                                           |
+| `MenuService`                    | `'root'`     | The menu items and their state, as signals, plus `openEnd`, `closeStart` and `closeEnd`.                                                                                                                   |
+| `StorageService`                 | `'root'`     | `setItem`, `getItem`, `removeItem`, `clear` over local storage.                                                                                                                                            |
+| `FileService`                    | Module       | `upload`, `download`, `delete` and `getUrl` against `FILE_SERVICE_CONFIG.apiUrl` + `/attachments`. Requires that token.                                                                                    |
+| `StyleService`                   | Module       | Writes an `IStyle` map onto an element as CSS variables. `init`, `set`, and the static `create`.                                                                                                           |
+| `ToastService`                   | Module       | `error` and `info`, plus the `addLockError` / `removeLockError` counter that suppresses errors.                                                                                                            |
+| `AlertService`                   | Module       | `show(options: IAlertOptions)`.                                                                                                                                                                            |
+| `ModalService`                   | Module       | `show(options: IModalServiceOptions)` opens a component in a `smart-modal` at the end of `<body>` and resolves with an `IModal` (`dismiss`, `onDidDismiss`); `dismiss(data)` closes the modal opened last. |
+| `PopoverService`                 | Module       | `close()`.                                                                                                                                                                                                 |
+| `HardwareService`                | Module       | `isMobile` and `isMobileWeb` (both `false`), and `onBackButtonClick(callback)`, which calls back on the browser's back navigation until `remove()` is called on the handle it resolves with.               |
+| `UIService`                      | Module       | `showAlertWithDismissCallback`.                                                                                                                                                                            |
+| `ErrorService`                   | Neither      | `log(obj)`. Translates an HTTP error into a message and forwards it to `ToastService`.                                                                                                                     |
+| `NgrxStoreService`               | Neither      | Provided by `NgrxSharedModule`. `connect(store)` and the static `store` and `addReducer`.                                                                                                                  |
+| `DynamicComponentStorageService` | Neither      | Not injectable at all. The static `get(key, moduleRef)` reads `DYNAMIC_COMPONENTS_STORE` and returns the components whose `smartType` matches.                                                             |
 
-{% callout type="warning" title="The overlay services are shells today" %}
-`ToastService`, `AlertService`, `ModalService`, `PopoverService`, `UIService` and `HardwareService` wrap an overlay layer the package no longer ships, and every call inside them is commented out. They still resolve and still return, but nothing appears: `ModalService.show` hands back an empty object cast to `IModal`, and `HardwareService.isMobile` is a hard-coded `false`. Anything built on them inherits that. `DetailsDirective` and `DetailsPage` both open their content through `ModalService`, and `ErrorService.log` reports through `ToastService`. The `smart-modal`, `smart-drawer` and `smart-notification` components are unaffected, they render their own markup.
+{% callout type="warning" title="Some overlay services are shells today" %}
+`ToastService`, `PopoverService` and `UIService` wrap an overlay layer the package no longer ships, and every call inside them is commented out. They still resolve and still return, but nothing appears. Anything built on them inherits that: `ErrorService.log` reports through `ToastService`. `AlertService` and `ModalService` are not among them: they render `smart-alert` and `smart-modal` at the end of `<body>`, and the `smart-modal`, `smart-drawer` and `smart-notification` components are unaffected, they render their own markup.
 {% /callout %}
 
 Also exported from the services barrel: `SmartFormGroup`, the `UntypedFormGroup` subclass `FormFactory` returns, and the `FILE_SERVICE_CONFIG` and `DYNAMIC_COMPONENTS_STORE` tokens.
@@ -169,10 +169,10 @@ The same file declares a `*_STANDARD_COMPONENT_TOKEN` for each of the 46 compone
 
 ### Directives
 
-| Class                     | Selector           | What it does                                                                                                                                          |
-| ------------------------- | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `DetailsDirective`        | `[smartDetails]`   | Opens a component in a modal on click, emitting `smartDetailsShowed` and `smartDetailsDismissed`. Goes through `ModalService`, see the warning above. |
-| `DynamicContentDirective` | `.dynamic-content` | Marks the projected slots a dynamic component fills.                                                                                                  |
+| Class                     | Selector           | What it does                                                                                                                                                                                                                                                 |
+| ------------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `DetailsDirective`        | `[smartDetails]`   | Opens a component in a modal on click through `ModalService`, with its `params` as the `value` input, emitting `smartDetailsShowed` and `smartDetailsDismissed`; the browser's back navigation closes the modal. `showDetailsModal` does the same from code. |
+| `DynamicContentDirective` | `.dynamic-content` | Marks the projected slots a dynamic component fills.                                                                                                                                                                                                         |
 
 ### Pipes
 
@@ -203,7 +203,7 @@ All 56 are standalone, all follow the `smart-<name>` / `<Name>Component` naming,
 
 **Import and export.** `smart-export`, `smart-import`.
 
-Three of them fan out into families that are the real metadata engine. `smart-input` dispatches to about 35 field editors, one per `FieldType`, from address and currency through NIP, PESEL and phone number to the file, image, PDF and video uploads. `smart-detail` dispatches to about 17 read-only renderers over the same types. `smart-list` has three modes, desktop, mobile and masonry grid. Each of those has a Preline-styled `preset` twin, and the preset maps in the substitution table are how an application switches the whole family over at once.
+Three of them fan out into families that are the real metadata engine. `smart-input` dispatches to about 35 field editors, one per `FieldType`, from address and currency through NIP, PESEL and phone number to the file, image, PDF and video uploads. `smart-detail` dispatches to about 17 read-only renderers over the same types. `smart-list` has three modes, desktop, mobile and masonry grid, with sortable headers on the desktop table, the details of an item in a modal and single-page or infinite-scroll paging. Each of those has a Preline-styled `preset` twin, and the preset maps in the substitution table are how an application switches the whole family over at once.
 
 #### HTML in detail text fields
 
@@ -229,7 +229,7 @@ The sanitizer also strips inline `style` attributes, so colours and alignment wr
 
 ### Pages
 
-`DetailsPage<T extends IEntity<string>>` and `SharedPagesModule`. The page reads its options from the navigation parameters of an application shell the package no longer ships, and that lookup is commented out, so it renders an empty details view unless the options are supplied another way.
+`DetailsPage<T extends IEntity<string>>` and `SharedPagesModule`. The page renders `smart-details` for its `value` input, which `[smartDetails]`, the `details` option of `smart-list` and `ModalService.show({ component: DetailsPage, props: { value } })` pass to it. Its `pageOptions()` holds the title and the remove and forward buttons, both closing the modal, for a page layout around it.
 
 ### Decorators
 

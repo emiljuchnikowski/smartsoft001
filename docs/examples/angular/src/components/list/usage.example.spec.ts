@@ -44,6 +44,35 @@ describe('docs-examples-angular: ListUsageExampleComponent', () => {
     fixture.detectChanges();
 
     // Assert
-    expect(element.textContent).toContain('Selected member: Lindsay Walton');
+    expect(element.textContent).toContain('Selected member: Tom Cook');
+  });
+
+  it('should list the members by last name first', () => {
+    // Arrange
+    const header = element.querySelectorAll('th')[1];
+
+    // Act
+    const firstRow = element.querySelector('tbody tr')?.textContent;
+
+    // Assert
+    expect(header.getAttribute('aria-sort')).toBe('ascending');
+    expect(firstRow).toContain('Cook');
+  });
+
+  it('should sort the rows by a clicked column header', () => {
+    // Arrange
+    const sortByLastName = element.querySelectorAll<HTMLButtonElement>(
+      'th [data-role="sort"]',
+    )[1];
+
+    // Act
+    sortByLastName.click();
+    fixture.detectChanges();
+
+    // Assert
+    expect(element.querySelectorAll('th')[1].getAttribute('aria-sort')).toBe(
+      'descending',
+    );
+    expect(element.querySelector('tbody tr')?.textContent).toContain('Walton');
   });
 });

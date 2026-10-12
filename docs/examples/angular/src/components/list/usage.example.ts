@@ -1,7 +1,12 @@
 // #region usage
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 
-import { IListOptions, ListComponent, ListMode } from '@smartsoft001/angular';
+import {
+  IListOptions,
+  IListSortFilter,
+  ListComponent,
+  ListMode,
+} from '@smartsoft001/angular';
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
 @Model({})
@@ -39,6 +44,15 @@ const members: Member[] = [
   },
 ];
 
+// Stands in for the server: the rows of `members` in the order asked for.
+function sortMembers(key: string, desc: boolean): Member[] {
+  const field = key as keyof Member;
+
+  return [...members].sort(
+    (a, b) => a[field].localeCompare(b[field]) * (desc ? -1 : 1),
+  );
+}
+
 @Component({
   selector: 'docs-list-usage-example',
   imports: [ListComponent],
@@ -47,16 +61,21 @@ const members: Member[] = [
 })
 export class ListUsageExampleComponent {
   readonly selected = signal<Member | null>(null);
+  readonly members = signal(sortMembers('lastName', false));
 
   // The provider is the data source; in an app it is usually an NgRx facade.
   readonly options: IListOptions<Member> = {
     type: Member,
     mode: ListMode.desktop,
     provider: {
-      list: signal(members),
+      list: this.members,
       loading: signal(false),
-      getData: () => undefined,
+      // A click on a column header asks for the rows sorted by that column.
+      getData: ({ sortBy, sortDesc }: IListSortFilter) =>
+        this.members.set(sortMembers(sortBy, sortDesc)),
     },
+    // The headers sort the list, starting from the last name.
+    sort: { default: 'lastName' },
     // The item action of a row calls `select` with the row's id.
     item: {
       options: {
