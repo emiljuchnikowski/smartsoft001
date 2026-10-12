@@ -1,25 +1,41 @@
-import { Injectable } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { inject, Injectable } from '@angular/core';
+
+/** What `HardwareService.onBackButtonClick` returns. */
+export interface IBackButtonHandle {
+  /** Stops calling the callback. */
+  remove(): void;
+}
 
 @Injectable()
 export class HardwareService {
+  private readonly document = inject(DOCUMENT);
+
   get isMobile(): boolean {
-    // return this.platform.is('capacitor');
     return false;
   }
 
   get isMobileWeb(): boolean {
-    // return this.platform.is('mobileweb');
     return false;
   }
 
-  // constructor(private platform: Platform) {}
+  /**
+   * Calls `callback` when the user goes back in the browser history (the
+   * `popstate` event of the window), until `remove()` is called on the
+   * returned handle. Without a window (server rendering) the handle does
+   * nothing.
+   */
+  async onBackButtonClick(callback: () => void): Promise<IBackButtonHandle> {
+    const view = this.document.defaultView;
 
-  async onBackButtonClick(
-    callback: () => void,
-  ): Promise</*PluginListenerHandle*/ any> {
-    /*App.addListener('backButton', () => {
-      callback();
-    })*/
-    return {} as any;
+    if (!view) return { remove: () => undefined };
+
+    const listener = () => callback();
+
+    view.addEventListener('popstate', listener);
+
+    return {
+      remove: () => view.removeEventListener('popstate', listener),
+    };
   }
 }

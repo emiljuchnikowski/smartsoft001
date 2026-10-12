@@ -31,6 +31,7 @@ export function SmartListMasonryGridPreset<T extends IEntity<string>>(
     keys,
     cellPipe,
     type,
+    detailsHandler,
     page,
     totalPages,
     handlePageChange,
@@ -92,6 +93,16 @@ export function SmartListMasonryGridPreset<T extends IEntity<string>>(
                   ></p>
                 );
               })}
+              {detailsHandler ? (
+                <button
+                  type="button"
+                  data-role="details"
+                  className="smart:mt-2 smart:py-2 smart:px-3 smart:inline-flex smart:justify-center smart:items-center smart:gap-x-2 smart:text-sm smart:font-medium smart:rounded-lg smart:bg-blue-600 smart:dark:bg-blue-500 smart:text-white smart:hover:bg-blue-700 smart:dark:hover:bg-blue-600 smart:focus:outline-hidden"
+                  onClick={() => detailsHandler(item.data)}
+                >
+                  {t('show')}
+                </button>
+              ) : null}
             </div>
           </li>
         ))}

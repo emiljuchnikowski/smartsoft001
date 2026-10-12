@@ -318,7 +318,7 @@ export class ListComponent<T extends IEntity<string>>
           getLinks: () => this.links(),
         },
       }),
-      sort: this.config.sort,
+      sort: this.getListSort(newFilter),
     });
 
     this.cd.detectChanges();
@@ -327,6 +327,19 @@ export class ListComponent<T extends IEntity<string>>
     this.initTopComponent(compiledComponents);
 
     this.refreshDynamicInstance();
+  }
+
+  /**
+   * The sort the list headers start from: the one of the first read (the
+   * search filter, else `config.sort.default`). A header click reads again
+   * through `provider.getData({ offset: 0, sortBy, sortDesc })`.
+   */
+  private getListSort(
+    filter: ICrudFilter | undefined,
+  ): IListOptions<T>['sort'] {
+    if (!this.config.sort) return undefined;
+
+    return { default: filter?.sortBy, defaultDesc: filter?.sortDesc };
   }
 
   private initCloseMenu() {

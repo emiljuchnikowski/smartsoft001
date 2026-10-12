@@ -2,12 +2,20 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
+  effect,
+  inject,
   input,
   ViewEncapsulation,
 } from '@angular/core';
 
 import { SmartModalFooterStyle, SmartModalVariant } from '../../../models';
 import { ModalBaseComponent } from '../base';
+import {
+  closeEscapeLayer,
+  isTopEscapeLayer,
+  openEscapeLayer,
+} from './escape-layers';
 import {
   getModalActionClasses,
   getModalFooterClasses,
@@ -87,8 +95,19 @@ export class ModalPresetComponent extends ModalBaseComponent {
     }
   }
 
+  constructor() {
+    super();
+
+    // Escape closes only the modal on top when modals are stacked.
+    effect(() => {
+      if (this.open()) openEscapeLayer(this);
+      else closeEscapeLayer(this);
+    });
+    inject(DestroyRef).onDestroy(() => closeEscapeLayer(this));
+  }
+
   protected onEscape(): void {
-    if (this.open()) {
+    if (this.open() && isTopEscapeLayer(this)) {
       this.close();
     }
   }

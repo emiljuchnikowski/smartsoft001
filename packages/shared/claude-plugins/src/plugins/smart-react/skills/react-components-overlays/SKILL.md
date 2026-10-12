@@ -67,9 +67,9 @@ A toast with a title shows the title as the heading and the message under it; wi
 interface IModalServiceOptions {
   component: ComponentType<any>; // receives `props` and a `dismiss(data)` prop
   props?: Record<string, unknown>;
-  mode?: 'default' | 'bottom'; // not read by SmartModalHost
+  mode?: 'default' | 'bottom'; // 'bottom' adds the smart-modal-bottom class
   cssClass?: string[]; // joined into the SmartModal className
-  backdropDismiss?: boolean; // not read by SmartModalHost
+  backdropDismiss?: boolean; // false: the backdrop and Escape leave it open
 }
 
 interface IModal {
@@ -78,7 +78,7 @@ interface IModal {
 }
 ```
 
-`SmartModalHost` renders each request as `<SmartModal open className={cssClass.join(' ')} onClosed={() => dismiss()}>` around `<component {...props} dismiss={dismiss} />`, so closing the modal by its own controls resolves `onDidDismiss()` with `{ data: null }`.
+`SmartModalHost` renders each request in a `<div data-role="modal" data-mode={mode}>` as `<SmartModal open className options={{ withDismiss: true }} onClosed={() => dismiss()}>` around `<component {...props} dismiss={dismiss} />`, its `className` being `cssClass` plus `smart-modal-bottom` for `mode: 'bottom'`. So every modal shows its close button, and closing the modal by its own controls (close button, backdrop, Escape) resolves `onDidDismiss()` with `{ data: null }`. The modals stack in opening order, the last one on top. With `backdropDismiss: false` a click on the backdrop (outside the `role="dialog"` element) is stopped before the modal sees it, and `ModalService` stops Escape at the document while that modal is on top; the close button and `dismiss()` still close it. `smart-modal-bottom` is a class for the application to style (a sheet docked at the bottom); the modal implementations do not style it.
 
 ## Usage
 

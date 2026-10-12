@@ -249,4 +249,18 @@ describe('@smartsoft001/shared-angular: ListDesktopComponent', () => {
       'itemAction',
     ]);
   });
+
+  it('should put detailsAction right after the keys', () => {
+    desktop.keys = ['firstName'];
+    desktop.detailsHandler = () => undefined;
+    desktop.removeHandler = () => undefined;
+    desktop.itemHandler = () => undefined;
+
+    expect(desktop.desktopKeys).toEqual([
+      'firstName',
+      'detailsAction',
+      'removeAction',
+      'itemAction',
+    ]);
+  });
 });

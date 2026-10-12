@@ -216,6 +216,39 @@ describe('@smartsoft001/shared-angular: PageComponent', () => {
     });
   });
 
+  describe('class on the standard page', () => {
+    it('should apply the class of <smart-page> to the standard page root', async () => {
+      await TestBed.configureTestingModule({
+        imports: [HostComponent],
+        providers: [
+          { provide: Location, useValue: { back: jest.fn() } },
+          {
+            provide: HardwareService,
+            useValue: { isMobile: false, isMobileWeb: false },
+          },
+          { provide: AppService, useValue: {} },
+        ],
+      })
+        .overrideComponent(PageStandardComponent, {
+          remove: { imports: [TranslatePipe] },
+          add: { imports: [MockTranslatePipe] },
+        })
+        .compileComponents();
+      const hostFixture = TestBed.createComponent(HostComponent);
+      hostFixture.componentInstance.cssClass = 'smart:mt-4 page-extra';
+
+      hostFixture.detectChanges();
+      await hostFixture.whenStable();
+      hostFixture.detectChanges();
+
+      const root = (hostFixture.nativeElement as HTMLElement).querySelector(
+        'smart-page-standard > [data-role="page"]',
+      );
+      expect(root?.classList).toContain('smart:mt-4');
+      expect(root?.classList).toContain('page-extra');
+    });
+  });
+
   describe('ng-content fallback and bodyTpl precedence', () => {
     it('should project <ng-content> into the standard body via merged bodyTpl', async () => {
       await TestBed.configureTestingModule({

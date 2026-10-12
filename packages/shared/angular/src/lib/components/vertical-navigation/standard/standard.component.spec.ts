@@ -114,6 +114,33 @@ describe('@smartsoft001/shared-angular: VerticalNavigationStandardComponent', ()
     expect(groupTitles[0].textContent).toContain('Projects');
   });
 
+  it('should name the list of a group by its title', () => {
+    fixture.componentRef.setInput('options', {
+      groups: [
+        { id: 'main', items: [{ id: 'a', label: 'A' }] },
+        {
+          id: 'projects',
+          title: 'Projects',
+          items: [{ id: 'p1', label: 'Project 1' }],
+        },
+      ],
+    });
+
+    fixture.detectChanges();
+
+    const lists = Array.from(
+      (fixture.nativeElement as HTMLElement).querySelectorAll('ul.items'),
+    );
+    const labelledBy = lists.map((list) =>
+      list.getAttribute('aria-labelledby'),
+    );
+    expect(labelledBy[0]).toBeNull();
+    expect(
+      document.getElementById(labelledBy[1] ?? '')?.textContent?.trim(),
+    ).toBe('Projects');
+    expect(fixture.nativeElement.querySelectorAll('nav').length).toBe(1);
+  });
+
   it('should combine items + groups when both provided', () => {
     fixture.componentRef.setInput('options', {
       items: [{ id: 'home', label: 'Home' }],

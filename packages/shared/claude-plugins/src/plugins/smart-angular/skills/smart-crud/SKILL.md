@@ -63,13 +63,16 @@ registers the NgRx reducer (`NgrxStoreService.addReducer(config.entity, …)`) a
 ### `CrudFullConfig<T>` (extends `CrudConfig<T>`)
 
 - `title: string`
-- `details?` / `edit?` — `boolean | { cellPipe?; components?: { top?; bottom? } }`
+- `details?` / `edit?` — `boolean | { cellPipe?; components?: { top?; bottom? } }`; with `details`
+  every row of the list also gets a details action that opens the record in a modal (`DetailsPage`)
 - `add?` — `boolean | { components?: { top?; bottom? } }`
 - `remove?` / `search?` / `export?` — `boolean`
 - `pagination?: { limit: number }` — the backend (`CrudShellNestjsModule.forRoot`) caps a page at
   `maxQueryLimit` (default 100), so a list without `pagination` shows at most that many rows;
   exports use `maxExportLimit` (default 10000) and are refused with 400 rather than truncated
-- `sort?` — `boolean | { default?: string; defaultDesc?: boolean }`
+- `sort?` — `boolean | { default?: string; defaultDesc?: boolean }`: the first read sorts by
+  `default`, and the desktop list headers sort the list (a click reads again with `sortBy` /
+  `sortDesc` from the first page)
 - `list?` — `{ cellPipe?; components?: { top?; multi? }; mode?: ListMode; paginationMode?: PaginationMode; resetQuery?: 'beforeInit'; groups?: Array<ICrudListGroup> }`
 - `buttons?: Array<IIconButtonOptions>`
 - `inputComponents?: { [key: string]: Type<InputBaseComponent<T>> }`

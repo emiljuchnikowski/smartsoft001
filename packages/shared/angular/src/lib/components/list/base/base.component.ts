@@ -2,6 +2,8 @@ import { CdkTableDataSourceInput } from '@angular/cdk/table';
 import {
   ChangeDetectorRef,
   Directive,
+  ElementRef,
+  Injector,
   Type,
   ViewContainerRef,
   inject,
@@ -10,6 +12,7 @@ import {
   effect,
   input,
   InputSignal,
+  linkedSignal,
   viewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
@@ -22,6 +25,7 @@ import {
   IFieldOptions,
 } from '@smartsoft001/models';
 
+import { showDetailsModal } from '../../../directives/details/details-modal';
 import {
   IDetailsOptions,
   IListProvider,
@@ -34,8 +38,18 @@ import {
   IDetailsProvider,
   IDetailsComponentFactories,
 } from '../../../models';
-import { AlertService } from '../../../services';
+import { DetailsPage } from '../../../pages/details/details.page';
+import { AlertService, HardwareService, ModalService } from '../../../services';
 import { AuthService } from '../../../services';
+import {
+  getListAriaSort,
+  getListDefaultSort,
+  getListSortIndicator,
+  getNextListSort,
+  IListSortFilter,
+  IListSortState,
+  isListSortableKey,
+} from '../list-sort';
 
 @Directive()
 export abstract class ListBaseComponent<T extends IEntity<string>> {
@@ -49,6 +63,9 @@ export abstract class ListBaseComponent<T extends IEntity<string>> {
   protected alertService = inject(AlertService);
   protected cd = inject(ChangeDetectorRef);
   protected translateService = inject(TranslateService);
+  protected injector = inject(Injector);
+
+  private loadingNextPage = false;
 
   detailsComponent: any;
   selectMode?: 'multi';
@@ -57,6 +74,12 @@ export abstract class ListBaseComponent<T extends IEntity<string>> {
   unselect!: () => void;
   itemHandler: ((id: string) => void) | null = null;
   removeHandler: ((item: T) => void) | null = null;
+  /**
+   * Opens the details of an item in a modal (`details` set): `DetailsPage`, or
+   * `details.component`, with `detailsComponentProps` as its `value`; `null`
+   * without `details`.
+   */
+  detailsHandler: ((item: T) => void) | null = null;
   checkRemoveHandler!: (item: T) => boolean;
   detailsButtonOptions: IButtonOptions;
   removed: Set<string> = new Set<string>();
@@ -85,6 +108,44 @@ export abstract class ListBaseComponent<T extends IEntity<string>> {
   cssClass: InputSignal<string> = input<string>('', { alias: 'class' });
 
   contentTpl = viewChild<ViewContainerRef>('contentTpl');
+
+  /** Whether the column headers sort the list (`options.sort` set). */
+  sortable: Signal<boolean> = computed(() => !!this.options().sort);
+
+  /**
+   * The sort the headers show: `sort.default` / `sort.defaultDesc` at first,
+   * then the last header clicked. It starts over when `options.sort` changes.
+   */
+  activeSort = linkedSignal<
+    IListInternalOptions<T>['sort'],
+    IListSortState | null
+  >({
+    source: () => this.options().sort,
+    // The source runs again on every new options object; keep the clicked
+    // sort as long as the `sort` option itself is the same.
+    computation: (sort, previous) =>
+      previous && previous.source === sort
+        ? previous.value
+        : getListDefaultSort(sort),
+  });
+
+  /**
+   * `true` with `pagination.mode === PaginationMode.infiniteScroll` and a next
+   * page: the modes render the `#infiniteScrollAnchor` element after the
+   * items, and the next page loads when it scrolls into view.
+   */
+  infiniteScroll: Signal<boolean> = computed(() => {
+    const pagination = this.options().pagination;
+
+    return (
+      pagination?.mode === PaginationMode.infiniteScroll &&
+      (pagination.page?.() ?? 1) < (pagination.totalPages?.() ?? 0)
+    );
+  });
+
+  infiniteScrollAnchor = viewChild<ElementRef<HTMLElement>>(
+    'infiniteScrollAnchor',
+  );
 
   constructor() {
     effect(() => {
@@ -155,23 +216,26 @@ export abstract class ListBaseComponent<T extends IEntity<string>> {
         component?: Type<any>;
       };
 
+      this.detailsHandler = null;
+
       if (options.details) {
         if (!details?.provider) throw Error('Must set details provider');
 
-        if (details.component) {
-          this.detailsComponent = details.component;
-          this.detailsComponentProps = {
-            item: details.provider.item,
-            type: options.type,
-            loading: details.provider.loading,
-            itemHandler: this.itemHandler ?? null,
-            removeHandler: this.removeHandler,
-            componentFactories: details.componentFactories,
-          };
-        }
+        this.detailsComponent = details.component;
+        this.detailsComponentProps = {
+          item: details.provider.item,
+          type: options.type,
+          loading: details.provider.loading,
+          itemHandler: this.itemHandler ?? null,
+          removeHandler: this.removeHandler,
+          componentFactories: details.componentFactories,
+        };
 
         this.select = details.provider.getData;
         this.unselect = details.provider.clearData;
+        this.detailsHandler = (item: T) => {
+          void this.openDetails(item);
+        };
       }
 
       if (options.pagination) {
@@ -199,6 +263,42 @@ export abstract class ListBaseComponent<T extends IEntity<string>> {
 
       this.afterInitOptions();
     });
+
+    effect((onCleanup) => {
+      const pagination = this.options().pagination;
+      const target = this.infiniteScrollAnchor()?.nativeElement;
+
+      // Read on every page, so the anchor is observed again after a page
+      // loaded: a new observer reports it at once while it is still in view.
+      pagination?.page?.();
+
+      if (
+        !this.infiniteScroll() ||
+        !target ||
+        typeof IntersectionObserver === 'undefined'
+      ) {
+        return;
+      }
+
+      const observer = new IntersectionObserver((entries) => {
+        if (
+          this.loadingNextPage ||
+          !entries.some((entry) => entry.isIntersecting)
+        ) {
+          return;
+        }
+
+        this.loadingNextPage = true;
+
+        Promise.resolve(pagination?.loadNextPage?.()).finally(() => {
+          this.loadingNextPage = false;
+        });
+      });
+
+      observer.observe(target);
+      onCleanup(() => observer.disconnect());
+    });
+
     this.detailsButtonOptions = {
       loading: this.loading,
       click: () => {
@@ -268,6 +368,67 @@ export abstract class ListBaseComponent<T extends IEntity<string>> {
 
   protected afterInitOptions() {
     // No base functionality
+  }
+
+  /** Whether the header of `key` sorts the list. */
+  isSortable(key: string): boolean {
+    return this.sortable() && isListSortableKey(key);
+  }
+
+  /**
+   * Sorts by `key`: ascending for another column, the opposite direction for
+   * the active one, read from the first page through
+   * `provider.getData({ offset: 0, sortBy, sortDesc })`.
+   */
+  sortBy(key: string): void {
+    if (!this.isSortable(key)) return;
+
+    const next = getNextListSort(this.activeSort(), key);
+    const filter: IListSortFilter = {
+      offset: 0,
+      sortBy: next.key,
+      sortDesc: next.desc,
+    };
+
+    this.activeSort.set(next);
+    this.provider.getData(filter);
+  }
+
+  /** The `aria-sort` of the header of `key` (only the active one has it). */
+  ariaSort(key: string): 'ascending' | 'descending' | null {
+    return this.isSortable(key)
+      ? getListAriaSort(this.activeSort(), key)
+      : null;
+  }
+
+  /** The arrow shown in the header of `key`. */
+  sortIndicator(key: string): string {
+    return getListSortIndicator(this.activeSort(), key);
+  }
+
+  /**
+   * Opens the details of `item` in a modal: clears the details provider,
+   * opens the details component (`DetailsPage` by default) through
+   * `ModalService` and asks the provider for the item (`select(id)`).
+   */
+  async openDetails(item: T): Promise<void> {
+    if (!this.select) return;
+
+    this.unselect?.();
+
+    await showDetailsModal(
+      {
+        modalService: this.injector.get(ModalService),
+        hardwareService: this.injector.get(HardwareService),
+        injector: this.injector,
+      },
+      {
+        component: this.detailsComponent ?? DetailsPage,
+        params: this.detailsComponentProps,
+        mode: 'bottom',
+      },
+      { showed: () => this.select(item.id) },
+    );
   }
 
   handlePageChange(nextPage: number): void {

@@ -9,6 +9,7 @@ import {
   ViewContainerRef,
   ViewEncapsulation,
 } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { IEntity } from '@smartsoft001/domain-core';
 import { FieldType, getModelFieldsWithOptions } from '@smartsoft001/models';
@@ -23,7 +24,13 @@ import { ListBaseComponent } from '../base/base.component';
   templateUrl: './masonry-grid.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [PagingComponent, FileUrlPipe, NgOptimizedImage, ListCellPipe],
+  imports: [
+    PagingComponent,
+    FileUrlPipe,
+    NgOptimizedImage,
+    ListCellPipe,
+    TranslatePipe,
+  ],
 })
 export class ListMasonryGridComponent<T extends IEntity<string>>
   extends ListBaseComponent<T>

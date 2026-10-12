@@ -247,6 +247,68 @@ describe('crud-shell-angular: ListComponent (GAP-27 styling surface)', () => {
     expect(details.component).toBeUndefined();
   });
 
+  describe('sort', () => {
+    it('should leave the list unsorted without config.sort', async () => {
+      const { fixture } = setup({ title: 'Unsorted' });
+
+      await fixture.componentInstance.ngOnInit();
+
+      expect(fixture.componentInstance.listOptions()?.sort).toBeUndefined();
+    });
+
+    it('should start the list headers from the sort of the first read', async () => {
+      const { fixture, facadeMock } = setup({
+        title: 'Sorted',
+        sort: { default: 'title', defaultDesc: true },
+      });
+
+      await fixture.componentInstance.ngOnInit();
+
+      expect(facadeMock.read.mock.calls[0][0]).toMatchObject({
+        sortBy: 'title',
+        sortDesc: true,
+      });
+      expect(fixture.componentInstance.listOptions()?.sort).toEqual({
+        default: 'title',
+        defaultDesc: true,
+      });
+    });
+
+    it('should start the list headers from the sort of the current filter', async () => {
+      const { fixture } = setup(
+        { title: 'Sorted', sort: true },
+        { filter: { sortBy: 'date', sortDesc: false } },
+      );
+
+      await fixture.componentInstance.ngOnInit();
+
+      expect(fixture.componentInstance.listOptions()?.sort).toEqual({
+        default: 'date',
+        defaultDesc: false,
+      });
+    });
+
+    it('should read the list sorted by a header from the first page', async () => {
+      const { fixture, facadeMock } = setup(
+        { title: 'Sorted', sort: true, pagination: { limit: 10 } },
+        { filter: { limit: 10, offset: 20, searchText: 'abc' } },
+      );
+      await fixture.componentInstance.ngOnInit();
+
+      fixture.componentInstance
+        .listOptions()
+        ?.provider.getData({ offset: 0, sortBy: 'title', sortDesc: true });
+
+      expect(facadeMock.read).toHaveBeenLastCalledWith({
+        limit: 10,
+        offset: 0,
+        searchText: 'abc',
+        sortBy: 'title',
+        sortDesc: true,
+      });
+    });
+  });
+
   // FRA-385 - the `.dynamic-content` anchor is only matched by
   // `DynamicContentDirective` when the directive is in the component imports.
   // Without it `dynamicContents()` stayed empty and a body registered for the

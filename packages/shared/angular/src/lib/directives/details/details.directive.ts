@@ -1,48 +1,57 @@
-import { Directive, HostListener, input, output, inject } from '@angular/core';
+import {
+  DestroyRef,
+  Directive,
+  HostListener,
+  inject,
+  Injector,
+  input,
+  output,
+} from '@angular/core';
 
-import { ModalService, HardwareService, IModal } from '../../services';
+import { IDetailsModalOptions, showDetailsModal } from './details-modal';
+import { HardwareService, ModalService } from '../../services';
 
+/**
+ * Opens `component` in a modal on click (`ModalService`, mode `'bottom'` by
+ * default) with `{ value: params }` as its inputs; the modal closes when the
+ * browser goes back. Emits `smartDetailsShowed` once the modal is open and
+ * `smartDetailsDismissed` once it is closed.
+ */
 @Directive({
   selector: '[smartDetails]',
 })
 export class DetailsDirective {
   private modalService = inject(ModalService);
   private hardwareService = inject(HardwareService);
+  private injector = inject(Injector);
+  private destroyed = false;
 
-  options = input.required<{
-    component: any;
-    params: any;
-    mode?: 'bottom' | 'default';
-  }>({ alias: 'smartDetails' });
+  options = input.required<IDetailsModalOptions>({ alias: 'smartDetails' });
 
   smartDetailsShowed = output();
   smartDetailsDismissed = output();
 
+  constructor() {
+    inject(DestroyRef).onDestroy(() => (this.destroyed = true));
+  }
+
   @HostListener('click')
   async click(): Promise<void> {
-    if (!this.options() || !this.options().component) return;
-
-    let modal: IModal | null = await this.modalService.show({
-      component: this.options().component,
-      props: {
-        value: this.options().params,
+    await showDetailsModal(
+      {
+        modalService: this.modalService,
+        hardwareService: this.hardwareService,
+        injector: this.injector,
       },
-      mode: this.options().mode ? this.options().mode : 'bottom',
-    });
-    this.smartDetailsShowed.emit();
-
-    const handler = await this.hardwareService.onBackButtonClick(async () => {
-      if (modal) {
-        await modal.dismiss();
-      }
-    });
-
-    await modal.onDidDismiss();
-
-    handler.remove();
-
-    modal = null;
-
-    this.smartDetailsDismissed.emit();
+      this.options(),
+      {
+        showed: () => {
+          if (!this.destroyed) this.smartDetailsShowed.emit();
+        },
+        dismissed: () => {
+          if (!this.destroyed) this.smartDetailsDismissed.emit();
+        },
+      },
+    );
   }
 }

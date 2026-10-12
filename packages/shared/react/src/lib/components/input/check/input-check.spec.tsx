@@ -263,4 +263,58 @@ describe('@smartsoft001/react: SmartInputCheckPreset', () => {
 
     expect(group).toHaveClass('extra-user-class', 'smart:space-y-3');
   });
+
+  it('should fall back to the possibilities of the model field', () => {
+    setup(SmartInputCheckPreset, { possibilities: null });
+
+    expect(screen.getAllByRole('checkbox')).toHaveLength(2);
+    expect(screen.getByText('From model')).toBeInTheDocument();
+  });
+
+  describe('with a model possibilities provider', () => {
+    beforeEach(() => jest.useFakeTimers());
+
+    afterEach(() => jest.useRealTimers());
+
+    it('should render the possibilities of the provider and ask again 500 ms after the form changed', async () => {
+      const provider = {
+        get: jest.fn(({ instance }: { instance: { kind: string } }) => [
+          {
+            id: 'p',
+            text: instance.kind === 'b' ? 'From B' : 'From A',
+            checked: false,
+          },
+        ]),
+      };
+      const { kind } = setup(SmartInputCheckPreset, {
+        provider,
+        value: ['p'],
+      });
+      await act(async () => undefined);
+      expect(screen.getByRole('checkbox')).toBeChecked();
+      expect(screen.getByText('From A')).toBeInTheDocument();
+
+      act(() => kind.setValue('b'));
+      await act(async () => {
+        jest.advanceTimersByTime(500);
+      });
+
+      expect(screen.getByText('From B')).toBeInTheDocument();
+      expect(screen.getByRole('checkbox')).toBeChecked();
+      expect(provider.get).toHaveBeenLastCalledWith(
+        expect.objectContaining({ key: 'tags', type: Article }),
+      );
+    });
+
+    it('should render the input options while the provider returns none', async () => {
+      const provider = { get: jest.fn(() => null) };
+      setup(SmartInputCheckPreset, { provider });
+
+      await act(async () => undefined);
+
+      expect(provider.get).toHaveBeenCalled();
+      expect(screen.getAllByRole('checkbox')).toHaveLength(3);
+      expect(screen.getByText('Second')).toBeInTheDocument();
+    });
+  });
 });

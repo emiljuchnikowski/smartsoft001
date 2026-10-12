@@ -7,6 +7,8 @@ import {
   getListDesktopHeaderCellClasses,
   getListDesktopHeaderRowClasses,
   getListDesktopRowClasses,
+  getListDesktopSortButtonClasses,
+  getListDesktopSortIndicatorClasses,
   getListDesktopTableClasses,
 } from './preset-classes';
 import { PaginationMode } from '../../../../models';
@@ -30,7 +32,8 @@ import {
  * or render it directly.
  *
  * Keeps every functional branch of the desktop table (top slot, multi
- * select, remove / item actions, pagination, image cells) and restyles it
+ * select, sort headers, details / remove / item actions, pagination, image
+ * cells) and restyles it
  * with the Preline table look, driven by `options.presentation`: `variant`
  * (default | striped | bordered | borderless), `hoverable` and `header`
  * (default | muted | none). `className` goes on the container.
@@ -55,6 +58,11 @@ export function SmartListDesktopPreset<T extends IEntity<string>>(
     checkRemoveHandler,
     removeHandler,
     itemHandler,
+    detailsHandler,
+    isSortable,
+    sortBy,
+    getAriaSort,
+    getSortIndicator,
     loadNextPage,
     page,
     totalPages,
@@ -112,6 +120,7 @@ export function SmartListDesktopPreset<T extends IEntity<string>>(
                         style={LIST_DESKTOP_STICKY_HEADER_STYLE}
                       ></th>
                     );
+                  case 'detailsAction':
                   case 'removeAction':
                   case 'itemAction':
                     return (
@@ -132,8 +141,26 @@ export function SmartListDesktopPreset<T extends IEntity<string>>(
                         key={key}
                         className={headerCellClasses}
                         style={LIST_DESKTOP_STICKY_HEADER_STYLE}
+                        aria-sort={getAriaSort(key) ?? undefined}
                       >
-                        {listHeader(desktopList, key, type)}
+                        {isSortable(key) ? (
+                          <button
+                            type="button"
+                            data-role="sort"
+                            className={getListDesktopSortButtonClasses()}
+                            onClick={() => sortBy(key)}
+                          >
+                            {listHeader(desktopList, key, type)}
+                            <span
+                              aria-hidden="true"
+                              className={getListDesktopSortIndicatorClasses()}
+                            >
+                              {getSortIndicator(key)}
+                            </span>
+                          </button>
+                        ) : (
+                          listHeader(desktopList, key, type)
+                        )}
                         {pagination(last)}
                       </th>
                     );
@@ -167,6 +194,25 @@ export function SmartListDesktopPreset<T extends IEntity<string>>(
                               )
                             }
                           />
+                        </td>
+                      );
+                    case 'detailsAction':
+                      return (
+                        <td
+                          key={key}
+                          className={cn(
+                            cellClasses,
+                            'smart:w-10 smart:text-end',
+                          )}
+                        >
+                          <button
+                            type="button"
+                            data-role="details"
+                            className="smart:inline-flex smart:items-center smart:gap-x-2 smart:text-sm smart:font-semibold smart:rounded-lg smart:text-blue-600 smart:hover:text-blue-700 smart:dark:text-blue-400 smart:dark:hover:text-blue-300 smart:focus:outline-hidden smart:disabled:opacity-50 smart:disabled:pointer-events-none"
+                            onClick={() => detailsHandler?.(element)}
+                          >
+                            {t('show')}
+                          </button>
                         </td>
                       );
                     case 'removeAction':

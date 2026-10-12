@@ -1,4 +1,5 @@
 export * from './list.component';
+export * from './list-sort';
 export * from './base/base.component';
 export * from './mobile/mobile.component';
 export * from './desktop/desktop.component';

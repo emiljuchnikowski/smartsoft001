@@ -10,10 +10,7 @@
 //   bg-muted-hover           -> bg-gray-100|gray-700
 
 type ListPresentationVariant =
-  | 'default'
-  | 'striped'
-  | 'bordered'
-  | 'borderless';
+  'default' | 'striped' | 'bordered' | 'borderless';
 
 type ListPresentationHeader = 'default' | 'muted' | 'none';
 
@@ -43,6 +40,22 @@ const HEADER_CELL = [
   'smart:dark:text-gray-400',
   'smart:uppercase',
 ];
+
+const SORT_BUTTON = [
+  'smart:inline-flex',
+  'smart:items-center',
+  'smart:gap-x-1',
+  'smart:uppercase',
+  'smart:font-medium',
+  'smart:text-gray-500',
+  'smart:hover:text-gray-800',
+  'smart:dark:text-gray-400',
+  'smart:dark:hover:text-gray-200',
+  'smart:focus:outline-hidden',
+  'smart:focus-visible:underline',
+];
+
+const SORT_INDICATOR = ['smart:text-gray-400', 'smart:dark:text-gray-500'];
 
 const HEADER_ROW_MUTED = ['smart:bg-gray-50', 'smart:dark:bg-gray-800'];
 
@@ -107,6 +120,16 @@ export function getListDesktopHeaderRowClasses(
 
 export function getListDesktopHeaderCellClasses(): string {
   return HEADER_CELL.join(' ');
+}
+
+/** Classes for the button of a sortable header (`options.sort` set). */
+export function getListDesktopSortButtonClasses(): string {
+  return SORT_BUTTON.join(' ');
+}
+
+/** Classes for the sort arrow inside a sortable header. */
+export function getListDesktopSortIndicatorClasses(): string {
+  return SORT_INDICATOR.join(' ');
 }
 
 /**

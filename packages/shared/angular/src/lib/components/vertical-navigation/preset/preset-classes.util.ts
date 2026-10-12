@@ -9,12 +9,22 @@ const CONTAINER = [
   'smart:dark:border-gray-700',
 ].join(' ');
 
+// The list of a group's items. The list reset keeps it identical to the
+// former per-group <nav> where the Tailwind preflight is not loaded.
 const NAV = [
   'smart:-me-0.5',
   'smart:flex',
   'smart:flex-col',
   'smart:space-y-3',
+  'smart:my-0',
+  'smart:p-0',
+  'smart:list-none',
 ].join(' ');
+
+// A column flex item, so the tab inside stretches to the full width (with
+// its trailing border on the container's edge) as it did as a direct child
+// of the group's flex column.
+const LIST_ITEM = ['smart:flex', 'smart:flex-col'].join(' ');
 
 const GROUP_TITLE = [
   'smart:px-1',
@@ -99,6 +109,10 @@ export function getVerticalNavContainerClasses(): string {
 
 export function getVerticalNavNavClasses(): string {
   return NAV;
+}
+
+export function getVerticalNavListItemClasses(): string {
+  return LIST_ITEM;
 }
 
 export function getVerticalNavGroupTitleClasses(): string {

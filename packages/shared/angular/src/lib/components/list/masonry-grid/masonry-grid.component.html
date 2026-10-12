@@ -24,6 +24,16 @@
             ></p>
           }
         }
+        @if (detailsHandler) {
+          <button
+            type="button"
+            data-role="details"
+            class="smart:mt-2 smart:text-sm smart:text-indigo-600 smart:hover:text-indigo-900 smart:dark:text-indigo-400 smart:dark:hover:text-indigo-300"
+            (click)="detailsHandler?.(item.data)"
+          >
+            {{ 'show' | translate }}
+          </button>
+        }
       </div>
     </li>
   }
@@ -35,4 +45,12 @@
     [totalPages]="totalPages() ?? 1"
     (pageChange)="handlePageChange($event)"
   ></smart-paging>
+}
+
+@if (infiniteScroll()) {
+  <div
+    #infiniteScrollAnchor
+    data-role="infinite-scroll"
+    aria-hidden="true"
+  ></div>
 }

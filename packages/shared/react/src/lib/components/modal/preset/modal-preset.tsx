@@ -18,6 +18,13 @@ import {
 } from './preset-classes';
 
 /**
+ * The preset modals that are open, in the order they opened. Every open preset
+ * listens to Escape on the whole document, so with modals stacked only the one
+ * on top closes on it.
+ */
+const openModalLayers: object[] = [];
+
+/**
  * Styled modal variation (preset). Register it as `components.modal` on
  * `SmartProvider` to restyle every `<SmartModal>`, or render it directly.
  *
@@ -40,13 +47,23 @@ export function SmartModalPreset(props: SmartModalProps) {
   useEffect(() => {
     if (!open) return undefined;
 
+    // Escape closes only the modal on top when modals are stacked.
+    const layer = {};
+
+    openModalLayers.push(layer);
+
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' || event.key === 'Esc') close();
+      const onTop = openModalLayers[openModalLayers.length - 1] === layer;
+
+      if (onTop && (event.key === 'Escape' || event.key === 'Esc')) close();
     };
 
     document.addEventListener('keydown', onKeyDown);
 
-    return () => document.removeEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      openModalLayers.splice(openModalLayers.indexOf(layer), 1);
+    };
   }, [open, close]);
 
   if (!open) return null;

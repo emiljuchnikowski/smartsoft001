@@ -6,18 +6,19 @@ import { getPageButtonOptions, usePage } from '../use-page';
 /**
  * The default page rendering: a header with the optional back button, the
  * translated title, the search input and the end buttons, followed by
- * `options.bodyTpl`.
- *
- * It renders no wrapper element (header and body are siblings) and does not
- * apply `className`.
+ * `options.bodyTpl`, inside a root element (`data-role="page"`) that takes
+ * `className`.
  */
-export function SmartPageStandard({ options }: SmartPageVariantProps) {
+export function SmartPageStandard({
+  options,
+  className,
+}: SmartPageVariantProps) {
   const t = useTranslate();
   const { back } = usePage();
   const search = options?.search;
 
   return (
-    <>
+    <div className={className || undefined} data-role="page">
       {!options?.hideHeader ? (
         <div className="smart:md:flex smart:md:items-center smart:md:justify-between smart:px-4 smart:py-4 smart:sm:px-6 smart:lg:px-8">
           <div className="smart:min-w-0 smart:flex-1">
@@ -81,6 +82,6 @@ export function SmartPageStandard({ options }: SmartPageVariantProps) {
       <div className="smart:px-4 smart:sm:px-6 smart:lg:px-8">
         {options?.bodyTpl ? options.bodyTpl : null}
       </div>
-    </>
+    </div>
   );
 }

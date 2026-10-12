@@ -4,12 +4,24 @@
     [attr.aria-label]="options()?.ariaLabel ?? 'Sidebar'"
   >
     <ul role="list" class="groups">
-      @for (group of groups; track group.id ?? $index) {
+      @for (
+        group of groups;
+        track group.id ?? $index;
+        let groupIndex = $index
+      ) {
         <li class="group">
           @if (group.title) {
-            <div class="group-title">{{ group.title }}</div>
+            <div [id]="groupTitleId(groupIndex)" class="group-title">
+              {{ group.title }}
+            </div>
           }
-          <ul role="list" class="items">
+          <ul
+            role="list"
+            class="items"
+            [attr.aria-labelledby]="
+              group.title ? groupTitleId(groupIndex) : null
+            "
+          >
             @for (item of group.items; track item.id) {
               <li class="item">
                 @if (item.href) {

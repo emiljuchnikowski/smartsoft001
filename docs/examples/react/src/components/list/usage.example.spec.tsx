@@ -31,14 +31,12 @@ describe('docs-examples-react: ListUsageExample', () => {
     setup();
 
     // Act
-    const headers = screen
-      .getAllByRole('columnheader')
-      .map((header) => header.textContent?.trim());
+    const headers = ['first name', 'last name', 'email'].map((name) =>
+      screen.queryByRole('columnheader', { name }),
+    );
 
     // Assert
-    expect(headers).toEqual(
-      expect.arrayContaining(['first name', 'last name', 'email']),
-    );
+    headers.forEach((header) => expect(header).toBeInTheDocument());
   });
 
   it('should show the member of the opened row', () => {
@@ -51,8 +49,36 @@ describe('docs-examples-react: ListUsageExample', () => {
     );
 
     // Assert
+    expect(screen.getByText('Selected member: Tom Cook')).toBeInTheDocument();
+  });
+
+  it('should list the members by last name first', () => {
+    // Arrange
+    const { container } = setup();
+
+    // Act
+    const firstRow = container.querySelector('tbody tr')?.textContent;
+
+    // Assert
     expect(
-      screen.getByText('Selected member: Lindsay Walton'),
-    ).toBeInTheDocument();
+      screen.getByRole('button', { name: 'last name' }).closest('th'),
+    ).toHaveAttribute('aria-sort', 'ascending');
+    expect(firstRow).toContain('Cook');
+  });
+
+  it('should sort the rows by a clicked column header', () => {
+    // Arrange
+    const { container } = setup();
+
+    // Act
+    fireEvent.click(screen.getByRole('button', { name: 'last name' }));
+
+    // Assert
+    expect(
+      screen.getByRole('button', { name: 'last name' }).closest('th'),
+    ).toHaveAttribute('aria-sort', 'descending');
+    expect(container.querySelector('tbody tr')?.textContent).toContain(
+      'Walton',
+    );
   });
 });

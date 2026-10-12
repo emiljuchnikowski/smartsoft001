@@ -46,6 +46,29 @@
               }
             </td>
           }
+          @case ('detailsAction') {
+            <th
+              cdk-header-cell
+              *cdkHeaderCellDef
+              class="smart:w-10 smart:px-3 smart:py-3.5"
+            >
+              <ng-container *ngTemplateOutlet="pagination"></ng-container>
+            </th>
+            <td
+              cdk-cell
+              *cdkCellDef="let element"
+              class="smart:w-10 smart:px-3 smart:py-4"
+            >
+              <button
+                type="button"
+                data-role="details"
+                class="smart:text-indigo-600 smart:hover:text-indigo-900 smart:dark:text-indigo-400 smart:dark:hover:text-indigo-300"
+                (click)="detailsHandler?.(element)"
+              >
+                {{ 'show' | translate }}
+              </button>
+            </td>
+          }
           @case ('removeAction') {
             <th
               cdk-header-cell
@@ -97,8 +120,25 @@
               cdk-header-cell
               *cdkHeaderCellDef
               class="smart:px-3 smart:py-3.5 smart:text-left smart:text-sm smart:font-semibold smart:text-gray-900 smart:dark:text-white"
+              [attr.aria-sort]="ariaSort(key)"
             >
-              {{ (desktopList() | smartListHeader: key : type)() }}
+              @if (isSortable(key)) {
+                <button
+                  type="button"
+                  data-role="sort"
+                  class="smart:inline-flex smart:items-center smart:gap-x-1 smart:font-semibold smart:text-gray-900 smart:hover:text-indigo-600 smart:dark:text-white smart:dark:hover:text-indigo-400"
+                  (click)="sortBy(key)"
+                >
+                  {{ (desktopList() | smartListHeader: key : type)() }}
+                  <span
+                    aria-hidden="true"
+                    class="smart:text-gray-400 smart:dark:text-gray-500"
+                    >{{ sortIndicator(key) }}</span
+                  >
+                </button>
+              } @else {
+                {{ (desktopList() | smartListHeader: key : type)() }}
+              }
               <ng-container *ngTemplateOutlet="pagination"></ng-container>
             </th>
             <td
@@ -146,4 +186,12 @@
     [totalPages]="totalPages() ?? 1"
     (pageChange)="handlePageChange($event)"
   ></smart-paging>
+}
+
+@if (infiniteScroll()) {
+  <div
+    #infiniteScrollAnchor
+    data-role="infinite-scroll"
+    aria-hidden="true"
+  ></div>
 }

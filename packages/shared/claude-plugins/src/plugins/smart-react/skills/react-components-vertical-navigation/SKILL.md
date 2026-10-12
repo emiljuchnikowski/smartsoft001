@@ -27,7 +27,7 @@ All from `@smartsoft001/react`.
 | `SmartVerticalNavigationStandard` | component | The default vertical navigation rendering.                                                                                                                        |
 | `useVerticalNavigation`           | hook      | The behaviour every vertical navigation variant shares: `options.items` normalised into a first, untitled group followed by `options.groups`, and the item click. |
 
-The preset's class helpers (`getVerticalNavContainerClasses`, `getVerticalNavNavClasses`, `getVerticalNavGroupTitleClasses`, `getVerticalNavItemClasses`, `getVerticalNavIconClasses`, `getVerticalNavInitialClasses`, `getVerticalNavBadgeClasses`) are exported too, for a custom implementation that wants the preset look.
+The preset's class helpers (`getVerticalNavContainerClasses` for the `<nav>`, `getVerticalNavNavClasses` for a group's list, `getVerticalNavListItemClasses`, `getVerticalNavGroupTitleClasses`, `getVerticalNavItemClasses`, `getVerticalNavIconClasses`, `getVerticalNavInitialClasses`, `getVerticalNavBadgeClasses`) are exported too, for a custom implementation that wants the preset look.
 
 ## Props and Types
 
@@ -44,7 +44,7 @@ The preset's class helpers (`getVerticalNavContainerClasses`, `getVerticalNavNav
 | Field        | Type                     | Default     | Description                                                                                           |
 | ------------ | ------------------------ | ----------- | ----------------------------------------------------------------------------------------------------- |
 | `layout?`    | `SmartVerticalNavLayout` | —           | Not read by the built-in implementations (standard and preset); available to a custom implementation. |
-| `ariaLabel?` | `string`                 | `'Sidebar'` | Accessible name of the `nav`.                                                                         |
+| `ariaLabel?` | `string`                 | `'Sidebar'` | Accessible name of the one `nav` landmark (the groups are lists named by their title).                |
 | `items?`     | `IVerticalNavItem[]`     | —           | The first, untitled group.                                                                            |
 | `groups?`    | `IVerticalNavGroup[]`    | —           | Further groups, each with a title.                                                                    |
 
@@ -198,7 +198,7 @@ export function PlainVerticalNav(props: SmartVerticalNavigationProps) {
 
 ## Styling
 
-- The standard rendering is unstyled; the preset renders every group as its own `<nav>` after its title, with `smart:dark:` variants.
+- Both renderings put every group in one `<nav>` landmark (named by `options.ariaLabel`, `'Sidebar'` by default); a group is a list (`role="list"`) of its items, named by its title through `aria-labelledby`. The standard rendering is unstyled; the preset renders the vertical tabs, each group's title before its list, with `smart:dark:` variants.
 
 ## File Locations
 

@@ -33,6 +33,7 @@ export function SmartListMobilePreset<T extends IEntity<string>>(
     checkRemoveHandler,
     removeHandler,
     itemHandler,
+    detailsHandler,
     page,
     totalPages,
     handlePageChange,
@@ -104,6 +105,16 @@ export function SmartListMobilePreset<T extends IEntity<string>>(
                       onClick={() => itemHandler?.(item.id)}
                     >
                       {t('details')}
+                    </button>
+                  ) : null}
+                  {detailsHandler ? (
+                    <button
+                      type="button"
+                      data-role="details"
+                      className="smart:mt-2 smart:text-blue-600 smart:hover:text-blue-700 smart:dark:text-blue-400 smart:dark:hover:text-blue-300 smart:text-sm"
+                      onClick={() => detailsHandler(item)}
+                    >
+                      {t('show')}
                     </button>
                   ) : null}
                   {removeHandler &&

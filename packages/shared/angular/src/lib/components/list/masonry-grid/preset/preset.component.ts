@@ -4,6 +4,7 @@ import {
   Component,
   ViewEncapsulation,
 } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { IEntity } from '@smartsoft001/domain-core';
 import { FieldType, getModelFieldOptions } from '@smartsoft001/models';
@@ -18,7 +19,13 @@ import { ListMasonryGridComponent } from '../masonry-grid.component';
   templateUrl: './preset.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [PagingComponent, FileUrlPipe, NgOptimizedImage, ListCellPipe],
+  imports: [
+    PagingComponent,
+    FileUrlPipe,
+    NgOptimizedImage,
+    ListCellPipe,
+    TranslatePipe,
+  ],
 })
 export class ListMasonryGridPresetComponent<
   T extends IEntity<string>,

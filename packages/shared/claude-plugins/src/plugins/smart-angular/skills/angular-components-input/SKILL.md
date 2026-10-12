@@ -33,7 +33,15 @@ Abstract base directive for all input sub-components. Provides:
 
 ### InputPossibilitiesBaseComponent (abstract)
 
-Extends `InputBaseComponent` for sub-components that need list possibilities: the radio and check components (standard and preset) and the enum preset. Its `afterSetOptionsHandler()` asks `MODEL_POSSIBILITIES_PROVIDER` for the possibilities and asks again 500 ms after the parent form's value changes. The built-in radio, check and enum preset components override that hook without calling it, so they never consult the provider: they show `options.possibilities`, else the `possibilities` of the field's `@Field()` metadata. A custom component that keeps the inherited hook gets the provider behaviour.
+Extends `InputBaseComponent` for sub-components that need list possibilities: the radio and check components (standard and preset) and the enum preset. Its `possibilities` signal holds, in this order of precedence:
+
+1. the list in the signal `MODEL_POSSIBILITIES_PROVIDER` returns from `get({ type, key, instance })` (the model's class, the field key and the parent form's value), while that signal's value is not `null`;
+2. else `options.possibilities`;
+3. else the `possibilities` of the field's `@Field()` metadata (read through the first item of an array model): an object map `{ text: id }`, such as an enum, as a list for the radio components and the enum preset, a list as it is for the check components.
+
+The provider is asked when the options are set and again 500 ms after the parent form's value last changed, so the list can depend on other fields; a provider signal filled later (after an HTTP call, for instance) updates the field, and after a new question the former list stays until the new signal holds one. The token is optional: without a provider the field shows the input options, else the field's own possibilities. The check components keep each possibility's `checked` in line with the control value (an `id` in the value, or equal to it) whenever the list or the value changes.
+
+A subclass that overrides `afterSetOptionsHandler()` calls `super.afterSetOptionsHandler()` first. Two more protected hooks are there to override: `afterPossibilitiesChange()`, which runs whenever the list may have changed, and `getModelPossibilities()`, the fallback read from the field's metadata.
 
 ### InputFileBaseComponent (abstract)
 
@@ -91,15 +99,15 @@ The validation messages `<smart-input>` renders under a touched field. Its only 
 
 `InputOptions<T>` is `IInputOptions & IInputFromFieldOptions<T>`.
 
-| Field           | Type                                                            | Default  | Description                                                                                                                      |
-| --------------- | --------------------------------------------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| `treeLevel`     | `number`                                                        | required | Nesting depth (0 at the top; nested object / array forms go one deeper).                                                         |
-| `control`       | `UntypedFormControl \| UntypedFormArray`                        | required | The control of the field.                                                                                                        |
-| `possibilities` | `WritableSignal<{ id: any; text: string; checked: boolean }[]>` | —        | The options of a radio, check or enum preset field; wins over the field's own `possibilities`. Other field types do not read it. |
-| `component`     | `Type<InputBaseComponent<any>>`                                 | —        | A field component used instead of the one of the field type (wins over the token).                                               |
-| `model`         | `T`                                                             | required | The model instance whose `@Field()` metadata is read.                                                                            |
-| `fieldKey`      | `string`                                                        | required | The field's key; a `<key>Confirm` key reads the metadata of `<key>`.                                                             |
-| `mode`          | `'create' \| 'update' \| string`                                | —        | Merges the `@Field({ create })` / `@Field({ update })` overrides into the field options.                                         |
+| Field           | Type                                                            | Default  | Description                                                                                                                                                                                                                              |
+| --------------- | --------------------------------------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `treeLevel`     | `number`                                                        | required | Nesting depth (0 at the top; nested object / array forms go one deeper).                                                                                                                                                                 |
+| `control`       | `UntypedFormControl \| UntypedFormArray`                        | required | The control of the field.                                                                                                                                                                                                                |
+| `possibilities` | `WritableSignal<{ id: any; text: string; checked: boolean }[]>` | —        | The options of a radio, check or enum preset field: the `MODEL_POSSIBILITIES_PROVIDER` list wins over them, they win over the field's own `possibilities`. The standard enum (the enum's keys) and the other field types do not read it. |
+| `component`     | `Type<InputBaseComponent<any>>`                                 | —        | A field component used instead of the one of the field type (wins over the token).                                                                                                                                                       |
+| `model`         | `T`                                                             | required | The model instance whose `@Field()` metadata is read.                                                                                                                                                                                    |
+| `fieldKey`      | `string`                                                        | required | The field's key; a `<key>Confirm` key reads the metadata of `<key>`.                                                                                                                                                                     |
+| `mode`          | `'create' \| 'update' \| string`                                | —        | Merges the `@Field({ create })` / `@Field({ update })` overrides into the field options.                                                                                                                                                 |
 
 ```typescript
 type InputOptions<T> = IInputOptions & IInputFromFieldOptions<T>;
@@ -187,12 +195,12 @@ the most recently added ones:
 
 Where a preset behaves differently from the standard component of its type:
 
-| FieldType | Standard                                           | Preset                                                                                                     |
-| --------- | -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `enum`    | Checkboxes of the enum's keys; value: list of keys | A `<select>` of the possibilities (`options.possibilities`, else the field's); value: one possibility `id` |
-| `file`    | Keeps the picked `File` as the value (no upload)   | Uploads through `FileService` (`InputFileBaseComponent`); value: the API result                            |
-| `logo`    | Stores a base64 `data:` URL (no upload)            | Uploads like `image` (`.jpg,.png,.jpeg`)                                                                   |
-| `pesel`   | No validator of its own                            | Adds an `invalidPesel` check (shown with the same message as `pesel`)                                      |
+| FieldType | Standard                                           | Preset                                                                                                                          |
+| --------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `enum`    | Checkboxes of the enum's keys; value: list of keys | A `<select>` of the possibilities (the provider's, else `options.possibilities`, else the field's); value: one possibility `id` |
+| `file`    | Keeps the picked `File` as the value (no upload)   | Uploads through `FileService` (`InputFileBaseComponent`); value: the API result                                                 |
+| `logo`    | Stores a base64 `data:` URL (no upload)            | Uploads like `image` (`.jpg,.png,.jpeg`)                                                                                        |
+| `pesel`   | No validator of its own                            | Adds an `invalidPesel` check (shown with the same message as `pesel`)                                                           |
 
 Notes:
 

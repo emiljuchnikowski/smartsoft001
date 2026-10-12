@@ -249,4 +249,46 @@ describe('@smartsoft001/react: SmartInputRadioPreset', () => {
 
     expect(screen.getAllByRole('radio')).toHaveLength(3);
   });
+
+  describe('with a model possibilities provider', () => {
+    beforeEach(() => jest.useFakeTimers());
+
+    afterEach(() => jest.useRealTimers());
+
+    it('should render the possibilities of the provider and ask again 500 ms after the form changed', async () => {
+      const provider = {
+        get: jest.fn(({ instance }: { instance: { kind: string } }) => [
+          {
+            id: 'x',
+            text: instance.kind === 'b' ? 'From B' : 'From A',
+            checked: false,
+          },
+        ]),
+      };
+      const { kind } = setup(SmartInputRadioPreset, { provider });
+      await act(async () => undefined);
+      expect(screen.getByLabelText('From A')).toBeInTheDocument();
+
+      act(() => kind.setValue('b'));
+      await act(async () => {
+        jest.advanceTimersByTime(500);
+      });
+
+      expect(screen.getByLabelText('From B')).toBeInTheDocument();
+      expect(provider.get).toHaveBeenLastCalledWith(
+        expect.objectContaining({ key: 'status', type: Account }),
+      );
+    });
+
+    it('should render the input options while the provider returns none', async () => {
+      const provider = { get: jest.fn(() => null) };
+      setup(SmartInputRadioPreset, { provider });
+
+      await act(async () => undefined);
+
+      expect(provider.get).toHaveBeenCalled();
+      expect(screen.getAllByRole('radio')).toHaveLength(3);
+      expect(screen.getByLabelText('Disabled')).toBeInTheDocument();
+    });
+  });
 });

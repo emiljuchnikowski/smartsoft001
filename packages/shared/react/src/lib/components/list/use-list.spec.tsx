@@ -342,6 +342,81 @@ describe('@smartsoft001/react: useList', () => {
 
       expect(provider.clearData).toHaveBeenCalledTimes(1);
     });
+
+    it('should not set detailsHandler without details', () => {
+      const { result } = setup();
+
+      expect([
+        result.current.detailsHandler,
+        result.current.detailsComponentProps,
+      ]).toEqual([null, null]);
+    });
+
+    it('should build the details props for the default page without a component', () => {
+      const provider = createDetailsProvider();
+
+      const { result } = setup({ details: { provider } });
+
+      expect(result.current.detailsHandler).toEqual(expect.any(Function));
+      expect(result.current.detailsComponentProps).toMatchObject({
+        item: provider.item,
+        type: TestItemModel,
+      });
+    });
+  });
+
+  describe('sort', () => {
+    it('should not sort without the sort option', () => {
+      const { result } = setup();
+
+      act(() => result.current.sortBy('firstName'));
+
+      expect(result.current.sortable).toBe(false);
+      expect(result.current.activeSort).toBeNull();
+      expect(result.current.getAriaSort('firstName')).toBeNull();
+    });
+
+    it('should start from the default sort', () => {
+      const { result } = setup({
+        sort: { default: 'firstName', defaultDesc: true },
+      });
+
+      expect(result.current.activeSort).toEqual({
+        key: 'firstName',
+        desc: true,
+      });
+      expect(result.current.getAriaSort('firstName')).toBe('descending');
+      expect(result.current.getSortIndicator('firstName')).toBe('↓');
+    });
+
+    it('should read the data sorted by a column from the first page', () => {
+      const provider = createProvider();
+      const { result } = setup({ provider, sort: true });
+
+      act(() => result.current.sortBy('firstName'));
+
+      expect(provider.getData).toHaveBeenCalledWith({
+        offset: 0,
+        sortBy: 'firstName',
+        sortDesc: false,
+      });
+      expect(result.current.activeSort).toEqual({
+        key: 'firstName',
+        desc: false,
+      });
+    });
+
+    it('should not sort the expanded columns of a dynamic field', () => {
+      const provider = createProvider();
+      const { result } = setup({ provider, sort: true });
+
+      act(() => result.current.sortBy('__array.tags.0.name.value'));
+
+      expect(result.current.isSortable('__array.tags.0.name.value')).toBe(
+        false,
+      );
+      expect(provider.getData).not.toHaveBeenCalled();
+    });
   });
 
   describe('pagination', () => {

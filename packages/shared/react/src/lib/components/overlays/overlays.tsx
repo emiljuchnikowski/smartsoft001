@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
-import type { ReactNode } from 'react';
+import type { MouseEvent, ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 
+import { IModalOptions } from '../../models';
 import { useSmart } from '../../providers/smart-context';
+import { IModalRequest } from '../../services/modal/modal.service';
 import { IToast } from '../../services/toast/toast.service';
 import { useStore } from '../../store/store';
+import { cn } from '../../utils/class-names';
 import { SmartAlert } from '../alert/alert';
 import { SmartModal } from '../modal/modal';
 import { SmartNotification } from '../notification/notification';
@@ -82,10 +85,30 @@ export function SmartAlertHost() {
   );
 }
 
+/** The modals of `ModalService` show their close button. */
+const MODAL_HOST_OPTIONS: IModalOptions = { withDismiss: true };
+
 /**
- * The components `ModalService.show` opened, each in a `<SmartModal>`. The
- * component gets its `props` and a `dismiss(data)` prop that closes the
- * modal with a result.
+ * With `backdropDismiss: false`, stops a click that lands in the modal but
+ * outside its dialog (the backdrop) before the modal sees it.
+ */
+function keepOpenOnBackdrop(
+  request: IModalRequest,
+  event: MouseEvent<HTMLDivElement>,
+): void {
+  if (request.backdropDismiss !== false) return;
+
+  const target = event.target as Element | null;
+
+  if (!target?.closest?.('[role="dialog"]')) event.stopPropagation();
+}
+
+/**
+ * The components `ModalService.show` opened, each in a `<SmartModal>` with its
+ * close button, the last one on top. The component gets its `props` and a
+ * `dismiss(data)` prop that closes the modal with a result. `cssClass` (and
+ * `smart-modal-bottom` for `mode: 'bottom'`) goes on the modal; with
+ * `backdropDismiss: false` a click on the backdrop leaves it open.
  */
 export function SmartModalHost() {
   const { modalService } = useSmart();
@@ -95,16 +118,38 @@ export function SmartModalHost() {
 
   return (
     <BodyPortal>
-      {modals.map(({ id, component: Component, props, dismiss, cssClass }) => (
-        <SmartModal
-          key={id}
-          open
-          className={cssClass?.join(' ')}
-          onClosed={() => dismiss()}
-        >
-          <Component {...(props ?? {})} dismiss={dismiss} />
-        </SmartModal>
-      ))}
+      {modals.map((request) => {
+        const {
+          id,
+          component: Component,
+          props,
+          dismiss,
+          cssClass,
+          mode,
+        } = request;
+
+        return (
+          <div
+            key={id}
+            className="smart:contents"
+            data-role="modal"
+            data-mode={mode ?? 'default'}
+            onClickCapture={(event) => keepOpenOnBackdrop(request, event)}
+          >
+            <SmartModal
+              open
+              className={
+                cn(cssClass, mode === 'bottom' && 'smart-modal-bottom') ||
+                undefined
+              }
+              options={MODAL_HOST_OPTIONS}
+              onClosed={() => dismiss()}
+            >
+              <Component {...(props ?? {})} dismiss={dismiss} />
+            </SmartModal>
+          </div>
+        );
+      })}
     </BodyPortal>
   );
 }

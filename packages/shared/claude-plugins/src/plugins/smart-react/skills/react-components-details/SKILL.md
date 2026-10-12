@@ -40,11 +40,11 @@ All from `@smartsoft001/react`.
 
 What `useDetailsModal` opens: a component and its params.
 
-| Field       | Type                    | Default    | Description                                                      |
-| ----------- | ----------------------- | ---------- | ---------------------------------------------------------------- |
-| `component` | `ComponentType<any>`    | required   | Rendered in the modal, with `params` as its `value` prop.        |
-| `params`    | `any`                   | required   | Passed to the component as its `value` prop.                     |
-| `mode?`     | `'bottom' \| 'default'` | `'bottom'` | Passed to `ModalService.show` (the modal host does not read it). |
+| Field       | Type                    | Default    | Description                                                                                 |
+| ----------- | ----------------------- | ---------- | ------------------------------------------------------------------------------------------- |
+| `component` | `ComponentType<any>`    | required   | Rendered in the modal, with `params` as its `value` prop.                                   |
+| `params`    | `any`                   | required   | Passed to the component as its `value` prop.                                                |
+| `mode?`     | `'bottom' \| 'default'` | `'bottom'` | Passed to `ModalService.show`; `'bottom'` adds the `smart-modal-bottom` class to the modal. |
 
 ### `IDetailsOptions<T extends IEntity<string>>`
 
@@ -100,7 +100,7 @@ Formats a value: `transform(item, key, translate?)` returns text (sanitised) or 
 
 ## In a modal
 
-`useDetailsModal({ component, params, mode? }, { onShowed?, onDismissed? })` returns a click handler that opens `component` in a modal through `ModalService`, with `{ value: params }` as its props, and resolves once the modal closed. `SmartDetailsPage` is the component made for it: it renders `SmartDetails` of `value` full width, with the application style applied. `useDetailsPageOptions(value)` returns page options (title, a remove button for `removeHandler`, a forward button for `itemHandler`) for a page layout of your own around it.
+`SmartList` opens the same page for its `details` option, with the item loaded after the modal opened (see `react-components-list`). `useDetailsModal({ component, params, mode? }, { onShowed?, onDismissed? })` returns a click handler that opens `component` in a modal through `ModalService`, with `{ value: params }` as its props, and resolves once the modal closed. `SmartDetailsPage` is the component made for it: it renders `SmartDetails` of `value` full width, with the application style applied. `useDetailsPageOptions(value)` returns page options (title, a remove button for `removeHandler`, a forward button for `itemHandler`) for a page layout of your own around it.
 
 ## Usage
 

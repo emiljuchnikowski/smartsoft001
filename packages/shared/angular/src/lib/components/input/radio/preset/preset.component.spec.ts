@@ -191,3 +191,102 @@ describe('@smartsoft001/shared-angular: InputRadioPresetComponent', () => {
     expect(control.value).toBe(2);
   });
 });
+
+describe('@smartsoft001/shared-angular: InputRadioPresetComponent (with a possibilities provider)', () => {
+  const provider = { get: jest.fn() };
+
+  function texts(fixture: ComponentFixture<TestHostComponent>): string[] {
+    return Array.from(
+      (fixture.nativeElement as HTMLElement).querySelectorAll('fieldset label'),
+    ).map((label) => label.textContent?.trim() ?? '');
+  }
+
+  beforeEach(async () => {
+    provider.get.mockReset();
+
+    await TestBed.configureTestingModule({
+      imports: [
+        TestHostComponent,
+        ReactiveFormsModule,
+        TranslateModule.forRoot(),
+      ],
+      providers: [
+        { provide: IModelLabelProvider, useClass: MockModelLabelProvider },
+        { provide: MODEL_POSSIBILITIES_PROVIDER, useValue: provider },
+      ],
+    }).compileComponents();
+  });
+
+  afterEach(() => jest.useRealTimers());
+
+  it('should render the possibilities of the provider over the input options', () => {
+    provider.get.mockReturnValue(
+      signal([{ id: 9, text: 'From provider', checked: false }]),
+    );
+    const fixture = TestBed.createComponent(TestHostComponent);
+    fixture.componentInstance.options = buildOptions(new UntypedFormControl(1));
+
+    fixture.detectChanges();
+
+    expect(texts(fixture)).toEqual(['From provider']);
+    expect(provider.get).toHaveBeenCalledWith({
+      type: RadioModel,
+      key: 'status',
+      instance: { status: 1 },
+    });
+  });
+
+  it('should render the input options while the provider has no possibilities', () => {
+    provider.get.mockReturnValue(signal(null));
+    const fixture = TestBed.createComponent(TestHostComponent);
+    fixture.componentInstance.options = buildOptions(new UntypedFormControl(1));
+
+    fixture.detectChanges();
+
+    expect(texts(fixture)).toEqual(['Active', 'Inactive', 'Pending']);
+  });
+
+  it('should ask the provider again 500 ms after the form value changed', () => {
+    jest.useFakeTimers();
+    provider.get.mockImplementation(
+      ({ instance }: { instance: { status: number } }) =>
+        signal([
+          {
+            id: 9,
+            text: instance.status === 2 ? 'From B' : 'From A',
+            checked: false,
+          },
+        ]),
+    );
+    const control = new UntypedFormControl(1);
+    const fixture = TestBed.createComponent(TestHostComponent);
+    fixture.componentInstance.options = buildOptions(control);
+    fixture.detectChanges();
+
+    control.setValue(2);
+    jest.advanceTimersByTime(500);
+    fixture.detectChanges();
+
+    expect(texts(fixture)).toEqual(['From B']);
+  });
+
+  it('should fall back to the object map of the model possibilities', () => {
+    provider.get.mockReturnValue(signal(null));
+    const control = new UntypedFormControl(1);
+    const fixture = TestBed.createComponent(TestHostComponent);
+    fixture.componentInstance.options = {
+      ...buildOptions(control),
+      possibilities: undefined,
+    };
+    fixture.detectChanges();
+    const radios = (fixture.nativeElement as HTMLElement).querySelectorAll(
+      'input[type="radio"]',
+    ) as NodeListOf<HTMLInputElement>;
+
+    radios[2].checked = true;
+    radios[2].dispatchEvent(new Event('change'));
+
+    expect(texts(fixture)).toEqual(['Active', 'Inactive', 'Pending']);
+    expect(control.value).toBe(3);
+  });
+});

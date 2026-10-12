@@ -68,8 +68,11 @@ describe('docs-examples-react: NotesListRoute', () => {
     await setup();
 
     expect(
-      screen.getAllByRole('columnheader').map((th) => th.textContent),
-    ).toEqual(expect.arrayContaining(['Title', 'Content']));
+      screen.getByRole('columnheader', { name: 'Title' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('columnheader', { name: 'Content' }),
+    ).toBeInTheDocument();
   });
 
   it('should navigate to the add path from the add button', async () => {
