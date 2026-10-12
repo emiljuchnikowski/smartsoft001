@@ -1,3 +1,13 @@
+## 2.204.0 (2026-10-12)
+
+### 🚀 Features
+
+- **shared:** Angular toasts render and modals open as a bottom sheet ([#141](https://github.com/emiljuchnikowski/smartsoft001/pull/141))
+
+### ❤️ Thank You
+
+- Emil Juchnikowski
+
 ## 2.203.0 (2026-10-12)
 
 ### 🚀 Features
