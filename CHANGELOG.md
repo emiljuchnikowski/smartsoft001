@@ -1,3 +1,13 @@
+## 2.205.0 (2026-10-12)
+
+### 🚀 Features
+
+- **nx:** docs-check keeps the Angular and React libraries in step ([#142](https://github.com/emiljuchnikowski/smartsoft001/pull/142))
+
+### ❤️ Thank You
+
+- Emil Juchnikowski
+
 ## 2.204.0 (2026-10-12)
 
 ### 🚀 Features
