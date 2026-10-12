@@ -28,10 +28,13 @@ import {
   rule15,
   rule16,
   rule17,
+  rule18,
+  rule19,
   runAllRules,
   skillInventory,
   storyInventory,
 } from './check-rules.mjs'
+import { API_EXCEPTIONS, COMPONENT_EXCEPTIONS } from './framework-parity.mjs'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const fixtureRoot = path.join(here, '__fixtures__', 'check')
@@ -44,6 +47,31 @@ const citedRoot = path.join(here, '__fixtures__', 'check-r14')
 const agentRoot = path.join(here, '__fixtures__', 'check-r16')
 const quotedRoot = path.join(here, '__fixtures__', 'check-fenced')
 const reactRoot = path.join(here, '__fixtures__', 'check-react')
+const parityRoot = path.join(here, '__fixtures__', 'check-r18')
+const apiRoot = path.join(here, '__fixtures__', 'check-r19')
+
+/** The exceptions of `framework-parity.mjs` a parity test runs with. */
+const NO_EXCEPTIONS = { components: {}, api: {} }
+const REASON = 'The fixture needs it.'
+
+function parityContext(overrides = {}) {
+  return context({
+    repoRoot: parityRoot,
+    docsAppDir: path.join(parityRoot, 'docs', 'site', 'src', 'app'),
+    examplesRoot: path.join(parityRoot, 'docs', 'examples'),
+    parity: NO_EXCEPTIONS,
+    ...overrides,
+  })
+}
+
+function apiContext(overrides = {}) {
+  return parityContext({
+    repoRoot: apiRoot,
+    docsAppDir: path.join(apiRoot, 'docs', 'site', 'src', 'app'),
+    examplesRoot: path.join(apiRoot, 'docs', 'examples'),
+    ...overrides,
+  })
+}
 
 function reactContext(overrides = {}) {
   return context({
@@ -1378,6 +1406,459 @@ describe('rule15 (usage examples)', () => {
   })
 })
 
+describe('rule18 (component parity)', () => {
+  const plugins = 'packages/shared/claude-plugins/src/plugins'
+  const messages = (ctx) => rule18(ctx).map((finding) => finding.message)
+
+  test('reports a component the React library does not have', () => {
+    const finding = rule18(parityContext()).find((item) =>
+      item.message.startsWith('React component "drawer"'),
+    )
+
+    assert.ok(finding)
+    assert.equal(finding.rule, 'R18')
+    assert.equal(finding.level, 'error')
+    assert.equal(
+      finding.message,
+      'React component "drawer" is not in the library (expected a component ' +
+        'in packages/shared/react/src/lib/components/drawer, exported from ' +
+        'packages/shared/react/src/lib/components/index.ts)',
+    )
+    assert.equal(
+      finding.file,
+      path.join(parityRoot, 'packages/shared/react/src/lib/components/drawer'),
+    )
+  })
+
+  test('reports a component without its React skill', () => {
+    const finding = rule18(parityContext()).find((item) =>
+      item.message.startsWith('React component "badge"'),
+    )
+
+    assert.ok(finding)
+    assert.equal(finding.level, 'error')
+    assert.equal(
+      finding.message,
+      'React component "badge" has no skill (expected ' +
+        `${plugins}/smart-react/skills/react-components-badge/SKILL.md)`,
+    )
+    assert.equal(
+      finding.file,
+      path.join(
+        parityRoot,
+        `${plugins}/smart-react/skills/react-components-badge/SKILL.md`,
+      ),
+    )
+  })
+
+  test('reports a component without its Angular skill', () => {
+    const found = messages(parityContext()).filter((message) =>
+      message.includes('"loader"'),
+    )
+
+    assert.deepEqual(found, [
+      'Angular component "loader" has no skill (expected ' +
+        `${plugins}/smart-angular/skills/angular-components-loader/SKILL.md)`,
+    ])
+  })
+
+  test('reports a React-only component without an exception on the Angular side', () => {
+    const found = messages(parityContext()).filter((message) =>
+      message.includes('"toast"'),
+    )
+
+    assert.deepEqual(found, [
+      'Angular component "toast" is not in the library (expected a component ' +
+        'in packages/shared/angular/src/lib/components/toast, exported from ' +
+        'packages/shared/angular/src/lib/components/index.ts)',
+      'Angular component "toast" has no skill (expected ' +
+        `${plugins}/smart-angular/skills/angular-components-toast/SKILL.md)`,
+    ])
+  })
+
+  test('accepts a component both libraries and both plugins have', () => {
+    const findings = rule18(parityContext())
+
+    assert.ok(!findings.some((finding) => /"button"/.test(finding.message)))
+  })
+
+  test('does not count a directory without a component file as a component', () => {
+    const findings = rule18(parityContext())
+
+    assert.ok(!findings.some((finding) => /"presets"/.test(finding.message)))
+  })
+
+  test('accepts a React-only component the exceptions allow', () => {
+    const exempt = parityContext({
+      parity: {
+        components: { overlays: { only: 'react', reason: REASON } },
+        api: {},
+      },
+    })
+
+    assert.ok(messages(parityContext()).some((m) => m.includes('"overlays"')))
+    assert.ok(!messages(exempt).some((m) => m.includes('"overlays"')))
+  })
+
+  test('reports an exception for a component both frameworks or neither have', () => {
+    const stale = parityContext({
+      parity: {
+        components: {
+          button: { only: 'react', reason: REASON },
+          drawer: { only: 'angular', reason: REASON },
+          ghost: { only: 'react', reason: REASON },
+        },
+        api: {},
+      },
+    })
+    const findings = rule18(stale).filter((finding) =>
+      /"(button|drawer|ghost)"/.test(finding.message),
+    )
+
+    assert.ok(findings.every((finding) => finding.level === 'error'))
+    assert.deepEqual(
+      findings.map((finding) => finding.message),
+      [
+        'Component exception "button" (React only) in ' +
+          'docs/site/tools/framework-parity.mjs is stale: Angular has the ' +
+          'component or its skill too (remove the entry)',
+        'Component exception "drawer" (Angular only) in ' +
+          'docs/site/tools/framework-parity.mjs is stale: React has the ' +
+          'component or its skill too (remove the entry)',
+        'React component "drawer" is not in the library (expected a ' +
+          'component in packages/shared/react/src/lib/components/drawer, ' +
+          'exported from packages/shared/react/src/lib/components/index.ts)',
+        'Component exception "ghost" (React only) in ' +
+          'docs/site/tools/framework-parity.mjs is stale: neither framework ' +
+          'has the component or its skill (remove the entry)',
+      ],
+    )
+    assert.equal(
+      findings[0].file,
+      path.join(parityRoot, 'docs/site/tools/framework-parity.mjs'),
+    )
+  })
+
+  test('reports an exception without a reason or a framework, and ignores it', () => {
+    const invalid = parityContext({
+      parity: {
+        components: {
+          overlays: { only: 'vue', reason: REASON },
+          toast: { only: 'react', reason: ' ' },
+        },
+        api: {},
+      },
+    })
+    const found = messages(invalid)
+
+    assert.ok(
+      found.includes(
+        'Component exception "overlays" in docs/site/tools/framework-parity.mjs ' +
+          'names no framework ("only" is "angular" or "react")',
+      ),
+    )
+    assert.ok(
+      found.includes(
+        'Component exception "toast" in docs/site/tools/framework-parity.mjs ' +
+          'has no reason',
+      ),
+    )
+    assert.ok(found.some((m) => m.startsWith('Angular component "toast"')))
+  })
+
+  test('reads the exceptions of framework-parity.mjs by default', () => {
+    const found = messages(parityContext({ parity: undefined }))
+
+    assert.ok(!found.some((m) => m.includes('"overlays"')))
+    assert.ok(found.some((m) => /^Component exception "app" .* stale/.test(m)))
+  })
+
+  test('has nothing to compare in a workspace without the React library', () => {
+    assert.deepEqual(rule18(context()), [])
+  })
+})
+
+describe('rule19 (model API parity)', () => {
+  const ngModels = 'packages/shared/angular/src/lib/models'
+  const reactModels = 'packages/shared/react/src/lib/models'
+  const about = (subject, ctx = apiContext()) =>
+    rule19(ctx)
+      .filter((finding) => finding.message.includes(`"${subject}`))
+      .map((finding) => finding.message)
+
+  test('reports a declaration one library exports and the other does not', () => {
+    const findings = rule19(apiContext())
+    const finding = findings.find((item) =>
+      item.message.includes('"SmartPossibility"'),
+    )
+
+    assert.ok(finding)
+    assert.equal(finding.rule, 'R19')
+    assert.equal(finding.level, 'error')
+    assert.equal(
+      finding.message,
+      'Declaration "SmartPossibility" is exported by the React models only ' +
+        `(${reactModels}/interfaces.ts:1)`,
+    )
+    assert.equal(finding.file, path.join(apiRoot, reactModels, 'interfaces.ts'))
+    assert.deepEqual(about('InputBaseComponentType'), [
+      'Declaration "InputBaseComponentType" is exported by the Angular ' +
+        `models only (${ngModels}/forward-types.ts:1)`,
+    ])
+  })
+
+  test('reports a member one side of an interface declares and the other not', () => {
+    assert.deepEqual(about('IButtonOptions.size'), [
+      'Member "IButtonOptions.size" is declared in Angular only ' +
+        `(${ngModels}/interfaces.ts:3)`,
+    ])
+  })
+
+  test('matches an Angular member ending in $ with the React member without it', () => {
+    assert.deepEqual(about('IButtonOptions.disabled'), [])
+  })
+
+  test('reports a member that is optional on one side and required on the other', () => {
+    assert.deepEqual(about('IButtonOptions.label'), [
+      'Member "IButtonOptions.label" is optional in Angular ' +
+        `(${ngModels}/interfaces.ts:2) but required in React ` +
+        `(${reactModels}/interfaces.ts:6)`,
+    ])
+  })
+
+  test('reports a type alias whose literals differ', () => {
+    assert.deepEqual(about('SmartModalVariant'), [
+      `Type "SmartModalVariant" allows 'fullscreen' in React only ` +
+        `(${ngModels}/interfaces.ts:8, ${reactModels}/interfaces.ts:11)`,
+    ])
+  })
+
+  test('reports an interface member whose literals differ', () => {
+    assert.deepEqual(about('IButtonOptions.type'), [
+      `Member "IButtonOptions.type" allows 'reset' in React only ` +
+        `(${ngModels}/interfaces.ts:5, ${reactModels}/interfaces.ts:8)`,
+    ])
+  })
+
+  test('reports a member that is a union of literals on one side only', () => {
+    assert.deepEqual(about('ITableOptions.density'), [
+      'Member "ITableOptions.density" is a union of literals in Angular but ' +
+        `not in React (${ngModels}/interfaces.ts:24, ` +
+        `${reactModels}/interfaces.ts:27)`,
+    ])
+  })
+
+  test('reports a declaration that is of another kind on the other side', () => {
+    assert.deepEqual(about('ISortState'), [
+      'Declaration "ISortState" is an interface in Angular ' +
+        `(${ngModels}/interfaces.ts:19) but a type alias in React ` +
+        `(${reactModels}/interfaces.ts:22)`,
+    ])
+  })
+
+  test('reports an enum whose members differ', () => {
+    assert.deepEqual(about('SmartColumnType'), [
+      'Enum "SmartColumnType" has Number in Angular only and Date in React ' +
+        `only (${ngModels}/interfaces.ts:14, ${reactModels}/interfaces.ts:17)`,
+    ])
+  })
+
+  test('compares the component types both components trees export by name', () => {
+    assert.deepEqual(about('IModalActionClick'), [
+      'Member "IModalActionClick.close" is declared in React only ' +
+        '(packages/shared/react/src/lib/components/modal/modal.types.ts:3)',
+    ])
+  })
+
+  test('skips spec files and accepts a component type only one side exports', () => {
+    assert.deepEqual(about('IModalHarness'), [])
+    assert.deepEqual(about('SmartModalProps'), [])
+    assert.deepEqual(about('ModalSize'), [])
+  })
+
+  test('reports every difference exactly once, as errors', () => {
+    for (const strict of [false, true]) {
+      const findings = rule19(apiContext({ strict }))
+
+      assert.equal(findings.length, 10)
+      assert.ok(findings.every((finding) => finding.rule === 'R19'))
+      assert.ok(findings.every((finding) => finding.level === 'error'))
+    }
+  })
+
+  test('accepts the differences the exceptions allow, by name and by member', () => {
+    const exempt = apiContext({
+      parity: {
+        components: {},
+        api: {
+          SmartPossibility: { only: 'react', reason: REASON },
+          'IButtonOptions.size': { only: 'angular', reason: REASON },
+          'IButtonOptions.label': { reason: REASON },
+          SmartModalVariant: { reason: REASON },
+          ITableOptions: { reason: REASON },
+        },
+      },
+    })
+
+    for (const subject of [
+      'SmartPossibility',
+      'IButtonOptions.size',
+      'IButtonOptions.label',
+      'SmartModalVariant',
+      'ITableOptions',
+    ]) {
+      assert.deepEqual(about(subject, exempt), [], subject)
+    }
+    assert.equal(rule19(exempt).length, 5)
+  })
+
+  test('reports an exception that allows nothing any more', () => {
+    const stale = apiContext({
+      parity: {
+        components: {},
+        api: {
+          IGhost: { only: 'react', reason: REASON },
+          'IButtonOptions.ghost$': { reason: REASON },
+          IListOptions: { reason: REASON },
+          SmartPossibility: { only: 'angular', reason: REASON },
+        },
+      },
+    })
+    const parity = 'docs/site/tools/framework-parity.mjs'
+    const findings = rule19(stale).filter((finding) =>
+      finding.message.startsWith('API exception'),
+    )
+
+    assert.deepEqual(
+      findings.map((finding) => finding.message),
+      [
+        `API exception "IButtonOptions.ghost$" in ${parity} is stale: ` +
+          'neither library declares it (remove the entry)',
+        `API exception "IGhost" (React only) in ${parity} is stale: ` +
+          'neither library declares it (remove the entry)',
+        `API exception "IListOptions" in ${parity} is stale: the two ` +
+          'libraries agree on it (remove the entry)',
+        `API exception "SmartPossibility" (Angular only) in ${parity} is ` +
+          'stale: only React declares it (remove the entry)',
+      ],
+    )
+    assert.ok(findings.every((finding) => finding.level === 'error'))
+    assert.equal(findings[0].file, path.join(apiRoot, parity))
+    assert.equal(about('SmartPossibility', stale).length, 2)
+  })
+
+  test('reports an exception without a reason or a framework, and ignores it', () => {
+    const invalid = apiContext({
+      parity: {
+        components: {},
+        api: {
+          SmartPossibility: { only: 'react' },
+          SmartModalVariant: { only: 'vue', reason: REASON },
+        },
+      },
+    })
+
+    assert.deepEqual(about('SmartPossibility', invalid), [
+      'Declaration "SmartPossibility" is exported by the React models only ' +
+        `(${reactModels}/interfaces.ts:1)`,
+      'API exception "SmartPossibility" in ' +
+        'docs/site/tools/framework-parity.mjs has no reason',
+    ])
+    assert.deepEqual(about('SmartModalVariant', invalid), [
+      `Type "SmartModalVariant" allows 'fullscreen' in React only ` +
+        `(${ngModels}/interfaces.ts:8, ${reactModels}/interfaces.ts:11)`,
+      'API exception "SmartModalVariant" in ' +
+        'docs/site/tools/framework-parity.mjs names no framework ' +
+        '("only" is "angular" or "react")',
+    ])
+  })
+
+  test('reads the exceptions of framework-parity.mjs by default', () => {
+    const findings = rule19(apiContext({ parity: undefined }))
+
+    assert.deepEqual(
+      about('SmartPossibility', apiContext({ parity: undefined })),
+      [],
+    )
+    assert.deepEqual(
+      findings
+        .filter((finding) => finding.message.startsWith('API exception'))
+        .map((finding) => finding.message.split(' (')[0]),
+      [
+        'API exception "InputComponentType"',
+        'API exception "SmartSubscribable"',
+      ],
+    )
+  })
+
+  test('has nothing to compare in a workspace without the React library', () => {
+    assert.deepEqual(rule19(context()), [])
+  })
+})
+
+describe('framework-parity.mjs', () => {
+  const valid = (entry, required) =>
+    (required || entry.only !== undefined
+      ? ['angular', 'react'].includes(entry.only)
+      : true) &&
+    typeof entry.reason === 'string' &&
+    entry.reason.trim().length > 0
+
+  test('gives every component exception a framework and a reason', () => {
+    assert.ok(Object.values(COMPONENT_EXCEPTIONS).every((e) => valid(e, true)))
+    assert.deepEqual(Object.keys(COMPONENT_EXCEPTIONS).sort(), [
+      'app',
+      'overlays',
+    ])
+  })
+
+  test('gives every API exception a reason', () => {
+    assert.ok(Object.values(API_EXCEPTIONS).every((e) => valid(e, false)))
+  })
+})
+
+describe('the union inventory of both libraries', () => {
+  const about = (findings, name) =>
+    findings
+      .filter((finding) => finding.message.includes(`"${name}"`))
+      .map((finding) => finding.message)
+
+  test('rule9 checks the story of a React-only component in React only', () => {
+    assert.deepEqual(about(rule9(parityContext()), 'toast'), [
+      'React component "toast" has no Storybook story (expected a ' +
+        '*.stories.tsx under packages/shared/react/src/lib/components/toast ' +
+        'with a "usage" region)',
+    ])
+  })
+
+  test('rule15 asks a React-only component for its React usage example only', () => {
+    assert.deepEqual(about(rule15(parityContext()), 'toast'), [
+      'React component "toast" has no usage example (expected ' +
+        'docs/examples/react/src/components/toast/usage.example.tsx)',
+    ])
+  })
+
+  test('keeps the levels of R9 and R15 for a React-only component', () => {
+    const strict = parityContext({ strict: new Set(['R9']) })
+
+    assert.ok(rule9(strict).every((finding) => finding.level === 'error'))
+    assert.ok(rule15(strict).every((finding) => finding.level === 'warn'))
+  })
+
+  test('rule9 and rule15 skip a component the exceptions let one framework ship alone', () => {
+    const exempt = parityContext({
+      parity: {
+        components: { toast: { only: 'react', reason: REASON } },
+        api: {},
+      },
+    })
+
+    assert.deepEqual(about(rule9(exempt), 'toast'), [])
+    assert.deepEqual(about(rule15(exempt), 'toast'), [])
+    assert.ok(about(rule9(exempt), 'loader').length > 0)
+  })
+})
+
 describe('runAllRules', () => {
   test('concatenates the findings of every rule, in rule order', () => {
     const findings = runAllRules(context())
@@ -1450,6 +1931,24 @@ describe('runAllRules', () => {
       ['R14'],
     )
     assert.equal(findings.length, 3)
+  })
+
+  test('runs R18 after R17, as errors without --strict', () => {
+    const findings = runAllRules(parityContext())
+    const r18 = findings.filter((finding) => finding.rule === 'R18')
+
+    assert.equal(findings.at(-1).rule, 'R18')
+    assert.deepEqual(r18, rule18(parityContext()))
+    assert.ok(r18.every((finding) => finding.level === 'error'))
+  })
+
+  test('runs R19 after R18, as errors without --strict', () => {
+    const findings = runAllRules(apiContext())
+    const r19 = findings.filter((finding) => finding.rule === 'R19')
+
+    assert.equal(findings.at(-1).rule, 'R19')
+    assert.deepEqual(r19, rule19(apiContext()))
+    assert.ok(r19.every((finding) => finding.level === 'error'))
   })
 
   test('turns parity warnings into errors in strict mode', () => {

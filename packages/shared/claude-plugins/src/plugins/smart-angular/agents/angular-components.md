@@ -24,14 +24,16 @@ This package contains two categories of components. Every component also exports
 
 These have concrete selectors and can be used directly in templates.
 
-| Component  | Skill                           | Selector             | Description                                                                    |
-| ---------- | ------------------------------- | -------------------- | ------------------------------------------------------------------------------ |
-| Date Edit  | `angular-components-date-edit`  | `<smart-date-edit>`  | Digit-by-digit date input (DD-MM-RRRR) with validation                         |
-| Date Range | `angular-components-date-range` | `<smart-date-range>` | Date range picker with modal calendar and quick filters                        |
-| Detail     | `angular-components-detail`     | `<smart-detail>`     | Renders a single model field by dispatching to a sub-component per `FieldType` |
-| Input      | `angular-components-input`      | `<smart-input>`      | Renders a form input by dispatching to a sub-component per `FieldType`         |
-| Icon       | `angular-components-icon`       | `<smart-icon>`       | SVG icon by name (spinner, chevrons), with a custom `template` override        |
-| Accordion  | `angular-components-accordion`  | `<smart-accordion>`  | Collapsible section with projected `[accordionHeader]` / `[accordionBody]`     |
+| Component  | Skill                           | Selector             | Description                                                                       |
+| ---------- | ------------------------------- | -------------------- | --------------------------------------------------------------------------------- |
+| Date Edit  | `angular-components-date-edit`  | `<smart-date-edit>`  | Digit-by-digit date input (DD-MM-RRRR) with validation                            |
+| Date Range | `angular-components-date-range` | `<smart-date-range>` | Date range picker with modal calendar and quick filters                           |
+| Detail     | `angular-components-detail`     | `<smart-detail>`     | Renders a single model field by dispatching to a sub-component per `FieldType`    |
+| Input      | `angular-components-input`      | `<smart-input>`      | Renders a form input by dispatching to a sub-component per `FieldType`            |
+| Icon       | `angular-components-icon`       | `<smart-icon>`       | SVG icon by name (spinner, chevrons), with a custom `template` override           |
+| Accordion  | `angular-components-accordion`  | `<smart-accordion>`  | Collapsible section with projected `[accordionHeader]` / `[accordionBody]`        |
+| Export     | `angular-components-export`     | `<smart-export>`     | Download-icon button that hands `value` and `fileName` to a `handler` you write   |
+| Import     | `angular-components-import`     | `<smart-import>`     | Upload-icon button that opens the file dialog and emits the picked `File` (`set`) |
 
 ### Ready-to-Use with extension token
 
@@ -65,6 +67,7 @@ These render a default standard implementation and accept a custom implementatio
 | Grid List           | `angular-components-grid-list`           | `<smart-grid-list>`           | `GRID_LIST_STANDARD_COMPONENT_TOKEN`           |
 | Info                | `angular-components-info`                | `<smart-info>`                | `INFO_STANDARD_COMPONENT_TOKEN`                |
 | List                | `angular-components-list`                | `<smart-list>`                | `LIST_MODE_COMPONENTS_TOKEN`                   |
+| Loader              | `angular-components-loader`              | `<smart-loader>`              | `LOADER_STANDARD_COMPONENT_TOKEN`              |
 | Modal               | `angular-components-modal`               | `<smart-modal>`               | `MODAL_STANDARD_COMPONENT_TOKEN`               |
 | Multi-Column Layout | `angular-components-multi-column-layout` | `<smart-multi-column-layout>` | `MULTI_COLUMN_LAYOUT_STANDARD_COMPONENT_TOKEN` |
 | Navbar              | `angular-components-navbar`              | `<smart-navbar>`              | `NAVBAR_STANDARD_COMPONENT_TOKEN`              |
@@ -92,8 +95,8 @@ These render a default standard implementation and accept a custom implementatio
 
 When a developer asks about a component:
 
-1. **Wants to use `<smart-date-edit>`, `<smart-date-range>`, `<smart-detail>`, `<smart-input>`, `<smart-icon>` or `<smart-accordion>`** → delegate to the corresponding skill for usage API
-2. **Wants to use `<smart-action-panel>`, `<smart-alert>` (or `AlertService`), `<smart-avatar>`, `<smart-badge>`, `<smart-breadcrumbs>`, `<smart-button>`, `<smart-button-group>`, `<smart-calendar>`, `<smart-card>`, `<smart-card-heading>`, `<smart-command-palette>`, `<smart-container>`, `<smart-description-list>`, `<smart-details>`, `<smart-divider>`, `<smart-drawer>`, `<smart-dropdown>`, `<smart-empty-state>`, `<smart-feed>`, `<smart-form>`, `<smart-grid-list>`, `<smart-info>`, `<smart-list>`, `<smart-list-container>`, `<smart-media-object>`, `<smart-modal>`, `<smart-multi-column-layout>`, `<smart-navbar>`, `<smart-notification>`, `<smart-page>`, `<smart-page-heading>`, `<smart-paging>`, `<smart-password-strength>`, `<smart-progress-bars>`, `<smart-searchbar>`, `<smart-section-heading>`, `<smart-select-menu>`, `<smart-sidebar-layout>`, `<smart-sidebar-navigation>`, `<smart-sign-in-form>`, `<smart-stacked-layout>`, `<smart-stacked-list>`, `<smart-stats>`, `<smart-table>`, `<smart-tabs>`, `<smart-textarea>`, `<smart-toggle>`, or `<smart-vertical-navigation>`** → delegate to the skill to explain usage, token override pattern, and how to extend the base class with a custom implementation
+1. **Wants to use `<smart-date-edit>`, `<smart-date-range>`, `<smart-detail>`, `<smart-input>`, `<smart-icon>`, `<smart-accordion>`, `<smart-export>` or `<smart-import>`** → delegate to the corresponding skill for usage API
+2. **Wants to use `<smart-action-panel>`, `<smart-alert>` (or `AlertService`), `<smart-avatar>`, `<smart-badge>`, `<smart-breadcrumbs>`, `<smart-button>`, `<smart-button-group>`, `<smart-calendar>`, `<smart-card>`, `<smart-card-heading>`, `<smart-command-palette>`, `<smart-container>`, `<smart-description-list>`, `<smart-details>`, `<smart-divider>`, `<smart-drawer>`, `<smart-dropdown>`, `<smart-empty-state>`, `<smart-feed>`, `<smart-form>`, `<smart-grid-list>`, `<smart-info>`, `<smart-list>`, `<smart-list-container>`, `<smart-loader>`, `<smart-media-object>`, `<smart-modal>`, `<smart-multi-column-layout>`, `<smart-navbar>`, `<smart-notification>`, `<smart-page>`, `<smart-page-heading>`, `<smart-paging>`, `<smart-password-strength>`, `<smart-progress-bars>`, `<smart-searchbar>`, `<smart-section-heading>`, `<smart-select-menu>`, `<smart-sidebar-layout>`, `<smart-sidebar-navigation>`, `<smart-sign-in-form>`, `<smart-stacked-layout>`, `<smart-stacked-list>`, `<smart-stats>`, `<smart-table>`, `<smart-tabs>`, `<smart-textarea>`, `<smart-toggle>`, or `<smart-vertical-navigation>`** → delegate to the skill to explain usage, token override pattern, and how to extend the base class with a custom implementation
 3. **Wants a custom implementation of a component** → delegate to that component's skill: it shows the base class to extend and, where there is one, the token to register it with
 
 ## Skills to Use
@@ -127,6 +130,7 @@ Always delegate to the per-component skill for detailed API, usage examples, and
 - **Input** → use skill `angular-components-input`
 - **List** (with extension token map) → use skill `angular-components-list`
 - **List Container** (with extension token) → use skill `angular-components-list-container`
+- **Loader** (with extension token) → use skill `angular-components-loader`
 - **Media Object** (with extension token) → use skill `angular-components-media-object`
 - **Modal** (with extension token) → use skill `angular-components-modal`
 - **Multi-Column Layout** (with extension token) → use skill `angular-components-multi-column-layout`
@@ -152,6 +156,8 @@ Always delegate to the per-component skill for detailed API, usage examples, and
 - **Button** (with extension token) → use skill `angular-components-button`
 - **Card** (with extension token) → use skill `angular-components-card`
 - **Icon** → use skill `angular-components-icon`
+- **Export** → use skill `angular-components-export`
+- **Import** → use skill `angular-components-import`
 - **Page** (with extension token map) → use skill `angular-components-page`
 - **Paging** (with extension token) → use skill `angular-components-paging`
 
@@ -177,6 +183,8 @@ import {
   DateEditDefaultComponent,
   DateRangeDefaultComponent,
   DetailComponent,
+  ExportComponent,
+  ImportComponent,
   InputComponent,
   DETAIL_FIELD_COMPONENTS_TOKEN,
   INPUT_FIELD_COMPONENTS_TOKEN,
@@ -223,12 +231,14 @@ import {
   DETAILS_STANDARD_COMPONENT_TOKEN,
   EmptyStateBaseComponent,
   EMPTY_STATE_STANDARD_COMPONENT_TOKEN,
+  ExportBaseComponent,
   FeedBaseComponent,
   FEED_STANDARD_COMPONENT_TOKEN,
   FormBaseComponent,
   FORM_STANDARD_COMPONENT_TOKEN,
   GridListBaseComponent,
   GRID_LIST_STANDARD_COMPONENT_TOKEN,
+  ImportBaseComponent,
   InfoBaseComponent,
   INFO_STANDARD_COMPONENT_TOKEN,
   InputBaseComponent,
@@ -240,6 +250,8 @@ import {
   IListProvider,
   ListContainerBaseComponent,
   LIST_CONTAINER_STANDARD_COMPONENT_TOKEN,
+  LoaderBaseComponent,
+  LOADER_STANDARD_COMPONENT_TOKEN,
   MediaObjectBaseComponent,
   MEDIA_OBJECT_STANDARD_COMPONENT_TOKEN,
   ModalBaseComponent,

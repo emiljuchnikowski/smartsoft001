@@ -18,7 +18,7 @@
  * - R14: every example app path a skill cites exists in the workspace.
  * - R15: every UI component has a compiled usage example, its template and
  *   its class, in `docs/examples/angular`, and its one `.tsx` file in
- *   `docs/examples/react`.
+ *   `docs/examples/react`, in each library that has the component.
  *
  * - R16: every component skill is named in the components agent of its
  *   plugin (angular-components in smart-angular, react-components in
@@ -27,19 +27,34 @@
  *   a list, a table, a code block or a tag. A colon followed by prose or a
  *   heading is what is left when the code it introduced was dropped, as the
  *   component generator drops the code fences of a skill.
+ * - R18: every component of either UI library is in both libraries, each
+ *   with its component skill in the plugin of its framework.
+ * - R19: the two UI libraries agree on their public types: the declarations
+ *   of their models, and the component types both export under one name.
+ *
+ * R9 and R15 check the components of both libraries (the union inventory);
+ * R2 keeps the Angular one, the components the site has a page for.
+ * `framework-parity.mjs` is the only place R18 and R19 accept a difference
+ * between the frameworks, each with a reason; an entry that allows nothing
+ * any more is an error too. A component it lets one framework ship alone has
+ * no component page, so R9 and R15 skip it as well.
  *
  * R1-R3, R9, R10, R12, R13 and R15 are the parity rules: they compare the workspace
  * with the site and only warn until `--strict` names them. R14 is an error
  * from the start, like R4: a skill citing a file that moved sends the agent to
- * the wrong place, which is worse than no citation at all.
+ * the wrong place, which is worse than no citation at all. R16-R19 are
+ * errors from the start as well: a component or an option one framework lacks
+ * is a broken promise of the library, not a page still to write.
  */
 
 import { load as parseYaml } from 'js-yaml'
+import ts from 'typescript'
 
 import fs from 'node:fs'
 import path from 'node:path'
 
 import { fencedLineMask, insideFence, openingFences } from './fences.mjs'
+import { API_EXCEPTIONS, COMPONENT_EXCEPTIONS } from './framework-parity.mjs'
 import { SECTION_ORDER } from './sections.mjs'
 import {
   locateSkill,
@@ -52,10 +67,19 @@ import {
 const SCOPE = '@smartsoft001/'
 /** The plugin whose skills document the Angular components. */
 const ANGULAR_SKILLS_DIR = `${PLUGINS_DIR}/smart-angular/skills`
-const COMPONENTS_DIR = 'packages/shared/angular/src/lib/components'
+/** The sources of the two UI libraries. */
+const ANGULAR_LIB = 'packages/shared/angular/src/lib'
+const REACT_LIB = 'packages/shared/react/src/lib'
+const COMPONENTS_DIR = `${ANGULAR_LIB}/components`
 /** The React library: a component it has is documented, and checked, too. */
-const REACT_COMPONENTS_DIR = 'packages/shared/react/src/lib/components'
+const REACT_COMPONENTS_DIR = `${REACT_LIB}/components`
 const COMPONENT_SKILL_PREFIX = 'angular-components-'
+/** The plugin whose skills document the React components. */
+const REACT_SKILLS_DIR = `${PLUGINS_DIR}/smart-react/skills`
+const REACT_COMPONENT_SKILL_PREFIX = 'react-components-'
+/** Where the usage example of a component lives, relative to the repo root. */
+const USAGE_EXAMPLES_DIR = 'docs/examples/angular/src/components'
+const REACT_USAGE_EXAMPLES_DIR = 'docs/examples/react/src/components'
 const EXCLUDED_PACKAGES = new Set(['claude-plugins'])
 const CODE_LANGUAGES = new Set([
   'ts',
@@ -200,34 +224,127 @@ function hasComponent(dir) {
 }
 
 /**
+ * True when the directory holds a React component: a `.tsx` file, in the
+ * directory or below it, that is neither a spec nor a story. `presets` only
+ * holds `.ts` files and is no component.
+ */
+function hasReactComponent(dir) {
+  return walk(dir).some(
+    (file) => file.endsWith('.tsx') && !/\.(spec|stories)\.tsx$/.test(file),
+  )
+}
+
+/**
+ * The two UI libraries: where each keeps its components and the plugin
+ * skills that document them, how a directory is told to hold a component, and
+ * what R9 and R15 expect of a component it has (the story, and the usage
+ * example the component page embeds) under which label.
+ */
+const LIBRARIES = [
+  {
+    framework: 'angular',
+    name: 'Angular',
+    label: 'Component',
+    root: ANGULAR_LIB,
+    modelsDir: `${ANGULAR_LIB}/models`,
+    componentsDir: COMPONENTS_DIR,
+    skillsDir: ANGULAR_SKILLS_DIR,
+    skillPrefix: COMPONENT_SKILL_PREFIX,
+    holdsComponent: hasComponent,
+    storyExtension: '.stories.ts',
+    usageExamples: (name) =>
+      ['html', 'ts'].map(
+        (extension) =>
+          `${USAGE_EXAMPLES_DIR}/${name}/usage.example.${extension}`,
+      ),
+  },
+  {
+    framework: 'react',
+    name: 'React',
+    label: 'React component',
+    root: REACT_LIB,
+    modelsDir: `${REACT_LIB}/models`,
+    componentsDir: REACT_COMPONENTS_DIR,
+    skillsDir: REACT_SKILLS_DIR,
+    skillPrefix: REACT_COMPONENT_SKILL_PREFIX,
+    holdsComponent: hasReactComponent,
+    storyExtension: '.stories.tsx',
+    usageExamples: (name) => [
+      `${REACT_USAGE_EXAMPLES_DIR}/${name}/usage.example.tsx`,
+    ],
+  },
+]
+
+/**
+ * The directories the library's `components/index.ts` exports that hold a
+ * component.
+ */
+function exportedComponents(repoRoot, library) {
+  const componentsDir = path.join(repoRoot, library.componentsDir)
+  const indexFile = path.join(componentsDir, 'index.ts')
+
+  if (!fs.existsSync(indexFile)) return []
+
+  const source = fs.readFileSync(indexFile, 'utf8')
+
+  return [...source.matchAll(/export \* from '\.\/([^']+)'/g)]
+    .map((match) => match[1])
+    .filter((dir) => library.holdsComponent(path.join(componentsDir, dir)))
+}
+
+/** The component names the plugin of the library has a skill directory for. */
+function componentSkills(repoRoot, library) {
+  return listDirectories(path.join(repoRoot, library.skillsDir))
+    .filter((dir) => dir.startsWith(library.skillPrefix))
+    .map((dir) => dir.slice(library.skillPrefix.length))
+}
+
+/**
+ * The components of one library: the component skills of its plugin plus
+ * every exported component directory of the library.
+ */
+function libraryInventory(repoRoot, library) {
+  return new Set([
+    ...componentSkills(repoRoot, library),
+    ...exportedComponents(repoRoot, library),
+  ])
+}
+
+/**
  * Documented UI components: the component skills of the smart-angular plugin
  * plus every exported component directory of the shared Angular library.
  */
 export function componentInventory(repoRoot) {
-  const names = new Set()
+  return [...libraryInventory(repoRoot, LIBRARIES[0])].sort()
+}
 
-  for (const dir of listDirectories(path.join(repoRoot, ANGULAR_SKILLS_DIR))) {
-    if (dir.startsWith(COMPONENT_SKILL_PREFIX)) {
-      names.add(dir.slice(COMPONENT_SKILL_PREFIX.length))
-    }
-  }
+/**
+ * The components R9 and R15 check, sorted, each with the libraries that have
+ * it: every component of either library (the union inventory), except one
+ * `framework-parity.mjs` lets one framework ship alone. Such a component has
+ * no component page, R2 keeping the Angular inventory, and is documented on
+ * its package page, so a story usage region or a usage example of it would
+ * be embedded nowhere.
+ */
+function documentedComponents(ctx) {
+  const { components: exceptions } = parityExceptions(ctx)
+  const inventories = LIBRARIES.map((library) => ({
+    library,
+    names: libraryInventory(ctx.repoRoot, library),
+  }))
+  const names = new Set(inventories.flatMap(({ names }) => [...names]))
+  const exempt = (name) =>
+    Boolean(exceptions[name]) && !exceptionProblem(exceptions[name], true)
 
-  const componentsDir = path.join(repoRoot, COMPONENTS_DIR)
-  const indexFile = path.join(componentsDir, 'index.ts')
-
-  if (fs.existsSync(indexFile)) {
-    const source = fs.readFileSync(indexFile, 'utf8')
-
-    for (const match of source.matchAll(/export \* from '\.\/([^']+)'/g)) {
-      const dir = match[1]
-
-      if (hasComponent(path.join(componentsDir, dir))) {
-        names.add(dir)
-      }
-    }
-  }
-
-  return [...names].sort()
+  return [...names]
+    .filter((name) => !exempt(name))
+    .sort()
+    .map((name) => ({
+      name,
+      libraries: inventories
+        .filter(({ names }) => names.has(name))
+        .map(({ library }) => library),
+    }))
 }
 
 /** The skills directory of every plugin, relative to the repo root. */
@@ -743,26 +860,6 @@ function storiesFiles(dir, extension = '.stories.ts') {
     .sort()
 }
 
-/**
- * The libraries a component's story and usage example are checked in: the
- * Angular one always, the React one when it has the component.
- */
-function componentLibraries(repoRoot, name) {
-  const libraries = [
-    { label: 'Component', dir: COMPONENTS_DIR, extension: '.stories.ts' },
-  ]
-
-  if (fs.existsSync(path.join(repoRoot, REACT_COMPONENTS_DIR, name))) {
-    libraries.push({
-      label: 'React component',
-      dir: REACT_COMPONENTS_DIR,
-      extension: '.stories.tsx',
-    })
-  }
-
-  return libraries
-}
-
 /** True when the file opens a `usage` region and closes it again. */
 function hasUsageRegion(file) {
   const lines = fs.readFileSync(file, 'utf8').split(/\r?\n/)
@@ -773,22 +870,27 @@ function hasUsageRegion(file) {
   return lines.slice(start + 1).some((line) => REGION_END.test(line))
 }
 
-/** R9: every component has a story with a "usage" region. */
+/**
+ * R9: every component has a story with a "usage" region, in each library
+ * that has the component. A component `framework-parity.mjs` lets one
+ * framework ship alone is skipped: it has no component page to embed the
+ * region in.
+ */
 export function rule9(ctx) {
   const level = isStrict(ctx, 'R9') ? 'error' : 'warn'
   const findings = []
 
-  for (const name of componentInventory(ctx.repoRoot)) {
-    for (const library of componentLibraries(ctx.repoRoot, name)) {
-      const dir = path.join(ctx.repoRoot, library.dir, name)
-      const relative = `${library.dir}/${name}`
-      const stories = storiesFiles(dir, library.extension)
+  for (const { name, libraries } of documentedComponents(ctx)) {
+    for (const library of libraries) {
+      const dir = path.join(ctx.repoRoot, library.componentsDir, name)
+      const relative = `${library.componentsDir}/${name}`
+      const stories = storiesFiles(dir, library.storyExtension)
 
       if (!stories.length) {
         findings.push({
           rule: 'R9',
           level,
-          message: `${library.label} "${name}" has no Storybook story (expected a *${library.extension} under ${relative} with a "usage" region)`,
+          message: `${library.label} "${name}" has no Storybook story (expected a *${library.storyExtension} under ${relative} with a "usage" region)`,
           file: dir,
         })
         continue
@@ -1159,39 +1261,22 @@ export function rule14(ctx) {
   return findings
 }
 
-/** Where the usage example of a component lives, relative to the repo root. */
-const USAGE_EXAMPLES_DIR = 'docs/examples/angular/src/components'
-const REACT_USAGE_EXAMPLES_DIR = 'docs/examples/react/src/components'
-
 /**
  * R15: every component has a usage example. Its template and its class are
  * the HTML and TypeScript tabs of the component page, the code a consumer
  * writes, so a component without one falls back to its Storybook story. A
- * component the React library has needs its `.tsx` example for the TSX tab
- * as well.
+ * component the React library has needs its `.tsx` example for the TSX tab;
+ * each library that has the component is checked. A component
+ * `framework-parity.mjs` lets one framework ship alone is skipped: it has no
+ * component page to show the example on.
  */
 export function rule15(ctx) {
   const level = isStrict(ctx, 'R15') ? 'error' : 'warn'
   const findings = []
 
-  for (const name of componentInventory(ctx.repoRoot)) {
-    const base = `${USAGE_EXAMPLES_DIR}/${name}/usage.example`
-    const expected = [
-      {
-        label: 'Component',
-        files: ['html', 'ts'].map((extension) => `${base}.${extension}`),
-      },
-    ]
-
-    if (fs.existsSync(path.join(ctx.repoRoot, REACT_COMPONENTS_DIR, name))) {
-      expected.push({
-        label: 'React component',
-        files: [`${REACT_USAGE_EXAMPLES_DIR}/${name}/usage.example.tsx`],
-      })
-    }
-
-    for (const { label, files } of expected) {
-      const missing = files.filter(
+  for (const { name, libraries } of documentedComponents(ctx)) {
+    for (const { label, usageExamples } of libraries) {
+      const missing = usageExamples(name).filter(
         (file) => !fs.existsSync(path.join(ctx.repoRoot, file)),
       )
 
@@ -1221,7 +1306,7 @@ const COMPONENT_AGENTS = [
   },
   {
     plugin: 'smart-react',
-    prefix: 'react-components-',
+    prefix: REACT_COMPONENT_SKILL_PREFIX,
     agent: 'react-components',
   },
 ]
@@ -1255,7 +1340,6 @@ export function rule16(ctx) {
   })
 }
 
-/** Every rule, in order. */
 /** What may follow a line ending with a colon: the thing it announces. */
 const ANNOUNCED = /^(?:[-*+] |\d+\. |\||```|~~~|>|\{% (?!\/))/
 
@@ -1315,6 +1399,634 @@ export function rule17(ctx) {
   return findings
 }
 
+/** The one place a difference between the two frameworks is allowed. */
+const PARITY_FILE = 'docs/site/tools/framework-parity.mjs'
+
+/**
+ * The differences between the frameworks R18 and R19 accept:
+ * `framework-parity.mjs`, unless the context brings its own, as the tests do
+ * for a fixture workspace.
+ */
+function parityExceptions(ctx) {
+  return ctx.parity ?? { components: COMPONENT_EXCEPTIONS, api: API_EXCEPTIONS }
+}
+
+/**
+ * True when the workspace has both UI libraries. R18 and R19 compare the two,
+ * so a workspace without one of them, like the fixture workspaces of the other
+ * rules, has nothing to compare.
+ */
+function hasBothLibraries(repoRoot) {
+  return LIBRARIES.every(({ root }) => fs.existsSync(path.join(repoRoot, root)))
+}
+
+/** The library of `framework`, `undefined` for any other value. */
+function libraryOf(framework) {
+  return LIBRARIES.find((library) => library.framework === framework)
+}
+
+/**
+ * What is wrong with an entry of `framework-parity.mjs`, or `null`. Every
+ * entry carries a reason, and its `only`, mandatory when `required`, names one
+ * of the two frameworks.
+ */
+function exceptionProblem(entry, required) {
+  if ((required || entry.only !== undefined) && !libraryOf(entry.only)) {
+    return 'names no framework ("only" is "angular" or "react")'
+  }
+
+  if (typeof entry.reason !== 'string' || !entry.reason.trim()) {
+    return 'has no reason'
+  }
+
+  return null
+}
+
+/**
+ * What a valid component exception means for the component `name`: the
+ * libraries R18 holds to it, and why the entry is stale, or `null`. The
+ * entry lets the framework it names ship the component alone; once the other
+ * framework has the component or its skill, both are held to it again, and a
+ * component neither framework has is left alone.
+ */
+function componentExemption(name, exception, libraries) {
+  const owner = libraryOf(exception.only)
+  const holders = libraries.filter(
+    ({ exported, skills }) => exported.has(name) || skills.has(name),
+  )
+  const others = holders.filter(({ library }) => library !== owner)
+
+  if (!holders.length) {
+    return {
+      checked: [],
+      stale: 'neither framework has the component or its skill',
+    }
+  }
+
+  if (!others.length) return { checked: holders, stale: null }
+
+  const too = holders.length > others.length ? ' too' : ''
+
+  return {
+    checked: libraries,
+    stale: `${others[0].library.name} has the component or its skill${too}`,
+  }
+}
+
+/**
+ * R18: every component of either library is in both, each with its
+ * component skill, unless `framework-parity.mjs` lets one framework ship it
+ * alone. An error from the start, like R14.
+ */
+export function rule18(ctx) {
+  if (!hasBothLibraries(ctx.repoRoot)) return []
+
+  const libraries = LIBRARIES.map((library) => ({
+    library,
+    exported: new Set(exportedComponents(ctx.repoRoot, library)),
+    skills: new Set(componentSkills(ctx.repoRoot, library)),
+  }))
+  const { components: exceptions } = parityExceptions(ctx)
+  const names = new Set([
+    ...libraries.flatMap(({ exported, skills }) => [...exported, ...skills]),
+    ...Object.keys(exceptions),
+  ])
+  const parityFile = path.join(ctx.repoRoot, PARITY_FILE)
+  const findings = []
+  const report = (message, file) =>
+    findings.push({ rule: 'R18', level: 'error', message, file })
+
+  for (const name of [...names].sort()) {
+    const exception = exceptions[name]
+    const problem = exception && exceptionProblem(exception, true)
+    let checked = libraries
+
+    if (problem) {
+      report(
+        `Component exception "${name}" in ${PARITY_FILE} ${problem}`,
+        parityFile,
+      )
+    } else if (exception) {
+      const exemption = componentExemption(name, exception, libraries)
+
+      checked = exemption.checked
+
+      if (exemption.stale) {
+        report(
+          `Component exception "${name}" (${libraryOf(exception.only).name} only) in ${PARITY_FILE} is stale: ${exemption.stale} (remove the entry)`,
+          parityFile,
+        )
+      }
+    }
+
+    for (const { library, exported } of checked) {
+      const dir = `${library.componentsDir}/${name}`
+      const skill = `${library.skillsDir}/${library.skillPrefix}${name}/SKILL.md`
+      const label = `${library.name} component "${name}"`
+
+      if (!exported.has(name)) {
+        report(
+          `${label} is not in the library (expected a component in ${dir}, exported from ${library.componentsDir}/index.ts)`,
+          path.join(ctx.repoRoot, dir),
+        )
+      }
+
+      if (!fs.existsSync(path.join(ctx.repoRoot, skill))) {
+        report(
+          `${label} has no skill (expected ${skill})`,
+          path.join(ctx.repoRoot, skill),
+        )
+      }
+    }
+  }
+
+  return findings
+}
+
+/** The files R19 reads below `dir`: sources, without specs and stories. */
+function apiSourceFiles(dir) {
+  return walk(dir)
+    .filter((file) => /\.tsx?$/.test(file))
+    .filter((file) => !/(\.d|\.spec|\.stories|\.test)\.tsx?$/.test(file))
+    .sort()
+    .map((file) => path.join(dir, file))
+}
+
+function isExported(statement) {
+  return Boolean(
+    statement.modifiers?.some(
+      (modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword,
+    ),
+  )
+}
+
+/**
+ * The literals of a type that is a literal or a union of literals only,
+ * sorted and written the same way on both sides (`'a'`, `1`, `true`), or
+ * `null` for any other type.
+ */
+function literalsOf(type) {
+  let node = type
+
+  while (node && ts.isParenthesizedTypeNode(node)) node = node.type
+
+  if (!node) return null
+
+  const parts = ts.isUnionTypeNode(node) ? node.types : [node]
+
+  if (!parts.every((part) => ts.isLiteralTypeNode(part))) return null
+
+  const texts = parts.map(({ literal }) =>
+    ts.isStringLiteral(literal) ? `'${literal.text}'` : literal.getText(),
+  )
+
+  return [...new Set(texts)].sort()
+}
+
+/**
+ * What only one of the Angular and the React list holds, as
+ * `a in Angular only and b in React only`, or `null` when they hold the same.
+ */
+function exclusive(angular, react) {
+  const parts = [
+    [angular.filter((item) => !react.includes(item)), 'Angular'],
+    [react.filter((item) => !angular.includes(item)), 'React'],
+  ]
+    .filter(([only]) => only.length)
+    .map(([only, framework]) => `${only.join(', ')} in ${framework} only`)
+
+  return parts.length ? parts.join(' and ') : null
+}
+
+/**
+ * How the literals of the Angular and the React type differ, as the phrase
+ * R19 reports, or `null` when they agree or neither type is a union of
+ * literals.
+ */
+function literalDrift(angular, react) {
+  if (!angular && !react) return null
+
+  if (!angular || !react) {
+    const [union, other] = angular ? ['Angular', 'React'] : ['React', 'Angular']
+
+    return `is a union of literals in ${union} but not in ${other}`
+  }
+
+  const only = exclusive(angular, react)
+
+  return only && `allows ${only}`
+}
+
+/** The name of an interface member, `null` for an index or call signature. */
+function memberName(member, source) {
+  if (!member.name) return null
+
+  return ts.isComputedPropertyName(member.name)
+    ? member.name.getText(source)
+    : member.name.text
+}
+
+/**
+ * The name R19 compares a member under: without the trailing `$` Angular
+ * gives an `Observable` member (`disabled$` in Angular is `disabled` in
+ * React).
+ */
+function comparedName(name) {
+  return name.replace(/\$$/, '')
+}
+
+/**
+ * The named members of an interface, by compared name, with the name as
+ * written, its optionality, its literals and where it is.
+ */
+function interfaceMembers(members, source, locate) {
+  const result = new Map()
+
+  for (const member of members) {
+    const name = memberName(member, source)
+
+    if (name === null) continue
+
+    result.set(comparedName(name), {
+      name,
+      optional: Boolean(member.questionToken),
+      literals: literalsOf(member.type),
+      where: locate(member),
+    })
+  }
+
+  return result
+}
+
+/**
+ * The declarations one exported top-level statement makes, as
+ * `[name, node, description]` entries; the description carries the kind R19
+ * compares first and, by kind, what it compares next.
+ */
+function statementDeclarations(statement, source, locate) {
+  const named = (description) => [[statement.name.text, statement, description]]
+
+  if (ts.isInterfaceDeclaration(statement)) {
+    return named({
+      kind: 'interface',
+      members: interfaceMembers(statement.members, source, locate),
+    })
+  }
+
+  if (ts.isTypeAliasDeclaration(statement)) {
+    return named({ kind: 'type alias', literals: literalsOf(statement.type) })
+  }
+
+  if (ts.isEnumDeclaration(statement)) {
+    return named({
+      kind: 'enum',
+      names: statement.members.map((member) => memberName(member, source)),
+    })
+  }
+
+  if (ts.isClassDeclaration(statement) && statement.name) {
+    return named({ kind: 'class' })
+  }
+
+  if (ts.isFunctionDeclaration(statement) && statement.name) {
+    return named({ kind: 'function' })
+  }
+
+  if (ts.isVariableStatement(statement)) {
+    return statement.declarationList.declarations
+      .filter((declaration) => ts.isIdentifier(declaration.name))
+      .map((declaration) => [
+        declaration.name.text,
+        declaration,
+        { kind: 'const' },
+      ])
+  }
+
+  return []
+}
+
+/**
+ * The exported top-level declarations of the sources below `dir` (relative
+ * to the repo root), by name; the first file that declares a name wins. Each
+ * one records its file and where it is, as `path:line`.
+ */
+function exportedDeclarations(repoRoot, dir) {
+  const declarations = new Map()
+
+  for (const file of apiSourceFiles(path.join(repoRoot, dir))) {
+    const source = ts.createSourceFile(
+      file,
+      fs.readFileSync(file, 'utf8'),
+      ts.ScriptTarget.Latest,
+      true,
+      file.endsWith('.tsx') ? ts.ScriptKind.TSX : ts.ScriptKind.TS,
+    )
+    const relative = path.relative(repoRoot, file).split(path.sep).join('/')
+    const locate = (node) => {
+      const start = source.getLineAndCharacterOfPosition(node.getStart(source))
+
+      return `${relative}:${start.line + 1}`
+    }
+
+    for (const statement of source.statements.filter(isExported)) {
+      for (const [name, node, description] of statementDeclarations(
+        statement,
+        source,
+        locate,
+      )) {
+        if (declarations.has(name)) continue
+
+        declarations.set(name, { ...description, file, where: locate(node) })
+      }
+    }
+  }
+
+  return declarations
+}
+
+/** The interfaces and type aliases among `declarations`. */
+function typeDeclarations(declarations) {
+  return new Map(
+    [...declarations].filter(([, { kind }]) =>
+      ['interface', 'type alias'].includes(kind),
+    ),
+  )
+}
+
+/**
+ * How the members of two interfaces named `name` differ: a member one side
+ * declares and the other not, its optionality, its literals.
+ */
+function memberDifferences(name, angular, react) {
+  const differences = []
+  const members = new Set([...angular.members.keys(), ...react.members.keys()])
+
+  for (const member of [...members].sort()) {
+    const key = `${name}.${member}`
+    const a = angular.members.get(member)
+    const r = react.members.get(member)
+
+    if (!a || !r) {
+      const [owner, declaration, declared] = a
+        ? [LIBRARIES[0], angular, a]
+        : [LIBRARIES[1], react, r]
+
+      differences.push({
+        key,
+        only: owner.framework,
+        message: `Member "${name}.${declared.name}" is declared in ${owner.name} only (${declared.where})`,
+        file: declaration.file,
+      })
+      continue
+    }
+
+    if (a.optional !== r.optional) {
+      const state = ({ optional }) => (optional ? 'optional' : 'required')
+
+      differences.push({
+        key,
+        message: `Member "${key}" is ${state(a)} in Angular (${a.where}) but ${state(r)} in React (${r.where})`,
+        file: angular.file,
+      })
+    }
+
+    const drift = literalDrift(a.literals, r.literals)
+
+    if (drift) {
+      differences.push({
+        key,
+        message: `Member "${key}" ${drift} (${a.where}, ${r.where})`,
+        file: angular.file,
+      })
+    }
+  }
+
+  return differences
+}
+
+/**
+ * How two declarations of `name`, the Angular one and the React one, differ:
+ * `{ key, only, message, file }` entries, where `key` is `name` or
+ * `name.member` and `only`, for something one side has, names that side.
+ * Member types other than literal unions are not compared: `TemplateRef`
+ * against `ReactNode` or `Signal<T>` against `T` are the frameworks' idioms.
+ */
+function declarationDifferences(name, angular, react) {
+  const both = `${angular.where}, ${react.where}`
+
+  if (angular.kind !== react.kind) {
+    const article = ({ kind }) =>
+      `${/^[aeiou]/.test(kind) ? 'an' : 'a'} ${kind}`
+
+    return [
+      {
+        key: name,
+        message: `Declaration "${name}" is ${article(angular)} in Angular (${angular.where}) but ${article(react)} in React (${react.where})`,
+        file: angular.file,
+      },
+    ]
+  }
+
+  const differences = []
+  const literals = literalDrift(angular.literals, react.literals)
+  const enumMembers =
+    angular.names && react.names && exclusive(angular.names, react.names)
+
+  if (literals) {
+    differences.push({
+      key: name,
+      message: `Type "${name}" ${literals} (${both})`,
+      file: angular.file,
+    })
+  }
+
+  if (enumMembers) {
+    differences.push({
+      key: name,
+      message: `Enum "${name}" has ${enumMembers} (${both})`,
+      file: angular.file,
+    })
+  }
+
+  if (angular.members && react.members) {
+    differences.push(...memberDifferences(name, angular, react))
+  }
+
+  return differences
+}
+
+/**
+ * How the models of the two libraries differ: a declaration one of them
+ * exports and the other does not, and how the declarations both export
+ * differ.
+ */
+function modelDifferences(angular, react) {
+  const names = new Set([...angular.keys(), ...react.keys()])
+  const differences = []
+
+  for (const name of [...names].sort()) {
+    if (angular.has(name) && react.has(name)) {
+      differences.push(
+        ...declarationDifferences(name, angular.get(name), react.get(name)),
+      )
+      continue
+    }
+
+    const [owner, declaration] = angular.has(name)
+      ? [LIBRARIES[0], angular.get(name)]
+      : [LIBRARIES[1], react.get(name)]
+
+    differences.push({
+      key: name,
+      only: owner.framework,
+      message: `Declaration "${name}" is exported by the ${owner.name} models only (${declaration.where})`,
+      file: declaration.file,
+    })
+  }
+
+  return differences
+}
+
+/**
+ * How the declarations both libraries export under the same name differ; a
+ * name only one of them exports, like a React `Smart*Props`, is no
+ * difference.
+ */
+function sharedNameDifferences(angular, react) {
+  return [...angular.keys()]
+    .filter((name) => react.has(name))
+    .sort()
+    .flatMap((name) =>
+      declarationDifferences(name, angular.get(name), react.get(name)),
+    )
+}
+
+/**
+ * A function that returns the entry of the API exceptions that allows a
+ * difference, or `null`. An entry allows a difference of its key; with
+ * `only`, only that framework may have what the other lacks. An entry for a
+ * declaration without `only` allows every difference of its members as well.
+ */
+function apiExceptionMatcher(exceptions) {
+  const entries = new Map(
+    Object.entries(exceptions).map(([key, entry]) => [
+      comparedName(key),
+      { key, ...entry },
+    ]),
+  )
+
+  return ({ key, only }) => {
+    const exact = entries.get(key)
+
+    if (exact && (!exact.only || exact.only === only)) return exact
+
+    const declaration = entries.get(key.split('.')[0])
+
+    return key.includes('.') && declaration && !declaration.only
+      ? declaration
+      : null
+  }
+}
+
+/**
+ * True when one of the declaration maps of a library declares `key`: a
+ * declaration name, or `Name.member` for a member of it.
+ */
+function declares(maps, key) {
+  const [name, member] = comparedName(key).split('.')
+  const declaration = maps.map((map) => map.get(name)).find(Boolean)
+
+  if (!declaration) return false
+
+  return member === undefined || Boolean(declaration.members?.has(member))
+}
+
+/**
+ * Why an API exception that allowed no difference is stale, from the
+ * libraries that declare its key.
+ */
+function staleApiState(only, holders) {
+  if (!holders.length) return 'neither library declares it'
+  if (holders.length === 1) return `only ${holders[0].name} declares it`
+
+  return only ? 'both libraries declare it' : 'the two libraries agree on it'
+}
+
+/**
+ * R19: the two libraries agree on their public types. Their models export
+ * the same declarations, and the interfaces and type aliases both
+ * `components/` trees export under one name match: the same kind, the same
+ * members with the same optionality, the same literals and enum members.
+ * Differences are allowed only by `framework-parity.mjs`. An error from the
+ * start, like R14.
+ */
+export function rule19(ctx) {
+  if (!hasBothLibraries(ctx.repoRoot)) return []
+
+  const models = LIBRARIES.map(({ modelsDir }) =>
+    exportedDeclarations(ctx.repoRoot, modelsDir),
+  )
+  const components = LIBRARIES.map(({ componentsDir }) =>
+    typeDeclarations(exportedDeclarations(ctx.repoRoot, componentsDir)),
+  )
+  const differences = [
+    ...modelDifferences(...models),
+    ...sharedNameDifferences(...components),
+  ]
+  const exceptions = parityExceptions(ctx).api
+  const problems = new Map(
+    Object.entries(exceptions)
+      .map(([key, entry]) => [key, exceptionProblem(entry, false)])
+      .filter(([, problem]) => problem),
+  )
+  const allowed = apiExceptionMatcher(
+    Object.fromEntries(
+      Object.entries(exceptions).filter(([key]) => !problems.has(key)),
+    ),
+  )
+  const parityFile = path.join(ctx.repoRoot, PARITY_FILE)
+  const used = new Set()
+  const findings = []
+  const report = (message, file) =>
+    findings.push({ rule: 'R19', level: 'error', message, file })
+
+  for (const difference of differences) {
+    const entry = allowed(difference)
+
+    if (entry) {
+      used.add(entry.key)
+    } else {
+      report(difference.message, difference.file)
+    }
+  }
+
+  for (const key of Object.keys(exceptions).sort()) {
+    if (problems.has(key)) {
+      report(
+        `API exception "${key}" in ${PARITY_FILE} ${problems.get(key)}`,
+        parityFile,
+      )
+      continue
+    }
+
+    if (used.has(key)) continue
+
+    const { only } = exceptions[key]
+    const label = only ? ` (${libraryOf(only).name} only)` : ''
+    const holders = LIBRARIES.filter((library, index) =>
+      declares([models[index], components[index]], key),
+    )
+
+    report(
+      `API exception "${key}"${label} in ${PARITY_FILE} is stale: ${staleApiState(only, holders)} (remove the entry)`,
+      parityFile,
+    )
+  }
+
+  return findings
+}
+
+/** Every rule, in order. */
 export function runAllRules(ctx) {
   return [
     rule1,
@@ -1334,5 +2046,7 @@ export function runAllRules(ctx) {
     rule15,
     rule16,
     rule17,
+    rule18,
+    rule19,
   ].flatMap((rule) => rule(ctx))
 }

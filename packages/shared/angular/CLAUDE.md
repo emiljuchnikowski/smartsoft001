@@ -38,6 +38,7 @@ Use these together with the shared agents listed in the root `CLAUDE.md`:
 - **Component prefix**: the Nx `prefix` is `smart` for `crud-shell-angular` and `lib` for `angular`, but every selector in both libraries uses `smart-` (`smart-button`, `smart-button-standard`, `smart-crud-list-page`); follow the existing selectors.
 - Styling: Tailwind CSS 4 with the `smart:` prefix, `ViewEncapsulation.None`, dark mode through `smart:dark:` under a `.dark` class.
 - Plugin sync: component changes are mirrored in the `smart-angular` plugin (`packages/shared/claude-plugins/src/plugins/smart-angular/`), as the `angular-components` skill describes.
+- Framework parity: every component and every option, variant and behaviour of it also exists in `@smartsoft001/react` (`packages/shared/react`, see its `CLAUDE.md`), changed in the same pull request. Rules R18 and R19 of `npx nx run docs:check` enforce it; the only exceptions are the entries of `docs/site/tools/framework-parity.mjs`, each with a reason. The `angular-components` skill maps every file to its React counterpart.
 
 ## Commands
 

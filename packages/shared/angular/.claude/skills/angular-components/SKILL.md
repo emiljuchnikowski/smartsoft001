@@ -32,6 +32,39 @@ Create or modify Angular UI components in `packages/shared/angular/` following p
 - `component-name` - kebab-case name (e.g., `hero-section`, `feature-section`, `pricing-table`)
 - `description` - brief description of the component and its variants
 
+## MANDATORY: Parity with the Other Framework
+
+`@smartsoft001/react` (`packages/shared/react`) has the same components with the same options. Plan both sides before writing code: a new component, or a new or changed option, variant, input, output or behaviour, lands in both libraries in the same pull request:
+
+1. **Component** — wrapper, standard and preset here; component, standard, preset and registry key in React.
+2. **Story** — `Playground` inside the `usage` region, plus `AllVariants`, in each library.
+3. **Usage example** — with its spec, in `docs/examples/angular` and `docs/examples/react`, showing the same scenario.
+4. **Skills** — `angular-components-<name>` in `smart-angular` and `react-components-<name>` in `smart-react`, each named in its plugin's agent.
+5. **Shared models** — `src/lib/models/*.ts` stay equal: the same declaration names, members, optionality and literal unions (`SmartModalVariant` lists the same variants on both sides). An Angular `Observable` member `foo$` is `foo` in React; other member types follow each framework (`TemplateRef` / `ReactNode`, `Signal<T>` / `T`).
+
+The React side follows the `react-components` skill (`packages/shared/react/.claude/skills/react-components/SKILL.md`). It loads only once a file below `packages/shared/react` is read, so read it directly. The only alternative to the counterpart is an entry in `docs/site/tools/framework-parity.mjs` with a reason saying why the frameworks differ. `npx nx run docs:check` enforces this on every pull request: R18 fails a component or component skill one library lacks, R19 a model declaration, member or literal one side lacks.
+
+| Artifact          | Angular                                                                                         | React                                                                                    |
+| ----------------- | ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Component folder  | `packages/shared/angular/src/lib/components/<name>/`                                            | `packages/shared/react/src/lib/components/<name>/`                                       |
+| Wrapper           | `<name>.component.ts` (`<smart-<name>>`)                                                        | `<name>.tsx` (`Smart<Name>`)                                                             |
+| Shared logic      | `base/base.component.ts`                                                                        | `use-<name>.ts`                                                                          |
+| Standard / preset | `standard/standard.component.{ts,html}`, `preset/preset.component.{ts,html}`                    | `standard/<name>-standard.tsx`, `preset/<name>-preset.tsx`                               |
+| Preset classes    | `preset/preset-classes.util.ts`                                                                 | `preset/preset-classes.ts`                                                               |
+| Swap point        | `<COMPONENT_NAME>_STANDARD_COMPONENT_TOKEN` in `shared.inectors.ts`                             | registry key `'<name>'` in `DynamicComponentType`                                        |
+| Preset registry   | `SMART_PRESET_PROVIDERS` in `components/presets/presets.ts`                                     | `SMART_PRESET_COMPONENTS` in `components/presets/presets.ts`                             |
+| Specs             | `*.component.spec.ts`                                                                           | `<name>.spec.tsx`                                                                        |
+| Story             | `<name>.component.stories.ts`                                                                   | `<name>.stories.tsx`                                                                     |
+| Models            | `src/lib/models/{interfaces,colors,style}.ts`                                                   | `src/lib/models/{interfaces,colors,style}.ts`                                            |
+| Translations      | `src/lib/translations-default.ts`                                                               | `src/lib/i18n/translations-default.ts`                                                   |
+| Usage example     | `docs/examples/angular/src/components/<name>/usage.example.{html,ts}` + `usage.example.spec.ts` | `docs/examples/react/src/components/<name>/usage.example.tsx` + `usage.example.spec.tsx` |
+| Live preview      | `docs/examples/angular/src/components/usage-examples.stories.ts`                                | `docs/examples/react/src/components/usage-examples.stories.tsx`                          |
+| Plugin skill      | `plugins/smart-angular/skills/angular-components-<name>/SKILL.md`                               | `plugins/smart-react/skills/react-components-<name>/SKILL.md`                            |
+| Plugin agent      | `plugins/smart-angular/agents/angular-components.md`                                            | `plugins/smart-react/agents/react-components.md`                                         |
+| Package docs      | `packages/shared/angular/README.md`, `docs/site/src/app/docs/packages/angular/page.md`          | `packages/shared/react/README.md`, `docs/site/src/app/docs/packages/react/page.md`       |
+
+The plugins live in `packages/shared/claude-plugins/src/plugins/`. An `input()` is a prop of `Smart<Name>Props`, an `output()` such as `closed` is an `on<Event>` callback (`onClosed`).
+
 ## Component Architecture (3-Layer Pattern)
 
 Components follow a 2-layer pattern (Base + Wrapper). Add the optional Standard layer only when multiple visual variants are needed.
@@ -39,7 +72,7 @@ Components follow a 2-layer pattern (Base + Wrapper). Add the optional Standard 
 ```
 packages/shared/angular/src/lib/components/<component-name>/
 ├── index.ts                          # Barrel exports
-├── <component-name>.component.ts     # Wrapper (CreateDynamicComponent)
+├── <component-name>.component.ts     # Wrapper (DI token + *ngComponentOutlet)
 ├── <component-name>.component.spec.ts
 ├── <component-name>.component.stories.ts
 ├── base/
@@ -74,7 +107,7 @@ export abstract class <ComponentName>BaseComponent {
 
 ### Layer 2 (optional): Standard Component (`standard/standard.component.ts`)
 
-Only needed when the component has multiple visual variants (e.g., standard form vs grouped form). If the component has a single variant, keep all logic and template in Base + Wrapper. Every component can be dynamically swapped via `ng-template` and `CreateDynamicComponent`.
+Only needed when the component has multiple visual variants (e.g., standard form vs grouped form). If the component has a single variant, keep all logic and template in Base + Wrapper. Every component can be swapped for a custom implementation registered on its `<COMPONENT_NAME>_STANDARD_COMPONENT_TOKEN`.
 
 ```typescript
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
@@ -203,8 +236,10 @@ Add the component options interface to `packages/shared/angular/src/lib/models/i
 ```typescript
 export interface I<ComponentName>Options {
   // Component-specific properties only.
-  // Do NOT put a `variant` field here — visual variants are chosen by DI
-  // (via <COMPONENT_NAME>_STANDARD_COMPONENT_TOKEN), not by runtime options.
+  // A layout the preset and the standard switch on is a
+  // `variant?: Smart<ComponentName>Variant` literal union (e.g. `SmartModalVariant`),
+  // declared identically in the React models (R19). A whole different
+  // implementation is registered on <COMPONENT_NAME>_STANDARD_COMPONENT_TOKEN instead.
 }
 ```
 
@@ -221,10 +256,10 @@ These files are distributed with `@smartsoft001/angular` and used by end-user pr
 
 Execute each step in order. Use `shared-tdd-developer` agent for all code implementation (RED → GREEN → REFACTOR).
 
-- [ ] **1. Define interface** — `I<ComponentName>Options` + enum in `models/interfaces.ts`
+- [ ] **1. Define interface** — `I<ComponentName>Options` + enum in `models/interfaces.ts`, and the same declaration in `packages/shared/react/src/lib/models/interfaces.ts` (R19)
 - [ ] **2. Create base component** — `base/base.component.ts` with signals and logic
 - [ ] **3. Create standard component** — `standard/standard.component.ts` + `.html` with Tailwind
-- [ ] **4. Create wrapper component** — `<component-name>.component.ts` with `CreateDynamicComponent`
+- [ ] **4. Create wrapper component** — `<component-name>.component.ts` with the DI token and `*ngComponentOutlet` (Layer 3)
 - [ ] **5. Write unit tests** — for base, standard, and wrapper components
 - [ ] **6. Register exports** — barrel exports in `index.ts` files
 - [ ] **7. Update components module** — add to `components.module.ts` declarations/exports
@@ -236,6 +271,7 @@ Execute each step in order. Use `shared-tdd-developer` agent for all code implem
 - [ ] **13. Verify** — run tests (`nx test angular`), lint, build
 - [ ] **14. Presets** — when the component has a preset, `SMART_PRESET_PROVIDERS` (`components/presets/presets.ts`, behind `provideSmartPresets()`) registers it on the component's token; its spec fails for a preset with a token that is not there.
 - [ ] **15. Public documentation** — run the `docs` skill's component flow (`/docs component <component-name>`). The public page is generated from the per-component plugin skill, so the work here is the `usage` region in the stories (rule R9 fails `docs:check` without it), the usage example `docs/examples/angular/src/components/<component-name>/usage.example.{html,ts}` with its spec and its story in `docs/examples/angular/src/components/usage-examples.stories.ts` (the live preview of the page), and, when the skill documents an extension, `custom.example.ts` plus its spec. The skill documents option interfaces as tables, since the page drops its code fences. A component is not done until `npx nx run docs:check` passes.
+- [ ] **16. Parity** — the React counterpart of every change from [Parity with the Other Framework](#mandatory-parity-with-the-other-framework) is in the same pull request (component, story, usage example, `react-components-<name>` skill, models), or `docs/site/tools/framework-parity.mjs` has an entry with its reason. `npx nx test react`, `npx nx lint react` and `npx nx build react` pass, and `npx nx run docs:check` reports nothing for R18 and R19.
 
 ## Styling Rules
 
@@ -275,7 +311,7 @@ Every component MUST have exactly **2 stories**: `Playground` and `AllVariants`.
 
 ### Critical configuration rules
 
-1. **Never render a wrapper that extends `CreateDynamicComponent`** — it uses `toObservable` from `@angular/core/rxjs-interop`, which is not compatible with Storybook webpack. Render its sub-component directly instead (e.g., `ButtonStandardComponent`, or the preset). This applies **only** to `CreateDynamicComponent` descendants — the DI-dispatch wrappers (`<smart-detail>`, `<smart-details>`, `<smart-form>`, `<smart-input>`, `<smart-list>`, `<smart-page>`) use `computed()` + `*ngComponentOutlet` and are safe to render directly. See [DI-dispatch components](#di-dispatch-components).
+1. **Never render a wrapper that extends `CreateDynamicComponent`** — it uses `toObservable` from `@angular/core/rxjs-interop`, which is not compatible with Storybook webpack. No wrapper of `@smartsoft001/angular` extends it any more (the class remains in `components/base/base.component.ts`; the list and item pages of `crud-shell-angular` still extend it): every wrapper of the library uses `computed()` + `*ngComponentOutlet` and is safe to render directly, so a new wrapper must not extend it either. The DI-dispatch wrappers (`<smart-detail>`, `<smart-details>`, `<smart-form>`, `<smart-input>`, `<smart-list>`, `<smart-page>`) need extra setup, see [DI-dispatch components](#di-dispatch-components).
 2. **Provide `TranslateModule.forRoot()` via `applicationConfig`** (not `moduleMetadata`) — using `moduleMetadata` with `ModuleWithProviders` causes `ngModule` errors on navigation between stories. In `packages/shared/angular` use the shared helper `provideStorybookTranslations()` from `.storybook/storybook-translations.ts`; `moduleMetadata.imports` must then use the bare `TranslateModule`.
 3. **Import sub-components via `moduleMetadata`** — standalone components go in `moduleMetadata({ imports: [...] })`. Preset components are **not** part of the `COMPONENTS` array in `components.module.ts`, so they must be imported by class.
 4. **AllVariants must disable all Controls** — use `parameters: { controls: { disable: true } }` on the story. (Per-arg `argTypes: { propName: { table: { disable: true } } }` also works but has to be repeated for every arg.)
@@ -434,6 +470,8 @@ Do **not** add a separate `Preset` or `CustomViaToken` story — that breaks the
 | Unit tests                | `angular-jest-test-writer` |
 | Style/lint check          | `shared-style-enforcer`    |
 | Build verification        | `shared-build-verifier`    |
+
+Brief `shared-tdd-developer` with both libraries: the Angular files of this skill and their React counterparts from the [parity table](#mandatory-parity-with-the-other-framework), built with the `react-components` skill (React 19 function components, Testing Library specs in `<name>.spec.tsx`, `npx nx test react --testPathPatterns=<name>`). Give the other agents both projects (`angular` and `react`).
 
 ## Reference Components
 

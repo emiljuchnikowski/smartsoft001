@@ -2,8 +2,9 @@
 /**
  * Regenerates one `docs/site/src/app/docs/components/<name>/page.md` per
  * documented `smart-*` component, plus the section index. The material comes
- * from the component skill, its Storybook story and, where it exists, a
- * hand written page under `docs/site/content/components`.
+ * from the component skills of both plugins, the Storybook stories and the
+ * usage examples under `docs/examples`; a component without an Angular skill
+ * gets no page.
  *
  * Usage: node docs/site/tools/generate-components.mjs [--check] [--root <dir>]
  *

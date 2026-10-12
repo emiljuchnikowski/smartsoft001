@@ -14,7 +14,7 @@ The `smart-angular` plugin ships the `smart-angular:angular-components` agent fo
 
 ## What it does
 
-When a developer describes a piece of UI, the agent chooses a `smart-*` component and delegates to an `angular-components-<name>` skill for its API, options and usage pattern. The plugin contains 54 such background skills, one per component, and the agent's catalogue names every one of them (docs-check fails when it doesn't). The same skill files feed the generated [Components](/docs/components) section of this site.
+When a developer describes a piece of UI, the agent chooses a `smart-*` component and delegates to an `angular-components-<name>` skill for its API, options and usage pattern. The plugin contains 57 such background skills, one per component, and the agent's catalogue names every one of them (docs-check fails when it doesn't). The same skill files feed the generated [Components](/docs/components) section of this site.
 
 ## When to use it
 

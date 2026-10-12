@@ -1,6 +1,6 @@
 ---
 name: review
-description: Run multi-dimensional code review. Checks quality, tests, security, and performance across changed files.
+description: Run multi-dimensional code review. Checks quality, tests, security, performance, and Angular/React parity across changed files.
 allowed-tools:
   - Bash
   - Read
@@ -18,7 +18,7 @@ allowed-tools:
 
 # Review Skill
 
-Run multi-dimensional code review covering quality, tests, security, and performance.
+Run multi-dimensional code review covering quality, tests, security, performance, and parity of the Angular and React libraries.
 
 ## Usage
 
@@ -35,9 +35,10 @@ Run multi-dimensional code review covering quality, tests, security, and perform
 - [ ] **3. Test review** — coverage, test quality, AAA pattern compliance
 - [ ] **4. Security review** — OWASP top 10, dependency audit, secrets detection
 - [ ] **5. Performance review** — bundle impact, change detection, memory leaks
-- [ ] **6. Synthesize findings** — merge all findings, deduplicate, prioritize
-- [ ] **7. Post to Linear** — create review comment in Polish (if linearTaskId provided)
-- [ ] **8. Present to user** — show findings with severity ratings
+- [ ] **6. Parity review** — a UI component or model change lands in both `@smartsoft001/angular` and `@smartsoft001/react`
+- [ ] **7. Synthesize findings** — merge all findings, deduplicate, prioritize
+- [ ] **8. Post to Linear** — create review comment in Polish (if linearTaskId provided)
+- [ ] **9. Present to user** — show findings with severity ratings
 
 ## Instructions
 
@@ -90,7 +91,16 @@ Delegate to `shared-security-scanner`:
 - Check for memory leaks (unsubscribed observables)
 - Verify OnPush change detection usage
 
-### Step 6: Synthesize and Report
+### Step 6: Parity Review
+
+Applies when the diff touches `packages/shared/angular` or `packages/shared/react` (components, `src/lib/models/`), their component skills in `packages/shared/claude-plugins/src/plugins/`, `docs/examples/{angular,react}/src/components/` or `docs/site/tools/framework-parity.mjs`. The two libraries keep the same components with the same options; the `angular-components` and `react-components` skills map each Angular file to its React counterpart.
+
+- Run `npx nx run docs:check`; an R18 (component parity) or R19 (model API parity) error fails the pipeline — CRITICAL
+- A new component, or a new or changed option, variant, input/prop, output/callback or behaviour, in one library without the counterpart in the other: component, story with its `usage` region, usage example and spec, `angular-components-<name>` / `react-components-<name>` skill — HIGH. The rules do not see a changed default, handler or class, so compare the two implementations by reading them
+- A change to `src/lib/models/*.ts`, or to a type both `components/` trees export under the same name, on one side only: a declaration, a member, its optionality or a literal of a union (Angular `foo$` is React `foo`) — HIGH
+- A new or changed entry in `docs/site/tools/framework-parity.mjs` whose reason does not convince: it has to say why the frameworks differ (a framework idiom, a host one framework mounts itself), not postpone the work ("React later", "not needed yet") — HIGH; ask for the counterpart instead
+
+### Step 7: Synthesize and Report
 
 ```markdown
 ## Code Review Report
@@ -107,6 +117,7 @@ Delegate to `shared-security-scanner`:
 | Tests       | X        | Y      | Z   | PASS/BLOCK |
 | Security    | X        | Y      | Z   | PASS/BLOCK |
 | Performance | X        | Y      | Z   | PASS/BLOCK |
+| Parity      | X        | Y      | Z   | PASS/BLOCK |
 
 ### Critical Issues
 
