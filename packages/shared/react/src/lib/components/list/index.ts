@@ -3,6 +3,8 @@ export * from './desktop/preset/list-desktop-preset';
 export * from './desktop/preset/preset-classes';
 export * from './desktop/use-list-desktop';
 export * from './list';
+export * from './list-details-modal';
+export * from './list-sort';
 export * from './list-title-key';
 export * from './list.types';
 export * from './masonry-grid/list-masonry-grid';

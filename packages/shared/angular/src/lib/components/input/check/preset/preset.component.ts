@@ -2,14 +2,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  signal,
   ViewEncapsulation,
-  WritableSignal,
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
-
-import { getModelFieldOptions } from '@smartsoft001/models';
+import { Subscription } from 'rxjs';
 
 import { ModelLabelPipe } from '../../../../pipes';
 import { InputPossibilitiesBaseComponent } from '../../base/possibilities.component';
@@ -56,11 +53,7 @@ import { InputPossibilitiesBaseComponent } from '../../base/possibilities.compon
 export class InputCheckPresetComponent<
   T,
 > extends InputPossibilitiesBaseComponent<T> {
-  override possibilities: WritableSignal<Array<{
-    id: any;
-    text: string;
-    checked: boolean;
-  }> | null> = signal(null);
+  private controlChanges: Subscription | null = null;
 
   labelClasses = computed(() =>
     [
@@ -113,22 +106,27 @@ export class InputCheckPresetComponent<
   );
 
   protected override afterSetOptionsHandler(): void {
-    const current = this.possibilities();
-    if (this.internalOptions && !current) {
-      const fromModel = getModelFieldOptions(
-        this.internalOptions.model,
-        this.internalOptions.fieldKey,
-      )?.possibilities;
-      if (fromModel) {
-        this.possibilities.set(fromModel);
-      }
-    }
+    super.afterSetOptionsHandler();
 
-    this.syncCheckedWithControl();
-
-    this.control.valueChanges
+    this.controlChanges?.unsubscribe();
+    this.controlChanges = this.control.valueChanges
       .pipe(this.takeUntilDestroy)
       .subscribe(() => this.syncCheckedWithControl());
+  }
+
+  protected override afterPossibilitiesChange(): void {
+    this.syncCheckedWithControl();
+  }
+
+  /** The field's own `possibilities` when they are a list; `null` otherwise. */
+  protected override getModelPossibilities(): Array<{
+    id: any;
+    text: string;
+    checked: boolean;
+  }> | null {
+    const possibilities = this.getModelFieldPossibilities();
+
+    return Array.isArray(possibilities) ? possibilities : null;
   }
 
   private syncCheckedWithControl(): void {
@@ -146,7 +144,9 @@ export class InputCheckPresetComponent<
           item.checked = false;
         }
       } else {
-        item.checked = item.id === value;
+        item.checked = Array.isArray(value)
+          ? value.includes(item.id)
+          : item.id === value;
       }
     });
 

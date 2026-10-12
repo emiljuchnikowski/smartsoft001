@@ -1144,6 +1144,11 @@ export interface IPageOptions {
 }
 
 export interface IListProvider<T> {
+  /**
+   * Reads the data again with `filter` merged into the current one. The list
+   * calls it with `{ offset: 0, sortBy, sortDesc }` when a sortable header is
+   * clicked (`IListOptions.sort` set).
+   */
   getData: (filter: any) => void;
   onChangeMultiSelected?: (list: Array<T>) => void;
   onCleanMultiSelected$?: Observable<void>;
@@ -1152,6 +1157,11 @@ export interface IListProvider<T> {
 }
 
 export interface IListPaginationOptions {
+  /**
+   * `PaginationMode.singlePage` renders `<smart-paging>` below the items;
+   * `PaginationMode.infiniteScroll` calls `loadNextPage` when the end of the
+   * items scrolls into view, while `page < totalPages`.
+   */
   mode?: PaginationMode;
   /** Not read by the built-in implementations (standard or preset); available to a custom implementation registered for the component. */
   limit: number;
@@ -1204,6 +1214,11 @@ export interface IListOptions<T> {
 
   cellPipe?: ICellPipe<T>;
   componentFactories?: IListComponentFactories<T>;
+  /**
+   * Makes the field headers of the desktop modes sort buttons: a click reads
+   * the data through `provider.getData({ offset: 0, sortBy, sortDesc })`.
+   * `default` / `defaultDesc` is the sort the headers show at first.
+   */
   sort?:
     | boolean
     | {
@@ -1211,6 +1226,11 @@ export interface IListOptions<T> {
         defaultDesc?: boolean;
       };
 
+  /**
+   * Adds a details action to every item: it opens `component` (`DetailsPage`
+   * by default) in a modal with the `IDetailsOptions` of `provider` as its
+   * `value`, and asks `provider.getData(id)` for the item.
+   */
   details?:
     | boolean
     | {

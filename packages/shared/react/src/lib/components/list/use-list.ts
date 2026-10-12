@@ -3,6 +3,16 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { IEntity } from '@smartsoft001/domain-core';
 import { IFieldListMetadata, IFieldOptions } from '@smartsoft001/models';
 
+import { SmartListDetailsModal } from './list-details-modal';
+import {
+  getListAriaSort,
+  getListDefaultSort,
+  getListSortIndicator,
+  getNextListSort,
+  IListSortFilter,
+  IListSortState,
+  isListSortableKey,
+} from './list-sort';
 import { SmartListModeProps } from './list.types';
 import {
   IButtonOptions,
@@ -12,13 +22,16 @@ import {
   IListOptions,
   PaginationMode,
 } from '../../models';
+import { SmartDetailsPage } from '../../pages/details/details-page';
 import {
   useAlertService,
   useAuthService,
   useFileService,
+  useModalService,
   useNavigation,
   useTranslate,
 } from '../../providers/hooks';
+import { SmartStore } from '../../store/store';
 
 type ListField = { key: string; options: IFieldOptions };
 
@@ -112,6 +125,13 @@ function getItemUrl(routingPrefix: string, id: string): string {
  * With `pagination.mode === PaginationMode.infiniteScroll` and a next page,
  * `infiniteScroll` is `true`: render an element with `infiniteScrollRef`
  * after the items, and the next page loads when it scrolls into view.
+ *
+ * With `sort`, `sortBy(key)` sorts by a column (ascending, or the other
+ * direction for the active one) through
+ * `provider.getData({ offset: 0, sortBy, sortDesc })`; `activeSort`,
+ * `getAriaSort(key)` and `getSortIndicator(key)` describe it for the headers.
+ * With `details`, `detailsHandler(item)` opens the details of an item in a
+ * modal (`SmartDetailsPage`, or `details.component`).
  */
 export function useList<T extends IEntity<string>>({
   options,
@@ -120,6 +140,7 @@ export function useList<T extends IEntity<string>>({
   const authService = useAuthService();
   const alertService = useAlertService();
   const navigation = useNavigation();
+  const modalService = useModalService();
 
   const fields = options.fields ?? NO_FIELDS;
   const provider = options.provider;
@@ -206,7 +227,7 @@ export function useList<T extends IEntity<string>>({
   const detailsComponent = (options.details && details?.component) || null;
 
   const detailsComponentProps = useMemo<IDetailsOptions<T> | null>(() => {
-    if (!detailsComponent || !detailsProvider) return null;
+    if (!detailsProvider) return null;
 
     return {
       item: detailsProvider.item,
@@ -217,7 +238,6 @@ export function useList<T extends IEntity<string>>({
       componentFactories: details?.componentFactories,
     };
   }, [
-    detailsComponent,
     detailsProvider,
     type,
     itemHandler,
@@ -227,6 +247,89 @@ export function useList<T extends IEntity<string>>({
 
   const select = detailsProvider?.getData;
   const unselect = detailsProvider?.clearData;
+
+  // The details modal reads the options from here, so it follows the item
+  // the provider loads after the modal opened.
+  const [detailsStore] = useState(
+    () => new SmartStore<IDetailsOptions<T> | null>(null),
+  );
+
+  useEffect(() => {
+    detailsStore.set(detailsComponentProps);
+  }, [detailsStore, detailsComponentProps]);
+
+  const detailsHandler = useMemo<((item: T) => void) | null>(() => {
+    if (!detailsProvider) return null;
+
+    return (item: T) => {
+      unselect?.();
+
+      void modalService
+        .show({
+          component: SmartListDetailsModal,
+          props: {
+            component: detailsComponent ?? SmartDetailsPage,
+            store: detailsStore,
+          },
+          mode: 'bottom',
+        })
+        .then(() => select?.(item.id));
+    };
+  }, [
+    detailsProvider,
+    detailsComponent,
+    detailsStore,
+    modalService,
+    select,
+    unselect,
+  ]);
+
+  const sortOption = options.sort;
+  const sortable = !!sortOption;
+  const [sortState, setSortState] = useState<{
+    source: IListOptions<T>['sort'];
+    value: IListSortState | null;
+  }>(() => ({ source: sortOption, value: getListDefaultSort(sortOption) }));
+  let activeSort = sortState.value;
+
+  // A new `sort` option starts over from its default.
+  if (sortState.source !== sortOption) {
+    activeSort = getListDefaultSort(sortOption);
+    setSortState({ source: sortOption, value: activeSort });
+  }
+
+  const isSortable = useCallback(
+    (key: string) => sortable && isListSortableKey(key),
+    [sortable],
+  );
+
+  const sortBy = useCallback(
+    (key: string) => {
+      if (!isSortable(key)) return;
+
+      const next = getNextListSort(activeSort, key);
+      const filter: IListSortFilter = {
+        offset: 0,
+        sortBy: next.key,
+        sortDesc: next.desc,
+      };
+
+      setSortState({ source: sortOption, value: next });
+      provider?.getData(filter);
+    },
+    [isSortable, activeSort, sortOption, provider],
+  );
+
+  const getAriaSort = useCallback(
+    (key: string) =>
+      isSortable(key) ? getListAriaSort(activeSort, key) : null,
+    [isSortable, activeSort],
+  );
+
+  const getSortIndicator = useCallback(
+    (key: string) => getListSortIndicator(activeSort, key),
+    [activeSort],
+  );
 
   const detailsButtonOptions = useMemo<IButtonOptions>(
     () => ({
@@ -338,6 +441,7 @@ export function useList<T extends IEntity<string>>({
     itemHandler,
     detailsComponent,
     detailsComponentProps,
+    detailsHandler,
     select,
     unselect,
     detailsButtonOptions,
@@ -348,5 +452,11 @@ export function useList<T extends IEntity<string>>({
     handlePageChange,
     infiniteScroll,
     infiniteScrollRef,
+    sortable,
+    activeSort,
+    isSortable,
+    sortBy,
+    getAriaSort,
+    getSortIndicator,
   };
 }

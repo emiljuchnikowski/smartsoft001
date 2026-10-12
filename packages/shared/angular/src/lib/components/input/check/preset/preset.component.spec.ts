@@ -19,7 +19,10 @@ import {
 
 @Model({})
 class CheckModel {
-  @Field({ type: FieldType.check })
+  @Field({
+    type: FieldType.check,
+    possibilities: [{ id: 'x', text: 'From model', checked: false }],
+  })
   tags: any[] = [];
 }
 
@@ -161,5 +164,165 @@ describe('@smartsoft001/shared-angular: InputCheckPresetComponent', () => {
     fixture.detectChanges();
 
     expect(control.value).toEqual(['a']);
+  });
+
+  it('should check the possibilities in the control value', () => {
+    const control = new UntypedFormControl(['a', 'c']);
+    host.options = buildOptions(control);
+
+    fixture.detectChanges();
+
+    const checkboxes = Array.from(
+      fixture.nativeElement.querySelectorAll('input[type="checkbox"]'),
+    ) as HTMLInputElement[];
+    expect(checkboxes.map((checkbox) => checkbox.checked)).toEqual([
+      true,
+      false,
+      true,
+    ]);
+  });
+
+  it('should keep the checked values when another possibility is checked', () => {
+    const control = new UntypedFormControl(['a']);
+    host.options = buildOptions(control);
+    fixture.detectChanges();
+    const checkboxes = fixture.nativeElement.querySelectorAll(
+      'input[type="checkbox"]',
+    ) as NodeListOf<HTMLInputElement>;
+
+    checkboxes[1].dispatchEvent(new Event('change'));
+
+    expect(control.value).toEqual(['a', 'b']);
+  });
+});
+
+describe('@smartsoft001/shared-angular: InputCheckPresetComponent (with a possibilities provider)', () => {
+  const provider = { get: jest.fn() };
+
+  function texts(fixture: ComponentFixture<TestHostComponent>): string[] {
+    return Array.from(
+      (fixture.nativeElement as HTMLElement).querySelectorAll(
+        'input[type="checkbox"] + span',
+      ),
+    ).map((span) => span.textContent?.trim() ?? '');
+  }
+
+  function checkboxes(
+    fixture: ComponentFixture<TestHostComponent>,
+  ): HTMLInputElement[] {
+    return Array.from(
+      (fixture.nativeElement as HTMLElement).querySelectorAll(
+        'input[type="checkbox"]',
+      ),
+    );
+  }
+
+  beforeEach(async () => {
+    provider.get.mockReset();
+
+    await TestBed.configureTestingModule({
+      imports: [
+        TestHostComponent,
+        ReactiveFormsModule,
+        TranslateModule.forRoot(),
+      ],
+      providers: [
+        { provide: IModelLabelProvider, useClass: MockModelLabelProvider },
+        { provide: MODEL_POSSIBILITIES_PROVIDER, useValue: provider },
+      ],
+    }).compileComponents();
+  });
+
+  afterEach(() => jest.useRealTimers());
+
+  it('should render the possibilities of the provider checked from the control value', () => {
+    provider.get.mockReturnValue(
+      signal([{ id: 'p', text: 'From provider', checked: false }]),
+    );
+    const fixture = TestBed.createComponent(TestHostComponent);
+    fixture.componentInstance.options = buildOptions(
+      new UntypedFormControl(['p']),
+    );
+
+    fixture.detectChanges();
+
+    expect(texts(fixture)).toEqual(['From provider']);
+    expect(checkboxes(fixture)[0].checked).toBe(true);
+    expect(provider.get).toHaveBeenCalledWith({
+      type: CheckModel,
+      key: 'tags',
+      instance: { tags: ['p'] },
+    });
+  });
+
+  it('should render the input options while the provider has no possibilities', () => {
+    provider.get.mockReturnValue(signal(null));
+    const fixture = TestBed.createComponent(TestHostComponent);
+    fixture.componentInstance.options = buildOptions(
+      new UntypedFormControl([]),
+    );
+
+    fixture.detectChanges();
+
+    expect(texts(fixture)).toEqual(['Alpha', 'Beta', 'Gamma']);
+  });
+
+  it('should check the possibilities the provider sets later', () => {
+    const fromProvider = signal<
+      { id: string; text: string; checked: boolean }[] | null
+    >(null);
+    provider.get.mockReturnValue(fromProvider);
+    const fixture = TestBed.createComponent(TestHostComponent);
+    fixture.componentInstance.options = buildOptions(
+      new UntypedFormControl(['p']),
+    );
+    fixture.detectChanges();
+
+    fromProvider.set([{ id: 'p', text: 'Loaded', checked: false }]);
+    fixture.detectChanges();
+
+    expect(texts(fixture)).toEqual(['Loaded']);
+    expect(checkboxes(fixture)[0].checked).toBe(true);
+  });
+
+  it('should ask the provider again 500 ms after the form value changed', () => {
+    jest.useFakeTimers();
+    provider.get.mockImplementation(
+      ({ instance }: { instance: { tags: string[] } }) =>
+        signal([
+          {
+            id: 'p',
+            text: instance.tags.length ? 'From B' : 'From A',
+            checked: false,
+          },
+        ]),
+    );
+    const control = new UntypedFormControl([]);
+    const fixture = TestBed.createComponent(TestHostComponent);
+    fixture.componentInstance.options = buildOptions(control);
+    fixture.detectChanges();
+
+    control.setValue(['p']);
+    jest.advanceTimersByTime(500);
+    fixture.detectChanges();
+
+    expect(texts(fixture)).toEqual(['From B']);
+    expect(checkboxes(fixture)[0].checked).toBe(true);
+  });
+
+  it('should fall back to the possibilities of the model field', () => {
+    provider.get.mockReturnValue(signal(null));
+    const control = new UntypedFormControl([]);
+    const fixture = TestBed.createComponent(TestHostComponent);
+    fixture.componentInstance.options = {
+      ...buildOptions(control),
+      possibilities: undefined,
+    };
+    fixture.detectChanges();
+
+    checkboxes(fixture)[0].dispatchEvent(new Event('change'));
+
+    expect(texts(fixture)).toEqual(['From model']);
+    expect(control.value).toEqual(['x']);
   });
 });

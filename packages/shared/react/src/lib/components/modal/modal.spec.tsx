@@ -474,6 +474,45 @@ describe('@smartsoft001/react: SmartModal', () => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
 
+    it('should close only the modal on top when modals are stacked', () => {
+      // Arrange
+      const onBottomClosed = jest.fn();
+      const onTopClosed = jest.fn();
+      render(
+        <>
+          <SmartModalPreset defaultOpen onClosed={onBottomClosed} />
+          <SmartModalPreset defaultOpen onClosed={onTopClosed} />
+        </>,
+      );
+
+      // Act
+      fireEvent.keyDown(document, { key: 'Escape' });
+
+      // Assert
+      expect(onTopClosed).toHaveBeenCalledTimes(1);
+      expect(onBottomClosed).not.toHaveBeenCalled();
+      expect(screen.getAllByRole('dialog')).toHaveLength(1);
+    });
+
+    it('should close the next modal on the next Escape', () => {
+      // Arrange
+      const onBottomClosed = jest.fn();
+      render(
+        <>
+          <SmartModalPreset defaultOpen onClosed={onBottomClosed} />
+          <SmartModalPreset defaultOpen />
+        </>,
+      );
+      fireEvent.keyDown(document, { key: 'Escape' });
+
+      // Act
+      fireEvent.keyDown(document, { key: 'Escape' });
+
+      // Assert
+      expect(onBottomClosed).toHaveBeenCalledTimes(1);
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+
     it('should ignore Escape while closed', () => {
       const onClosed = jest.fn();
       render(<SmartModalPreset open={false} onClosed={onClosed} />);

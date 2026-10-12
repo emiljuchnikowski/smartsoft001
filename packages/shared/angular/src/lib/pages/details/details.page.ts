@@ -1,90 +1,90 @@
 import {
+  ChangeDetectionStrategy,
   Component,
+  computed,
   ElementRef,
   inject,
+  input,
   OnInit,
-  signal,
-  WritableSignal,
-  ChangeDetectionStrategy,
+  Signal,
 } from '@angular/core';
 
 import { IEntity } from '@smartsoft001/domain-core';
 
-// TODO: PageComponent moved to @smartsoft001-pro/angular (FRA-121)
-import { DetailsComponent } from '../../components';
+import { DetailsComponent } from '../../components/details/details.component';
 import {
-  IPageOptions,
   IDetailsOptions,
   IIconButtonOptions,
+  IPageOptions,
 } from '../../models';
 import { ModalService, StyleService } from '../../services';
 
+/**
+ * The details of `value` full width, with the application style
+ * (`StyleService`) applied to its element. Open it in a modal with
+ * `[smartDetails]="{ component: DetailsPage, params }"` (or
+ * `ModalService.show({ component: DetailsPage, props: { value } })`), which
+ * passes `params` as `value`.
+ *
+ * `pageOptions()` gives the title and buttons for a page layout around it: a
+ * `trash` button for `removeHandler` and an `arrow-forward-outline` button for
+ * `itemHandler`, both closing the modal through `ModalService.dismiss()`. The
+ * page layout itself moved out of the library (FRA-121), so the page does not
+ * render them.
+ */
 @Component({
   templateUrl: './details.page.html',
-  imports: [/* PageComponent, */ DetailsComponent],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [DetailsComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./details.page.scss'],
 })
 export class DetailsPage<T extends IEntity<string>> implements OnInit {
   private modalService = inject(ModalService);
   private styleService = inject(StyleService);
   private elementRef = inject(ElementRef);
-  // navParams: NavParams, //TODO: to be injected
 
-  pageOptions: WritableSignal<IPageOptions> = signal({
-    title: 'details',
-    hideMenuButton: true,
+  /** The details to show; `[smartDetails]` passes its `params` here. */
+  value = input<IDetailsOptions<T>>();
+
+  pageOptions: Signal<IPageOptions> = computed(() => {
+    const value = this.value();
+
+    return {
+      title: value?.title ? value.title : 'details',
+      hideMenuButton: true,
+      endButtons: this.getButtons(value),
+    };
   });
-  detailsOptions: IDetailsOptions<T>;
-
-  constructor() {
-    this.detailsOptions = /*navParams.get('value')*/ {} as IDetailsOptions<T>;
-    this.initTitle();
-    this.initButtons();
-  }
 
   ngOnInit(): void {
     this.styleService.init(this.elementRef);
   }
 
-  private initTitle(): void {
-    this.pageOptions.update((options) => {
-      if (this.detailsOptions.title) {
-        return {
-          ...options,
-          title: this.detailsOptions.title,
-        };
-      }
-
-      return options;
-    });
-  }
-
-  private initButtons(): void {
+  private getButtons(value?: IDetailsOptions<T>): IIconButtonOptions[] {
     const buttons: IIconButtonOptions[] = [];
 
-    if (this.detailsOptions.removeHandler) {
+    if (value?.removeHandler) {
       buttons.push({
         handler: () => {
-          const item = this.detailsOptions.item?.();
-          if (item) this.detailsOptions.removeHandler?.(item);
-          this.modalService.dismiss();
+          const item = value.item?.();
+          if (item) value.removeHandler?.(item);
+          void this.modalService.dismiss();
         },
         icon: 'trash',
       });
     }
 
-    if (this.detailsOptions.itemHandler) {
+    if (value?.itemHandler) {
       buttons.push({
         handler: () => {
-          const item = this.detailsOptions.item?.();
-          if (item) this.detailsOptions.itemHandler?.(item.id);
-          this.modalService.dismiss();
+          const item = value.item?.();
+          if (item) value.itemHandler?.(item.id);
+          void this.modalService.dismiss();
         },
         icon: 'arrow-forward-outline',
       });
     }
 
-    this.pageOptions.update((options) => ({ ...options, endButtons: buttons }));
+    return buttons;
   }
 }

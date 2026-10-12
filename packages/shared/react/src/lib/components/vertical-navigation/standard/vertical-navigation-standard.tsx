@@ -1,15 +1,22 @@
+import { useId } from 'react';
+
 import { IVerticalNavItem } from '../../../models';
 import { cn } from '../../../utils/class-names';
 import { SmartNavLink } from '../../navbar/nav-link';
 import { useVerticalNavigation } from '../use-vertical-navigation';
 import { SmartVerticalNavigationProps } from '../vertical-navigation.types';
 
-/** The default vertical navigation rendering. */
+/**
+ * The default vertical navigation rendering: one `<nav>` landmark
+ * (`options.ariaLabel`, `'Sidebar'` by default) with a list of groups, each a
+ * list of items labelled by the group's title.
+ */
 export function SmartVerticalNavigationStandard(
   props: SmartVerticalNavigationProps,
 ) {
   const { options, className } = props;
   const { groups, itemClick } = useVerticalNavigation(props);
+  const id = useId();
 
   const renderContent = (item: IVerticalNavItem) => (
     <>
@@ -32,35 +39,46 @@ export function SmartVerticalNavigationStandard(
         aria-label={options?.ariaLabel ?? 'Sidebar'}
       >
         <ul role="list" className="groups">
-          {groups.map((group, index) => (
-            <li key={group.id ?? index} className="group">
-              {group.title && <div className="group-title">{group.title}</div>}
-              <ul role="list" className="items">
-                {group.items.map((item) => (
-                  <li key={item.id} className="item">
-                    {item.href ? (
-                      <SmartNavLink
-                        href={item.href}
-                        className={cn('item-link', item.current && 'current')}
-                        aria-current={item.current ? 'page' : undefined}
-                      >
-                        {renderContent(item)}
-                      </SmartNavLink>
-                    ) : (
-                      <button
-                        type="button"
-                        className={cn('item-button', item.current && 'current')}
-                        aria-current={item.current ? 'page' : undefined}
-                        onClick={() => itemClick(item.id)}
-                      >
-                        {renderContent(item)}
-                      </button>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </li>
-          ))}
+          {groups.map((group, index) => {
+            const titleId = group.title ? `${id}-group-${index}` : undefined;
+
+            return (
+              <li key={group.id ?? index} className="group">
+                {group.title && (
+                  <div id={titleId} className="group-title">
+                    {group.title}
+                  </div>
+                )}
+                <ul role="list" className="items" aria-labelledby={titleId}>
+                  {group.items.map((item) => (
+                    <li key={item.id} className="item">
+                      {item.href ? (
+                        <SmartNavLink
+                          href={item.href}
+                          className={cn('item-link', item.current && 'current')}
+                          aria-current={item.current ? 'page' : undefined}
+                        >
+                          {renderContent(item)}
+                        </SmartNavLink>
+                      ) : (
+                        <button
+                          type="button"
+                          className={cn(
+                            'item-button',
+                            item.current && 'current',
+                          )}
+                          aria-current={item.current ? 'page' : undefined}
+                          onClick={() => itemClick(item.id)}
+                        >
+                          {renderContent(item)}
+                        </button>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            );
+          })}
         </ul>
       </nav>
     </div>

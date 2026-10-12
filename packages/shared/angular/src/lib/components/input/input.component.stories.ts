@@ -199,9 +199,8 @@ const VARIANTS: InputVariant[] = [
     key: 'categories',
     type: FieldType.enum,
     control: ctrl([CategoryEnum.News]),
-    // InputEnumPresetComponent extends InputPossibilitiesBaseComponent and
-    // calls possibilities() in its template; without MODEL_POSSIBILITIES_PROVIDER
-    // the signal is never assigned, so the story supplies it directly.
+    // The enum preset lists these unless MODEL_POSSIBILITIES_PROVIDER returns
+    // some; without them it would list the enum's keys from the field.
     possibilities: () =>
       signal(
         Object.values(CategoryEnum).map((value) => ({
@@ -215,8 +214,7 @@ const VARIANTS: InputVariant[] = [
     key: 'status',
     type: FieldType.radio,
     control: ctrl(1),
-    // InputRadioComponent calls this.possibilities() unconditionally — without
-    // it the component throws.
+    // The radio lists these unless MODEL_POSSIBILITIES_PROVIDER returns some.
     possibilities: () =>
       signal([
         { id: 1, text: 'Aktywny', checked: true },

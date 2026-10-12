@@ -15,8 +15,11 @@ import {
   getVerticalNavIconClasses,
   getVerticalNavInitialClasses,
   getVerticalNavItemClasses,
+  getVerticalNavListItemClasses,
   getVerticalNavNavClasses,
 } from './preset-classes.util';
+
+let nextId = 0;
 
 /**
  * Styled vertical navigation variation (preset).
@@ -27,7 +30,9 @@ import {
  * selector directly.
  *
  * Renders the Preline vertical-tabs look: each item is a tab with a trailing
- * border, the `current` item gaining the primary border + text accent.
+ * border, the `current` item gaining the primary border + text accent. One
+ * `<nav>` landmark (`options.ariaLabel`, `'Sidebar'` by default) holds every
+ * group; a group is a list labelled by its title.
  */
 @Component({
   selector: 'smart-vertical-navigation-preset',
@@ -51,6 +56,13 @@ export class VerticalNavigationPresetComponent extends VerticalNavigationBaseCom
   protected iconClasses = getVerticalNavIconClasses();
   protected initialClasses = getVerticalNavInitialClasses();
   protected badgeClasses = getVerticalNavBadgeClasses();
+  protected listItemClasses = getVerticalNavListItemClasses();
+
+  private readonly idPrefix = `smart-vertical-navigation-${nextId++}`;
+
+  protected groupTitleId(groupIndex: number): string {
+    return `${this.idPrefix}-group-${groupIndex}`;
+  }
 
   protected itemClasses(current: boolean | undefined): string {
     return getVerticalNavItemClasses(Boolean(current));

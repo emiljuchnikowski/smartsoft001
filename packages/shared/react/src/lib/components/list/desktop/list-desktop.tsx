@@ -17,9 +17,9 @@ import { useListFileUrl } from '../use-list';
 
 /**
  * The desktop list: a table with one column per list field, plus the
- * multi-select, remove and item columns, the `top` component factory above it
- * and the paging below it (`PaginationMode.singlePage`). The header row stays
- * sticky.
+ * multi-select, details, remove and item columns, the `top` component factory
+ * above it and the paging below it (`PaginationMode.singlePage`). The header
+ * row stays sticky; with `options.sort` the field headers are sort buttons.
  */
 export function SmartListDesktop<T extends IEntity<string>>(
   props: SmartListModeProps<T>,
@@ -38,6 +38,11 @@ export function SmartListDesktop<T extends IEntity<string>>(
     checkRemoveHandler,
     removeHandler,
     itemHandler,
+    detailsHandler,
+    isSortable,
+    sortBy,
+    getAriaSort,
+    getSortIndicator,
     loadNextPage,
     page,
     totalPages,
@@ -83,6 +88,7 @@ export function SmartListDesktop<T extends IEntity<string>>(
                         style={LIST_DESKTOP_STICKY_HEADER_STYLE}
                       ></th>
                     );
+                  case 'detailsAction':
                   case 'removeAction':
                   case 'itemAction':
                     return (
@@ -100,8 +106,26 @@ export function SmartListDesktop<T extends IEntity<string>>(
                         key={key}
                         className="smart:px-3 smart:py-3.5 smart:text-left smart:text-sm smart:font-semibold smart:text-gray-900 smart:dark:text-white"
                         style={LIST_DESKTOP_STICKY_HEADER_STYLE}
+                        aria-sort={getAriaSort(key) ?? undefined}
                       >
-                        {listHeader(desktopList, key, type)}
+                        {isSortable(key) ? (
+                          <button
+                            type="button"
+                            data-role="sort"
+                            className="smart:inline-flex smart:items-center smart:gap-x-1 smart:font-semibold smart:text-gray-900 smart:hover:text-indigo-600 smart:dark:text-white smart:dark:hover:text-indigo-400"
+                            onClick={() => sortBy(key)}
+                          >
+                            {listHeader(desktopList, key, type)}
+                            <span
+                              aria-hidden="true"
+                              className="smart:text-gray-400 smart:dark:text-gray-500"
+                            >
+                              {getSortIndicator(key)}
+                            </span>
+                          </button>
+                        ) : (
+                          listHeader(desktopList, key, type)
+                        )}
                         {pagination(last)}
                       </th>
                     );
@@ -134,6 +158,22 @@ export function SmartListDesktop<T extends IEntity<string>>(
                               )
                             }
                           />
+                        </td>
+                      );
+                    case 'detailsAction':
+                      return (
+                        <td
+                          key={key}
+                          className="smart:w-10 smart:px-3 smart:py-4"
+                        >
+                          <button
+                            type="button"
+                            data-role="details"
+                            className="smart:text-indigo-600 smart:hover:text-indigo-900 smart:dark:text-indigo-400 smart:dark:hover:text-indigo-300"
+                            onClick={() => detailsHandler?.(element)}
+                          >
+                            {t('show')}
+                          </button>
                         </td>
                       );
                     case 'removeAction':

@@ -143,6 +143,18 @@ describe('@smartsoft001/react: SmartPage', () => {
       expect(screen.getByTestId('injected')).toHaveClass('passed-class');
     });
 
+    it('should apply className to the root of the standard page', () => {
+      const { container } = renderPage(
+        <SmartPage
+          options={{ title: 'styled' }}
+          className="smart:mt-4 extra"
+        />,
+      );
+
+      expect(container.firstElementChild).toHaveAttribute('data-role', 'page');
+      expect(container.firstElementChild).toHaveClass('smart:mt-4', 'extra');
+    });
+
     it('should render children in the body', () => {
       renderPage(
         <SmartPage options={{ title: 'hello' }}>
@@ -189,7 +201,10 @@ describe('@smartsoft001/react: SmartPage', () => {
         { components: PAGE_PRESET_VARIANT_COMPONENTS },
       );
 
-      expect(container.querySelector('[data-role="page"]')).not.toBeNull();
+      expect(container.querySelector('[data-role="header"]')).not.toBeNull();
+      expect(
+        screen.getByRole('heading', { level: 1, name: 'wrapped' }),
+      ).toBeInTheDocument();
     });
 
     it('should wire children into the preset body', () => {
@@ -211,7 +226,10 @@ describe('@smartsoft001/react: SmartPage', () => {
         { components: PAGE_PRESET_VARIANT_COMPONENTS },
       );
 
-      expect(container.querySelector('[data-role="page"]')).toBeNull();
+      expect(container.querySelector('[data-role="header"]')).toBeNull();
+      expect(
+        screen.getByRole('heading', { level: 2, name: 'plain' }),
+      ).toBeInTheDocument();
     });
   });
 
@@ -428,7 +446,8 @@ describe('@smartsoft001/react: SmartPage', () => {
         <SmartPageStandard options={{ title: 'no-body' }} />,
       );
 
-      expect(container.lastElementChild).toBeEmptyDOMElement();
+      const root = container.querySelector('[data-role="page"]');
+      expect(root?.lastElementChild).toBeEmptyDOMElement();
     });
 
     it('should keep the body section when the header is hidden', () => {
@@ -438,7 +457,40 @@ describe('@smartsoft001/react: SmartPage', () => {
         />,
       );
 
-      expect(container.firstElementChild).toHaveClass('smart:px-4');
+      const root = container.querySelector('[data-role="page"]');
+      expect(root?.children).toHaveLength(1);
+      expect(root?.firstElementChild).toHaveClass('smart:px-4');
+    });
+
+    it('should render the header and the body inside one page root', () => {
+      const { container } = renderPage(
+        <SmartPageStandard options={{ title: 'root', bodyTpl: <p>body</p> }} />,
+      );
+
+      const root = container.querySelector('[data-role="page"]');
+      expect(container.children).toHaveLength(1);
+      expect(root).toContainElement(screen.getByRole('heading', { level: 2 }));
+      expect(root).toContainElement(screen.getByText('body'));
+    });
+
+    it('should append className to the page root', () => {
+      const { container } = renderPage(
+        <SmartPageStandard options={{ title: 'c' }} className="my-external" />,
+      );
+
+      expect(container.querySelector('[data-role="page"]')).toHaveClass(
+        'my-external',
+      );
+    });
+
+    it('should render the page root without a class attribute by default', () => {
+      const { container } = renderPage(
+        <SmartPageStandard options={{ title: 'c' }} />,
+      );
+
+      expect(container.querySelector('[data-role="page"]')).not.toHaveAttribute(
+        'class',
+      );
     });
   });
 

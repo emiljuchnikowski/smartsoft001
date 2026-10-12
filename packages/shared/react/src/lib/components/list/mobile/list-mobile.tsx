@@ -10,8 +10,8 @@ import { SmartListModeProps } from '../list.types';
 import { useList } from '../use-list';
 
 /**
- * The mobile list: a stacked list with one paragraph per cell and the remove /
- * item buttons, the `top` component factory above it and the paging below it
+ * The mobile list: a stacked list with one paragraph per cell and the details /
+ * remove / item buttons, the `top` component factory above it and the paging below it
  * (`PaginationMode.singlePage`).
  */
 export function SmartListMobile<T extends IEntity<string>>(
@@ -27,6 +27,7 @@ export function SmartListMobile<T extends IEntity<string>>(
     checkRemoveHandler,
     removeHandler,
     itemHandler,
+    detailsHandler,
     page,
     totalPages,
     handlePageChange,
@@ -68,6 +69,16 @@ export function SmartListMobile<T extends IEntity<string>>(
               </div>
             </div>
             <div className="smart:flex smart:shrink-0 smart:items-center smart:gap-x-4">
+              {detailsHandler ? (
+                <button
+                  type="button"
+                  data-role="details"
+                  className="smart:text-indigo-600 smart:hover:text-indigo-900 smart:dark:text-indigo-400 smart:dark:hover:text-indigo-300 smart:text-sm"
+                  onClick={() => detailsHandler(item)}
+                >
+                  {t('show')}
+                </button>
+              ) : null}
               {removeHandler &&
               (!checkRemoveHandler || checkRemoveHandler(item)) ? (
                 <button

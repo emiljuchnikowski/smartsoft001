@@ -1,9 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
-import * as _ from 'lodash';
-
-import { getModelFieldOptions } from '@smartsoft001/models';
 
 import { ModelLabelPipe } from '../../../pipes';
 import { InputPossibilitiesBaseComponent } from '../base/possibilities.component';
@@ -64,30 +61,4 @@ export class InputRadioComponent<T> extends InputPossibilitiesBaseComponent<T> {
     if (extra) classes.push(extra);
     return classes.join(' ');
   });
-
-  protected override afterSetOptionsHandler(): void {
-    if (this.internalOptions && !this.possibilities()) {
-      let options = getModelFieldOptions(
-        this.internalOptions.model,
-        this.internalOptions.fieldKey,
-      );
-
-      if (!options && (this.internalOptions.model as any)[0])
-        options = getModelFieldOptions(
-          (this.internalOptions.model as any)[0],
-          this.internalOptions.fieldKey,
-        );
-
-      const possibilities = options.possibilities;
-      if (!possibilities || _.isArray(possibilities)) return possibilities;
-
-      this.possibilities.set(
-        Object.keys(possibilities).map((key) => ({
-          id: possibilities[key],
-          text: key,
-          checked: false,
-        })),
-      );
-    }
-  }
 }

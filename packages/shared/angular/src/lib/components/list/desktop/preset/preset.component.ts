@@ -28,6 +28,8 @@ import {
   getListDesktopHeaderCellClasses,
   getListDesktopHeaderRowClasses,
   getListDesktopRowClasses,
+  getListDesktopSortButtonClasses,
+  getListDesktopSortIndicatorClasses,
   getListDesktopTableClasses,
 } from './preset-classes.util';
 import { FileUrlPipe, ListCellPipe, ListHeaderPipe } from '../../../../pipes';
@@ -45,7 +47,10 @@ import { ListDesktopComponent } from '../desktop.component';
  * select, remove/item actions, pagination, image cells) and restyles it with
  * the Preline table look. Styling variations are driven by
  * `options.presentation`: `variant` (default | striped | bordered |
- * borderless), `hoverable`, and `header` (default | muted | none).
+ * borderless), `hoverable`, and `header` (default | muted | none). With
+ * `options.sort` the field headers are sort buttons, with `options.details`
+ * every row gets a details action, and `PaginationMode.infiniteScroll` loads
+ * the next page when the end of the table scrolls into view.
  *
  * Decorator metadata is not inherited, so the full `imports` list is repeated.
  */
@@ -109,4 +114,8 @@ export class ListDesktopPresetComponent<
   );
 
   cellClasses = computed(() => getListDesktopCellClasses());
+
+  protected readonly sortButtonClasses = getListDesktopSortButtonClasses();
+  protected readonly sortIndicatorClasses =
+    getListDesktopSortIndicatorClasses();
 }

@@ -30,6 +30,22 @@ const CONTAINER_BORDER = [
   'smart:dark:border-gray-700',
 ];
 
+const SORT_BUTTON = [
+  'smart:inline-flex',
+  'smart:items-center',
+  'smart:gap-x-1',
+  'smart:uppercase',
+  'smart:font-medium',
+  'smart:text-gray-500',
+  'smart:hover:text-gray-800',
+  'smart:dark:text-gray-400',
+  'smart:dark:hover:text-gray-200',
+  'smart:focus:outline-hidden',
+  'smart:focus-visible:underline',
+];
+
+const SORT_INDICATOR = ['smart:text-gray-400', 'smart:dark:text-gray-500'];
+
 const HEADER_CELL = [
   'smart:px-6',
   'smart:py-3',
@@ -104,6 +120,16 @@ export function getListDesktopHeaderRowClasses(
 
 export function getListDesktopHeaderCellClasses(): string {
   return HEADER_CELL.join(' ');
+}
+
+/** Classes for the button of a sortable header (`options.sort` set). */
+export function getListDesktopSortButtonClasses(): string {
+  return SORT_BUTTON.join(' ');
+}
+
+/** Classes for the sort arrow inside a sortable header. */
+export function getListDesktopSortIndicatorClasses(): string {
+  return SORT_INDICATOR.join(' ');
 }
 
 /**

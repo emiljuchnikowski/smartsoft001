@@ -1,41 +1,49 @@
-<div [class]="containerClasses() + ' ' + cssClass()">
-  @for (group of groups(); track group.id ?? $index) {
+<nav
+  [class]="containerClasses() + ' ' + cssClass()"
+  [attr.aria-label]="options()?.ariaLabel ?? 'Sidebar'"
+>
+  @for (group of groups(); track group.id ?? $index; let groupIndex = $index) {
     @if (group.title) {
-      <div [class]="groupTitleClasses">{{ group.title }}</div>
+      <div [id]="groupTitleId(groupIndex)" [class]="groupTitleClasses">
+        {{ group.title }}
+      </div>
     }
-    <nav
+    <ul
+      role="list"
       [class]="navClasses()"
-      [attr.aria-label]="options()?.ariaLabel ?? 'Sidebar'"
+      [attr.aria-labelledby]="group.title ? groupTitleId(groupIndex) : null"
     >
       @for (item of group.items; track item.id) {
-        @if (item.href) {
-          <a
-            [href]="item.href"
-            [class]="itemClasses(item.current)"
-            [attr.aria-current]="item.current ? 'page' : null"
-          >
-            <ng-container
-              [ngTemplateOutlet]="itemContent"
-              [ngTemplateOutletContext]="{ $implicit: item }"
-            />
-          </a>
-        } @else {
-          <button
-            type="button"
-            [class]="itemClasses(item.current)"
-            [attr.aria-current]="item.current ? 'page' : null"
-            (click)="onItemClick(item.id)"
-          >
-            <ng-container
-              [ngTemplateOutlet]="itemContent"
-              [ngTemplateOutletContext]="{ $implicit: item }"
-            />
-          </button>
-        }
+        <li [class]="listItemClasses">
+          @if (item.href) {
+            <a
+              [href]="item.href"
+              [class]="itemClasses(item.current)"
+              [attr.aria-current]="item.current ? 'page' : null"
+            >
+              <ng-container
+                [ngTemplateOutlet]="itemContent"
+                [ngTemplateOutletContext]="{ $implicit: item }"
+              />
+            </a>
+          } @else {
+            <button
+              type="button"
+              [class]="itemClasses(item.current)"
+              [attr.aria-current]="item.current ? 'page' : null"
+              (click)="onItemClick(item.id)"
+            >
+              <ng-container
+                [ngTemplateOutlet]="itemContent"
+                [ngTemplateOutletContext]="{ $implicit: item }"
+              />
+            </button>
+          }
+        </li>
       }
-    </nav>
+    </ul>
   }
-</div>
+</nav>
 
 <ng-template #itemContent let-item>
   @if (item.iconTpl) {

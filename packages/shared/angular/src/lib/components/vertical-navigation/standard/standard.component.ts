@@ -7,6 +7,8 @@ import {
 
 import { VerticalNavigationBaseComponent } from '../base';
 
+let nextId = 0;
+
 @Component({
   selector: 'smart-vertical-navigation-standard',
   templateUrl: './standard.component.html',
@@ -15,6 +17,12 @@ import { VerticalNavigationBaseComponent } from '../base';
   imports: [NgTemplateOutlet],
 })
 export class VerticalNavigationStandardComponent extends VerticalNavigationBaseComponent {
+  private readonly idPrefix = `smart-vertical-navigation-standard-${nextId++}`;
+
+  protected groupTitleId(groupIndex: number): string {
+    return `${this.idPrefix}-group-${groupIndex}`;
+  }
+
   protected onItemClick(itemId: string): void {
     this.itemClick.emit({ itemId });
   }

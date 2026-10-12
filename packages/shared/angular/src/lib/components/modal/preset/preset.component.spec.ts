@@ -199,4 +199,41 @@ describe('@smartsoft001/shared-angular: ModalPresetComponent', () => {
 
     expect(dialog()?.parentElement?.className).toContain('my-extra-class');
   });
+
+  it('should close only the modal on top when modals are stacked', () => {
+    // Arrange
+    open();
+    const top = TestBed.createComponent(ModalPresetComponent);
+    top.componentRef.setInput('open', true);
+    top.detectChanges();
+
+    // Act
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    fixture.detectChanges();
+    top.detectChanges();
+
+    // Assert
+    expect(top.componentInstance.open()).toBe(false);
+    expect(component.open()).toBe(true);
+    expect(dialog()).not.toBeNull();
+  });
+
+  it('should close the next modal on the next Escape', () => {
+    // Arrange
+    open();
+    const top = TestBed.createComponent(ModalPresetComponent);
+    top.componentRef.setInput('open', true);
+    top.detectChanges();
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    top.detectChanges();
+    fixture.detectChanges();
+
+    // Act
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    fixture.detectChanges();
+
+    // Assert
+    expect(component.open()).toBe(false);
+    expect(dialog()).toBeNull();
+  });
 });

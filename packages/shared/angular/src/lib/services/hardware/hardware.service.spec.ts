@@ -1,62 +1,36 @@
-describe('Placeholder', () => {
-  it('should be fixed during rewrite of components that use ionic', () => {
-    expect(true).toBe(true);
+import { TestBed } from '@angular/core/testing';
+
+import { HardwareService } from './hardware.service';
+
+describe('@smartsoft001/angular: HardwareService', () => {
+  let service: HardwareService;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({ providers: [HardwareService] });
+
+    service = TestBed.inject(HardwareService);
+  });
+
+  it('should report a web platform', () => {
+    expect([service.isMobile, service.isMobileWeb]).toEqual([false, false]);
+  });
+
+  it('should call the callback when the browser goes back', async () => {
+    const callback = jest.fn();
+    await service.onBackButtonClick(callback);
+
+    window.dispatchEvent(new PopStateEvent('popstate'));
+
+    expect(callback).toHaveBeenCalledTimes(1);
+  });
+
+  it('should stop calling the callback once the handle is removed', async () => {
+    const callback = jest.fn();
+    const handle = await service.onBackButtonClick(callback);
+
+    handle.remove();
+    window.dispatchEvent(new PopStateEvent('popstate'));
+
+    expect(callback).not.toHaveBeenCalled();
   });
 });
-
-// import { TestBed } from '@angular/core/testing';
-// import { App } from '@capacitor/app';
-//
-// import { HardwareService } from './hardware.service';
-//
-// describe('angular: HardwareService', () => {
-//   let hardwareService: HardwareService;
-//   let platformMock: any;
-//   let appAddListenerMock: any;
-//
-//   beforeEach(() => {
-//     jest.clearAllMocks();
-//     platformMock = {
-//       is: jest.fn(),
-//     };
-//     appAddListenerMock = jest.fn();
-//     (App as any).addListener = appAddListenerMock;
-//     TestBed.configureTestingModule({
-//       providers: [
-//         HardwareService,
-//         { provide: Platform, useValue: platformMock },
-//       ],
-//     });
-//     hardwareService = TestBed.inject(HardwareService);
-//   });
-//
-//   it('should be created', () => {
-//     expect(hardwareService).toBeTruthy();
-//   });
-//
-//   describe('isMobile', () => {
-//     it('returns true if platform.is("capacitor") returns true', () => {
-//       platformMock.is.mockImplementation(
-//         (type: string) => type === 'capacitor',
-//       );
-//       expect(hardwareService.isMobile).toBe(true);
-//     });
-//     it('returns false if platform.is("capacitor") returns false', () => {
-//       platformMock.is.mockReturnValue(false);
-//       expect(hardwareService.isMobile).toBe(false);
-//     });
-//   });
-//
-//   describe('isMobileWeb', () => {
-//     it('returns true if platform.is("mobileweb") returns true', () => {
-//       platformMock.is.mockImplementation(
-//         (type: string) => type === 'mobileweb',
-//       );
-//       expect(hardwareService.isMobileWeb).toBe(true);
-//     });
-//     it('returns false if platform.is("mobileweb") returns false', () => {
-//       platformMock.is.mockReturnValue(false);
-//       expect(hardwareService.isMobileWeb).toBe(false);
-//     });
-//   });
-// });

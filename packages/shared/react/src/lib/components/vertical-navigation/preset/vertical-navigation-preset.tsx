@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, useId } from 'react';
 
 import {
   getVerticalNavBadgeClasses,
@@ -7,6 +7,7 @@ import {
   getVerticalNavIconClasses,
   getVerticalNavInitialClasses,
   getVerticalNavItemClasses,
+  getVerticalNavListItemClasses,
   getVerticalNavNavClasses,
 } from './preset-classes';
 import { IVerticalNavItem } from '../../../models';
@@ -21,14 +22,16 @@ import { SmartVerticalNavigationProps } from '../vertical-navigation.types';
  * `<SmartVerticalNavigation>`, or render it directly.
  *
  * The Preline vertical-tabs look: each item is a tab with a trailing border,
- * the `current` item gaining the primary border and text accent. Every group
- * renders its own `<nav>`, after its title.
+ * the `current` item gaining the primary border and text accent. One `<nav>`
+ * landmark (`options.ariaLabel`, `'Sidebar'` by default) holds every group; a
+ * group is a list labelled by its title.
  */
 export function SmartVerticalNavigationPreset(
   props: SmartVerticalNavigationProps,
 ) {
   const { options, className } = props;
   const { groups, itemClick } = useVerticalNavigation(props);
+  const id = useId();
 
   const renderContent = (item: IVerticalNavItem) => (
     <>
@@ -45,43 +48,55 @@ export function SmartVerticalNavigationPreset(
   );
 
   return (
-    <div className={cn(getVerticalNavContainerClasses(), className)}>
-      {groups.map((group, index) => (
-        <Fragment key={group.id ?? index}>
-          {group.title && (
-            <div className={getVerticalNavGroupTitleClasses()}>
-              {group.title}
-            </div>
-          )}
-          <nav
-            className={getVerticalNavNavClasses()}
-            aria-label={options?.ariaLabel ?? 'Sidebar'}
-          >
-            {group.items.map((item) =>
-              item.href ? (
-                <SmartNavLink
-                  key={item.id}
-                  href={item.href}
-                  className={getVerticalNavItemClasses(Boolean(item.current))}
-                  aria-current={item.current ? 'page' : undefined}
-                >
-                  {renderContent(item)}
-                </SmartNavLink>
-              ) : (
-                <button
-                  key={item.id}
-                  type="button"
-                  className={getVerticalNavItemClasses(Boolean(item.current))}
-                  aria-current={item.current ? 'page' : undefined}
-                  onClick={() => itemClick(item.id)}
-                >
-                  {renderContent(item)}
-                </button>
-              ),
+    <nav
+      className={cn(getVerticalNavContainerClasses(), className)}
+      aria-label={options?.ariaLabel ?? 'Sidebar'}
+    >
+      {groups.map((group, index) => {
+        const titleId = group.title ? `${id}-group-${index}` : undefined;
+
+        return (
+          <Fragment key={group.id ?? index}>
+            {group.title && (
+              <div id={titleId} className={getVerticalNavGroupTitleClasses()}>
+                {group.title}
+              </div>
             )}
-          </nav>
-        </Fragment>
-      ))}
-    </div>
+            <ul
+              role="list"
+              className={getVerticalNavNavClasses()}
+              aria-labelledby={titleId}
+            >
+              {group.items.map((item) => (
+                <li key={item.id} className={getVerticalNavListItemClasses()}>
+                  {item.href ? (
+                    <SmartNavLink
+                      href={item.href}
+                      className={getVerticalNavItemClasses(
+                        Boolean(item.current),
+                      )}
+                      aria-current={item.current ? 'page' : undefined}
+                    >
+                      {renderContent(item)}
+                    </SmartNavLink>
+                  ) : (
+                    <button
+                      type="button"
+                      className={getVerticalNavItemClasses(
+                        Boolean(item.current),
+                      )}
+                      aria-current={item.current ? 'page' : undefined}
+                      onClick={() => itemClick(item.id)}
+                    >
+                      {renderContent(item)}
+                    </button>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </Fragment>
+        );
+      })}
+    </nav>
   );
 }

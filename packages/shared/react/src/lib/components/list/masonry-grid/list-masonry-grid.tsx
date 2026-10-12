@@ -14,7 +14,8 @@ import { useListFileUrl } from '../use-list';
 /**
  * The masonry-grid list: a grid of tiles with the item's image (the model's
  * first image field, lazy loaded) over its non-image cells, the `top` component
- * factory above it and the paging below it (`PaginationMode.singlePage`).
+ * factory above it and the paging below it (`PaginationMode.singlePage`). With
+ * `options.details` every tile gets a details button.
  */
 export function SmartListMasonryGrid<T extends IEntity<string>>(
   props: SmartListModeProps<T>,
@@ -27,6 +28,7 @@ export function SmartListMasonryGrid<T extends IEntity<string>>(
     keys,
     cellPipe,
     type,
+    detailsHandler,
     page,
     totalPages,
     handlePageChange,
@@ -73,6 +75,16 @@ export function SmartListMasonryGrid<T extends IEntity<string>>(
                   ></p>
                 ) : null;
               })}
+              {detailsHandler ? (
+                <button
+                  type="button"
+                  data-role="details"
+                  className="smart:mt-2 smart:text-sm smart:text-indigo-600 smart:hover:text-indigo-900 smart:dark:text-indigo-400 smart:dark:hover:text-indigo-300"
+                  onClick={() => detailsHandler(item.data)}
+                >
+                  {t('show')}
+                </button>
+              ) : null}
             </div>
           </li>
         ))}

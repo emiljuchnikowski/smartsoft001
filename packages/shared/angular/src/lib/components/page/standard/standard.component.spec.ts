@@ -75,6 +75,31 @@ describe('@smartsoft001/shared-angular: PageStandardComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should apply cssClass to the page root', () => {
+    fixture.componentRef.setInput('options', { title: 'styled' });
+    fixture.componentRef.setInput('cssClass', 'smart:mt-4 page-extra');
+
+    fixture.detectChanges();
+
+    const root = (fixture.nativeElement as HTMLElement).querySelector(
+      ':scope > [data-role="page"]',
+    );
+    expect(root?.classList).toContain('smart:mt-4');
+    expect(root?.classList).toContain('page-extra');
+    expect(root?.querySelector('h2')?.textContent?.trim()).toBe('styled');
+  });
+
+  it('should render the page root without a class by default', () => {
+    fixture.componentRef.setInput('options', { title: 'plain' });
+
+    fixture.detectChanges();
+
+    const root = (fixture.nativeElement as HTMLElement).querySelector(
+      ':scope > [data-role="page"]',
+    );
+    expect(root?.className).toBe('');
+  });
+
   it('should render a header heading with translated title', () => {
     fixture.componentRef.setInput('options', { title: 'my-title' });
     fixture.detectChanges();

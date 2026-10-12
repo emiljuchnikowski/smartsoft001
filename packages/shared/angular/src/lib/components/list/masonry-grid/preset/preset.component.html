@@ -32,6 +32,16 @@
             }
           }
         }
+        @if (detailsHandler) {
+          <button
+            type="button"
+            data-role="details"
+            class="smart:mt-2 smart:py-2 smart:px-3 smart:inline-flex smart:justify-center smart:items-center smart:gap-x-2 smart:text-sm smart:font-medium smart:rounded-lg smart:bg-blue-600 smart:dark:bg-blue-500 smart:text-white smart:hover:bg-blue-700 smart:dark:hover:bg-blue-600 smart:focus:outline-hidden"
+            (click)="detailsHandler?.(item.data)"
+          >
+            {{ 'show' | translate }}
+          </button>
+        }
       </div>
     </li>
   }
@@ -43,4 +53,12 @@
     [totalPages]="totalPages() ?? 1"
     (pageChange)="handlePageChange($event)"
   ></smart-paging>
+}
+
+@if (infiniteScroll()) {
+  <div
+    #infiniteScrollAnchor
+    data-role="infinite-scroll"
+    aria-hidden="true"
+  ></div>
 }

@@ -15,7 +15,8 @@ export const LIST_DESKTOP_STICKY_HEADER_STYLE: CSSProperties = {
 
 /**
  * The desktop table logic: `useList` plus the table columns (`desktopKeys`:
- * `selectMulti`, the keys, `removeAction`, `itemAction`), the multi selection
+ * `selectMulti`, the keys, `detailsAction`, `removeAction`, `itemAction`),
+ * the multi selection
  * reported through `provider.onChangeMultiSelected` and cleared by
  * `provider.onCleanMultiSelected$`, and the `top` component factory.
  */
@@ -23,7 +24,14 @@ export function useListDesktop<T extends IEntity<string>>(
   props: SmartListModeProps<T>,
 ) {
   const base = useList(props);
-  const { provider, selectMode, keys, removeHandler, itemHandler } = base;
+  const {
+    provider,
+    selectMode,
+    keys,
+    detailsHandler,
+    removeHandler,
+    itemHandler,
+  } = base;
   const componentFactories = props.options.componentFactories ?? null;
   const multiSelected = useRef<T[]>([]);
   const onCleanMultiSelected$ = provider?.onCleanMultiSelected$;
@@ -65,10 +73,11 @@ export function useListDesktop<T extends IEntity<string>>(
     () => [
       ...(selectMode === 'multi' ? ['selectMulti'] : []),
       ...keys,
+      ...(detailsHandler ? ['detailsAction'] : []),
       ...(removeHandler ? ['removeAction'] : []),
       ...(itemHandler ? ['itemAction'] : []),
     ],
-    [selectMode, keys, removeHandler, itemHandler],
+    [selectMode, keys, detailsHandler, removeHandler, itemHandler],
   );
 
   return {

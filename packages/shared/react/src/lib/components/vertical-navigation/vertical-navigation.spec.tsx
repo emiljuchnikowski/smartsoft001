@@ -1,4 +1,10 @@
-import { fireEvent, render, renderHook, screen } from '@testing-library/react';
+import {
+  fireEvent,
+  render,
+  renderHook,
+  screen,
+  within,
+} from '@testing-library/react';
 
 import { SmartVerticalNavigationPreset } from './preset/vertical-navigation-preset';
 import { SmartVerticalNavigationStandard } from './standard/vertical-navigation-standard';
@@ -216,6 +222,30 @@ describe('@smartsoft001/react: SmartVerticalNavigation', () => {
       expect(titles[0]).toHaveTextContent('Projects');
     });
 
+    it('should name the list of a group by its title', () => {
+      render(
+        <SmartVerticalNavigationStandard
+          options={{
+            groups: [
+              { id: 'main', items: [{ id: 'a', label: 'A' }] },
+              {
+                id: 'projects',
+                title: 'Projects',
+                items: [{ id: 'p1', label: 'Project 1' }],
+              },
+            ],
+          }}
+        />,
+      );
+
+      const projects = screen.getByRole('list', { name: 'Projects' });
+
+      expect(within(projects).getByRole('button')).toHaveTextContent(
+        'Project 1',
+      );
+      expect(screen.getAllByRole('navigation')).toHaveLength(1);
+    });
+
     it('should render internal links through the navigation linkComponent', () => {
       render(
         <SmartProvider navigation={routerNavigation()}>
@@ -326,10 +356,11 @@ describe('@smartsoft001/react: SmartVerticalNavigation', () => {
       ).toHaveTextContent('icon');
     });
 
-    it('should render a nav per group after its title', () => {
-      const { container } = render(
+    it('should render one navigation landmark for all groups', () => {
+      render(
         <SmartVerticalNavigationPreset
           options={{
+            ariaLabel: 'Project',
             items: [{ id: 'home', label: 'Home' }],
             groups: [
               { title: 'Section', items: [{ id: 'a', label: 'Tab 1' }] },
@@ -338,11 +369,73 @@ describe('@smartsoft001/react: SmartVerticalNavigation', () => {
         />,
       );
 
-      const navs = container.querySelectorAll('nav');
+      const nav = screen.getByRole('navigation');
 
-      expect(navs).toHaveLength(2);
-      expect(navs[1].previousElementSibling).toHaveTextContent('Section');
-      expect(navs[1].previousElementSibling).toHaveClass('smart:uppercase');
+      expect(nav).toHaveAccessibleName('Project');
+      expect(within(nav).getAllByRole('list')).toHaveLength(2);
+    });
+
+    it('should render each group as a list named by its title', () => {
+      render(
+        <SmartVerticalNavigationPreset
+          options={{
+            groups: [
+              {
+                title: 'Workspace',
+                items: [
+                  { id: 'a', label: 'Dashboard', href: '#a' },
+                  { id: 'b', label: 'Team', href: '#b' },
+                ],
+              },
+              { title: 'Account', items: [{ id: 'c', label: 'Settings' }] },
+            ],
+          }}
+        />,
+      );
+
+      const workspace = screen.getByRole('list', { name: 'Workspace' });
+      const account = screen.getByRole('list', { name: 'Account' });
+
+      expect(within(workspace).getAllByRole('listitem')).toHaveLength(2);
+      expect(
+        within(workspace).getByRole('link', { name: 'Team' }),
+      ).toBeInTheDocument();
+      expect(
+        within(account).getByRole('button', { name: 'Settings' }),
+      ).toBeInTheDocument();
+    });
+
+    it('should render the group title before its list with the title classes', () => {
+      render(
+        <SmartVerticalNavigationPreset
+          options={{
+            groups: [
+              { title: 'Section', items: [{ id: 'a', label: 'Tab 1' }] },
+            ],
+          }}
+        />,
+      );
+
+      const list = screen.getByRole('list', { name: 'Section' });
+
+      expect(list.previousElementSibling).toHaveTextContent('Section');
+      expect(list.previousElementSibling).toHaveClass('smart:uppercase');
+      expect(list).toHaveClass('smart:flex', 'smart:space-y-3');
+    });
+
+    it('should leave a group without a title unnamed', () => {
+      render(<SmartVerticalNavigationPreset options={options} />);
+
+      expect(screen.getByRole('list')).not.toHaveAttribute('aria-labelledby');
+    });
+
+    it('should keep the tab classes on the items inside the list items', () => {
+      render(<SmartVerticalNavigationPreset options={options} />);
+
+      const link = screen.getByRole('link', { name: 'Tab 1' });
+
+      expect(link.parentElement).toHaveClass('smart:flex', 'smart:flex-col');
+      expect(link).toHaveClass('smart:border-e-2');
     });
 
     it('should apply className on the container', () => {
