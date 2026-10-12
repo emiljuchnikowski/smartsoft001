@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ModalBaseComponent } from './base/base.component';
 import { ModalComponent } from './modal.component';
+import { ModalPresetComponent } from './preset/preset.component';
 import { MODAL_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
@@ -180,6 +181,51 @@ describe('@smartsoft001/shared-angular: ModalComponent', () => {
 
         expect(fixture.componentInstance.open()).toEqual(true);
       });
+    });
+  });
+
+  describe('bottom-sheet variant', () => {
+    it('should render the standard dialog as a bottom sheet', async () => {
+      await TestBed.configureTestingModule({
+        imports: [ModalComponent],
+      }).compileComponents();
+      const fixture = TestBed.createComponent(ModalComponent);
+      fixture.componentRef.setInput('open', true);
+      fixture.componentRef.setInput('options', { variant: 'bottom-sheet' });
+
+      fixture.detectChanges();
+
+      const dialog = fixture.nativeElement.querySelector(
+        'smart-modal-standard dialog',
+      );
+      expect(dialog.getAttribute('data-variant')).toBe('bottom-sheet');
+      expect(dialog.classList).toContain('smart:bottom-0');
+    });
+
+    it('should render the preset registered through MODAL_STANDARD_COMPONENT_TOKEN as a bottom sheet', async () => {
+      await TestBed.configureTestingModule({
+        imports: [ModalComponent],
+        providers: [
+          {
+            provide: MODAL_STANDARD_COMPONENT_TOKEN,
+            useValue: ModalPresetComponent,
+          },
+        ],
+      }).compileComponents();
+      const fixture = TestBed.createComponent(ModalComponent);
+      fixture.componentRef.setInput('open', true);
+      fixture.componentRef.setInput('options', { variant: 'bottom-sheet' });
+      fixture.componentRef.setInput('class', 'smart-modal-bottom');
+
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      const panel = fixture.nativeElement.querySelector(
+        'smart-modal-preset [role="dialog"]',
+      );
+      expect(panel.classList).toContain('smart:max-h-[85dvh]');
+      expect(panel.parentElement.classList).toContain('smart:bottom-0');
+      expect(panel.parentElement.classList).toContain('smart-modal-bottom');
     });
   });
 

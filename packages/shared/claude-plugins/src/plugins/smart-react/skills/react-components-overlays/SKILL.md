@@ -30,26 +30,27 @@ All from `@smartsoft001/react`.
 
 ### `ToastService` (`useToastService()`)
 
-| Member                                         | What it does                                                                                                                       |
-| ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `info(options: IToastOptions): Promise<void>`  | Queues an info toast.                                                                                                              |
-| `error(options: IToastOptions): Promise<void>` | Queues an error toast (`aria-live="assertive"`), unless an error lock is held.                                                     |
-| `dismiss(id: number): void`                    | Removes a toast.                                                                                                                   |
-| `addLockError()` / `removeLockError()`         | Holds / releases the error lock: while held, error toasts are swallowed (e.g. during a sign-out that makes pending requests fail). |
-| `toasts: SmartStore<IToast[]>`                 | The queue the host renders.                                                                                                        |
+| Member                                         | What it does                                                                                                                                                               |
+| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `info(options: IToastOptions): Promise<void>`  | Queues an info toast (`aria-live="polite"`).                                                                                                                               |
+| `error(options: IToastOptions): Promise<void>` | Queues an error toast (`aria-live="assertive"`), unless an error lock is held.                                                                                             |
+| `dismiss(id: number): void`                    | Removes a toast.                                                                                                                                                           |
+| `addLockError()` / `removeLockError()`         | Holds / releases an error lock (the count never goes below zero): while one is held, error toasts are swallowed (e.g. during a sign-out that makes pending requests fail). |
+| `toasts: SmartStore<IToast[]>`                 | The queue the host renders.                                                                                                                                                |
 
 ```ts
 interface IToastOptions {
   title?: string;
   message: string;
-  /** Milliseconds before the toast closes itself (default 2000). */
+  /** Milliseconds before the toast closes itself; 2000 when missing, zero or negative. */
   duration?: number;
-  // { text: string; position: 'start' | 'end'; handler: () => void }; the host renders them as actions, ignoring `position`
+  // { text: string; position: 'start' | 'end'; handler: () => void }; the host renders them as actions in the given order
+  // (`position` is kept for compatibility); a click runs `handler`, then closes the toast
   buttons?: Array<IToastButton>;
 }
 ```
 
-A toast with a title shows the title as the heading and the message under it; without one, the message is the heading. A toast with buttons renders in the `condensed` notification variant and its buttons as actions.
+A toast with a title shows the title as the heading and the message under it; without one, the message is the heading. Its buttons are the notification's actions: a click runs the button's handler, then closes the toast. A toast without buttons renders in the `simple` notification variant, a message with buttons in `condensed`, and a title with a message and buttons in `with-actions-below`, which keeps the message under the title. A toast closes itself after its duration and on its close button.
 
 ### `AlertService` (`useAlertService()`)
 
@@ -67,7 +68,7 @@ A toast with a title shows the title as the heading and the message under it; wi
 interface IModalServiceOptions {
   component: ComponentType<any>; // receives `props` and a `dismiss(data)` prop
   props?: Record<string, unknown>;
-  mode?: 'default' | 'bottom'; // 'bottom' adds the smart-modal-bottom class
+  mode?: 'default' | 'bottom'; // 'bottom': the bottom-sheet variant, plus the smart-modal-bottom class
   cssClass?: string[]; // joined into the SmartModal className
   backdropDismiss?: boolean; // false: the backdrop and Escape leave it open
 }
@@ -78,7 +79,7 @@ interface IModal {
 }
 ```
 
-`SmartModalHost` renders each request in a `<div data-role="modal" data-mode={mode}>` as `<SmartModal open className options={{ withDismiss: true }} onClosed={() => dismiss()}>` around `<component {...props} dismiss={dismiss} />`, its `className` being `cssClass` plus `smart-modal-bottom` for `mode: 'bottom'`. So every modal shows its close button, and closing the modal by its own controls (close button, backdrop, Escape) resolves `onDidDismiss()` with `{ data: null }`. The modals stack in opening order, the last one on top. With `backdropDismiss: false` a click on the backdrop (outside the `role="dialog"` element) is stopped before the modal sees it, and `ModalService` stops Escape at the document while that modal is on top; the close button and `dismiss()` still close it. `smart-modal-bottom` is a class for the application to style (a sheet docked at the bottom); the modal implementations do not style it.
+`SmartModalHost` renders each request in a `<div data-role="modal" data-mode={mode}>` as `<SmartModal open className options={{ withDismiss: true }} onClosed={() => dismiss()}>` around `<component {...props} dismiss={dismiss} />`, its `className` being `cssClass` plus `smart-modal-bottom` for `mode: 'bottom'`, and its `options` adding `variant: 'bottom-sheet'` for that mode. So every modal shows its close button, and closing the modal by its own controls (close button, backdrop, Escape) resolves `onDidDismiss()` with `{ data: null }`. The modals stack in opening order, the last one on top. With `backdropDismiss: false` a click on the backdrop (outside the `role="dialog"` element) is stopped before the modal sees it, and `ModalService` stops Escape at the document while that modal is on top; the close button and `dismiss()` still close it. `mode: 'bottom'` is a bottom sheet: both `SmartModalStandard` and `SmartModalPreset` dock the `bottom-sheet` variant to the bottom of the viewport, full width up to a max width, with a max height and a scrolling body (see `react-components-modal`); the backdrop, Escape and close button behave as in the other variants. `smart-modal-bottom` stays on the modal for an application's own styling.
 
 ## Usage
 
@@ -172,7 +173,7 @@ A host renders nothing during server-side rendering and until it has mounted, th
 
 ## Styling
 
-- The toast stack is fixed to the bottom of the screen (centred, right-aligned from `sm`), with each toast `max-w-sm`.
+- The toast stack is fixed to the bottom of the screen (centred, right-aligned from `sm`) above the modals (`z-[100]`), with each toast `max-w-sm` and its type in `data-type` (`error` or `info`).
 - Looks come from the registered `notification` / `alert` / `modal` implementations, with their dark-mode variants.
 
 ## File Locations

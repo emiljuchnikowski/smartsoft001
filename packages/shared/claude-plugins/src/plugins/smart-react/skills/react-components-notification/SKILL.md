@@ -74,7 +74,7 @@ Payload of `onActionClick`.
 
 ## Toasts from code
 
-`ToastService` keeps a queue of toasts that the toast host of `SmartProvider` (`SmartToastHost`, part of `SmartOverlays`) renders at the bottom of the screen through `SmartNotification`. A toast closes itself after `duration` ms (2000 by default) or on its close button.
+`ToastService` keeps a queue of toasts that the toast host of `SmartProvider` (`SmartToastHost`, part of `SmartOverlays`) renders at the bottom of the screen through `SmartNotification`. A toast closes itself after `duration` ms (2000 by default), on its close button, or once the handler of one of its buttons ran. Errors are announced assertively, infos politely.
 
 ```tsx
 import { SmartButton, useToastService } from '@smartsoft001/react';

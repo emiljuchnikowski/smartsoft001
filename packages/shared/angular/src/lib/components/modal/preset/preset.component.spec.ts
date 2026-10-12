@@ -177,6 +177,67 @@ describe('@smartsoft001/shared-angular: ModalPresetComponent', () => {
     expect(footer?.className).toContain('smart:bg-gray-50');
   });
 
+  describe('bottom-sheet variant', () => {
+    beforeEach(() => {
+      fixture.componentRef.setInput('options', {
+        variant: 'bottom-sheet',
+        footerStyle: 'gray',
+      });
+      fixture.componentRef.setInput('actions', [{ id: 'ok', label: 'OK' }]);
+      open();
+    });
+
+    it('should dock the wrapper to the bottom of the viewport at full width', () => {
+      const wrapper = dialog()?.parentElement;
+
+      expect(wrapper?.className).toContain('smart:fixed');
+      expect(wrapper?.className).toContain('smart:bottom-0');
+      expect(wrapper?.className).toContain('smart:w-full');
+      expect(wrapper?.className).toContain('smart:sm:max-w-2xl');
+      expect(wrapper?.className).not.toContain('smart:m-3');
+      expect(wrapper?.className).not.toContain('smart:items-center');
+    });
+
+    it('should cap the height of the panel and round its top corners from sm', () => {
+      const panel = dialog();
+
+      expect(panel?.className).toContain('smart:max-h-[85dvh]');
+      expect(panel?.className).toContain('smart:sm:rounded-t-xl');
+      expect(panel?.className).not.toContain('smart:rounded-xl');
+    });
+
+    it('should scroll the body inside the panel', () => {
+      const body = host().querySelector('[role="dialog"] > .smart\\:p-4');
+
+      expect(body?.className).toContain('smart:overflow-y-auto');
+    });
+
+    it('should not round the bottom of the gray footer', () => {
+      const footer = host().querySelector(
+        '[role="dialog"] button',
+      )?.parentElement;
+
+      expect(footer?.className).toContain('smart:bg-gray-50');
+      expect(footer?.className).not.toContain('smart:rounded-b-xl');
+    });
+
+    it('should close on a click on the backdrop', () => {
+      host()
+        .querySelector<HTMLElement>('[role="presentation"]')
+        ?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      fixture.detectChanges();
+
+      expect(component.open()).toBe(false);
+    });
+
+    it('should close on Escape', () => {
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+      fixture.detectChanges();
+
+      expect(component.open()).toBe(false);
+    });
+  });
+
   it('should close when the backdrop is clicked', () => {
     open();
 
