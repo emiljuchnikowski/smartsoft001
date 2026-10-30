@@ -10,7 +10,7 @@
   "main": "./src/index.js",
   "typings": "./src/index.d.ts",
   "dependencies": {
-    "dompurify": "^3.4.16",
+    "dompurify": "^3.4.17",
     "jwt-decode": "^4.0.0",
     "moment": "^2.31.0"
   },
