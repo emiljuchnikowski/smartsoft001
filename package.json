@@ -132,7 +132,7 @@
     "class-validator": "^0.15.1",
     "combined-stream": "^1.0.8",
     "crypto-js": "^4.2.0",
-    "dompurify": "^3.4.16",
+    "dompurify": "^3.4.17",
     "express": "^5.2.1",
     "guid-typescript": "^1.0.9",
     "json2csv": "^6.0.0-alpha.2",
