@@ -73,6 +73,22 @@ export function Layout({ children }: { children: React.ReactNode }) {
   let pathname = usePathname()
   let isHomePage = pathname === '/'
 
+  useEffect(() => {
+    // Let the layout own scrolling when navigating back or forward as well.
+    let previousScrollRestoration = window.history.scrollRestoration
+    window.history.scrollRestoration = 'manual'
+    return () => {
+      window.history.scrollRestoration = previousScrollRestoration
+    }
+  }, [])
+
+  useEffect(() => {
+    // Keep heading links working, but start every other page at the top.
+    if (!window.location.hash) {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+    }
+  }, [pathname])
+
   return (
     <div className="flex w-full flex-col">
       <Header />
