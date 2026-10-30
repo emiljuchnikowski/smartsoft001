@@ -1,3 +1,13 @@
+## 2.206.0 (2026-10-30)
+
+### 🩹 Fixes
+
+- **nx:** scroll docs pages to the top on navigation ([#143](https://github.com/emiljuchnikowski/smartsoft001/pull/143))
+
+### ❤️ Thank You
+
+- Emil Juchnikowski
+
 ## 2.205.0 (2026-10-12)
 
 ### 🚀 Features
