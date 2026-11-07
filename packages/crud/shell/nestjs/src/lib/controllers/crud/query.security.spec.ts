@@ -106,6 +106,31 @@ describe('crud-nestjs: queries sent by the Angular CRUD UI', () => {
     },
   );
 
+  it.each([
+    '48',
+    '007',
+    '1234567890',
+    'true',
+    'false',
+    'Polska',
+    'jan@example.com',
+    '2026-11-07T10:00:00Z',
+    'Kowalski, Jan',
+    '/(a+)+$/',
+  ])('keeps $search as the text that was sent: %s', (text) => {
+    const result = query({ $search: text });
+
+    expect(result.criteria).toEqual({ $search: text });
+  });
+
+  it('rejects an empty $search', () => {
+    expect(() => query({ $search: '' })).toThrow();
+  });
+
+  it('rejects $search sent as an array', () => {
+    expect(() => query({ $search: ['a', 'b'] })).toThrow();
+  });
+
   it('rejects a $search longer than 256 characters', () => {
     expect(() => query({ $search: 'a'.repeat(257) })).toThrow();
   });

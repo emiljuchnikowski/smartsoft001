@@ -154,7 +154,7 @@ export class CrudService<T extends IEntity<string>> {
     let query = '';
 
     if (filter && filter.searchText) {
-      query += '&$search=' + filter.searchText;
+      query += '&$search=' + encodeURIComponent(filter.searchText);
     }
 
     if (filter && filter.limit) {

@@ -156,6 +156,19 @@ describe('crud-shell-angular: CrudService', () => {
       const result = await promise;
       expect(result).toEqual(expectedResponse);
     });
+
+    it('should encode the search text sent as $search', async () => {
+      const filter: ICrudFilter = { searchText: '+48 600&x#1' };
+
+      const promise = service.getList(filter);
+
+      const req = httpMock.expectOne(
+        `${config.apiUrl}?$search=%2B48%20600%26x%231`,
+      );
+      req.flush({ data: [], totalCount: 0, links: {} });
+      await promise;
+      expect(req.request.method).toBe('GET');
+    });
   });
 
   describe('update', () => {

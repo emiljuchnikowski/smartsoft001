@@ -112,6 +112,11 @@ export function parseHttpQuery(
     maxLimit: limits.maxLimit,
     maxOffset: MAX_QUERY_OFFSET,
   });
+  // `$search` is free text, which q2m must not type.
+  const search = query['$search'];
+  if (search !== undefined && search !== '') {
+    result.criteria['$search'] = String(search);
+  }
   for (const [key, item] of Object.entries(result.criteria)) {
     if (key === '$search') {
       if (typeof item !== 'string') invalid();

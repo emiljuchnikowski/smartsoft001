@@ -139,16 +139,16 @@ A few things about the list route are worth knowing before you rely on it. Expor
 
 The query string is checked before it is parsed, and a request outside these bounds is answered with `400 Bad Request`:
 
-| Bound              | Value                                                                                                                             |
-| ------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
-| Operators          | `=`, `!=`, `>`, `>=`, `<`, `<=`, `~=` and repeated keys. No `$` keys other than `$search`, and no `field:op=value` raw operators. |
-| Field names        | Letters, digits and underscores, dotted for nested fields, at most 128 characters. No `__proto__`, `prototype` or `constructor`.  |
-| Values             | Strings, numbers or booleans of at most 1024 characters. A `/regex/` value is refused.                                            |
-| `~=` and `$search` | At most 256 characters, matched literally: the value is escaped before it becomes a regular expression.                           |
-| Repeated keys      | Joined into one `$in`, at most 100 values.                                                                                        |
-| `limit`            | A positive integer, lowered to `maxQueryLimit` (or `maxExportLimit` for an export), which is also the default.                    |
-| `offset`           | An integer from `0` to `10000`. `next` and `last` links beyond it are left out of the response.                                   |
-| The whole query    | At most 4096 encoded characters.                                                                                                  |
+| Bound              | Value                                                                                                                                                                                           |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Operators          | `=`, `!=`, `>`, `>=`, `<`, `<=`, `~=` and repeated keys. No `$` keys other than `$search`, and no `field:op=value` raw operators.                                                               |
+| Field names        | Letters, digits and underscores, dotted for nested fields, at most 128 characters. No `__proto__`, `prototype` or `constructor`.                                                                |
+| Values             | Strings, numbers or booleans of at most 1024 characters. A `/regex/` value is refused.                                                                                                          |
+| `~=` and `$search` | At most 256 characters, matched literally: the value is escaped before it becomes a regular expression. `$search` is always treated as text, so `48`, `007` and `true` are searched as written. |
+| Repeated keys      | Joined into one `$in`, at most 100 values.                                                                                                                                                      |
+| `limit`            | A positive integer, lowered to `maxQueryLimit` (or `maxExportLimit` for an export), which is also the default.                                                                                  |
+| `offset`           | An integer from `0` to `10000`. `next` and `last` links beyond it are left out of the response.                                                                                                 |
+| The whole query    | At most 4096 encoded characters.                                                                                                                                                                |
 
 Raw operators are refused because they reach MongoDB as a `$match` stage, where an operator such as an unescaped `$regex` lets one request keep the database busy: the risk is denial of service. The bounds cap what one request asks for, not what it costs, so index the fields you filter and sort on, scope the data per customer, and set database timeouts and rate limits in the application; counting the matches still reads the whole filtered collection.
 
