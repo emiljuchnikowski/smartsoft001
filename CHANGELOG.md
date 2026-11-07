@@ -1,3 +1,13 @@
+## 2.207.0 (2026-11-07)
+
+### 🩹 Fixes
+
+- **crud:** keep $search as text in the HTTP query ([#145](https://github.com/emiljuchnikowski/smartsoft001/pull/145))
+
+### ❤️ Thank You
+
+- Emil Juchnikowski
+
 ## 2.206.0 (2026-10-30)
 
 ### 🩹 Fixes
