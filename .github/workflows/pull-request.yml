@@ -21,9 +21,11 @@ jobs:
     # their targets set `parallelism: false` and `nx run-many` runs them one
     # after the other. The suite is opt-in through RUN_EXAMPLE_APP_E2E so that
     # `nx run-many -t test` stays runnable on a machine without MongoDB.
+    # mongo:7, not 8: MongoDB 8.x refuses to start on Linux kernels 6.19 to
+    # 7.0.13 (SERVER-121912, tcmalloc and rseq), and the runner image has one.
     services:
       mongo:
-        image: mongo:8
+        image: mongo:7
         ports:
           - 27017:27017
     steps:
