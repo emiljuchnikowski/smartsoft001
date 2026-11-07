@@ -61,6 +61,18 @@ describe('@smartsoft001/crud-shell-react: CrudService', () => {
     );
   });
 
+  it('should encode the search text sent as $search', async () => {
+    const { fetch, service } = setup(
+      () => new Response('{"data":[],"totalCount":0}'),
+    );
+
+    await service.getList({ searchText: '+48 600&x#1' });
+
+    expect(fetch.mock.calls[0][0]).toBe(
+      'http://api/todos?$search=%2B48%20600%26x%231',
+    );
+  });
+
   it('should call the list without a query string for no filter', async () => {
     const { fetch, service } = setup(() => new Response('{"data":[]}'));
 
