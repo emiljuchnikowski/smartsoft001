@@ -19,7 +19,7 @@ The packages are published for current Node.js releases and npm 10 or newer. Che
 
 {% snippet file="install/install.sh" region="prerequisites" /%}
 
-On the consumer side the Angular packages target Angular 22, the React packages React 19, and the backend packages NestJS 11.
+On the consumer side the Angular packages target Angular 22, the React packages React 19, and the backend packages NestJS 12. NestJS 12 is published as ES modules only: Node.js loads it from CommonJS code on its own, but Jest needs `NODE_OPTIONS=--experimental-vm-modules` to load it from a test of a NestJS project. Keep the flag away from Angular test projects, where it makes Jest load Angular's `.mjs` files without the `jest-preset-angular` transform.
 
 ## Where to install
 

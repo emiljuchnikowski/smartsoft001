@@ -7,17 +7,8 @@
   "implicitDependencies": ["crud-shell-angular"],
   "targets": {
     "e2e": {
-      "executor": "@nx/cypress:cypress",
       "options": {
-        "cypressConfig": "packages/crud/shell/angular-e2e/cypress.config.ts",
-        "testingType": "e2e",
-        "devServerTarget": "crud-shell-angular:storybook",
-        "baseUrl": "http://localhost:4401"
-      },
-      "configurations": {
-        "ci": {
-          "devServerTarget": "crud-shell-angular:storybook:ci"
-        }
+        "config-file": "./cypress.config.ts"
       }
     },
     "lint": {

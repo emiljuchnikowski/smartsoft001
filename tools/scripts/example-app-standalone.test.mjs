@@ -460,6 +460,16 @@ describe('createStandaloneApp', () => {
         inputs: ['default', '^default', '{workspaceRoot}/jest.preset.js'],
         options: { passWithNoTests: true },
       },
+      {
+        filter: { plugin: '@nx/jest/plugin', projects: ['*api'] },
+        options: {
+          env: {
+            NODE_OPTIONS: '--experimental-vm-modules',
+            TS_NODE_COMPILER_OPTIONS:
+              '{"moduleResolution":"node10","module":"commonjs","customConditions":null}',
+          },
+        },
+      },
     ]);
     assert.deepEqual(
       nx.plugins.map((entry) => entry.plugin),
