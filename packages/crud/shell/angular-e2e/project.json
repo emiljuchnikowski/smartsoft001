@@ -21,12 +21,9 @@
       }
     },
     "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": [
-          "packages/crud/shell/angular-e2e/**/*.{ts,tsx,js,jsx}"
-        ]
+        "args": ["\"**/*.{ts,tsx,js,jsx}\""],
+        "command": "eslint"
       }
     }
   }

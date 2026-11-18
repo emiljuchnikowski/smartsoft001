@@ -15,16 +15,6 @@
         "assets": ["packages/shared/utils/*.md"]
       }
     },
-    "lint": {
-      "executor": "@nx/eslint:lint"
-    },
-    "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
-      "options": {
-        "jestConfig": "packages/shared/utils/jest.config.ts"
-      }
-    },
     "nx-release-publish": {
       "options": {
         "packageRoot": "dist/{projectRoot}"
@@ -32,11 +22,11 @@
     },
     "deploy": {
       "executor": "ngx-deploy-npm:deploy",
+      "dependsOn": ["build"],
       "options": {
         "access": "public",
         "distFolderPath": "dist/packages/shared/utils"
-      },
-      "dependsOn": ["build"]
+      }
     }
   }
 }

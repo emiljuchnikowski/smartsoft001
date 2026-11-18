@@ -5,20 +5,9 @@
   "projectType": "library",
   "targets": {
     "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": [
-          "packages/auth/domain/**/*.{ts,tsx,js,jsx}",
-          "packages/auth/domain/package.json"
-        ]
-      }
-    },
-    "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/packages/auth/domain"],
-      "options": {
-        "jestConfig": "packages/auth/domain/jest.config.ts"
+        "args": ["\"**/*.{ts,tsx,js,jsx}\"", "package.json"],
+        "command": "eslint"
       }
     },
     "nx-release-publish": {
@@ -38,11 +27,11 @@
     },
     "deploy": {
       "executor": "ngx-deploy-npm:deploy",
+      "dependsOn": ["build"],
       "options": {
         "access": "public",
         "distFolderPath": "dist/packages/auth/domain"
-      },
-      "dependsOn": ["build"]
+      }
     }
   }
 }

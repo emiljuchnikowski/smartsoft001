@@ -23,9 +23,9 @@
       }
     },
     "lint": {
-      "executor": "@nx/eslint:lint",
       "options": {
-        "lintFilePatterns": ["docs/examples/app/apps/web-e2e/**/*.{ts,mjs}"]
+        "args": ["\"**/*.{ts,mjs}\""],
+        "command": "eslint"
       }
     }
   }

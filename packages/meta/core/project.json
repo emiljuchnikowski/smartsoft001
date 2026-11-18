@@ -21,16 +21,6 @@
         "command": "node packages/meta/core/build.mjs"
       }
     },
-    "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
-      "options": {
-        "jestConfig": "packages/meta/core/jest.config.ts"
-      }
-    },
-    "lint": {
-      "executor": "@nx/eslint:lint"
-    },
     "nx-release-publish": {
       "options": {
         "packageRoot": "dist/{projectRoot}"

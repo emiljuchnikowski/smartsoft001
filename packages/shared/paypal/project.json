@@ -7,21 +7,16 @@
   "generators": {},
   "targets": {
     "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": [
-          "packages/shared/paypal/**/*.{ts,tsx,js,jsx}",
-          "packages/shared/paypal/package.json"
-        ]
+        "args": ["\"**/*.{ts,tsx,js,jsx}\"", "package.json"],
+        "command": "eslint"
       }
     },
     "test": {
-      "executor": "@nx/jest:jest",
-      "options": {
-        "jestConfig": "packages/shared/paypal/jest.config.ts"
-      },
-      "outputs": ["{workspaceRoot}/coverage/packages/shared/paypal"]
+      "outputs": [
+        "{workspaceRoot}/coverage/packages/shared/paypal",
+        "{workspaceRoot}/coverage/libs/shared/paypal"
+      ]
     },
     "build": {
       "executor": "@nx/js:tsc",
@@ -40,11 +35,11 @@
     },
     "deploy": {
       "executor": "ngx-deploy-npm:deploy",
+      "dependsOn": ["build"],
       "options": {
         "access": "public",
         "distFolderPath": "dist/packages/shared/paypal"
-      },
-      "dependsOn": ["build"]
+      }
     }
   }
 }

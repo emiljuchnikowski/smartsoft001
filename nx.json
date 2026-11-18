@@ -13,28 +13,6 @@
     "build": {
       "cache": true
     },
-    "@nx/jest:jest": {
-      "inputs": ["default", "^default", "{workspaceRoot}/jest.preset.js"],
-      "cache": true,
-      "options": {
-        "passWithNoTests": true
-      },
-      "configurations": {
-        "ci": {
-          "ci": true,
-          "codeCoverage": true
-        }
-      }
-    },
-    "@nx/eslint:lint": {
-      "inputs": [
-        "default",
-        "^default",
-        "{workspaceRoot}/eslint.config.mjs",
-        "{workspaceRoot}/tools/eslint-rules/**/*"
-      ],
-      "cache": true
-    },
     "@nx/js:tsc": {
       "cache": true,
       "dependsOn": ["^build"],
@@ -53,7 +31,23 @@
         "{projectRoot}/.storybook/**/*",
         "{projectRoot}/tsconfig.storybook.json"
       ]
-    }
+    },
+    "test": [
+      {
+        "filter": {
+          "plugin": "@nx/jest/plugin"
+        },
+        "configurations": {
+          "ci": {
+            "ci": true,
+            "coverage": true
+          }
+        },
+        "options": {
+          "passWithNoTests": true
+        }
+      }
+    ]
   },
   "nxCloudAccessToken": "NGUyN2ZlZDktZjIyNi00MTUyLWJkOTQtZjM3NzI3NTg0ZGZifHJlYWQtd3JpdGU=",
   "useInferencePlugins": false,
@@ -85,5 +79,111 @@
       "style": "scss"
     }
   },
-  "analytics": false
+  "analytics": false,
+  "affected": {
+    "legacy": true
+  },
+  "plugins": [
+    {
+      "plugin": "@nx/eslint/plugin",
+      "options": {
+        "targetName": "lint"
+      },
+      "include": [
+        "eslint.config.mjs",
+        "docs/examples/angular/**/*",
+        "docs/examples/app/apps/api/**/*",
+        "docs/examples/app/apps/web/**/*",
+        "docs/examples/app/apps/web-e2e/**/*",
+        "docs/examples/app/apps/web-react/**/*",
+        "docs/examples/app/libs/model/**/*",
+        "docs/examples/node/**/*",
+        "docs/examples/react/**/*",
+        "packages/auth/domain/**/*",
+        "packages/auth/shell/app-services/**/*",
+        "packages/auth/shell/dtos/**/*",
+        "packages/auth/shell/nestjs/**/*",
+        "packages/crud/domain/**/*",
+        "packages/crud/shell/angular/**/*",
+        "packages/crud/shell/angular-e2e/**/*",
+        "packages/crud/shell/app-services/**/*",
+        "packages/crud/shell/dtos/**/*",
+        "packages/crud/shell/nestjs/**/*",
+        "packages/crud/shell/react/**/*",
+        "packages/meta/core/**/*",
+        "packages/shared/angular/**/*",
+        "packages/shared/claude-plugins/**/*",
+        "packages/shared/domain-core/**/*",
+        "packages/shared/fb/**/*",
+        "packages/shared/google/**/*",
+        "packages/shared/models/**/*",
+        "packages/shared/mongo/**/*",
+        "packages/shared/nestjs/**/*",
+        "packages/shared/paynow/**/*",
+        "packages/shared/paypal/**/*",
+        "packages/shared/payu/**/*",
+        "packages/shared/react/**/*",
+        "packages/shared/revolut/**/*",
+        "packages/shared/users/**/*",
+        "packages/shared/utils/**/*",
+        "packages/trans/domain/**/*",
+        "packages/trans/shell/app-services/**/*",
+        "packages/trans/shell/dtos/**/*",
+        "packages/trans/shell/nestjs/**/*"
+      ]
+    },
+    {
+      "plugin": "@nx/jest/plugin",
+      "options": {
+        "targetName": "test"
+      },
+      "include": [
+        "docs/examples/angular/**/*",
+        "docs/examples/app/apps/api/**/*",
+        "docs/examples/app/apps/web/**/*",
+        "docs/examples/app/apps/web-react/**/*",
+        "docs/examples/app/libs/model/**/*",
+        "docs/examples/node/**/*",
+        "docs/examples/react/**/*",
+        "packages/auth/domain/**/*",
+        "packages/auth/shell/app-services/**/*",
+        "packages/auth/shell/dtos/**/*",
+        "packages/auth/shell/nestjs/**/*",
+        "packages/crud/domain/**/*",
+        "packages/crud/shell/angular/**/*",
+        "packages/crud/shell/app-services/**/*",
+        "packages/crud/shell/dtos/**/*",
+        "packages/crud/shell/nestjs/**/*",
+        "packages/crud/shell/react/**/*",
+        "packages/meta/core/**/*",
+        "packages/shared/angular/**/*",
+        "packages/shared/domain-core/**/*",
+        "packages/shared/fb/**/*",
+        "packages/shared/google/**/*",
+        "packages/shared/models/**/*",
+        "packages/shared/mongo/**/*",
+        "packages/shared/nestjs/**/*",
+        "packages/shared/paynow/**/*",
+        "packages/shared/paypal/**/*",
+        "packages/shared/payu/**/*",
+        "packages/shared/react/**/*",
+        "packages/shared/revolut/**/*",
+        "packages/shared/users/**/*",
+        "packages/shared/utils/**/*",
+        "packages/trans/domain/**/*",
+        "packages/trans/shell/app-services/**/*",
+        "packages/trans/shell/dtos/**/*",
+        "packages/trans/shell/nestjs/**/*"
+      ]
+    },
+    {
+      "plugin": "@nx/webpack/plugin",
+      "options": {
+        "buildTargetName": "build",
+        "previewTargetName": "preview",
+        "serveStaticTargetName": "serve-static",
+        "serveTargetName": "serve"
+      }
+    }
+  ]
 }

@@ -237,11 +237,33 @@ export function createStandaloneApp({ repoRoot, target, packages }) {
     useInferencePlugins: false,
     targetDefaults: {
       build: { cache: true },
-      '@nx/jest:jest': {
-        cache: true,
-        options: { passWithNoTests: true },
-      },
+      test: [
+        {
+          filter: { plugin: '@nx/jest/plugin' },
+          // The inferred inputs list every package `jest.preset.js` maps,
+          // `@angular/platform-browser-dynamic` among them, which the copy
+          // does not install, and Nx refuses to hash a missing package.
+          inputs: ['default', '^default', '{workspaceRoot}/jest.preset.js'],
+          options: { passWithNoTests: true },
+        },
+      ],
     },
+    // Nx 24 removed the ESLint, Jest and webpack executors: the copied
+    // `project.json` files keep only overrides, and these plugins infer the
+    // `lint`, `test` and API `build` targets, as the monorepo's do.
+    plugins: [
+      { plugin: '@nx/eslint/plugin', options: { targetName: 'lint' } },
+      { plugin: '@nx/jest/plugin', options: { targetName: 'test' } },
+      {
+        plugin: '@nx/webpack/plugin',
+        options: {
+          buildTargetName: 'build',
+          previewTargetName: 'preview',
+          serveStaticTargetName: 'serve-static',
+          serveTargetName: 'serve',
+        },
+      },
+    ],
   });
   writeJson(
     path.join(target, 'tsconfig.base.json'),

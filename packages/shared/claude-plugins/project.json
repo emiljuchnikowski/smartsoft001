@@ -1,7 +1,9 @@
 {
-  "root": "packages/shared/claude-plugins",
+  "name": "shared-claude-plugins",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/shared/claude-plugins/src",
   "projectType": "library",
+  "tags": [],
   "targets": {
     "nx-release-publish": {
       "options": {
@@ -44,11 +46,6 @@
         "generatePackageJson": true,
         "additionalEntryPoints": []
       }
-    },
-    "lint": {
-      "executor": "@nx/eslint:lint"
     }
-  },
-  "tags": [],
-  "name": "shared-claude-plugins"
+  }
 }
