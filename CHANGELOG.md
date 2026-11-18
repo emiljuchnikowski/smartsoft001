@@ -1,3 +1,13 @@
+## 2.208.0 (2026-11-18)
+
+### 🩹 Fixes
+
+- **crud:** run the Cypress e2e through @nx/cypress/plugin ([d0ddc2f6](https://github.com/emiljuchnikowski/smartsoft001/commit/d0ddc2f6))
+
+### ❤️ Thank You
+
+- Emil Juchnikowski
+
 ## 2.207.0 (2026-11-07)
 
 ### 🩹 Fixes
