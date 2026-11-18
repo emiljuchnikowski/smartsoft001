@@ -16,7 +16,8 @@ test('fenceNode renders the code of a block with its language', () => {
   const block = render(['```ts', 'const answer = 42', '```'].join('\n'))
 
   assert.equal(block.name, 'Fence')
-  assert.deepEqual(block.attributes, { language: 'ts' })
+  // Markdoc 0.5.13 builds attributes on a null prototype; compare the values.
+  assert.deepEqual({ ...block.attributes }, { language: 'ts' })
   assert.deepEqual(block.children, ['const answer = 42\n'])
 })
 

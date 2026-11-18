@@ -31,8 +31,7 @@ export function readAttachment(
       return;
     }
     const chunks: Buffer[] = [];
-    let info:
-      { filename: string; mimeType: string; encoding: string } | undefined;
+    let info: busboy.FileInfo | undefined;
     let settled = false;
     const aborted = () => fail(new BadRequestException('Upload interrupted'));
     const cleanup = () => {
@@ -76,7 +75,10 @@ export function readAttachment(
       cleanup();
       resolve({
         data: Buffer.concat(chunks),
-        fileName: info.filename,
+        // @types/busboy 1.5.5 types the name as optional: busboy leaves it out
+        // for a part that is a file only through application/octet-stream.
+        // The value is passed on as it always was.
+        fileName: info.filename as string,
         mimeType: info.mimeType,
         encoding: info.encoding,
       });
