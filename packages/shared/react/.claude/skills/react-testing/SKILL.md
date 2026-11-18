@@ -21,7 +21,7 @@ Unit tests of `packages/shared/react` and `packages/crud/shell/react`. The repos
 
 ## Set-up
 
-- Jest 30 through `@nx/jest:jest`, `ts-jest`, `testEnvironment: 'jsdom'` (`jest.config.ts` of each project).
+- Jest 30 through the `test` target inferred by `@nx/jest/plugin`, `ts-jest`, `testEnvironment: 'jsdom'` (`jest.config.ts` of each project).
 - `src/test-setup.ts` imports `reflect-metadata` (the model decorators need it) and `@testing-library/jest-dom` (the `toBeInTheDocument`, `toHaveClass`, `toBeDisabled`, `toBeChecked`, `toHaveTextContent`, `toHaveAttribute` matchers).
 - `@testing-library/react` provides `render`, `screen`, `fireEvent`, `act`, `renderHook`, `waitFor`, `within`. Events are fired with `fireEvent`; `@testing-library/user-event` is not a dependency of the workspace.
 

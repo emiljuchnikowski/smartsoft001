@@ -3,7 +3,7 @@
 Generate the library then patch it to the generic skeleton below. Substitute `<PREFIX>`.
 
 ```bash
-npx nx g @nx/angular:library shared/angular \
+npx nx g @nx/angular:library libs/shared/angular --name=shared-angular \
   --prefix=smart-<PREFIX> --unitTestRunner=jest --linter=eslint \
   --buildable --interactive=false
 ```
@@ -12,7 +12,10 @@ The base lib exports ONLY the SSR environment infra (`environment` + `Environmen
 NO feature UI components/services/models/pipes/interceptors/directives — `lib/` folders are
 empty placeholders the module skills fill in later.
 
-> The reference's generated `ng-package.json` `dest` and `jest.config.ts` `coverageDirectory`
+> The positional argument is the project directory (Nx ≥ 20), so pass the full `libs/shared/angular`
+> path and the project name separately.
+>
+> The reference's generated `ng-package.json` `dest` and `jest.config.cts` `coverageDirectory`
 > point at `packages/shared/angular` (a generator leftover). Normalize both to
 > `libs/shared/angular` as shown below.
 
@@ -137,6 +140,10 @@ Create empty dirs with a `.gitkeep` each (the module skills populate them):
 
 ## `libs/shared/angular/project.json` (overwrite)
 
+`lint` and `test` are inferred by the `@nx/eslint/plugin` and `@nx/jest/plugin` entries in
+`nx.json` from `eslint.config.mjs` and `jest.config.cts` (Nx 24 removed the `@nx/eslint:lint` and
+`@nx/jest:jest` executors), so only `build` and the Storybook targets are declared.
+
 ```json
 {
   "name": "shared-angular",
@@ -146,24 +153,6 @@ Create empty dirs with a `.gitkeep` each (the module skills populate them):
   "prefix": "smart-<PREFIX>",
   "tags": [],
   "targets": {
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "options": {
-        "lintFilePatterns": [
-          "libs/shared/angular/src/**/*.ts",
-          "libs/shared/angular/src/**/*.html"
-        ]
-      }
-    },
-    "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/libs/shared/angular"],
-      "options": {
-        "jestConfig": "libs/shared/angular/jest.config.ts",
-        "passWithNoTests": true,
-        "tsConfig": "libs/shared/angular/tsconfig.spec.json"
-      }
-    },
     "build": {
       "executor": "@nx/angular:package",
       "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
@@ -181,6 +170,11 @@ Create empty dirs with a `.gitkeep` each (the module skills populate them):
     },
     "storybook": {
       "executor": "@storybook/angular:start-storybook",
+      "continuous": true,
+      "readyWhen": {
+        "port": "{env.SBCONFIG_PORT ?? options.port ?? 9009}",
+        "host": "{env.SBCONFIG_HOSTNAME ?? options.host ?? localhost}"
+      },
       "options": {
         "port": 4400,
         "configDir": "libs/shared/angular/.storybook",
@@ -223,10 +217,10 @@ Create empty dirs with a `.gitkeep` each (the module skills populate them):
 }
 ```
 
-## `libs/shared/angular/jest.config.ts` (overwrite — normalized paths)
+## `libs/shared/angular/jest.config.cts` (overwrite — normalized paths)
 
 ```ts
-export default {
+module.exports = {
   displayName: 'angular',
   preset: '../../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
