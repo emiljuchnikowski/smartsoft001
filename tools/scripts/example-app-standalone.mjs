@@ -246,19 +246,6 @@ export function createStandaloneApp({ repoRoot, target, packages }) {
           inputs: ['default', '^default', '{workspaceRoot}/jest.preset.js'],
           options: { passWithNoTests: true },
         },
-        {
-          // NestJS 12 ships ES modules only, and Jest can `require()` them
-          // only with Node's VM modules. The Angular app must not get the
-          // flag: it would make Jest load Angular's `.mjs` files untransformed.
-          filter: { plugin: '@nx/jest/plugin', projects: ['*api'] },
-          options: {
-            env: {
-              NODE_OPTIONS: '--experimental-vm-modules',
-              TS_NODE_COMPILER_OPTIONS:
-                '{"moduleResolution":"node10","module":"commonjs","customConditions":null}',
-            },
-          },
-        },
       ],
     },
     // Nx 24 removed the ESLint, Jest and webpack executors: the copied

@@ -19,9 +19,9 @@
     "nestjs"
   ],
   "peerDependencies": {
-    "@nestjs/common": "^12.5.1",
-    "@nestjs/jwt": "^12.0.5",
-    "@nestjs/typeorm": "^12.0.3",
+    "@nestjs/common": "^11.1.5",
+    "@nestjs/jwt": "^11.0.0",
+    "@nestjs/typeorm": "^11.0.0",
     "@smartsoft001/domain-core": "2.207.0",
     "@smartsoft001/fb": "2.207.0",
     "@smartsoft001/google": "2.207.0",

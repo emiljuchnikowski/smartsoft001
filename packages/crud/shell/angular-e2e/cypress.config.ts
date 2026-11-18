@@ -7,18 +7,13 @@ import { defineConfig } from 'cypress';
  * The suite drives the already-published Storybook stories of
  * `crud-shell-angular` and stubs every REST call with `cy.intercept`, so no
  * real backend is required. The dev server (Storybook) is started by the
- * `webServerCommands` of the Nx preset (the `e2e` target is inferred by
- * `@nx/cypress/plugin`) and serves on port 4401 (see `crud-shell-angular`'s
- * `storybook` target), hence the matching `baseUrl` below.
+ * `@nx/cypress:cypress` executor via `devServerTarget` and serves on port 4401
+ * (see `crud-shell-angular`'s `storybook` target), hence the matching
+ * `baseUrl` below.
  */
 export default defineConfig({
   e2e: {
     ...nxE2EPreset(__filename, {
-      ciWebServerCommand: 'npx nx run crud-shell-angular:storybook:ci',
-      webServerCommands: {
-        default: 'npx nx run crud-shell-angular:storybook',
-        ci: 'npx nx run crud-shell-angular:storybook:ci',
-      },
       cypressDir: 'src',
       bundler: 'webpack',
     }),

@@ -20,8 +20,8 @@
   "author": "Emil Juchnikowski",
   "license": "MIT",
   "peerDependencies": {
-    "@nestjs/common": "^12.5.1",
-    "@nestjs/core": "^12.5.1",
+    "@nestjs/common": "^11.1.5",
+    "@nestjs/core": "^11.2.1",
     "@smartsoft001/auth-domain": "2.207.0",
     "@smartsoft001/utils": "2.207.0",
     "express": "^5.2.1"

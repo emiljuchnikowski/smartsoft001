@@ -290,7 +290,7 @@ export function createBrowserRef(chromium) {
         const dying = browser;
 
         try {
-          dying?.process?.()?.kill('SIGKILL');
+          dying?.process()?.kill('SIGKILL');
         } catch {
           // The process may already be gone; the relaunch below is what counts.
         }
@@ -308,7 +308,7 @@ export function createBrowserRef(chromium) {
       if (!browser) return;
 
       if (!(await closeQuietly(browser))) {
-        browser.process?.()?.kill('SIGKILL');
+        browser.process()?.kill('SIGKILL');
       }
     },
   };
