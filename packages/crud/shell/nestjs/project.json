@@ -7,26 +7,10 @@
   "generators": {},
   "targets": {
     "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": [
-          "packages/crud/shell/nestjs/**/*.{ts,tsx,js,jsx}",
-          "packages/crud/shell/nestjs/package.json"
-        ],
-        "tsConfig": [
-          "packages/crud/shell/nestjs/tsconfig.lib.json",
-          "packages/crud/shell/nestjs/tsconfig.spec.json"
-        ]
+        "args": ["\"**/*.{ts,tsx,js,jsx}\"", "package.json"],
+        "command": "eslint"
       }
-    },
-    "test": {
-      "executor": "@nx/jest:jest",
-      "options": {
-        "jestConfig": "packages/crud/shell/nestjs/jest.config.ts",
-        "passWithNoTests": true
-      },
-      "outputs": ["{workspaceRoot}/coverage/packages/crud/shell/nestjs"]
     },
     "nx-release-publish": {
       "options": {

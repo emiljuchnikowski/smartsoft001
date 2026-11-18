@@ -13,7 +13,12 @@ this base-app↔base-lib coupling is intentional generic SSR infra.
 ## `apps/web/project.json` (overwrite)
 
 Drop feature `scripts` (e.g. masonry) and prod `fileReplacements` only if the base lib provides
-`environment.prod.ts` (it does — keep the fileReplacement). Keep build/serve/test/lint/serve-static.
+`environment.prod.ts` (it does — keep the fileReplacement). Keep build/serve/extract-i18n/serve-static.
+
+`lint` and `test` are **not** declared here: since Nx 24 removed the `@nx/eslint:lint` and
+`@nx/jest:jest` executors, they are inferred by the `@nx/eslint/plugin` and `@nx/jest/plugin`
+entries in `nx.json` (see `patch-delta.md`) from `apps/web/eslint.config.mjs` and
+`apps/web/jest.config.cts`. Check them with `npx nx show project web`.
 
 ```json
 {
@@ -73,6 +78,7 @@ Drop feature `scripts` (e.g. masonry) and prod `fileReplacements` only if the ba
     },
     "serve": {
       "continuous": true,
+      "readyWhen": { "signal": true },
       "executor": "@angular/build:dev-server",
       "options": { "port": 4210 },
       "configurations": {
@@ -85,17 +91,10 @@ Drop feature `scripts` (e.g. masonry) and prod `fileReplacements` only if the ba
       "executor": "@angular/build:extract-i18n",
       "options": { "buildTarget": "web:build" }
     },
-    "lint": { "executor": "@nx/eslint:lint" },
-    "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
-      "options": {
-        "jestConfig": "apps/web/jest.config.ts",
-        "tsConfig": "apps/web/tsconfig.spec.json"
-      }
-    },
     "serve-static": {
       "continuous": true,
+      "readyWhen": { "signal": true },
+      "dependsOn": ["build"],
       "executor": "@nx/web:file-server",
       "options": {
         "buildTarget": "web:build",
@@ -397,9 +396,9 @@ export class App {}
 
 `apps/web/src/styles.scss`, `apps/web/src/index.html`, `apps/web/src/test-setup.ts`,
 `apps/web/src/app/app.scss`, `apps/web/tsconfig.app.json`, `apps/web/tsconfig.spec.json`,
-`apps/web/tsconfig.json`, `apps/web/eslint.config.mjs`, `apps/web/jest.config.ts`,
+`apps/web/tsconfig.json`, `apps/web/eslint.config.mjs`, `apps/web/jest.config.cts`,
 `apps/web/public/**`.
 
-> If `apps/web/jest.config.ts` carries a feature `moduleNameMapper` or a feature-scoped
+> If `apps/web/jest.config.cts` carries a feature `moduleNameMapper` or a feature-scoped
 > `transformIgnorePatterns` entry, strip it to a generic
 > `transformIgnorePatterns: ['node_modules/(?!.*\\.mjs$)']`.

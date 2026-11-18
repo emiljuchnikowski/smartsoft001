@@ -454,9 +454,16 @@ describe('createStandaloneApp', () => {
     assert.equal(nx.extends, 'nx/presets/npm.json');
     assert.equal(nx.useInferencePlugins, false);
     assert.equal(nx.targetDefaults.build.cache, true);
-    assert.equal(
-      nx.targetDefaults['@nx/jest:jest'].options.passWithNoTests,
-      true,
+    assert.deepEqual(nx.targetDefaults.test, [
+      {
+        filter: { plugin: '@nx/jest/plugin' },
+        inputs: ['default', '^default', '{workspaceRoot}/jest.preset.js'],
+        options: { passWithNoTests: true },
+      },
+    ]);
+    assert.deepEqual(
+      nx.plugins.map((entry) => entry.plugin),
+      ['@nx/eslint/plugin', '@nx/jest/plugin', '@nx/webpack/plugin'],
     );
     assert.deepEqual(Object.keys(tsconfig.compilerOptions.paths), [
       '@app/model',

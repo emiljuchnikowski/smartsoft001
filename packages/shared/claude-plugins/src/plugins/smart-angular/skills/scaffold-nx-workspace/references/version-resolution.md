@@ -5,9 +5,9 @@ from it. Resolve it at run time so a scaffold always matches the smartsoft libra
 
 Placeholders produced here and consumed by the other references:
 
-- `<NG_VERSION>` — the confirmed Angular version (e.g. `21.2.4`).
-- `<NG_MAJOR>` — its major (e.g. `21`).
-- `<NX_LINE>` — the Nx version range to scaffold with (e.g. `^22`).
+- `<NG_VERSION>` — the confirmed Angular version (e.g. `22.2.2`).
+- `<NG_MAJOR>` — its major (e.g. `22`).
+- `<NX_LINE>` — the Nx version range to scaffold with (e.g. `^24`).
 - `<NODE_VERSION>` — the Node version for `.nvmrc` (e.g. `24.5.0`).
 
 ## 1. Detect the Angular version the smartsoft library targets
@@ -26,7 +26,7 @@ node -p "(p=>p.peerDependencies?.['@angular/core']||p.dependencies?.['@angular/c
 Resolve the range to a concrete version and take its major:
 
 ```bash
-# highest published Angular matching the detected range, e.g. ^21.0.0 -> 21.2.4
+# highest published Angular matching the detected range, e.g. ^22.1.3 -> 22.2.x
 npm view "@angular/core@<detected-range>" version | tail -1
 ```
 
@@ -44,14 +44,33 @@ Use `AskUserQuestion`:
 Whatever the user confirms becomes `<NG_VERSION>` / `<NG_MAJOR>`. If they override to a different
 major, all derived values below recompute from the new major.
 
-## 3. Derive the rest from the Angular major
+## 3. Derive the rest from the Angular version
 
-- **Nx line `<NX_LINE>` = `^<NG_MAJOR + 1>`.** Nx's major tracks Angular's major + 1
-  (Angular 21 → Nx 22, Angular 20 → Nx 21, Angular 19 → Nx 20, …). Verify the line resolves:
+- **Nx line `<NX_LINE>` = `^<NX_MAJOR>`, the latest stable Nx major that supports `<NG_VERSION>`.**
+  Source: the Nx documentation's Angular/Nx version matrix,
+  <https://nx.dev/docs/kb/angular-nx-version-matrix> (checked 2026-11-18). It states that the latest Nx
+  release supports Angular's actively supported versions (current and LTS), recommends the latest Nx
+  for them, and gives the minimum Nx per Angular minor:
+
+  | Angular   | Nx (range)          |
+  | --------- | ------------------- |
+  | `~22.2.0` | `>=24.0.0 <=latest` |
+  | `~22.1.0` | `>=23.2.0 <=latest` |
+  | `~22.0.0` | `>=23.1.0 <=latest` |
+  | `~21.2.0` | `>=22.6.0 <=latest` |
+
+  So the Nx major is **not** "Angular major + 1": Angular 22.2 needs Nx 24, which is what this
+  framework uses (Angular 22.2, Nx 24.0.6). Resolve it at run time:
 
   ```bash
-  npm view "nx@<NX_LINE>" version | tail -1
+  npm view nx version                                          # latest stable, e.g. 24.0.6 -> <NX_MAJOR> = 24
+  npm view "@nx/angular@^<NX_MAJOR>" peerDependencies.@angular/build | tail -1   # e.g. >= 20.0.0 < 23.0.0
   ```
+
+  `<NG_VERSION>` must fall inside that `@angular/build` peer range **and** the matrix row for its
+  minor must allow the resolved Nx. If the latest Nx no longer supports `<NG_VERSION>` (an Angular
+  older than the current LTS), take the highest Nx major whose matrix range and `@nx/angular` peer
+  range both cover it.
 
   `create-nx-workspace@<NX_LINE>` then scaffolds the matching Angular line and a compatible
   jest / eslint / typescript / playwright / swc / esbuild toolchain. **Do not pin those** — keep
@@ -79,5 +98,5 @@ major, all derived values below recompute from the new major.
 ## Summary
 
 The only thing this skill decides is the _shape_ (which packages, which conventions). The _numbers_
-come from `@smartsoft001/angular` + the Nx/Angular alignment rule + Angular's own engine range, all at
+come from `@smartsoft001/angular` + the Nx documentation's Angular/Nx version matrix + Angular's own engine range, all at
 run time.

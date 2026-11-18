@@ -7,21 +7,10 @@
   "generators": {},
   "targets": {
     "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": [
-          "packages/shared/mongo/**/*.{ts,tsx,js,jsx}",
-          "packages/shared/mongo/package.json"
-        ]
+        "args": ["\"**/*.{ts,tsx,js,jsx}\"", "package.json"],
+        "command": "eslint"
       }
-    },
-    "test": {
-      "executor": "@nx/jest:jest",
-      "options": {
-        "jestConfig": "packages/shared/mongo/jest.config.ts"
-      },
-      "outputs": ["{workspaceRoot}/coverage/packages/shared/mongo"]
     },
     "build": {
       "executor": "@nx/js:tsc",
@@ -40,11 +29,11 @@
     },
     "deploy": {
       "executor": "ngx-deploy-npm:deploy",
+      "dependsOn": ["build"],
       "options": {
         "access": "public",
         "distFolderPath": "dist/packages/shared/mongo"
-      },
-      "dependsOn": ["build"]
+      }
     }
   }
 }

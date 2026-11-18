@@ -6,21 +6,10 @@
   "tags": [],
   "targets": {
     "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": [
-          "packages/shared/fb/**/*.{ts,tsx,js,jsx}",
-          "packages/shared/fb/package.json"
-        ]
+        "args": ["\"**/*.{ts,tsx,js,jsx}\"", "package.json"],
+        "command": "eslint"
       }
-    },
-    "test": {
-      "executor": "@nx/jest:jest",
-      "options": {
-        "jestConfig": "packages/shared/fb/jest.config.ts"
-      },
-      "outputs": ["{workspaceRoot}/coverage/packages/shared/fb"]
     },
     "nx-release-publish": {
       "options": {

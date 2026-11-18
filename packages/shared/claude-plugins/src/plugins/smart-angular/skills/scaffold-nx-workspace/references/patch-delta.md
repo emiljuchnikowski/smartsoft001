@@ -28,7 +28,7 @@ Drop `nxCloudId`. Set `defaultBase` to `<BASE_BRANCH>`.
       "!{projectRoot}/eslint.config.mjs",
       "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
       "!{projectRoot}/tsconfig.spec.json",
-      "!{projectRoot}/jest.config.[jt]s",
+      "!{projectRoot}/jest.config.{cjs,mjs,js,cts,mts,ts}",
       "!{projectRoot}/src/test-setup.[jt]s",
       "!{projectRoot}/test-setup.[jt]s",
       "!{projectRoot}/**/*.spec.[jt]s?(x)",
@@ -42,24 +42,18 @@ Drop `nxCloudId`. Set `defaultBase` to `<BASE_BRANCH>`.
       "dependsOn": ["^build"],
       "inputs": ["production", "^production"]
     },
-    "@nx/eslint:lint": {
-      "cache": true,
-      "inputs": [
-        "default",
-        "{workspaceRoot}/.eslintrc.json",
-        "{workspaceRoot}/.eslintignore",
-        "{workspaceRoot}/eslint.config.mjs"
-      ]
-    },
-    "@nx/jest:jest": {
-      "cache": true,
-      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
-      "options": { "passWithNoTests": true },
-      "configurations": { "ci": { "ci": true, "codeCoverage": true } }
-    }
+    "test": [
+      {
+        "filter": { "plugin": "@nx/jest/plugin" },
+        "options": { "passWithNoTests": true },
+        "configurations": { "ci": { "ci": true, "coverage": true } }
+      }
+    ]
   },
   "plugins": [
-    { "plugin": "@nx/eslint/plugin", "options": { "targetName": "lint" } }
+    { "plugin": "@nx/eslint/plugin", "options": { "targetName": "lint" } },
+    { "plugin": "@nx/jest/plugin", "options": { "targetName": "test" } },
+    { "plugin": "@nx/playwright/plugin", "options": { "targetName": "e2e" } }
   ],
   "generators": {
     "@nx/angular:application": {
@@ -74,6 +68,12 @@ Drop `nxCloudId`. Set `defaultBase` to `<BASE_BRANCH>`.
 }
 ```
 
+> Nx 24 removed the `@nx/eslint:lint` and `@nx/jest:jest` executors. `lint` and `test` are
+> inferred by the plugins above for every project with an `eslint.config.mjs` / `jest.config.cts`;
+> the plugins cache them and set their inputs (including the root `eslint.config.mjs` and
+> `jest.preset.js`) themselves. The `test` default is filtered to the Jest plugin's targets
+> (an array `targetDefaults` entry with `filter.plugin`), so it never touches other `test` targets.
+>
 > Everything defaults to `scss` — the app, generated libs, and generated components — so styling
 > is consistent workspace-wide.
 

@@ -13,18 +13,10 @@
         "command": "tsc -p docs/examples/app/libs/model/tsconfig.lib.json --noEmit"
       }
     },
-    "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
-      "options": {
-        "jestConfig": "docs/examples/app/libs/model/jest.config.ts",
-        "tsConfig": "docs/examples/app/libs/model/tsconfig.spec.json"
-      }
-    },
     "lint": {
-      "executor": "@nx/eslint:lint",
       "options": {
-        "lintFilePatterns": ["docs/examples/app/libs/model/**/*.ts"]
+        "args": ["\"**/*.ts\""],
+        "command": "eslint"
       }
     }
   }

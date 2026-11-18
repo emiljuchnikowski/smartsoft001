@@ -768,12 +768,21 @@ describe('buildStarter', () => {
       'apps/web-e2e/project.json',
       'libs/model/project.json',
     ]) {
+      // `@nx/eslint/plugin` in nx.json infers the target; project.json keeps
+      // the file patterns the project lints.
       assert.equal(
-        readJson(path.join(target, file)).targets.lint.executor,
-        '@nx/eslint:lint',
+        readJson(path.join(target, file)).targets.lint?.options?.command,
+        'eslint',
         `${file} has no lint target`,
       );
     }
+
+    assert.ok(
+      readJson(path.join(target, 'nx.json')).plugins.some(
+        (entry) => entry.plugin === '@nx/eslint/plugin',
+      ),
+      'nx.json does not register @nx/eslint/plugin',
+    );
 
     for (const file of ['apps/web', 'apps/api']) {
       assert.match(

@@ -7,27 +7,10 @@
   "generators": {},
   "targets": {
     "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": [
-          "packages/crud/domain/**/*.{ts,tsx,js,jsx}",
-          "packages/crud/domain/package.json"
-        ],
-        "tsConfig": [
-          "packages/crud/domain/tsconfig.lib.json",
-          "packages/crud/domain/tsconfig.spec.json"
-        ],
-        "exclude": ["**/node_modules/**", "!packages/crud/domain/**/*"]
+        "args": ["\"**/*.{ts,tsx,js,jsx}\"", "package.json"],
+        "command": "eslint"
       }
-    },
-    "test": {
-      "executor": "@nx/jest:jest",
-      "options": {
-        "jestConfig": "packages/crud/domain/jest.config.ts",
-        "passWithNoTests": true
-      },
-      "outputs": ["{workspaceRoot}/coverage/packages/crud/domain"]
     },
     "nx-release-publish": {
       "options": {

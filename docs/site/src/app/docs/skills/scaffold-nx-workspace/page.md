@@ -20,7 +20,7 @@ Creates a new Nx monorepo the way the framework's own projects are laid out: it 
 The conventions it enforces:
 
 - npm, Nx and an Angular SSR app built with `@angular/build:application` in `outputMode: server`; Jest with the zoneless `jest-preset-angular` environment for unit tests and Playwright for end-to-end tests.
-- Cached `build`, `lint` and `jest` targets and a `defaultBase` for `nx affected`; no Nx Cloud binding.
+- A cached `build` target, `lint` and `test` targets inferred by the `@nx/eslint/plugin` and `@nx/jest/plugin` Nx plugins (Nx 24 no longer has the `@nx/eslint:lint` and `@nx/jest:jest` executors), and a `defaultBase` for `nx affected`; no Nx Cloud binding.
 - ESLint flat config with `import/order` and a path group for the workspace prefix, Prettier with single quotes, husky and commitlint with scopes derived from `libs/`.
 - `apps/` and `libs/` layout, the shared library aliased as `@<prefix>/angular`, SCSS everywhere.
 - An `EnvironmentService`, an `/env.js` endpoint and an `env-init.ts` imported first in `main.server.ts`, so the SSR runtime reads its environment at start.
@@ -40,7 +40,7 @@ Not for adding a feature library to an existing workspace, for changing lint or 
 
 The skill declares no positional arguments. Run it in the context of an empty target directory, or state the target folder in the prompt, and it confirms the decisions that shape the workspace:
 
-1. **Angular version.** It reads the version `@smartsoft001/angular` targets from npm and proposes it; you confirm or type another. Nx and Node are derived from it (Nx major = Angular major + 1, Node = an LTS the Angular release supports). Nothing else is pinned.
+1. **Angular version.** It reads the version `@smartsoft001/angular` targets from npm and proposes it; you confirm or type another. Nx and Node are derived from it: Nx is the latest stable major that supports that Angular version according to the [Nx and Angular version matrix](https://nx.dev/docs/kb/angular-nx-version-matrix) (Angular 22.2 needs Nx 24.0.0 or later, so the skill scaffolds with Nx 24), and Node is an LTS the Angular release supports. Nothing else is pinned.
 2. **Workspace prefix.** A candidate derived from the target folder name, used in tsconfig paths, ESLint, imports and package names.
 3. **Base branch** for `nx affected` and the husky pre-push hook (default `origin/development`).
 4. **`npm install`**, which it only runs after asking.
