@@ -10,12 +10,12 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { IActionPanelActionClick } from './base/base.component';
-import { ActionPanelStandardComponent } from './standard';
 import { IActionPanelOptions } from '../../models';
 import { ACTION_PANEL_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 import { outletInputs } from '../base/outlet-inputs';
+import { IActionPanelActionClick } from './base/base.component';
+import { ActionPanelStandardComponent } from './standard';
 
 @Component({
   selector: 'smart-action-panel',

@@ -48,10 +48,10 @@ import { SpecificationService } from '@smartsoft001/utils';
 import { CrudFacade } from '../../+state/crud.facade';
 import { CrudFullConfig } from '../../crud.config';
 import { ICrudFilter } from '../../models';
-import { CrudItemPageBaseComponent } from './base/base.component';
-import { ItemStandardComponent } from './standard/standard.component';
 import { CrudService } from '../../services/crud/crud.service';
 import { PageService } from '../../services/page/page.service';
+import { CrudItemPageBaseComponent } from './base/base.component';
+import { ItemStandardComponent } from './standard/standard.component';
 
 @Component({
   selector: 'smart-crud-item-page',

@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 
+import { SmartOverlays } from '../components/overlays/overlays';
+import { SmartTranslateFn } from '../i18n/translate';
 import { createHistoryNavigation } from './navigation';
 import {
   createSmartContextValue,
@@ -9,8 +11,6 @@ import {
   SmartConfig,
   SmartContext,
 } from './smart-context';
-import { SmartOverlays } from '../components/overlays/overlays';
-import { SmartTranslateFn } from '../i18n/translate';
 
 export interface SmartProviderProps extends SmartConfig {
   children?: ReactNode;

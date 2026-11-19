@@ -13,9 +13,9 @@ import {
 
 import { IPageOptions, SmartPageVariant } from '../../models';
 import { PAGE_VARIANT_COMPONENTS_TOKEN } from '../../shared.inectors';
+import { outletInputs } from '../base/outlet-inputs';
 import { PageBaseComponent } from './base/base.component';
 import { PageStandardComponent } from './standard/standard.component';
-import { outletInputs } from '../base/outlet-inputs';
 
 const baseMap: Partial<Record<SmartPageVariant, Type<PageBaseComponent>>> = {
   standard: PageStandardComponent,

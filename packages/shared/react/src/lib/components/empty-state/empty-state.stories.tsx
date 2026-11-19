@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
+import { IEmptyStateOptions } from '../../models';
 import { SmartEmptyState } from './empty-state';
 import { SmartEmptyStatePreset } from './preset/empty-state-preset';
-import { IEmptyStateOptions } from '../../models';
 
 interface EmptyStateArgs {
   title: string;

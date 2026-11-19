@@ -1,10 +1,10 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartSignInFormPreset } from './preset/sign-in-form-preset';
 import { SmartSignInForm } from './sign-in-form';
 import { SmartSignInFormProps } from './sign-in-form.types';
 import { SmartSignInFormStandard } from './standard/sign-in-form-standard';
-import { SmartProvider } from '../../providers/smart-provider';
 
 const type = (input: HTMLElement, value: string) =>
   fireEvent.change(input, { target: { value } });

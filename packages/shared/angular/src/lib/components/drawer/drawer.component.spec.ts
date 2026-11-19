@@ -8,9 +8,9 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { DRAWER_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { DrawerBaseComponent } from './base/base.component';
 import { DrawerComponent } from './drawer.component';
-import { DRAWER_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-drawer-injected',

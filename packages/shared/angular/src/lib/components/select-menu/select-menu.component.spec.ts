@@ -1,9 +1,9 @@
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { SELECT_MENU_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { SelectMenuBaseComponent } from './base/base.component';
 import { SelectMenuComponent } from './select-menu.component';
-import { SELECT_MENU_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-select-menu-injected',

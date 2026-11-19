@@ -10,12 +10,12 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { IVerticalNavItemClick } from './base/base.component';
-import { VerticalNavigationStandardComponent } from './standard';
 import { IVerticalNavOptions } from '../../models';
 import { VERTICAL_NAVIGATION_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 import { outletInputs } from '../base/outlet-inputs';
+import { IVerticalNavItemClick } from './base/base.component';
+import { VerticalNavigationStandardComponent } from './standard';
 
 @Component({
   selector: 'smart-vertical-navigation',

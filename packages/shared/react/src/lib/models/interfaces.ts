@@ -3,10 +3,10 @@ import type { ComponentType, ReactNode } from 'react';
 import { IEntity } from '@smartsoft001/domain-core';
 import { IFieldOptions, IModelOptions } from '@smartsoft001/models';
 
-import { IStyle } from './style';
 import type { SmartAbstractControl } from '../forms/abstract-control';
 import type { IAppProvider } from '../providers/interfaces';
 import type { SmartTrustedHtml } from '../utils/html';
+import { IStyle } from './style';
 
 /*
  * The option objects the components take. They follow a few conventions:

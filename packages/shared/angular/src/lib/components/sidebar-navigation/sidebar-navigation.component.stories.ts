@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { SidebarNavigationComponent } from './sidebar-navigation.component';
 import {
   ISidebarNavGroup,
   ISidebarNavItem,
   ISidebarNavOptions,
   SmartSidebarNavLayout,
 } from '../../models';
+import { SidebarNavigationComponent } from './sidebar-navigation.component';
 
 const LAYOUTS: SmartSidebarNavLayout[] = [
   'light',

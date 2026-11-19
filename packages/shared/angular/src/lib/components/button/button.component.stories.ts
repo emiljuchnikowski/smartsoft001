@@ -2,10 +2,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { ButtonComponent } from './button.component';
-import { ButtonPresetComponent } from './preset/preset.component';
 import { SmartColor, SmartSize, SmartVariant } from '../../models';
 import { BUTTON_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { ButtonComponent } from './button.component';
+import { ButtonPresetComponent } from './preset/preset.component';
 
 const COLORS: SmartColor[] = [
   'gray',

@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { ListContainerComponent } from './list-container.component';
 import { IListContainerOptions, SmartListContainerVariant } from '../../models';
+import { ListContainerComponent } from './list-container.component';
 
 const VARIANTS: SmartListContainerVariant[] = [
   'simple-dividers',

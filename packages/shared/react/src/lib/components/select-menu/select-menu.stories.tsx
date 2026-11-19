@@ -2,9 +2,9 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import type { ReactNode } from 'react';
 
+import { ISelectMenuItem, ISelectMenuOptions } from '../../models';
 import { SmartSelectMenu } from './select-menu';
 import { SelectMenuValue } from './select-menu.types';
-import { ISelectMenuItem, ISelectMenuOptions } from '../../models';
 
 const COUNTRIES: ISelectMenuItem[] = [
   { value: 'pl', label: 'Poland' },

@@ -7,8 +7,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DescriptionListStandardComponent } from './standard.component';
 import { IDescriptionListOptions } from '../../../models';
+import { DescriptionListStandardComponent } from './standard.component';
 
 describe('@smartsoft001/shared-angular: DescriptionListStandardComponent', () => {
   describe('default rendering (no options)', () => {

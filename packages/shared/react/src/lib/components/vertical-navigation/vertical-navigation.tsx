@@ -1,6 +1,6 @@
+import { useSmartComponent } from '../../providers/hooks';
 import { SmartVerticalNavigationStandard } from './standard/vertical-navigation-standard';
 import { SmartVerticalNavigationProps } from './vertical-navigation.types';
-import { useSmartComponent } from '../../providers/hooks';
 
 /**
  * Renders the implementation registered as `components['vertical-navigation']`

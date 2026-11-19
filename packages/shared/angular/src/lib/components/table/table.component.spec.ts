@@ -1,9 +1,9 @@
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { TABLE_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { TableBaseComponent } from './base/base.component';
 import { TableComponent } from './table.component';
-import { TABLE_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-table-injected',

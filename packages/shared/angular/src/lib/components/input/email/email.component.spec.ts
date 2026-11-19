@@ -10,9 +10,9 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { InputEmailComponent } from './email.component';
 import { InputOptions } from '../../../models';
 import { IModelLabelProvider } from '../../../providers';
+import { InputEmailComponent } from './email.component';
 
 @Model({})
 class EmailModel {

@@ -3,10 +3,10 @@ import type { ComponentType } from 'react';
 
 import { FieldTypeDef } from '@smartsoft001/models';
 
-import { ISmartNavigation } from './navigation';
-import { SmartComponentKey, useSmart } from './smart-context';
 import { SmartTranslateFn } from '../i18n/translate';
 import { ListMode } from '../models/interfaces';
+import { ISmartNavigation } from './navigation';
+import { SmartComponentKey, useSmart } from './smart-context';
 
 /** The provider's translate function: `translate('cancel')` gives the label in the current language. */
 export function useTranslate(): SmartTranslateFn {

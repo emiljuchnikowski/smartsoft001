@@ -20,7 +20,6 @@ import {
 } from '@smartsoft001/react';
 import { SpecificationService } from '@smartsoft001/utils';
 
-import { SmartCrudListPageProps } from './list-page.types';
 import { SmartCrudExport } from '../../components/export/export';
 import { SmartCrudFilters } from '../../components/filters/filters';
 import { SmartCrudMultiselect } from '../../components/multiselect/multiselect';
@@ -30,6 +29,7 @@ import { useCrudListPagination, useCrudState } from '../../hooks';
 import { ICrudFilter } from '../../models';
 import { useCrudBoundComponent } from '../use-crud-bound-component';
 import { useCrudPageConfig } from '../use-crud-page-config';
+import { SmartCrudListPageProps } from './list-page.types';
 
 const NO_ITEMS: never[] = [];
 

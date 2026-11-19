@@ -1,8 +1,8 @@
 import { SmartDateEdit, useTranslate } from '@smartsoft001/react';
 
+import { SmartCrudFilterProps } from '../filter.types';
 import { useCrudFilterDate } from './use-crud-filter-date';
 import { useCrudFilterValue } from './use-crud-filter-value';
-import { SmartCrudFilterProps } from '../filter.types';
 
 /**
  * The date filter: the item label, the shared date editor bound to the item's

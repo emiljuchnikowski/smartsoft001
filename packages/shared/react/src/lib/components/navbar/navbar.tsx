@@ -1,6 +1,6 @@
+import { useSmartComponent } from '../../providers/hooks';
 import { SmartNavbarProps } from './navbar.types';
 import { SmartNavbarStandard } from './standard/navbar-standard';
-import { useSmartComponent } from '../../providers/hooks';
 
 /**
  * Renders the implementation registered as `components.navbar` on

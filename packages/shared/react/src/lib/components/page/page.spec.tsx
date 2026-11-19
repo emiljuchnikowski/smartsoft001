@@ -1,6 +1,10 @@
 import { fireEvent, render, renderHook, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 
+import { IPageOptions, SmartPageVariant } from '../../models';
+import { ISmartNavigation } from '../../providers/navigation';
+import { SmartComponentOverrides } from '../../providers/smart-context';
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartPage, getPageVariantKey } from './page';
 import { SmartPageVariantProps } from './page.types';
 import { SmartPagePreset } from './preset/page-preset';
@@ -8,10 +12,6 @@ import { getPagePageClasses } from './preset/preset-classes';
 import { PAGE_PRESET_VARIANT_COMPONENTS } from './preset-variants';
 import { SmartPageStandard } from './standard/page-standard';
 import { getPageButtonOptions, usePage } from './use-page';
-import { IPageOptions, SmartPageVariant } from '../../models';
-import { ISmartNavigation } from '../../providers/navigation';
-import { SmartComponentOverrides } from '../../providers/smart-context';
-import { SmartProvider } from '../../providers/smart-provider';
 
 function createNavigation(): ISmartNavigation & { back: jest.Mock } {
   return {

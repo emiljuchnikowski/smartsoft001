@@ -11,13 +11,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { IEntity } from '@smartsoft001/domain-core';
 import { Field, Model } from '@smartsoft001/models';
 
-import { ListBaseComponent } from './base.component';
 import {
   IDetailsProvider,
   IListInternalOptions,
   IListProvider,
 } from '../../../models';
 import { AlertService, AuthService } from '../../../services';
+import { ListBaseComponent } from './base.component';
 
 @Model({})
 class TestItemModel implements IEntity<string> {

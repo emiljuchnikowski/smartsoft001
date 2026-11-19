@@ -1,9 +1,9 @@
 import { IEntity } from '@smartsoft001/domain-core';
 import { useTranslate } from '@smartsoft001/react';
 
+import { SmartCrudFilter } from '../filter/filter';
 import { SmartCrudFiltersProps } from './filters.types';
 import { useCrudFilters } from './use-crud-filters';
-import { SmartCrudFilter } from '../filter/filter';
 
 /**
  * The filters panel of the CRUD feature, opened in the end menu — a header

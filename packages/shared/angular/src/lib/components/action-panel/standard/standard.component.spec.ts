@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ActionPanelStandardComponent } from './standard.component';
 import { IActionPanelActionClick } from '../base/base.component';
+import { ActionPanelStandardComponent } from './standard.component';
 
 describe('@smartsoft001/shared-angular: ActionPanelStandardComponent', () => {
   let fixture: ComponentFixture<ActionPanelStandardComponent>;

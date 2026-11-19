@@ -12,13 +12,13 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { IModalActionClick } from './base/base.component';
-import { ModalStandardComponent } from './standard/standard.component';
 import { IModalAction, IModalOptions } from '../../models';
 import { MODAL_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 import { outletContent } from '../base/outlet-content';
 import { outletInputs } from '../base/outlet-inputs';
+import { IModalActionClick } from './base/base.component';
+import { ModalStandardComponent } from './standard/standard.component';
 
 @Component({
   selector: 'smart-modal',

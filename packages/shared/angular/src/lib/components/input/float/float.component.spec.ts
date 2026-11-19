@@ -10,9 +10,9 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { InputFloatComponent } from './float.component';
 import { InputOptions } from '../../../models';
 import { IModelLabelProvider } from '../../../providers';
+import { InputFloatComponent } from './float.component';
 
 @Model({})
 class FloatModel {

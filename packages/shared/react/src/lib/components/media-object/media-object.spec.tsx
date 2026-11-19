@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartMediaObject } from './media-object';
 import { SmartMediaObjectProps } from './media-object.types';
 import { SmartMediaObjectPreset } from './preset/media-object-preset';
@@ -9,7 +10,6 @@ import {
   getMediaObjectRootClasses,
 } from './preset/preset-classes';
 import { SmartMediaObjectStandard } from './standard/media-object-standard';
-import { SmartProvider } from '../../providers/smart-provider';
 
 const MEDIA_URL = 'https://example.com/image.png';
 const MEDIA_ALT = 'Example image';

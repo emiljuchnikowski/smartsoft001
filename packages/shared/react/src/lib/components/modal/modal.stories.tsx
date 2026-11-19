@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { SmartModal } from './modal';
-import { SmartModalPreset } from './preset/modal-preset';
 import {
   IModalAction,
   SmartModalFooterStyle,
   SmartModalVariant,
 } from '../../models';
+import { SmartModal } from './modal';
+import { SmartModalPreset } from './preset/modal-preset';
 
 const VARIANTS: SmartModalVariant[] = [
   'centered',

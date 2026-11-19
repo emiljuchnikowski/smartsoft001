@@ -6,8 +6,8 @@ import { DynamicIoDirective } from 'ng-dynamic-component';
 import { ButtonComponent, FormComponent } from '@smartsoft001/angular';
 import { IEntity } from '@smartsoft001/domain-core';
 
-import { MultiselectBaseComponent } from './base/base.component';
 import { FormOptionsPipe } from '../../pipes';
+import { MultiselectBaseComponent } from './base/base.component';
 
 @Component({
   selector: 'smart-crud-multiselect',

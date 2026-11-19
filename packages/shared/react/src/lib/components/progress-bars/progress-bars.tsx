@@ -1,6 +1,6 @@
+import { useSmartComponent } from '../../providers/hooks';
 import { SmartProgressBarsProps } from './progress-bars.types';
 import { SmartProgressBarsStandard } from './standard/progress-bars-standard';
-import { useSmartComponent } from '../../providers/hooks';
 
 /**
  * Renders the implementation registered as `components['progress-bars']` on

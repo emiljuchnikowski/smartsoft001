@@ -5,8 +5,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ListContainerStandardComponent } from './standard.component';
 import { IListContainerOptions } from '../../../models';
+import { ListContainerStandardComponent } from './standard.component';
 
 @Component({
   selector: 'smart-test-host',

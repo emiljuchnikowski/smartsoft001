@@ -5,8 +5,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DateRangeModalBaseComponent } from './date-range-modal-base.component';
 import { CalendarService, StyleService, UIService } from '../../../services';
+import { DateRangeModalBaseComponent } from './date-range-modal-base.component';
 
 @Component({
   selector: 'smart-test-date-range-modal',

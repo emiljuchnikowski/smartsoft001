@@ -10,8 +10,8 @@ import {
 
 import { SmartColor, SmartSize } from '../../models';
 import { LOADER_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
-import { LoaderStandardComponent } from './standard/standard.component';
 import { outletInputs } from '../base/outlet-inputs';
+import { LoaderStandardComponent } from './standard/standard.component';
 
 @Component({
   selector: 'smart-loader',

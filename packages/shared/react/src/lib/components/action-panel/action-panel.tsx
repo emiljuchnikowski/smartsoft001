@@ -1,6 +1,6 @@
+import { useSmartComponent } from '../../providers/hooks';
 import { SmartActionPanelProps } from './action-panel.types';
 import { SmartActionPanelStandard } from './standard/action-panel-standard';
-import { useSmartComponent } from '../../providers/hooks';
 
 /**
  * Renders the implementation registered as `components['action-panel']` on

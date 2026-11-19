@@ -1,6 +1,6 @@
+import { useSmartComponent } from '../../providers/hooks';
 import { SmartPageHeadingProps } from './page-heading.types';
 import { SmartPageHeadingStandard } from './standard/page-heading-standard';
-import { useSmartComponent } from '../../providers/hooks';
 
 /**
  * Renders the implementation registered as `components['page-heading']` on

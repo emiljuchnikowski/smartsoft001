@@ -6,17 +6,17 @@ import {
   within,
 } from '@testing-library/react';
 
-import { SmartVerticalNavigationPreset } from './preset/vertical-navigation-preset';
-import { SmartVerticalNavigationStandard } from './standard/vertical-navigation-standard';
-import { useVerticalNavigation } from './use-vertical-navigation';
-import { SmartVerticalNavigation } from './vertical-navigation';
-import { SmartVerticalNavigationProps } from './vertical-navigation.types';
 import {
   createHistoryNavigation,
   ISmartLinkProps,
   ISmartNavigation,
 } from '../../providers/navigation';
 import { SmartProvider } from '../../providers/smart-provider';
+import { SmartVerticalNavigationPreset } from './preset/vertical-navigation-preset';
+import { SmartVerticalNavigationStandard } from './standard/vertical-navigation-standard';
+import { useVerticalNavigation } from './use-vertical-navigation';
+import { SmartVerticalNavigation } from './vertical-navigation';
+import { SmartVerticalNavigationProps } from './vertical-navigation.types';
 
 function routerNavigation(): ISmartNavigation {
   return {

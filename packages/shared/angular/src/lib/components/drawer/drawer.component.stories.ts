@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
+import { DRAWER_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { DrawerComponent } from './drawer.component';
 import { DrawerPresetComponent } from './preset/preset.component';
-import { DRAWER_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 interface DrawerArgs {
   open: boolean;

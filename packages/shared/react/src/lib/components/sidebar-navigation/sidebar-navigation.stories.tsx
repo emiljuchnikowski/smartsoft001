@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ReactNode } from 'react';
 
-import { SmartSidebarNavigation } from './sidebar-navigation';
 import {
   ISidebarNavGroup,
   ISidebarNavItem,
   ISidebarNavOptions,
   SmartSidebarNavLayout,
 } from '../../models';
+import { SmartSidebarNavigation } from './sidebar-navigation';
 
 const LAYOUTS: SmartSidebarNavLayout[] = [
   'light',

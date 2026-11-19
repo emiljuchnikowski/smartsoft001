@@ -3,8 +3,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { DomainForbiddenError } from '@smartsoft001/domain-core';
 import { IUser } from '@smartsoft001/users';
 
-import { PermissionService } from './permission.service';
 import { SharedConfig } from '../shared.config';
+import { PermissionService } from './permission.service';
 
 describe('shared-nestjs: PermissionService', () => {
   let service: PermissionService;

@@ -8,10 +8,10 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { StatsStandardComponent } from './standard';
 import { IStatsOptions } from '../../models';
 import { STATS_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { outletInputs } from '../base/outlet-inputs';
+import { StatsStandardComponent } from './standard';
 
 @Component({
   selector: 'smart-stats',

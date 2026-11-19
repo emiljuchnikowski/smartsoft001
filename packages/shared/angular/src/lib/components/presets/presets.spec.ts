@@ -4,10 +4,10 @@ import { TestBed } from '@angular/core/testing';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
-import { provideSmartPresets, SMART_PRESET_PROVIDERS } from './presets';
 import * as tokens from '../../shared.inectors';
 import { BadgeComponent } from '../badge/badge.component';
 import { PagePresetComponent } from '../page/preset/preset.component';
+import { provideSmartPresets, SMART_PRESET_PROVIDERS } from './presets';
 
 describe('shared-angular: provideSmartPresets', () => {
   const componentsDir = path.join(__dirname, '..');

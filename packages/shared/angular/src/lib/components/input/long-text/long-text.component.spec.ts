@@ -10,10 +10,10 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { InputLongTextComponent } from './long-text.component';
 import { InputOptions } from '../../../models';
 import { IModelLabelProvider } from '../../../providers';
 import { HardwareService } from '../../../services';
+import { InputLongTextComponent } from './long-text.component';
 
 @Model({})
 class LongTextModel {

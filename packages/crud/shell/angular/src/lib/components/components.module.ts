@@ -5,6 +5,12 @@ import { DynamicIoModule } from 'ng-dynamic-component';
 
 import { IModelLabelProvider, SharedModule } from '@smartsoft001/angular';
 
+import { CrudFacade } from '../+state/crud.facade';
+import { CrudListPaginationFactory } from '../factories/list-pagination/list-pagination.factory';
+import { CrudPipesModule } from '../pipes';
+import { CrudModelLabelProvider } from '../providers/model-label/model-label.provider';
+import { CrudService } from '../services/crud/crud.service';
+import { SocketService } from '../services/socket/socket.service';
 import { ExportComponent } from './export/export.component';
 import {
   FilterComponent,
@@ -17,16 +23,10 @@ import {
   FilterIntComponent,
   FilterDateTimeComponent,
 } from './filter';
-import { CrudPipesModule } from '../pipes';
 import { FiltersComponent } from './filters/filters.component';
 import { FiltersConfigComponent } from './filters-config/filters-config.component';
-import { MultiselectComponent } from './multiselect/multiselect.component';
-import { CrudFacade } from '../+state/crud.facade';
 import { GroupComponent } from './group/group.component';
-import { CrudListPaginationFactory } from '../factories/list-pagination/list-pagination.factory';
-import { CrudModelLabelProvider } from '../providers/model-label/model-label.provider';
-import { CrudService } from '../services/crud/crud.service';
-import { SocketService } from '../services/socket/socket.service';
+import { MultiselectComponent } from './multiselect/multiselect.component';
 
 const COMPONENTS = [
   ExportComponent,

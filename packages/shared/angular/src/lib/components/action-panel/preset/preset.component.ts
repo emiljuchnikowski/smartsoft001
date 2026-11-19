@@ -7,6 +7,8 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
+import { IActionPanelAction, SmartActionPanelLayout } from '../../../models';
+import { ActionPanelStandardComponent } from '../standard/standard.component';
 import {
   getActionPanelActionClasses,
   getActionPanelCardClasses,
@@ -14,8 +16,6 @@ import {
   getActionPanelTitleClasses,
   getActionPanelWellClasses,
 } from './preset-classes.util';
-import { IActionPanelAction, SmartActionPanelLayout } from '../../../models';
-import { ActionPanelStandardComponent } from '../standard/standard.component';
 
 /**
  * Styled action-panel variation (preset).

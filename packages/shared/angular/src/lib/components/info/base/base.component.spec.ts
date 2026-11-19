@@ -5,8 +5,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { InfoBaseComponent } from './base.component';
 import { IInfoOptions } from '../../../models';
+import { InfoBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-info',

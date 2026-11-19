@@ -1,11 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CommandPalettePresetComponent } from './preset.component';
 import {
   ICommand,
   ICommandPaletteOptions,
   SmartCommandPaletteVariant,
 } from '../../../models';
+import { CommandPalettePresetComponent } from './preset.component';
 
 describe('@smartsoft001/shared-angular: CommandPalettePresetComponent', () => {
   let fixture: ComponentFixture<CommandPalettePresetComponent>;

@@ -1,11 +1,11 @@
 import { render, screen } from '@testing-library/react';
 
+import { IStatsOptions } from '../../models';
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartStatsPreset } from './preset/stats-preset';
 import { SmartStatsStandard } from './standard/stats-standard';
 import { SmartStats } from './stats';
 import { SmartStatsProps } from './stats.types';
-import { IStatsOptions } from '../../models';
-import { SmartProvider } from '../../providers/smart-provider';
 
 describe('@smartsoft001/react: SmartStats', () => {
   describe('wrapper', () => {

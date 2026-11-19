@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react';
 
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartStackedListPreset } from './preset/stacked-list-preset';
 import { SmartStackedList } from './stacked-list';
 import { SmartStackedListProps } from './stacked-list.types';
 import { SmartStackedListStandard } from './standard/stacked-list-standard';
-import { SmartProvider } from '../../providers/smart-provider';
 
 describe('@smartsoft001/react: SmartStackedList', () => {
   describe('wrapper', () => {

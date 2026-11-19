@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ReactNode } from 'react';
 
-import { SmartBadge } from './badge';
 import { SmartBadgeColor } from '../../models';
+import { SmartBadge } from './badge';
 import { SmartBadgePreset } from './preset/badge-preset';
 
 const COLORS: SmartBadgeColor[] = [

@@ -6,14 +6,14 @@ import {
   screen,
 } from '@testing-library/react';
 
+import { ICalendarEvent } from '../../models';
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartCalendar } from './calendar';
 import { SmartCalendarProps } from './calendar.types';
 import { SmartCalendarPreset } from './preset/calendar-preset';
 import { getCalendarPresetDayClasses } from './preset/preset-classes';
 import { SmartCalendarStandard } from './standard/calendar-standard';
 import { buildMonthGrid, useCalendar } from './use-calendar';
-import { ICalendarEvent } from '../../models';
-import { SmartProvider } from '../../providers/smart-provider';
 
 describe('@smartsoft001/react: SmartCalendar', () => {
   describe('SmartCalendar (wrapper)', () => {

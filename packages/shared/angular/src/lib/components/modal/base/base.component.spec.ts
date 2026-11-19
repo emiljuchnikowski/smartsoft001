@@ -6,8 +6,8 @@ import {
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { IModalActionClick } from '..';
-import { ModalBaseComponent } from './base.component';
 import { IModalAction, IModalOptions } from '../../../models';
+import { ModalBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-modal',

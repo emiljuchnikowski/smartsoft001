@@ -7,6 +7,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
+import { StackedLayoutStandardComponent } from '../standard/standard.component';
 import {
   getStackedLayoutContainerClasses,
   getStackedLayoutContentCardClasses,
@@ -14,7 +15,6 @@ import {
   getStackedLayoutRootClasses,
   getStackedLayoutTitleClasses,
 } from './preset-classes.util';
-import { StackedLayoutStandardComponent } from '../standard/standard.component';
 
 /**
  * HyperUI-styled stacked-layout variation (preset).

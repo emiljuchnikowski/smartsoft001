@@ -5,8 +5,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NavbarBaseComponent } from './base.component';
 import { INavbarOptions } from '../../../models';
+import { NavbarBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-navbar',

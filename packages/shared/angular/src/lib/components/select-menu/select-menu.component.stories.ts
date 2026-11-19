@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { SelectMenuComponent } from './select-menu.component';
 import { ISelectMenuItem, ISelectMenuOptions } from '../../models';
+import { SelectMenuComponent } from './select-menu.component';
 
 const COUNTRIES: ISelectMenuItem[] = [
   { value: 'pl', label: 'Poland' },

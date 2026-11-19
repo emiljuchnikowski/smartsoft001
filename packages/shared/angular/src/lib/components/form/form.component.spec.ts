@@ -5,14 +5,14 @@ import { By } from '@angular/platform-browser';
 
 import { Field, Model } from '@smartsoft001/models';
 
-import { FormBaseComponent } from './base/base.component';
-import { FormComponent } from './form.component';
-import { FormStandardComponent } from './standard/standard.component';
 import { FormFactory } from '../../factories';
 import { IFormOptions } from '../../models';
 import { SmartFormGroup } from '../../services';
 import { FORM_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { InputComponent } from '../input';
+import { FormBaseComponent } from './base/base.component';
+import { FormComponent } from './form.component';
+import { FormStandardComponent } from './standard/standard.component';
 
 @Component({
   selector: 'smart-input',

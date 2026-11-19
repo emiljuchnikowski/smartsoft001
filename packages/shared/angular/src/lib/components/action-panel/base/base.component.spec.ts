@@ -5,8 +5,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ActionPanelBaseComponent } from './base.component';
 import { IActionPanelOptions } from '../../../models';
+import { ActionPanelBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-action-panel',

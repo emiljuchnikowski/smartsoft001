@@ -1,9 +1,9 @@
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { SECTION_HEADING_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { SectionHeadingBaseComponent } from './base/base.component';
 import { SectionHeadingComponent } from './section-heading.component';
-import { SECTION_HEADING_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-section-heading-injected',

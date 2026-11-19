@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { AccordionPresetComponent } from './preset/preset.component';
 import { IAccordionOptions } from '../../models';
+import { AccordionPresetComponent } from './preset/preset.component';
 
 // The accordion has NO standard-component token, so the preset is rendered
 // directly via its <smart-accordion-preset> selector (not DI-swappable). The

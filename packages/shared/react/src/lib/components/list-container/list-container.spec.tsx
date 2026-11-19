@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react';
 
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartListContainer } from './list-container';
 import { SmartListContainerProps } from './list-container.types';
 import { SmartListContainerStandard } from './standard/list-container-standard';
-import { SmartProvider } from '../../providers/smart-provider';
 
 describe('@smartsoft001/react: SmartListContainer', () => {
   describe('wrapper', () => {

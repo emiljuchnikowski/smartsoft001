@@ -7,10 +7,10 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TablePresetComponent } from './preset.component';
 import { ITableOptions } from '../../../models';
 import { TABLE_STANDARD_COMPONENT_TOKEN } from '../../../shared.inectors';
 import { TableComponent } from '../table.component';
+import { TablePresetComponent } from './preset.component';
 
 const COLUMNS: ITableOptions['columns'] = [
   { key: 'name', label: 'Name' },

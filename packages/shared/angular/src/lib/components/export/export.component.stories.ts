@@ -2,8 +2,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { applicationConfig, moduleMetadata } from '@storybook/angular';
 
-import { ExportComponent } from './export.component';
 import { provideStorybookTranslations } from '../../../../.storybook/storybook-translations';
+import { ExportComponent } from './export.component';
 
 const SINGLE = { name: 'John', email: 'john@example.com' };
 const ROWS = [

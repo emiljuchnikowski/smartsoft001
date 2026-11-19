@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { EmptyStateComponent } from './empty-state.component';
-import { EmptyStatePresetComponent } from './preset/preset.component';
 import { IEmptyStateOptions } from '../../models';
 import { EMPTY_STATE_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { EmptyStateComponent } from './empty-state.component';
+import { EmptyStatePresetComponent } from './preset/preset.component';
 
 interface EmptyStateArgs {
   title: string;

@@ -1,16 +1,6 @@
 import { IEntity } from '@smartsoft001/domain-core';
 import { FieldType } from '@smartsoft001/models';
 
-import {
-  getListDesktopCellClasses,
-  getListDesktopContainerClasses,
-  getListDesktopHeaderCellClasses,
-  getListDesktopHeaderRowClasses,
-  getListDesktopRowClasses,
-  getListDesktopSortButtonClasses,
-  getListDesktopSortIndicatorClasses,
-  getListDesktopTableClasses,
-} from './preset-classes';
 import { PaginationMode } from '../../../../models';
 import { useTranslate } from '../../../../providers/hooks';
 import { cn } from '../../../../utils/class-names';
@@ -24,6 +14,16 @@ import {
   LIST_DESKTOP_STICKY_HEADER_STYLE,
   useListDesktop,
 } from '../use-list-desktop';
+import {
+  getListDesktopCellClasses,
+  getListDesktopContainerClasses,
+  getListDesktopHeaderCellClasses,
+  getListDesktopHeaderRowClasses,
+  getListDesktopRowClasses,
+  getListDesktopSortButtonClasses,
+  getListDesktopSortIndicatorClasses,
+  getListDesktopTableClasses,
+} from './preset-classes';
 
 /**
  * Preline-styled desktop list variation. Drop-in replacement for

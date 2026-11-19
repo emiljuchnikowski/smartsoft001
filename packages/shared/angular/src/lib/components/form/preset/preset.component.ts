@@ -5,12 +5,12 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
+import { InputComponent } from '../../input';
+import { FormStandardComponent } from '../standard/standard.component';
 import {
   getFormFieldClasses,
   getFormShellClasses,
 } from './preset-classes.util';
-import { InputComponent } from '../../input';
-import { FormStandardComponent } from '../standard/standard.component';
 
 /**
  * Styled form variation (preset).

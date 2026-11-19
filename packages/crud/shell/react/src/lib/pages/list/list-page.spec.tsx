@@ -24,13 +24,13 @@ import {
   useStore,
 } from '@smartsoft001/react';
 
-import { SmartCrudListPage } from './list-page';
-import { SmartCrudListPageBodyProps } from './list-page.types';
 import { CrudFullConfig } from '../../crud.config';
 import { useCrud } from '../../crud.context';
 import { CrudProvider } from '../../crud.provider';
 import { ICrudFilter } from '../../models';
 import { CrudService } from '../../services/crud/crud.service';
+import { SmartCrudListPage } from './list-page';
+import { SmartCrudListPageBodyProps } from './list-page.types';
 
 // The CRUD components have specs of their own; the page only places them.
 jest.mock('../../components/filters/filters', () => ({

@@ -1,6 +1,6 @@
+import { useSmartComponent } from '../../providers/hooks';
 import { SmartDescriptionListProps } from './description-list.types';
 import { SmartDescriptionListStandard } from './standard/description-list-standard';
-import { useSmartComponent } from '../../providers/hooks';
 
 /**
  * Renders the implementation registered as `components['description-list']` on

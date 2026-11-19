@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { TogglePresetComponent } from './preset/preset.component';
-import { ToggleComponent } from './toggle.component';
 import { IToggleOptions } from '../../models';
 import { TOGGLE_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { TogglePresetComponent } from './preset/preset.component';
+import { ToggleComponent } from './toggle.component';
 
 interface ToggleArgs {
   value: boolean;

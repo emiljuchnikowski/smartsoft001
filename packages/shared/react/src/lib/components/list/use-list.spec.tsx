@@ -4,8 +4,6 @@ import type { ReactNode } from 'react';
 import { IEntity } from '@smartsoft001/domain-core';
 import { Field, Model } from '@smartsoft001/models';
 
-import { SmartListModeProps } from './list.types';
-import { useList } from './use-list';
 import {
   IDetailsProvider,
   IListInternalOptions,
@@ -16,6 +14,8 @@ import { SmartConfig } from '../../providers/smart-context';
 import { SmartProvider } from '../../providers/smart-provider';
 import { AlertService } from '../../services/alert/alert.service';
 import { AuthService } from '../../services/auth/auth.service';
+import { SmartListModeProps } from './list.types';
+import { useList } from './use-list';
 
 @Model({})
 class TestItemModel implements IEntity<string> {

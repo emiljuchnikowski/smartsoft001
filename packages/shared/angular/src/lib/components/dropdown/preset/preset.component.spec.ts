@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DropdownPresetComponent } from './preset.component';
 import { IDropdownItem } from '../../../models';
+import { DropdownPresetComponent } from './preset.component';
 
 describe('@smartsoft001/shared-angular: DropdownPresetComponent', () => {
   let fixture: ComponentFixture<DropdownPresetComponent>;

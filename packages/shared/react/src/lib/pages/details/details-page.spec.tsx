@@ -10,13 +10,13 @@ import type { ReactNode } from 'react';
 import { IEntity } from '@smartsoft001/domain-core';
 import { Field, Model } from '@smartsoft001/models';
 
-import { SmartDetailsPage } from './details-page';
-import { useDetailsPageOptions } from './use-details-page-options';
 import { useDetailsModal } from '../../components/details/use-details-modal';
 import { IDetailsOptions } from '../../models';
 import { SmartProvider } from '../../providers/smart-provider';
 import { ModalService } from '../../services/modal/modal.service';
 import { StyleService } from '../../services/style/style.service';
+import { SmartDetailsPage } from './details-page';
+import { useDetailsPageOptions } from './use-details-page-options';
 
 @Model({})
 class Customer implements IEntity<string> {

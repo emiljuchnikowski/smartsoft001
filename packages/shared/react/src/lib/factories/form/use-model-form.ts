@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { SmartUniqueProvider } from './form.factory';
 import { SmartFormGroup } from '../../forms/form-group';
 import { useFormFactory } from '../../providers/hooks';
+import { SmartUniqueProvider } from './form.factory';
 
 export interface IUseModelFormOptions {
   mode?: 'create' | 'update' | 'multiUpdate' | string;

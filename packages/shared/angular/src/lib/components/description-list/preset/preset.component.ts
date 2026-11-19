@@ -7,6 +7,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
+import { DescriptionListStandardComponent } from '../standard/standard.component';
 import {
   DESCRIPTION_LIST_ACTION_CLASSES,
   DESCRIPTION_LIST_ATTACHMENTS_CLASSES,
@@ -18,7 +19,6 @@ import {
   DESCRIPTION_LIST_VALUE_CLASSES,
   getDescriptionListListClasses,
 } from './preset-classes.util';
-import { DescriptionListStandardComponent } from '../standard/standard.component';
 
 /**
  * Preset-styled description list.

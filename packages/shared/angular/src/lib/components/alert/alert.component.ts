@@ -10,11 +10,11 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { AlertStandardComponent } from './standard/standard.component';
 import { IAlertButton, IAlertOptions } from '../../models';
 import { ALERT_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 import { outletInputs } from '../base/outlet-inputs';
+import { AlertStandardComponent } from './standard/standard.component';
 
 @Component({
   selector: 'smart-alert',

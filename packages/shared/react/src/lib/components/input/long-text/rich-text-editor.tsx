@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { toInnerHtml } from '../../../utils/html';
 import {
   applyRichTextCommand,
   EMPTY_RICH_TEXT_STATE,
@@ -13,7 +14,6 @@ import {
 } from './rich-text-commands';
 import { SmartRichTextMenu } from './rich-text-menu';
 import { LONG_TEXT_TOOLBAR, SmartRichTextToolbar } from './rich-text-toolbar';
-import { toInnerHtml } from '../../../utils/html';
 
 // The content styles (padding, paragraph spacing, quotes), plus the list,
 // heading, code and link looks Tailwind's preflight resets.

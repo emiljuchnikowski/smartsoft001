@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { SmartButtonGroup } from './button-group';
 import { IButtonGroupButton, SmartButtonGroupVariant } from '../../models';
+import { SmartButtonGroup } from './button-group';
 import { SmartButtonGroupPreset } from './preset/button-group-preset';
 
 const VARIANTS: SmartButtonGroupVariant[] = [

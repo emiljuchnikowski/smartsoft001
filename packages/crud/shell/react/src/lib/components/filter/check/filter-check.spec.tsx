@@ -3,11 +3,11 @@ import { act, fireEvent, render, screen } from '@testing-library/react';
 import { FieldType, IModelFilter } from '@smartsoft001/models';
 import { SmartProvider } from '@smartsoft001/react';
 
-import { SmartCrudFilterCheck } from './filter-check';
 import { CrudProvider } from '../../../crud.provider';
 import { useCrudState } from '../../../hooks';
 import { ICrudFilter } from '../../../models';
 import { CrudService } from '../../../services/crud/crud.service';
+import { SmartCrudFilterCheck } from './filter-check';
 
 class TodoModel {
   status?: number;

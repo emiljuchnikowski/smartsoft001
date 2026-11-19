@@ -8,8 +8,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DetailsDirective } from './details.directive';
 import { HardwareService, ModalService } from '../../services';
+import { DetailsDirective } from './details.directive';
 
 @Component({
   selector: 'smart-test-details-body',

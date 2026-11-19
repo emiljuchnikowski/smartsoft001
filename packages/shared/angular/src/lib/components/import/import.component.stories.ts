@@ -2,8 +2,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { applicationConfig, moduleMetadata } from '@storybook/angular';
 
-import { ImportComponent } from './import.component';
 import { provideStorybookTranslations } from '../../../../.storybook/storybook-translations';
+import { ImportComponent } from './import.component';
 
 const ACCEPTS = ['application/json', '.csv', '*/*'] as const;
 

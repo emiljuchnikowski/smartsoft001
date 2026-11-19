@@ -10,9 +10,9 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { InputColorComponent } from './color.component';
 import { InputOptions } from '../../../models';
 import { IModelLabelProvider } from '../../../providers';
+import { InputColorComponent } from './color.component';
 
 @Model({})
 class ColorModel {

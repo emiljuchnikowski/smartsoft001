@@ -7,13 +7,13 @@ import {
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { IconComponent } from '../../icon';
+import { ButtonBaseComponent } from '../base/base.component';
 import {
   getButtonPresetClasses,
   SmartButtonPresetVariant,
   toButtonPresetVariant,
 } from './preset-classes.util';
-import { IconComponent } from '../../icon';
-import { ButtonBaseComponent } from '../base/base.component';
 
 /**
  * Styled button variation (preset).

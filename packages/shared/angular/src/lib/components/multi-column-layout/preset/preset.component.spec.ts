@@ -6,12 +6,12 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { IMultiColumnLayoutOptions } from '../../../models';
 import {
   getMultiColumnLayoutContentContainerClasses,
   getMultiColumnLayoutSecondaryClasses,
 } from './preset-classes.util';
 import { MultiColumnLayoutPresetComponent } from './preset.component';
-import { IMultiColumnLayoutOptions } from '../../../models';
 
 @Component({
   selector: 'smart-test-host',

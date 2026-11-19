@@ -24,12 +24,12 @@ import {
 import { IListInternalOptions, IListOptions, ListMode } from '../../models';
 import { HardwareService } from '../../services';
 import { LIST_MODE_COMPONENTS_TOKEN } from '../../shared.inectors';
+import { outletInputs } from '../base/outlet-inputs';
 import { LoaderComponent } from '../loader';
 import { ListBaseComponent } from './base/base.component';
 import { ListDesktopComponent } from './desktop/desktop.component';
 import { ListMasonryGridComponent } from './masonry-grid/masonry-grid.component';
 import { ListMobileComponent } from './mobile/mobile.component';
-import { outletInputs } from '../base/outlet-inputs';
 
 const baseMap: Partial<Record<ListMode, Type<ListBaseComponent<any>>>> = {
   [ListMode.desktop]: ListDesktopComponent,

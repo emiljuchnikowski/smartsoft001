@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
+import { SmartDividerVariant } from '../../models';
 import { SmartDivider } from './divider';
 import { SmartDividerPreset } from './preset/divider-preset';
-import { SmartDividerVariant } from '../../models';
 
 const VARIANTS: SmartDividerVariant[] = [
   'with-label',

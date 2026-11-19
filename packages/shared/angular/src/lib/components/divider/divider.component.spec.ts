@@ -1,9 +1,9 @@
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { DIVIDER_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { DividerBaseComponent } from './base/base.component';
 import { DividerComponent } from './divider.component';
-import { DIVIDER_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-divider-injected',

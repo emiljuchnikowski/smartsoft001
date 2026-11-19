@@ -9,9 +9,9 @@ import {
 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
-import { ModalService } from './modal.service';
 import { ModalPresetComponent } from '../../components/modal/preset/preset.component';
 import { MODAL_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { ModalService } from './modal.service';
 
 const GREETING = new InjectionToken<string>('GREETING');
 

@@ -1,9 +1,9 @@
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { PROGRESS_BARS_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { ProgressBarsBaseComponent } from './base/base.component';
 import { ProgressBarsComponent } from './progress-bars.component';
-import { PROGRESS_BARS_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-progress-bars-injected',

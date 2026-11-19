@@ -1,10 +1,10 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartButton } from './button';
 import { SmartButtonProps } from './button.types';
 import { SmartButtonPreset } from './preset/button-preset';
 import { SmartButtonStandard } from './standard/button-standard';
-import { SmartProvider } from '../../providers/smart-provider';
 
 describe('@smartsoft001/react: SmartButton', () => {
   it('should render the standard implementation by default', () => {

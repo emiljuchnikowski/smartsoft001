@@ -1,11 +1,11 @@
 import { fireEvent, render, renderHook, screen } from '@testing-library/react';
 
+import { IAlertOptions } from '../../models';
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartAlert } from './alert';
 import { SmartAlertProps } from './alert.types';
 import { SmartAlertStandard } from './standard/alert-standard';
 import { getAlertButtonClasses, useAlert } from './use-alert';
-import { IAlertOptions } from '../../models';
-import { SmartProvider } from '../../providers/smart-provider';
 
 describe('@smartsoft001/react: SmartAlert', () => {
   describe('wrapper', () => {

@@ -73,6 +73,21 @@ List only the `@nestjs/*` packages your project already has, and add `@nestjs/we
 - **Logging.** A plain object passed to `Logger` after the message becomes structured parameters instead of being printed as text. Create the application with `logger: new ConsoleLogger({ structuredParams: false })` to keep the NestJS 11 output.
 - **Error responses.** The core and the Express adapter map errors differently. The framework's `AppExceptionFilter` sets the status and body itself, so responses that go through it are unchanged; check the ones that do not.
 
+## Moving to ESLint 10
+
+The framework's packages ship no ESLint configuration and have no peer dependency on ESLint, so a release does not make a project change its linter. A project started from one of the [starters](/docs/example-app) or the `scaffold-nx-workspace` skill owns an `eslint.config.mjs` written against ESLint 9 and `eslint-plugin-import`; the starters and the skill now write it for ESLint 10. To move an existing project the same way:
+
+```bash
+npm uninstall eslint-plugin-import
+npm install -D eslint@^10 @eslint/js@^10 eslint-plugin-import-x
+```
+
+- **The import plugin.** `eslint-plugin-import` supports ESLint up to 9. Import `eslint-plugin-import-x` instead, register it as `'import-x': importX` and rename the rule to `import-x/order`; its options are the same. It sorts a parent import (`../`) before a sibling (`./`), the opposite of `eslint-plugin-import`, so run `npx nx run-many -t lint --fix` once to reorder them.
+- **`@eslint/js`.** ESLint 10 no longer installs it, and `@nx/eslint-plugin` loads it, so it is a dev dependency of its own.
+- **New recommended rules.** `no-useless-assignment` reports an initial value that every branch overwrites (declare the variable without one) and `preserve-caught-error` reports an error rethrown without its cause (pass `{ cause: error }`).
+
+The [ESLint migration guide](https://eslint.org/docs/latest/use/migrate-to-10.0.0) has the rest; a flat config needs nothing else.
+
 ## Staying on one version
 
 The packages are pinned to each other exactly, so a project cannot end up with two of them on different versions through the stacks. If you install packages individually, keep them in lockstep: [`angular-stack`](/docs/packages/angular-stack) and its siblings exist to make that automatic.

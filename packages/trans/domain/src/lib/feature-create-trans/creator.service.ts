@@ -6,10 +6,10 @@ import {
   IItemRepository,
 } from '@smartsoft001/domain-core';
 
-import { ITransCreate } from './interfaces';
 import { Trans, TRANS_SYSTEMS } from '../entities';
 import { ITransInternalService, ITransPaymentService } from '../interfaces';
 import { TransBaseService } from '../trans.service';
+import { ITransCreate } from './interfaces';
 
 @Injectable()
 export class CreatorService<T> extends TransBaseService<T> {

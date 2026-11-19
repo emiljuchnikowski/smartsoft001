@@ -11,8 +11,8 @@ import type { Meta, StoryObj } from '@storybook/angular';
 import { NgrxSharedModule, SharedModule } from '@smartsoft001/angular';
 import { Field, Model } from '@smartsoft001/models';
 
-import { ListComponent } from './list.component';
 import { CrudModule } from '../../crud.module';
+import { ListComponent } from './list.component';
 
 @Component({
   template: ` <p>Test details</p> `,

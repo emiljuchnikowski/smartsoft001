@@ -7,11 +7,11 @@ import {
   SmartProviderProps,
 } from '@smartsoft001/react';
 
-import { SmartCrudFilterRadio } from './filter-radio';
 import { CrudProvider } from '../../../crud.provider';
 import { useCrudState } from '../../../hooks';
 import { ICrudFilter } from '../../../models';
 import { CrudService } from '../../../services/crud/crud.service';
+import { SmartCrudFilterRadio } from './filter-radio';
 
 class TodoModel {
   status?: number;

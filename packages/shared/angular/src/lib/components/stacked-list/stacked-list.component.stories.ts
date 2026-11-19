@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { StackedListPresetComponent } from './preset/preset.component';
-import { StackedListComponent } from './stacked-list.component';
 import { IStackedListItem, IStackedListOptions } from '../../models';
 import { STACKED_LIST_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { StackedListPresetComponent } from './preset/preset.component';
+import { StackedListComponent } from './stacked-list.component';
 
 const AVATAR =
   'https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-4.0.3&auto=format&fit=crop&w=96&h=96&q=80';

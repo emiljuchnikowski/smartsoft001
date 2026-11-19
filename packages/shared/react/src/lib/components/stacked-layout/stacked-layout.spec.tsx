@@ -1,11 +1,11 @@
 import { render, screen } from '@testing-library/react';
 
+import { SmartStackedLayoutContainerWidth } from '../../models';
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartStackedLayoutPreset } from './preset/stacked-layout-preset';
 import { SmartStackedLayout } from './stacked-layout';
 import { SmartStackedLayoutProps } from './stacked-layout.types';
 import { SmartStackedLayoutStandard } from './standard/stacked-layout-standard';
-import { SmartStackedLayoutContainerWidth } from '../../models';
-import { SmartProvider } from '../../providers/smart-provider';
 
 describe('@smartsoft001/react: SmartStackedLayout', () => {
   describe('wrapper', () => {

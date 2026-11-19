@@ -12,8 +12,8 @@ import { IEntity } from '@smartsoft001/domain-core';
 
 import { IDetailsOptions } from '../../models';
 import { DETAILS_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
-import { DetailsStandardComponent } from './standard/standard.component';
 import { outletInputs } from '../base/outlet-inputs';
+import { DetailsStandardComponent } from './standard/standard.component';
 
 @Component({
   selector: 'smart-details',

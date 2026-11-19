@@ -6,8 +6,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DescriptionListPresetComponent } from './preset.component';
 import { IDescriptionListOptions } from '../../../models';
+import { DescriptionListPresetComponent } from './preset.component';
 
 describe('@smartsoft001/shared-angular: DescriptionListPresetComponent', () => {
   describe('structure and cssClass', () => {

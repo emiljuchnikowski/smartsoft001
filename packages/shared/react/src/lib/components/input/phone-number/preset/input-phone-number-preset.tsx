@@ -1,11 +1,11 @@
 import { useId } from 'react';
 
+import { useInput } from '../../base/use-input';
+import { SmartInputFieldProps } from '../../input.types';
 import {
   getInputPhoneNumberPresetClasses,
   getInputPhoneNumberPresetLabelClasses,
 } from './preset-classes';
-import { useInput } from '../../base/use-input';
-import { SmartInputFieldProps } from '../../input.types';
 
 /**
  * Styled `phoneNumber` field (preset): the Preline look of

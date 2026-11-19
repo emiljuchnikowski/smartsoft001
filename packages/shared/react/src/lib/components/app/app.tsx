@@ -1,6 +1,6 @@
+import { useSmartComponent } from '../../providers/hooks';
 import { SmartAppProps } from './app.types';
 import { SmartAppStandard } from './standard/app-standard';
-import { useSmartComponent } from '../../providers/hooks';
 
 /**
  * The application shell: renders the implementation registered as

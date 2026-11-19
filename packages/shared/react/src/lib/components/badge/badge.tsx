@@ -1,6 +1,6 @@
+import { useSmartComponent } from '../../providers/hooks';
 import { SmartBadgeProps } from './badge.types';
 import { SmartBadgeStandard } from './standard/badge-standard';
-import { useSmartComponent } from '../../providers/hooks';
 
 /**
  * Renders the implementation registered as `components.badge` on

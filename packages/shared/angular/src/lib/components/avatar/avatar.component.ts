@@ -8,7 +8,6 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { AvatarStandardComponent } from './standard/standard.component';
 import {
   IAvatarItem,
   IAvatarOptions,
@@ -17,6 +16,7 @@ import {
 } from '../../models';
 import { AVATAR_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { outletInputs } from '../base/outlet-inputs';
+import { AvatarStandardComponent } from './standard/standard.component';
 
 @Component({
   selector: 'smart-avatar',

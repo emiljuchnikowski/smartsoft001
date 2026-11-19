@@ -5,8 +5,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EmptyStateBaseComponent } from './base.component';
 import { IEmptyStateOptions } from '../../../models';
+import { EmptyStateBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-empty-state',

@@ -6,11 +6,11 @@ import {
   screen,
 } from '@testing-library/react';
 
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartSelectMenu } from './select-menu';
 import { SmartSelectMenuProps } from './select-menu.types';
 import { SmartSelectMenuStandard } from './standard/select-menu-standard';
 import { useSelectMenu } from './use-select-menu';
-import { SmartProvider } from '../../providers/smart-provider';
 
 const ITEMS = [
   { value: 'a', label: 'A' },

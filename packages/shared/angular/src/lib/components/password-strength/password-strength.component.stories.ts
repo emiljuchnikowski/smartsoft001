@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { applicationConfig, moduleMetadata } from '@storybook/angular';
 
+import { provideStorybookTranslations } from '../../../../.storybook/storybook-translations';
 import { PasswordStrengthComponent } from './password-strength.component';
 import { PasswordStrengthStandardComponent } from './standard/standard.component';
-import { provideStorybookTranslations } from '../../../../.storybook/storybook-translations';
 
 interface PasswordStrengthArgs {
   passwordToCheck: string;

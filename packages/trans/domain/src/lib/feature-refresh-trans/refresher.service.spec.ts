@@ -3,13 +3,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { IItemRepository } from '@smartsoft001/domain-core';
 
-import { RefresherService } from './refresher.service';
 import { Trans, TransSystem, TransStatus } from '../entities/trans.entity';
 import {
   ITransInternalService,
   ITransPaymentService,
   ITransPaymentSingleService,
 } from '../interfaces';
+import { RefresherService } from './refresher.service';
 
 describe('trans-domain: RefresherService', () => {
   let service: RefresherService<any>;

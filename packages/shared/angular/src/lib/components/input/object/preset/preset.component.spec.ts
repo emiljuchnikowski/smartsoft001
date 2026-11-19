@@ -11,10 +11,10 @@ import { DynamicComponentInjectorToken } from 'ng-dynamic-component';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { InputObjectPresetComponent } from './preset.component';
 import { InputOptions } from '../../../../models';
 import { IModelLabelProvider } from '../../../../providers';
 import { FORM_COMPONENT_TOKEN } from '../../../../shared.inectors';
+import { InputObjectPresetComponent } from './preset.component';
 
 @Component({
   selector: 'smart-stub-form',

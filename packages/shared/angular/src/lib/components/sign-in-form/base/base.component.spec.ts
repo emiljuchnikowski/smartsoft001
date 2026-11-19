@@ -5,8 +5,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SignInFormBaseComponent } from './base.component';
 import { ISignInFormOptions, SmartSignInFormMode } from '../../../models';
+import { SignInFormBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-sign-in-form',

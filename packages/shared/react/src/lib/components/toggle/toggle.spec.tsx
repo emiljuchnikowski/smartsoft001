@@ -6,12 +6,12 @@ import {
   screen,
 } from '@testing-library/react';
 
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartTogglePreset } from './preset/toggle-preset';
 import { SmartToggleStandard } from './standard/toggle-standard';
 import { SmartToggle } from './toggle';
 import { SmartToggleProps } from './toggle.types';
 import { useToggle } from './use-toggle';
-import { SmartProvider } from '../../providers/smart-provider';
 
 describe('@smartsoft001/react: SmartToggle', () => {
   describe('useToggle', () => {

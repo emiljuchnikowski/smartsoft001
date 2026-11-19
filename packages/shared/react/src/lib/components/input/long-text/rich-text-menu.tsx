@@ -1,6 +1,7 @@
 import { Fragment, useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 
+import { cn } from '../../../utils/class-names';
 import { SmartRichTextCommand, SmartRichTextState } from './rich-text-commands';
 import {
   keepEditorFocus,
@@ -16,7 +17,6 @@ import {
   SmartRichTextToolbar,
   SmartRichTextToolbarItem,
 } from './rich-text-toolbar';
-import { cn } from '../../../utils/class-names';
 
 const MENU_BAR_CLASSES =
   'smart:flex smart:flex-wrap smart:gap-x-0.5 smart:gap-y-1 smart:p-1 smart:border-b smart:border-gray-300 smart:dark:border-white/10';

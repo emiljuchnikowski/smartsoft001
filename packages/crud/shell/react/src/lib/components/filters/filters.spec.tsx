@@ -15,13 +15,13 @@ import {
   useStyleService,
 } from '@smartsoft001/react';
 
-import { SmartCrudFilters } from './filters';
-import { SmartCrudFiltersProps } from './filters.types';
-import { useCrudFilters } from './use-crud-filters';
 import { useCrudFacade } from '../../crud.context';
 import { CrudProvider } from '../../crud.provider';
 import { CrudFacade } from '../../state/crud.facade';
 import { SmartCrudFilter } from '../filter/filter';
+import { SmartCrudFilters } from './filters';
+import { SmartCrudFiltersProps } from './filters.types';
+import { useCrudFilters } from './use-crud-filters';
 
 jest.mock('../filter/filter', () => ({
   SmartCrudFilter: jest.fn((p: { item: { key: string } }) => (

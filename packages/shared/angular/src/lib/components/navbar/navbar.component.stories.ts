@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { NavbarComponent } from './navbar.component';
-import { NavbarPresetComponent } from './preset/preset.component';
 import { INavbarOptions } from '../../models';
 import { NAVBAR_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { NavbarComponent } from './navbar.component';
+import { NavbarPresetComponent } from './preset/preset.component';
 
 const ITEMS = [
   { id: 'landing', label: 'Landing', href: '#', current: true },

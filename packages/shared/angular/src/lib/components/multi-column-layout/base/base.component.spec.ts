@@ -5,8 +5,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MultiColumnLayoutBaseComponent } from './base.component';
 import { IMultiColumnLayoutOptions } from '../../../models';
+import { MultiColumnLayoutBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-multi-column-layout',

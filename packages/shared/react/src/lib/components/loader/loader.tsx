@@ -1,6 +1,6 @@
+import { useSmartComponent } from '../../providers/hooks';
 import { SmartLoaderProps } from './loader.types';
 import { SmartLoaderStandard } from './standard/loader-standard';
-import { useSmartComponent } from '../../providers/hooks';
 
 /**
  * Renders the implementation registered as `components.loader` on

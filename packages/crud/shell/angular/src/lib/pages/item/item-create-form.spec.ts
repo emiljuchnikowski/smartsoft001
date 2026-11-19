@@ -22,11 +22,11 @@ import {
 } from '@smartsoft001/angular';
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { ItemComponent } from './item.component';
 import { CrudFacade } from '../../+state';
 import { CrudFullConfig } from '../../crud.config';
 import { CrudService } from '../../services/crud/crud.service';
 import { PageService } from '../../services/page/page.service';
+import { ItemComponent } from './item.component';
 
 @Model({})
 class NoteModel {

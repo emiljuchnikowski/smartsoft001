@@ -12,12 +12,12 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { DrawerStandardComponent } from './standard/standard.component';
 import { IDrawerOptions } from '../../models';
 import { DRAWER_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 import { outletContent } from '../base/outlet-content';
 import { outletInputs } from '../base/outlet-inputs';
+import { DrawerStandardComponent } from './standard/standard.component';
 
 @Component({
   selector: 'smart-drawer',

@@ -1,9 +1,9 @@
+import { escapeHtml } from '../../../utils/html';
 import {
   SmartRichTextColorKind,
   SmartRichTextHeading,
   SmartRichTextToggle,
 } from './rich-text-toolbar';
-import { escapeHtml } from '../../../utils/html';
 
 /** What a menu item asks the editor to do. */
 export type SmartRichTextCommand =

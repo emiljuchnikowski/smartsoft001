@@ -7,8 +7,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CalendarStandardComponent } from './standard.component';
 import { ICalendarOptions } from '../../../models';
+import { CalendarStandardComponent } from './standard.component';
 
 describe('@smartsoft001/shared-angular: CalendarStandardComponent', () => {
   describe('default rendering (no options)', () => {

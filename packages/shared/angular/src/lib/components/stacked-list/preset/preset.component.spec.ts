@@ -7,11 +7,11 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StackedListPresetComponent } from './preset.component';
 import { IStackedListOptions } from '../../../models';
 import { STACKED_LIST_STANDARD_COMPONENT_TOKEN } from '../../../shared.inectors';
 import { StackedListBaseComponent } from '../base';
 import { StackedListComponent } from '../stacked-list.component';
+import { StackedListPresetComponent } from './preset.component';
 
 describe('@smartsoft001/shared-angular: StackedListPresetComponent', () => {
   let fixture: ComponentFixture<StackedListPresetComponent>;

@@ -1,9 +1,9 @@
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { BREADCRUMBS_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { BreadcrumbsBaseComponent } from './base/base.component';
 import { BreadcrumbsComponent } from './breadcrumbs.component';
-import { BREADCRUMBS_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-breadcrumbs-injected',

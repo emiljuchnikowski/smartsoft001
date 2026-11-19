@@ -1,13 +1,13 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { useState } from 'react';
 
+import { IButtonGroupButton } from '../../models';
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartButtonGroup } from './button-group';
 import { SmartButtonGroupProps } from './button-group.types';
 import { SmartButtonGroupPreset } from './preset/button-group-preset';
 import { getButtonGroupButtonClasses } from './preset/preset-classes';
 import { SmartButtonGroupStandard } from './standard/button-group-standard';
-import { IButtonGroupButton } from '../../models';
-import { SmartProvider } from '../../providers/smart-provider';
 
 const BUTTONS: IButtonGroupButton[] = [
   { id: 'a', label: 'Alpha' },

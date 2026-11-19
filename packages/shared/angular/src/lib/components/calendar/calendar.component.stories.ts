@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { CalendarComponent } from './calendar.component';
-import { CalendarPresetComponent } from './preset/preset.component';
 import { ICalendarEvent } from '../../models';
 import { CALENDAR_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { CalendarComponent } from './calendar.component';
+import { CalendarPresetComponent } from './preset/preset.component';
 
 interface CalendarArgs {
   weekStart: 0 | 1;

@@ -1,11 +1,11 @@
 import { useId } from 'react';
 
+import { useInput } from '../../base/use-input';
+import { SmartInputFieldProps } from '../../input.types';
 import {
   getInputTextPresetClasses,
   getInputTextPresetLabelClasses,
 } from './preset-classes';
-import { useInput } from '../../base/use-input';
-import { SmartInputFieldProps } from '../../input.types';
 
 /**
  * Styled `text` field (preset): the Preline look of {@link SmartInputText}.

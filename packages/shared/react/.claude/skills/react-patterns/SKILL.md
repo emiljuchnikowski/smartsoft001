@@ -161,7 +161,7 @@ React renders `dangerouslySetInnerHTML` verbatim, so HTML always goes through `t
 
 - `react-hooks/rules-of-hooks` (error) — call every hook unconditionally, before any early `return` (`SmartInput` returns `null` for a hidden field only after its hooks ran);
 - `react-hooks/exhaustive-deps` (warn) — list what a hook reads. A deliberate omission gets `// eslint-disable-next-line react-hooks/exhaustive-deps` with a comment saying why (`SmartProvider`, `SmartInput`, `useControlState`);
-- `import/order` — external packages, then `@smartsoft001/*`, then relative imports, alphabetical, a blank line between groups.
+- `import-x/order` — external packages, then `@smartsoft001/*`, then relative imports, alphabetical, a blank line between groups.
 
 Run `npx nx lint react` / `npx nx lint crud-shell-react`.
 

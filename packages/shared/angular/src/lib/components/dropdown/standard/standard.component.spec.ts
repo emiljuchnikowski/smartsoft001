@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DropdownStandardComponent } from './standard.component';
 import { IDropdownItem } from '../../../models';
+import { DropdownStandardComponent } from './standard.component';
 
 describe('@smartsoft001/shared-angular: DropdownStandardComponent', () => {
   let fixture: ComponentFixture<DropdownStandardComponent>;

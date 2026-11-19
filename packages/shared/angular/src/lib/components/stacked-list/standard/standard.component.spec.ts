@@ -7,8 +7,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StackedListStandardComponent } from './standard.component';
 import { IStackedListOptions } from '../../../models';
+import { StackedListStandardComponent } from './standard.component';
 
 describe('@smartsoft001/shared-angular: StackedListStandardComponent', () => {
   describe('default rendering (no options)', () => {

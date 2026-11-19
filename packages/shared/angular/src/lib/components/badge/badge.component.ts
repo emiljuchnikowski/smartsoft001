@@ -10,11 +10,11 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { BadgeStandardComponent } from './standard/standard.component';
 import { IBadgeOptions, SmartBadgeColor } from '../../models';
 import { BADGE_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 import { outletInputs } from '../base/outlet-inputs';
+import { BadgeStandardComponent } from './standard/standard.component';
 
 @Component({
   selector: 'smart-badge',

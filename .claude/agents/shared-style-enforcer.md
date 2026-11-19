@@ -34,9 +34,12 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { BaseModel } from '@smartsoft001/domain-core';
 import { SmartModel } from '@smartsoft001/models';
 
-// 3. Relative imports (with blank line)
+// 3. Relative imports (with blank line), parents (`../`) before siblings (`./`)
+import { SharedConfig } from '../shared.config';
 import { LocalComponent } from './local.component';
 ```
+
+Enforced by `import-x/order` from `eslint-plugin-import-x` (see `eslint.config.mjs`); `nx lint <project> --fix` reorders.
 
 ## Fix Process
 

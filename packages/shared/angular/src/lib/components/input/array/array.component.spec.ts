@@ -10,11 +10,11 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { InputArrayComponent } from './array.component';
 import { FormFactory } from '../../../factories';
 import { InputOptions } from '../../../models';
 import { IModelLabelProvider } from '../../../providers';
 import { FORM_COMPONENT_TOKEN } from '../../../shared.inectors';
+import { InputArrayComponent } from './array.component';
 
 @Model({})
 class ArrayChildModel {

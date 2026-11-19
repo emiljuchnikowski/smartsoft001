@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { applicationConfig, moduleMetadata } from '@storybook/angular';
 
-import { SearchbarComponent } from './searchbar.component';
-import { SearchbarStandardComponent } from './standard/standard.component';
 import { provideStorybookTranslations } from '../../../../.storybook/storybook-translations';
 import { ISearchbarOptions } from '../../models';
+import { SearchbarComponent } from './searchbar.component';
+import { SearchbarStandardComponent } from './standard/standard.component';
 
 interface SearchbarArgs {
   placeholder: string;

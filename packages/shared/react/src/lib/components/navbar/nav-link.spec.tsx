@@ -1,11 +1,11 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
-import { isInternalHref, SmartNavLink } from './nav-link';
 import {
   createHistoryNavigation,
   ISmartLinkProps,
 } from '../../providers/navigation';
 import { SmartProvider } from '../../providers/smart-provider';
+import { isInternalHref, SmartNavLink } from './nav-link';
 
 describe('@smartsoft001/react: SmartNavLink', () => {
   it.each([

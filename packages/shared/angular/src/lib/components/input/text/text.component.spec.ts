@@ -10,9 +10,9 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { InputTextComponent } from './text.component';
 import { InputOptions } from '../../../models';
 import { IModelLabelProvider } from '../../../providers';
+import { InputTextComponent } from './text.component';
 
 @Model({})
 class TextModel {

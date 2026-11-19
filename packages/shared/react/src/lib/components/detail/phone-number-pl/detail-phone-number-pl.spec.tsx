@@ -2,9 +2,9 @@ import { render } from '@testing-library/react';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
+import { IDetailOptions } from '../../../models';
 import { SmartDetailPhoneNumberPl } from './detail-phone-number-pl';
 import { SmartDetailPhoneNumberPlPreset } from './preset/detail-phone-number-pl-preset';
-import { IDetailOptions } from '../../../models';
 
 @Model({})
 class Contact {

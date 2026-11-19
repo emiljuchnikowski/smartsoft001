@@ -2,8 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { InfoStandardComponent } from './standard.component';
 import { IInfoOptions } from '../../../models';
+import { InfoStandardComponent } from './standard.component';
 
 @Pipe({ name: 'translate' })
 class MockTranslatePipe implements PipeTransform {

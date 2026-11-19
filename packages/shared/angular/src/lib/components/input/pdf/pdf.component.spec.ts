@@ -11,10 +11,10 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { InputPdfComponent } from './pdf.component';
 import { InputOptions } from '../../../models';
 import { IModelLabelProvider } from '../../../providers';
 import { FileService, ToastService } from '../../../services';
+import { InputPdfComponent } from './pdf.component';
 
 @Model({})
 class PdfModel {

@@ -1,9 +1,9 @@
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { TEXTAREA_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { TextareaBaseComponent } from './base/base.component';
 import { TextareaComponent } from './textarea.component';
-import { TEXTAREA_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-textarea-injected',

@@ -7,13 +7,13 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
+import { CardBaseComponent } from '../base/base.component';
 import {
   getCardBodyClasses,
   getCardContainerClasses,
   getCardFooterClasses,
   getCardHeaderClasses,
 } from './preset-classes.util';
-import { CardBaseComponent } from '../base/base.component';
 
 /**
  * Styled card variation (preset).

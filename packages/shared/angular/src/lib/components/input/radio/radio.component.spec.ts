@@ -10,12 +10,12 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { InputRadioComponent } from './radio.component';
 import { InputOptions } from '../../../models';
 import {
   IModelLabelProvider,
   MODEL_POSSIBILITIES_PROVIDER,
 } from '../../../providers';
+import { InputRadioComponent } from './radio.component';
 
 @Model({})
 class RadioModel {

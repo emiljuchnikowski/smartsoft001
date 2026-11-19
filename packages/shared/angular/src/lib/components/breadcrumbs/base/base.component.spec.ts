@@ -5,8 +5,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BreadcrumbsBaseComponent } from './base.component';
 import { IBreadcrumbsOptions } from '../../../models';
+import { BreadcrumbsBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-breadcrumbs',

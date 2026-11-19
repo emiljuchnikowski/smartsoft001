@@ -3,11 +3,11 @@ import { act, fireEvent, render, screen } from '@testing-library/react';
 import { IModelFilter } from '@smartsoft001/models';
 import { SmartProvider } from '@smartsoft001/react';
 
-import { SmartCrudFilterDate } from './filter-date';
 import { CrudProvider } from '../../../crud.provider';
 import { useCrudState } from '../../../hooks';
 import { ICrudFilter } from '../../../models';
 import { CrudService } from '../../../services/crud/crud.service';
+import { SmartCrudFilterDate } from './filter-date';
 
 class TodoModel {
   date?: string;

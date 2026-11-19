@@ -7,8 +7,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GridListStandardComponent } from './standard.component';
 import { IGridListOptions } from '../../../models';
+import { GridListStandardComponent } from './standard.component';
 
 describe('@smartsoft001/shared-angular: GridListStandardComponent', () => {
   describe('default rendering (no options)', () => {

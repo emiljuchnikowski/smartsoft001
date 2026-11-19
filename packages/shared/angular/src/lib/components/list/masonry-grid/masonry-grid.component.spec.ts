@@ -13,11 +13,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { IEntity } from '@smartsoft001/domain-core';
 import { Field, Model } from '@smartsoft001/models';
 
-import { ListMasonryGridComponent } from './masonry-grid.component';
 import { IListInternalOptions, IListProvider } from '../../../models';
 import { FileUrlPipe, ListCellPipe } from '../../../pipes';
 import { AlertService, AuthService } from '../../../services';
 import { PagingComponent } from '../../paging';
+import { ListMasonryGridComponent } from './masonry-grid.component';
 
 @Pipe({ name: 'smartListCell' })
 class MockListCellPipe implements PipeTransform {

@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
+import { LOADER_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { LoaderComponent } from './loader.component';
 import { LoaderPresetComponent } from './preset/preset.component';
-import { LOADER_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 const meta: Meta<LoaderComponent> = {
   title: 'Components/Loader',

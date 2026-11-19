@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 
+import { SmartProvider } from '../../../providers/smart-provider';
 import { SmartInputError } from './input-error';
 import { SmartInputErrorPreset } from './preset/input-error-preset';
-import { SmartProvider } from '../../../providers/smart-provider';
 
 describe('@smartsoft001/react: SmartInputError', () => {
   it.each([

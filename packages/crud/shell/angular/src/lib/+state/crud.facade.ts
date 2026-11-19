@@ -7,13 +7,13 @@ import { NgrxStoreService } from '@smartsoft001/angular';
 import { IEntity } from '@smartsoft001/domain-core';
 
 import { CrudConfig } from '../crud.config';
-import * as CrudActions from './crud.actions';
-import * as CrudSelectors from './crud.selectors';
 import {
   ICrudCreateManyOptions,
   ICrudFilter,
   ICrudFilterQueryItem,
 } from '../models';
+import * as CrudActions from './crud.actions';
+import * as CrudSelectors from './crud.selectors';
 
 @Injectable()
 export class CrudFacade<T extends IEntity<string>> {

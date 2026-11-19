@@ -47,12 +47,12 @@ import { ExportComponent } from '../../components';
 import { FiltersComponent } from '../../components';
 import { MultiselectComponent } from '../../components';
 import { CrudFullConfig } from '../../crud.config';
-import { CrudListPageBaseComponent } from './base/base.component';
 import { CrudListPaginationFactory } from '../../factories/list-pagination/list-pagination.factory';
 import { ICrudFilter } from '../../models';
-import { ListStandardComponent } from './standard/standard.component';
 import { PageService } from '../../services/page/page.service';
 import { CrudSearchService } from '../../services/search/search.service';
+import { CrudListPageBaseComponent } from './base/base.component';
+import { ListStandardComponent } from './standard/standard.component';
 
 @Component({
   selector: 'smart-crud-list-page',
@@ -124,7 +124,7 @@ export class ListComponent<T extends IEntity<string>>
 
     const options = getModelOptions(this.config.type);
 
-    let newFilter = null;
+    let newFilter;
 
     if (this.config.list?.resetQuery === 'beforeInit') {
       newFilter = {

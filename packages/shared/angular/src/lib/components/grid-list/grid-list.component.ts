@@ -8,10 +8,10 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { GridListStandardComponent } from './standard';
 import { IGridListOptions } from '../../models';
 import { GRID_LIST_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { outletInputs } from '../base/outlet-inputs';
+import { GridListStandardComponent } from './standard';
 
 @Component({
   selector: 'smart-grid-list',

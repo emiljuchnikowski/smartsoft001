@@ -3,11 +3,11 @@ import { of } from 'rxjs';
 
 import { IEntity } from '@smartsoft001/domain-core';
 
-import { FormOptionsPipe } from './form-options.pipe';
 import {
   CRUD_MODEL_POSSIBILITIES_PROVIDER,
   ICrudModelPossibilitiesProvider,
 } from '../../providers/model-possibilities/model-possibilities.provider';
+import { FormOptionsPipe } from './form-options.pipe';
 
 class SomeType implements IEntity<string> {
   id!: string;

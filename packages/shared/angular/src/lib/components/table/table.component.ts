@@ -8,10 +8,10 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { TableStandardComponent } from './standard';
 import { ITableOptions } from '../../models';
 import { TABLE_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { outletInputs } from '../base/outlet-inputs';
+import { TableStandardComponent } from './standard';
 
 @Component({
   selector: 'smart-table',

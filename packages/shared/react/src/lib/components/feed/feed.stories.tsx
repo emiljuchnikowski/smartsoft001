@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
+import { IFeedOptions, SmartFeedVariant } from '../../models';
 import { SmartFeed } from './feed';
 import { SmartFeedPreset } from './preset/feed-preset';
-import { IFeedOptions, SmartFeedVariant } from '../../models';
 
 const VARIANTS: SmartFeedVariant[] = [
   'simple',

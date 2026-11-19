@@ -5,8 +5,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DropdownBaseComponent } from './base.component';
 import { IDropdownItem, IDropdownOptions } from '../../../models';
+import { DropdownBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-dropdown',

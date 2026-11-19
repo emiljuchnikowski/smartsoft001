@@ -1,13 +1,13 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 
+import { SmartProvider } from '../../providers/smart-provider';
+import { ModalService } from '../../services/modal/modal.service';
 import {
   IDetailsModalOptions,
   useDetailsModal,
   UseDetailsModalCallbacks,
 } from './use-details-modal';
-import { SmartProvider } from '../../providers/smart-provider';
-import { ModalService } from '../../services/modal/modal.service';
 
 function Page() {
   return <p>page</p>;

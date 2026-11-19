@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { SignInFormPresetComponent } from './preset/preset.component';
-import { SignInFormComponent } from './sign-in-form.component';
 import { SmartSignInFormLayout } from '../../models';
 import { SIGN_IN_FORM_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { SignInFormPresetComponent } from './preset/preset.component';
+import { SignInFormComponent } from './sign-in-form.component';
 
 const LAYOUTS: SmartSignInFormLayout[] = [
   'simple',

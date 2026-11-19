@@ -9,8 +9,8 @@ import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 
 import { Field, Model } from '@smartsoft001/models';
 
-import { FormBaseComponent } from './base.component';
 import { IFormOptions } from '../../../models';
+import { FormBaseComponent } from './base.component';
 
 @Model({})
 class TestItemModel {

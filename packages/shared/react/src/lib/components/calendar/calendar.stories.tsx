@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { SmartCalendar } from './calendar';
 import { ICalendarEvent } from '../../models';
+import { SmartCalendar } from './calendar';
 import { SmartCalendarPreset } from './preset/calendar-preset';
 
 interface CalendarArgs {

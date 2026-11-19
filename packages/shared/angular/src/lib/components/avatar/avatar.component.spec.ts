@@ -1,9 +1,9 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { AVATAR_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { AvatarComponent } from './avatar.component';
 import { AvatarBaseComponent } from './base/base.component';
-import { AVATAR_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-avatar-injected',

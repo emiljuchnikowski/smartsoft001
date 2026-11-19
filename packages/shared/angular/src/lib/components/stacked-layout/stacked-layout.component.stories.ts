@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
+import { STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { StackedLayoutPresetComponent } from './preset/preset.component';
 import { StackedLayoutComponent } from './stacked-layout.component';
-import { STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 const CONTAINER_WIDTHS = ['sm', 'md', 'lg', 'xl', 'full'] as const;
 

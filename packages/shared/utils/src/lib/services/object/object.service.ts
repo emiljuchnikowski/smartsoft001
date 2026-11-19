@@ -37,7 +37,7 @@ export class ObjectService {
 
     Object.keys(obj).forEach((key) => {
       if (obj[key] && obj[key].constructor && !(obj[key] instanceof Date)) {
-        let stringValue = '';
+        let stringValue: string;
         try {
           stringValue = JSON.stringify(obj[key]);
         } catch (e) {

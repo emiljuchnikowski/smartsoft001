@@ -2,9 +2,9 @@ import { render } from '@testing-library/react';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
+import { IDetailOptions } from '../../../models';
 import { SmartDetailLogo } from './detail-logo';
 import { SmartDetailLogoPreset } from './preset/detail-logo-preset';
-import { IDetailOptions } from '../../../models';
 
 @Model({})
 class Brand {

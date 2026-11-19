@@ -3,8 +3,6 @@ import type { ComponentType } from 'react';
 
 import { Field, FieldType, getModelOptions, Model } from '@smartsoft001/models';
 
-import { SmartInputArray } from './input-array';
-import { SmartInputArrayPreset } from './preset/input-array-preset';
 import { FormFactory } from '../../../factories/form/form.factory';
 import { SmartFormArray } from '../../../forms/form-array';
 import { SmartFormControl } from '../../../forms/form-control';
@@ -14,6 +12,8 @@ import { IModelLabelProvider } from '../../../providers/model-label.provider';
 import { SmartProvider } from '../../../providers/smart-provider';
 import { SmartFormBaseProps } from '../../form/form.types';
 import { SmartInputFieldProps } from '../input.types';
+import { SmartInputArray } from './input-array';
+import { SmartInputArrayPreset } from './preset/input-array-preset';
 
 @Model({})
 class ArrayChildModel {

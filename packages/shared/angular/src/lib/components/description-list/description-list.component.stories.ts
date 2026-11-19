@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { DescriptionListComponent } from './description-list.component';
-import { DescriptionListPresetComponent } from './preset/preset.component';
 import { IDescriptionListOptions } from '../../models';
 import { DESCRIPTION_LIST_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { DescriptionListComponent } from './description-list.component';
+import { DescriptionListPresetComponent } from './preset/preset.component';
 
 const ITEMS: IDescriptionListOptions['items'] = [
   { label: 'Full name', value: 'Margot Foster' },

@@ -6,13 +6,13 @@ import {
   screen,
 } from '@testing-library/react';
 
+import { ITextareaOptions } from '../../models';
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartTextareaPreset } from './preset/textarea-preset';
 import { SmartTextareaStandard } from './standard/textarea-standard';
 import { SmartTextarea } from './textarea';
 import { SmartTextareaProps } from './textarea.types';
 import { useTextarea } from './use-textarea';
-import { ITextareaOptions } from '../../models';
-import { SmartProvider } from '../../providers/smart-provider';
 
 describe('@smartsoft001/react: SmartTextarea', () => {
   describe('useTextarea', () => {

@@ -1,8 +1,8 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PageHeadingPresetComponent } from './preset.component';
 import { IPageHeadingOptions } from '../../../models';
+import { PageHeadingPresetComponent } from './preset.component';
 
 @Component({
   selector: 'smart-test-page-heading-templates',

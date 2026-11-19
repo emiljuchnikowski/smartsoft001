@@ -1,9 +1,9 @@
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { StackedLayoutBaseComponent } from './base/base.component';
 import { StackedLayoutComponent } from './stacked-layout.component';
-import { STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-stacked-layout-injected',

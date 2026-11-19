@@ -105,7 +105,7 @@ export class FormFactory {
 
     for (let index = 0; index < fields.length; index++) {
       const field = fields[index];
-      let control: AbstractControl | null = null;
+      let control: AbstractControl;
 
       const options = FormFactory.getOptionsFromMode(field.options, ops.mode);
 

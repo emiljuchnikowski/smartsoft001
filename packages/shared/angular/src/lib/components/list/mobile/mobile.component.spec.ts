@@ -13,11 +13,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { IEntity } from '@smartsoft001/domain-core';
 import { Field, Model } from '@smartsoft001/models';
 
-import { ListMobileComponent } from './mobile.component';
 import { IListInternalOptions, IListProvider } from '../../../models';
 import { FileUrlPipe, ListCellPipe } from '../../../pipes';
 import { AlertService, AuthService } from '../../../services';
 import { PagingComponent } from '../../paging';
+import { ListMobileComponent } from './mobile.component';
 
 @Pipe({ name: 'smartListCell' })
 class MockListCellPipe implements PipeTransform {

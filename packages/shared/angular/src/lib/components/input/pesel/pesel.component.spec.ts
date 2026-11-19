@@ -10,9 +10,9 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { InputPeselComponent } from './pesel.component';
 import { InputOptions } from '../../../models';
 import { IModelLabelProvider } from '../../../providers';
+import { InputPeselComponent } from './pesel.component';
 
 @Model({})
 class PeselModel {

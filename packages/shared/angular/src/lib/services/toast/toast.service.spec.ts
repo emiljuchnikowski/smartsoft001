@@ -1,9 +1,9 @@
 import { ApplicationRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
-import { ToastService } from './toast.service';
 import { NotificationPresetComponent } from '../../components/notification/preset/preset.component';
 import { NOTIFICATION_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { ToastService } from './toast.service';
 
 describe('@smartsoft001/angular: ToastService', () => {
   let service: ToastService;

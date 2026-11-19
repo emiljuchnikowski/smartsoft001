@@ -1,7 +1,6 @@
 import { IEntity } from '@smartsoft001/domain-core';
 import { FieldType } from '@smartsoft001/models';
 
-import { useListMasonryGrid } from './use-list-masonry-grid';
 import { PaginationMode } from '../../../models';
 import { useTranslate } from '../../../providers/hooks';
 import { cn } from '../../../utils/class-names';
@@ -10,6 +9,7 @@ import { getListCell } from '../../../utils/model';
 import { SmartPaging } from '../../paging/paging';
 import { SmartListModeProps } from '../list.types';
 import { useListFileUrl } from '../use-list';
+import { useListMasonryGrid } from './use-list-masonry-grid';
 
 /**
  * The masonry-grid list: a grid of tiles with the item's image (the model's

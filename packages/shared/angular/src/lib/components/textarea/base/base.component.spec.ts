@@ -5,8 +5,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TextareaBaseComponent } from './base.component';
 import { ITextareaOptions } from '../../../models';
+import { TextareaBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-textarea',

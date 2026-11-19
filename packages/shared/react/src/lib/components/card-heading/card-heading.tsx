@@ -1,6 +1,6 @@
+import { useSmartComponent } from '../../providers/hooks';
 import { SmartCardHeadingProps } from './card-heading.types';
 import { SmartCardHeadingStandard } from './standard/card-heading-standard';
-import { useSmartComponent } from '../../providers/hooks';
 
 /**
  * Renders the implementation registered as `components['card-heading']` on

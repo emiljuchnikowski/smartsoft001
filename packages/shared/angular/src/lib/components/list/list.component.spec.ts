@@ -12,10 +12,10 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { IEntity } from '@smartsoft001/domain-core';
 import { Field, Model } from '@smartsoft001/models';
 
-import { ListComponent } from './list.component';
 import { IListOptions, IListProvider, ListMode } from '../../models';
 import { HardwareService } from '../../services';
 import { LIST_MODE_COMPONENTS_TOKEN } from '../../shared.inectors';
+import { ListComponent } from './list.component';
 
 @Pipe({ name: 'translate', standalone: true })
 class MockTranslatePipe implements PipeTransform {

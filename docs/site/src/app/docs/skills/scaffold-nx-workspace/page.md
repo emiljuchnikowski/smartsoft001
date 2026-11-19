@@ -21,7 +21,7 @@ The conventions it enforces:
 
 - npm, Nx and an Angular SSR app built with `@angular/build:application` in `outputMode: server`; Jest with the zoneless `jest-preset-angular` environment for unit tests and Playwright for end-to-end tests.
 - A cached `build` target, `lint` and `test` targets inferred by the `@nx/eslint/plugin` and `@nx/jest/plugin` Nx plugins (Nx 24 no longer has the `@nx/eslint:lint` and `@nx/jest:jest` executors), and a `defaultBase` for `nx affected`; no Nx Cloud binding.
-- ESLint flat config with `import/order` and a path group for the workspace prefix, Prettier with single quotes, husky and commitlint with scopes derived from `libs/`.
+- ESLint flat config with `import-x/order` (eslint-plugin-import-x) and a path group for the workspace prefix, Prettier with single quotes, husky and commitlint with scopes derived from `libs/`.
 - `apps/` and `libs/` layout, the shared library aliased as `@<prefix>/angular`, SCSS everywhere.
 - An `EnvironmentService`, an `/env.js` endpoint and an `env-init.ts` imported first in `main.server.ts`, so the SSR runtime reads its environment at start.
 

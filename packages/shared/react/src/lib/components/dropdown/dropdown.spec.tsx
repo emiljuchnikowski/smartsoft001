@@ -6,13 +6,13 @@ import {
   screen,
 } from '@testing-library/react';
 
+import { IDropdownItem } from '../../models';
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartDropdown } from './dropdown';
 import { SmartDropdownProps } from './dropdown.types';
 import { SmartDropdownPreset } from './preset/dropdown-preset';
 import { SmartDropdownStandard } from './standard/dropdown-standard';
 import { useDropdown } from './use-dropdown';
-import { IDropdownItem } from '../../models';
-import { SmartProvider } from '../../providers/smart-provider';
 
 describe('@smartsoft001/react: SmartDropdown', () => {
   describe('wrapper', () => {

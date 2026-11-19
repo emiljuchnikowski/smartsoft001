@@ -3,11 +3,11 @@ import type { ReactNode } from 'react';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { SmartDetailVideo } from './detail-video';
-import { SmartDetailVideoPreset } from './preset/detail-video-preset';
 import { IDetailOptions } from '../../../models';
 import { SmartProvider } from '../../../providers/smart-provider';
 import { FileService } from '../../../services/file/file.service';
+import { SmartDetailVideo } from './detail-video';
+import { SmartDetailVideoPreset } from './preset/detail-video-preset';
 
 @Model({})
 class Lesson {

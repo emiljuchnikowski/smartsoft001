@@ -1,6 +1,6 @@
+import { useSmartComponent } from '../../providers/hooks';
 import { SmartGridListProps } from './grid-list.types';
 import { SmartGridListStandard } from './standard/grid-list-standard';
-import { useSmartComponent } from '../../providers/hooks';
 
 /**
  * Renders the implementation registered as `components['grid-list']` on

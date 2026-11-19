@@ -1,6 +1,6 @@
+import { useSmartComponent } from '../../providers/hooks';
 import { SmartMediaObjectProps } from './media-object.types';
 import { SmartMediaObjectStandard } from './standard/media-object-standard';
-import { useSmartComponent } from '../../providers/hooks';
 
 /**
  * Renders the implementation registered as `components['media-object']` on

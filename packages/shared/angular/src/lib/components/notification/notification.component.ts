@@ -10,12 +10,12 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { INotificationActionClick } from './base/base.component';
-import { NotificationStandardComponent } from './standard/standard.component';
 import { INotificationAction, INotificationOptions } from '../../models';
 import { NOTIFICATION_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 import { outletInputs } from '../base/outlet-inputs';
+import { INotificationActionClick } from './base/base.component';
+import { NotificationStandardComponent } from './standard/standard.component';
 
 @Component({
   selector: 'smart-notification',

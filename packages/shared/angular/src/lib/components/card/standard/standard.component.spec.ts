@@ -7,8 +7,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CardStandardComponent } from './standard.component';
 import { ICardOptions } from '../../../models';
+import { CardStandardComponent } from './standard.component';
 
 @Component({
   selector: 'smart-test-host',

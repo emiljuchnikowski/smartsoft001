@@ -2,10 +2,10 @@ import { signal } from '@angular/core';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
+import { PAGING_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { PagingVariant } from './base/base.component';
 import { PagingComponent } from './paging.component';
 import { PagingPresetComponent } from './preset/preset.component';
-import { PAGING_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 interface PagingArgs {
   currentPage: number;

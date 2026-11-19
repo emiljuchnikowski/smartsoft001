@@ -2,9 +2,9 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import type { ReactNode } from 'react';
 
+import { IPageOptions } from '../../models';
 import { SmartPage } from './page';
 import { PAGE_PRESET_VARIANT_COMPONENTS } from './preset-variants';
-import { IPageOptions } from '../../models';
 
 interface PageStoryProps {
   title?: string;

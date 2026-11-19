@@ -2,8 +2,8 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import type { ReactNode } from 'react';
 
-import { SmartSearchbar } from './searchbar';
 import { ISearchbarOptions } from '../../models';
+import { SmartSearchbar } from './searchbar';
 
 interface SearchbarArgs {
   placeholder: string;

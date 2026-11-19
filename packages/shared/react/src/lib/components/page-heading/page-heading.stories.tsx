@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { SmartPageHeading } from './page-heading';
 import { IPageHeadingOptions } from '../../models';
+import { SmartPageHeading } from './page-heading';
 import { SmartPageHeadingPreset } from './preset/page-heading-preset';
 
 const LAYOUTS = ['links-left', 'links-center', 'links-right', 'user'] as const;

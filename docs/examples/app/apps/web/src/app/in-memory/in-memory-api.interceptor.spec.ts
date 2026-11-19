@@ -10,13 +10,13 @@ import { firstValueFrom } from 'rxjs';
 
 import { Note } from '@app/model';
 
+import { AUTH_CLIENT_ID, TOKEN_URL } from '../auth/login.service';
+import { notesConfig } from '../notes/notes.config';
 import {
   DEMO_CREDENTIALS,
   DEMO_NOTES_KEY,
   IN_MEMORY_API_PROVIDER,
 } from './in-memory-api.interceptor';
-import { AUTH_CLIENT_ID, TOKEN_URL } from '../auth/login.service';
-import { notesConfig } from '../notes/notes.config';
 
 interface IList {
   data: Note[];

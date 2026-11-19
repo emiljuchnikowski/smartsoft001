@@ -1,6 +1,6 @@
+import { useSmartComponent } from '../../providers/hooks';
 import { SmartSelectMenuProps } from './select-menu.types';
 import { SmartSelectMenuStandard } from './standard/select-menu-standard';
-import { useSmartComponent } from '../../providers/hooks';
 
 /**
  * Renders the implementation registered as `components['select-menu']` on

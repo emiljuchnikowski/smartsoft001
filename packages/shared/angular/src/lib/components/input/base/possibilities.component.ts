@@ -15,8 +15,8 @@ import { debounceTime } from 'rxjs/operators';
 
 import { getModelFieldOptions } from '@smartsoft001/models';
 
-import { InputBaseComponent } from './base.component';
 import { MODEL_POSSIBILITIES_PROVIDER } from '../../../providers';
+import { InputBaseComponent } from './base.component';
 
 type InputPossibilities = Array<{
   id: any;

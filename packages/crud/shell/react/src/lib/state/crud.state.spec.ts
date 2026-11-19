@@ -1,11 +1,11 @@
 import { PaginationMode } from '@smartsoft001/react';
 
+import { CrudService } from '../services/crud/crud.service';
 import * as CrudActions from './crud.actions';
 import { CrudEffects } from './crud.effects';
 import { CrudFacade } from './crud.facade';
 import { getReducer, initialState } from './crud.reducer';
 import { CrudStore } from './crud.store';
-import { CrudService } from '../services/crud/crud.service';
 
 type Todo = { id: string; name?: string };
 

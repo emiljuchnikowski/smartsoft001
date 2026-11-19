@@ -3,9 +3,9 @@ import { render } from '@testing-library/react';
 import { IAddress } from '@smartsoft001/domain-core';
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
+import { IDetailOptions } from '../../../models';
 import { SmartDetailAddress } from './detail-address';
 import { SmartDetailAddressPreset } from './preset/detail-address-preset';
-import { IDetailOptions } from '../../../models';
 
 @Model({})
 class Company {

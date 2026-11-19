@@ -3,12 +3,12 @@ import { act, fireEvent, render, screen } from '@testing-library/react';
 import { SmartProvider } from '@smartsoft001/react';
 import type { SmartProviderProps } from '@smartsoft001/react';
 
-import { SmartCrudFiltersConfig } from './filters-config';
 import { useCrudFacade } from '../../crud.context';
 import { CrudProvider } from '../../crud.provider';
 import { ICrudFilter } from '../../models';
 import { CrudService } from '../../services/crud/crud.service';
 import { CrudFacade } from '../../state/crud.facade';
+import { SmartCrudFiltersConfig } from './filters-config';
 
 class TodoModel {
   id!: string;

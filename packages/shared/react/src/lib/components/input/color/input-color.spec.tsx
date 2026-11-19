@@ -3,13 +3,13 @@ import type { ComponentType } from 'react';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { SmartInputColor } from './input-color';
-import { SmartInputColorPreset } from './preset/input-color-preset';
 import { SmartFormControl } from '../../../forms/form-control';
 import { SmartFormGroup } from '../../../forms/form-group';
 import { SmartValidators } from '../../../forms/validators';
 import { SmartProvider } from '../../../providers/smart-provider';
 import { SmartInputFieldProps } from '../input.types';
+import { SmartInputColor } from './input-color';
+import { SmartInputColorPreset } from './preset/input-color-preset';
 
 @Model({})
 class Theme {

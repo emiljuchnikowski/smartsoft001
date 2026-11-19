@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StatsPresetComponent } from './preset.component';
 import { IStatsOptions } from '../../../models';
+import { StatsPresetComponent } from './preset.component';
 
 describe('@smartsoft001/shared-angular: StatsPresetComponent', () => {
   let fixture: ComponentFixture<StatsPresetComponent>;

@@ -1,15 +1,15 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
-import { SmartNavbar } from './navbar';
-import { SmartNavbarProps } from './navbar.types';
-import { SmartNavbarPreset } from './preset/navbar-preset';
-import { SmartNavbarStandard } from './standard/navbar-standard';
 import {
   createHistoryNavigation,
   ISmartLinkProps,
   ISmartNavigation,
 } from '../../providers/navigation';
 import { SmartProvider } from '../../providers/smart-provider';
+import { SmartNavbar } from './navbar';
+import { SmartNavbarProps } from './navbar.types';
+import { SmartNavbarPreset } from './preset/navbar-preset';
+import { SmartNavbarStandard } from './standard/navbar-standard';
 
 function routerNavigation(): ISmartNavigation {
   return {

@@ -6,11 +6,11 @@ import {
   screen,
 } from '@testing-library/react';
 
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartSearchbar } from './searchbar';
 import { SmartSearchbarProps } from './searchbar.types';
 import { SmartSearchbarStandard } from './standard/searchbar-standard';
 import { useSearchbar } from './use-searchbar';
-import { SmartProvider } from '../../providers/smart-provider';
 
 describe('@smartsoft001/react: SmartSearchbar', () => {
   beforeEach(() => jest.useFakeTimers());

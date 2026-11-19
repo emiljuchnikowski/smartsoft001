@@ -7,8 +7,8 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { AccordionDefaultComponent } from './default/default.component';
 import { IAccordionOptions } from '../../models';
+import { AccordionDefaultComponent } from './default/default.component';
 
 @Component({
   selector: 'smart-accordion',

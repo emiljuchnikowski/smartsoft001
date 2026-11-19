@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react';
 
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartDescriptionList } from './description-list';
 import { SmartDescriptionListProps } from './description-list.types';
 import { SmartDescriptionListPreset } from './preset/description-list-preset';
 import { SmartDescriptionListStandard } from './standard/description-list-standard';
-import { SmartProvider } from '../../providers/smart-provider';
 
 describe('@smartsoft001/react: SmartDescriptionList', () => {
   describe('wrapper', () => {

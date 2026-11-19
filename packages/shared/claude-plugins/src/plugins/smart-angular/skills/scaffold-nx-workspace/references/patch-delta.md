@@ -113,7 +113,7 @@ Keep `compilerOptions`; replace `paths` with a **single generic** entry. NO modu
 
 ## `eslint.config.mjs` (overwrite)
 
-Thread `<PREFIX>` into the `import/order` `pathGroups`. Keep the storybook block (the base
+Thread `<PREFIX>` into the `import-x/order` `pathGroups`. Keep the storybook block (the base
 shared lib ships `.storybook`).
 
 ```js
@@ -121,24 +121,25 @@ shared lib ships `.storybook`).
 import storybook from 'eslint-plugin-storybook';
 
 import nx from '@nx/eslint-plugin';
-import importPlugin from 'eslint-plugin-import';
+import importX from 'eslint-plugin-import-x';
 
 export default [
   ...nx.configs['flat/base'],
   ...nx.configs['flat/typescript'],
   ...nx.configs['flat/javascript'],
   {
-    ignores: ['**/dist'],
+    // Flat config reads no `.eslintignore`; the ignores live here.
+    ignores: ['**/dist', '**/node_modules', '**/tailwind.config.js'],
   },
   {
     plugins: {
-      import: importPlugin,
+      'import-x': importX,
     },
   },
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
     rules: {
-      'import/order': [
+      'import-x/order': [
         'error',
         {
           'newlines-between': 'always',
@@ -243,13 +244,6 @@ trim_trailing_whitespace = true
 [*.md]
 max_line_length = off
 trim_trailing_whitespace = false
-```
-
-## `.eslintignore` (overwrite)
-
-```
-node_modules
-**/tailwind.config.js
 ```
 
 ## `.nvmrc` (overwrite)
@@ -368,6 +362,7 @@ So the seeded `.claude` hooks and commit hooks resolve. Pin none of these to a l
 resolve each at run time:
 
 - `@smartsoft001/claude-plugins` → the version currently providing this skill (`npm view @smartsoft001/claude-plugins version`, or the locally installed one).
+- `eslint-plugin-import-x` → its current published version: the `eslint.config.mjs` above imports it and `create-nx-workspace` does not install it.
 - `husky`, `@commitlint/cli`, `@commitlint/config-conventional` → their current published versions (`npm view <pkg> version`), unless `create-nx-workspace` already added compatible ones.
 
 ### Toolchain versions — derive, do not pin

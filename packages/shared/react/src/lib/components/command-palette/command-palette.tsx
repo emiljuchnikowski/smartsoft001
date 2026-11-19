@@ -1,6 +1,6 @@
+import { useSmartComponent } from '../../providers/hooks';
 import { SmartCommandPaletteProps } from './command-palette.types';
 import { SmartCommandPaletteStandard } from './standard/command-palette-standard';
-import { useSmartComponent } from '../../providers/hooks';
 
 /**
  * Renders the implementation registered as `components['command-palette']` on

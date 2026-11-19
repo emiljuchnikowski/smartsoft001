@@ -6,9 +6,9 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PageBaseComponent } from './base.component';
 import { IPageOptions } from '../../../models';
 import { AppService, HardwareService } from '../../../services';
+import { PageBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-page',

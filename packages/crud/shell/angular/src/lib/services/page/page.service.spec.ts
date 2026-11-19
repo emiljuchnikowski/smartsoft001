@@ -20,8 +20,8 @@ jest.mock('@smartsoft001/angular', () => ({
 
 import { AuthService } from '@smartsoft001/angular';
 
-import { PageService } from './page.service';
 import { CrudFullConfig } from '../../crud.config';
+import { PageService } from './page.service';
 
 describe('crud-shell-angular: PageService', () => {
   let service: PageService<any>;

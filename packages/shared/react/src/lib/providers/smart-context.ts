@@ -3,13 +3,6 @@ import type { ComponentType } from 'react';
 
 import { FieldTypeDef } from '@smartsoft001/models';
 
-import { IAppProvider } from './interfaces';
-import { IModelExportProvider } from './model-export.provider';
-import { IModelImportProvider } from './model-import.provider';
-import { IModelLabelProvider } from './model-label.provider';
-import { IModelPossibilitiesProvider } from './model-possibilities.provider';
-import { IModelValidatorsProvider } from './model-validators.provider';
-import { createHistoryNavigation, ISmartNavigation } from './navigation';
 import { FormFactory } from '../factories/form/form.factory';
 import {
   createTranslator,
@@ -34,6 +27,13 @@ import { ModalService } from '../services/modal/modal.service';
 import { StorageService } from '../services/storage/storage.service';
 import { StyleService } from '../services/style/style.service';
 import { ToastService } from '../services/toast/toast.service';
+import { IAppProvider } from './interfaces';
+import { IModelExportProvider } from './model-export.provider';
+import { IModelImportProvider } from './model-import.provider';
+import { IModelLabelProvider } from './model-label.provider';
+import { IModelPossibilitiesProvider } from './model-possibilities.provider';
+import { IModelValidatorsProvider } from './model-validators.provider';
+import { createHistoryNavigation, ISmartNavigation } from './navigation';
 
 /**
  * The name a component is registered under to replace the default rendering

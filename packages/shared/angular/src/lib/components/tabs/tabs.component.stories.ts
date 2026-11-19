@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { TabsPresetComponent } from './preset/preset.component';
-import { TabsComponent } from './tabs.component';
 import { ITabItem, SmartTabsLayout } from '../../models';
 import { TABS_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { TabsPresetComponent } from './preset/preset.component';
+import { TabsComponent } from './tabs.component';
 
 const LAYOUTS: SmartTabsLayout[] = [
   'underline',

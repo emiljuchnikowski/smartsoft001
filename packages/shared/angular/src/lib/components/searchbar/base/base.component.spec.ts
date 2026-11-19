@@ -5,8 +5,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SearchbarBaseComponent } from './base.component';
 import { ISearchbarOptions } from '../../../models';
+import { SearchbarBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-searchbar',

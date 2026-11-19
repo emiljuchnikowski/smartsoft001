@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AlertStandardComponent } from './standard.component';
 import { IAlertOptions } from '../../../models';
+import { AlertStandardComponent } from './standard.component';
 
 describe('@smartsoft001/shared-angular: AlertStandardComponent', () => {
   let fixture: ComponentFixture<AlertStandardComponent>;

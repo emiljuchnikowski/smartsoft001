@@ -10,12 +10,12 @@ import { By } from '@angular/platform-browser';
 import { IEntity } from '@smartsoft001/domain-core';
 import { Field, Model } from '@smartsoft001/models';
 
+import { IDetailsOptions } from '../../models';
+import { DETAILS_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { DetailComponent } from '../detail';
 import { DetailsBaseComponent } from './base/base.component';
 import { DetailsComponent } from './details.component';
-import { IDetailsOptions } from '../../models';
-import { DetailComponent } from '../detail';
 import { DetailsStandardComponent } from './standard/standard.component';
-import { DETAILS_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-detail',

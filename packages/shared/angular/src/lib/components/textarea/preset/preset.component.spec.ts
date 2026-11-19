@@ -6,9 +6,9 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TextareaPresetComponent } from './preset.component';
 import { ITextareaOptions } from '../../../models';
 import { ITextareaActionClick, TextareaBaseComponent } from '../base';
+import { TextareaPresetComponent } from './preset.component';
 
 @Component({
   selector: 'smart-test-textarea-slots',

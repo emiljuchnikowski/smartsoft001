@@ -1,10 +1,10 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartPageHeading } from './page-heading';
 import { SmartPageHeadingProps } from './page-heading.types';
 import { SmartPageHeadingPreset } from './preset/page-heading-preset';
 import { SmartPageHeadingStandard } from './standard/page-heading-standard';
-import { SmartProvider } from '../../providers/smart-provider';
 
 describe('@smartsoft001/react: SmartPageHeading', () => {
   describe('wrapper', () => {

@@ -3,9 +3,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { applicationConfig, moduleMetadata } from '@storybook/angular';
 
+import { INFO_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { InfoComponent } from './info.component';
 import { InfoPresetComponent } from './preset/preset.component';
-import { INFO_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 const meta: Meta<InfoComponent> = {
   title: 'Components/Info',

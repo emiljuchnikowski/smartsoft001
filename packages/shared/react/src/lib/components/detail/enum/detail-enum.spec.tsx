@@ -2,10 +2,10 @@ import { render } from '@testing-library/react';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { SmartDetailEnum } from './detail-enum';
-import { SmartDetailEnumPreset } from './preset/detail-enum-preset';
 import { IDetailOptions } from '../../../models';
 import { SmartProvider } from '../../../providers/smart-provider';
+import { SmartDetailEnum } from './detail-enum';
+import { SmartDetailEnumPreset } from './preset/detail-enum-preset';
 
 @Model({})
 class Account {

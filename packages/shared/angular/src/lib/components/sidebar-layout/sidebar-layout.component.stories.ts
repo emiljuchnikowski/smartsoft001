@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
+import { SIDEBAR_LAYOUT_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { SidebarLayoutPresetComponent } from './preset/preset.component';
 import { SidebarLayoutComponent } from './sidebar-layout.component';
-import { SIDEBAR_LAYOUT_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 const POSITIONS = ['left', 'right'] as const;
 

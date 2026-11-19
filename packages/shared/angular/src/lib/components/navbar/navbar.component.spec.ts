@@ -1,9 +1,9 @@
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { NAVBAR_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { NavbarBaseComponent } from './base/base.component';
 import { NavbarComponent } from './navbar.component';
-import { NAVBAR_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-navbar-injected',

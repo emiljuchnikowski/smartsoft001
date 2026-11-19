@@ -6,13 +6,13 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
+import { AccordionBaseComponent } from '../base/base.component';
 import {
   getAccordionPresetContainerClasses,
   getAccordionPresetContentClasses,
   getAccordionPresetIconClasses,
   getAccordionPresetToggleClasses,
 } from './preset-classes.util';
-import { AccordionBaseComponent } from '../base/base.component';
 
 let nextId = 0;
 

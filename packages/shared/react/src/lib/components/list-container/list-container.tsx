@@ -1,6 +1,6 @@
+import { useSmartComponent } from '../../providers/hooks';
 import { SmartListContainerProps } from './list-container.types';
 import { SmartListContainerStandard } from './standard/list-container-standard';
-import { useSmartComponent } from '../../providers/hooks';
 
 /**
  * Renders the implementation registered as `components['list-container']` on

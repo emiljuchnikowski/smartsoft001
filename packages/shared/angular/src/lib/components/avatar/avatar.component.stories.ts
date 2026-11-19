@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { AvatarComponent } from './avatar.component';
-import { AvatarPresetComponent } from './preset/preset.component';
 import { IAvatarItem, SmartAvatarShape, SmartAvatarSize } from '../../models';
 import { AVATAR_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { AvatarComponent } from './avatar.component';
+import { AvatarPresetComponent } from './preset/preset.component';
 
 const SIZES: SmartAvatarSize[] = ['xs', 'sm', 'md', 'lg', 'xl'];
 const IMAGE =

@@ -3,8 +3,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FieldType } from '@smartsoft001/models';
 
-import { DetailColorPresetComponent } from './preset.component';
 import { IDetailOptions } from '../../../../models';
+import { DetailColorPresetComponent } from './preset.component';
 
 @Component({
   selector: 'smart-test-host',

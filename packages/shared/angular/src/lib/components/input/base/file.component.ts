@@ -12,9 +12,9 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 
-import { InputBaseComponent } from './base.component';
 import { IButtonOptions } from '../../../models';
 import { FileService, ToastService } from '../../../services';
+import { InputBaseComponent } from './base.component';
 
 @Directive()
 export abstract class InputFileBaseComponent<T>

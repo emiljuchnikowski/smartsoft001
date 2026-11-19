@@ -1,6 +1,6 @@
+import { useSmartComponent } from '../../providers/hooks';
 import { SmartSectionHeadingProps } from './section-heading.types';
 import { SmartSectionHeadingStandard } from './standard/section-heading-standard';
-import { useSmartComponent } from '../../providers/hooks';
 
 /**
  * Renders the implementation registered as `components['section-heading']` on

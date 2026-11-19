@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { SmartAlert } from './alert';
 import { IAlertOptions } from '../../models';
+import { SmartAlert } from './alert';
 
 interface AlertArgs {
   header: string;

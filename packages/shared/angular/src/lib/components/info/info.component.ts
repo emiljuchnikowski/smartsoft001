@@ -10,8 +10,8 @@ import {
 
 import { IInfoOptions } from '../../models';
 import { INFO_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
-import { InfoStandardComponent } from './standard/standard.component';
 import { outletInputs } from '../base/outlet-inputs';
+import { InfoStandardComponent } from './standard/standard.component';
 
 @Component({
   selector: 'smart-info',

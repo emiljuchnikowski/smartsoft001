@@ -1,6 +1,6 @@
+import { useSmartComponent } from '../../providers/hooks';
 import { SmartEmptyStateProps } from './empty-state.types';
 import { SmartEmptyStateStandard } from './standard/empty-state-standard';
-import { useSmartComponent } from '../../providers/hooks';
 
 /**
  * Renders the implementation registered as `components['empty-state']` on

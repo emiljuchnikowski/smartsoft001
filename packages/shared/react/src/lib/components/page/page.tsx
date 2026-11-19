@@ -1,8 +1,8 @@
-import { SmartPageProps } from './page.types';
-import { SmartPageStandard } from './standard/page-standard';
 import { IPageOptions, SmartPageVariant } from '../../models';
 import { useSmartComponent } from '../../providers/hooks';
 import { SmartComponentKey } from '../../providers/smart-context';
+import { SmartPageProps } from './page.types';
+import { SmartPageStandard } from './standard/page-standard';
 
 /**
  * The `SmartProvider` `components` key a page variant is registered under:

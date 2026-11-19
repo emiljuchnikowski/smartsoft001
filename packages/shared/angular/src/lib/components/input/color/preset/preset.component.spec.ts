@@ -11,9 +11,9 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { InputColorPresetComponent } from './preset.component';
 import { InputOptions } from '../../../../models';
 import { IModelLabelProvider } from '../../../../providers';
+import { InputColorPresetComponent } from './preset.component';
 
 @Model({})
 class ColorModel {

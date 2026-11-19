@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
-import { UIService } from './ui.service';
 import { AlertService } from '../alert/alert.service';
+import { UIService } from './ui.service';
 
 describe('@smartsoft001/angular: UIService', () => {
   let service: UIService;

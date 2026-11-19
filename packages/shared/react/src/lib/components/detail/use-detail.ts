@@ -1,7 +1,7 @@
-import { SmartDetailFieldProps } from './detail.types';
 import { ICellPipe } from '../../models';
 import { useTranslate } from '../../providers/hooks';
 import { getListCell } from '../../utils/model';
+import { SmartDetailFieldProps } from './detail.types';
 
 /**
  * What every detail field shares: the item, the key of the field and its value,

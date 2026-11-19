@@ -3,11 +3,11 @@ import type { ReactNode } from 'react';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { SmartDetailPdf } from './detail-pdf';
-import { SmartDetailPdfPreset } from './preset/detail-pdf-preset';
 import { IDetailOptions } from '../../../models';
 import { SmartProvider } from '../../../providers/smart-provider';
 import { FileService } from '../../../services/file/file.service';
+import { SmartDetailPdf } from './detail-pdf';
+import { SmartDetailPdfPreset } from './preset/detail-pdf-preset';
 
 interface Attachment {
   id: string;

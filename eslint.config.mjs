@@ -2,7 +2,7 @@
 import storybook from 'eslint-plugin-storybook';
 
 import nx from '@nx/eslint-plugin';
-import importPlugin from 'eslint-plugin-import';
+import importX from 'eslint-plugin-import-x';
 import reactHooks from 'eslint-plugin-react-hooks';
 
 export default [
@@ -21,13 +21,13 @@ export default [
   },
   {
     plugins: {
-      import: importPlugin,
+      'import-x': importX,
     },
   },
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
     rules: {
-      'import/order': [
+      'import-x/order': [
         'error',
         {
           'newlines-between': 'always',

@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react';
 
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartAvatar } from './avatar';
 import { SmartAvatarProps } from './avatar.types';
 import { SmartAvatarPreset } from './preset/avatar-preset';
 import { SmartAvatarStandard } from './standard/avatar-standard';
-import { SmartProvider } from '../../providers/smart-provider';
 
 describe('@smartsoft001/react: SmartAvatar', () => {
   describe('wrapper', () => {

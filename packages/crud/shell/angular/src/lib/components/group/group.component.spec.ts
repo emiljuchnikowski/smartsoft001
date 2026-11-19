@@ -3,9 +3,9 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { StyleService } from '@smartsoft001/angular';
 
-import { GroupComponent } from './group.component';
 import { ICrudListGroup } from '../../models';
 import { CrudListGroupService } from '../../services/list-group/list-group.service';
+import { GroupComponent } from './group.component';
 
 describe('crud-shell-angular: GroupComponent (characterization)', () => {
   function setup(): ComponentFixture<GroupComponent<any>> {

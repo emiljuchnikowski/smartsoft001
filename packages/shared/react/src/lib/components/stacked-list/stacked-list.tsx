@@ -1,6 +1,6 @@
+import { useSmartComponent } from '../../providers/hooks';
 import { SmartStackedListProps } from './stacked-list.types';
 import { SmartStackedListStandard } from './standard/stacked-list-standard';
-import { useSmartComponent } from '../../providers/hooks';
 
 /**
  * Renders the implementation registered as `components['stacked-list']` on

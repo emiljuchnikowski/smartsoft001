@@ -1,6 +1,6 @@
+import { useSmartComponent } from '../../providers/hooks';
 import { SmartTabsStandard } from './standard/tabs-standard';
 import { SmartTabsProps } from './tabs.types';
-import { useSmartComponent } from '../../providers/hooks';
 
 /**
  * Renders the implementation registered as `components.tabs` on

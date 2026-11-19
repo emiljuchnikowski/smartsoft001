@@ -1,9 +1,9 @@
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { VERTICAL_NAVIGATION_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { VerticalNavigationBaseComponent } from './base/base.component';
 import { VerticalNavigationComponent } from './vertical-navigation.component';
-import { VERTICAL_NAVIGATION_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-vnav-injected',

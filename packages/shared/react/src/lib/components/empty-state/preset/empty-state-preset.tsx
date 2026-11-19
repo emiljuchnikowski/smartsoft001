@@ -1,3 +1,6 @@
+import { IEmptyStateAction, IEmptyStateItem } from '../../../models';
+import { cn } from '../../../utils/class-names';
+import { SmartEmptyStateProps } from '../empty-state.types';
 import {
   EMPTY_STATE_ACTIONS,
   EMPTY_STATE_CONTAINER,
@@ -19,9 +22,6 @@ import {
   getEmptyStateActionClasses,
   SmartEmptyStatePresetActionVariant,
 } from './preset-classes';
-import { IEmptyStateAction, IEmptyStateItem } from '../../../models';
-import { cn } from '../../../utils/class-names';
-import { SmartEmptyStateProps } from '../empty-state.types';
 
 function actionClasses(action: IEmptyStateAction): string {
   const variant: SmartEmptyStatePresetActionVariant =

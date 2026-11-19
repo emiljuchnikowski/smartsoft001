@@ -1,10 +1,10 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartBadge } from './badge';
 import { SmartBadgeProps } from './badge.types';
 import { SmartBadgePreset } from './preset/badge-preset';
 import { SmartBadgeStandard } from './standard/badge-standard';
-import { SmartProvider } from '../../providers/smart-provider';
 
 describe('@smartsoft001/react: SmartBadge', () => {
   describe('wrapper', () => {

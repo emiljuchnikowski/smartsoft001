@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { SmartListContainer } from './list-container';
 import { IListContainerOptions, SmartListContainerVariant } from '../../models';
+import { SmartListContainer } from './list-container';
 
 const VARIANTS: SmartListContainerVariant[] = [
   'simple-dividers',

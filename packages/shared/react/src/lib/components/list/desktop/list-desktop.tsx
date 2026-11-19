@@ -1,10 +1,6 @@
 import { IEntity } from '@smartsoft001/domain-core';
 import { FieldType } from '@smartsoft001/models';
 
-import {
-  LIST_DESKTOP_STICKY_HEADER_STYLE,
-  useListDesktop,
-} from './use-list-desktop';
 import { PaginationMode } from '../../../models';
 import { useTranslate } from '../../../providers/hooks';
 import { cn } from '../../../utils/class-names';
@@ -14,6 +10,10 @@ import { getListCell } from '../../../utils/model';
 import { SmartPaging } from '../../paging/paging';
 import { SmartListModeProps } from '../list.types';
 import { useListFileUrl } from '../use-list';
+import {
+  LIST_DESKTOP_STICKY_HEADER_STYLE,
+  useListDesktop,
+} from './use-list-desktop';
 
 /**
  * The desktop list: a table with one column per list field, plus the

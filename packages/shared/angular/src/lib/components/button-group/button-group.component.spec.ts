@@ -1,9 +1,9 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { BUTTON_GROUP_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { ButtonGroupBaseComponent } from './base/base.component';
 import { ButtonGroupComponent } from './button-group.component';
-import { BUTTON_GROUP_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-button-group-injected',

@@ -4,8 +4,8 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { FieldType } from '@smartsoft001/models';
 
-import { DetailPhoneNumberPlComponent } from './phone-number-pl.component';
 import { IDetailOptions } from '../../../models';
+import { DetailPhoneNumberPlComponent } from './phone-number-pl.component';
 
 @Component({
   selector: 'smart-test-host',

@@ -5,13 +5,13 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AvatarBaseComponent } from './base.component';
 import {
   IAvatarItem,
   IAvatarOptions,
   SmartAvatarShape,
   SmartAvatarSize,
 } from '../../../models';
+import { AvatarBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-avatar',

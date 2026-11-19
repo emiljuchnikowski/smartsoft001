@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartGridList } from './grid-list';
 import { SmartGridListProps } from './grid-list.types';
 import { SmartGridListPreset } from './preset/grid-list-preset';
@@ -11,7 +12,6 @@ import {
   getGridListTileClasses,
 } from './preset/preset-classes';
 import { SmartGridListStandard } from './standard/grid-list-standard';
-import { SmartProvider } from '../../providers/smart-provider';
 
 describe('@smartsoft001/react: SmartGridList', () => {
   describe('wrapper', () => {

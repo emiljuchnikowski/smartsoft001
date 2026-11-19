@@ -7,8 +7,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PageHeadingStandardComponent } from './standard.component';
 import { IPageHeadingOptions } from '../../../models';
+import { PageHeadingStandardComponent } from './standard.component';
 
 describe('@smartsoft001/shared-angular: PageHeadingStandardComponent', () => {
   describe('default rendering (no options)', () => {

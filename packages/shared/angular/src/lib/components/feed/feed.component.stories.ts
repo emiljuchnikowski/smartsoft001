@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { FeedComponent } from './feed.component';
-import { FeedPresetComponent } from './preset/preset.component';
 import { IFeedOptions, SmartFeedVariant } from '../../models';
 import { FEED_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { FeedComponent } from './feed.component';
+import { FeedPresetComponent } from './preset/preset.component';
 
 const VARIANTS: SmartFeedVariant[] = [
   'simple',

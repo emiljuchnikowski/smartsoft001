@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ReactNode } from 'react';
 
-import { SmartAvatar } from './avatar';
 import { IAvatarItem, SmartAvatarShape, SmartAvatarSize } from '../../models';
+import { SmartAvatar } from './avatar';
 import { SmartAvatarPreset } from './preset/avatar-preset';
 
 const SIZES: SmartAvatarSize[] = ['xs', 'sm', 'md', 'lg', 'xl'];

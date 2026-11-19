@@ -7,10 +7,10 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DetailsPage } from './details.page';
 import { DetailsComponent } from '../../components/details/details.component';
 import { IDetailsOptions, IIconButtonOptions } from '../../models';
 import { ModalService, StyleService } from '../../services';
+import { DetailsPage } from './details.page';
 
 interface TestItem {
   id: string;

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ButtonGroupPresetComponent } from './preset.component';
 import { IButtonGroupButton } from '../../../models';
+import { ButtonGroupPresetComponent } from './preset.component';
 
 const BUTTONS: IButtonGroupButton[] = [
   { id: 'years', label: 'Years' },

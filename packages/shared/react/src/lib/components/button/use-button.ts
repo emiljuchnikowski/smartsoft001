@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 
-import { SmartButtonProps } from './button.types';
 import { COMPONENT_COLORS, SmartVariant } from '../../models';
+import { SmartButtonProps } from './button.types';
 
 /**
  * The behaviour every button variant shares: the colour classes of the variant,

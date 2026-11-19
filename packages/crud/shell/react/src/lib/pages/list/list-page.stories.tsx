@@ -2,9 +2,9 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { Field, Model } from '@smartsoft001/models';
 
-import { SmartCrudListPage } from './list-page';
 import { CrudFullConfig } from '../../crud.config';
 import { CrudProvider } from '../../crud.provider';
+import { SmartCrudListPage } from './list-page';
 
 @Model({})
 class Note {

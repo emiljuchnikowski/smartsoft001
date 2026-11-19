@@ -2,8 +2,8 @@ import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { ButtonPresetComponent } from './preset.component';
 import { IButtonOptions } from '../../../models';
+import { ButtonPresetComponent } from './preset.component';
 
 @Component({
   selector: 'smart-button-preset-host',

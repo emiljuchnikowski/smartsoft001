@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
+import { CARD_HEADING_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { CardHeadingComponent } from './card-heading.component';
 import { CardHeadingPresetComponent } from './preset/preset.component';
-import { CARD_HEADING_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 const VARIANTS = ['author', 'stacked', 'overlay', 'outline'] as const;
 

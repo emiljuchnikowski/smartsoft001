@@ -2,9 +2,9 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { SmartCrudItemPage } from './item-page';
 import { CrudFullConfig } from '../../crud.config';
 import { CrudProvider } from '../../crud.provider';
+import { SmartCrudItemPage } from './item-page';
 
 /**
  * Sample entity for the item page stories: text, long text, int and flag

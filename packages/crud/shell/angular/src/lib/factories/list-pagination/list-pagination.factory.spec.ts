@@ -1,8 +1,8 @@
 import { signal, WritableSignal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
-import { CrudListPaginationFactory } from './list-pagination.factory';
 import { CrudFacade } from '../../+state/crud.facade';
+import { CrudListPaginationFactory } from './list-pagination.factory';
 
 describe('crud-shell-angular: CrudListPaginationFactory', () => {
   let factory: CrudListPaginationFactory<any>;

@@ -4,10 +4,10 @@ import type { ReactNode } from 'react';
 import type { IAddress } from '@smartsoft001/domain-core';
 import { Field, FieldType, FieldTypeDef, Model } from '@smartsoft001/models';
 
-import { SmartDetail } from './detail';
-import { DETAIL_PRESET_FIELD_COMPONENTS } from './preset-fields';
 import { IDetailOptions } from '../../models';
 import { FileService } from '../../services/file/file.service';
+import { SmartDetail } from './detail';
+import { DETAIL_PRESET_FIELD_COMPONENTS } from './preset-fields';
 
 // ─── Fixtures ────────────────────────────────────────────────────────────────
 

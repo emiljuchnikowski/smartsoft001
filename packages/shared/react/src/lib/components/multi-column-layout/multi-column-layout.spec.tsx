@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartMultiColumnLayout } from './multi-column-layout';
 import { SmartMultiColumnLayoutProps } from './multi-column-layout.types';
 import { SmartMultiColumnLayoutPreset } from './preset/multi-column-layout-preset';
@@ -8,7 +9,6 @@ import {
   getMultiColumnLayoutSecondaryClasses,
 } from './preset/preset-classes';
 import { SmartMultiColumnLayoutStandard } from './standard/multi-column-layout-standard';
-import { SmartProvider } from '../../providers/smart-provider';
 
 describe('@smartsoft001/react: SmartMultiColumnLayout', () => {
   describe('wrapper', () => {

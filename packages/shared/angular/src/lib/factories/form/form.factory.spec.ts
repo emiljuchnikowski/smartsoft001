@@ -2,9 +2,9 @@ import { TestBed } from '@angular/core/testing';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { FormFactory } from './form.factory';
 import { MODEL_VALIDATORS_PROVIDER } from '../../providers';
 import { AuthService, SmartFormGroup } from '../../services';
+import { FormFactory } from './form.factory';
 
 @Model({})
 class ContactModel {

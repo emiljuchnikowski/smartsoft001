@@ -1,6 +1,7 @@
 import { useId, useState } from 'react';
 import type { KeyboardEvent, MouseEvent } from 'react';
 
+import { cn } from '../../../utils/class-names';
 import {
   RICH_TEXT_COLOR_PRESETS,
   RICH_TEXT_IMAGE_PATTERN,
@@ -8,7 +9,6 @@ import {
   RICH_TEXT_LINK_PATTERN,
   SmartRichTextColorKind,
 } from './rich-text-toolbar';
-import { cn } from '../../../utils/class-names';
 
 const POPUP_CLASSES =
   'smart:absolute smart:left-0 smart:top-full smart:z-10 smart:mt-0.5 smart:min-w-48 smart:rounded-sm smart:bg-white smart:p-2 smart:text-sm smart:text-gray-900 smart:shadow-md smart:dark:bg-gray-800 smart:dark:text-white';

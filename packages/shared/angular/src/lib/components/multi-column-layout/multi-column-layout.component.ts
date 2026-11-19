@@ -10,11 +10,11 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { MultiColumnLayoutStandardComponent } from './standard/standard.component';
 import { IMultiColumnLayoutOptions } from '../../models';
 import { MULTI_COLUMN_LAYOUT_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { outletContent } from '../base/outlet-content';
 import { outletInputs } from '../base/outlet-inputs';
+import { MultiColumnLayoutStandardComponent } from './standard/standard.component';
 
 @Component({
   selector: 'smart-multi-column-layout',

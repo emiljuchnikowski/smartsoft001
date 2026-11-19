@@ -3,9 +3,9 @@ import { render, screen } from '@testing-library/react';
 import { FieldType, FieldTypeDef, IModelFilter } from '@smartsoft001/models';
 import { SmartProvider } from '@smartsoft001/react';
 
-import { SmartCrudFilter } from './filter';
 import { CrudProvider } from '../../crud.provider';
 import { CrudService } from '../../services/crud/crud.service';
+import { SmartCrudFilter } from './filter';
 
 class TodoModel {
   field?: unknown;

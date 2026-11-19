@@ -3,14 +3,14 @@ import type { ComponentType } from 'react';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { SmartInputAddress } from './input-address';
-import { SmartInputAddressPreset } from './preset/input-address-preset';
 import { FormFactory } from '../../../factories/form/form.factory';
 import { SmartFormControl } from '../../../forms/form-control';
 import { SmartFormGroup } from '../../../forms/form-group';
 import { SmartValidators } from '../../../forms/validators';
 import { SmartProvider } from '../../../providers/smart-provider';
 import { SmartInputFieldProps } from '../input.types';
+import { SmartInputAddress } from './input-address';
+import { SmartInputAddressPreset } from './preset/input-address-preset';
 
 @Model({})
 class Shop {

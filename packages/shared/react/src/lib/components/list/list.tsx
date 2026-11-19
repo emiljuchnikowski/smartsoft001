@@ -8,10 +8,6 @@ import {
   IFieldOptions,
 } from '@smartsoft001/models';
 
-import { SmartListDesktop } from './desktop/list-desktop';
-import { SmartListModeProps, SmartListProps } from './list.types';
-import { SmartListMasonryGrid } from './masonry-grid/list-masonry-grid';
-import { SmartListMobile } from './mobile/list-mobile';
 import { IListInternalOptions, ListMode } from '../../models';
 import {
   useListModeComponents,
@@ -19,6 +15,10 @@ import {
   useTranslate,
 } from '../../providers/hooks';
 import { SmartLoader } from '../loader/loader';
+import { SmartListDesktop } from './desktop/list-desktop';
+import { SmartListModeProps, SmartListProps } from './list.types';
+import { SmartListMasonryGrid } from './masonry-grid/list-masonry-grid';
+import { SmartListMobile } from './mobile/list-mobile';
 
 type ListField = { key: string; options: IFieldOptions };
 

@@ -8,6 +8,8 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
+import { ICommand, SmartCommandPaletteVariant } from '../../../models';
+import { CommandPaletteStandardComponent } from '../standard/standard.component';
 import {
   COMMAND_PALETTE_EMPTY,
   COMMAND_PALETTE_FOOTER,
@@ -24,8 +26,6 @@ import {
   getCommandPaletteItemClasses,
   getCommandPaletteListClasses,
 } from './preset-classes.util';
-import { ICommand, SmartCommandPaletteVariant } from '../../../models';
-import { CommandPaletteStandardComponent } from '../standard/standard.component';
 
 interface ICommandGroup {
   group: string;

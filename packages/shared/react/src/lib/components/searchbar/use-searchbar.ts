@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { SmartSearchbarProps } from './searchbar.types';
 import { SmartFormControl } from '../../forms/form-control';
+import { SmartSearchbarProps } from './searchbar.types';
 
 /**
  * The behaviour every searchbar variant shares.

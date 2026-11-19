@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { DividerComponent } from './divider.component';
-import { DividerPresetComponent } from './preset/preset.component';
 import { SmartDividerVariant } from '../../models';
 import { DIVIDER_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { DividerComponent } from './divider.component';
+import { DividerPresetComponent } from './preset/preset.component';
 
 const VARIANTS: SmartDividerVariant[] = [
   'with-label',

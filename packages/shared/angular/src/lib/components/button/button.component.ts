@@ -12,9 +12,9 @@ import {
 
 import { IButtonOptions } from '../../models';
 import { BUTTON_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
-import { ButtonStandardComponent } from './standard/standard.component';
 import { outletContent } from '../base/outlet-content';
 import { outletInputs } from '../base/outlet-inputs';
+import { ButtonStandardComponent } from './standard/standard.component';
 
 @Component({
   selector: 'smart-button',

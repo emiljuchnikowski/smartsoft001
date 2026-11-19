@@ -1,11 +1,11 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartInfo } from './info';
 import { SmartInfoProps } from './info.types';
 import { SmartInfoPreset } from './preset/info-preset';
 import { getInfoTooltipClasses } from './preset/preset-classes';
 import { SmartInfoStandard } from './standard/info-standard';
-import { SmartProvider } from '../../providers/smart-provider';
 
 describe('@smartsoft001/react: SmartInfo', () => {
   const options = { text: 'test info text' };

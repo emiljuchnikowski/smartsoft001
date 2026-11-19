@@ -1,7 +1,7 @@
+import { useSmartComponent } from '../../providers/hooks';
 import { SmartCardProps, SmartCardVariantProps } from './card.types';
 import { SmartCardStandard } from './standard/card-standard';
 import { isCardSectionShown } from './use-card';
-import { useSmartComponent } from '../../providers/hooks';
 
 /**
  * Renders the implementation registered as `components.card` on

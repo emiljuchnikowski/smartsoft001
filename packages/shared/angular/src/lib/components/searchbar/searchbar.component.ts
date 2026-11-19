@@ -10,11 +10,11 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { SearchbarStandardComponent } from './standard';
 import { ISearchbarOptions } from '../../models';
 import { SEARCHBAR_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 import { outletInputs } from '../base/outlet-inputs';
+import { SearchbarStandardComponent } from './standard';
 
 @Component({
   selector: 'smart-searchbar',

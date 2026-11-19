@@ -2,8 +2,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
-import { ErrorService } from './error.service';
 import { ToastService } from '../toast/toast.service';
+import { ErrorService } from './error.service';
 
 describe('@smartsoft001/angular: ErrorService', () => {
   let service: ErrorService;

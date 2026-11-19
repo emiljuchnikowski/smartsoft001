@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ReactNode } from 'react';
 
+import { IDescriptionListOptions } from '../../models';
 import { SmartDescriptionList } from './description-list';
 import { SmartDescriptionListPreset } from './preset/description-list-preset';
-import { IDescriptionListOptions } from '../../models';
 
 const ITEMS: IDescriptionListOptions['items'] = [
   { label: 'Full name', value: 'Margot Foster' },

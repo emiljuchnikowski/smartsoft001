@@ -7,6 +7,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
+import { SectionHeadingStandardComponent } from '../standard/standard.component';
 import {
   getSectionHeadingGridClasses,
   getSectionHeadingImageClasses,
@@ -19,7 +20,6 @@ import {
   SECTION_HEADING_SECTION_CLASSES,
   SECTION_HEADING_TITLE_CLASSES,
 } from './preset-classes.util';
-import { SectionHeadingStandardComponent } from '../standard/standard.component';
 
 /**
  * HyperUI-styled "content with image" section heading (preset).

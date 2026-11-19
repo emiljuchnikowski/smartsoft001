@@ -10,12 +10,12 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { IProgressStepClick } from './base/base.component';
-import { ProgressBarsStandardComponent } from './standard';
 import { IProgressBarsOptions } from '../../models';
 import { PROGRESS_BARS_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 import { outletInputs } from '../base/outlet-inputs';
+import { IProgressStepClick } from './base/base.component';
+import { ProgressBarsStandardComponent } from './standard';
 
 @Component({
   selector: 'smart-progress-bars',

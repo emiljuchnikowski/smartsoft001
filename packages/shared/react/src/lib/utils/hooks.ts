@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 
-import { getListHeader, getModelLabel } from './model';
 import { useSmart } from '../providers/smart-context';
+import { getListHeader, getModelLabel } from './model';
 
 /** The label of a model field, translated. */
 export function useModelLabel(

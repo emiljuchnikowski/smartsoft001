@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { jwtDecode } from 'jwt-decode';
 
-import { AuthService, AUTH_TOKEN } from './auth.service';
 import { StorageService } from '../storage/storage.service';
+import { AuthService, AUTH_TOKEN } from './auth.service';
 
 jest.mock('jwt-decode', () => ({
   jwtDecode: jest.fn(),

@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { applicationConfig, moduleMetadata } from '@storybook/angular';
 
+import { provideStorybookTranslations } from '../../../../.storybook/storybook-translations';
+import { StyleService, UIService } from '../../services';
 import { DateRangeComponent } from './date-range.component';
 import { DateRangePresetComponent } from './preset/preset.component';
 import { DateRangeModalStandardComponent } from './standard/standard-modal.component';
-import { provideStorybookTranslations } from '../../../../.storybook/storybook-translations';
-import { StyleService, UIService } from '../../services';
 
 const RANGE = { start: '2026-04-01', end: '2026-04-07' };
 

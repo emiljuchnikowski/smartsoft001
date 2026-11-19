@@ -20,8 +20,8 @@ import {
 } from '@smartsoft001/angular';
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { ItemComponent } from './item.component';
 import { CrudModule } from '../../crud.module';
+import { ItemComponent } from './item.component';
 
 /**
  * Sample entity for the item-page stories. Several `@Field` types are present

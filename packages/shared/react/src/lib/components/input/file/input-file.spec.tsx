@@ -9,8 +9,6 @@ import type { ComponentType } from 'react';
 
 import { Field, FieldType, IFieldOptions, Model } from '@smartsoft001/models';
 
-import { SmartInputFile } from './input-file';
-import { SmartInputFilePreset } from './preset/input-file-preset';
 import { SmartFormControl } from '../../../forms/form-control';
 import { SmartFormGroup } from '../../../forms/form-group';
 import { SmartValidators } from '../../../forms/validators';
@@ -18,6 +16,8 @@ import { SmartProvider } from '../../../providers/smart-provider';
 import { FileService } from '../../../services/file/file.service';
 import { SmartHttpClient } from '../../../services/http/http.client';
 import { SmartInputFieldProps } from '../input.types';
+import { SmartInputFile } from './input-file';
+import { SmartInputFilePreset } from './preset/input-file-preset';
 
 @Model({})
 class FileModel {

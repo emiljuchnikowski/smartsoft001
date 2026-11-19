@@ -1,10 +1,6 @@
 import { act, render, renderHook, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 
-import { SmartApp } from './app';
-import { SmartAppProps } from './app.types';
-import { SmartAppStandard } from './standard/app-standard';
-import { useApp } from './use-app';
 import { IAppOptions, IMenuItem } from '../../models';
 import { IAppProvider } from '../../providers/interfaces';
 import { ISmartNavigation } from '../../providers/navigation';
@@ -12,6 +8,10 @@ import { SmartConfig } from '../../providers/smart-context';
 import { SmartProvider } from '../../providers/smart-provider';
 import { AuthService } from '../../services/auth/auth.service';
 import { MenuService } from '../../services/menu/menu.service';
+import { SmartApp } from './app';
+import { SmartAppProps } from './app.types';
+import { SmartAppStandard } from './standard/app-standard';
+import { useApp } from './use-app';
 
 function createNavigation(url = '/') {
   const listeners = new Set<(url: string) => void>();

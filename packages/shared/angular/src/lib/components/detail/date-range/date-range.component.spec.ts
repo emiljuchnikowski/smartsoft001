@@ -3,8 +3,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FieldType } from '@smartsoft001/models';
 
-import { DetailDateRangeComponent } from './date-range.component';
 import { IDetailOptions } from '../../../models';
+import { DetailDateRangeComponent } from './date-range.component';
 
 @Component({
   selector: 'smart-test-host',

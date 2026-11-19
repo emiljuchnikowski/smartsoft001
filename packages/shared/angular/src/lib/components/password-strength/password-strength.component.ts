@@ -10,10 +10,10 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { PasswordStrengthStandardComponent } from './standard';
 import { PASSWORD_STRENGTH_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 import { outletInputs } from '../base/outlet-inputs';
+import { PasswordStrengthStandardComponent } from './standard';
 
 @Component({
   selector: 'smart-password-strength',

@@ -10,11 +10,11 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { CalendarStandardComponent } from './standard';
 import { ICalendarEvent, ICalendarOptions } from '../../models';
 import { CALENDAR_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 import { outletInputs } from '../base/outlet-inputs';
+import { CalendarStandardComponent } from './standard';
 
 @Component({
   selector: 'smart-calendar',

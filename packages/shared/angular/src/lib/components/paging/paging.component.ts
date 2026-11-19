@@ -18,9 +18,9 @@ import {
 } from '@angular/core/rxjs-interop';
 
 import { PAGING_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { outletInputs } from '../base/outlet-inputs';
 import { PagingBaseComponent, PagingVariant } from './base/base.component';
 import { PagingStandardComponent } from './standard/standard.component';
-import { outletInputs } from '../base/outlet-inputs';
 
 @Component({
   selector: 'smart-paging',

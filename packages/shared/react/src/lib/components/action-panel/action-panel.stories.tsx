@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ReactNode } from 'react';
 
-import { SmartActionPanel } from './action-panel';
 import { IActionPanelOptions, SmartActionPanelLayout } from '../../models';
+import { SmartActionPanel } from './action-panel';
 import { SmartActionPanelPreset } from './preset/action-panel-preset';
 
 const LAYOUTS: SmartActionPanelLayout[] = [

@@ -7,6 +7,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
+import { SidebarLayoutStandardComponent } from '../standard/standard.component';
 import {
   getSidebarLayoutHeaderClasses,
   getSidebarLayoutMainClasses,
@@ -15,7 +16,6 @@ import {
   getSidebarLayoutSidebarClasses,
   getSidebarLayoutTitleClasses,
 } from './preset-classes.util';
-import { SidebarLayoutStandardComponent } from '../standard/standard.component';
 
 /**
  * Styled sidebar-layout variation (preset).

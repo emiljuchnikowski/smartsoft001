@@ -14,9 +14,9 @@ import {
   useStyleService,
 } from '@smartsoft001/react';
 
-import { SmartCrudFiltersProps } from './filters.types';
 import { useCrudConfig } from '../../crud.context';
 import { useCrudState } from '../../hooks';
+import { SmartCrudFiltersProps } from './filters.types';
 
 /**
  * The filters of the model `type`: the model's `filters` (labelled

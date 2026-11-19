@@ -10,15 +10,15 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
+import { ISidebarNavOptions } from '../../models';
+import { SIDEBAR_NAVIGATION_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
+import { outletInputs } from '../base/outlet-inputs';
 import {
   ISidebarNavItemClick,
   ISidebarNavItemToggle,
 } from './base/base.component';
 import { SidebarNavigationStandardComponent } from './standard';
-import { ISidebarNavOptions } from '../../models';
-import { SIDEBAR_NAVIGATION_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
-import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
-import { outletInputs } from '../base/outlet-inputs';
 
 @Component({
   selector: 'smart-sidebar-navigation',

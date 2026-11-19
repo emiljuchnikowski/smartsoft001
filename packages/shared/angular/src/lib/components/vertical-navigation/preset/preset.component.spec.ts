@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { VerticalNavigationPresetComponent } from './preset.component';
 import { IVerticalNavOptions } from '../../../models';
+import { VerticalNavigationPresetComponent } from './preset.component';
 
 describe('@smartsoft001/shared-angular: VerticalNavigationPresetComponent', () => {
   let fixture: ComponentFixture<VerticalNavigationPresetComponent>;

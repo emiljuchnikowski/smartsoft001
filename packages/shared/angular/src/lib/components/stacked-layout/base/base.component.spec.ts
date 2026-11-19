@@ -5,8 +5,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StackedLayoutBaseComponent } from './base.component';
 import { IStackedLayoutOptions } from '../../../models';
+import { StackedLayoutBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-stacked-layout',

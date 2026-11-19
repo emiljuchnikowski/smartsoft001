@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SignInFormStandardComponent } from './standard.component';
 import { ISignInFormSocialClick, ISignInFormSubmit } from '../../../models';
+import { SignInFormStandardComponent } from './standard.component';
 
 describe('@smartsoft001/shared-angular: SignInFormStandardComponent', () => {
   let fixture: ComponentFixture<SignInFormStandardComponent>;

@@ -5,8 +5,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LoaderBaseComponent } from './base.component';
 import { SmartColor, SmartSize } from '../../../models';
+import { LoaderBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-loader',

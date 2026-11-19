@@ -6,8 +6,8 @@ import {
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { INotificationActionClick } from '..';
-import { NotificationBaseComponent } from './base.component';
 import { INotificationAction, INotificationOptions } from '../../../models';
+import { NotificationBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-notification',
