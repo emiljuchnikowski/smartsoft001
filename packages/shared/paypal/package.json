@@ -1,6 +1,6 @@
 {
   "name": "@smartsoft001/paypal",
-  "version": "2.209.0",
+  "version": "2.210.0",
   "type": "commonjs",
   "main": "./src/index.js",
   "typings": "./src/index.d.ts",
@@ -24,6 +24,6 @@
   "peerDependencies": {
     "@nestjs/common": "^12.5.1",
     "@nestjs/core": "^12.5.1",
-    "@smartsoft001/trans-domain": "2.209.0"
+    "@smartsoft001/trans-domain": "2.210.0"
   }
 }

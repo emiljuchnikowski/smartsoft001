@@ -1,6 +1,6 @@
 {
   "name": "@smartsoft001/auth-domain",
-  "version": "2.209.0",
+  "version": "2.210.0",
   "type": "commonjs",
   "main": "./src/index.js",
   "typings": "./src/index.d.ts",
@@ -22,11 +22,11 @@
     "@nestjs/common": "^12.5.1",
     "@nestjs/jwt": "^12.0.5",
     "@nestjs/typeorm": "^12.0.3",
-    "@smartsoft001/domain-core": "2.209.0",
-    "@smartsoft001/fb": "2.209.0",
-    "@smartsoft001/google": "2.209.0",
-    "@smartsoft001/users": "2.209.0",
-    "@smartsoft001/utils": "2.209.0",
+    "@smartsoft001/domain-core": "2.210.0",
+    "@smartsoft001/fb": "2.210.0",
+    "@smartsoft001/google": "2.210.0",
+    "@smartsoft001/users": "2.210.0",
+    "@smartsoft001/utils": "2.210.0",
     "express": "^5.2.1",
     "typeorm": "^1.1.0"
   }
