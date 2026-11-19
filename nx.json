@@ -46,6 +46,24 @@
         "options": {
           "passWithNoTests": true
         }
+      },
+      {
+        "filter": {
+          "plugin": "@nx/jest/plugin",
+          "projects": [
+            "*",
+            "!angular",
+            "!crud-shell-angular",
+            "!docs-examples-app-web",
+            "!docs-examples-angular"
+          ]
+        },
+        "options": {
+          "env": {
+            "NODE_OPTIONS": "--experimental-vm-modules",
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"commonjs\",\"customConditions\":null}"
+          }
+        }
       }
     ]
   },

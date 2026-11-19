@@ -10,7 +10,7 @@ Nx monorepo with shared libraries for Angular, React, NestJS, and Ionic projects
 
 - **Angular**: 22.2.5
 - **React**: 19.3 (`react`, `react-dom`)
-- **NestJS**: 11.2.11
+- **NestJS**: 12.5.1
 - **Nx**: 24.0.6
 - **TypeScript**: 6.0.3
 - **Storybook**: 10.6.7 (`@storybook/angular`; `@storybook/react-vite` on Vite 8 for React)

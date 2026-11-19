@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/emiljuchnikowski/smartsoft#readme",
   "peerDependencies": {
-    "@nestjs/common": "^11.1.5",
+    "@nestjs/common": "^12.5.1",
     "@smartsoft001/domain-core": "2.209.0",
     "@smartsoft001/models": "2.209.0",
     "@smartsoft001/users": "2.209.0",
