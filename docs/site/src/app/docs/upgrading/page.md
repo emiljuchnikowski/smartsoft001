@@ -56,6 +56,23 @@ npx nx run-many -t lint test build
 
 If a migration did something you did not want, the change is in your working tree and nowhere else: `git checkout` the file and the release notes tell you what it was trying to do.
 
+## Moving to NestJS 12
+
+The first release after 2.209.0 raises the backend packages to NestJS 12: every `@nestjs/*` peer dependency of `@smartsoft001/nestjs`, the `*-shell-nestjs` and `*-shell-app-services` packages, the domain packages and the payment and login integrations is now `^12`. Next to NestJS 11 npm reports a peer conflict for them, and refuses the install outright for a package the project names directly, so raise NestJS in the same step as the framework, before the install:
+
+```bash
+npm install @nestjs/common@^12 @nestjs/core@^12 @nestjs/platform-express@^12 \
+  @nestjs/axios@^12 @nestjs/jwt@^12 @nestjs/passport@^12 @nestjs/typeorm@^12
+npm install -D @nestjs/testing@^12
+```
+
+List only the `@nestjs/*` packages your project already has, and add `@nestjs/websockets@^12` if it does. The [NestJS migration guide](https://docs.nestjs.com/migration-guide) is the full list of changes; in a project built on this framework four of them need a look:
+
+- **Jest.** NestJS 12 ships ES modules only. Node loads them from CommonJS code on its own, but Jest needs `NODE_OPTIONS=--experimental-vm-modules` for every test project that reaches NestJS. In an Nx workspace set it as an `env` option of the Jest plugin's `test` target, for the backend projects only: an Angular project with the flag loads Angular's `.mjs` files without the `jest-preset-angular` transform and fails.
+- **`@Optional()` in a subclass.** A subclass that redeclares its constructor no longer inherits `@Optional()` from the base class, and Nest refuses to start instead of injecting `undefined`. A subclass of `CrudController` that passes the `SharedConfig` on declares it as `@Optional() @Inject(SharedConfig)` itself.
+- **Logging.** A plain object passed to `Logger` after the message becomes structured parameters instead of being printed as text. Create the application with `logger: new ConsoleLogger({ structuredParams: false })` to keep the NestJS 11 output.
+- **Error responses.** The core and the Express adapter map errors differently. The framework's `AppExceptionFilter` sets the status and body itself, so responses that go through it are unchanged; check the ones that do not.
+
 ## Staying on one version
 
 The packages are pinned to each other exactly, so a project cannot end up with two of them on different versions through the stacks. If you install packages individually, keep them in lockstep: [`angular-stack`](/docs/packages/angular-stack) and its siblings exist to make that automatic.

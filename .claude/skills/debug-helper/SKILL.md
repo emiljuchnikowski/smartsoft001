@@ -66,6 +66,9 @@ nx test <project-name> --skip-nx-cache
 - Verify DI token matching
 - Check guard and interceptor order
 - Verify async module initialization
+- `Must use import to load ES Module` from Jest: NestJS 12 ships ES modules only, and Jest loads them only with `NODE_OPTIONS=--experimental-vm-modules`. `nx.json` sets it for every Jest project except the Angular ones (`angular`, `crud-shell-angular`, `docs-examples-app-web`, `docs-examples-angular`); a new NestJS project gets it automatically, a new Angular project must be added to the exclusions
+- `UnknownDependenciesException` for a parameter marked `@Optional()` in a base class: NestJS 12 does not inherit the marker into a subclass that redeclares its constructor; repeat `@Optional()` there
+- Lifecycle hooks (`onModuleInit`, `onApplicationBootstrap`, shutdown hooks) run in module hierarchy order since NestJS 12
 
 ## Process
 

@@ -55,6 +55,8 @@ it('should perform expected operation', () => {
 
 ## NestJS Service Testing
 
+NestJS 12 ships ES modules only. Jest loads them through Node's VM modules, so every non-Angular Jest project runs with `NODE_OPTIONS=--experimental-vm-modules`, set once in `nx.json` (`targetDefaults.test`). Run NestJS tests through `nx test <project>`, not a bare `jest`, or set the variable yourself.
+
 ```typescript
 import { Test, TestingModule } from '@nestjs/testing';
 
