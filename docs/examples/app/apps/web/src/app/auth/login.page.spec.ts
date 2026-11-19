@@ -33,6 +33,8 @@ describe('LoginPage', () => {
     fixture.detectChanges();
   };
 
+  // The first compile of the sign-in form tree can take more than Jest's
+  // default 5 s when the whole workspace is tested in parallel.
   beforeEach(async () => {
     signIn.mockReset();
 
@@ -49,7 +51,7 @@ describe('LoginPage', () => {
       .spyOn(TestBed.inject(Router), 'navigateByUrl')
       .mockResolvedValue(true);
     await fixture.whenStable();
-  });
+  }, 30_000);
 
   it('should render the sign-in form', () => {
     const submitButton: HTMLButtonElement =
