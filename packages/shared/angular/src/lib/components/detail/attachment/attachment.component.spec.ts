@@ -4,9 +4,9 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { FieldType } from '@smartsoft001/models';
 
-import { DetailAttachmentComponent } from './attachment.component';
 import { IDetailOptions } from '../../../models';
 import { FileService } from '../../../services';
+import { DetailAttachmentComponent } from './attachment.component';
 
 @Component({
   selector: 'smart-test-host',

@@ -20,12 +20,12 @@ import {
 } from '@smartsoft001/react';
 import { SpecificationService } from '@smartsoft001/utils';
 
-import { SmartCrudItemPageProps } from './item-page.types';
 import { CrudComponentSlots, CrudFullConfig } from '../../crud.config';
 import { useCrudFacade, useCrudService } from '../../crud.context';
 import { useCrudState } from '../../hooks';
 import { ICrudFilter, ICrudFilterQueryItem } from '../../models';
 import { useCrudPageConfig } from '../use-crud-page-config';
+import { SmartCrudItemPageProps } from './item-page.types';
 
 /** The `components` of an object `config.add` / `config.edit` / `config.details`. */
 function getSlots(

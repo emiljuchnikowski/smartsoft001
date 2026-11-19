@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
+import { useSmartComponent } from '../../providers/hooks';
 import { SmartCalendarProps } from './calendar.types';
 import { SmartCalendarStandard } from './standard/calendar-standard';
-import { useSmartComponent } from '../../providers/hooks';
 
 /**
  * Renders the implementation registered as `components.calendar` on

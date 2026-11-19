@@ -18,8 +18,6 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { IEntity } from '@smartsoft001/domain-core';
 import { Field, Model } from '@smartsoft001/models';
 
-import { ListBaseComponent } from './base/base.component';
-import { ListDesktopComponent } from './desktop/desktop.component';
 import {
   IDetailsProvider,
   IListInternalOptions,
@@ -29,15 +27,17 @@ import {
 } from '../../models';
 import { DetailsPage } from '../../pages/details/details.page';
 import { FileUrlPipe, ListCellPipe, ListHeaderPipe } from '../../pipes';
-import { PagingComponent } from '../paging';
-import { ListDesktopPresetComponent } from './desktop/preset/preset.component';
-import { ListMasonryGridComponent } from './masonry-grid/masonry-grid.component';
 import {
   AlertService,
   AuthService,
   HardwareService,
   ModalService,
 } from '../../services';
+import { PagingComponent } from '../paging';
+import { ListBaseComponent } from './base/base.component';
+import { ListDesktopComponent } from './desktop/desktop.component';
+import { ListDesktopPresetComponent } from './desktop/preset/preset.component';
+import { ListMasonryGridComponent } from './masonry-grid/masonry-grid.component';
 import { ListMasonryGridPresetComponent } from './masonry-grid/preset/preset.component';
 import { ListMobileComponent } from './mobile/mobile.component';
 import { ListMobilePresetComponent } from './mobile/preset/preset.component';

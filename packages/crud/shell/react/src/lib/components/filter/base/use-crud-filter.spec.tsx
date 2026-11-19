@@ -8,13 +8,13 @@ import {
   SmartProviderProps,
 } from '@smartsoft001/react';
 
-import { useCrudFilter, useCrudFilterControl } from './use-crud-filter';
 import { useCrudFacade } from '../../../crud.context';
 import { CrudProvider } from '../../../crud.provider';
 import { ICrudFilter } from '../../../models';
 import { CrudService } from '../../../services/crud/crud.service';
 import { CrudFacade } from '../../../state/crud.facade';
 import { SmartCrudFilterProps } from '../filter.types';
+import { useCrudFilter, useCrudFilterControl } from './use-crud-filter';
 
 class TodoModel {
   name?: string;

@@ -8,13 +8,13 @@ import { IItemRepository } from '@smartsoft001/domain-core';
 import { IUser } from '@smartsoft001/users';
 import { PasswordService } from '@smartsoft001/utils';
 
-import { AppModule } from './password-hasher.example';
 import {
   createDocsUserRepository,
   DOCS_CLIENT_ID,
   InMemoryUserRepository,
 } from '../auth/password-grant.example';
 import { InMemoryNoteRepository, Note } from '../crud/crud-service.example';
+import { AppModule } from './password-hasher.example';
 
 const PBKDF2_HASH = /^pbkdf2-sha256\$600000\$[a-f0-9]{32}\$[a-f0-9]{64}$/;
 const admin: IUser = { username: 'anna', permissions: ['admin'] };

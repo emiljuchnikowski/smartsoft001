@@ -24,7 +24,7 @@ This skill enforces only the build and architecture conventions.
 - **Caching / affected:** `targetDefaults` cache `build`; `lint` and `test` are inferred and cached by
   the `@nx/eslint/plugin` and `@nx/jest/plugin` (Nx 24 removed the `@nx/eslint:lint` and `@nx/jest:jest`
   executors); `nx.json` sets `defaultBase` for `nx affected`. No Nx Cloud binding.
-- **Lint / format:** ESLint flat config (`eslint.config.mjs`) with `import/order` + an `@<prefix>/**`
+- **Lint / format:** ESLint flat config (`eslint.config.mjs`) with `import-x/order` + an `@<prefix>/**`
   pathGroup; Prettier (`singleQuote`); husky + commitlint (conventional commits, scopes from `libs/`).
 - **Layout:** monorepo with `apps/` (the SSR `web` app) and `libs/`. Shared lib at `libs/shared/angular`,
   aliased `@<prefix>/angular`. Feature code lives in separate libs (`libs/<feature>/...`) added by the

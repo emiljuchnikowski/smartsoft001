@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SidebarNavigationStandardComponent } from './standard.component';
 import {
   ISidebarNavItemClick,
   ISidebarNavItemToggle,
 } from '../base/base.component';
+import { SidebarNavigationStandardComponent } from './standard.component';
 
 describe('@smartsoft001/shared-angular: SidebarNavigationStandardComponent', () => {
   let fixture: ComponentFixture<SidebarNavigationStandardComponent>;

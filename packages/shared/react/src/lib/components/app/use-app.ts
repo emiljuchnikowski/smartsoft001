@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { SmartAppProps } from './app.types';
 import { IMenuItem } from '../../models';
 import {
   useAppService,
@@ -10,6 +9,7 @@ import {
   useStyleService,
 } from '../../providers/hooks';
 import { useStore } from '../../store/store';
+import { SmartAppProps } from './app.types';
 
 const NO_MENU_ITEMS: IMenuItem[] = [];
 

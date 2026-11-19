@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react';
 
-import { SmartVerticalNavigationProps } from './vertical-navigation.types';
 import { IVerticalNavGroup } from '../../models';
+import { SmartVerticalNavigationProps } from './vertical-navigation.types';
 
 /**
  * The behaviour every vertical navigation variant shares: `options.items`

@@ -11,9 +11,9 @@ import {
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { PageStandardComponent } from './standard.component';
 import { IPageOptions } from '../../../models';
 import { AppService, HardwareService } from '../../../services';
+import { PageStandardComponent } from './standard.component';
 
 @Pipe({ name: 'translate', standalone: true })
 class MockTranslatePipe implements PipeTransform {

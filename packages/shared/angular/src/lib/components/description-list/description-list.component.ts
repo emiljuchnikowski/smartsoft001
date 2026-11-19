@@ -8,10 +8,10 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { DescriptionListStandardComponent } from './standard';
 import { IDescriptionListOptions } from '../../models';
 import { DESCRIPTION_LIST_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { outletInputs } from '../base/outlet-inputs';
+import { DescriptionListStandardComponent } from './standard';
 
 @Component({
   selector: 'smart-description-list',

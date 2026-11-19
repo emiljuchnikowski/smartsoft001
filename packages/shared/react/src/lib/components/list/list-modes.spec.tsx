@@ -4,6 +4,15 @@ import type { ComponentType } from 'react';
 import { IEntity } from '@smartsoft001/domain-core';
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
+import {
+  IDetailsProvider,
+  IListInternalOptions,
+  IListProvider,
+} from '../../models';
+import { SmartDetailsPage } from '../../pages/details/details-page';
+import { SmartProvider } from '../../providers/smart-provider';
+import { AuthService } from '../../services/auth/auth.service';
+import { ModalService } from '../../services/modal/modal.service';
 import { SmartListDesktop } from './desktop/list-desktop';
 import { SmartListDesktopPreset } from './desktop/preset/list-desktop-preset';
 import { SmartListDetailsModal } from './list-details-modal';
@@ -11,16 +20,7 @@ import { SmartListModeProps } from './list.types';
 import { SmartListMasonryGrid } from './masonry-grid/list-masonry-grid';
 import { SmartListMasonryGridPreset } from './masonry-grid/preset/list-masonry-grid-preset';
 import { SmartListMobile } from './mobile/list-mobile';
-import {
-  IDetailsProvider,
-  IListInternalOptions,
-  IListProvider,
-} from '../../models';
 import { SmartListMobilePreset } from './mobile/preset/list-mobile-preset';
-import { SmartDetailsPage } from '../../pages/details/details-page';
-import { SmartProvider } from '../../providers/smart-provider';
-import { AuthService } from '../../services/auth/auth.service';
-import { ModalService } from '../../services/modal/modal.service';
 
 @Model({})
 class Member implements IEntity<string> {

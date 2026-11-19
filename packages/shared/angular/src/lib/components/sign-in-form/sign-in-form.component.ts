@@ -10,7 +10,6 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { SignInFormStandardComponent } from './standard';
 import {
   ISignInFormOptions,
   ISignInFormSocialClick,
@@ -20,6 +19,7 @@ import {
 import { SIGN_IN_FORM_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 import { outletInputs } from '../base/outlet-inputs';
+import { SignInFormStandardComponent } from './standard';
 
 @Component({
   selector: 'smart-sign-in-form',

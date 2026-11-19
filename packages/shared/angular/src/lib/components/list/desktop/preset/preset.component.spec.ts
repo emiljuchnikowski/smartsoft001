@@ -6,11 +6,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { IEntity } from '@smartsoft001/domain-core';
 import { Field, Model } from '@smartsoft001/models';
 
-import { ListDesktopPresetComponent } from './preset.component';
 import { IListInternalOptions, IListProvider } from '../../../../models';
 import { FileUrlPipe, ListCellPipe, ListHeaderPipe } from '../../../../pipes';
 import { AlertService, AuthService } from '../../../../services';
 import { PagingComponent } from '../../../paging';
+import { ListDesktopPresetComponent } from './preset.component';
 
 @Pipe({ name: 'smartListHeader' })
 class MockListHeaderPipe implements PipeTransform {

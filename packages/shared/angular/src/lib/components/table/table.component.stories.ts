@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { TablePresetComponent } from './preset/preset.component';
-import { TableComponent } from './table.component';
 import { ITableColumn, ITableOptions, TableRow } from '../../models';
 import { TABLE_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { TablePresetComponent } from './preset/preset.component';
+import { TableComponent } from './table.component';
 
 const COLUMNS: ITableColumn[] = [
   { key: 'name', label: 'Name' },

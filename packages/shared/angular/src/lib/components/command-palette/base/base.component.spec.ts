@@ -5,8 +5,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CommandPaletteBaseComponent } from './base.component';
 import { ICommand, ICommandPaletteOptions } from '../../../models';
+import { CommandPaletteBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-command-palette',

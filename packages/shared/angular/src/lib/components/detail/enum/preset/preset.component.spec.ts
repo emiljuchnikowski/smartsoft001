@@ -4,8 +4,8 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { FieldType } from '@smartsoft001/models';
 
-import { DetailEnumPresetComponent } from './preset.component';
 import { IDetailOptions } from '../../../../models';
+import { DetailEnumPresetComponent } from './preset.component';
 
 @Component({
   selector: 'smart-test-host',

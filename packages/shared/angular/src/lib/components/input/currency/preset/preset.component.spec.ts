@@ -10,9 +10,9 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { InputCurrencyPresetComponent } from './preset.component';
 import { InputOptions } from '../../../../models';
 import { IModelLabelProvider } from '../../../../providers';
+import { InputCurrencyPresetComponent } from './preset.component';
 
 @Model({})
 class CurrencyModel {

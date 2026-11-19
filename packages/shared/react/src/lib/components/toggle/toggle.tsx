@@ -1,6 +1,6 @@
+import { useSmartComponent } from '../../providers/hooks';
 import { SmartToggleStandard } from './standard/toggle-standard';
 import { SmartToggleProps } from './toggle.types';
-import { useSmartComponent } from '../../providers/hooks';
 
 /**
  * Renders the implementation registered as `components.toggle` on

@@ -1,9 +1,9 @@
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { STATS_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { StatsBaseComponent } from './base/base.component';
 import { StatsComponent } from './stats.component';
-import { STATS_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-stats-injected',

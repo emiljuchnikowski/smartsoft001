@@ -1,9 +1,9 @@
-import { useInputArray } from './use-input-array';
 import { useTranslate } from '../../../providers/hooks';
 import { cn } from '../../../utils/class-names';
 import { SmartButton } from '../../button/button';
 import { SmartForm } from '../../form/form';
 import { SmartInputFieldProps } from '../input.types';
+import { useInputArray } from './use-input-array';
 
 /**
  * The label of an `array` field, a nested `SmartForm` per item and an add

@@ -7,8 +7,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SectionHeadingStandardComponent } from './standard.component';
 import { ISectionHeadingOptions } from '../../../models';
+import { SectionHeadingStandardComponent } from './standard.component';
 
 describe('@smartsoft001/shared-angular: SectionHeadingStandardComponent', () => {
   describe('default rendering (no options)', () => {

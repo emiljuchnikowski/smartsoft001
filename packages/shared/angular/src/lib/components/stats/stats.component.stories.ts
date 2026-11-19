@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { StatsPresetComponent } from './preset/preset.component';
-import { StatsComponent } from './stats.component';
 import { IStatsOptions } from '../../models';
 import { STATS_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { StatsPresetComponent } from './preset/preset.component';
+import { StatsComponent } from './stats.component';
 
 interface StatsArgs {
   title: string;

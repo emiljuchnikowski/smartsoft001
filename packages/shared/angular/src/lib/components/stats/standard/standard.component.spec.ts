@@ -7,8 +7,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StatsStandardComponent } from './standard.component';
 import { IStatsOptions } from '../../../models';
+import { StatsStandardComponent } from './standard.component';
 
 describe('@smartsoft001/shared-angular: StatsStandardComponent', () => {
   describe('default rendering (no options)', () => {

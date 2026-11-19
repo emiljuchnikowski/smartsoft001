@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BreadcrumbsPresetComponent } from './preset.component';
 import { IBreadcrumbsOptions } from '../../../models';
+import { BreadcrumbsPresetComponent } from './preset.component';
 
 describe('@smartsoft001/shared-angular: BreadcrumbsPresetComponent', () => {
   let fixture: ComponentFixture<BreadcrumbsPresetComponent>;

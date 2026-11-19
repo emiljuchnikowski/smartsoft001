@@ -3,8 +3,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FieldType } from '@smartsoft001/models';
 
-import { DetailAddressComponent } from './address.component';
 import { IDetailOptions } from '../../../models';
+import { DetailAddressComponent } from './address.component';
 
 @Component({
   selector: 'smart-test-host',

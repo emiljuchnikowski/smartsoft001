@@ -10,11 +10,11 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { MediaObjectStandardComponent } from './standard/standard.component';
 import { IMediaObjectOptions } from '../../models';
 import { MEDIA_OBJECT_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { outletContent } from '../base/outlet-content';
 import { outletInputs } from '../base/outlet-inputs';
+import { MediaObjectStandardComponent } from './standard/standard.component';
 
 @Component({
   selector: 'smart-media-object',

@@ -8,9 +8,9 @@ import { TestBed } from '@angular/core/testing';
 
 import { IEntity } from '@smartsoft001/domain-core';
 
-import { CrudService } from './crud.service';
 import { CrudConfig } from '../../crud.config';
 import { ICrudCreateManyOptions, ICrudFilter } from '../../models';
+import { CrudService } from './crud.service';
 
 interface TestEntity extends IEntity<string> {
   id: string;

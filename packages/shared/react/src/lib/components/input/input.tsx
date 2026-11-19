@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 
-import { getDefaultInputFieldComponents } from './default-field-components';
 import { useControlState } from '../../forms/hooks';
 import {
   useInputFieldComponents,
@@ -8,6 +7,7 @@ import {
 } from '../../providers/hooks';
 import { SmartInfo } from '../info/info';
 import { SmartLoader } from '../loader/loader';
+import { getDefaultInputFieldComponents } from './default-field-components';
 import { SmartInputError } from './error/input-error';
 import { resolveInputFieldOptions } from './field-options';
 import { SmartInputProps } from './input.types';

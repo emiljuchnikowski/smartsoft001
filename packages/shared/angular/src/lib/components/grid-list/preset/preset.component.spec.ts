@@ -1,6 +1,7 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { IGridListOptions } from '../../../models';
 import {
   getGridListColumnsClasses,
   getGridListGapClasses,
@@ -8,7 +9,6 @@ import {
   getGridListTileClasses,
 } from './preset-classes.util';
 import { GridListPresetComponent } from './preset.component';
-import { IGridListOptions } from '../../../models';
 
 @Component({
   template: `

@@ -2,9 +2,9 @@ import type { ComponentType } from 'react';
 
 import { IEntity } from '@smartsoft001/domain-core';
 
+import { ListMode } from '../../models';
 import { SmartListDesktopPreset } from './desktop/preset/list-desktop-preset';
 import { SmartListModeProps } from './list.types';
-import { ListMode } from '../../models';
 import { SmartListMasonryGridPreset } from './masonry-grid/preset/list-masonry-grid-preset';
 import { SmartListMobilePreset } from './mobile/preset/list-mobile-preset';
 

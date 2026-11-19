@@ -1,15 +1,15 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
-import { SmartTabsPreset } from './preset/tabs-preset';
-import { SmartTabsStandard } from './standard/tabs-standard';
-import { SmartTabs } from './tabs';
-import { SmartTabsProps } from './tabs.types';
 import {
   createHistoryNavigation,
   ISmartLinkProps,
   ISmartNavigation,
 } from '../../providers/navigation';
 import { SmartProvider } from '../../providers/smart-provider';
+import { SmartTabsPreset } from './preset/tabs-preset';
+import { SmartTabsStandard } from './standard/tabs-standard';
+import { SmartTabs } from './tabs';
+import { SmartTabsProps } from './tabs.types';
 
 function routerNavigation(): ISmartNavigation {
   return {

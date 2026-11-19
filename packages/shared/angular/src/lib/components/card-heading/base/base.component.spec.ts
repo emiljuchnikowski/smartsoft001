@@ -5,8 +5,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CardHeadingBaseComponent } from './base.component';
 import { ICardHeadingOptions } from '../../../models';
+import { CardHeadingBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-card-heading',

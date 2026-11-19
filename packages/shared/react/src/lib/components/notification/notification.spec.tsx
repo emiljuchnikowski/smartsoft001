@@ -1,10 +1,10 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartNotification } from './notification';
 import { SmartNotificationProps } from './notification.types';
 import { SmartNotificationPreset } from './preset/notification-preset';
 import { SmartNotificationStandard } from './standard/notification-standard';
-import { SmartProvider } from '../../providers/smart-provider';
 
 describe('@smartsoft001/react: SmartNotification', () => {
   describe('wrapper', () => {

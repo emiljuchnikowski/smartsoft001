@@ -4,9 +4,9 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { FieldType } from '@smartsoft001/models';
 
-import { DetailPdfComponent } from './pdf.component';
 import { IDetailOptions } from '../../../models';
 import { FileService } from '../../../services';
+import { DetailPdfComponent } from './pdf.component';
 
 @Component({
   selector: 'smart-test-host',

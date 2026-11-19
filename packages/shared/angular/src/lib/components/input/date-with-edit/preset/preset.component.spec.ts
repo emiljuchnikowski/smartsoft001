@@ -10,9 +10,9 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { InputDateWithEditPresetComponent } from './preset.component';
 import { InputOptions } from '../../../../models';
 import { IModelLabelProvider } from '../../../../providers';
+import { InputDateWithEditPresetComponent } from './preset.component';
 
 @Model({})
 class DateWithEditModel {

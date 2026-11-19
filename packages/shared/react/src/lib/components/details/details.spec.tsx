@@ -4,14 +4,14 @@ import type { ReactNode } from 'react';
 import { IEntity } from '@smartsoft001/domain-core';
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { SmartDetails } from './details';
-import { SmartDetailsProps } from './details.types';
-import { SmartDetailsStandard } from './standard/details-standard';
-import { useDetails } from './use-details';
 import { IDetailsOptions } from '../../models';
 import { useDetailsService } from '../../providers/hooks';
 import { SmartProvider } from '../../providers/smart-provider';
 import { AuthService } from '../../services/auth/auth.service';
+import { SmartDetails } from './details';
+import { SmartDetailsProps } from './details.types';
+import { SmartDetailsStandard } from './standard/details-standard';
+import { useDetails } from './use-details';
 
 @Model({})
 class Customer implements IEntity<string> {

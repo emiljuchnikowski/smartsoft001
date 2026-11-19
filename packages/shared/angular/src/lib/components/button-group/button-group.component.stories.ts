@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { ButtonGroupComponent } from './button-group.component';
-import { ButtonGroupPresetComponent } from './preset/preset.component';
 import { IButtonGroupButton, SmartButtonGroupVariant } from '../../models';
 import { BUTTON_GROUP_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { ButtonGroupComponent } from './button-group.component';
+import { ButtonGroupPresetComponent } from './preset/preset.component';
 
 const VARIANTS: SmartButtonGroupVariant[] = [
   'basic',

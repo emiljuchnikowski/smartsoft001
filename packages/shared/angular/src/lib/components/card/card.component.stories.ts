@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
+import { CARD_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { CardComponent } from './card.component';
 import { CardPresetComponent } from './preset/preset.component';
-import { CARD_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 interface CardArgs {
   title: string;

@@ -1,7 +1,7 @@
-import { useInputObject } from './use-input-object';
 import { cn } from '../../../utils/class-names';
 import { SmartForm } from '../../form/form';
 import { SmartInputFieldProps } from '../input.types';
+import { useInputObject } from './use-input-object';
 
 /**
  * The label of an `object` field and a nested `SmartForm` for its group.

@@ -1,6 +1,6 @@
+import { useSmartComponent } from '../../providers/hooks';
 import { SmartButtonGroupProps } from './button-group.types';
 import { SmartButtonGroupStandard } from './standard/button-group-standard';
-import { useSmartComponent } from '../../providers/hooks';
 
 /**
  * Renders the implementation registered as `components['button-group']` on

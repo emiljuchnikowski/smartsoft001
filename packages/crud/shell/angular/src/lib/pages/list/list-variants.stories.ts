@@ -14,9 +14,9 @@ import {
 } from '@smartsoft001/angular';
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { ListComponent } from './list.component';
 import { CrudModule } from '../../crud.module';
 import { ICrudListGroup } from '../../models';
+import { ListComponent } from './list.component';
 
 /**
  * Model whose fields are flagged `list.filter` across several `FieldType`s, plus

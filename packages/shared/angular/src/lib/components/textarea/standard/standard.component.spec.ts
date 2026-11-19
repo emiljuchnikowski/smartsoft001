@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TextareaStandardComponent } from './standard.component';
 import { ITextareaActionClick } from '../base/base.component';
+import { TextareaStandardComponent } from './standard.component';
 
 describe('@smartsoft001/shared-angular: TextareaStandardComponent', () => {
   let fixture: ComponentFixture<TextareaStandardComponent>;

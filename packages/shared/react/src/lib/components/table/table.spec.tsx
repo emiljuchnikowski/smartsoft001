@@ -1,10 +1,10 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartTablePreset } from './preset/table-preset';
 import { SmartTableStandard } from './standard/table-standard';
 import { SmartTable } from './table';
 import { ISmartTableOptions, SmartTableProps } from './table.types';
-import { SmartProvider } from '../../providers/smart-provider';
 
 const COLUMNS: ISmartTableOptions['columns'] = [
   { key: 'name', label: 'Name' },

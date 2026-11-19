@@ -7,8 +7,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CardHeadingStandardComponent } from './standard.component';
 import { ICardHeadingOptions } from '../../../models';
+import { CardHeadingStandardComponent } from './standard.component';
 
 describe('@smartsoft001/shared-angular: CardHeadingStandardComponent', () => {
   describe('default rendering (no options)', () => {

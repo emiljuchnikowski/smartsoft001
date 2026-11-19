@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { VerticalNavigationStandardComponent } from './standard.component';
 import { IVerticalNavItemClick } from '../base/base.component';
+import { VerticalNavigationStandardComponent } from './standard.component';
 
 describe('@smartsoft001/shared-angular: VerticalNavigationStandardComponent', () => {
   let fixture: ComponentFixture<VerticalNavigationStandardComponent>;

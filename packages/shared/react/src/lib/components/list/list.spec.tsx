@@ -3,12 +3,12 @@ import { render, screen } from '@testing-library/react';
 import { IEntity } from '@smartsoft001/domain-core';
 import { Field, Model } from '@smartsoft001/models';
 
-import { SmartList } from './list';
-import { SmartListModeProps } from './list.types';
-import { LIST_PRESET_MODE_COMPONENTS } from './preset-modes';
 import { IListOptions, IListProvider, ListMode } from '../../models';
 import { SmartProvider } from '../../providers/smart-provider';
 import { AuthService } from '../../services/auth/auth.service';
+import { SmartList } from './list';
+import { SmartListModeProps } from './list.types';
+import { LIST_PRESET_MODE_COMPONENTS } from './preset-modes';
 
 @Model({})
 class TestItemModel implements IEntity<string> {

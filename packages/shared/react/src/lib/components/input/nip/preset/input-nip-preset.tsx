@@ -1,11 +1,11 @@
 import { useId } from 'react';
 
+import { SmartInputFieldProps } from '../../input.types';
+import { useInputNip } from '../use-input-nip';
 import {
   getInputNipPresetClasses,
   getInputNipPresetLabelClasses,
 } from './preset-classes';
-import { SmartInputFieldProps } from '../../input.types';
-import { useInputNip } from '../use-input-nip';
 
 /**
  * Styled `nip` field (preset): the Preline look of {@link SmartInputNip}, with

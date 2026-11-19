@@ -1,9 +1,9 @@
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { COMMAND_PALETTE_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { CommandPaletteBaseComponent } from './base/base.component';
 import { CommandPaletteComponent } from './command-palette.component';
-import { COMMAND_PALETTE_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-command-palette-injected',

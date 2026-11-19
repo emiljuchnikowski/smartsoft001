@@ -1,7 +1,7 @@
 import { BadRequestException } from '@nestjs/common';
 
-import { IQ2mResult, q2m } from './query-to-mongo';
 import { MAX_QUERY_OFFSET } from '../../crud-query.config';
+import { IQ2mResult, q2m } from './query-to-mongo';
 
 const operators = new Set([
   '$eq',

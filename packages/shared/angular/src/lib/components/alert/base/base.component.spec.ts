@@ -5,8 +5,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AlertBaseComponent } from './base.component';
 import { IAlertOptions } from '../../../models';
+import { AlertBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-alert',

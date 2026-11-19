@@ -11,10 +11,10 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { InputImagePresetComponent } from './preset.component';
 import { InputOptions } from '../../../../models';
 import { IModelLabelProvider } from '../../../../providers';
 import { FileService, ToastService } from '../../../../services';
+import { InputImagePresetComponent } from './preset.component';
 
 @Model({})
 class ImageModel {

@@ -10,11 +10,11 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { StackedLayoutStandardComponent } from './standard/standard.component';
 import { IStackedLayoutOptions } from '../../models';
 import { STACKED_LAYOUT_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { outletContent } from '../base/outlet-content';
 import { outletInputs } from '../base/outlet-inputs';
+import { StackedLayoutStandardComponent } from './standard/standard.component';
 
 @Component({
   selector: 'smart-stacked-layout',

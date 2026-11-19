@@ -3,10 +3,10 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Field, FieldType, IModelFilter, Model } from '@smartsoft001/models';
 import { PaginationMode } from '@smartsoft001/react';
 
-import { SmartCrudListPage } from './list-page';
 import { CrudFullConfig } from '../../crud.config';
 import { CrudProvider } from '../../crud.provider';
 import { ICrudListGroup } from '../../models';
+import { SmartCrudListPage } from './list-page';
 
 // The filters read `IModelFilter.possibilities` as a function returning the
 // list.

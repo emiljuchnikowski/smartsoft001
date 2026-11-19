@@ -6,16 +6,16 @@ import {
   screen,
 } from '@testing-library/react';
 
-import { SmartSidebarNavigation } from './sidebar-navigation';
-import { SmartSidebarNavigationProps } from './sidebar-navigation.types';
-import { SmartSidebarNavigationStandard } from './standard/sidebar-navigation-standard';
-import { useSidebarNavigation } from './use-sidebar-navigation';
 import {
   createHistoryNavigation,
   ISmartLinkProps,
   ISmartNavigation,
 } from '../../providers/navigation';
 import { SmartProvider } from '../../providers/smart-provider';
+import { SmartSidebarNavigation } from './sidebar-navigation';
+import { SmartSidebarNavigationProps } from './sidebar-navigation.types';
+import { SmartSidebarNavigationStandard } from './standard/sidebar-navigation-standard';
+import { useSidebarNavigation } from './use-sidebar-navigation';
 
 function routerNavigation(): ISmartNavigation {
   return {

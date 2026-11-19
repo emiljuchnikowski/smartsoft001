@@ -1,9 +1,9 @@
 import { useId, useState } from 'react';
 
-import { useInputPassword } from './use-input-password';
 import { cn } from '../../../utils/class-names';
 import { SmartPasswordStrength } from '../../password-strength/password-strength';
 import { SmartInputFieldProps } from '../input.types';
+import { useInputPassword } from './use-input-password';
 
 const LABEL_CLASSES = [
   'smart:block',

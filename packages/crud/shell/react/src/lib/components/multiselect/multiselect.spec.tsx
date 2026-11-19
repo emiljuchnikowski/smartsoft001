@@ -15,12 +15,12 @@ import {
   useMenuService,
 } from '@smartsoft001/react';
 
-import { SmartCrudMultiselect } from './multiselect';
-import { useCrudMultiselect } from './use-crud-multiselect';
 import { CrudConfig, CrudFullConfig } from '../../crud.config';
 import { useCrudFacade } from '../../crud.context';
 import { CrudProvider } from '../../crud.provider';
 import { CrudFacade } from '../../state/crud.facade';
+import { SmartCrudMultiselect } from './multiselect';
+import { useCrudMultiselect } from './use-crud-multiselect';
 
 @Model({})
 class TodoModel {

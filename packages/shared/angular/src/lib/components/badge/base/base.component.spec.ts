@@ -5,8 +5,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BadgeBaseComponent } from './base.component';
 import { IBadgeOptions, SmartBadgeColor } from '../../../models';
+import { BadgeBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-badge',

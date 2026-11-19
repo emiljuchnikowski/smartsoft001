@@ -7,8 +7,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MultiColumnLayoutStandardComponent } from './standard.component';
 import { IMultiColumnLayoutOptions } from '../../../models';
+import { MultiColumnLayoutStandardComponent } from './standard.component';
 
 describe('@smartsoft001/shared-angular: MultiColumnLayoutStandardComponent', () => {
   describe('default rendering', () => {

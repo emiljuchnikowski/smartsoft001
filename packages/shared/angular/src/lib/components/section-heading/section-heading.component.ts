@@ -8,10 +8,10 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { SectionHeadingStandardComponent } from './standard/standard.component';
 import { ISectionHeadingOptions } from '../../models';
 import { SECTION_HEADING_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { outletInputs } from '../base/outlet-inputs';
+import { SectionHeadingStandardComponent } from './standard/standard.component';
 
 @Component({
   selector: 'smart-section-heading',

@@ -1,11 +1,11 @@
 import { fireEvent, render, renderHook, screen } from '@testing-library/react';
 
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartPaging } from './paging';
 import { SmartPagingProps } from './paging.types';
 import { SmartPagingPreset } from './preset/paging-preset';
 import { SmartPagingStandard } from './standard/paging-standard';
 import { usePaging } from './use-paging';
-import { SmartProvider } from '../../providers/smart-provider';
 
 describe('@smartsoft001/react: SmartPaging', () => {
   describe('SmartPaging (wrapper)', () => {

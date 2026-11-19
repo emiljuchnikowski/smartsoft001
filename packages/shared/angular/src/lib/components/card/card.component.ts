@@ -12,8 +12,8 @@ import {
 
 import { ICardOptions } from '../../models';
 import { CARD_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
-import { CardStandardComponent } from './standard/standard.component';
 import { outletInputs } from '../base/outlet-inputs';
+import { CardStandardComponent } from './standard/standard.component';
 
 @Component({
   selector: 'smart-card',

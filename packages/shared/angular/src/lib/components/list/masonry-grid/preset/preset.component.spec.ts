@@ -6,11 +6,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { IEntity } from '@smartsoft001/domain-core';
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { ListMasonryGridPresetComponent } from './preset.component';
 import { IListInternalOptions, IListProvider } from '../../../../models';
 import { FileUrlPipe, ListCellPipe } from '../../../../pipes';
 import { AlertService, AuthService } from '../../../../services';
 import { PagingComponent } from '../../../paging';
+import { ListMasonryGridPresetComponent } from './preset.component';
 
 @Pipe({ name: 'smartListCell' })
 class MockListCellPipe implements PipeTransform {

@@ -3,11 +3,11 @@ import { useEffect } from 'react';
 
 import { Field, FieldType, IModelFilter, Model } from '@smartsoft001/models';
 
-import { SmartCrudFilters } from './filters';
 import { CrudFullConfig } from '../../crud.config';
 import { useCrud } from '../../crud.context';
 import { CrudProvider } from '../../crud.provider';
 import { read } from '../../state/crud.actions';
+import { SmartCrudFilters } from './filters';
 
 // The filters read `IModelFilter.possibilities` as a function returning the
 // list.

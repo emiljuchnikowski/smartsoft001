@@ -1,9 +1,9 @@
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { PAGE_HEADING_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { PageHeadingBaseComponent } from './base/base.component';
 import { PageHeadingComponent } from './page-heading.component';
-import { PAGE_HEADING_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-page-heading-injected',

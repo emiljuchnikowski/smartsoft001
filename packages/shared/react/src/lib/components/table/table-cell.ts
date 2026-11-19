@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 
-import { ISmartTableColumn } from './table.types';
 import { TableRow } from '../../models';
+import { ISmartTableColumn } from './table.types';
 
 /**
  * The content of a body cell: the column's `cellTpl` (called with the

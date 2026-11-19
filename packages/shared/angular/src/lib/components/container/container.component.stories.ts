@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
+import { CONTAINER_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { ContainerComponent } from './container.component';
 import { ContainerPresetComponent } from './preset/preset.component';
-import { CONTAINER_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 const MODES = ['full-width', 'constrained', 'container'] as const;
 

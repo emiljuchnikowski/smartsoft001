@@ -10,12 +10,12 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { SelectMenuValue } from './base/base.component';
-import { SelectMenuStandardComponent } from './standard';
 import { ISelectMenuOptions } from '../../models';
 import { SELECT_MENU_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 import { outletInputs } from '../base/outlet-inputs';
+import { SelectMenuValue } from './base/base.component';
+import { SelectMenuStandardComponent } from './standard';
 
 @Component({
   selector: 'smart-select-menu',

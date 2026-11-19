@@ -8,10 +8,10 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { PageHeadingStandardComponent } from './standard/standard.component';
 import { IPageHeadingOptions } from '../../models';
 import { PAGE_HEADING_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { outletInputs } from '../base/outlet-inputs';
+import { PageHeadingStandardComponent } from './standard/standard.component';
 
 @Component({
   selector: 'smart-page-heading',

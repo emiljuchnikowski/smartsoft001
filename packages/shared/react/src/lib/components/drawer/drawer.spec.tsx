@@ -1,10 +1,10 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartDrawer } from './drawer';
 import { SmartDrawerProps } from './drawer.types';
 import { SmartDrawerPreset } from './preset/drawer-preset';
 import { SmartDrawerStandard } from './standard/drawer-standard';
-import { SmartProvider } from '../../providers/smart-provider';
 
 describe('@smartsoft001/react: SmartDrawer', () => {
   describe('wrapper', () => {

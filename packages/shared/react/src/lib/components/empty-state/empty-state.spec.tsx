@@ -1,11 +1,11 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartEmptyState } from './empty-state';
 import { SmartEmptyStateProps } from './empty-state.types';
 import { SmartEmptyStatePreset } from './preset/empty-state-preset';
 import { getEmptyStateActionClasses } from './preset/preset-classes';
 import { SmartEmptyStateStandard } from './standard/empty-state-standard';
-import { SmartProvider } from '../../providers/smart-provider';
 
 describe('@smartsoft001/react: SmartEmptyState', () => {
   describe('wrapper', () => {

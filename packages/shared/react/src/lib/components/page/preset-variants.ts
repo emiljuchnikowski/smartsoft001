@@ -1,5 +1,5 @@
-import { SmartPagePreset } from './preset/page-preset';
 import { SmartComponentOverrides } from '../../providers/smart-context';
+import { SmartPagePreset } from './preset/page-preset';
 
 /**
  * Styled page variant preset, keyed by `getPageVariantKey(variant)`. Pass it to

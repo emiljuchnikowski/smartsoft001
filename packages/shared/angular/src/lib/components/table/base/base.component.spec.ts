@@ -5,8 +5,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TableBaseComponent } from './base.component';
 import { ITableOptions } from '../../../models';
+import { TableBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-table',

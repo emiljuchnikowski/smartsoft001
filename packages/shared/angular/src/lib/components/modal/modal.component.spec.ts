@@ -1,10 +1,10 @@
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { MODAL_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { ModalBaseComponent } from './base/base.component';
 import { ModalComponent } from './modal.component';
 import { ModalPresetComponent } from './preset/preset.component';
-import { MODAL_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-modal-injected',

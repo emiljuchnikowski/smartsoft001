@@ -3,9 +3,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FieldType } from '@smartsoft001/models';
 
-import { DetailImageComponent } from './image.component';
 import { IDetailOptions } from '../../../models';
 import { FileService } from '../../../services';
+import { DetailImageComponent } from './image.component';
 
 @Component({
   selector: 'smart-test-host',

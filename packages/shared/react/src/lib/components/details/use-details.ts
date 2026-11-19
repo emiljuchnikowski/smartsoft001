@@ -9,9 +9,9 @@ import {
 } from '@smartsoft001/models';
 import { ObjectService, SpecificationService } from '@smartsoft001/utils';
 
-import { SmartDetailsProps } from './details.types';
 import { useAuthService, useDetailsService } from '../../providers/hooks';
 import { AuthService } from '../../services/auth/auth.service';
+import { SmartDetailsProps } from './details.types';
 
 export interface SmartDetailsField {
   key: string;

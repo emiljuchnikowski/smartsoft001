@@ -5,7 +5,6 @@ import { of } from 'rxjs';
 
 import { FieldType, IModelFilter } from '@smartsoft001/models';
 
-import { BaseComponent } from './base.component';
 import { CrudFacade } from '../../../+state/crud.facade';
 import { CrudConfig } from '../../../crud.config';
 import { ICrudFilter } from '../../../models';
@@ -13,6 +12,7 @@ import {
   CRUD_MODEL_POSSIBILITIES_PROVIDER,
   ICrudModelPossibilitiesProvider,
 } from '../../../providers/model-possibilities/model-possibilities.provider';
+import { BaseComponent } from './base.component';
 
 class SomeModel {
   name?: string;

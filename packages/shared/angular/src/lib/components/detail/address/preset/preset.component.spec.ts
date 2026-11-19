@@ -4,8 +4,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { IAddress } from '@smartsoft001/domain-core';
 import { FieldType } from '@smartsoft001/models';
 
-import { DetailAddressPresetComponent } from './preset.component';
 import { IDetailOptions } from '../../../../models';
+import { DetailAddressPresetComponent } from './preset.component';
 
 @Component({
   selector: 'smart-test-host',

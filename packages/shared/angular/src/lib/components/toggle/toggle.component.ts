@@ -10,11 +10,11 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { ToggleStandardComponent } from './standard/standard.component';
 import { IToggleOptions } from '../../models';
 import { TOGGLE_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 import { outletInputs } from '../base/outlet-inputs';
+import { ToggleStandardComponent } from './standard/standard.component';
 
 @Component({
   selector: 'smart-toggle',

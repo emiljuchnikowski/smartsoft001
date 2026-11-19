@@ -7,8 +7,8 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { DateRangeModalStandardComponent } from './standard-modal.component';
 import { DateRangeBaseComponent } from '../base/date-range-base.component';
+import { DateRangeModalStandardComponent } from './standard-modal.component';
 
 @Component({
   selector: 'smart-date-range-standard',

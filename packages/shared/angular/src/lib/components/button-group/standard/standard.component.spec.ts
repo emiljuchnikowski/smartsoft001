@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ButtonGroupStandardComponent } from './standard.component';
 import { IButtonGroupButton } from '../../../models';
+import { ButtonGroupStandardComponent } from './standard.component';
 
 describe('@smartsoft001/shared-angular: ButtonGroupStandardComponent', () => {
   let fixture: ComponentFixture<ButtonGroupStandardComponent>;

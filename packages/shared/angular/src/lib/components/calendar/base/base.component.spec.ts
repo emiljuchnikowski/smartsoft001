@@ -5,8 +5,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CalendarBaseComponent } from './base.component';
 import { ICalendarEvent, ICalendarOptions } from '../../../models';
+import { CalendarBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-calendar',

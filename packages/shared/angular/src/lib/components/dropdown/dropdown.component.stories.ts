@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { DropdownComponent } from './dropdown.component';
-import { DropdownPresetComponent } from './preset/preset.component';
 import { IDropdownItem, SmartDropdownVariant } from '../../models';
 import { DROPDOWN_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { DropdownComponent } from './dropdown.component';
+import { DropdownPresetComponent } from './preset/preset.component';
 
 const VARIANTS: SmartDropdownVariant[] = [
   'simple',

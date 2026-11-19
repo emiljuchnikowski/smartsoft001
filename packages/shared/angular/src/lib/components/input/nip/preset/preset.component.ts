@@ -8,12 +8,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { NipService } from '@smartsoft001/utils';
 
+import { ModelLabelPipe } from '../../../../pipes';
+import { InputBaseComponent } from '../../base/base.component';
 import {
   getInputNipPresetClasses,
   getInputNipPresetLabelClasses,
 } from './preset-classes.util';
-import { ModelLabelPipe } from '../../../../pipes';
-import { InputBaseComponent } from '../../base/base.component';
 
 @Component({
   selector: 'smart-input-nip-preset',

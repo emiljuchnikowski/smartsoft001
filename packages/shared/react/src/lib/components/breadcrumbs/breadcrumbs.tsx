@@ -1,6 +1,6 @@
+import { useSmartComponent } from '../../providers/hooks';
 import { SmartBreadcrumbsProps } from './breadcrumbs.types';
 import { SmartBreadcrumbsStandard } from './standard/breadcrumbs-standard';
-import { useSmartComponent } from '../../providers/hooks';
 
 /**
  * Renders the implementation registered as `components.breadcrumbs` on

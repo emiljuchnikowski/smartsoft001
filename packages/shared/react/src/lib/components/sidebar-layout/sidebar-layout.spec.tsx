@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react';
 
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartSidebarLayoutPreset } from './preset/sidebar-layout-preset';
 import { SmartSidebarLayout } from './sidebar-layout';
 import { SmartSidebarLayoutProps } from './sidebar-layout.types';
 import { SmartSidebarLayoutStandard } from './standard/sidebar-layout-standard';
-import { SmartProvider } from '../../providers/smart-provider';
 
 function childTags(element: Element | null): string[] {
   return Array.from(element?.children ?? []).map((child) => child.tagName);

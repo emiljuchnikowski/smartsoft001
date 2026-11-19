@@ -1,5 +1,5 @@
-import { RefresherService } from './refresher.service';
 import { Trans, TransStatus } from '../entities';
+import { RefresherService } from './refresher.service';
 
 /** Lets every other pending promise run, as a network round trip would. */
 const roundTrip = () => new Promise<void>((resolve) => setImmediate(resolve));

@@ -4,10 +4,10 @@ import type { ReactNode } from 'react';
 import { IEntity } from '@smartsoft001/domain-core';
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { SmartDetailObject } from './detail-object';
-import { SmartDetailObjectPreset } from './preset/detail-object-preset';
 import { IDetailOptions, IDetailsOptions } from '../../../models';
 import { SmartProvider } from '../../../providers/smart-provider';
+import { SmartDetailObject } from './detail-object';
+import { SmartDetailObjectPreset } from './preset/detail-object-preset';
 
 @Model({})
 class Headquarters implements IEntity<string> {

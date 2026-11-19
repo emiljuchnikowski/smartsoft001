@@ -1,5 +1,5 @@
-import { CrudSearchService } from './search.service';
 import { ICrudFilter, ICrudFilterQueryItem } from '../../models';
+import { CrudSearchService } from './search.service';
 
 describe('crud-shell-angular: CrudSearchService', () => {
   let service: CrudSearchService;

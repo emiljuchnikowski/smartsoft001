@@ -1,12 +1,12 @@
 import { render, screen } from '@testing-library/react';
 
+import { ICardHeadingOptions } from '../../models';
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartCardHeading } from './card-heading';
 import { SmartCardHeadingProps } from './card-heading.types';
 import { SmartCardHeadingPreset } from './preset/card-heading-preset';
 import { getCardHeadingContainerClasses } from './preset/preset-classes';
 import { SmartCardHeadingStandard } from './standard/card-heading-standard';
-import { ICardHeadingOptions } from '../../models';
-import { SmartProvider } from '../../providers/smart-provider';
 
 const slots: ICardHeadingOptions = {
   title: 'Job Postings',

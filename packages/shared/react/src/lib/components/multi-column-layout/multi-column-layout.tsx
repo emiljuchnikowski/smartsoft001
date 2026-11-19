@@ -1,6 +1,6 @@
+import { useSmartComponent } from '../../providers/hooks';
 import { SmartMultiColumnLayoutProps } from './multi-column-layout.types';
 import { SmartMultiColumnLayoutStandard } from './standard/multi-column-layout-standard';
-import { useSmartComponent } from '../../providers/hooks';
 
 /**
  * Renders the implementation registered as `components['multi-column-layout']`

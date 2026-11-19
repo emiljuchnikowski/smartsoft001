@@ -1,11 +1,11 @@
 import { render, screen } from '@testing-library/react';
 
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartContainer } from './container';
 import { SmartContainerProps } from './container.types';
 import { SmartContainerPreset } from './preset/container-preset';
 import { getContainerClasses } from './preset/preset-classes';
 import { SmartContainerStandard } from './standard/container-standard';
-import { SmartProvider } from '../../providers/smart-provider';
 
 describe('@smartsoft001/react: SmartContainer', () => {
   describe('wrapper', () => {

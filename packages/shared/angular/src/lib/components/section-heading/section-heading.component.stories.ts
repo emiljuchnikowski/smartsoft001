@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { SectionHeadingPresetComponent } from './preset/preset.component';
-import { SectionHeadingComponent } from './section-heading.component';
 import { ISectionHeadingOptions } from '../../models';
 import { SECTION_HEADING_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { SectionHeadingPresetComponent } from './preset/preset.component';
+import { SectionHeadingComponent } from './section-heading.component';
 
 const LAYOUTS = ['half', 'narrow', 'wide', 'vertical'] as const;
 

@@ -2,9 +2,9 @@ import { render } from '@testing-library/react';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
+import { IDetailOptions } from '../../../models';
 import { SmartDetailDateRange } from './detail-date-range';
 import { SmartDetailDateRangePreset } from './preset/detail-date-range-preset';
-import { IDetailOptions } from '../../../models';
 
 interface Range {
   start: string;

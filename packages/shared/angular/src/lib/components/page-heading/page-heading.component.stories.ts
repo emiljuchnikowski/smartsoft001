@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
+import { PAGE_HEADING_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { PageHeadingComponent } from './page-heading.component';
 import { PageHeadingPresetComponent } from './preset/preset.component';
-import { PAGE_HEADING_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 const LAYOUTS = ['links-left', 'links-center', 'links-right', 'user'] as const;
 

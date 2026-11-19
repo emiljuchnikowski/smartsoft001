@@ -2,10 +2,10 @@ import { TemplateRef } from '@angular/core';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { TextareaPresetComponent } from './preset/preset.component';
-import { TextareaComponent } from './textarea.component';
 import { ITextareaOptions, SmartTextareaVariant } from '../../models';
 import { TEXTAREA_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { TextareaPresetComponent } from './preset/preset.component';
+import { TextareaComponent } from './textarea.component';
 
 const VARIANTS: SmartTextareaVariant[] = [
   'simple',

@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 
-import { SmartSidebarNavigationProps } from './sidebar-navigation.types';
 import { ISidebarNavGroup, ISidebarNavItem } from '../../models';
+import { SmartSidebarNavigationProps } from './sidebar-navigation.types';
 
 /**
  * The behaviour every sidebar navigation variant shares: `options.items`

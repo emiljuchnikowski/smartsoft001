@@ -5,8 +5,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TabsBaseComponent } from './base.component';
 import { ITabsOptions } from '../../../models';
+import { TabsBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-tabs',

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FeedPresetComponent } from './preset.component';
 import { IFeedOptions } from '../../../models';
+import { FeedPresetComponent } from './preset.component';
 
 describe('@smartsoft001/shared-angular: FeedPresetComponent', () => {
   let fixture: ComponentFixture<FeedPresetComponent>;

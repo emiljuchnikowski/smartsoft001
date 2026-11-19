@@ -7,8 +7,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StackedLayoutStandardComponent } from './standard.component';
 import { IStackedLayoutOptions } from '../../../models';
+import { StackedLayoutStandardComponent } from './standard.component';
 
 describe('@smartsoft001/shared-angular: StackedLayoutStandardComponent', () => {
   describe('default rendering', () => {

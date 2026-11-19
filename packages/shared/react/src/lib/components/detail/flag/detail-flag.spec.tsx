@@ -2,9 +2,9 @@ import { render } from '@testing-library/react';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
+import { IDetailOptions } from '../../../models';
 import { SmartDetailFlag } from './detail-flag';
 import { SmartDetailFlagPreset } from './preset/detail-flag-preset';
-import { IDetailOptions } from '../../../models';
 
 @Model({})
 class Account {

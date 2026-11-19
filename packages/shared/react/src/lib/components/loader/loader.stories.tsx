@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ReactNode } from 'react';
 
+import { SmartColor, SmartSize } from '../../models';
 import { SmartLoader } from './loader';
 import { SmartLoaderPreset } from './preset/loader-preset';
-import { SmartColor, SmartSize } from '../../models';
 
 interface LoaderArgs {
   show: boolean;

@@ -3,8 +3,6 @@ import type { ComponentType } from 'react';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { SmartInputObject } from './input-object';
-import { SmartInputObjectPreset } from './preset/input-object-preset';
 import { SmartFormControl } from '../../../forms/form-control';
 import { SmartFormGroup } from '../../../forms/form-group';
 import { SmartValidators } from '../../../forms/validators';
@@ -13,6 +11,8 @@ import { IModelLabelProvider } from '../../../providers/model-label.provider';
 import { SmartProvider } from '../../../providers/smart-provider';
 import { SmartFormBaseProps } from '../../form/form.types';
 import { SmartInputFieldProps } from '../input.types';
+import { SmartInputObject } from './input-object';
+import { SmartInputObjectPreset } from './preset/input-object-preset';
 
 @Model({})
 class ChildModel {

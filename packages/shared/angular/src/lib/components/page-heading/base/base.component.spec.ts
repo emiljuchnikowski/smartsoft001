@@ -5,8 +5,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PageHeadingBaseComponent } from './base.component';
 import { IPageHeadingOptions } from '../../../models';
+import { PageHeadingBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-page-heading',

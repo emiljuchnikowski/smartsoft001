@@ -3,10 +3,10 @@ import { provideTranslateService } from '@ngx-translate/core';
 
 import { IModelFilter } from '@smartsoft001/models';
 
-import { FilterDateWithEditComponent } from './date-with-edit.component';
 import { CrudFacade } from '../../../+state/crud.facade';
 import { CrudConfig } from '../../../crud.config';
 import { ICrudFilter } from '../../../models';
+import { FilterDateWithEditComponent } from './date-with-edit.component';
 
 class SomeModel {
   date?: string;

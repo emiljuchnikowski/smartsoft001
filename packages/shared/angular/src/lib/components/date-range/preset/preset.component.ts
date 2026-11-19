@@ -10,6 +10,8 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import moment from 'moment';
 
+import { DateRangeBaseComponent } from '../base/date-range-base.component';
+import { FilterBtnConstants } from '../base/date-range-modal-base.component';
 import {
   DATE_RANGE_PRESET_APPLY_BUTTON,
   DATE_RANGE_PRESET_CANCEL_BUTTON,
@@ -25,8 +27,6 @@ import {
   DATE_RANGE_PRESET_TRIGGER,
   DATE_RANGE_PRESET_WEEKDAY,
 } from './preset-classes.util';
-import { DateRangeBaseComponent } from '../base/date-range-base.component';
-import { FilterBtnConstants } from '../base/date-range-modal-base.component';
 
 /**
  * Styled date-range variation (preset) based on the Preline "single calendar

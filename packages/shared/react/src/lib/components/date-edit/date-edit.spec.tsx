@@ -1,10 +1,10 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { useState } from 'react';
 
+import { SmartFormControl } from '../../forms';
 import { SmartDateEdit } from './date-edit';
 import { SmartDateEditPreset } from './preset/date-edit-preset';
 import { SmartDateEditStandard } from './standard/date-edit-standard';
-import { SmartFormControl } from '../../forms';
 
 function digitInputs(container: HTMLElement): HTMLInputElement[] {
   return Array.from(container.querySelectorAll('input'));

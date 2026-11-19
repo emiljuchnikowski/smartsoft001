@@ -4,8 +4,8 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { FieldType } from '@smartsoft001/models';
 
-import { DetailTextComponent } from './text.component';
 import { IDetailOptions } from '../../../models';
+import { DetailTextComponent } from './text.component';
 
 @Component({
   selector: 'smart-test-host',

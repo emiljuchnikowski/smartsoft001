@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProgressBarsStandardComponent } from './standard.component';
 import { IProgressStepClick } from '../base/base.component';
+import { ProgressBarsStandardComponent } from './standard.component';
 
 describe('@smartsoft001/shared-angular: ProgressBarsStandardComponent', () => {
   let fixture: ComponentFixture<ProgressBarsStandardComponent>;

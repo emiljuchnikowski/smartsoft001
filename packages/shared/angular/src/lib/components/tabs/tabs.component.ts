@@ -11,12 +11,12 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { ITabChange } from './base/base.component';
-import { TabsStandardComponent } from './standard';
 import { ITabsOptions } from '../../models';
 import { TABS_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 import { outletInputs } from '../base/outlet-inputs';
+import { ITabChange } from './base/base.component';
+import { TabsStandardComponent } from './standard';
 
 @Component({
   selector: 'smart-tabs',

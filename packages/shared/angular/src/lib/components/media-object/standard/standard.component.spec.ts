@@ -5,8 +5,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MediaObjectStandardComponent } from './standard.component';
 import { IMediaObjectOptions } from '../../../models';
+import { MediaObjectStandardComponent } from './standard.component';
 
 @Component({
   selector: 'smart-test-host',

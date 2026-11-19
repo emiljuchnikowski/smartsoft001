@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ReactNode } from 'react';
 
-import { SmartCommandPalette } from './command-palette';
 import { ICommand, SmartCommandPaletteVariant } from '../../models';
+import { SmartCommandPalette } from './command-palette';
 import { SmartCommandPalettePreset } from './preset/command-palette-preset';
 
 const COMMANDS: ICommand[] = [

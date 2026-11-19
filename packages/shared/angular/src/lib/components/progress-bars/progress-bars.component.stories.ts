@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { ProgressBarsPresetComponent } from './preset/preset.component';
-import { ProgressBarsComponent } from './progress-bars.component';
 import { SmartProgressBarsLayout } from '../../models';
 import { PROGRESS_BARS_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { ProgressBarsPresetComponent } from './preset/preset.component';
+import { ProgressBarsComponent } from './progress-bars.component';
 
 const STEP_LAYOUTS: SmartProgressBarsLayout[] = [
   'simple',

@@ -1,6 +1,6 @@
+import { useSmartComponent } from '../../providers/hooks';
 import { SmartSidebarNavigationProps } from './sidebar-navigation.types';
 import { SmartSidebarNavigationStandard } from './standard/sidebar-navigation-standard';
-import { useSmartComponent } from '../../providers/hooks';
 
 /**
  * Renders the implementation registered as `components['sidebar-navigation']`

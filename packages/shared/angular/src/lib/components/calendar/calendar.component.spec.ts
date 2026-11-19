@@ -1,9 +1,9 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { CALENDAR_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { CalendarBaseComponent } from './base/base.component';
 import { CalendarComponent } from './calendar.component';
-import { CALENDAR_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-calendar-injected',

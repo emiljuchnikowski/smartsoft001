@@ -6,8 +6,8 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { getContainerClasses } from './preset-classes.util';
 import { ContainerStandardComponent } from '../standard/standard.component';
+import { getContainerClasses } from './preset-classes.util';
 
 /**
  * Styled container variation (preset).

@@ -1,8 +1,8 @@
 import { useCallback, useId } from 'react';
 
-import { SmartAlertProps } from './alert.types';
 import { IAlertButton } from '../../models';
 import { cn } from '../../utils/class-names';
+import { SmartAlertProps } from './alert.types';
 
 const BUTTON_BASE =
   'smart:rounded-md smart:px-3 smart:py-2 smart:text-sm smart:font-semibold smart:shadow-sm smart:focus:outline-none smart:focus-visible:outline-2 smart:focus-visible:outline-offset-2';

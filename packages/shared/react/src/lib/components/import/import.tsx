@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 
-import { SmartImportProps } from './import.types';
-import { useImport } from './use-import';
 import { IButtonOptions } from '../../models';
 import { SmartButton } from '../button/button';
+import { SmartImportProps } from './import.types';
+import { useImport } from './use-import';
 
 /**
  * An upload-icon `SmartButton` that opens a hidden file input and passes the

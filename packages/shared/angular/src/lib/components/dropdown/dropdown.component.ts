@@ -12,12 +12,12 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { DropdownStandardComponent } from './standard/standard.component';
 import { IDropdownItem, IDropdownOptions } from '../../models';
 import { DROPDOWN_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 import { outletContent } from '../base/outlet-content';
 import { outletInputs } from '../base/outlet-inputs';
+import { DropdownStandardComponent } from './standard/standard.component';
 
 @Component({
   selector: 'smart-dropdown',

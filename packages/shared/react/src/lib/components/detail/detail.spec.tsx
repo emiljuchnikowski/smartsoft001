@@ -3,14 +3,14 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { IEntity } from '@smartsoft001/domain-core';
 import { Field, FieldType, FieldTypeDef, Model } from '@smartsoft001/models';
 
+import { IDetailOptions } from '../../models';
+import { IModelLabelProvider } from '../../providers/model-label.provider';
+import { SmartProvider } from '../../providers/smart-provider';
 import { getDefaultDetailFieldComponents } from './default-field-components';
 import { SmartDetail } from './detail';
 import { SmartDetailFieldProps } from './detail.types';
 import { DETAIL_PRESET_FIELD_COMPONENTS } from './preset-fields';
-import { IDetailOptions } from '../../models';
 import { SmartDetailTextPreset } from './text/preset/detail-text-preset';
-import { IModelLabelProvider } from '../../providers/model-label.provider';
-import { SmartProvider } from '../../providers/smart-provider';
 
 @Model({})
 class Customer implements IEntity<string> {

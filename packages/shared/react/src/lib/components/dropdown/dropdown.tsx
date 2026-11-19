@@ -1,6 +1,6 @@
+import { useSmartComponent } from '../../providers/hooks';
 import { SmartDropdownProps } from './dropdown.types';
 import { SmartDropdownStandard } from './standard/dropdown-standard';
-import { useSmartComponent } from '../../providers/hooks';
 
 /**
  * Renders the implementation registered as `components.dropdown` on

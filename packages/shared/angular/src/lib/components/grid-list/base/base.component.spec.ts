@@ -5,8 +5,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GridListBaseComponent } from './base.component';
 import { IGridListOptions } from '../../../models';
+import { GridListBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-grid-list',

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TabsStandardComponent } from './standard.component';
 import { ITabChange } from '../base/base.component';
+import { TabsStandardComponent } from './standard.component';
 
 describe('@smartsoft001/shared-angular: TabsStandardComponent', () => {
   let fixture: ComponentFixture<TabsStandardComponent>;

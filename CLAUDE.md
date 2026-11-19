@@ -15,6 +15,7 @@ Nx monorepo with shared libraries for Angular, React, NestJS, and Ionic projects
 - **TypeScript**: 6.0.3
 - **Storybook**: 10.6.7 (`@storybook/angular`; `@storybook/react-vite` on Vite 8 for React)
 - **Jest**: 30.5 (Testing Library 16 for React)
+- **ESLint**: 10.15 (flat config, typescript-eslint 8, `eslint-plugin-import-x` for import order)
 - **Tailwind CSS**: 4.3
 - **Node**: ^22.12 or >=26, **npm**: 10+
 

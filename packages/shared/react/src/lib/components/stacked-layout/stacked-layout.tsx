@@ -1,6 +1,6 @@
+import { useSmartComponent } from '../../providers/hooks';
 import { SmartStackedLayoutProps } from './stacked-layout.types';
 import { SmartStackedLayoutStandard } from './standard/stacked-layout-standard';
-import { useSmartComponent } from '../../providers/hooks';
 
 /**
  * Renders the implementation registered as `components['stacked-layout']` on

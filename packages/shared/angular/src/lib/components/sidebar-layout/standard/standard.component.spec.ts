@@ -8,8 +8,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SidebarLayoutStandardComponent } from './standard.component';
 import { ISidebarLayoutOptions } from '../../../models';
+import { SidebarLayoutStandardComponent } from './standard.component';
 
 @Component({
   selector: 'smart-test-sidebar-layout-position-host',

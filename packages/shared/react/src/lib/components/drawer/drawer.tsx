@@ -1,6 +1,6 @@
+import { useSmartComponent } from '../../providers/hooks';
 import { SmartDrawerProps } from './drawer.types';
 import { SmartDrawerStandard } from './standard/drawer-standard';
-import { useSmartComponent } from '../../providers/hooks';
 
 /**
  * Renders the implementation registered as `components.drawer` on

@@ -1,9 +1,9 @@
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { STACKED_LIST_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { StackedListBaseComponent } from './base/base.component';
 import { StackedListComponent } from './stacked-list.component';
-import { STACKED_LIST_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-stacked-list-injected',

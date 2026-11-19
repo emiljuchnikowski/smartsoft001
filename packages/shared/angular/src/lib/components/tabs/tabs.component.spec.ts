@@ -1,9 +1,9 @@
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { TABS_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { TabsBaseComponent } from './base/base.component';
 import { TabsComponent } from './tabs.component';
-import { TABS_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-tabs-injected',

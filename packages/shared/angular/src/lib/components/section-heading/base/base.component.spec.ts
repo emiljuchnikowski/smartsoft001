@@ -5,8 +5,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SectionHeadingBaseComponent } from './base.component';
 import { ISectionHeadingOptions } from '../../../models';
+import { SectionHeadingBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-section-heading',

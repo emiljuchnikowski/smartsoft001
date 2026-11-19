@@ -7,11 +7,11 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
+import { CardHeadingStandardComponent } from '../standard/standard.component';
 import {
   CardHeadingVariant,
   getCardHeadingContainerClasses,
 } from './preset-classes.util';
-import { CardHeadingStandardComponent } from '../standard/standard.component';
 
 /**
  * HyperUI-styled card-heading variation (preset).

@@ -2,9 +2,9 @@ import { useCallback, useEffect, useReducer, useRef } from 'react';
 
 import { IEntity } from '@smartsoft001/domain-core';
 
-import { SmartCrudGroupProps } from './group.types';
 import { useCrudListGroupService } from '../../crud.context';
 import { ICrudListGroup } from '../../models';
+import { SmartCrudGroupProps } from './group.types';
 
 /**
  * The behaviour of the list groups. `change(val, item)` closes the other

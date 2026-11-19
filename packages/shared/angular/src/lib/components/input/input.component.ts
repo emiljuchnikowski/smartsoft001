@@ -25,6 +25,7 @@ import {
 import { InputOptions } from '../../models';
 import { StyleService } from '../../services';
 import { INPUT_FIELD_COMPONENTS_TOKEN } from '../../shared.inectors';
+import { outletInputs } from '../base/outlet-inputs';
 import { InfoComponent } from '../info';
 import { LoaderComponent } from '../loader';
 import { InputAddressComponent } from './address/address.component';
@@ -59,7 +60,6 @@ import { InputRadioComponent } from './radio/radio.component';
 import { InputStringsComponent } from './strings/strings.component';
 import { InputTextComponent } from './text/text.component';
 import { InputVideoComponent } from './video/video.component';
-import { outletInputs } from '../base/outlet-inputs';
 
 const baseMap: Partial<Record<FieldTypeDef, Type<InputBaseComponent<any>>>> = {
   [FieldType.currency]: InputCurrencyComponent,

@@ -15,6 +15,7 @@ import { FieldType, FieldTypeDef } from '@smartsoft001/models';
 import { IDetailOptions } from '../../models';
 import { ModelLabelPipe } from '../../pipes';
 import { DETAIL_FIELD_COMPONENTS_TOKEN } from '../../shared.inectors';
+import { outletInputs } from '../base/outlet-inputs';
 import { InfoComponent } from '../info';
 import { DetailAddressComponent } from './address/address.component';
 import { DetailArrayComponent } from './array/array.component';
@@ -32,7 +33,6 @@ import { DetailPdfComponent } from './pdf/pdf.component';
 import { DetailPhoneNumberPlComponent } from './phone-number-pl/phone-number-pl.component';
 import { DetailTextComponent } from './text/text.component';
 import { DetailVideoComponent } from './video/video.component';
-import { outletInputs } from '../base/outlet-inputs';
 
 const baseMap: Partial<Record<FieldTypeDef, Type<DetailBaseComponent<any>>>> = {
   [FieldType.email]: DetailEmailComponent,

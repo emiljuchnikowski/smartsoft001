@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 
-import { SmartExportProps } from './export.types';
-import { useExport } from './use-export';
 import { IButtonOptions } from '../../models';
 import { SmartButton } from '../button/button';
+import { SmartExportProps } from './export.types';
+import { useExport } from './use-export';
 
 /**
  * A download-icon `SmartButton` that calls `handler(value, fileName)`. Disabled

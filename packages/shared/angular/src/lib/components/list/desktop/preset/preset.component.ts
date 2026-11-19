@@ -22,6 +22,9 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
 
 import { IEntity } from '@smartsoft001/domain-core';
 
+import { FileUrlPipe, ListCellPipe, ListHeaderPipe } from '../../../../pipes';
+import { PagingComponent } from '../../../paging';
+import { ListDesktopComponent } from '../desktop.component';
 import {
   getListDesktopCellClasses,
   getListDesktopContainerClasses,
@@ -32,9 +35,6 @@ import {
   getListDesktopSortIndicatorClasses,
   getListDesktopTableClasses,
 } from './preset-classes.util';
-import { FileUrlPipe, ListCellPipe, ListHeaderPipe } from '../../../../pipes';
-import { PagingComponent } from '../../../paging';
-import { ListDesktopComponent } from '../desktop.component';
 
 /**
  * Preline-styled desktop list variation (preset).

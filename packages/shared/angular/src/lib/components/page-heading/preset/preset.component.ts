@@ -8,12 +8,12 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
+import { PageHeadingStandardComponent } from '../standard/standard.component';
 import {
   getPageHeadingBarClasses,
   getPageHeadingHeaderClasses,
   PageHeadingPresetLayout,
 } from './preset-classes.util';
-import { PageHeadingStandardComponent } from '../standard/standard.component';
 
 /**
  * HyperUI-styled page-heading variation (preset).

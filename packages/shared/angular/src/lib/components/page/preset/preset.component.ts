@@ -8,6 +8,8 @@ import {
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { ButtonComponent } from '../../button/button.component';
+import { PageStandardComponent } from '../standard/standard.component';
 import {
   getPageBodyCardClasses,
   getPageContainerClasses,
@@ -16,8 +18,6 @@ import {
   getPagePageClasses,
   getPageTitleClasses,
 } from './preset-classes.util';
-import { ButtonComponent } from '../../button/button.component';
-import { PageStandardComponent } from '../standard/standard.component';
 
 /**
  * Styled page variation (preset).

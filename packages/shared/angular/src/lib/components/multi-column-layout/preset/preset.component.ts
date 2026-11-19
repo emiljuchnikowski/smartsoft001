@@ -7,6 +7,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
+import { MultiColumnLayoutStandardComponent } from '../standard/standard.component';
 import {
   getMultiColumnLayoutContentContainerClasses,
   getMultiColumnLayoutHeaderClasses,
@@ -17,7 +18,6 @@ import {
   getMultiColumnLayoutSecondaryClasses,
   getMultiColumnLayoutTitleClasses,
 } from './preset-classes.util';
-import { MultiColumnLayoutStandardComponent } from '../standard/standard.component';
 
 /**
  * Styled multi-column-layout variation (preset).

@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { CommandPaletteComponent } from './command-palette.component';
-import { CommandPalettePresetComponent } from './preset/preset.component';
 import { ICommand, SmartCommandPaletteVariant } from '../../models';
 import { COMMAND_PALETTE_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { CommandPaletteComponent } from './command-palette.component';
+import { CommandPalettePresetComponent } from './preset/preset.component';
 
 const COMMANDS: ICommand[] = [
   {

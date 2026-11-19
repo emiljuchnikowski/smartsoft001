@@ -1,6 +1,14 @@
 import { Fragment } from 'react';
 
 import {
+  IProgressStep,
+  SmartProgressBarsLayout,
+  SmartProgressStepStatus,
+} from '../../../models';
+import { cn } from '../../../utils/class-names';
+import { SmartNavLink } from '../../navbar/nav-link';
+import { SmartProgressBarsProps } from '../progress-bars.types';
+import {
   getProgressBarsColumnClasses,
   getProgressBarsConnectorClasses,
   getProgressBarsListClasses,
@@ -27,14 +35,6 @@ import {
   PROGRESS_BARS_VALUE_LABEL,
   PROGRESS_BARS_WRAPPER,
 } from './preset-classes';
-import {
-  IProgressStep,
-  SmartProgressBarsLayout,
-  SmartProgressStepStatus,
-} from '../../../models';
-import { cn } from '../../../utils/class-names';
-import { SmartNavLink } from '../../navbar/nav-link';
-import { SmartProgressBarsProps } from '../progress-bars.types';
 
 /**
  * Styled progress bars variation (preset). Register it as

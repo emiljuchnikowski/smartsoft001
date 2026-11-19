@@ -3,17 +3,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { IEntity } from '@smartsoft001/domain-core';
 import { IFieldListMetadata, IFieldOptions } from '@smartsoft001/models';
 
-import { SmartListDetailsModal } from './list-details-modal';
-import {
-  getListAriaSort,
-  getListDefaultSort,
-  getListSortIndicator,
-  getNextListSort,
-  IListSortFilter,
-  IListSortState,
-  isListSortableKey,
-} from './list-sort';
-import { SmartListModeProps } from './list.types';
 import {
   IButtonOptions,
   IDetailsOptions,
@@ -32,6 +21,17 @@ import {
   useTranslate,
 } from '../../providers/hooks';
 import { SmartStore } from '../../store/store';
+import { SmartListDetailsModal } from './list-details-modal';
+import {
+  getListAriaSort,
+  getListDefaultSort,
+  getListSortIndicator,
+  getNextListSort,
+  IListSortFilter,
+  IListSortState,
+  isListSortableKey,
+} from './list-sort';
+import { SmartListModeProps } from './list.types';
 
 type ListField = { key: string; options: IFieldOptions };
 

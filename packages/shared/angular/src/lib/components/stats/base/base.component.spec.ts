@@ -5,8 +5,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StatsBaseComponent } from './base.component';
 import { IStatsOptions } from '../../../models';
+import { StatsBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-stats',

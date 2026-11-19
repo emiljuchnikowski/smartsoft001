@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { SmartBreadcrumbs } from './breadcrumbs';
 import {
   IBreadcrumbsOptions,
   SmartBreadcrumbsLayout,
   SmartBreadcrumbsSeparator,
 } from '../../models';
+import { SmartBreadcrumbs } from './breadcrumbs';
 import { SmartBreadcrumbsPreset } from './preset/breadcrumbs-preset';
 
 const ITEMS: IBreadcrumbsOptions['items'] = [

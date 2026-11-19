@@ -5,8 +5,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { VerticalNavigationBaseComponent } from './base.component';
 import { IVerticalNavOptions } from '../../../models';
+import { VerticalNavigationBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-vnav',

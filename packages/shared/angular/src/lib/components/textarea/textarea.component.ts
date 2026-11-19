@@ -11,12 +11,12 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { ITextareaActionClick } from './base/base.component';
-import { TextareaStandardComponent } from './standard';
 import { ITextareaOptions } from '../../models';
 import { TEXTAREA_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 import { outletInputs } from '../base/outlet-inputs';
+import { ITextareaActionClick } from './base/base.component';
+import { TextareaStandardComponent } from './standard';
 
 @Component({
   selector: 'smart-textarea',

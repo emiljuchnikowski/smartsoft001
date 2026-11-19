@@ -10,15 +10,15 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
+import { IEmptyStateOptions } from '../../models';
+import { EMPTY_STATE_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
+import { outletInputs } from '../base/outlet-inputs';
 import {
   IEmptyStateActionClick,
   IEmptyStateItemClick,
 } from './base/base.component';
 import { EmptyStateStandardComponent } from './standard';
-import { IEmptyStateOptions } from '../../models';
-import { EMPTY_STATE_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
-import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
-import { outletInputs } from '../base/outlet-inputs';
 
 @Component({
   selector: 'smart-empty-state',

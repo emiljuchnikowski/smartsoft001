@@ -6,10 +6,10 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { InputOptions, IModelLabelProvider } from '@smartsoft001/angular';
 import { IModelFilter } from '@smartsoft001/models';
 
-import { FilterTextComponent } from './text.component';
 import { CrudFacade } from '../../../+state/crud.facade';
 import { CrudConfig } from '../../../crud.config';
 import { ICrudFilter } from '../../../models';
+import { FilterTextComponent } from './text.component';
 
 class SomeModel {
   name?: string;

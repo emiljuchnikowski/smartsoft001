@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { ActionPanelComponent } from './action-panel.component';
-import { ActionPanelPresetComponent } from './preset/preset.component';
 import { SmartActionPanelLayout } from '../../models';
 import { ACTION_PANEL_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { ActionPanelComponent } from './action-panel.component';
+import { ActionPanelPresetComponent } from './preset/preset.component';
 
 const LAYOUTS: SmartActionPanelLayout[] = [
   'simple',

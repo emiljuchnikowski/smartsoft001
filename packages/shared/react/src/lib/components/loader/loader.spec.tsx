@@ -1,11 +1,11 @@
 import { render, screen } from '@testing-library/react';
 
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartLoader } from './loader';
 import { SmartLoaderProps } from './loader.types';
 import { SmartLoaderPreset } from './preset/loader-preset';
 import { getLoaderSpinnerClasses } from './preset/preset-classes';
 import { SmartLoaderStandard } from './standard/loader-standard';
-import { SmartProvider } from '../../providers/smart-provider';
 
 describe('@smartsoft001/react: SmartLoader', () => {
   describe('wrapper', () => {

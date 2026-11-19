@@ -6,13 +6,13 @@ import {
   screen,
 } from '@testing-library/react';
 
+import { ICommand, SmartCommandPaletteVariant } from '../../models';
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartCommandPalette } from './command-palette';
 import { SmartCommandPaletteProps } from './command-palette.types';
 import { SmartCommandPalettePreset } from './preset/command-palette-preset';
 import { SmartCommandPaletteStandard } from './standard/command-palette-standard';
 import { useCommandPalette } from './use-command-palette';
-import { ICommand, SmartCommandPaletteVariant } from '../../models';
-import { SmartProvider } from '../../providers/smart-provider';
 
 const ABC: ICommand[] = [
   { id: 'a', label: 'Alpha' },

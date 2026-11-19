@@ -7,13 +7,13 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
+import { IGridListItem, SmartGridListLayout } from '../../../models';
+import { GridListStandardComponent } from '../standard/standard.component';
 import {
   getGridListGridClasses,
   getGridListMediaClasses,
   getGridListTileClasses,
 } from './preset-classes.util';
-import { IGridListItem, SmartGridListLayout } from '../../../models';
-import { GridListStandardComponent } from '../standard/standard.component';
 
 /**
  * Styled grid-list variation (preset).

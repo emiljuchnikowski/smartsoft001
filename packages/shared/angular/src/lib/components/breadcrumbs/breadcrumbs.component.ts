@@ -10,12 +10,12 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { IBreadcrumbsItemClick } from './base/base.component';
-import { BreadcrumbsStandardComponent } from './standard';
 import { IBreadcrumbsOptions } from '../../models';
 import { BREADCRUMBS_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { forwardOutletOutputs } from '../base/forward-outlet-outputs';
 import { outletInputs } from '../base/outlet-inputs';
+import { IBreadcrumbsItemClick } from './base/base.component';
+import { BreadcrumbsStandardComponent } from './standard';
 
 @Component({
   selector: 'smart-breadcrumbs',

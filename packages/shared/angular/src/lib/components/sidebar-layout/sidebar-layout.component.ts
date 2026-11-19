@@ -10,11 +10,11 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { SidebarLayoutStandardComponent } from './standard/standard.component';
 import { ISidebarLayoutOptions } from '../../models';
 import { SIDEBAR_LAYOUT_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { outletContent } from '../base/outlet-content';
 import { outletInputs } from '../base/outlet-inputs';
+import { SidebarLayoutStandardComponent } from './standard/standard.component';
 
 @Component({
   selector: 'smart-sidebar-layout',

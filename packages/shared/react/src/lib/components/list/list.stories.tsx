@@ -5,10 +5,10 @@ import type { ReactNode } from 'react';
 import { IEntity } from '@smartsoft001/domain-core';
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { SmartList } from './list';
-import { LIST_PRESET_MODE_COMPONENTS } from './preset-modes';
 import { IListOptions, IListProvider, ListMode } from '../../models';
 import { FileService } from '../../services/file/file.service';
+import { SmartList } from './list';
+import { LIST_PRESET_MODE_COMPONENTS } from './preset-modes';
 
 // ─── Fixtures ────────────────────────────────────────────────────────────────
 

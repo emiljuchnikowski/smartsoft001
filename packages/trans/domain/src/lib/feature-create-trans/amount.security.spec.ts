@@ -1,6 +1,6 @@
+import { ITransInternalService } from '../interfaces';
 import { CreatorService } from './creator.service';
 import { ITransCreate } from './interfaces';
-import { ITransInternalService } from '../interfaces';
 
 describe('trans-domain: authoritative payment amount', () => {
   const request: ITransCreate<unknown> = {

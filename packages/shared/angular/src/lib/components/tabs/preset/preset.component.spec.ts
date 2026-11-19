@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TabsPresetComponent } from './preset.component';
 import { ITabItem } from '../../../models';
+import { TabsPresetComponent } from './preset.component';
 
 describe('@smartsoft001/shared-angular: TabsPresetComponent', () => {
   let fixture: ComponentFixture<TabsPresetComponent>;

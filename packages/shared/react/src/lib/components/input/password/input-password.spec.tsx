@@ -3,8 +3,6 @@ import type { ComponentType } from 'react';
 
 import { Field, FieldType, IFieldOptions, Model } from '@smartsoft001/models';
 
-import { SmartInputPassword } from './input-password';
-import { SmartInputPasswordPreset } from './preset/input-password-preset';
 import { SmartFormControl } from '../../../forms/form-control';
 import { SmartFormGroup } from '../../../forms/form-group';
 import { SmartValidators } from '../../../forms/validators';
@@ -13,6 +11,8 @@ import { SmartProvider } from '../../../providers/smart-provider';
 import { SmartPasswordStrengthProps } from '../../password-strength/password-strength.types';
 import { SmartInput } from '../input';
 import { SmartInputFieldProps } from '../input.types';
+import { SmartInputPassword } from './input-password';
+import { SmartInputPasswordPreset } from './preset/input-password-preset';
 
 @Model({})
 class PasswordModel {

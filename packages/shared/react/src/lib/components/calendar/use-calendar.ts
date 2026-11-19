@@ -1,11 +1,11 @@
 import { useCallback, useMemo, useState } from 'react';
 
-import { SmartCalendarProps } from './calendar.types';
 import {
   ICalendarDayCell,
   ICalendarEvent,
   SmartCalendarView,
 } from '../../models';
+import { SmartCalendarProps } from './calendar.types';
 
 const NO_EVENTS: ICalendarEvent[] = [];
 

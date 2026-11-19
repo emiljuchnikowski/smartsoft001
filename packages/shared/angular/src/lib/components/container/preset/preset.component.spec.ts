@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { IContainerOptions } from '../../../models';
 import { getContainerClasses } from './preset-classes.util';
 import { ContainerPresetComponent } from './preset.component';
-import { IContainerOptions } from '../../../models';
 
 type Mode = 'container' | 'constrained' | 'full-width' | 'unset';
 type Padding = 'always' | 'mobile' | 'none' | 'unset';

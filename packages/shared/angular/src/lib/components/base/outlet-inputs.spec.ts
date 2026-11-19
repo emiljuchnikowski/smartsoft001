@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
-import { outletInputs } from './outlet-inputs';
 import { BADGE_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { BadgeComponent } from '../badge/badge.component';
 import { BadgeBaseComponent } from '../badge/base/base.component';
+import { outletInputs } from './outlet-inputs';
 
 @Component({
   selector: 'smart-test-aliased',

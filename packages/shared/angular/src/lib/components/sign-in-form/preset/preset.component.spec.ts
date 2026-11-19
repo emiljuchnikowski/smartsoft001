@@ -1,13 +1,13 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SignInFormPresetComponent } from './preset.component';
 import {
   ISignInFormOptions,
   ISignInFormSocialClick,
   ISignInFormSubmit,
   SmartSignInFormMode,
 } from '../../../models';
+import { SignInFormPresetComponent } from './preset.component';
 
 @Component({
   selector: 'smart-test-host',

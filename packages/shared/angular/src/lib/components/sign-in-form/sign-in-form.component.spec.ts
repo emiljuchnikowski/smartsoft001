@@ -1,10 +1,10 @@
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SignInFormBaseComponent } from './base/base.component';
-import { SignInFormComponent } from './sign-in-form.component';
 import { ISignInFormSubmit } from '../../models';
 import { SIGN_IN_FORM_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { SignInFormBaseComponent } from './base/base.component';
+import { SignInFormComponent } from './sign-in-form.component';
 
 @Component({
   selector: 'smart-test-sign-in-form-injected',

@@ -1,6 +1,6 @@
-import { getInputErrorMessages } from './input-error-messages';
 import { SmartValidationErrors } from '../../../forms/abstract-control';
 import { useTranslate } from '../../../providers/hooks';
+import { getInputErrorMessages } from './input-error-messages';
 
 export interface SmartInputErrorProps {
   errors?: SmartValidationErrors | null;

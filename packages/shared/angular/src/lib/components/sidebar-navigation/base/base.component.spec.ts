@@ -5,8 +5,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SidebarNavigationBaseComponent } from './base.component';
 import { ISidebarNavOptions } from '../../../models';
+import { SidebarNavigationBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-sidebar-nav',

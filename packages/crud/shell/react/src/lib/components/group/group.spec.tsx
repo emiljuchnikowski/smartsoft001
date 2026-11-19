@@ -8,11 +8,11 @@ import {
 
 import { IListOptions, SmartProvider } from '@smartsoft001/react';
 
-import { SmartCrudGroup } from './group';
-import { SmartCrudGroupProps } from './group.types';
 import { CrudProvider } from '../../crud.provider';
 import { ICrudListGroup } from '../../models';
 import { CrudListGroupService } from '../../services/list-group/list-group.service';
+import { SmartCrudGroup } from './group';
+import { SmartCrudGroupProps } from './group.types';
 
 class TodoModel {
   id!: string;

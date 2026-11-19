@@ -1,15 +1,15 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
-import { SmartProgressBarsPreset } from './preset/progress-bars-preset';
-import { SmartProgressBars } from './progress-bars';
-import { SmartProgressBarsProps } from './progress-bars.types';
-import { SmartProgressBarsStandard } from './standard/progress-bars-standard';
 import {
   createHistoryNavigation,
   ISmartLinkProps,
   ISmartNavigation,
 } from '../../providers/navigation';
 import { SmartProvider } from '../../providers/smart-provider';
+import { SmartProgressBarsPreset } from './preset/progress-bars-preset';
+import { SmartProgressBars } from './progress-bars';
+import { SmartProgressBarsProps } from './progress-bars.types';
+import { SmartProgressBarsStandard } from './standard/progress-bars-standard';
 
 function routerNavigation(): ISmartNavigation {
   return {

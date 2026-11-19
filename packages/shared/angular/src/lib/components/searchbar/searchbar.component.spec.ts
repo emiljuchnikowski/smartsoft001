@@ -8,10 +8,10 @@ import {
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslatePipe } from '@ngx-translate/core';
 
+import { SEARCHBAR_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { SearchbarBaseComponent } from './base/base.component';
 import { SearchbarComponent } from './searchbar.component';
 import { SearchbarStandardComponent } from './standard/standard.component';
-import { SEARCHBAR_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Pipe({ name: 'translate', standalone: true })
 class MockTranslatePipe implements PipeTransform {

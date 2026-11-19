@@ -10,10 +10,10 @@ import {
 } from '@smartsoft001/angular';
 import { IModelFilter } from '@smartsoft001/models';
 
-import { FilterRadioComponent } from './radio.component';
 import { CrudFacade } from '../../../+state/crud.facade';
 import { CrudConfig } from '../../../crud.config';
 import { ICrudFilter } from '../../../models';
+import { FilterRadioComponent } from './radio.component';
 
 class SomeModel {
   status?: number;

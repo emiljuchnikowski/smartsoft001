@@ -8,8 +8,8 @@ import {
   output,
 } from '@angular/core';
 
-import { IDetailsModalOptions, showDetailsModal } from './details-modal';
 import { HardwareService, ModalService } from '../../services';
+import { IDetailsModalOptions, showDetailsModal } from './details-modal';
 
 /**
  * Opens `component` in a modal on click (`ModalService`, mode `'bottom'` by

@@ -1,8 +1,8 @@
 import { IEntity } from '@smartsoft001/domain-core';
 
+import { useSmartComponent } from '../../providers/hooks';
 import { SmartDetailsProps } from './details.types';
 import { SmartDetailsStandard } from './standard/details-standard';
-import { useSmartComponent } from '../../providers/hooks';
 
 /**
  * Renders the implementation registered as `components.details` on

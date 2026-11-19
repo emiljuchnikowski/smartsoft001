@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
+import { MULTI_COLUMN_LAYOUT_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { MultiColumnLayoutComponent } from './multi-column-layout.component';
 import { MultiColumnLayoutPresetComponent } from './preset/preset.component';
-import { MULTI_COLUMN_LAYOUT_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 const WIDTHS = ['full', 'constrained'] as const;
 const SECONDARY_WIDTHS = ['sm', 'md', 'lg'] as const;

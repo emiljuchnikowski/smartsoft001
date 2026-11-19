@@ -10,12 +10,12 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { InputCheckComponent } from './check.component';
 import { InputOptions } from '../../../models';
 import {
   IModelLabelProvider,
   MODEL_POSSIBILITIES_PROVIDER,
 } from '../../../providers';
+import { InputCheckComponent } from './check.component';
 
 @Model({})
 class CheckModel {

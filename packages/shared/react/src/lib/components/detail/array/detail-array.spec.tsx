@@ -4,10 +4,10 @@ import type { ReactNode } from 'react';
 import { IEntity } from '@smartsoft001/domain-core';
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { SmartDetailArray } from './detail-array';
-import { SmartDetailArrayPreset } from './preset/detail-array-preset';
 import { IDetailOptions, IDetailsOptions } from '../../../models';
 import { SmartProvider } from '../../../providers/smart-provider';
+import { SmartDetailArray } from './detail-array';
+import { SmartDetailArrayPreset } from './preset/detail-array-preset';
 
 @Model({})
 class OrderLine implements IEntity<string> {

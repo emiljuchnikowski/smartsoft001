@@ -4,9 +4,9 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { MenuService } from '@smartsoft001/angular';
 
-import { MultiselectComponent } from './multiselect.component';
 import { CrudFacade } from '../../+state';
 import { CrudFullConfig } from '../../crud.config';
+import { MultiselectComponent } from './multiselect.component';
 
 class SomeModel {}
 

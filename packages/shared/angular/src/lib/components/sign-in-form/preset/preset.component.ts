@@ -7,6 +7,8 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
+import { SmartSignInFormLayout } from '../../../models';
+import { SignInFormStandardComponent } from '../standard/standard.component';
 import {
   getSignInFormCardClasses,
   getSignInFormColumnClasses,
@@ -18,8 +20,6 @@ import {
   getSignInFormSocialClasses,
   getSignInFormSubmitClasses,
 } from './preset-classes.util';
-import { SmartSignInFormLayout } from '../../../models';
-import { SignInFormStandardComponent } from '../standard/standard.component';
 
 /**
  * Preset (OSS-styled) sign-in-form variation.

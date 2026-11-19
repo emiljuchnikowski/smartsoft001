@@ -8,10 +8,10 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { StackedListStandardComponent } from './standard';
 import { IStackedListOptions } from '../../models';
 import { STACKED_LIST_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { outletInputs } from '../base/outlet-inputs';
+import { StackedListStandardComponent } from './standard';
 
 @Component({
   selector: 'smart-stacked-list',

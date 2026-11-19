@@ -6,8 +6,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StackedLayoutPresetComponent } from './preset.component';
 import { IStackedLayoutOptions } from '../../../models';
+import { StackedLayoutPresetComponent } from './preset.component';
 
 @Component({
   selector: 'smart-test-host',

@@ -4,9 +4,9 @@ import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 
 import { Field, Model } from '@smartsoft001/models';
 
-import { FormPresetComponent } from './preset.component';
 import { IFormOptions } from '../../../models';
 import { InputComponent } from '../../input';
+import { FormPresetComponent } from './preset.component';
 
 @Component({
   selector: 'smart-input',

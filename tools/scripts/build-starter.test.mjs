@@ -220,7 +220,7 @@ describe('starterEslintConfig', () => {
 
   test('builds on the Nx flat configs and the import plugin', () => {
     assert.match(config, /import nx from '@nx\/eslint-plugin';/);
-    assert.match(config, /import importPlugin from 'eslint-plugin-import';/);
+    assert.match(config, /import importX from 'eslint-plugin-import-x';/);
     assert.match(config, /\.\.\.nx\.configs\['flat\/typescript'\]/);
   });
 

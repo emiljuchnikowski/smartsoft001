@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProgressBarsPresetComponent } from './preset.component';
 import { IProgressBarsOptions } from '../../../models';
+import { ProgressBarsPresetComponent } from './preset.component';
 
 describe('@smartsoft001/shared-angular: ProgressBarsPresetComponent', () => {
   let fixture: ComponentFixture<ProgressBarsPresetComponent>;

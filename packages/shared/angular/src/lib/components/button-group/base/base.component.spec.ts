@@ -6,8 +6,8 @@ import {
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { IButtonGroupButtonClick } from '..';
-import { ButtonGroupBaseComponent } from './base.component';
 import { IButtonGroupButton, IButtonGroupOptions } from '../../../models';
+import { ButtonGroupBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-button-group',

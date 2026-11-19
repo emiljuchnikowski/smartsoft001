@@ -5,8 +5,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProgressBarsBaseComponent } from './base.component';
 import { IProgressBarsOptions } from '../../../models';
+import { ProgressBarsBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-progress-bars',

@@ -3,9 +3,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { IItemRepository } from '@smartsoft001/domain-core';
 
-import { RefundService } from './refund.service';
 import { Trans } from '../entities';
 import { ITransInternalService, ITransPaymentService } from '../interfaces';
+import { RefundService } from './refund.service';
 
 describe('trans-domain: RefundService', () => {
   let service: RefundService<any>;

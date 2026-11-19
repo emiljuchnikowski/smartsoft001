@@ -1,9 +1,9 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { BADGE_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { BadgeComponent } from './badge.component';
 import { BadgeBaseComponent } from './base/base.component';
-import { BADGE_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-badge-injected',

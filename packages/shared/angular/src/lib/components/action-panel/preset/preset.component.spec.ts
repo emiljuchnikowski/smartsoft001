@@ -1,8 +1,8 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ActionPanelPresetComponent } from './preset.component';
 import { IActionPanelOptions, SmartActionPanelLayout } from '../../../models';
+import { ActionPanelPresetComponent } from './preset.component';
 
 @Component({
   selector: 'smart-test-action-panel-templates',

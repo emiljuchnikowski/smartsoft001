@@ -1,9 +1,9 @@
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { LIST_CONTAINER_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { ListContainerBaseComponent } from './base/base.component';
 import { ListContainerComponent } from './list-container.component';
-import { LIST_CONTAINER_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-list-container-injected',

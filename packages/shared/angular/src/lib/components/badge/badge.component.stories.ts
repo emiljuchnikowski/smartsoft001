@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { BadgeComponent } from './badge.component';
-import { BadgePresetComponent } from './preset/preset.component';
 import { SmartBadgeColor } from '../../models';
 import { BADGE_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { BadgeComponent } from './badge.component';
+import { BadgePresetComponent } from './preset/preset.component';
 
 const COLORS: SmartBadgeColor[] = [
   'gray',

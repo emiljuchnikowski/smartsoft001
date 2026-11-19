@@ -1,6 +1,6 @@
+import { useSmartComponent } from '../../providers/hooks';
 import { SmartSearchbarProps } from './searchbar.types';
 import { SmartSearchbarStandard } from './standard/searchbar-standard';
-import { useSmartComponent } from '../../providers/hooks';
 
 /**
  * Renders the implementation registered as `components.searchbar` on

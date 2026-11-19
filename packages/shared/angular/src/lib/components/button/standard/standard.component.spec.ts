@@ -2,8 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { ButtonStandardComponent } from './standard.component';
 import { IButtonOptions } from '../../../models';
+import { ButtonStandardComponent } from './standard.component';
 
 @Pipe({ name: 'translate', standalone: true })
 class MockTranslatePipe implements PipeTransform {

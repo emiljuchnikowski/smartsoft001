@@ -23,12 +23,12 @@ import {
   ToastService,
 } from '@smartsoft001/react';
 
-import { SmartCrudItemPage } from './item-page';
-import { SmartCrudItemPageBodyProps } from './item-page.types';
 import { CrudFullConfig } from '../../crud.config';
 import { CrudProvider } from '../../crud.provider';
 import { ICrudFilter } from '../../models';
 import { CrudService } from '../../services/crud/crud.service';
+import { SmartCrudItemPage } from './item-page';
+import { SmartCrudItemPageBodyProps } from './item-page.types';
 
 const ENTITY = 'item-page-articles';
 

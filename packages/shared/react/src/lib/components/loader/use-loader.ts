@@ -1,5 +1,5 @@
-import { SmartLoaderProps } from './loader.types';
 import { SmartColor, SmartSize } from '../../models';
+import { SmartLoaderProps } from './loader.types';
 
 const SIZE_CLASS_MAP: Record<SmartSize, string> = {
   xs: 'smart:size-4',

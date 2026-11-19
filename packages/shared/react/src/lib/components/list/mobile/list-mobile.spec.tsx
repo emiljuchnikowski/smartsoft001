@@ -3,7 +3,6 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { IEntity } from '@smartsoft001/domain-core';
 import { Field, Model } from '@smartsoft001/models';
 
-import { SmartListMobile } from './list-mobile';
 import {
   IListInternalOptions,
   IListPaginationOptions,
@@ -12,6 +11,7 @@ import {
 import { SmartProvider } from '../../../providers/smart-provider';
 import { AlertService } from '../../../services/alert/alert.service';
 import { AuthService } from '../../../services/auth/auth.service';
+import { SmartListMobile } from './list-mobile';
 
 @Model({})
 class TestItemModel implements IEntity<string> {

@@ -7,8 +7,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FeedStandardComponent } from './standard.component';
 import { IFeedOptions } from '../../../models';
+import { FeedStandardComponent } from './standard.component';
 
 describe('@smartsoft001/shared-angular: FeedStandardComponent', () => {
   describe('default rendering (no options)', () => {

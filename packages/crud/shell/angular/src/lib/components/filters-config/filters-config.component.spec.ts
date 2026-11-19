@@ -5,9 +5,9 @@ import { of } from 'rxjs';
 
 import { StyleService } from '@smartsoft001/angular';
 
-import { FiltersConfigComponent } from './filters-config.component';
 import { CrudFacade } from '../../+state/crud.facade';
 import { ICrudFilter } from '../../models';
+import { FiltersConfigComponent } from './filters-config.component';
 
 describe('crud-shell-angular: FiltersConfigComponent', () => {
   let facadeMock: { filter: WritableSignal<ICrudFilter>; read: jest.Mock };

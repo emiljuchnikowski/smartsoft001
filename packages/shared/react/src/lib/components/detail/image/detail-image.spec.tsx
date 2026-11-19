@@ -3,11 +3,11 @@ import type { ReactNode } from 'react';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { SmartDetailImage } from './detail-image';
-import { SmartDetailImagePreset } from './preset/detail-image-preset';
 import { IDetailOptions } from '../../../models';
 import { SmartProvider } from '../../../providers/smart-provider';
 import { FileService } from '../../../services/file/file.service';
+import { SmartDetailImage } from './detail-image';
+import { SmartDetailImagePreset } from './preset/detail-image-preset';
 
 @Model({})
 class Profile {

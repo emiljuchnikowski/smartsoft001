@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { SmartNotification } from './notification';
 import { INotificationAction, SmartNotificationVariant } from '../../models';
+import { SmartNotification } from './notification';
 import { SmartNotificationPreset } from './preset/notification-preset';
 
 const VARIANTS: SmartNotificationVariant[] = [

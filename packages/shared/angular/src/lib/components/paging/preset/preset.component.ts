@@ -5,6 +5,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
+import { PagingBaseComponent } from '../base/base.component';
 import {
   getPagingContainerClasses,
   getPagingNavClasses,
@@ -14,7 +15,6 @@ import {
   PAGING_PAGE_LIST_CLASSES,
   PAGING_RESULTS_CLASSES,
 } from './preset-classes.util';
-import { PagingBaseComponent } from '../base/base.component';
 
 /**
  * Styled paging variation (preset).

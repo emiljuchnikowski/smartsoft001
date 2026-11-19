@@ -2,8 +2,8 @@ import { act, render } from '@testing-library/react';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { SmartDetailText } from './detail-text';
 import { IDetailOptions } from '../../../models';
+import { SmartDetailText } from './detail-text';
 
 @Model({})
 class Product {

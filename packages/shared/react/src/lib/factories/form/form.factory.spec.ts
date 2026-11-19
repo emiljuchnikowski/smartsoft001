@@ -1,11 +1,11 @@
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { FormFactory } from './form.factory';
 import { SmartFormArray } from '../../forms/form-array';
 import { SmartFormGroup } from '../../forms/form-group';
 import { SmartValidators } from '../../forms/validators';
 import { IModelValidatorsProvider } from '../../providers/model-validators.provider';
 import { DetailsService } from '../../services/details/details.service';
+import { FormFactory } from './form.factory';
 
 @Model({})
 class ContactModel {

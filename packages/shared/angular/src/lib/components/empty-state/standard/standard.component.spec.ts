@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EmptyStateStandardComponent } from './standard.component';
 import {
   IEmptyStateActionClick,
   IEmptyStateItemClick,
 } from '../base/base.component';
+import { EmptyStateStandardComponent } from './standard.component';
 
 describe('@smartsoft001/shared-angular: EmptyStateStandardComponent', () => {
   let fixture: ComponentFixture<EmptyStateStandardComponent>;

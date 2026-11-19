@@ -2,8 +2,8 @@ import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 
-import { ModelLabelPipe } from './model-label.pipe';
 import { IModelLabelOptions, IModelLabelProvider } from '../../providers';
+import { ModelLabelPipe } from './model-label.pipe';
 
 describe('ModelLabelPipe', () => {
   describe('without IModelLabelProvider', () => {

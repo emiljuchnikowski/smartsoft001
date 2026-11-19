@@ -11,9 +11,9 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { InputDateRangeComponent } from './date-range.component';
 import { InputOptions } from '../../../models';
 import { IModelLabelProvider } from '../../../providers';
+import { InputDateRangeComponent } from './date-range.component';
 
 @Model({})
 class DateRangeModel {

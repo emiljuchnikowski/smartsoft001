@@ -12,6 +12,7 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import moment from 'moment';
 
+import { DateEditBaseComponent } from '../base/base.component';
 import {
   DATE_EDIT_NAV_BUTTON,
   DATE_EDIT_POPOVER,
@@ -23,7 +24,6 @@ import {
   DATE_EDIT_WEEKDAY,
   getDateEditDayClasses,
 } from './preset-classes.util';
-import { DateEditBaseComponent } from '../base/base.component';
 
 interface DateEditDay {
   date: string;

@@ -1,5 +1,8 @@
 import type { ReactNode } from 'react';
 
+import { IActionPanelAction, SmartActionPanelLayout } from '../../../models';
+import { cn } from '../../../utils/class-names';
+import { SmartActionPanelProps } from '../action-panel.types';
 import {
   getActionPanelActionClasses,
   getActionPanelCardClasses,
@@ -7,9 +10,6 @@ import {
   getActionPanelTitleClasses,
   getActionPanelWellClasses,
 } from './preset-classes';
-import { IActionPanelAction, SmartActionPanelLayout } from '../../../models';
-import { cn } from '../../../utils/class-names';
-import { SmartActionPanelProps } from '../action-panel.types';
 
 function getActionsContainerClasses(layout: SmartActionPanelLayout): string {
   switch (layout) {

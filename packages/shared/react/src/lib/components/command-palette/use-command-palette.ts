@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 
-import { SmartCommandPaletteProps } from './command-palette.types';
 import { ICommand } from '../../models';
+import { SmartCommandPaletteProps } from './command-palette.types';
 
 /**
  * A value that is controlled when `value` is defined and kept in state

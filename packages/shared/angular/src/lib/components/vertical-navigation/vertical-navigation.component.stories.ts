@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { VerticalNavigationPresetComponent } from './preset/preset.component';
-import { VerticalNavigationComponent } from './vertical-navigation.component';
 import { IVerticalNavOptions } from '../../models';
 import { VERTICAL_NAVIGATION_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { VerticalNavigationPresetComponent } from './preset/preset.component';
+import { VerticalNavigationComponent } from './vertical-navigation.component';
 
 interface VerticalNavArgs {
   ariaLabel: string;

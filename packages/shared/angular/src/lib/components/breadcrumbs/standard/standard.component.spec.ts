@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BreadcrumbsStandardComponent } from './standard.component';
 import { IBreadcrumbsItemClick } from '../base/base.component';
+import { BreadcrumbsStandardComponent } from './standard.component';
 
 describe('@smartsoft001/shared-angular: BreadcrumbsStandardComponent', () => {
   let fixture: ComponentFixture<BreadcrumbsStandardComponent>;

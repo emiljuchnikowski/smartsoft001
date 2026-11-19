@@ -1,9 +1,9 @@
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { EMPTY_STATE_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { EmptyStateBaseComponent } from './base/base.component';
 import { EmptyStateComponent } from './empty-state.component';
-import { EMPTY_STATE_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-empty-state-injected',

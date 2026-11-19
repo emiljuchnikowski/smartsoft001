@@ -1,11 +1,11 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
+import { IBreadcrumbsOptions } from '../../models';
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartBreadcrumbs } from './breadcrumbs';
 import { SmartBreadcrumbsProps } from './breadcrumbs.types';
 import { SmartBreadcrumbsPreset } from './preset/breadcrumbs-preset';
 import { SmartBreadcrumbsStandard } from './standard/breadcrumbs-standard';
-import { IBreadcrumbsOptions } from '../../models';
-import { SmartProvider } from '../../providers/smart-provider';
 
 describe('@smartsoft001/react: SmartBreadcrumbs', () => {
   describe('wrapper', () => {

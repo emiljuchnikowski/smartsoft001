@@ -1,8 +1,8 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CardHeadingPresetComponent } from './preset.component';
 import { ICardHeadingOptions } from '../../../models';
+import { CardHeadingPresetComponent } from './preset.component';
 
 @Component({
   selector: 'smart-test-host',

@@ -16,13 +16,13 @@ import {
 } from '@smartsoft001/angular';
 import { Model } from '@smartsoft001/models';
 
-import { CrudListPageBaseComponent } from './base/base.component';
-import { ListComponent } from './list.component';
 import { CrudFacade } from '../../+state';
 import { CrudFullConfig } from '../../crud.config';
 import { CrudListPaginationFactory } from '../../factories/list-pagination/list-pagination.factory';
 import { PageService } from '../../services/page/page.service';
 import { CrudSearchService } from '../../services/search/search.service';
+import { CrudListPageBaseComponent } from './base/base.component';
+import { ListComponent } from './list.component';
 
 @Model({})
 class SomeModel {

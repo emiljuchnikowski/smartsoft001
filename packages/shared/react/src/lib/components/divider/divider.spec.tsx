@@ -1,10 +1,10 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartDivider } from './divider';
 import { SmartDividerProps } from './divider.types';
 import { SmartDividerPreset } from './preset/divider-preset';
 import { SmartDividerStandard } from './standard/divider-standard';
-import { SmartProvider } from '../../providers/smart-provider';
 
 describe('@smartsoft001/react: SmartDivider', () => {
   describe('wrapper', () => {

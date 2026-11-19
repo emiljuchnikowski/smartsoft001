@@ -10,9 +10,9 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { InputPhoneNumberPlComponent } from './phone-number-pl.component';
 import { InputOptions } from '../../../models';
 import { IModelLabelProvider } from '../../../providers';
+import { InputPhoneNumberPlComponent } from './phone-number-pl.component';
 
 @Model({})
 class PhoneNumberPlModel {

@@ -1,11 +1,11 @@
 import { render, screen } from '@testing-library/react';
 
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartCard } from './card';
 import { SmartCardVariantProps } from './card.types';
 import { SmartCardPreset } from './preset/card-preset';
 import { getCardBodyClasses } from './preset/preset-classes';
 import { SmartCardStandard } from './standard/card-standard';
-import { SmartProvider } from '../../providers/smart-provider';
 
 function root(container: HTMLElement): HTMLElement {
   return container.firstElementChild as HTMLElement;

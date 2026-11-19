@@ -1,6 +1,6 @@
+import { useSmartComponent } from '../../providers/hooks';
 import { SmartTextareaStandard } from './standard/textarea-standard';
 import { SmartTextareaProps } from './textarea.types';
-import { useSmartComponent } from '../../providers/hooks';
 
 /**
  * Renders the implementation registered as `components.textarea` on

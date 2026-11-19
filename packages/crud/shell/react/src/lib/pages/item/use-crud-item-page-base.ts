@@ -3,10 +3,10 @@ import { useEffect, useMemo } from 'react';
 import { IEntity } from '@smartsoft001/domain-core';
 import { IFormOptions, useModelForm } from '@smartsoft001/react';
 
-import { SmartCrudItemPageBodyProps } from './item-page.types';
 import { useCrudConfig, useCrudFacade } from '../../crud.context';
 import { getCrudFormOptions } from '../../factories/form-options';
 import { useCrudState } from '../../hooks';
+import { SmartCrudItemPageBodyProps } from './item-page.types';
 
 /**
  * What every item page body shares: `config`, `facade`, the `selected` item

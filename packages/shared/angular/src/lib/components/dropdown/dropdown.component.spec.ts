@@ -1,9 +1,9 @@
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { DROPDOWN_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { DropdownBaseComponent } from './base/base.component';
 import { DropdownComponent } from './dropdown.component';
-import { DROPDOWN_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-dropdown-injected',

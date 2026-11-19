@@ -7,9 +7,9 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SelectMenuStandardComponent } from './standard.component';
 import { ISelectMenuOptions } from '../../../models';
 import { SelectMenuValue } from '../base/base.component';
+import { SelectMenuStandardComponent } from './standard.component';
 
 describe('@smartsoft001/shared-angular: SelectMenuStandardComponent', () => {
   describe('default rendering (no options)', () => {

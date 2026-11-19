@@ -3,10 +3,10 @@ import { render, screen } from '@testing-library/react';
 import { IEntity } from '@smartsoft001/domain-core';
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { SmartListMasonryGrid } from './list-masonry-grid';
 import { IListInternalOptions, PaginationMode } from '../../../models';
 import { SmartProvider } from '../../../providers/smart-provider';
 import { AuthService } from '../../../services/auth/auth.service';
+import { SmartListMasonryGrid } from './list-masonry-grid';
 
 @Model({})
 class TestItemModel implements IEntity<string> {

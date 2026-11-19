@@ -10,11 +10,11 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { ListContainerStandardComponent } from './standard/standard.component';
 import { IListContainerOptions } from '../../models';
 import { LIST_CONTAINER_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { outletContent } from '../base/outlet-content';
 import { outletInputs } from '../base/outlet-inputs';
+import { ListContainerStandardComponent } from './standard/standard.component';
 
 @Component({
   selector: 'smart-list-container',

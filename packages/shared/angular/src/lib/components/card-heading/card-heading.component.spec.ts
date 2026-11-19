@@ -1,9 +1,9 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { CARD_HEADING_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { CardHeadingBaseComponent } from './base/base.component';
 import { CardHeadingComponent } from './card-heading.component';
-import { CARD_HEADING_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-card-heading-injected',

@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { NotificationComponent } from './notification.component';
-import { NotificationPresetComponent } from './preset/preset.component';
 import { SmartNotificationVariant } from '../../models';
 import { NOTIFICATION_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { NotificationComponent } from './notification.component';
+import { NotificationPresetComponent } from './preset/preset.component';
 
 const VARIANTS: SmartNotificationVariant[] = [
   'simple',

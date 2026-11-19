@@ -6,12 +6,12 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
+import { MediaObjectStandardComponent } from '../standard/standard.component';
 import {
   getMediaObjectBodyClasses,
   getMediaObjectMediaClasses,
   getMediaObjectRootClasses,
 } from './preset-classes.util';
-import { MediaObjectStandardComponent } from '../standard/standard.component';
 
 /**
  * Styled media-object variation (preset).

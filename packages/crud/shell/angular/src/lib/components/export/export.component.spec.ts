@@ -3,8 +3,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PopoverService, StyleService } from '@smartsoft001/angular';
 
-import { ExportComponent } from './export.component';
 import { CrudFacade } from '../../+state';
+import { ExportComponent } from './export.component';
 
 class SomeModel {}
 

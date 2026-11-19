@@ -2,12 +2,12 @@ import { act, fireEvent, render, screen } from '@testing-library/react';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { SmartInput } from './input';
-import { SmartInputFieldProps } from './input.types';
 import { SmartFormControl } from '../../forms/form-control';
 import { SmartFormGroup } from '../../forms/form-group';
 import { SmartValidators } from '../../forms/validators';
 import { SmartProvider } from '../../providers/smart-provider';
+import { SmartInput } from './input';
+import { SmartInputFieldProps } from './input.types';
 
 @Model({})
 class Person {

@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ReactNode } from 'react';
 
-import { SmartMultiColumnLayoutPreset } from './preset/multi-column-layout-preset';
 import { IMultiColumnLayoutOptions } from '../../models';
+import { SmartMultiColumnLayoutPreset } from './preset/multi-column-layout-preset';
 
 const WIDTHS = ['full', 'constrained'] as const;
 const SECONDARY_WIDTHS = ['sm', 'md', 'lg'] as const;

@@ -6,9 +6,9 @@ import { of } from 'rxjs';
 import { MenuService, StyleService } from '@smartsoft001/angular';
 import { Model } from '@smartsoft001/models';
 
-import { FiltersComponent } from './filters.component';
 import { CrudFacade } from '../../+state/crud.facade';
 import { CrudConfig } from '../../crud.config';
+import { FiltersComponent } from './filters.component';
 
 @Model({
   filters: [

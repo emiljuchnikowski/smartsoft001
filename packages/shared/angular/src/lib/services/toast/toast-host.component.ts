@@ -7,13 +7,13 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import type { IToast } from './toast.service';
 import { NotificationComponent } from '../../components/notification/notification.component';
 import {
   INotificationAction,
   INotificationOptions,
   SmartNotificationVariant,
 } from '../../models';
+import type { IToast } from './toast.service';
 
 /** A click on the button at `index` of the toast `id`. */
 export interface IToastHostActionClick {

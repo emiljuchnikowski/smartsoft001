@@ -3,13 +3,13 @@ import type { ComponentType } from 'react';
 
 import { Field, FieldType, IFieldOptions, Model } from '@smartsoft001/models';
 
-import { SmartInputStrings } from './input-strings';
-import { SmartInputStringsPreset } from './preset/input-strings-preset';
 import { SmartFormControl } from '../../../forms/form-control';
 import { SmartFormGroup } from '../../../forms/form-group';
 import { SmartValidators } from '../../../forms/validators';
 import { SmartProvider } from '../../../providers/smart-provider';
 import { SmartInputFieldProps } from '../input.types';
+import { SmartInputStrings } from './input-strings';
+import { SmartInputStringsPreset } from './preset/input-strings-preset';
 
 @Model({})
 class Article {

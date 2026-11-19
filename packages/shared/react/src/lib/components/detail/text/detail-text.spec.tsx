@@ -2,11 +2,11 @@ import { render } from '@testing-library/react';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { SmartDetailText } from './detail-text';
-import { SmartDetailTextPreset } from './preset/detail-text-preset';
 import { IDetailOptions } from '../../../models';
 import { SmartProvider } from '../../../providers/smart-provider';
 import { trustHtml } from '../../../utils/html';
+import { SmartDetailText } from './detail-text';
+import { SmartDetailTextPreset } from './preset/detail-text-preset';
 
 @Model({})
 class Product {

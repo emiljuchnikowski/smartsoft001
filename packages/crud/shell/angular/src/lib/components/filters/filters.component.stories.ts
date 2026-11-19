@@ -17,9 +17,9 @@ import type { Meta, StoryObj } from '@storybook/angular';
 import { NgrxSharedModule, SharedModule } from '@smartsoft001/angular';
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { FiltersComponent } from './filters.component';
 import { read } from '../../+state/crud.actions';
 import { CrudModule } from '../../crud.module';
+import { FiltersComponent } from './filters.component';
 
 /**
  * Sample entity with several filterable fields so the standalone filters panel

@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { AlertComponent } from './alert.component';
 import { IAlertOptions } from '../../models';
+import { AlertComponent } from './alert.component';
 
 interface AlertArgs {
   header: string;

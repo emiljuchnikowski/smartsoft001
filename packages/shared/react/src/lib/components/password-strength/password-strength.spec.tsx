@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react';
 
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartPasswordStrength } from './password-strength';
 import { SmartPasswordStrengthProps } from './password-strength.types';
 import { SmartPasswordStrengthStandard } from './standard/password-strength-standard';
-import { SmartProvider } from '../../providers/smart-provider';
 
 describe('@smartsoft001/react: SmartPasswordStrength', () => {
   describe('wrapper', () => {

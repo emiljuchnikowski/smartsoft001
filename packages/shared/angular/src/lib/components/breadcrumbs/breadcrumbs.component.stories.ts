@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { BreadcrumbsComponent } from './breadcrumbs.component';
-import { BreadcrumbsPresetComponent } from './preset/preset.component';
 import {
   IBreadcrumbsOptions,
   SmartBreadcrumbsLayout,
   SmartBreadcrumbsSeparator,
 } from '../../models';
 import { BREADCRUMBS_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { BreadcrumbsComponent } from './breadcrumbs.component';
+import { BreadcrumbsPresetComponent } from './preset/preset.component';
 
 const ITEMS: IBreadcrumbsOptions['items'] = [
   { id: 'home', label: 'Home', href: '#' },

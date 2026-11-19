@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
+import { IInfoOptions } from '../../models';
 import { SmartInfo } from './info';
 import { SmartInfoPreset } from './preset/info-preset';
-import { IInfoOptions } from '../../models';
 
 interface InfoArgs {
   options: IInfoOptions;

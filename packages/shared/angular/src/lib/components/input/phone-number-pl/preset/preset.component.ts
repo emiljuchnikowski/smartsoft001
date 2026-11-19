@@ -6,14 +6,14 @@ import {
 } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 
+import { ModelLabelPipe } from '../../../../pipes';
+import { InputBaseComponent } from '../../base/base.component';
 import {
   getInputPhoneNumberPlPresetClasses,
   getInputPhoneNumberPlPresetLabelClasses,
   getInputPhoneNumberPlPresetPrefixClasses,
   getInputPhoneNumberPlPresetWrapperClasses,
 } from './preset-classes.util';
-import { ModelLabelPipe } from '../../../../pipes';
-import { InputBaseComponent } from '../../base/base.component';
 
 @Component({
   selector: 'smart-input-phone-number-pl-preset',

@@ -1,5 +1,5 @@
-import { SmartIconGlyphProps } from './icon.types';
 import { cn } from '../../utils/class-names';
+import { SmartIconGlyphProps } from './icon.types';
 
 export function SmartIconSpinner({ className }: SmartIconGlyphProps) {
   return (

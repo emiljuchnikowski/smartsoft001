@@ -7,6 +7,8 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
+import { INavbarItem } from '../../../models';
+import { NavbarBaseComponent } from '../base';
 import {
   getNavbarBrandClasses,
   getNavbarCollapseClasses,
@@ -19,8 +21,6 @@ import {
   NAVBAR_NAV_CONTAINER,
   NAVBAR_SECONDARY_CONTAINER,
 } from './preset-classes.util';
-import { INavbarItem } from '../../../models';
-import { NavbarBaseComponent } from '../base';
 
 /**
  * Styled navbar variation (preset).

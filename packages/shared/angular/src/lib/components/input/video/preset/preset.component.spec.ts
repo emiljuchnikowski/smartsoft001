@@ -11,10 +11,10 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { Field, FieldType, Model } from '@smartsoft001/models';
 
-import { InputVideoPresetComponent } from './preset.component';
 import { InputOptions } from '../../../../models';
 import { IModelLabelProvider } from '../../../../providers';
 import { FileService, ToastService } from '../../../../services';
+import { InputVideoPresetComponent } from './preset.component';
 
 @Model({})
 class VideoModel {

@@ -1,11 +1,11 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
+import { SmartActionPanelLayout } from '../../models';
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartActionPanel } from './action-panel';
 import { SmartActionPanelProps } from './action-panel.types';
 import { SmartActionPanelPreset } from './preset/action-panel-preset';
 import { SmartActionPanelStandard } from './standard/action-panel-standard';
-import { SmartActionPanelLayout } from '../../models';
-import { SmartProvider } from '../../providers/smart-provider';
 
 describe('@smartsoft001/react: SmartActionPanel', () => {
   describe('wrapper', () => {

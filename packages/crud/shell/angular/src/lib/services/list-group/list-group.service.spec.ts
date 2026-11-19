@@ -3,9 +3,9 @@ import { TestBed } from '@angular/core/testing';
 
 import { IEntity } from '@smartsoft001/domain-core';
 
-import { CrudListGroupService } from './list-group.service';
 import { CrudFacade } from '../../+state/crud.facade';
 import { ICrudFilter, ICrudListGroup } from '../../models';
+import { CrudListGroupService } from './list-group.service';
 
 jest.mock('../../+state/crud.facade', () => ({
   CrudFacade: jest.fn().mockImplementation(() => {

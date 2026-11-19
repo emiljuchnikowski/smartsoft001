@@ -3,8 +3,6 @@ import type { ComponentType } from 'react';
 
 import { Field, FieldType, IFieldOptions, Model } from '@smartsoft001/models';
 
-import { SmartInputRadio } from './input-radio';
-import { SmartInputRadioPreset } from './preset/input-radio-preset';
 import { SmartFormControl } from '../../../forms/form-control';
 import { SmartFormGroup } from '../../../forms/form-group';
 import { SmartValidators } from '../../../forms/validators';
@@ -12,6 +10,8 @@ import { SmartPossibility } from '../../../models';
 import { IModelPossibilitiesProvider } from '../../../providers/model-possibilities.provider';
 import { SmartProvider } from '../../../providers/smart-provider';
 import { SmartInputFieldProps } from '../input.types';
+import { SmartInputRadio } from './input-radio';
+import { SmartInputRadioPreset } from './preset/input-radio-preset';
 
 @Model({})
 class Account {

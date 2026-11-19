@@ -9,8 +9,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { IEntity } from '@smartsoft001/domain-core';
 import { Field, Model } from '@smartsoft001/models';
 
-import { DetailsBaseComponent } from './base.component';
 import { IDetailsOptions } from '../../../models';
+import { DetailsBaseComponent } from './base.component';
 
 @Model({})
 class TestItemModel implements IEntity<string> {

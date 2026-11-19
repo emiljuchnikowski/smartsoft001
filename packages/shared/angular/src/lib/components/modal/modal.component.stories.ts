@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { ModalComponent } from './modal.component';
-import { ModalPresetComponent } from './preset/preset.component';
 import {
   IModalAction,
   SmartModalFooterStyle,
   SmartModalVariant,
 } from '../../models';
 import { MODAL_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { ModalComponent } from './modal.component';
+import { ModalPresetComponent } from './preset/preset.component';
 
 const VARIANTS: SmartModalVariant[] = [
   'centered',

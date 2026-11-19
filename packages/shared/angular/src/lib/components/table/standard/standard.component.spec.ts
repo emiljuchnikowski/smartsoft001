@@ -7,8 +7,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TableStandardComponent } from './standard.component';
 import { ITableOptions } from '../../../models';
+import { TableStandardComponent } from './standard.component';
 
 describe('@smartsoft001/shared-angular: TableStandardComponent', () => {
   describe('default rendering (no options)', () => {

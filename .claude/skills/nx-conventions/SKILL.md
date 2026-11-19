@@ -99,9 +99,12 @@ import { Injectable } from '@nestjs/common';
 // 2. @smartsoft001/ imports (with blank line)
 import { BaseModel } from '@smartsoft001/domain-core';
 
-// 3. Relative imports (with blank line)
+// 3. Relative imports (with blank line), parents (`../`) before siblings (`./`)
+import { SharedConfig } from '../shared.config';
 import { LocalService } from './local.service';
 ```
+
+Enforced by `import-x/order` from `eslint-plugin-import-x` (see `eslint.config.mjs`); `nx lint <project> --fix` reorders.
 
 ## Reference implementation
 

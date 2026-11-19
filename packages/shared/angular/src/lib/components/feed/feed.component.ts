@@ -8,10 +8,10 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { FeedStandardComponent } from './standard';
 import { IFeedOptions } from '../../models';
 import { FEED_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { outletInputs } from '../base/outlet-inputs';
+import { FeedStandardComponent } from './standard';
 
 @Component({
   selector: 'smart-feed',

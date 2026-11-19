@@ -1,8 +1,8 @@
 import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AccordionPresetComponent } from './preset.component';
 import { IAccordionOptions } from '../../../models';
+import { AccordionPresetComponent } from './preset.component';
 
 @Component({
   selector: 'smart-test-host',

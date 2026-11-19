@@ -1,10 +1,10 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartModal } from './modal';
 import { SmartModalProps } from './modal.types';
 import { SmartModalPreset } from './preset/modal-preset';
 import { SmartModalStandard } from './standard/modal-standard';
-import { SmartProvider } from '../../providers/smart-provider';
 
 describe('@smartsoft001/react: SmartModal', () => {
   describe('wrapper', () => {

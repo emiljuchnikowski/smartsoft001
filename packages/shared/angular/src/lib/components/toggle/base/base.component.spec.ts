@@ -5,8 +5,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ToggleBaseComponent } from './base.component';
 import { IToggleOptions } from '../../../models';
+import { ToggleBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-toggle',

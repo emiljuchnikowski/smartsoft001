@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react';
 
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartFeed } from './feed';
 import { SmartFeedProps } from './feed.types';
 import { SmartFeedPreset } from './preset/feed-preset';
 import { SmartFeedStandard } from './standard/feed-standard';
-import { SmartProvider } from '../../providers/smart-provider';
 
 describe('@smartsoft001/react: SmartFeed', () => {
   describe('wrapper', () => {

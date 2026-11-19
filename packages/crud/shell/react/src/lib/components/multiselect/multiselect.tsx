@@ -3,8 +3,8 @@ import { useMemo } from 'react';
 import { IEntity } from '@smartsoft001/domain-core';
 import { SmartButton, SmartForm, useTranslate } from '@smartsoft001/react';
 
-import { useCrudMultiselect } from './use-crud-multiselect';
 import { getCrudFormOptions } from '../../factories/form-options';
+import { useCrudMultiselect } from './use-crud-multiselect';
 
 /**
  * The panel of the items selected in the list, opened in the end menu. A

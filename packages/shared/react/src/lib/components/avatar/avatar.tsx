@@ -1,6 +1,6 @@
+import { useSmartComponent } from '../../providers/hooks';
 import { SmartAvatarProps } from './avatar.types';
 import { SmartAvatarStandard } from './standard/avatar-standard';
-import { useSmartComponent } from '../../providers/hooks';
 
 /**
  * Renders the implementation registered as `components.avatar` on

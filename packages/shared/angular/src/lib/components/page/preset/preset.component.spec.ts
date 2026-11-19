@@ -11,13 +11,13 @@ import {
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { PagePresetComponent } from './preset.component';
 import { IPageOptions } from '../../../models';
 import { AppService, HardwareService } from '../../../services';
 import { PAGE_VARIANT_COMPONENTS_TOKEN } from '../../../shared.inectors';
 import { PageComponent } from '../page.component';
 import { PAGE_PRESET_VARIANT_COMPONENTS } from '../preset-variants';
 import { PageStandardComponent } from '../standard/standard.component';
+import { PagePresetComponent } from './preset.component';
 
 @Pipe({ name: 'translate', standalone: true })
 class MockTranslatePipe implements PipeTransform {

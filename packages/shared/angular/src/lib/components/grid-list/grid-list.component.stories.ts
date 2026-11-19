@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 
-import { GridListComponent } from './grid-list.component';
-import { GridListPresetComponent } from './preset/preset.component';
 import {
   IGridListOptions,
   SmartGridListColumns,
   SmartGridListLayout,
 } from '../../models';
 import { GRID_LIST_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { GridListComponent } from './grid-list.component';
+import { GridListPresetComponent } from './preset/preset.component';
 
 const LOGO =
   'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=96&h=96&q=80';

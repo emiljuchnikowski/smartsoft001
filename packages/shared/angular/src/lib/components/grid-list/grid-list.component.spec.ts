@@ -1,9 +1,9 @@
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { GRID_LIST_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 import { GridListBaseComponent } from './base/base.component';
 import { GridListComponent } from './grid-list.component';
-import { GRID_LIST_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
 
 @Component({
   selector: 'smart-test-grid-list-injected',

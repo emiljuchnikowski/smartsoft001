@@ -1,6 +1,6 @@
+import { useSmartComponent } from '../../providers/hooks';
 import { SmartNotificationProps } from './notification.types';
 import { SmartNotificationStandard } from './standard/notification-standard';
-import { useSmartComponent } from '../../providers/hooks';
 
 /**
  * Renders the implementation registered as `components.notification` on

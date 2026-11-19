@@ -9,7 +9,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DynamicComponent, DynamicModule } from 'ng-dynamic-component';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 
+import { SharedDirectivesModule } from '../directives';
 import { ListMode } from '../models';
+import { SharedPipesModule } from '../pipes/pipes.module';
 import {
   DETAILS_COMPONENT_TOKEN,
   DETAILS_STANDARD_COMPONENT_TOKEN,
@@ -50,7 +52,6 @@ import {
   DetailPhoneNumberPlComponent,
 } from './detail';
 import { DetailsComponent, DetailsStandardComponent } from './details';
-import { SharedDirectivesModule } from '../directives';
 import { ExportComponent } from './export';
 import { FormComponent, FormStandardComponent } from './form';
 import { ImportComponent } from './import';
@@ -103,7 +104,6 @@ import {
   PasswordStrengthStandardComponent,
 } from './password-strength';
 import { SearchbarComponent, SearchbarStandardComponent } from './searchbar';
-import { SharedPipesModule } from '../pipes/pipes.module';
 
 export const ACCORDION_COMPONENTS: any[] = [
   AccordionComponent,

@@ -1,6 +1,6 @@
-import { RefresherService } from './refresher.service';
 import { Trans, TransStatus } from '../entities';
 import { ITransInternalService } from '../interfaces';
+import { RefresherService } from './refresher.service';
 
 describe('trans-domain: fulfillment idempotency contract', () => {
   let stored: Trans<unknown>;

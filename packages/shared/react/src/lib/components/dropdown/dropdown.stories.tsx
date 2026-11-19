@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
+import { IDropdownItem, SmartDropdownVariant } from '../../models';
 import { SmartDropdown } from './dropdown';
 import { SmartDropdownPreset } from './preset/dropdown-preset';
-import { IDropdownItem, SmartDropdownVariant } from '../../models';
 
 const VARIANTS: SmartDropdownVariant[] = [
   'simple',

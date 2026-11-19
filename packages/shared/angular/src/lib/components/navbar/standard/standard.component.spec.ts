@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NavbarStandardComponent } from './standard.component';
 import { INavbarItemClick } from '../base/base.component';
+import { NavbarStandardComponent } from './standard.component';
 
 describe('@smartsoft001/shared-angular: NavbarStandardComponent', () => {
   let fixture: ComponentFixture<NavbarStandardComponent>;

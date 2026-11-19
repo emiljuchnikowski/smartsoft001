@@ -1,14 +1,14 @@
 import moment from 'moment';
 import { useEffect, useRef, useState } from 'react';
 
+import { useStyleService } from '../../providers/hooks';
+import { CalendarService } from '../../services/calendar/calendar.service';
+import { StyleService } from '../../services/style/style.service';
 import {
   CalendarState,
   FilterBtnConstants,
   SmartDateRangeModalProps,
 } from './date-range.types';
-import { useStyleService } from '../../providers/hooks';
-import { CalendarService } from '../../services/calendar/calendar.service';
-import { StyleService } from '../../services/style/style.service';
 
 /** The modal's form: the shown dates and the picked days. */
 export interface DateRangeModalForm {

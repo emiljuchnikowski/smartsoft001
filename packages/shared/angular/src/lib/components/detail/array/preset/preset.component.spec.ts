@@ -3,9 +3,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FieldType } from '@smartsoft001/models';
 
-import { DetailArrayPresetComponent } from './preset.component';
 import { IDetailOptions } from '../../../../models';
 import { DETAILS_COMPONENT_TOKEN } from '../../../../shared.inectors';
+import { DetailArrayPresetComponent } from './preset.component';
 
 @Component({
   selector: 'mock-details',

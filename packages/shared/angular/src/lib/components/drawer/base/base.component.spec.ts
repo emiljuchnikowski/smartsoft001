@@ -5,8 +5,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DrawerBaseComponent } from './base.component';
 import { IDrawerOptions } from '../../../models';
+import { DrawerBaseComponent } from './base.component';
 
 @Component({
   selector: 'smart-test-drawer',

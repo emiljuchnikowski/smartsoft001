@@ -1,13 +1,13 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { IMediaObjectOptions } from '../../../models';
 import {
   getMediaObjectBodyClasses,
   getMediaObjectMediaClasses,
   getMediaObjectRootClasses,
 } from './preset-classes.util';
 import { MediaObjectPresetComponent } from './preset.component';
-import { IMediaObjectOptions } from '../../../models';
 
 @Component({
   selector: 'smart-test-host',

@@ -1,6 +1,6 @@
+import { useSmartComponent } from '../../providers/hooks';
 import { SmartSidebarLayoutProps } from './sidebar-layout.types';
 import { SmartSidebarLayoutStandard } from './standard/sidebar-layout-standard';
-import { useSmartComponent } from '../../providers/hooks';
 
 /**
  * Renders the implementation registered as `components['sidebar-layout']` on

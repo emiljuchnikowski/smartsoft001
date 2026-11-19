@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react';
 
+import { SmartProvider } from '../../providers/smart-provider';
 import { SmartSectionHeadingPreset } from './preset/section-heading-preset';
 import { SmartSectionHeading } from './section-heading';
 import { SmartSectionHeadingProps } from './section-heading.types';
 import { SmartSectionHeadingStandard } from './standard/section-heading-standard';
-import { SmartProvider } from '../../providers/smart-provider';
 
 describe('@smartsoft001/react: SmartSectionHeading', () => {
   describe('wrapper', () => {

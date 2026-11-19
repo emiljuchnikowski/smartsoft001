@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
-import { AlertService } from './alert.service';
 import { AlertBaseComponent } from '../../components/alert';
 import { ALERT_STANDARD_COMPONENT_TOKEN } from '../../shared.inectors';
+import { AlertService } from './alert.service';
 
 @Component({
   selector: 'smart-test-alert-mock',

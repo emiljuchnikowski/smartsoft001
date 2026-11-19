@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { SmartNavbar } from './navbar';
 import { INavbarOptions } from '../../models';
+import { SmartNavbar } from './navbar';
 import { SmartNavbarPreset } from './preset/navbar-preset';
 
 const ITEMS = [
