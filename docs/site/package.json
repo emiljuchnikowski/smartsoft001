@@ -13,8 +13,8 @@
     "@algolia/autocomplete-core": "^1.19.13",
     "@headlessui/react": "^2.2.10",
     "@markdoc/markdoc": "^0.5.13",
-    "@markdoc/next.js": "^0.5.0",
-    "@sindresorhus/slugify": "^2.2.1",
+    "@markdoc/next.js": "^0.7.0",
+    "@sindresorhus/slugify": "^4.0.1",
     "@tailwindcss/postcss": "^4.3.5",
     "@tailwindcss/typography": "^0.5.20",
     "@types/react-highlight-words": "^0.20.1",
@@ -27,19 +27,19 @@
     "prism-react-renderer": "^2.4.1",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
-    "react-highlight-words": "^0.21.1",
+    "react-highlight-words": "^1.0.0",
     "simple-functional-loader": "^1.2.1",
     "tailwindcss": "^4.3.5",
     "typescript": "6.0.3"
   },
   "devDependencies": {
-    "@types/node": "^24.19.2",
+    "@types/node": "^26.6.6",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
     "eslint": "^10.15.0",
     "eslint-config-next": "16.4.6",
     "prettier": "^3.10.1",
     "prettier-plugin-tailwindcss": "^0.8.1",
-    "sharp": "0.34.3"
+    "sharp": "0.35.5"
   }
 }
