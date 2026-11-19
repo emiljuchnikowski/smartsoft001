@@ -1,6 +1,6 @@
 {
   "name": "@smartsoft001/payu",
-  "version": "2.210.0",
+  "version": "2.211.0",
   "type": "commonjs",
   "main": "./src/index.js",
   "typings": "./src/index.d.ts",
@@ -22,7 +22,7 @@
     "@nestjs/axios": "^12.0.2",
     "@nestjs/common": "^12.5.1",
     "@nestjs/core": "^12.5.1",
-    "@smartsoft001/trans-domain": "2.210.0",
+    "@smartsoft001/trans-domain": "2.211.0",
     "rxjs": "^7.8.1"
   }
 }
