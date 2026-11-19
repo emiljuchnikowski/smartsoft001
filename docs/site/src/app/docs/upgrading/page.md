@@ -88,6 +88,12 @@ npm install -D eslint@^10 @eslint/js@^10 eslint-plugin-import-x
 
 The [ESLint migration guide](https://eslint.org/docs/latest/use/migrate-to-10.0.0) has the rest; a flat config needs nothing else.
 
+## TypeScript 7
+
+The framework stays on TypeScript 6.0. Angular 22 supports TypeScript `>=6.0.0 <6.1.0` ([Angular version compatibility](https://angular.dev/reference/versions)): `@angular/compiler-cli`, `@angular/build` and `ng-packagr` declare that range and build on the programmatic compiler API, which TypeScript 7.0 does not ship. `typescript-eslint` needs the same API and accepts TypeScript below 6.1. The packages have no peer dependency on TypeScript, so a project picks its own version, but an Angular project cannot build on 7.0.
+
+Nx describes a side-by-side setup, with TypeScript 7.0 as the `tsc` executable and 6.0 behind the `typescript` name for the tools that need the API ([TypeScript 7 in Nx](https://nx.dev/docs/kb/typescript-7)). It speeds up type checking only, and the framework does not use it. The framework moves to TypeScript 7 when Angular supports it.
+
 ## Staying on one version
 
 The packages are pinned to each other exactly, so a project cannot end up with two of them on different versions through the stacks. If you install packages individually, keep them in lockstep: [`angular-stack`](/docs/packages/angular-stack) and its siblings exist to make that automatic.
