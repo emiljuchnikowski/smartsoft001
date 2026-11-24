@@ -94,6 +94,10 @@ The framework stays on TypeScript 6.0. Angular 22 supports TypeScript `>=6.0.0 <
 
 Nx describes a side-by-side setup, with TypeScript 7.0 as the `tsc` executable and 6.0 behind the `typescript` name for the tools that need the API ([TypeScript 7 in Nx](https://nx.dev/docs/kb/typescript-7)). It speeds up type checking only, and the framework does not use it. The framework moves to TypeScript 7 when Angular supports it.
 
+## Angular 22.3 and Nx 24
+
+The framework runs on Angular 22.3, and its peer dependencies (`^22.1.3`) accept it. The CLI and build tools stay on 22.2: `@angular-devkit/architect` 0.2203, which comes with `@angular/cli`, `@angular/build` and `@angular-devkit/build-angular` 22.3, no longer exports the `node/index` path that Nx 24 loads, so every Nx command that runs an Angular builder fails with "Package subpath './node/index' is not defined by "exports"". In an Nx workspace keep `@angular/cli`, `@angular/build`, `@angular-devkit/*` and `@schematics/angular` on 22.2.7, and pin `@angular-devkit/architect` to `0.2202.7` as a dev dependency if another package (Storybook, for one) would hoist 0.2203. `@angular/core`, the other runtime packages and `@angular/compiler-cli` can move to 22.3.
+
 ## Staying on one version
 
 The packages are pinned to each other exactly, so a project cannot end up with two of them on different versions through the stacks. If you install packages individually, keep them in lockstep: [`angular-stack`](/docs/packages/angular-stack) and its siblings exist to make that automatic.

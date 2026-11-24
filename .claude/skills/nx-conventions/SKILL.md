@@ -87,7 +87,7 @@ Pattern: `@smartsoft001/{package-name}` in `tsconfig.base.json`
 
 ## Package Manager
 
-- **pnpm** 9.11.0
+- **npm** (`package-lock.json`, `npm ci` in CI); `pnpm` 12 is only a dev dependency
 - Workspaces configured in `package.json`
 
 ## Import Order (ESLint)

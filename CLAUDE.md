@@ -8,7 +8,7 @@ Nx monorepo with shared libraries for Angular, React, NestJS, and Ionic projects
 
 ## Technology Stack
 
-- **Angular**: 22.2.5
+- **Angular**: 22.3.0 (CLI and build tools 22.2.7: Nx 24 cannot load `@angular-devkit/architect` 0.2203)
 - **React**: 19.3 (`react`, `react-dom`)
 - **NestJS**: 12.5.1
 - **Nx**: 24.0.6
